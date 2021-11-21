@@ -12,7 +12,7 @@ import {
   Paper,
   Switch,
 } from "@material-ui/core";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const useStyles = makeStyles((theme) => {
   const ratio = 0.5;
@@ -52,6 +52,32 @@ function Query() {
   const [result, setResult] = useState();
   const editor = useRef();
 
+  useEffect(() => {
+    editor.current.commands.addCommand({
+      name: "query",
+      bindKey: { win: "Ctrl-Enter", mac: "Ctrl-Enter" },
+      exec: () => {
+        query();
+      },
+    });
+  }, []);
+
+  const query = () => {
+    fetch("http://localhost:8448", {
+      method: "POST",
+      body: editor ? editor.current.getValue() : null,
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        try {
+          setResult(JSON.parse(data));
+        } catch (error) {
+          setResult(data);
+        }
+      })
+      .catch((error) => setResult(error.message));
+  };
+
   return (
     <IDE anchor={false}>
       <Grid container spacing={1}>
@@ -64,24 +90,7 @@ function Query() {
               className={classes.run}
               justifyContent={"flex-end"}
             >
-              <Fab
-                size={"small"}
-                onClick={() => {
-                  fetch("http://localhost:8448", {
-                    method: "POST",
-                    body: editor.current.getValue(),
-                  })
-                    .then((response) => response.text())
-                    .then((data) => {
-                      try {
-                        setResult(JSON.parse(data));
-                      } catch (error) {
-                        setResult(data);
-                      }
-                    })
-                    .catch((error) => setResult(error.message));
-                }}
-              >
+              <Fab size={"small"} onClick={() => query()}>
                 <PlayArrowIcon
                   style={{
                     fill: "#212121",
