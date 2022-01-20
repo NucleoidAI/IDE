@@ -5,6 +5,7 @@ import Functions from "./pages/ide/Functions";
 import Logs from "./pages/ide/Logs";
 import Query from "./pages/ide/Query";
 import State from "./state";
+import TestPage from "./pages/testpage";
 import theme from "./theme";
 import { Context, reducer } from "./context";
 import { CssBaseline, ThemeProvider } from "@material-ui/core";
@@ -26,6 +27,7 @@ function App() {
           <Route path={"/ide/query"} component={Query} />
           <Route path={"/ide/branches"} component={Branches} />
           <Route path={"/ide/logs"} component={Logs} />
+          <Route path={"/testpage"} component={TestPage} />
         </Router>
       </Context.Provider>
     </ThemeProvider>
