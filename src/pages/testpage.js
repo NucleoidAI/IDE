@@ -1,8 +1,7 @@
 import { Grid } from "@material-ui/core";
 import IDE from "../layouts/IDE";
 import React from "react";
-
-//import EditableScrollList from "../components/EditableScrollList";
+import TreeView from "../widgets/TreeView";
 
 import { useContext } from "../context";
 
@@ -13,10 +12,10 @@ export default function TestPage() {
     <IDE anchor={false}>
       <Grid item container spacing={2}>
         <Grid item md={6}>
-          .
+          <TreeView editable={true} />
         </Grid>
         <Grid item md={6}>
-          .
+          <TreeView editable={false} />
         </Grid>
         <Grid item md={12}>
           <button onClick={() => console.log(state)}>get state</button>
@@ -25,5 +24,3 @@ export default function TestPage() {
     </IDE>
   );
 }
-//<TreeWidget editable={true} />
-//  <TreeWidget editable={false} />
