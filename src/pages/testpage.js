@@ -18,7 +18,7 @@ export default function TestPage() {
           <TreeView editable={false} />
         </Grid>
         <Grid item md={12}>
-          <button onClick={() => console.log(state)}>get state</button>
+          <button onClick={() => console.log(state)}>Get state</button>
         </Grid>
       </Grid>
     </IDE>
