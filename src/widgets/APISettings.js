@@ -2,10 +2,11 @@ import EditIcon from "@material-ui/icons/Edit";
 import ParamView from "../components/ParamView";
 import Schema from "../components/Schema";
 import Security from "../components/Security";
+import SummaryForm from "../components/SummaryForm";
 import { makeStyles } from "@material-ui/core/styles";
 import { useContext } from "../context";
-import { Fab, Grid, TextField } from "@material-ui/core";
-import { useEffect, useState } from "react";
+import { Fab, Grid } from "@material-ui/core";
+import { useEffect, useRef, useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,13 +29,11 @@ function APISettings() {
   const [response, setResponse] = useState({});
   const [params, setParams] = useState();
 
-  const [summary, setSummary] = useState("");
-  const [description, setDescription] = useState("");
+  const summaryRef = useRef([]);
+
   const classes = useStyles();
 
   useEffect(() => {
-    console.log(state);
-
     const selected = state.get("pages.api.selected");
     const api = state.get("nucleoid.api");
 
@@ -43,8 +42,17 @@ function APISettings() {
       setRequest(api[selected.path][selected.method].request);
       setResponse(api[selected.path][selected.method].response);
       setParams(api[selected.path][selected.method].params);
-      setSummary(api[selected.path][selected.method].summary);
-      setDescription(api[selected.path][selected.method].description);
+
+      summaryRef.current["Summary"].value = api[selected.path][selected.method]
+        .summary
+        ? api[selected.path][selected.method].summary
+        : "";
+      summaryRef.current["Description"].value = api[selected.path][
+        selected.method
+      ].description
+        ? api[selected.path][selected.method].description
+        : "";
+        console.log( api[selected.path][selected.method].summary)
     }
   }, [state, method]);
 
@@ -74,23 +82,10 @@ function APISettings() {
         direction={"column"}
         justifyContent={"space-between"}
       >
-        <form style={{ marginLeft: 24, marginRight: 24 }}>
-          <TextField
-            label={"Summary"}
-            fullWidth
-            value={summary}
-            onChange={(event) => setSummary(event.target.value)}
-          />
-          <TextField
-            label={"Description"}
-            multiline
-            fullWidth
-            rows={3}
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-          />
-        </form>
-        <Security />
+        <SummaryForm ref={summaryRef} />
+        <Security
+          onClick={() => console.log(summaryRef.current["Summary"].value)}
+        />
         <Grid container justifyContent={"flex-end"}>
           <Fab
             size={"small"}

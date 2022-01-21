@@ -71,6 +71,13 @@ const params = [
 const style = { height: 300, width: 300 };
 
 function Dev() {
+  const ref = React.useRef([]);
+
+  function textChangeHandler() {
+    console.log(ref.current["Summary"].value);
+    console.log(ref.current["Description"].value);
+  }
+
   return (
     <Grid
       container
@@ -116,7 +123,13 @@ function Dev() {
       </Paper>
       <br />
       <Paper style={style}>
-        <SummaryForm />
+        <SummaryForm
+          summaryText="a"
+          descriptionText="b"
+          summaryTextChangeHandler={textChangeHandler}
+          descriptionTextChangeHandler={textChangeHandler}
+          ref={ref}
+        />
       </Paper>
       <br />
 

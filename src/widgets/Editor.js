@@ -16,20 +16,22 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
     const { editor } = ace.current;
     if (editorRef) editorRef.current = editor;
 
-    editor.selection.moveCursorToPosition({ row: 0, column: 0 });
-    if (api) {
-      const selected = state.get("pages.api.selected");
-      const api = state.get("nucleoid.api");
-      const action = api[selected.path][selected.method].action;
-      setCode(`function ${selected.method}(query, json) {\n  ${action}\n}`);
-      return;
-    }
+    if (state.get("pages.api.selected")) {
+      editor.selection.moveCursorToPosition({ row: 0, column: 0 });
+      if (api) {
+        const selected = state.get("pages.api.selected");
+        const api = state.get("nucleoid.api");
+        const action = api[selected.path][selected.method].action;
+        setCode(`function ${selected.method}(query, json) {\n  ${action}\n}`);
+        return;
+      }
 
-    if (functions) {
-      const selected = state.get("pages.functions.selected");
-      const functions = state.get("nucleoid.functions");
-      setCode(functions[selected].code);
-      return;
+      if (functions) {
+        const selected = state.get("pages.functions.selected");
+        const functions = state.get("nucleoid.functions");
+        setCode(functions[selected].code);
+        return;
+      }
     }
 
     setCode(log);
