@@ -52,7 +52,6 @@ function APISettings() {
       ].description
         ? api[selected.path][selected.method].description
         : "";
-        console.log( api[selected.path][selected.method].summary)
     }
   }, [state, method]);
 
