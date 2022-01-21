@@ -1,5 +1,5 @@
 import AddList from "../../components/AddList";
-import Editor from "../../components/Editor";
+import Editor from "../../widgets/Editor";
 import FunctionTree from "../../components/FunctionTree";
 import IDE from "../../layouts/IDE";
 import React from "react";

@@ -1,5 +1,5 @@
 import APITree from "../components/APITree";
-import Editor from "../components/Editor";
+import Editor from "../widgets/Editor";
 import FunctionTree from "../components/FunctionTree";
 import Logo from "../components/Logo";
 import ParamView from "../components/ParamView";

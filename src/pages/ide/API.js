@@ -2,7 +2,7 @@ import APIDialog from "../../components/APIDialog";
 import APISettings from "../../components/APISettings";
 import APITree from "../../components/APITree";
 import AddList from "../../components/AddList";
-import Editor from "../../components/Editor";
+import Editor from "../../widgets/Editor";
 import IDE from "../../layouts/IDE";
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
