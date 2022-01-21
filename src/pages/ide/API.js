@@ -1,6 +1,6 @@
 import APIDialog from "../../components/APIDialog";
 import APISettings from "../../components/APISettings";
-import APITree from "../../components/APITree";
+import APITree from "../../widgets/APITree";
 import AddList from "../../components/AddList";
 import Editor from "../../widgets/Editor";
 import IDE from "../../layouts/IDE";

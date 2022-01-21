@@ -1,4 +1,4 @@
-import APITree from "../components/APITree";
+import APITree from "../widgets/APITree";
 import Editor from "../widgets/Editor";
 import FunctionTree from "../components/FunctionTree";
 import Logo from "../components/Logo";
