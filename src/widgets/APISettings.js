@@ -28,6 +28,8 @@ function APISettings() {
   const [request, setRequest] = useState({});
   const [response, setResponse] = useState({});
   const [params, setParams] = useState();
+  const [summary, setSummary] = useState();
+  const [description, setDescription] = useState();
 
   const summaryRef = useRef([]);
 
@@ -42,18 +44,12 @@ function APISettings() {
       setRequest(api[selected.path][selected.method].request);
       setResponse(api[selected.path][selected.method].response);
       setParams(api[selected.path][selected.method].params);
-
-      summaryRef.current["Summary"].value = api[selected.path][selected.method]
-        .summary
-        ? api[selected.path][selected.method].summary
-        : "";
-      summaryRef.current["Description"].value = api[selected.path][
-        selected.method
-      ].description
-        ? api[selected.path][selected.method].description
-        : "";
+      setSummary(api[selected.path][selected.method].summary);
+      setDescription(api[selected.path][selected.method].description);
     }
   }, [state, method]);
+
+  console.log("render");
 
   return (
     <Grid container className={classes.root}>
@@ -81,7 +77,11 @@ function APISettings() {
         direction={"column"}
         justifyContent={"space-between"}
       >
-        <SummaryForm ref={summaryRef} />
+        <SummaryForm
+          summaryText={summary}
+          descriptionText={description}
+          ref={summaryRef}
+        />
         <Security
           onClick={() => console.log(summaryRef.current["Summary"].value)}
         />
