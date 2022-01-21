@@ -1,7 +1,7 @@
 import EditIcon from "@material-ui/icons/Edit";
-import ParamView from "./ParamView";
-import Schema from "./Schema";
-import Security from "./Security";
+import ParamView from "../components/ParamView";
+import Schema from "../components/Schema";
+import Security from "../components/Security";
 import { makeStyles } from "@material-ui/core/styles";
 import { useContext } from "../context";
 import { Fab, Grid, TextField } from "@material-ui/core";
@@ -33,15 +33,19 @@ function APISettings() {
   const classes = useStyles();
 
   useEffect(() => {
+    console.log(state);
+
     const selected = state.get("pages.api.selected");
     const api = state.get("nucleoid.api");
 
-    setMethod(selected.method);
-    setRequest(api[selected.path][selected.method].request);
-    setResponse(api[selected.path][selected.method].response);
-    setParams(api[selected.path][selected.method].params);
-    setSummary(api[selected.path][selected.method].summary);
-    setDescription(api[selected.path][selected.method].description);
+    if (selected) {
+      setMethod(selected.method);
+      setRequest(api[selected.path][selected.method].request);
+      setResponse(api[selected.path][selected.method].response);
+      setParams(api[selected.path][selected.method].params);
+      setSummary(api[selected.path][selected.method].summary);
+      setDescription(api[selected.path][selected.method].description);
+    }
   }, [state, method]);
 
   return (
