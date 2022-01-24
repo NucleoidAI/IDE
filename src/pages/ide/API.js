@@ -1,4 +1,4 @@
-import APIDialog from "../../components/APIDialog";
+import APIDialog from "../../widgets/APIDialog";
 import APISettings from "../../widgets/APISettings";
 import APITree from "../../widgets/APITree";
 import AddList from "../../components/AddList";

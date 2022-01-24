@@ -1,9 +1,9 @@
-import APIBody from "./APIBody";
-import APIDialogAction from "./APIDialogAction";
-import APIParams from "./APIParams";
-import APIPath from "./APIPath";
-import APITypes from "./APITypes";
-import ClosableDialogTitle from "./ClosableDialogTitle";
+import APIBody from "../components/APIBody";
+import APIDialogAction from "../components/APIDialogAction";
+import APIParams from "../components/APIParams";
+import APIPath from "../components/APIPath";
+import APITypes from "../components/APITypes";
+import ClosableDialogTitle from "../components/ClosableDialogTitle";
 import { Context } from "../context";
 import { v4 as uuid } from "uuid";
 import {

@@ -1,6 +1,6 @@
 import State from "./state";
 import { v4 as uuid } from "uuid";
-import { compile, decompile, deindex, index } from "./components/APIDialog";
+import { compile, decompile, deindex, index } from "./widgets/APIDialog";
 import { createContext, useContext } from "react";
 
 function reducer(state, action) {
