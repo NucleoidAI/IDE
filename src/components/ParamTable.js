@@ -3,7 +3,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import TypeMenu from "./TypeMenu";
 import { makeStyles } from "@material-ui/core/styles";
-import { useContext } from "../context";
+//import { useContext } from "../context";
 import { Checkbox, IconButton, TextField } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -13,10 +13,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ParamTable = ({ params }) => {
+const ParamTable = ({ params, removeParam, map }) => {
   const classes = useStyles();
-  const [state, dispatch] = useContext();
-  const map = state.get("pages.api.dialog.map");
+  // const [state, dispatch] = useContext();
+  // const map = state.get("pages.api.dialog.map");
+
+  //console.log(map);
+  console.log(Object.values(params || {}));
+  console.log(params);
+  params.forEach((item, index) => {
+    item.id = index;
+  });
 
   const columns = [
     {
@@ -84,9 +91,7 @@ const ParamTable = ({ params }) => {
       renderCell: (param) => {
         const { id } = param.row;
         return (
-          <IconButton
-            onClick={() => dispatch({ type: "REMOVE_PARAM", payload: { id } })}
-          >
+          <IconButton onClick={() => removeParam(id)}>
             <HighlightOffIcon />
           </IconButton>
         );
@@ -98,7 +103,7 @@ const ParamTable = ({ params }) => {
     <DataGrid
       className={classes.root}
       columns={columns}
-      rows={Object.values(params || {})}
+      rows={params}
       hideFooter
       disableSelectionOnClick
     />
@@ -106,3 +111,5 @@ const ParamTable = ({ params }) => {
 };
 
 export default ParamTable;
+
+//Object.values(params || {})

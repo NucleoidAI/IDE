@@ -30,6 +30,7 @@ function APIDialog() {
   const response = state.get("pages.api.dialog.response");
   const selected = state.get("pages.api.selected");
   const view = state.get("pages.api.dialog.view");
+  const map = state.get("pages.api.dialog.map");
   let method;
   let params;
   if (selected) {
@@ -42,7 +43,6 @@ function APIDialog() {
   };
 
   function setApiDialogView(newAlignment) {
-    console.log(newAlignment);
     dispatch({
       type: "SET_API_DIALOG_VIEW",
       payload: { view: newAlignment },
@@ -50,12 +50,15 @@ function APIDialog() {
   }
 
   function saveApiDialog() {
-    console.log("saveapidialog");
     dispatch({ type: "SAVE_API_DIALOG" });
   }
 
   function addParam() {
     dispatch({ type: "ADD_PARAM" });
+  }
+
+  function removeParam(id) {
+    dispatch({ type: "REMOVE_PARAM", payload: { id } });
   }
 
   return (
@@ -78,7 +81,12 @@ function APIDialog() {
             />
           )}
           {state.get("pages.api.dialog.view") === "PARAMS" && (
-            <APIParams params={params} addParam={addParam} />
+            <APIParams
+              params={params}
+              addParam={addParam}
+              removeParam={removeParam}
+              map={map}
+            />
           )}
           {state.get("pages.api.dialog.view") === "TYPES" && <APITypes />}
         </Grid>

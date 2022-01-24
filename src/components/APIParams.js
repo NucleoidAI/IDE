@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function APIParams({ params, addParam }) {
+function APIParams({ params, addParam, removeParam, map }) {
   const classes = useStyles();
 
   return (
@@ -24,7 +24,7 @@ function APIParams({ params, addParam }) {
       className={classes.root}
     >
       <Grid item className={classes.params}>
-        <ParamTable params={params} />
+        <ParamTable params={params} map={map} removeParam={removeParam} />
       </Grid>
       <Grid container item justifyContent="flex-end">
         <Fab size={"small"} onClick={() => addParam()}>
