@@ -4,7 +4,7 @@ import APIParams from "../components/APIParams";
 import APIPath from "../components/APIPath";
 import APITypes from "../components/APITypes";
 import ClosableDialogTitle from "../components/ClosableDialogTitle";
-import { Context } from "../context";
+import { Context, useContext } from "../context";
 import { v4 as uuid } from "uuid";
 import {
   Dialog,
@@ -13,7 +13,7 @@ import {
   Grid,
   makeStyles,
 } from "@material-ui/core";
-import React, { useContext } from "react";
+import React from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,11 +23,40 @@ const useStyles = makeStyles((theme) => ({
 
 function APIDialog() {
   const classes = useStyles();
-  const [state, dispatch] = useContext(Context);
+  const [state, dispatch] = useContext();
+
+  const api = state.get("nucleoid.api");
+  const request = state.get("pages.api.dialog.request");
+  const response = state.get("pages.api.dialog.response");
+  const selected = state.get("pages.api.selected");
+  const view = state.get("pages.api.dialog.view");
+  let method;
+  let params;
+  if (selected) {
+    method = state.get("pages.api.selected").method;
+    params = api[selected.path][selected.method].params;
+  }
 
   const handleClose = () => {
     dispatch({ type: "CLOSE_API_DIALOG" });
   };
+
+  function setApiDialogView(newAlignment) {
+    console.log(newAlignment);
+    dispatch({
+      type: "SET_API_DIALOG_VIEW",
+      payload: { view: newAlignment },
+    });
+  }
+
+  function saveApiDialog() {
+    console.log("saveapidialog");
+    dispatch({ type: "SAVE_API_DIALOG" });
+  }
+
+  function addParam() {
+    dispatch({ type: "ADD_PARAM" });
+  }
 
   return (
     <Dialog
@@ -40,13 +69,26 @@ function APIDialog() {
       <DialogContent>
         <APIPath />
         <Grid className={classes.root}>
-          {state.get("pages.api.dialog.view") === "BODY" && <APIBody />}
-          {state.get("pages.api.dialog.view") === "PARAMS" && <APIParams />}
+          {state.get("pages.api.dialog.view") === "BODY" && (
+            <APIBody
+              request={request}
+              response={response}
+              method={method}
+              params={params}
+            />
+          )}
+          {state.get("pages.api.dialog.view") === "PARAMS" && (
+            <APIParams params={params} addParam={addParam} />
+          )}
           {state.get("pages.api.dialog.view") === "TYPES" && <APITypes />}
         </Grid>
       </DialogContent>
       <DialogActions>
-        <APIDialogAction />
+        <APIDialogAction
+          setApiDialogView={setApiDialogView}
+          saveApiDialog={saveApiDialog}
+          view={view}
+        />
       </DialogActions>
     </Dialog>
   );

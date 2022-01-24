@@ -1,3 +1,4 @@
+import APIDialog from "../widgets/APIDialog";
 import APISettings from "../widgets/APISettings";
 import APITree from "../widgets/APITree";
 import AddList from "../components/AddList";
@@ -156,6 +157,10 @@ function Dev() {
 
       <Paper style={style}>
         <Editor name={"api"} api />
+      </Paper>
+      <br />
+      <Paper style={{ width: 800, height: 400 }}>
+        <APIDialog />
       </Paper>
       <br />
     </Grid>

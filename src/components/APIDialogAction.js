@@ -3,13 +3,12 @@ import { Button, Grid } from "@material-ui/core";
 import React, { useContext, useEffect } from "react";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 
-function APIDialogAction() {
-  const [state, dispatch] = useContext(Context);
+function APIDialogAction({ view, setApiDialogView, saveApiDialog }) {
   const [alignment, setAlignment] = React.useState();
 
   useEffect(() => {
-    setAlignment(state.get("pages.api.dialog.view"));
-  }, [state]);
+    setAlignment(view);
+  }, [view]);
 
   return (
     <Grid container justifyContent={"space-between"}>
@@ -22,10 +21,7 @@ function APIDialogAction() {
           onChange={(event, newAlignment) => {
             if (!newAlignment) return;
             setAlignment(newAlignment);
-            dispatch({
-              type: "SET_API_DIALOG_VIEW",
-              payload: { view: newAlignment },
-            });
+            setApiDialogView(newAlignment);
           }}
         >
           <ToggleButton
@@ -43,9 +39,7 @@ function APIDialogAction() {
       <Button
         variant={"text"}
         color={"primary"}
-        onClick={() => {
-          dispatch({ type: "SAVE_API_DIALOG" });
-        }}
+        onClick={() => saveApiDialog()}
       >
         Save
       </Button>

@@ -1,7 +1,6 @@
 import ParamView from "./ParamView";
 import React from "react";
 import Schema from "./Schema";
-import { useContext } from "../context";
 import { Divider, Grid, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -15,16 +14,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function APIBody() {
+function APIBody({ request, response, method, params }) {
   const classes = useStyles();
-  const [state] = useContext();
-  const { method } = state.get("pages.api.selected");
-  const request = state.get("pages.api.dialog.request");
-  const response = state.get("pages.api.dialog.response");
-
-  const selected = state.get("pages.api.selected");
-  const api = state.get("nucleoid.api");
-  const params = api[selected.path][selected.method].params;
 
   return (
     <Grid container justifyContent={"space-between"} className={classes.root}>
