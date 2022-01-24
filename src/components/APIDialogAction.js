@@ -1,6 +1,5 @@
-import { Context } from "../context";
 import { Button, Grid } from "@material-ui/core";
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 
 function APIDialogAction({ view, setApiDialogView, saveApiDialog }) {

@@ -4,7 +4,8 @@ import APIParams from "../components/APIParams";
 import APIPath from "../components/APIPath";
 import APITypes from "../components/APITypes";
 import ClosableDialogTitle from "../components/ClosableDialogTitle";
-import { Context, useContext } from "../context";
+import React from "react";
+import { useContext } from "../context";
 import { v4 as uuid } from "uuid";
 import {
   Dialog,
@@ -13,7 +14,6 @@ import {
   Grid,
   makeStyles,
 } from "@material-ui/core";
-import React from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
