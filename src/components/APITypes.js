@@ -1,7 +1,6 @@
 import "./ParamTable.css";
 import { DataGrid } from "@mui/x-data-grid";
 import Schema from "./Schema";
-import { useContext } from "../context";
 import {
   Divider,
   Grid,
@@ -29,11 +28,11 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function APITypes() {
+function APITypes({ map, dialogTypes }) {
   const classes = useStyles();
-  const [state] = useContext();
-  const types = Object.values(state.get("pages.api.dialog.types") || {});
-  const map = state.get("pages.api.dialog.map");
+
+  const types = Object.values(dialogTypes || {});
+
   const [selected, setSelected] = useState(types.length ? types[0] : {});
   const [selectionModel, setSelectionModel] = useState([]);
 

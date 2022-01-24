@@ -31,21 +31,25 @@ function APIDialog() {
   const selected = state.get("pages.api.selected");
   const view = state.get("pages.api.dialog.view");
   const map = state.get("pages.api.dialog.map");
+  const params = state.get("pages.api.dialog.params");
+  const types = state.get("pages.api.dialog.types");
+
   let method;
-  let params;
+  let selectedDarams;
   if (selected) {
     method = state.get("pages.api.selected").method;
-    params = api[selected.path][selected.method].params;
+    selectedDarams = api[selected.path][selected.method].params;
+    console.log();
   }
 
   const handleClose = () => {
     dispatch({ type: "CLOSE_API_DIALOG" });
   };
 
-  function setApiDialogView(newAlignment) {
+  function setApiDialogView(view) {
     dispatch({
       type: "SET_API_DIALOG_VIEW",
-      payload: { view: newAlignment },
+      payload: { view: view },
     });
   }
 
@@ -70,17 +74,17 @@ function APIDialog() {
     >
       <ClosableDialogTitle label={"API"} handleClose={handleClose} />
       <DialogContent>
-        <APIPath />
+        <APIPath view={view} setApiDialogView={setApiDialogView} />
         <Grid className={classes.root}>
-          {state.get("pages.api.dialog.view") === "BODY" && (
+          {view === "BODY" && (
             <APIBody
               request={request}
               response={response}
               method={method}
-              params={params}
+              params={selectedDarams}
             />
           )}
-          {state.get("pages.api.dialog.view") === "PARAMS" && (
+          {view === "PARAMS" && (
             <APIParams
               params={params}
               addParam={addParam}
@@ -88,7 +92,7 @@ function APIDialog() {
               map={map}
             />
           )}
-          {state.get("pages.api.dialog.view") === "TYPES" && <APITypes />}
+          {view === "TYPES" && <APITypes maxWidth={map} dialogTypes={types} />}
         </Grid>
       </DialogContent>
       <DialogActions>
