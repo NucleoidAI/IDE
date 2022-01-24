@@ -1,12 +1,11 @@
 import AddIcon from "@material-ui/icons/Add";
-import { Context } from "../context";
+import React from "react";
 import { v4 as uuid } from "uuid";
 import { Divider, Fab, Menu, MenuItem } from "@material-ui/core";
-import React, { useContext } from "react";
 
-function AddList({ list, type }) {
+function AddList(props) {
+  const { list, clickEvent } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const dispatch = useContext(Context)[1];
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -22,24 +21,22 @@ function AddList({ list, type }) {
         <AddIcon />
       </Fab>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-        {list.map((item) =>
-          item === "|" ? (
-            <Divider key={uuid()} />
-          ) : (
-            <MenuItem
-              key={item}
-              onClick={() => {
-                setAnchorEl(null);
-                dispatch({
-                  type,
-                  payload: item.toUpperCase(),
-                });
-              }}
-            >
-              {item}
-            </MenuItem>
-          )
-        )}
+        {list &&
+          list.map((item) =>
+            item === "|" ? (
+              <Divider key={uuid()} />
+            ) : (
+              <MenuItem
+                key={item}
+                onClick={() => {
+                  setAnchorEl(null);
+                  clickEvent && clickEvent(item);
+                }}
+              >
+                {item}
+              </MenuItem>
+            )
+          )}
       </Menu>
     </>
   );

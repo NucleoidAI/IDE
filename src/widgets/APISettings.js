@@ -49,8 +49,6 @@ function APISettings() {
     }
   }, [state, method]);
 
-  console.log("render");
-
   return (
     <Grid container className={classes.root}>
       <Grid

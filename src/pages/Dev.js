@@ -1,5 +1,6 @@
 import APISettings from "../widgets/APISettings";
 import APITree from "../widgets/APITree";
+import AddList from "../components/AddList";
 import Editor from "../widgets/Editor";
 import FunctionTree from "../components/FunctionTree";
 import Logo from "../components/Logo";
@@ -8,7 +9,6 @@ import React from "react";
 import Schema from "../components/Schema";
 import Security from "../components/Security";
 import SummaryForm from "../components/SummaryForm";
-
 import { Grid, Paper } from "@material-ui/core";
 
 const apis = [
@@ -78,6 +78,10 @@ function Dev() {
     console.log(ref.current["Description"].value);
   }
 
+  function openDialog(event) {
+    console.log(event);
+  }
+
   return (
     <Grid
       container
@@ -130,6 +134,10 @@ function Dev() {
           descriptionTextChangeHandler={textChangeHandler}
           ref={ref}
         />
+      </Paper>
+      <br />
+      <Paper style={style}>
+        <AddList list={["Resource", "Method"]} clickEvent={openDialog} />
       </Paper>
       <br />
 
