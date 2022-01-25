@@ -6,7 +6,6 @@ import SchemaArray from "./SchemaArray";
 import SchemaObject from "./SchemaObject";
 import SchemaProperty from "./SchemaProperty";
 import { TreeView } from "@material-ui/lab";
-import { useContext } from "../context";
 import { v4 as uuid } from "uuid";
 import {
   Grid,
@@ -17,15 +16,21 @@ import {
 } from "@material-ui/core";
 import { useEffect, useState } from "react";
 
-function Schema({ request, response, schema, edit }) {
+function Schema({
+  request,
+  response,
+  schema,
+  edit,
+  map,
+  addSchemaProperty,
+  removeSchemaProperty,
+}) {
   schema = schema || {};
 
-  const [state, dispatch] = useContext();
   const [add, setAdd] = useState();
   const [remove, setRemove] = useState();
   const [selected, setSelected] = useState(null);
   const root = edit ? Object.keys(schema || { [uuid]: {} })[0] : "root";
-  const map = state.get("pages.api.dialog.map");
 
   const select = (id) => {
     if (!edit) return;
@@ -42,7 +47,7 @@ function Schema({ request, response, schema, edit }) {
   useEffect(() => {
     if (!selected || (selected && !map[selected])) select(root);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+  }, []);
 
   return (
     <Grid
@@ -91,26 +96,12 @@ function Schema({ request, response, schema, edit }) {
           </Grid>
           <Grid item>
             {add && (
-              <IconButton
-                onClick={() =>
-                  dispatch({
-                    type: "ADD_SCHEMA_PROPERTY",
-                    payload: { id: selected },
-                  })
-                }
-              >
+              <IconButton onClick={() => addSchemaProperty(selected)}>
                 <AddIcon />
               </IconButton>
             )}
             {remove && (
-              <IconButton
-                onClick={() =>
-                  dispatch({
-                    type: "REMOVE_SCHEMA_PROPERTY",
-                    payload: { id: selected },
-                  })
-                }
-              >
+              <IconButton onClick={() => removeSchemaProperty(selected)}>
                 <RemoveIcon />
               </IconButton>
             )}

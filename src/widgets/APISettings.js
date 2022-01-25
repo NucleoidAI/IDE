@@ -30,6 +30,7 @@ function APISettings() {
   const [params, setParams] = useState();
   const [summary, setSummary] = useState();
   const [description, setDescription] = useState();
+  const [map, setMap] = useState();
 
   const summaryRef = useRef([]);
 
@@ -38,6 +39,7 @@ function APISettings() {
   useEffect(() => {
     const selected = state.get("pages.api.selected");
     const api = state.get("nucleoid.api");
+    setMap(state.get("pages.api.dialog.map"));
 
     if (selected) {
       setMethod(selected.method);
@@ -47,7 +49,7 @@ function APISettings() {
       setSummary(api[selected.path][selected.method].summary);
       setDescription(api[selected.path][selected.method].description);
     }
-  }, [state, method]);
+  }, [state, method, request, response, params, summary, description, map]);
 
   return (
     <Grid container className={classes.root}>
@@ -64,7 +66,7 @@ function APISettings() {
             {method !== "get" && <Schema request schema={request} />}
           </Grid>
           <Grid item xs={6} className={classes.schema}>
-            <Schema response schema={response} />
+            <Schema map={map} response schema={response} />
           </Grid>
         </Grid>
       </Grid>

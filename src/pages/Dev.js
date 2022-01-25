@@ -3,7 +3,7 @@ import APISettings from "../widgets/APISettings";
 import APITree from "../widgets/APITree";
 import AddList from "../components/AddList";
 import Editor from "../widgets/Editor";
-import FunctionTree from "../components/FunctionTree";
+import FunctionTree from "../widgets/FunctionTree";
 import Logo from "../components/Logo";
 import ParamView from "../components/ParamView";
 import React from "react";

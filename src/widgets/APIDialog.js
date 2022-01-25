@@ -39,7 +39,6 @@ function APIDialog() {
   if (selected) {
     method = state.get("pages.api.selected").method;
     selectedDarams = api[selected.path][selected.method].params;
-    console.log();
   }
 
   const handleClose = () => {
@@ -65,6 +64,20 @@ function APIDialog() {
     dispatch({ type: "REMOVE_PARAM", payload: { id } });
   }
 
+  function addSchemaProperty(selected) {
+    dispatch({
+      type: "ADD_SCHEMA_PROPERTY",
+      payload: { id: selected },
+    });
+  }
+
+  function removeSchemaProperty(selected) {
+    dispatch({
+      type: "REMOVE_SCHEMA_PROPERTY",
+      payload: { id: selected },
+    });
+  }
+
   return (
     <Dialog
       open={Boolean(state.get("pages.api.dialog.open"))}
@@ -82,6 +95,9 @@ function APIDialog() {
               response={response}
               method={method}
               params={selectedDarams}
+              map={map}
+              addSchemaProperty={addSchemaProperty}
+              removeSchemaProperty={removeSchemaProperty}
             />
           )}
           {view === "PARAMS" && (
@@ -92,7 +108,14 @@ function APIDialog() {
               map={map}
             />
           )}
-          {view === "TYPES" && <APITypes maxWidth={map} dialogTypes={types} />}
+          {view === "TYPES" && (
+            <APITypes
+              map={map}
+              dialogTypes={types}
+              addSchemaProperty={addSchemaProperty}
+              removeSchemaProperty={removeSchemaProperty}
+            />
+          )}
         </Grid>
       </DialogContent>
       <DialogActions>

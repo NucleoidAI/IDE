@@ -28,9 +28,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function APITypes({ map, dialogTypes }) {
+function APITypes({
+  map,
+  dialogTypes,
+  addSchemaProperty,
+  removeSchemaProperty,
+}) {
   const classes = useStyles();
-
   const types = Object.values(dialogTypes || {});
 
   const [selected, setSelected] = useState(types.length ? types[0] : {});
@@ -90,7 +94,14 @@ function APITypes({ map, dialogTypes }) {
       </Grid>
       <Divider orientation={"vertical"} className={classes.divider} />
       <Grid item className={classes.params}>
-        <Schema key={selectionModel[0]} schema={selected} edit />
+        <Schema
+          key={selectionModel[0]}
+          schema={selected}
+          edit
+          map={map}
+          addSchemaProperty={addSchemaProperty}
+          removeSchemaProperty={removeSchemaProperty}
+        />
       </Grid>
     </Grid>
   );

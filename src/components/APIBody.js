@@ -14,7 +14,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function APIBody({ request, response, method, params }) {
+function APIBody({
+  request,
+  response,
+  method,
+  params,
+  map,
+  addSchemaProperty,
+  removeSchemaProperty,
+}) {
   const classes = useStyles();
 
   return (
@@ -27,12 +35,28 @@ function APIBody({ request, response, method, params }) {
           </>
         )}
         {request && method !== "get" && (
-          <Schema request edit schema={request} />
+          <Schema
+            request
+            edit
+            schema={request}
+            map={map}
+            addSchemaProperty={addSchemaProperty}
+            removeSchemaProperty={removeSchemaProperty}
+          />
         )}
       </Grid>
       <Divider orientation={"vertical"} style={{ height: 350 }} />
       <Grid item className={classes.schema}>
-        {response && <Schema response edit schema={response} />}
+        {response && (
+          <Schema
+            response
+            edit
+            schema={response}
+            map={map}
+            addSchemaProperty={addSchemaProperty}
+            removeSchemaProperty={removeSchemaProperty}
+          />
+        )}
       </Grid>
     </Grid>
   );
