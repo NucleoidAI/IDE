@@ -49,7 +49,7 @@ function APISettings() {
       setSummary(api[selected.path][selected.method].summary);
       setDescription(api[selected.path][selected.method].description);
     }
-  }, [state, method, request, response, params, summary, description, map]);
+  }, [state]);
 
   return (
     <Grid container className={classes.root}>

@@ -1,22 +1,17 @@
 import React from "react";
-import { useContext } from "../context";
+//import { useContext } from "../context";
 import { v4 as uuid } from "uuid";
 import { Divider, MenuItem, Select } from "@material-ui/core";
 
-function TypeMenu({ id, type, edit, noNested }) {
-  const dispatch = useContext()[1];
+function TypeMenu({ id, type, edit, noNested, updateType }) {
+  // const dispatch = useContext()[1];
 
   return (
     <>
       {edit && (
         <Select
           value={type}
-          onChange={(event) =>
-            dispatch({
-              type: "UPDATE_TYPE",
-              payload: { id, type: event.target.value },
-            })
-          }
+          onChange={(event) => updateType(id, event.target.value)}
         >
           <MenuItem value={"integer"}>integer</MenuItem>
           <MenuItem value={"string"}>string</MenuItem>

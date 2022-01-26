@@ -1,6 +1,5 @@
 import { TreeItem } from "@material-ui/lab";
 import TypeMenu from "./TypeMenu";
-import { useContext } from "../context";
 import React, { useRef, useState } from "react";
 import { TextField, makeStyles } from "@material-ui/core";
 
@@ -10,12 +9,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function SchemaProperty({ id, name, type, edit, ...other }) {
+function SchemaProperty({ id, name, map, updateType, type, edit, ...other }) {
   const classes = useStyles();
-  const [state] = useContext();
   const [value, setValue] = useState(name);
   const textField = useRef();
-  const map = state.get("pages.api.dialog.map");
 
   return (
     <TreeItem
@@ -35,7 +32,7 @@ function SchemaProperty({ id, name, type, edit, ...other }) {
           )}
           {!edit && <>"{name}"</>}
           :&nbsp;
-          <TypeMenu id={id} type={type} edit={edit} />
+          <TypeMenu updateType={updateType} id={id} type={type} edit={edit} />
         </>
       }
       {...other}

@@ -22,6 +22,7 @@ function APIBody({
   map,
   addSchemaProperty,
   removeSchemaProperty,
+  updateType,
 }) {
   const classes = useStyles();
 
@@ -42,6 +43,7 @@ function APIBody({
             map={map}
             addSchemaProperty={addSchemaProperty}
             removeSchemaProperty={removeSchemaProperty}
+            updateType={updateType}
           />
         )}
       </Grid>
@@ -55,6 +57,7 @@ function APIBody({
             map={map}
             addSchemaProperty={addSchemaProperty}
             removeSchemaProperty={removeSchemaProperty}
+            updateType={updateType}
           />
         )}
       </Grid>

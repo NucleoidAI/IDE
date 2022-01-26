@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ParamTable = ({ params, removeParam, map }) => {
+const ParamTable = ({ params, removeParam, map, updateType }) => {
   const classes = useStyles();
 
   const columns = [
@@ -35,7 +35,9 @@ const ParamTable = ({ params, removeParam, map }) => {
       headerName: "Type",
       renderCell: (param) => {
         const { id } = param.row;
-        return <TypeMenu id={id} type={param.value} edit />;
+        return (
+          <TypeMenu updateType={updateType} id={id} type={param.value} edit />
+        );
       },
       flex: 1,
     },

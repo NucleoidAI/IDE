@@ -24,6 +24,7 @@ function Schema({
   map,
   addSchemaProperty,
   removeSchemaProperty,
+  updateType,
 }) {
   schema = schema || {};
 
@@ -79,6 +80,7 @@ function Schema({
           onNodeSelect={(event, value) => select(value)}
         >
           {compile(
+            updateType,
             map,
             edit ? (schema ? schema[Object.keys(schema)[0]] : {}) : schema,
             edit
@@ -112,7 +114,7 @@ function Schema({
   );
 }
 
-const compile = (map, schema, edit, name) => {
+const compile = (updateType, map, schema, edit, name) => {
   const { id, properties } = schema || {};
   const children = [];
 
@@ -125,17 +127,21 @@ const compile = (map, schema, edit, name) => {
 
     switch (property.type) {
       case "object":
-        children.push(compile(map, property, edit, edit ? name || "" : key));
+        children.push(
+          compile(updateType, map, property, edit, edit ? name || "" : key)
+        );
         break;
       case "array":
         children.push(
           <SchemaArray
+            map={map}
             id={id}
             key={id}
             nodeId={id}
             name={edit ? name || "" : key}
             type={property.items.type}
             edit={edit}
+            updateType={updateType}
           />
         );
         break;
@@ -145,9 +151,11 @@ const compile = (map, schema, edit, name) => {
             id={id}
             key={id}
             nodeId={id}
+            map={map}
             name={edit ? name : key}
             type={property.type}
             edit={edit}
+            updateType={updateType}
           />
         );
     }

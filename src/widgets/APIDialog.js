@@ -24,7 +24,36 @@ const useStyles = makeStyles((theme) => ({
 function APIDialog() {
   const classes = useStyles();
   const [state, dispatch] = useContext();
+  const { pages } = state;
 
+  const [api, setApi] = React.useState({});
+  const [request, setRequest] = React.useState();
+  const [response, setResponse] = React.useState();
+  const [selected, setSelected] = React.useState();
+  const [view, setView] = React.useState();
+  const [map, setMap] = React.useState({});
+  const [params, setParams] = React.useState();
+  const [types, setTypes] = React.useState();
+  const [method, setMethod] = React.useState();
+  const [selectedParams, setSelectedParams] = React.useState();
+
+  React.useEffect(() => {
+    setApi(state.get("nucleoid.api"));
+    setRequest(state.get("pages.api.dialog.request"));
+    setResponse(state.get("pages.api.dialog.response"));
+    setSelected(state.get("pages.api.selected"));
+    setView(state.get("pages.api.dialog.view"));
+    setMap(state.get("pages.api.dialog.map"));
+    setParams(state.get("pages.api.dialog.params"));
+    setTypes(state.get("pages.api.dialog.types"));
+
+    if (selected) {
+      setMethod(state.get("pages.api.selected").method);
+      setSelectedParams(api[selected.path][selected.method].params);
+    }
+  }, [state, selected, api]);
+
+  /*
   const api = state.get("nucleoid.api");
   const request = state.get("pages.api.dialog.request");
   const response = state.get("pages.api.dialog.response");
@@ -33,48 +62,98 @@ function APIDialog() {
   const map = state.get("pages.api.dialog.map");
   const params = state.get("pages.api.dialog.params");
   const types = state.get("pages.api.dialog.types");
-
+  
   let method;
   let selectedDarams;
   if (selected) {
     method = state.get("pages.api.selected").method;
     selectedDarams = api[selected.path][selected.method].params;
   }
+*/
 
   const handleClose = () => {
     dispatch({ type: "CLOSE_API_DIALOG" });
   };
 
-  function setApiDialogView(view) {
-    dispatch({
-      type: "SET_API_DIALOG_VIEW",
-      payload: { view: view },
-    });
-  }
-
   function saveApiDialog() {
     dispatch({ type: "SAVE_API_DIALOG" });
   }
 
+  function setApiDialogView(view) {
+    pages.api.dialog.view = view;
+    setView(pages.api.dialog.view);
+    /*
+    dispatch({
+      type: "SET_API_DIALOG_VIEW",
+      payload: { view: view },
+    });
+    */
+  }
+
   function addParam() {
+    const id = uuid();
+
+    pages.api.dialog.params[id] = map[id] = {
+      id: id,
+      type: "string",
+      required: true,
+    };
+
+    console.log(pages.api.dialog.params);
+    const tmpParams = pages.api.dialog.params;
+
+    setParams({ ...tmpParams });
+
+    /*
     dispatch({ type: "ADD_PARAM" });
+     */
   }
 
   function removeParam(id) {
+    const tmpMap = pages.api.dialog.map;
+    delete pages.api.dialog.params[id];
+    delete tmpMap[id];
+
+    setParams({ ...params });
+    /*
     dispatch({ type: "REMOVE_PARAM", payload: { id } });
+    */
   }
 
   function addSchemaProperty(selected) {
+    const tmpMap = pages.api.dialog.map;
+    const key = uuid();
+
+    tmpMap[key] = tmpMap[selected].properties[key] = {
+      id: key,
+      type: "integer",
+    };
+    setMap({ ...tmpMap });
+    /*
     dispatch({
       type: "ADD_SCHEMA_PROPERTY",
       payload: { id: selected },
     });
+    */
   }
 
   function removeSchemaProperty(selected) {
+    const tmpMap = pages.api.dialog.map;
+    delete tmpMap[selected];
+
+    setMap({ ...tmpMap });
+    /*
     dispatch({
       type: "REMOVE_SCHEMA_PROPERTY",
       payload: { id: selected },
+    });
+    */
+  }
+
+  function updateType(id, value) {
+    dispatch({
+      type: "UPDATE_TYPE",
+      payload: { id, type: value },
     });
   }
 
@@ -94,10 +173,11 @@ function APIDialog() {
               request={request}
               response={response}
               method={method}
-              params={selectedDarams}
+              params={selectedParams}
               map={map}
               addSchemaProperty={addSchemaProperty}
               removeSchemaProperty={removeSchemaProperty}
+              updateType={updateType}
             />
           )}
           {view === "PARAMS" && (
@@ -106,6 +186,7 @@ function APIDialog() {
               addParam={addParam}
               removeParam={removeParam}
               map={map}
+              updateType={updateType}
             />
           )}
           {view === "TYPES" && (
@@ -114,6 +195,7 @@ function APIDialog() {
               dialogTypes={types}
               addSchemaProperty={addSchemaProperty}
               removeSchemaProperty={removeSchemaProperty}
+              updateType={updateType}
             />
           )}
         </Grid>

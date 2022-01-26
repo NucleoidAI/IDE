@@ -33,6 +33,7 @@ function APITypes({
   dialogTypes,
   addSchemaProperty,
   removeSchemaProperty,
+  updateType,
 }) {
   const classes = useStyles();
   const types = Object.values(dialogTypes || {});
@@ -101,6 +102,7 @@ function APITypes({
           map={map}
           addSchemaProperty={addSchemaProperty}
           removeSchemaProperty={removeSchemaProperty}
+          updateType={updateType}
         />
       </Grid>
     </Grid>

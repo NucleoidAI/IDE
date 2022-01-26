@@ -21,7 +21,7 @@ test("List properties of schema", () => {
     },
   };
 
-  const root = shallow(compile({}, schema));
+  const root = shallow(compile({}, {}, schema));
 
   const child1 = root.children().first();
   expect(child1.type()).toEqual(SchemaProperty);
@@ -47,7 +47,7 @@ test("List array as property of schema", () => {
     },
   };
 
-  const root = shallow(compile({}, schema));
+  const root = shallow(compile({}, {}, schema));
   const child = root.children().first();
   expect(child.type()).toEqual(SchemaArray);
   expect(child.prop("name")).toEqual("list");
@@ -69,7 +69,7 @@ test("List nested object in schema", () => {
     },
   };
 
-  const root = shallow(compile({}, schema));
+  const root = shallow(compile({}, {}, schema));
 
   const child = root.children().first();
   expect(child.type()).toEqual(SchemaObject);
