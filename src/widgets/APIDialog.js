@@ -51,7 +51,7 @@ function APIDialog() {
       setMethod(state.get("pages.api.selected").method);
       setSelectedParams(api[selected.path][selected.method].params);
     }
-  }, [state, selected, api, params]);
+  }, [state, api, selected]);
 
   const handleClose = () => {
     dispatch({ type: "CLOSE_API_DIALOG" });
@@ -64,12 +64,6 @@ function APIDialog() {
   function setApiDialogView(view) {
     pages.api.dialog.view = view;
     setView(pages.api.dialog.view);
-    /*
-    dispatch({
-      type: "SET_API_DIALOG_VIEW",
-      payload: { view: view },
-    });
-    */
   }
 
   function addParam() {
@@ -84,24 +78,14 @@ function APIDialog() {
     const tmpParams = pages.api.dialog.params;
 
     setParams({ ...tmpParams });
-
-    console.log(pages.api.dialog.params);
-    /*
-    dispatch({ type: "ADD_PARAM" });
-     */
   }
 
   function removeParam(id) {
-    //pages.api.dialog.map;
     delete pages.api.dialog.params[id];
     delete map[id];
 
     const tmpParams = pages.api.dialog.params;
-
     setParams({ ...tmpParams });
-    /*
-    dispatch({ type: "REMOVE_PARAM", payload: { id } });
-    */
   }
 
   function addSchemaProperty(selected) {
@@ -113,12 +97,6 @@ function APIDialog() {
       type: "integer",
     };
     setMap({ ...tmpMap });
-    /*
-    dispatch({
-      type: "ADD_SCHEMA_PROPERTY",
-      payload: { id: selected },
-    });
-    */
   }
 
   function removeSchemaProperty(selected) {
@@ -126,19 +104,25 @@ function APIDialog() {
     delete tmpMap[selected];
 
     setMap({ ...tmpMap });
-    /*
-    dispatch({
-      type: "REMOVE_SCHEMA_PROPERTY",
-      payload: { id: selected },
-    });
-    */
   }
 
   function updateType(id, value) {
-    dispatch({
-      type: "UPDATE_TYPE",
-      payload: { id, type: value },
-    });
+    const tmpMap = pages.api.dialog.map;
+
+    const type = value;
+
+    //  if (name !== undefined) map[id].name = name;
+    if (type !== undefined) {
+      if (tmpMap[id].type === "array") tmpMap[id].items.type = type;
+      else {
+        tmpMap[id].type = type;
+
+        if (type === "array") tmpMap[id].items = { type: "integer" };
+        else if (type === "object") tmpMap[id].properties = {};
+      }
+    }
+
+    setMap({ ...tmpMap });
   }
 
   return (

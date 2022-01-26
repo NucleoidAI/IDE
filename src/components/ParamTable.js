@@ -90,7 +90,15 @@ const ParamTable = ({ params, removeParam, map, updateType }) => {
       },
     },
   ];
-  console.log(params);
+
+  if (
+    params &&
+    Object.keys(params[Object.keys(params)[0]]).find((key) => key === "id") ===
+      undefined
+  ) {
+    return null;
+  }
+
   return (
     <DataGrid
       className={classes.root}
