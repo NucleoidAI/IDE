@@ -51,25 +51,7 @@ function APIDialog() {
       setMethod(state.get("pages.api.selected").method);
       setSelectedParams(api[selected.path][selected.method].params);
     }
-  }, [state, selected, api]);
-
-  /*
-  const api = state.get("nucleoid.api");
-  const request = state.get("pages.api.dialog.request");
-  const response = state.get("pages.api.dialog.response");
-  const selected = state.get("pages.api.selected");
-  const view = state.get("pages.api.dialog.view");
-  const map = state.get("pages.api.dialog.map");
-  const params = state.get("pages.api.dialog.params");
-  const types = state.get("pages.api.dialog.types");
-  
-  let method;
-  let selectedDarams;
-  if (selected) {
-    method = state.get("pages.api.selected").method;
-    selectedDarams = api[selected.path][selected.method].params;
-  }
-*/
+  }, [state, selected, api, params]);
 
   const handleClose = () => {
     dispatch({ type: "CLOSE_API_DIALOG" });
@@ -99,22 +81,24 @@ function APIDialog() {
       required: true,
     };
 
-    console.log(pages.api.dialog.params);
     const tmpParams = pages.api.dialog.params;
 
     setParams({ ...tmpParams });
 
+    console.log(pages.api.dialog.params);
     /*
     dispatch({ type: "ADD_PARAM" });
      */
   }
 
   function removeParam(id) {
-    const tmpMap = pages.api.dialog.map;
+    //pages.api.dialog.map;
     delete pages.api.dialog.params[id];
-    delete tmpMap[id];
+    delete map[id];
 
-    setParams({ ...params });
+    const tmpParams = pages.api.dialog.params;
+
+    setParams({ ...tmpParams });
     /*
     dispatch({ type: "REMOVE_PARAM", payload: { id } });
     */

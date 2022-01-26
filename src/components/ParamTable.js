@@ -90,7 +90,7 @@ const ParamTable = ({ params, removeParam, map, updateType }) => {
       },
     },
   ];
-
+  console.log(params);
   return (
     <DataGrid
       className={classes.root}
