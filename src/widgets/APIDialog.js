@@ -36,6 +36,7 @@ function APIDialog() {
   const [types, setTypes] = React.useState();
   const [method, setMethod] = React.useState();
   const [selectedParams, setSelectedParams] = React.useState();
+  const [open, setOpen] = React.useState();
 
   React.useEffect(() => {
     setApi(state.get("nucleoid.api"));
@@ -46,6 +47,7 @@ function APIDialog() {
     setMap(state.get("pages.api.dialog.map"));
     setParams(state.get("pages.api.dialog.params"));
     setTypes(state.get("pages.api.dialog.types"));
+    setOpen(state.get("pages.api.dialog.open"));
 
     if (selected) {
       setMethod(state.get("pages.api.selected").method);
@@ -54,10 +56,34 @@ function APIDialog() {
   }, [state, api, selected]);
 
   const handleClose = () => {
-    dispatch({ type: "CLOSE_API_DIALOG" });
+    pages.api.dialog.open = false;
+    delete pages.api.dialog.request;
+    delete pages.api.dialog.response;
+    delete pages.api.dialog.params;
+    delete pages.api.dialog.types;
+    pages.api.dialog.map = {};
+    setOpen(pages.api.dialog.open);
   };
 
   function saveApiDialog() {
+    /*
+    const { path, method } = pages.api.selected;
+    const api = nucleoid.api;
+    const map = pages.api.dialog.map;
+
+    api[path][method].request = decompile(map, pages.api.dialog.request);
+    api[path][method].response = decompile(map, pages.api.dialog.response);
+    api[path][method].params = deindex(pages.api.dialog.params);
+    nucleoid.types = pages.api.dialog.types.reduce((previous, current) => {
+      const object = decompile(map, current);
+      const name = current[Object.keys(current)[0]].name;
+      return { ...previous, [name]: object };
+    }, {});
+
+    const isOpen = (pages.api.dialog.open = false);
+    setOpen(isOpen);
+    */
+
     dispatch({ type: "SAVE_API_DIALOG" });
   }
 
@@ -127,7 +153,7 @@ function APIDialog() {
 
   return (
     <Dialog
-      open={Boolean(state.get("pages.api.dialog.open"))}
+      open={Boolean(open)}
       fullWidth
       maxWidth={"md"}
       onClose={(event) => (event.key === "Escape" ? handleClose() : null)}

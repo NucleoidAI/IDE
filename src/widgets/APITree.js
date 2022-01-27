@@ -32,6 +32,7 @@ function APITree() {
   const select = (id) => {
     if (map[id]) {
       setSelected(id);
+
       dispatch({ type: "SET_SELECTED_API", payload: map[id] });
     }
   };
