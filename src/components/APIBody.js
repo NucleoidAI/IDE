@@ -14,55 +14,34 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function APIBody({
-  request,
-  response,
-  method,
-  params,
-  map,
-  addSchemaProperty,
-  removeSchemaProperty,
-  updateType,
-}) {
+const APIBody = React.forwardRef(({ method }, ref) => {
   const classes = useStyles();
+  const { requestRef, responseRef, paramsRef } = ref;
+
+  const params = [];
+  Object.keys(paramsRef.current).forEach((key) => {
+    params.push(paramsRef.current[key]);
+  });
 
   return (
     <Grid container justifyContent={"space-between"} className={classes.root}>
       <Grid item className={classes.schema}>
-        {request && method === "get" && (
+        {requestRef && method === "get" && (
           <>
             <br />
             <ParamView params={params} />
           </>
         )}
-        {request && method !== "get" && (
-          <Schema
-            request
-            edit
-            schema={request}
-            map={map}
-            addSchemaProperty={addSchemaProperty}
-            removeSchemaProperty={removeSchemaProperty}
-            updateType={updateType}
-          />
+        {requestRef && method !== "get" && (
+          <Schema request edit ref={requestRef} />
         )}
       </Grid>
       <Divider orientation={"vertical"} style={{ height: 350 }} />
       <Grid item className={classes.schema}>
-        {response && (
-          <Schema
-            response
-            edit
-            schema={response}
-            map={map}
-            addSchemaProperty={addSchemaProperty}
-            removeSchemaProperty={removeSchemaProperty}
-            updateType={updateType}
-          />
-        )}
+        {responseRef && <Schema response edit ref={responseRef} />}
       </Grid>
     </Grid>
   );
-}
+});
 
 export default APIBody;

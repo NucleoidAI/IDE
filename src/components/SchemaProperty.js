@@ -9,8 +9,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function SchemaProperty({ id, name, map, updateType, type, edit, ...other }) {
+function SchemaProperty({ id, name, map, type, edit, ...other }) {
   const classes = useStyles();
+
   const [value, setValue] = useState(name);
   const textField = useRef();
 
@@ -23,16 +24,14 @@ function SchemaProperty({ id, name, map, updateType, type, edit, ...other }) {
               size={"small"}
               className={classes.textField}
               value={value || ""}
-              onChange={(event) =>
-                setValue((map[id].name = event.target.value))
-              }
+              onChange={(event) => setValue((map.name = event.target.value))}
               inputRef={textField}
               onClick={() => setTimeout(() => textField.current.focus(), 0)}
             />
           )}
           {!edit && <>"{name}"</>}
           :&nbsp;
-          <TypeMenu updateType={updateType} id={id} type={type} edit={edit} />
+          <TypeMenu id={id} type={type} map={map} edit={edit} />
         </>
       }
       {...other}

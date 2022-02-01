@@ -14,24 +14,43 @@ import {
   Select,
   Typography,
 } from "@material-ui/core";
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 
-function Schema({
-  request,
-  response,
-  schema,
-  edit,
-  map,
-  addSchemaProperty,
-  removeSchemaProperty,
-  updateType,
-}) {
+const Schema = forwardRef(({ request, schema, response, edit }, ref) => {
   schema = schema || {};
 
   const [add, setAdd] = useState();
   const [remove, setRemove] = useState();
   const [selected, setSelected] = useState(null);
   const root = edit ? Object.keys(schema || { [uuid]: {} })[0] : "root";
+  const map = {};
+  const [mp, setMp] = useState(false);
+
+  if (ref?.current) {
+    schema = ref?.current[Object.keys(ref?.current)];
+
+    createMap(schema, map);
+  }
+
+  function addSchemaProperty(selected) {
+    console.log(map[selected]);
+    const key = uuid();
+
+    map[selected].properties[key] = {
+      id: key,
+      type: "integer",
+    };
+    setMp(!mp);
+  }
+
+  function removeSchemaProperty(selected) {
+    /*
+      const tmpMap = pages.api.dialog.map;
+      delete tmpMap[selected];
+
+      //  setMap({ ...tmpMap });
+      */
+  }
 
   const select = (id) => {
     if (!edit) return;
@@ -79,12 +98,7 @@ function Schema({
           selected={selected}
           onNodeSelect={(event, value) => select(value)}
         >
-          {compile(
-            updateType,
-            map,
-            edit ? (schema ? schema[Object.keys(schema)[0]] : {}) : schema,
-            edit
-          )}
+          {compile(map, schema, edit)}
         </TreeView>
       </Grid>
       {edit && (
@@ -112,9 +126,33 @@ function Schema({
       )}
     </Grid>
   );
-}
+});
 
-const compile = (updateType, map, schema, edit, name) => {
+const createMap = (schema, map) => {
+  const { properties, type } = schema;
+
+  for (const key in properties) {
+    const property = properties[key];
+
+    const { id } = property;
+    switch (type) {
+      case "object":
+        map[String(id)] = property;
+        createMap(property, map);
+
+        break;
+      case "array":
+        createMap(property, map);
+        map[String(id)] = property;
+        break;
+      default: {
+        map[String(id)] = property;
+      }
+    }
+  }
+};
+
+const compile = (map, schema, edit, name) => {
   const { id, properties } = schema || {};
   const children = [];
 
@@ -127,21 +165,18 @@ const compile = (updateType, map, schema, edit, name) => {
 
     switch (property.type) {
       case "object":
-        children.push(
-          compile(updateType, map, property, edit, edit ? name || "" : key)
-        );
+        children.push(compile(map, property, edit, edit ? name || "" : key));
         break;
       case "array":
         children.push(
           <SchemaArray
-            map={map}
             id={id}
             key={id}
             nodeId={id}
             name={edit ? name || "" : key}
-            type={property.items.type}
+            type={property.type}
             edit={edit}
-            updateType={updateType}
+            map={map[id]}
           />
         );
         break;
@@ -151,11 +186,10 @@ const compile = (updateType, map, schema, edit, name) => {
             id={id}
             key={id}
             nodeId={id}
-            map={map}
             name={edit ? name : key}
             type={property.type}
             edit={edit}
-            updateType={updateType}
+            map={map[id]}
           />
         );
     }
@@ -168,9 +202,9 @@ const compile = (updateType, map, schema, edit, name) => {
       name={name}
       edit={edit}
       children={children}
+      map={map[id]}
     />
   );
 };
-
 export { compile };
 export default Schema;

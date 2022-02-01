@@ -1,6 +1,6 @@
 import State from "./state";
 import { v4 as uuid } from "uuid";
-import { compile, decompile, deindex, index } from "./widgets/APIDialog";
+import { compile, decompile, deindex } from "./widgets/APIDialog";
 import { createContext, useContext } from "react";
 
 function reducer(state, action) {
@@ -17,7 +17,7 @@ function reducer(state, action) {
 
       pages.api.dialog.request = compile(map, api[path][method].request);
       pages.api.dialog.response = compile(map, api[path][method].response);
-      pages.api.dialog.params = index(map, api[path][method].params || []);
+
       pages.api.dialog.types = Object.entries(nucleoid.types)
         .map(([key, value]) => ({
           ...value,
@@ -25,8 +25,10 @@ function reducer(state, action) {
           type: value.type,
         }))
         .map((type) => compile(map, type));
+
       break;
     }
+
     case "SAVE_API_DIALOG": {
       const { path, method } = pages.api.selected;
       const api = nucleoid.api;
@@ -35,6 +37,7 @@ function reducer(state, action) {
       api[path][method].request = decompile(map, pages.api.dialog.request);
       api[path][method].response = decompile(map, pages.api.dialog.response);
       api[path][method].params = deindex(pages.api.dialog.params);
+
       nucleoid.types = pages.api.dialog.types.reduce((previous, current) => {
         const object = decompile(map, current);
         const name = current[Object.keys(current)[0]].name;

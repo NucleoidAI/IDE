@@ -1,7 +1,7 @@
 import AddIcon from "@material-ui/icons/Add";
 import ParamTable from "./ParamTable";
-import React from "react";
 import { Fab, Grid, makeStyles } from "@material-ui/core";
+import { forwardRef, useRef } from "react";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -13,8 +13,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function APIParams({ params, addParam, removeParam, updateType, map }) {
+const APIParams = forwardRef((props, ref) => {
   const classes = useStyles();
+  const paramsRef = ref.current;
+  const addParamRef = useRef();
 
   return (
     <Grid
@@ -24,20 +26,15 @@ function APIParams({ params, addParam, removeParam, updateType, map }) {
       className={classes.root}
     >
       <Grid item className={classes.params}>
-        <ParamTable
-          updateType={updateType}
-          params={params}
-          map={map}
-          removeParam={removeParam}
-        />
+        <ParamTable ref={{ paramsRef: paramsRef, addParamRef: addParamRef }} />
       </Grid>
       <Grid container item justifyContent="flex-end">
-        <Fab size={"small"} onClick={() => addParam()}>
+        <Fab size={"small"} onClick={() => addParamRef.current()}>
           <AddIcon />
         </Fab>
       </Grid>
     </Grid>
   );
-}
+});
 
 export default APIParams;

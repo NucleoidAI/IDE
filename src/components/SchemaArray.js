@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function SchemaArray({ id, name, edit, map, updateType, type, ...other }) {
+function SchemaArray({ id, name, edit, map, type, ...other }) {
   const classes = useStyles();
   const [value, setValue] = useState(name);
   const textField = useRef();
@@ -27,7 +27,7 @@ function SchemaArray({ id, name, edit, map, updateType, type, ...other }) {
                   className={classes.textField}
                   value={value || ""}
                   onChange={(event) =>
-                    setValue((map[id].name = event.target.value))
+                    setValue((map.name = event.target.value))
                   }
                   inputRef={textField}
                   onClick={() => setTimeout(() => textField.current.focus(), 0)}
@@ -45,13 +45,7 @@ function SchemaArray({ id, name, edit, map, updateType, type, ...other }) {
       {edit && (
         <>
           &nbsp;&nbsp;&nbsp;&nbsp;
-          <TypeMenu
-            updateType={updateType}
-            id={id}
-            type={type}
-            edit={edit}
-            noNested
-          />
+          <TypeMenu id={id} type={type} map={map} edit={edit} noNested />
           <br />
         </>
       )}

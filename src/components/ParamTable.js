@@ -1,8 +1,12 @@
 import "./ParamTable.css";
 import { DataGrid } from "@mui/x-data-grid";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import React from "react";
 import TypeMenu from "./TypeMenu";
+
 import { makeStyles } from "@material-ui/core/styles";
+import { v4 as uuid } from "uuid";
+
 import { Checkbox, IconButton, TextField } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -12,8 +16,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ParamTable = ({ params, removeParam, map, updateType }) => {
+const ParamTable = React.forwardRef((props, ref) => {
   const classes = useStyles();
+  const { paramsRef, addParamRef } = ref;
+
+  const [params, setParams] = React.useState(paramsRef);
+
+  addParamRef.current = () => {
+    const id = uuid();
+
+    paramsRef[id] = {
+      id: id,
+      type: "string",
+      required: true,
+    };
+    setParams({ ...paramsRef });
+  };
+
+  function removeParam(id) {
+    delete paramsRef[id];
+    //TODO: https://github.com/mui-org/material-ui-x/issues/2714 mui problem?
+    setTimeout(() => {
+      setParams({ ...paramsRef });
+    });
+  }
 
   const columns = [
     {
@@ -24,7 +50,7 @@ const ParamTable = ({ params, removeParam, map, updateType }) => {
         return (
           <TextField
             defaultValue={param.value}
-            onChange={(event) => (map[id].name = event.target.value)}
+            onChange={(event) => (params[id].name = event.target.value)}
           />
         );
       },
@@ -35,9 +61,7 @@ const ParamTable = ({ params, removeParam, map, updateType }) => {
       headerName: "Type",
       renderCell: (param) => {
         const { id } = param.row;
-        return (
-          <TypeMenu updateType={updateType} id={id} type={param.value} edit />
-        );
+        return <TypeMenu ref={paramsRef} id={id} type={param.value} edit />;
       },
       flex: 1,
     },
@@ -55,7 +79,9 @@ const ParamTable = ({ params, removeParam, map, updateType }) => {
         return (
           <Checkbox
             checked={param.value}
-            onChange={(event) => (map[id].required = event.target.checked)}
+            onChange={(event) =>
+              (paramsRef[id].required = event.target.checked)
+            }
           />
         );
       },
@@ -69,7 +95,9 @@ const ParamTable = ({ params, removeParam, map, updateType }) => {
         return (
           <TextField
             defaultValue={param.value}
-            onChange={(event) => (map[id].description = event.target.value)}
+            onChange={(event) =>
+              (paramsRef[id].description = event.target.value)
+            }
             fullWidth
           />
         );
@@ -91,25 +119,15 @@ const ParamTable = ({ params, removeParam, map, updateType }) => {
     },
   ];
 
-  if (
-    params &&
-    Object.keys(params[Object.keys(params)[0]]).find((key) => key === "id") ===
-      undefined
-  ) {
-    return null;
-  }
-
   return (
     <DataGrid
       className={classes.root}
       columns={columns}
-      rows={Object.values(params || {})}
+      rows={Object.values(paramsRef || {})}
       hideFooter
       disableSelectionOnClick
     />
   );
-};
+});
 
 export default ParamTable;
-
-//Object.values(params || {})

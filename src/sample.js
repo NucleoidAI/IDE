@@ -7,10 +7,21 @@ const api = {
         type: "object",
         properties: {
           id: {
-            type: "integer",
+            type: "string",
           },
           name: {
             type: "string",
+          },
+          user: {
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+              },
+              age: {
+                type: "string",
+              },
+            },
           },
         },
       },
@@ -57,7 +68,7 @@ const api = {
         type: "object",
         properties: {
           id: {
-            type: "integer",
+            type: "sa",
           },
           name: {
             type: "string",
@@ -90,6 +101,15 @@ const api = {
           },
           name: {
             type: "string",
+          },
+          type: "object",
+          properties: {
+            id: {
+              type: "integer",
+            },
+            name: {
+              type: "string",
+            },
           },
         },
       },

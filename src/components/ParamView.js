@@ -9,6 +9,7 @@ import {
 
 function ParamView({ params }) {
   params = params || [];
+
   return (
     <Table size={"small"}>
       <colgroup>

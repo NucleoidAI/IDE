@@ -4,8 +4,9 @@ import APIParams from "../components/APIParams";
 import APIPath from "../components/APIPath";
 import APITypes from "../components/APITypes";
 import ClosableDialogTitle from "../components/ClosableDialogTitle";
-import React from "react";
+
 import { useContext } from "../context";
+import { useRef } from "react";
 import { v4 as uuid } from "uuid";
 import {
   Dialog,
@@ -26,34 +27,50 @@ function APIDialog() {
   const [state, dispatch] = useContext();
   const { pages } = state;
 
+  /*
   const [api, setApi] = React.useState({});
   const [request, setRequest] = React.useState();
-  const [response, setResponse] = React.useState();
-  const [selected, setSelected] = React.useState();
+
+  //const [selected, setSelected] = React.useState();
   const [view, setView] = React.useState();
   const [map, setMap] = React.useState({});
-  const [params, setParams] = React.useState();
   const [types, setTypes] = React.useState();
   const [method, setMethod] = React.useState();
   const [selectedParams, setSelectedParams] = React.useState();
   const [open, setOpen] = React.useState();
+*/
 
-  React.useEffect(() => {
-    setApi(state.get("nucleoid.api"));
-    setRequest(state.get("pages.api.dialog.request"));
-    setResponse(state.get("pages.api.dialog.response"));
-    setSelected(state.get("pages.api.selected"));
-    setView(state.get("pages.api.dialog.view"));
-    setMap(state.get("pages.api.dialog.map"));
-    setParams(state.get("pages.api.dialog.params"));
-    setTypes(state.get("pages.api.dialog.types"));
-    setOpen(state.get("pages.api.dialog.open"));
+  const api = state.get("nucleoid.api");
+  const selected = state.get("pages.api.selected");
 
-    if (selected) {
-      setMethod(state.get("pages.api.selected").method);
-      setSelectedParams(api[selected.path][selected.method].params);
-    }
-  }, [state, api, selected]);
+  const view = state.get("pages.api.dialog.view");
+  const map = state.get("pages.api.dialog.map");
+  const types = state.get("pages.api.dialog.types");
+
+  //const selectedParams = api[selected.path][selected.method].params; //TODO: to be deleted
+
+  const paramsRef = useRef();
+  const requestRef = useRef();
+  const responseRef = useRef();
+  let method;
+
+  if (selected) {
+    paramsRef.current = index(
+      {},
+      api[selected.path][selected.method].params || []
+    );
+
+    requestRef.current = compile(
+      {},
+      api[selected.path][selected.method].request
+    );
+
+    responseRef.current = compile(
+      {},
+      api[selected.path][selected.method].response
+    );
+    method = selected.method;
+  }
 
   const handleClose = () => {
     pages.api.dialog.open = false;
@@ -62,7 +79,6 @@ function APIDialog() {
     delete pages.api.dialog.params;
     delete pages.api.dialog.types;
     pages.api.dialog.map = {};
-    setOpen(pages.api.dialog.open);
   };
 
   function saveApiDialog() {
@@ -89,71 +105,12 @@ function APIDialog() {
 
   function setApiDialogView(view) {
     pages.api.dialog.view = view;
-    setView(pages.api.dialog.view);
-  }
-
-  function addParam() {
-    const id = uuid();
-
-    pages.api.dialog.params[id] = map[id] = {
-      id: id,
-      type: "string",
-      required: true,
-    };
-
-    const tmpParams = pages.api.dialog.params;
-
-    setParams({ ...tmpParams });
-  }
-
-  function removeParam(id) {
-    delete pages.api.dialog.params[id];
-    delete map[id];
-
-    const tmpParams = pages.api.dialog.params;
-    setParams({ ...tmpParams });
-  }
-
-  function addSchemaProperty(selected) {
-    const tmpMap = pages.api.dialog.map;
-    const key = uuid();
-
-    tmpMap[key] = tmpMap[selected].properties[key] = {
-      id: key,
-      type: "integer",
-    };
-    setMap({ ...tmpMap });
-  }
-
-  function removeSchemaProperty(selected) {
-    const tmpMap = pages.api.dialog.map;
-    delete tmpMap[selected];
-
-    setMap({ ...tmpMap });
-  }
-
-  function updateType(id, value) {
-    const tmpMap = pages.api.dialog.map;
-
-    const type = value;
-
-    //  if (name !== undefined) map[id].name = name;
-    if (type !== undefined) {
-      if (tmpMap[id].type === "array") tmpMap[id].items.type = type;
-      else {
-        tmpMap[id].type = type;
-
-        if (type === "array") tmpMap[id].items = { type: "integer" };
-        else if (type === "object") tmpMap[id].properties = {};
-      }
-    }
-
-    setMap({ ...tmpMap });
+    // setView(pages.api.dialog.view);
   }
 
   return (
     <Dialog
-      open={Boolean(open)}
+      open={Boolean(state.get("pages.api.dialog.open"))}
       fullWidth
       maxWidth={"md"}
       onClose={(event) => (event.key === "Escape" ? handleClose() : null)}
@@ -164,34 +121,16 @@ function APIDialog() {
         <Grid className={classes.root}>
           {view === "BODY" && (
             <APIBody
-              request={request}
-              response={response}
+              ref={{
+                requestRef: requestRef,
+                responseRef: responseRef,
+                paramsRef: paramsRef,
+              }}
               method={method}
-              params={selectedParams}
-              map={map}
-              addSchemaProperty={addSchemaProperty}
-              removeSchemaProperty={removeSchemaProperty}
-              updateType={updateType}
             />
           )}
-          {view === "PARAMS" && (
-            <APIParams
-              params={params}
-              addParam={addParam}
-              removeParam={removeParam}
-              map={map}
-              updateType={updateType}
-            />
-          )}
-          {view === "TYPES" && (
-            <APITypes
-              map={map}
-              dialogTypes={types}
-              addSchemaProperty={addSchemaProperty}
-              removeSchemaProperty={removeSchemaProperty}
-              updateType={updateType}
-            />
-          )}
+          {view === "PARAMS" && <APIParams ref={paramsRef} />}
+          {view === "TYPES" && <APITypes map={map} dialogTypes={types} />}
         </Grid>
       </DialogContent>
       <DialogActions>
@@ -201,6 +140,9 @@ function APIDialog() {
           view={view}
         />
       </DialogActions>
+      <button onClick={() => console.log(paramsRef, requestRef, responseRef)}>
+        params
+      </button>
     </Dialog>
   );
 }
@@ -265,6 +207,8 @@ const decompile = (map, schema) => {
 };
 
 const index = (map, list) => {
+  map = map || {};
+
   const object = {};
   if (!list) return object;
 
