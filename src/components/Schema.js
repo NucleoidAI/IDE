@@ -22,34 +22,37 @@ const Schema = forwardRef(({ request, schema, response, edit }, ref) => {
   const [add, setAdd] = useState();
   const [remove, setRemove] = useState();
   const [selected, setSelected] = useState(null);
-  const root = edit ? Object.keys(schema || { [uuid]: {} })[0] : "root";
+
+  let root = edit ? schema[Object.keys(schema)[0]] : "root";
   const map = {};
   const [mp, setMp] = useState(false);
 
   if (ref?.current) {
     schema = ref?.current[Object.keys(ref?.current)];
+    root = edit ? schema[Object.keys(schema)[0]] : "root";
 
     createMap(schema, map);
   }
 
   function addSchemaProperty(selected) {
-    console.log(map[selected]);
     const key = uuid();
+    if (!map[selected].properties) {
+      map[selected].properties = {};
+    }
 
     map[selected].properties[key] = {
       id: key,
       type: "integer",
     };
+
     setMp(!mp);
   }
 
   function removeSchemaProperty(selected) {
-    /*
-      const tmpMap = pages.api.dialog.map;
-      delete tmpMap[selected];
-
-      //  setMap({ ...tmpMap });
-      */
+    delete map[selected];
+    // const tmap =  map[selected];
+    //delete dmap
+    setMp(!mp);
   }
 
   const select = (id) => {
@@ -131,22 +134,23 @@ const Schema = forwardRef(({ request, schema, response, edit }, ref) => {
 const createMap = (schema, map) => {
   const { properties, type } = schema;
 
+  if (schema.name === undefined) {
+    const { id } = schema;
+    map[id] = schema;
+  }
+
   for (const key in properties) {
     const property = properties[key];
 
     const { id } = property;
     switch (type) {
       case "object":
-        map[String(id)] = property;
         createMap(property, map);
+        map[id] = property;
+        break;
 
-        break;
-      case "array":
-        createMap(property, map);
-        map[String(id)] = property;
-        break;
       default: {
-        map[String(id)] = property;
+        map[id] = property;
       }
     }
   }

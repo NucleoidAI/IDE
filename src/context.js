@@ -1,7 +1,7 @@
 import State from "./state";
 import { v4 as uuid } from "uuid";
-import { compile, decompile, deindex } from "./widgets/APIDialog";
 import { createContext, useContext } from "react";
+import { decompile, deindex } from "./widgets/APIDialog";
 
 function reducer(state, action) {
   state = State.copy(state);
@@ -10,7 +10,7 @@ function reducer(state, action) {
   switch (action.type) {
     case "OPEN_API_DIALOG": {
       pages.api.dialog.open = true;
-
+      /*
       const { path, method } = pages.api.selected;
       const api = nucleoid.api;
       const map = (pages.api.dialog.map = {});
@@ -25,7 +25,7 @@ function reducer(state, action) {
           type: value.type,
         }))
         .map((type) => compile(map, type));
-
+*/
       break;
     }
 

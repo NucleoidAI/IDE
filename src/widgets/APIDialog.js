@@ -4,9 +4,8 @@ import APIParams from "../components/APIParams";
 import APIPath from "../components/APIPath";
 import APITypes from "../components/APITypes";
 import ClosableDialogTitle from "../components/ClosableDialogTitle";
-
+import React from "react";
 import { useContext } from "../context";
-import { useRef } from "react";
 import { v4 as uuid } from "uuid";
 import {
   Dialog,
@@ -27,31 +26,17 @@ function APIDialog() {
   const [state, dispatch] = useContext();
   const { pages } = state;
 
-  /*
-  const [api, setApi] = React.useState({});
-  const [request, setRequest] = React.useState();
-
-  //const [selected, setSelected] = React.useState();
-  const [view, setView] = React.useState();
-  const [map, setMap] = React.useState({});
-  const [types, setTypes] = React.useState();
-  const [method, setMethod] = React.useState();
-  const [selectedParams, setSelectedParams] = React.useState();
-  const [open, setOpen] = React.useState();
-*/
+  const [view, setView] = React.useState(state.get("pages.api.dialog.view"));
 
   const api = state.get("nucleoid.api");
   const selected = state.get("pages.api.selected");
 
-  const view = state.get("pages.api.dialog.view");
   const map = state.get("pages.api.dialog.map");
   const types = state.get("pages.api.dialog.types");
 
-  //const selectedParams = api[selected.path][selected.method].params; //TODO: to be deleted
-
-  const paramsRef = useRef();
-  const requestRef = useRef();
-  const responseRef = useRef();
+  const paramsRef = React.useRef();
+  const requestRef = React.useRef();
+  const responseRef = React.useRef();
   let method;
 
   if (selected) {
@@ -71,6 +56,28 @@ function APIDialog() {
     );
     method = selected.method;
   }
+
+  /*
+  React.useEffect(() => {
+
+    if (selected) {
+      paramsRef.current = index(
+        {},
+        api[selected.path][selected.method].params || []
+      );
+
+      requestRef.current = compile(
+        {},
+        api[selected.path][selected.method].request
+      );
+
+      responseRef.current = compile(
+        {},
+        api[selected.path][selected.method].response
+      );
+    }
+  }, []);
+*/
 
   const handleClose = () => {
     pages.api.dialog.open = false;
@@ -105,7 +112,7 @@ function APIDialog() {
 
   function setApiDialogView(view) {
     pages.api.dialog.view = view;
-    // setView(pages.api.dialog.view);
+    setView(pages.api.dialog.view);
   }
 
   return (
