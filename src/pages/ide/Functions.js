@@ -8,7 +8,7 @@ import { Card, CardActions, CardContent, Grid, Paper } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    height: window.innerHeight - parseInt(theme.spacing()) * 2 - 1,
+    height: window.innerHeight - theme.spacing(1) * 2 - 1,
   },
 }));
 

@@ -75,4 +75,9 @@ theme = {
   },
 };
 
+theme = {
+  ...theme,
+  spacing: (factor) => 8 * factor, // (Bootstrap strategy)
+};
+
 export default theme;

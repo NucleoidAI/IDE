@@ -33,13 +33,10 @@ const useStyles = makeStyles((theme) => {
     },
     main: {
       flex: 1,
-      padding: theme.spacing(1, 1),
+      padding: theme.spacing(1),
     },
     drawer: {
-      top:
-        (window.innerHeight * ratio) / 2 -
-        height / 2 +
-        parseInt(parseInt(theme.spacing())),
+      top: (window.innerHeight * ratio) / 2 - height / 2 + theme.spacing(1),
       height,
       borderTopLeftRadius: "5px",
       borderBottomLeftRadius: "5px",
@@ -47,13 +44,13 @@ const useStyles = makeStyles((theme) => {
       display: "flex",
       flexDirection: "column",
       justifyContent: "space-between",
-      paddingTop: parseInt(theme.spacing()),
-      paddingBottom: parseInt(theme.spacing()),
+      paddingTop: theme.spacing(1),
+      paddingBottom: theme.spacing(1),
     },
     button: {
       fill: theme.palette.custom.grey,
-      marginTop: parseInt(theme.spacing()) / 2,
-      marginBottom: parseInt(theme.spacing()) / 2,
+      marginTop: theme.spacing(1) / 2,
+      marginBottom: theme.spacing(1) / 2,
     },
   };
 });

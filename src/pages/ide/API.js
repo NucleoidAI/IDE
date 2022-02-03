@@ -11,19 +11,20 @@ import { Context } from "../../context";
 import makeStyles from "@mui/styles/makeStyles";
 
 const useStyles = makeStyles((theme) => {
+  console.log(theme.spacing(8));
   const ratio = 0.65;
-  const height = window.innerHeight - parseInt(theme.spacing()) * 2 - 1;
+  const height = window.innerHeight - theme.spacing(1) * 2 - 1;
 
   return {
     tree: {
       height,
     },
     editor: {
-      height: height * ratio - parseInt(theme.spacing()) / 2,
+      height: height * ratio - theme.spacing(1) / 2,
     },
     settings: {
-      height: height * (1 - ratio) - parseInt(theme.spacing()) / 2,
-      padding: parseInt(theme.spacing()),
+      height: height * (1 - ratio) - theme.spacing(1) / 2,
+      padding: theme.spacing(1),
     },
   };
 });

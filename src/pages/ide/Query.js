@@ -16,26 +16,26 @@ import React, { useEffect, useRef, useState } from "react";
 
 const useStyles = makeStyles((theme) => {
   const ratio = 0.5;
-  const height = window.innerHeight - parseInt(theme.spacing()) * 2 - 1;
+  const height = window.innerHeight - theme.spacing(1) * 2 - 1;
 
   return {
     editor: {
-      height: height * ratio - parseInt(theme.spacing()) / 2,
+      height: height * ratio - theme.spacing(1) / 2,
     },
     results: {
-      height: height * (1 - ratio) - parseInt(theme.spacing()) / 2,
+      height: height * (1 - ratio) - theme.spacing(1) / 2,
       justifyContent: "flex-start",
-      paddingLeft: parseInt(theme.spacing()) * 2,
+      paddingLeft: theme.spacing(1) * 2,
     },
     process: {
       position: "absolute",
-      top: parseInt(theme.spacing()) * 2,
-      right: parseInt(theme.spacing()) * 2,
+      top: theme.spacing(1) * 2,
+      right: theme.spacing(1) * 2,
     },
     run: {
       position: "relative",
-      bottom: 40 + parseInt(theme.spacing()),
-      right: parseInt(theme.spacing()),
+      bottom: 40 + theme.spacing(1),
+      right: theme.spacing(1),
     },
     popupIndicator: {
       "& span": {
