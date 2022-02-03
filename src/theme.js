@@ -21,27 +21,46 @@ let theme = createTheme({
 
 theme = {
   ...theme,
-  overrides: {
+  components: {
+    // Name of the component
+    MuiButton: {
+      styleOverrides: {
+        // Name of the slot
+        root: {
+          // Some CSS
+          fontSize: "1rem",
+        },
+      },
+    },
     MuiDrawer: {
-      paper: {
-        backgroundColor: "#323a40",
+      styleOverrides: {
+        // Name of the slot
+        paper: {
+          backgroundColor: "#323a40",
+        },
       },
     },
     MuiCard: {
-      root: {
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
+      styleOverrides: {
+        root: {
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        },
       },
     },
     MuiCardActions: {
-      root: {
-        justifyContent: "center",
+      styleOverrides: {
+        root: {
+          justifyContent: "center",
+        },
       },
     },
     MuiBackdrop: {
-      root: {
-        backgroundColor: "rgba(0,0,0,0.1)",
+      styleOverrides: {
+        root: {
+          backgroundColor: "rgba(0,0,0,0.1)",
+        },
       },
     },
   },

@@ -1,6 +1,7 @@
 import APISettings from "../widgets/APISettings";
 import APITree from "../widgets/APITree";
 import AddList from "../components/AddList";
+import Button from "@mui/material/Button";
 import Editor from "../widgets/Editor";
 import FunctionTree from "../widgets/FunctionTree";
 import Logo from "../components/Logo";
@@ -165,11 +166,11 @@ function Dev() {
           height: "400px",
           borderRadius: "2",
         }}
-      >
-        .
-      </Paper>
+      ></Paper>
       <br />
-      <Paper>.</Paper>
+      <Paper>
+        <Button>font-size: 1rem</Button>
+      </Paper>
     </Grid>
   );
 }
