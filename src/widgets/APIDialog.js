@@ -7,13 +7,9 @@ import ClosableDialogTitle from "../components/ClosableDialogTitle";
 import React from "react";
 import { useContext } from "../context";
 import { v4 as uuid } from "uuid";
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  Grid,
-  makeStyles,
-} from "@material-ui/core";
+import { Dialog, DialogActions, DialogContent, Grid } from "@mui/material";
+
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   root: {

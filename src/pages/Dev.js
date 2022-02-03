@@ -10,7 +10,7 @@ import React from "react";
 import Schema from "../components/Schema";
 import Security from "../components/Security";
 import SummaryForm from "../components/SummaryForm";
-import { Grid, Paper } from "@material-ui/core";
+import { Grid, Paper } from "@mui/material";
 
 const apis = [
   {
@@ -159,10 +159,18 @@ function Dev() {
         <Editor name={"api"} api />
       </Paper>
       <br />
-      <Paper style={{ width: 800, height: 400 }}>
-        <APIDialog />
+      <Paper
+        sx={{
+          bgcolor: "background.default",
+          width: "800px",
+          height: "400px",
+          borderRadius: "2",
+        }}
+      >
+        .
       </Paper>
       <br />
+      <Paper>.</Paper>
     </Grid>
   );
 }

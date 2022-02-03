@@ -1,11 +1,11 @@
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import AddIcon from "@material-ui/icons/Add";
-import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
-import RemoveIcon from "@material-ui/icons/Remove";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import RemoveIcon from "@mui/icons-material/Remove";
 import SchemaArray from "./SchemaArray";
 import SchemaObject from "./SchemaObject";
 import SchemaProperty from "./SchemaProperty";
-import { TreeView } from "@material-ui/lab";
+import { TreeView } from "@mui/lab";
 import { v4 as uuid } from "uuid";
 import {
   Grid,
@@ -13,7 +13,7 @@ import {
   MenuItem,
   Select,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import { forwardRef, useEffect, useState } from "react";
 
 const Schema = forwardRef(({ request, schema, response, edit }, ref) => {
@@ -114,12 +114,12 @@ const Schema = forwardRef(({ request, schema, response, edit }, ref) => {
           </Grid>
           <Grid item>
             {add && (
-              <IconButton onClick={() => addSchemaProperty(selected)}>
+              <IconButton onClick={() => addSchemaProperty(selected)} size="large">
                 <AddIcon />
               </IconButton>
             )}
             {remove && (
-              <IconButton onClick={() => removeSchemaProperty(selected)}>
+              <IconButton onClick={() => removeSchemaProperty(selected)} size="large">
                 <RemoveIcon />
               </IconButton>
             )}

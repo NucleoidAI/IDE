@@ -1,9 +1,9 @@
 import Arrow from "../icons/Arrow";
-import FolderIcon from "@material-ui/icons/FolderRounded";
+import FolderIcon from "@mui/icons-material/FolderRounded";
 import { useContext } from "../context";
-import { Menu, MenuItem, Typography } from "@material-ui/core";
+import { Menu, MenuItem, Typography } from "@mui/material";
 import React, { useEffect } from "react";
-import { TreeItem, TreeView } from "@material-ui/lab";
+import { TreeItem, TreeView } from "@mui/lab";
 
 function FunctionTree() {
   const [selected, setSelected] = React.useState(null);

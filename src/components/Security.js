@@ -1,5 +1,5 @@
-import LockIcon from "@material-ui/icons/Lock";
-import { Button, Grid } from "@material-ui/core";
+import LockIcon from "@mui/icons-material/Lock";
+import { Button, Grid } from "@mui/material";
 
 function Security({ onClick }) {
   return (

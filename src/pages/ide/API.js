@@ -5,25 +5,25 @@ import AddList from "../../components/AddList";
 import Editor from "../../widgets/Editor";
 import IDE from "../../layouts/IDE";
 import React from "react";
-import { Card, CardActions, CardContent, Grid, Paper } from "@material-ui/core";
+import { Card, CardActions, CardContent, Grid, Paper } from "@mui/material";
 // eslint-disable-next-line
 import { Context } from "../../context";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@mui/styles/makeStyles";
 
 const useStyles = makeStyles((theme) => {
   const ratio = 0.65;
-  const height = window.innerHeight - theme.spacing() * 2 - 1;
+  const height = window.innerHeight - parseInt(theme.spacing()) * 2 - 1;
 
   return {
     tree: {
       height,
     },
     editor: {
-      height: height * ratio - theme.spacing() / 2,
+      height: height * ratio - parseInt(theme.spacing()) / 2,
     },
     settings: {
-      height: height * (1 - ratio) - theme.spacing() / 2,
-      padding: theme.spacing(),
+      height: height * (1 - ratio) - parseInt(theme.spacing()) / 2,
+      padding: parseInt(theme.spacing()),
     },
   };
 });

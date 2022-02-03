@@ -6,7 +6,7 @@ import { compile } from "../Schema";
 import Enzyme, { shallow } from "enzyme";
 
 Enzyme.configure({ adapter: new Adapter() });
-jest.mock("@material-ui/core", () => ({ makeStyles: () => () => {} }));
+jest.mock("@mui/material", () => ({ makeStyles: () => () => {} }));
 
 test("List properties of schema", () => {
   const schema = {

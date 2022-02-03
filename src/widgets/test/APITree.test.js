@@ -2,7 +2,7 @@ import APITree from "../APITree";
 import Adapter from "enzyme-adapter-react-16";
 import React from "react";
 import State from "../../state";
-import { TreeItem } from "@material-ui/lab";
+import { TreeItem } from "@mui/lab";
 import { useContext } from "../../context";
 import Enzyme, { shallow } from "enzyme";
 

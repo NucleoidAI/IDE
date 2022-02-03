@@ -1,7 +1,9 @@
 import ParamView from "./ParamView";
 import React from "react";
 import Schema from "./Schema";
-import { Divider, Grid, makeStyles } from "@material-ui/core";
+import { Divider, Grid } from "@mui/material";
+
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   root: {

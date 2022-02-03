@@ -1,8 +1,8 @@
 import Editor from "../../widgets/Editor";
 import IDE from "../../layouts/IDE";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import QueryResult from "../../components/QueryResult";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import {
   Card,
   Fab,
@@ -11,31 +11,31 @@ import {
   Grid,
   Paper,
   Switch,
-} from "@material-ui/core";
+} from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
 const useStyles = makeStyles((theme) => {
   const ratio = 0.5;
-  const height = window.innerHeight - theme.spacing() * 2 - 1;
+  const height = window.innerHeight - parseInt(theme.spacing()) * 2 - 1;
 
   return {
     editor: {
-      height: height * ratio - theme.spacing() / 2,
+      height: height * ratio - parseInt(theme.spacing()) / 2,
     },
     results: {
-      height: height * (1 - ratio) - theme.spacing() / 2,
+      height: height * (1 - ratio) - parseInt(theme.spacing()) / 2,
       justifyContent: "flex-start",
-      paddingLeft: theme.spacing() * 2,
+      paddingLeft: parseInt(theme.spacing()) * 2,
     },
     process: {
       position: "absolute",
-      top: theme.spacing() * 2,
-      right: theme.spacing() * 2,
+      top: parseInt(theme.spacing()) * 2,
+      right: parseInt(theme.spacing()) * 2,
     },
     run: {
       position: "relative",
-      bottom: 40 + theme.spacing(),
-      right: theme.spacing(),
+      bottom: 40 + parseInt(theme.spacing()),
+      right: parseInt(theme.spacing()),
     },
     popupIndicator: {
       "& span": {

@@ -1,6 +1,6 @@
-import { Button, Grid } from "@material-ui/core";
+import { Button, Grid } from "@mui/material";
 import React, { useEffect } from "react";
-import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 
 function APIDialogAction({ view, setApiDialogView, saveApiDialog }) {
   const [alignment, setAlignment] = React.useState();

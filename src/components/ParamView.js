@@ -5,7 +5,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
-} from "@material-ui/core";
+} from "@mui/material";
 
 function ParamView({ params }) {
   params = params || [];

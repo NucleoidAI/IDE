@@ -1,21 +1,21 @@
 import AlertMassage from "../components/AlertMassage";
-import FolderIcon from "@material-ui/icons/Folder";
-import GitHubIcon from "@material-ui/icons/GitHub";
-import ImportExportIcon from "@material-ui/icons/ImportExport";
+import FolderIcon from "@mui/icons-material/Folder";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import ImportExportIcon from "@mui/icons-material/ImportExport";
 import Menu from "../components/Menu";
-import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled";
-import PlayCircleFilledIcon from "@material-ui/icons/PlayCircleFilled";
+import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
+import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import PostmanIcon from "../icons/Postman";
-import SaveIcon from "@material-ui/icons/Save";
-import SendIcon from "@material-ui/icons/Send";
-import SettingsEthernetIcon from "@material-ui/icons/SettingsEthernet";
-import StorageIcon from "@material-ui/icons/Storage";
-import ViewCarouselIcon from "@material-ui/icons/ViewCarousel";
-import ViewListIcon from "@material-ui/icons/ViewList";
-import { makeStyles } from "@material-ui/core/styles";
+import SaveIcon from "@mui/icons-material/Save";
+import SendIcon from "@mui/icons-material/Send";
+import SettingsEthernetIcon from "@mui/icons-material/SettingsEthernet";
+import StorageIcon from "@mui/icons-material/Storage";
+import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
+import ViewListIcon from "@mui/icons-material/ViewList";
+import makeStyles from "@mui/styles/makeStyles";
 import { useContext } from "../context";
 import { v4 as uuid } from "uuid";
-import { Box, Drawer, ListItem } from "@material-ui/core";
+import { Box, Drawer, ListItem } from "@mui/material";
 import React, { useState } from "react";
 
 const useStyles = makeStyles((theme) => {
@@ -36,7 +36,10 @@ const useStyles = makeStyles((theme) => {
       padding: theme.spacing(1, 1),
     },
     drawer: {
-      top: (window.innerHeight * ratio) / 2 - height / 2 + theme.spacing(),
+      top:
+        (window.innerHeight * ratio) / 2 -
+        height / 2 +
+        parseInt(parseInt(theme.spacing())),
       height,
       borderTopLeftRadius: "5px",
       borderBottomLeftRadius: "5px",
@@ -44,13 +47,13 @@ const useStyles = makeStyles((theme) => {
       display: "flex",
       flexDirection: "column",
       justifyContent: "space-between",
-      paddingTop: theme.spacing(),
-      paddingBottom: theme.spacing(),
+      paddingTop: parseInt(theme.spacing()),
+      paddingBottom: parseInt(theme.spacing()),
     },
     button: {
       fill: theme.palette.custom.grey,
-      marginTop: theme.spacing() / 2,
-      marginBottom: theme.spacing() / 2,
+      marginTop: parseInt(theme.spacing()) / 2,
+      marginBottom: parseInt(theme.spacing()) / 2,
     },
   };
 });

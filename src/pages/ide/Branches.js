@@ -2,7 +2,7 @@ import ArrowIcon from "../../icons/Arrow";
 import IDE from "../../layouts/IDE";
 import React from "react";
 import clsx from "clsx";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import {
   Box,
   Button,
@@ -20,7 +20,7 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 
 const rows = [
   { branch: "Production 1.1", classes: 15, functions: 14, size: 8 },

@@ -1,6 +1,7 @@
-import AddIcon from "@material-ui/icons/Add";
+import AddIcon from "@mui/icons-material/Add";
 import ParamTable from "./ParamTable";
-import { Fab, Grid, makeStyles } from "@material-ui/core";
+import { Fab, Grid } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { forwardRef, useRef } from "react";
 
 const useStyles = makeStyles(() => ({

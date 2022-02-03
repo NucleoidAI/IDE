@@ -1,5 +1,5 @@
 import { Doughnut } from "react-chartjs-2";
-import { Box, Grid } from "@material-ui/core";
+import { Box, Grid } from "@mui/material";
 
 const data = {
   labels: ["Used", "Free"],

@@ -1,11 +1,11 @@
-import Drawer from "@material-ui/core/Drawer";
+import Drawer from "@mui/material/Drawer";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
 import React from "react";
 import Settings from "./Settings";
 import Status from "./Status";
-import { makeStyles } from "@material-ui/core/styles";
-import { List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
+import makeStyles from '@mui/styles/makeStyles';
+import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
 const width = 300;
 
@@ -39,6 +39,7 @@ function Menu(props) {
     <nav className={classes.root}>
       <Drawer
         variant="permanent"
+       
         classes={{
           paper: classes.drawer,
         }}

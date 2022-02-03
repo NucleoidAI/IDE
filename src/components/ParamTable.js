@@ -1,13 +1,13 @@
 import "./ParamTable.css";
 import { DataGrid } from "@mui/x-data-grid";
-import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import React from "react";
 import TypeMenu from "./TypeMenu";
 
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import { v4 as uuid } from "uuid";
 
-import { Checkbox, IconButton, TextField } from "@material-ui/core";
+import { Checkbox, IconButton, TextField } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -111,7 +111,7 @@ const ParamTable = React.forwardRef((props, ref) => {
       renderCell: (param) => {
         const { id } = param.row;
         return (
-          <IconButton onClick={() => removeParam(id)}>
+          <IconButton onClick={() => removeParam(id)} size="large">
             <HighlightOffIcon />
           </IconButton>
         );

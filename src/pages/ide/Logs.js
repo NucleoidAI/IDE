@@ -1,9 +1,9 @@
 import Editor from "../../widgets/Editor";
 import IDE from "../../layouts/IDE";
 import Moment from "react-moment";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import { v4 as uuid } from "uuid";
-import { Grid, Paper, Typography } from "@material-ui/core";
+import { Grid, Paper, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 const useStyles = makeStyles((theme) => ({

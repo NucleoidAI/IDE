@@ -1,8 +1,8 @@
 import ArrowIcon from "../icons/Arrow";
 import { useContext } from "../context";
-import { Box, Menu, MenuItem } from "@material-ui/core";
+import { Box, Menu, MenuItem } from "@mui/material";
 import React, { useEffect } from "react";
-import { TreeItem, TreeView } from "@material-ui/lab";
+import { TreeItem, TreeView } from "@mui/lab";
 
 const style = {
   fontSize: 12,

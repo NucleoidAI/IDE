@@ -1,11 +1,11 @@
-import EditIcon from "@material-ui/icons/Edit";
+import EditIcon from "@mui/icons-material/Edit";
 import ParamView from "../components/ParamView";
 import Schema from "../components/Schema";
 import Security from "../components/Security";
 import SummaryForm from "../components/SummaryForm";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import { useContext } from "../context";
-import { Fab, Grid } from "@material-ui/core";
+import { Fab, Grid } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 
 const useStyles = makeStyles((theme) => ({

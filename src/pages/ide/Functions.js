@@ -3,12 +3,12 @@ import Editor from "../../widgets/Editor";
 import FunctionTree from "../../widgets/FunctionTree";
 import IDE from "../../layouts/IDE";
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Card, CardActions, CardContent, Grid, Paper } from "@material-ui/core";
+import makeStyles from '@mui/styles/makeStyles';
+import { Card, CardActions, CardContent, Grid, Paper } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    height: window.innerHeight - theme.spacing() * 2 - 1,
+    height: window.innerHeight - parseInt(theme.spacing()) * 2 - 1,
   },
 }));
 

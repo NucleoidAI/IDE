@@ -1,4 +1,4 @@
-import LanguageIcon from "@material-ui/icons/Language";
+import LanguageIcon from "@mui/icons-material/Language";
 import React from "react";
 import {
   Box,
@@ -8,7 +8,7 @@ import {
   MenuItem,
   Select,
   TextField,
-} from "@material-ui/core";
+} from "@mui/material";
 
 function APIPath({ setApiDialogView, view }) {
   return (

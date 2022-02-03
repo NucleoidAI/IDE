@@ -1,7 +1,9 @@
-import { TreeItem } from "@material-ui/lab";
+import { TreeItem } from "@mui/lab";
 import TypeMenu from "./TypeMenu";
 import React, { useRef, useState } from "react";
-import { TextField, makeStyles } from "@material-ui/core";
+import { TextField } from "@mui/material";
+
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   textField: {
