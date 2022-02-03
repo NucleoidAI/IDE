@@ -2,7 +2,7 @@ import ArrowIcon from "../../icons/Arrow";
 import IDE from "../../layouts/IDE";
 import React from "react";
 import clsx from "clsx";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import {
   Box,
   Button,

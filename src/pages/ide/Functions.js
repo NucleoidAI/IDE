@@ -3,7 +3,7 @@ import Editor from "../../widgets/Editor";
 import FunctionTree from "../../widgets/FunctionTree";
 import IDE from "../../layouts/IDE";
 import React from "react";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { Card, CardActions, CardContent, Grid, Paper } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({

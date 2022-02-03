@@ -9,8 +9,8 @@ import theme from "./theme";
 import { Context, reducer } from "./context";
 import {
   CssBaseline,
-  ThemeProvider,
   StyledEngineProvider,
+  ThemeProvider,
 } from "@mui/material";
 import React, { useReducer } from "react";
 import { Redirect, Route, BrowserRouter as Router } from "react-router-dom";

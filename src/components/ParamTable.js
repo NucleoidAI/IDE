@@ -4,7 +4,7 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import React from "react";
 import TypeMenu from "./TypeMenu";
 
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { v4 as uuid } from "uuid";
 
 import { Checkbox, IconButton, TextField } from "@mui/material";

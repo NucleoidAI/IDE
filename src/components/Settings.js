@@ -1,6 +1,6 @@
 import React from "react";
 import SettingsIcon from "@mui/icons-material/Settings";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import {
   Button,
   Dialog,
@@ -34,49 +34,51 @@ function Settings() {
     setOpen(false);
   };
 
-  return <>
-    <Grid container direction={"column"} justifyContent="center">
-      <Button
-        variant={"text"}
-        className={classes.button}
-        onClick={() => setConnect(!connect)}
-      >
-        {!connect ? "Connect" : "Disconnect"}
-      </Button>
-      <IconButton onClick={handleOpen} size="large">
-        <SettingsIcon className={classes.icon} fontSize={"large"} />
-      </IconButton>
-    </Grid>
-    <Dialog
-      onClose={handleClose}
-      aria-labelledby="settings-dialog-title"
-      open={open}
-      style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-      PaperProps={{
-        style: {
-          backgroundColor: "#424242",
-          color: "#ffffffb3",
-        },
-      }}
-      fullWidth
-      maxWidth={"sm"}
-    >
-      <DialogTitle id="settings-dialog-title" onClose={handleClose}>
-        Settings
-      </DialogTitle>
-      <DialogContent>Settings</DialogContent>
-      <DialogActions>
+  return (
+    <>
+      <Grid container direction={"column"} justifyContent="center">
         <Button
-          autoFocus
-          onClick={handleClose}
           variant={"text"}
-          style={{ color: "#90caf9" }}
+          className={classes.button}
+          onClick={() => setConnect(!connect)}
         >
-          Save
+          {!connect ? "Connect" : "Disconnect"}
         </Button>
-      </DialogActions>
-    </Dialog>
-  </>;
+        <IconButton onClick={handleOpen} size="large">
+          <SettingsIcon className={classes.icon} fontSize={"large"} />
+        </IconButton>
+      </Grid>
+      <Dialog
+        onClose={handleClose}
+        aria-labelledby="settings-dialog-title"
+        open={open}
+        style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        PaperProps={{
+          style: {
+            backgroundColor: "#424242",
+            color: "#ffffffb3",
+          },
+        }}
+        fullWidth
+        maxWidth={"sm"}
+      >
+        <DialogTitle id="settings-dialog-title" onClose={handleClose}>
+          Settings
+        </DialogTitle>
+        <DialogContent>Settings</DialogContent>
+        <DialogActions>
+          <Button
+            autoFocus
+            onClick={handleClose}
+            variant={"text"}
+            style={{ color: "#90caf9" }}
+          >
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
 }
 
 export default Settings;

@@ -7,13 +7,7 @@ import SchemaObject from "./SchemaObject";
 import SchemaProperty from "./SchemaProperty";
 import { TreeView } from "@mui/lab";
 import { v4 as uuid } from "uuid";
-import {
-  Grid,
-  IconButton,
-  MenuItem,
-  Select,
-  Typography,
-} from "@mui/material";
+import { Grid, IconButton, MenuItem, Select, Typography } from "@mui/material";
 import { forwardRef, useEffect, useState } from "react";
 
 const Schema = forwardRef(({ request, schema, response, edit }, ref) => {
@@ -114,12 +108,18 @@ const Schema = forwardRef(({ request, schema, response, edit }, ref) => {
           </Grid>
           <Grid item>
             {add && (
-              <IconButton onClick={() => addSchemaProperty(selected)} size="large">
+              <IconButton
+                onClick={() => addSchemaProperty(selected)}
+                size="large"
+              >
                 <AddIcon />
               </IconButton>
             )}
             {remove && (
-              <IconButton onClick={() => removeSchemaProperty(selected)} size="large">
+              <IconButton
+                onClick={() => removeSchemaProperty(selected)}
+                size="large"
+              >
                 <RemoveIcon />
               </IconButton>
             )}

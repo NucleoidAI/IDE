@@ -1,8 +1,9 @@
 import "./ParamTable.css";
 import { DataGrid } from "@mui/x-data-grid";
 import Schema from "./Schema";
+import makeStyles from "@mui/styles/makeStyles";
 import { Divider, Grid, MenuItem, Select, TextField } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+
 import React, { useEffect, useState } from "react";
 
 const useStyles = makeStyles(() => ({

@@ -1,5 +1,5 @@
 import CloseIcon from "@mui/icons-material/Close";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { DialogTitle, Grid, IconButton, Typography } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
@@ -23,7 +23,11 @@ function ClosableDialogTitle({ handleClose, label }) {
     <DialogTitle className={classes.root}>
       <Grid container justifyContent={"space-between"}>
         <Typography variant="h6">{label}</Typography>
-        <IconButton onClick={handleClose} className={classes.button} size="large">
+        <IconButton
+          onClick={handleClose}
+          className={classes.button}
+          size="large"
+        >
           <CloseIcon />
         </IconButton>
       </Grid>

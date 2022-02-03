@@ -1,9 +1,8 @@
 import ParamView from "./ParamView";
 import React from "react";
 import Schema from "./Schema";
+import makeStyles from "@mui/styles/makeStyles";
 import { Divider, Grid } from "@mui/material";
-
-import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   root: {

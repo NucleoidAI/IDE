@@ -4,7 +4,7 @@ import Logo from "./Logo";
 import React from "react";
 import Settings from "./Settings";
 import Status from "./Status";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
 const width = 300;
@@ -39,7 +39,6 @@ function Menu(props) {
     <nav className={classes.root}>
       <Drawer
         variant="permanent"
-       
         classes={{
           paper: classes.drawer,
         }}
