@@ -22,16 +22,6 @@ let theme = createTheme({
 theme = {
   ...theme,
   components: {
-    // Name of the component
-    MuiButton: {
-      styleOverrides: {
-        // Name of the slot
-        root: {
-          // Some CSS
-          fontSize: "1rem",
-        },
-      },
-    },
     MuiDrawer: {
       styleOverrides: {
         // Name of the slot
@@ -61,6 +51,16 @@ theme = {
         root: {
           backgroundColor: "rgba(0,0,0,0.1)",
         },
+      },
+    },
+    MuiTextField: {
+      defaultProps: {
+        variant: "standard",
+      },
+    },
+    MuiSelect: {
+      defaultProps: {
+        variant: "standard",
       },
     },
   },

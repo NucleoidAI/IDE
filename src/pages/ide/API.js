@@ -11,7 +11,6 @@ import { Context } from "../../context";
 import makeStyles from "@mui/styles/makeStyles";
 
 const useStyles = makeStyles((theme) => {
-  console.log(theme.spacing(8));
   const ratio = 0.65;
   const height = window.innerHeight - theme.spacing(1) * 2 - 1;
 
