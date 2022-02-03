@@ -30,84 +30,60 @@ function APIDialog() {
 
   const api = state.get("nucleoid.api");
   const selected = state.get("pages.api.selected");
-
-  const map = state.get("pages.api.dialog.map");
   const types = state.get("pages.api.dialog.types");
 
-  const paramsRef = React.useRef();
-  const requestRef = React.useRef();
-  const responseRef = React.useRef();
   let method;
+  let path;
 
   if (selected) {
-    paramsRef.current = index(
-      {},
-      api[selected.path][selected.method].params || []
-    );
-
-    requestRef.current = compile(
-      {},
-      api[selected.path][selected.method].request
-    );
-
-    responseRef.current = compile(
-      {},
-      api[selected.path][selected.method].response
-    );
     method = selected.method;
+    path = selected.path;
+  } else {
+    method = "get";
+    path = "/";
   }
 
-  /*
-  React.useEffect(() => {
+  const params = api[path][method].params;
+  const request = api[path][method].request;
+  const response = api[path][method].response;
 
-    if (selected) {
-      paramsRef.current = index(
-        {},
-        api[selected.path][selected.method].params || []
-      );
+  const paramsRef = React.useRef(index({}, params));
+  const requestRef = React.useRef(compile({}, request));
+  const responseRef = React.useRef(compile({}, response));
 
-      requestRef.current = compile(
-        {},
-        api[selected.path][selected.method].request
-      );
-
-      responseRef.current = compile(
-        {},
-        api[selected.path][selected.method].response
-      );
-    }
-  }, []);
-*/
+  if (
+    paramsRef.current === undefined &&
+    requestRef.current === undefined &&
+    responseRef.current === undefined
+  ) {
+    paramsRef.current = index({}, params);
+    requestRef.current = compile({}, request);
+    responseRef.current = compile({}, response);
+  }
 
   const handleClose = () => {
     pages.api.dialog.open = false;
-    delete pages.api.dialog.request;
-    delete pages.api.dialog.response;
-    delete pages.api.dialog.params;
-    delete pages.api.dialog.types;
-    pages.api.dialog.map = {};
+    dispatch({ type: "CLOSE_API_DIALOG" });
+    setTimeout(() => {
+      paramsRef.current = undefined;
+      requestRef.current = undefined;
+      responseRef.current = undefined;
+    }, 0);
   };
 
   function saveApiDialog() {
+    console.log(responseRef.current);
+    console.log(decompile({}, responseRef.current));
     /*
-    const { path, method } = pages.api.selected;
-    const api = nucleoid.api;
-    const map = pages.api.dialog.map;
-
-    api[path][method].request = decompile(map, pages.api.dialog.request);
-    api[path][method].response = decompile(map, pages.api.dialog.response);
-    api[path][method].params = deindex(pages.api.dialog.params);
-    nucleoid.types = pages.api.dialog.types.reduce((previous, current) => {
-      const object = decompile(map, current);
-      const name = current[Object.keys(current)[0]].name;
-      return { ...previous, [name]: object };
-    }, {});
-
-    const isOpen = (pages.api.dialog.open = false);
-    setOpen(isOpen);
+    dispatch({
+      type: "SAVE_API_DIALOG",
+      payload: {
+        params: deindex({}, paramsRef.current),
+        request: decompile({}, requestRef.current),
+        response: decompile({}, responseRef.current),
+      },
+    });
     */
-
-    dispatch({ type: "SAVE_API_DIALOG" });
   }
 
   function setApiDialogView(view) {
@@ -137,7 +113,7 @@ function APIDialog() {
             />
           )}
           {view === "PARAMS" && <APIParams ref={paramsRef} />}
-          {view === "TYPES" && <APITypes map={map} dialogTypes={types} />}
+          {view === "TYPES" && <APITypes ref={paramsRef} dialogTypes={types} />}
         </Grid>
       </DialogContent>
       <DialogActions>
@@ -192,21 +168,21 @@ const decompile = (map, schema) => {
   delete object.name;
 
   for (const key in properties) {
-    if (!map[key]) continue;
+    //if (!map[key]) continue;
 
-    const property = map[key];
-    const { name, type } = property;
+    const property = schema[Object.keys(schema)[0]];
 
-    if (!name) continue;
+    const { type } = property;
+    console.log(type);
 
     if (type === "object") {
-      const nested = decompile(map, { property });
-      object.properties[name] = nested;
+      const nested = decompile(map, property[key]);
+      object.properties[property.name] = nested;
     } else {
-      object.properties[name] = { type };
+      object.properties[property.name] = { type };
 
       if (type === "array")
-        object.properties[name].items = { type: property.items.type };
+        object.properties[property.name].items = { type: property.items.type };
     }
   }
 

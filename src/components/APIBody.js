@@ -16,12 +16,13 @@ const useStyles = makeStyles((theme) => ({
 
 const APIBody = React.forwardRef(({ method }, ref) => {
   const classes = useStyles();
-  const { requestRef, responseRef, paramsRef } = ref;
 
+  const { requestRef, responseRef, paramsRef } = ref;
   const params = [];
-  Object.keys(paramsRef.current).forEach((key) => {
-    params.push(paramsRef.current[key]);
-  });
+  if (requestRef.current || responseRef.current || paramsRef.current)
+    Object.keys(paramsRef.current).forEach((key) => {
+      params.push(paramsRef.current[key]);
+    });
 
   return (
     <Grid container justifyContent={"space-between"} className={classes.root}>

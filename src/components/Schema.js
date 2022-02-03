@@ -40,7 +40,7 @@ const Schema = forwardRef(({ request, schema, response, edit }, ref) => {
       map[selected].properties = {};
     }
 
-    map[selected].properties[key] = {
+    map[selected].properties[key] = map[key] = {
       id: key,
       type: "integer",
     };
@@ -49,9 +49,8 @@ const Schema = forwardRef(({ request, schema, response, edit }, ref) => {
   }
 
   function removeSchemaProperty(selected) {
-    delete map[selected];
-    // const tmap =  map[selected];
-    //delete dmap
+    delete map[selected].id;
+
     setMp(!mp);
   }
 

@@ -1,57 +1,30 @@
 import State from "./state";
 import { v4 as uuid } from "uuid";
 import { createContext, useContext } from "react";
-import { decompile, deindex } from "./widgets/APIDialog";
 
 function reducer(state, action) {
   state = State.copy(state);
-  const { nucleoid, pages } = state;
+  const { pages } = state;
 
   switch (action.type) {
     case "OPEN_API_DIALOG": {
       pages.api.dialog.open = true;
-      /*
-      const { path, method } = pages.api.selected;
-      const api = nucleoid.api;
-      const map = (pages.api.dialog.map = {});
-
-      pages.api.dialog.request = compile(map, api[path][method].request);
-      pages.api.dialog.response = compile(map, api[path][method].response);
-
-      pages.api.dialog.types = Object.entries(nucleoid.types)
-        .map(([key, value]) => ({
-          ...value,
-          name: key,
-          type: value.type,
-        }))
-        .map((type) => compile(map, type));
-*/
       break;
     }
 
     case "SAVE_API_DIALOG": {
-      const { path, method } = pages.api.selected;
-      const api = nucleoid.api;
-      const map = pages.api.dialog.map;
-
-      api[path][method].request = decompile(map, pages.api.dialog.request);
-      api[path][method].response = decompile(map, pages.api.dialog.response);
-      api[path][method].params = deindex(pages.api.dialog.params);
-
-      nucleoid.types = pages.api.dialog.types.reduce((previous, current) => {
-        const object = decompile(map, current);
-        const name = current[Object.keys(current)[0]].name;
-        return { ...previous, [name]: object };
-      }, {});
+      //const { path, method } = pages.api.selected;
+      // const api = nucleoid.api;
+      console.log(action.payload);
+      /*
+      api[path][method].request = action.payload.request;
+      api[path][method].response = action.payload.response;
+      api[path][method].params = action.payload.params;
+      */
     }
     // eslint-disable-next-line no-fallthrough
     case "CLOSE_API_DIALOG":
       pages.api.dialog.open = false;
-      delete pages.api.dialog.request;
-      delete pages.api.dialog.response;
-      delete pages.api.dialog.params;
-      delete pages.api.dialog.types;
-      pages.api.dialog.map = {};
       break;
     case "SET_API_DIALOG_VIEW":
       pages.api.dialog.view = action.payload.view;
