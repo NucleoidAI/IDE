@@ -4,43 +4,21 @@ import Logo from "./Logo";
 import React from "react";
 import Settings from "./Settings";
 import Status from "./Status";
-import makeStyles from "@mui/styles/makeStyles";
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
-const width = 300;
-
-export const useStyles = makeStyles((theme) => ({
-  root: {
-    width,
-    flexShrink: 0,
-  },
-  drawer: {
-    width,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-  },
-  item: {
-    background: "#353e48",
-    color: "rgba(255, 255, 255, 0.7)",
-    "&:hover,&:focus": {
-      color: "rgba(255, 255, 255, 1)",
-    },
-  },
-  icon: {
-    color: theme.palette.custom.grey,
-  },
-}));
-
 function Menu(props) {
-  const classes = useStyles();
-
   return (
-    <nav className={classes.root}>
+    <nav style={{ width: 300, flexShrink: 0 }}>
       <Drawer
         variant="permanent"
-        classes={{
-          paper: classes.drawer,
+        sx={{
+          "& .MuiDrawer-paper": {
+            boxSizing: "border-box",
+            width: 300,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          },
         }}
       >
         <List>
@@ -51,12 +29,20 @@ function Menu(props) {
           {props.list.map(({ title, link, icon }) => (
             <React.Fragment key={title}>
               <ListItem
-                className={classes.item}
+                sx={{
+                  background: "#353e48",
+                  color: "rgba(255, 255, 255, 0.7)",
+                  "&:hover,&:focus": {
+                    color: "rgba(255, 255, 255, 1)",
+                  },
+                }}
                 component={Link}
                 to={link}
                 button
               >
-                <ListItemIcon className={classes.icon}>{icon}</ListItemIcon>
+                <ListItemIcon sx={{ color: "custom.grey" }}>
+                  {icon}
+                </ListItemIcon>
                 <ListItemText primary={title} />
               </ListItem>
             </React.Fragment>

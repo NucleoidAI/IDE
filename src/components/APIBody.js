@@ -1,23 +1,9 @@
 import ParamView from "./ParamView";
 import React from "react";
 import Schema from "./Schema";
-import makeStyles from "@mui/styles/makeStyles";
 import { Divider, Grid } from "@mui/material";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    height: "100%",
-  },
-  schema: {
-    height: "100%",
-    width: 400,
-    margin: 8,
-  },
-}));
-
 const APIBody = React.forwardRef(({ method }, ref) => {
-  const classes = useStyles();
-
   const { requestRef, responseRef, paramsRef } = ref;
   const params = [];
   if (requestRef.current || responseRef.current || paramsRef.current)
@@ -26,8 +12,8 @@ const APIBody = React.forwardRef(({ method }, ref) => {
     });
 
   return (
-    <Grid container justifyContent={"space-between"} className={classes.root}>
-      <Grid item className={classes.schema}>
+    <Grid container justifyContent={"space-between"} sx={{ height: "100%" }}>
+      <Grid item md sx={{ margin: 3 }}>
         {requestRef && method === "get" && (
           <>
             <br />
@@ -38,8 +24,8 @@ const APIBody = React.forwardRef(({ method }, ref) => {
           <Schema request edit ref={requestRef} />
         )}
       </Grid>
-      <Divider orientation={"vertical"} style={{ height: 350 }} />
-      <Grid item className={classes.schema}>
+      <Divider orientation={"vertical"} flexItem sx={{ height: 350 }} />
+      <Grid item md sx={{ margin: 3 }}>
         {responseRef && <Schema response edit ref={responseRef} />}
       </Grid>
     </Grid>

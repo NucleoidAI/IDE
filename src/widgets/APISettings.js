@@ -3,24 +3,9 @@ import ParamView from "../components/ParamView";
 import Schema from "../components/Schema";
 import Security from "../components/Security";
 import SummaryForm from "../components/SummaryForm";
-import makeStyles from "@mui/styles/makeStyles";
 import { useContext } from "../context";
 import { Fab, Grid } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-    height: "100%",
-  },
-  schema: {
-    padding: theme.spacing(1),
-  },
-  schemas: {
-    height: 199,
-    overflow: "auto",
-  },
-}));
 
 function APISettings() {
   const [state, dispatch] = useContext();
@@ -33,8 +18,6 @@ function APISettings() {
   const [map, setMap] = useState();
 
   const summaryRef = useRef([]);
-
-  const classes = useStyles();
 
   useEffect(() => {
     const selected = state.get("pages.api.selected");
@@ -52,7 +35,7 @@ function APISettings() {
   }, [state]);
 
   return (
-    <Grid container className={classes.root}>
+    <Grid container sx={{ width: "100%", height: "100%" }}>
       <Grid
         container
         item
@@ -60,12 +43,12 @@ function APISettings() {
         direction={"column"}
         justifyContent={"space-between"}
       >
-        <Grid container className={classes.schemas}>
-          <Grid item xs={6} className={classes.schema}>
+        <Grid container sx={{ padding: 1 }}>
+          <Grid item xs={6} sx={{ height: 200, overflow: "auto" }}>
             {method === "get" && <ParamView params={params} />}
             {method !== "get" && <Schema request schema={request} />}
           </Grid>
-          <Grid item xs={6} className={classes.schema}>
+          <Grid item xs={6} sx={{ height: 200, overflow: "auto" }}>
             <Schema map={map} response schema={response} />
           </Grid>
         </Grid>

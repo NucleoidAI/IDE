@@ -1,6 +1,5 @@
 import React from "react";
 import SettingsIcon from "@mui/icons-material/Settings";
-import makeStyles from "@mui/styles/makeStyles";
 import {
   Button,
   Dialog,
@@ -11,18 +10,7 @@ import {
   IconButton,
 } from "@mui/material";
 
-const useStyles = makeStyles((theme) => ({
-  icon: {
-    fill: theme.palette.custom.grey,
-  },
-  button: {
-    color: theme.palette.custom.grey,
-  },
-}));
-
 function Settings() {
-  const classes = useStyles();
-
   const [open, setOpen] = React.useState(false);
   const [connect, setConnect] = React.useState(false);
 
@@ -39,13 +27,16 @@ function Settings() {
       <Grid container direction={"column"} justifyContent="center">
         <Button
           variant={"text"}
-          className={classes.button}
+          sx={{ color: (theme) => theme.palette.custom.grey }}
           onClick={() => setConnect(!connect)}
         >
           {!connect ? "Connect" : "Disconnect"}
         </Button>
         <IconButton onClick={handleOpen} size="large">
-          <SettingsIcon className={classes.icon} fontSize={"large"} />
+          <SettingsIcon
+            sx={{ fill: (theme) => theme.palette.custom.grey }}
+            fontSize={"large"}
+          />
         </IconButton>
       </Grid>
       <Dialog

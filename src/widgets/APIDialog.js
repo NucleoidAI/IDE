@@ -5,19 +5,11 @@ import APIPath from "../components/APIPath";
 import APITypes from "../components/APITypes";
 import ClosableDialogTitle from "../components/ClosableDialogTitle";
 import React from "react";
-import makeStyles from "@mui/styles/makeStyles";
 import { useContext } from "../context";
 import { v4 as uuid } from "uuid";
 import { Dialog, DialogActions, DialogContent, Grid } from "@mui/material";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    height: 450,
-  },
-}));
-
 function APIDialog() {
-  const classes = useStyles();
   const [state, dispatch] = useContext();
   const { pages } = state;
 
@@ -96,7 +88,7 @@ function APIDialog() {
       <ClosableDialogTitle label={"API"} handleClose={handleClose} />
       <DialogContent>
         <APIPath view={view} setApiDialogView={setApiDialogView} />
-        <Grid className={classes.root}>
+        <Grid sx={{ height: 450 }}>
           {view === "BODY" && (
             <APIBody
               ref={{

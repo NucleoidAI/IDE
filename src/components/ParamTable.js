@@ -4,21 +4,11 @@ import { DataGrid } from "@mui/x-data-grid";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import React from "react";
 import TypeMenu from "./TypeMenu";
-
-import makeStyles from "@mui/styles/makeStyles";
 import { v4 as uuid } from "uuid";
 
 import { Checkbox, IconButton, TextField } from "@mui/material";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    border: "none",
-    width: 850,
-  },
-}));
-
 const ParamTable = React.forwardRef((props, ref) => {
-  const classes = useStyles();
   const { paramsRef, addParamRef } = ref;
 
   const [params, setParams] = React.useState(paramsRef);
@@ -122,7 +112,7 @@ const ParamTable = React.forwardRef((props, ref) => {
 
   return (
     <DataGrid
-      className={classes.root}
+      sx={{ border: "none", width: 850 }}
       columns={columns}
       rows={Object.values(paramsRef || {})}
       hideFooter

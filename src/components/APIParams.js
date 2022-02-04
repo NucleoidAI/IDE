@@ -1,21 +1,9 @@
 import AddIcon from "@mui/icons-material/Add";
 import ParamTable from "./ParamTable";
-import makeStyles from "@mui/styles/makeStyles";
 import { Fab, Grid } from "@mui/material";
 import { forwardRef, useRef } from "react";
 
-const useStyles = makeStyles(() => ({
-  root: {
-    height: "100%",
-  },
-  params: {
-    height: 350,
-    margin: 8,
-  },
-}));
-
 const APIParams = forwardRef((props, ref) => {
-  const classes = useStyles();
   const paramsRef = ref.current;
   const addParamRef = useRef();
 
@@ -24,9 +12,9 @@ const APIParams = forwardRef((props, ref) => {
       container
       direction={"column"}
       justifyContent={"space-between"}
-      className={classes.root}
+      sx={{ height: "100%" }}
     >
-      <Grid item className={classes.params}>
+      <Grid item sx={{ margin: 2, height: 350 }}>
         <ParamTable ref={{ paramsRef: paramsRef, addParamRef: addParamRef }} />
       </Grid>
       <Grid container item justifyContent="flex-end">

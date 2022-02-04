@@ -1,8 +1,6 @@
 import ArrowIcon from "../../icons/Arrow";
 import IDE from "../../layouts/IDE";
 import React from "react";
-import clsx from "clsx";
-import makeStyles from "@mui/styles/makeStyles";
 import {
   Box,
   Button,
@@ -30,25 +28,7 @@ const rows = [
   { branch: "Development 1.6", classes: 35, functions: 24, size: 16 },
 ];
 
-const useStyles = makeStyles((theme) => ({
-  paper: {},
-  button: {
-    margin: theme.spacing(0.5),
-  },
-  tag: {
-    background: "linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%)",
-    color: "white",
-    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
-  },
-  history: {
-    width: "100%",
-    maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
-
 function Branches() {
-  const classes = useStyles();
   const [open, setOpen] = React.useState(rows[0].branch);
 
   return (
@@ -58,7 +38,7 @@ function Branches() {
       </Typography>
       <Grid container spacing={1}>
         <Grid item xs={8}>
-          <Paper className={classes.paper}>
+          <Paper>
             <TableContainer component={Paper}>
               <Table aria-label="collapsible table">
                 <TableHead>
@@ -103,18 +83,24 @@ function Branches() {
                             unmountOnExit
                           >
                             <Box margin={1} textAlign={"right"}>
-                              <Button size={"small"} className={classes.button}>
+                              <Button size={"small"} sx={{ margin: 1 }}>
                                 Export
                               </Button>
-                              <Button size={"small"} className={classes.button}>
+                              <Button size={"small"} sx={{ margin: 1 }}>
                                 Fork
                               </Button>
                               <Button
-                                className={clsx(classes.button, classes.tag)}
+                                sx={{
+                                  background:
+                                    "linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%)",
+                                  color: "white",
+                                  boxShadow:
+                                    "0 3px 5px 2px rgba(255, 105, 135, .3)",
+                                }}
                               >
                                 Tag
                               </Button>
-                              <Button size={"small"} className={classes.button}>
+                              <Button size={"small"} sx={{ margin: 1 }}>
                                 Delete
                               </Button>
                             </Box>
@@ -132,7 +118,13 @@ function Branches() {
           <Typography variant="h6" gutterBottom component="div">
             History
           </Typography>
-          <List className={classes.history}>
+          <List
+            sx={{
+              width: "100%",
+              maxWidth: 360,
+              bgcolor: "background.paper",
+            }}
+          >
             <ListItem>
               <ListItemText
                 primary="Add user related functions"

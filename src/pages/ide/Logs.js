@@ -1,21 +1,11 @@
 import Editor from "../../widgets/Editor";
 import IDE from "../../layouts/IDE";
 import Moment from "react-moment";
-import makeStyles from "@mui/styles/makeStyles";
 import { v4 as uuid } from "uuid";
 import { Grid, Paper, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-const useStyles = makeStyles((theme) => ({
-  editor: {
-    minHeight: 200,
-    width: 500,
-    margin: theme.spacing(3),
-  },
-}));
-
 function Logs() {
-  const classes = useStyles();
   const [logs, setLogs] = useState([]);
 
   useEffect(() => {
@@ -56,7 +46,14 @@ function Logs() {
           alignContent={"center"}
         >
           {logs.map((log) => (
-            <Paper key={uuid()} className={classes.editor}>
+            <Paper
+              key={uuid()}
+              sx={{
+                minHeight: 200,
+                width: 500,
+                margin: 3,
+              }}
+            >
               <Editor name={"log"} log={log.s} readOnly />
               <Grid container justifyContent={"center"}>
                 <Moment date={log.d} format="MM/DD hh:mm:ss" />{" "}

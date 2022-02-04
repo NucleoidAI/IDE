@@ -1,27 +1,9 @@
 import "./ParamTable.css";
 import { DataGrid } from "@mui/x-data-grid";
 import Schema from "./Schema";
-import makeStyles from "@mui/styles/makeStyles";
 import { Divider, Grid, MenuItem, Select, TextField } from "@mui/material";
 
 import React, { useEffect, useState } from "react";
-
-const useStyles = makeStyles(() => ({
-  root: {
-    height: "100%",
-  },
-  divider: {
-    height: 350,
-  },
-  params: {
-    height: "100%",
-    width: 400,
-    margin: 8,
-  },
-  table: {
-    border: "none",
-  },
-}));
 
 function APITypes({
   map,
@@ -30,7 +12,6 @@ function APITypes({
   removeSchemaProperty,
   updateType,
 }) {
-  const classes = useStyles();
   const types = Object.values(dialogTypes || {});
 
   const [selected, setSelected] = useState(types.length ? types[0] : {});
@@ -73,10 +54,10 @@ function APITypes({
   ];
 
   return (
-    <Grid container justifyContent={"space-between"} className={classes.root}>
-      <Grid item className={classes.params}>
+    <Grid container justifyContent={"space-between"} sx={{ height: "100%" }}>
+      <Grid item md sx={{ margin: 3 }}>
         <DataGrid
-          className={classes.table}
+          sx={{ border: "none" }}
           columns={columns}
           rows={types.map((type) => type[Object.keys(type)[0]])}
           onSelectionModelChange={(newSelectionModel) => {
@@ -88,8 +69,8 @@ function APITypes({
           hideFooter
         />
       </Grid>
-      <Divider orientation={"vertical"} className={classes.divider} />
-      <Grid item className={classes.params}>
+      <Divider orientation={"vertical"} flexItem sx={{ height: 350 }} />
+      <Grid item md sx={{ margin: 3 }}>
         <Schema
           key={selectionModel[0]}
           schema={selected}
