@@ -1,4 +1,3 @@
-import "./ParamTable.css";
 import { DataGrid } from "@mui/x-data-grid";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import React from "react";
