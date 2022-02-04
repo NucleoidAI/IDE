@@ -1,3 +1,5 @@
+import "./ParamTable.css";
+
 import { DataGrid } from "@mui/x-data-grid";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import React from "react";
@@ -11,7 +13,7 @@ import { Checkbox, IconButton, TextField } from "@mui/material";
 const useStyles = makeStyles((theme) => ({
   root: {
     border: "none",
-    width: 900,
+    width: 850,
   },
 }));
 
