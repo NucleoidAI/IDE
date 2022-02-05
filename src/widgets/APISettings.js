@@ -1,6 +1,6 @@
 import EditIcon from "@material-ui/icons/Edit";
 import ParamView from "../components/ParamView";
-import Schema from "../components/Schema";
+import SchemaView from "../components/SchemaView";
 import Security from "../components/Security";
 import SummaryForm from "../components/SummaryForm";
 import { makeStyles } from "@material-ui/core/styles";
@@ -25,12 +25,9 @@ const useStyles = makeStyles((theme) => ({
 function APISettings() {
   const [state, dispatch] = useContext();
   const [method, setMethod] = useState();
-  const [request, setRequest] = useState({});
-  const [response, setResponse] = useState({});
   const [params, setParams] = useState();
   const [summary, setSummary] = useState();
   const [description, setDescription] = useState();
-  const [map, setMap] = useState();
 
   const summaryRef = useRef([]);
 
@@ -39,12 +36,9 @@ function APISettings() {
   useEffect(() => {
     const selected = state.get("pages.api.selected");
     const api = state.get("nucleoid.api");
-    setMap(state.get("pages.api.dialog.map"));
 
     if (selected) {
       setMethod(selected.method);
-      setRequest(api[selected.path][selected.method].request);
-      setResponse(api[selected.path][selected.method].response);
       setParams(api[selected.path][selected.method].params);
       setSummary(api[selected.path][selected.method].summary);
       setDescription(api[selected.path][selected.method].description);
@@ -63,10 +57,10 @@ function APISettings() {
         <Grid container className={classes.schemas}>
           <Grid item xs={6} className={classes.schema}>
             {method === "get" && <ParamView params={params} />}
-            {method !== "get" && <Schema request schema={request} />}
+            {method !== "get" && <SchemaView />}
           </Grid>
           <Grid item xs={6} className={classes.schema}>
-            <Schema map={map} response schema={response} />
+            <SchemaView />
           </Grid>
         </Grid>
       </Grid>

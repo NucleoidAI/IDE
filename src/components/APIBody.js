@@ -14,35 +14,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const APIBody = React.forwardRef(({ method }, ref) => {
+const APIBody = ({ method, params, request, response }) => {
   const classes = useStyles();
-
-  const { requestRef, responseRef, paramsRef } = ref;
-  const params = [];
-  if (requestRef.current || responseRef.current || paramsRef.current)
-    Object.keys(paramsRef.current).forEach((key) => {
-      params.push(paramsRef.current[key]);
-    });
 
   return (
     <Grid container justifyContent={"space-between"} className={classes.root}>
       <Grid item className={classes.schema}>
-        {requestRef && method === "get" && (
+        {request && method === "get" && (
           <>
             <br />
             <ParamView params={params} />
           </>
         )}
-        {requestRef && method !== "get" && (
-          <Schema request edit ref={requestRef} />
+        {request && method !== "get" && (
+          <Schema request edit schema={request} />
         )}
       </Grid>
       <Divider orientation={"vertical"} style={{ height: 350 }} />
       <Grid item className={classes.schema}>
-        {responseRef && <Schema response edit ref={responseRef} />}
+        {response && <Schema response edit schema={response} />}
       </Grid>
     </Grid>
   );
-});
+};
 
 export default APIBody;

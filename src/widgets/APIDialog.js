@@ -36,46 +36,19 @@ function APIDialog() {
   const types = state.get("pages.api.dialog.types");
 
   const params = api[path][method].params;
-  const request = api[path][method].request;
-  const response = api[path][method].response;
+  const request = compile(api[path][method].request);
+  const response = compile(api[path][method].response);
 
-  const paramsRef = React.useRef(index(params));
-  const requestRef = React.useRef(compile(request));
-  const responseRef = React.useRef(compile(response));
-
-  if (
-    paramsRef.current === undefined &&
-    requestRef.current === undefined &&
-    responseRef.current === undefined
-  ) {
-    paramsRef.current = index(params);
-    requestRef.current = compile(request);
-    responseRef.current = compile(response);
-  }
-
-  const handleClose = () => {
-    pages.api.dialog.open = false;
-    dispatch({ type: "CLOSE_API_DIALOG" });
-    setImmediate(() => {
-      paramsRef.current = undefined;
-      requestRef.current = undefined;
-      responseRef.current = undefined;
-    });
-  };
-
-  function saveApiDialog() {
+  const handleClose = () => dispatch({ type: "CLOSE_API_DIALOG" });
+  const saveApiDialog = () =>
     dispatch({
       type: "SAVE_API_DIALOG",
       payload: {
-        params: deindex(paramsRef.current),
-        request: decompile(requestRef.current),
-        response: decompile(responseRef.current),
+        params: deindex(params),
+        request: decompile(request),
+        response: decompile(response),
       },
     });
-    paramsRef.current = undefined;
-    requestRef.current = undefined;
-    responseRef.current = undefined;
-  }
 
   function setApiDialogView(view) {
     pages.api.dialog.view = view;
@@ -95,16 +68,14 @@ function APIDialog() {
         <Grid className={classes.root}>
           {view === "BODY" && (
             <APIBody
-              ref={{
-                requestRef: requestRef,
-                responseRef: responseRef,
-                paramsRef: paramsRef,
-              }}
               method={method}
+              params={params}
+              request={request}
+              response={response}
             />
           )}
-          {view === "PARAMS" && <APIParams ref={paramsRef} />}
-          {view === "TYPES" && <APITypes ref={paramsRef} dialogTypes={types} />}
+          {view === "PARAMS" && <APIParams params={params} />}
+          {view === "TYPES" && <APITypes types={types} dialogTypes={types} />}
         </Grid>
       </DialogContent>
       <DialogActions>
