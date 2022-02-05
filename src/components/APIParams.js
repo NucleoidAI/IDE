@@ -26,7 +26,7 @@ const APIParams = forwardRef((props, ref) => {
       className={classes.root}
     >
       <Grid item className={classes.params}>
-        <ParamTable ref={{ paramsRef: paramsRef, addParamRef: addParamRef }} />
+        <ParamTable ref={{ paramsRef, addParamRef }} />
       </Grid>
       <Grid container item justifyContent="flex-end">
         <Fab size={"small"} onClick={() => addParamRef.current()}>

@@ -16,8 +16,8 @@ import {
 } from "@material-ui/core";
 import { forwardRef, useEffect, useState } from "react";
 
-const Schema = forwardRef(({ request, schema, response, edit }, ref) => {
-  schema = schema || {};
+const Schema = forwardRef(({ request, response, edit }, ref) => {
+  let schema = {};
 
   const [add, setAdd] = useState();
   const [remove, setRemove] = useState();

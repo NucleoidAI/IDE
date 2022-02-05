@@ -27,9 +27,8 @@ test("Compile and decompile schema", () => {
     },
   };
 
-  const map = {};
-  const object = compile(map, schema);
-  const result = decompile(map, object);
+  const object = compile(schema);
+  const result = decompile(object);
   expect(result).toEqual(schema);
 });
 
@@ -45,8 +44,7 @@ test("Index and deindex params", () => {
     },
   ];
 
-  const map = {};
-  const object = index(map, params);
+  const object = index(params);
   const result = deindex(object);
   expect(result).toEqual(params);
 });

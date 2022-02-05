@@ -35,8 +35,8 @@ const ParamTable = React.forwardRef((props, ref) => {
 
   function removeParam(id) {
     delete paramsRef[id];
-    //TODO: https://github.com/mui-org/material-ui-x/issues/2714 mui problem?
-    setTimeout(() => {
+    // TODO https://github.com/mui-org/material-ui-x/issues/2714 mui problem?
+    setImmediate(() => {
       setParams({ ...paramsRef });
     });
   }
