@@ -30,7 +30,7 @@ const APIBody = forwardRef(({ method, params }, { request, response }) => {
       </Grid>
       <Divider orientation={"vertical"} style={{ height: 350 }} />
       <Grid item className={classes.schema}>
-        <Schema response ref={response} />}
+        <Schema response ref={response} />
       </Grid>
     </Grid>
   );

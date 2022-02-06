@@ -11,7 +11,7 @@ function compile(object) {
     const { id, type } = property;
 
     if (type === "object") {
-      map = { ...map, ...compile({ property }) };
+      map = { ...map, ...compile({ root: property }) };
     } else {
       map[id] = property;
     }

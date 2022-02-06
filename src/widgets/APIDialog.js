@@ -158,7 +158,7 @@ const decompile = (schema) => {
     const { name, type } = property;
 
     if (type === "object") {
-      const nested = decompile({ property });
+      const nested = decompile({ root: property });
       object.properties[name] = nested;
     } else {
       object.properties[name] = { type };

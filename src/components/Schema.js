@@ -6,7 +6,7 @@ import SchemaArray from "./SchemaArray";
 import SchemaObject from "./SchemaObject";
 import SchemaProperty from "./SchemaProperty";
 import { TreeView } from "@material-ui/lab";
-import { compile as compileSchema } from "../utils/Map";
+import { compile as mapSchema } from "../utils/Map";
 import { v4 as uuid } from "uuid";
 import {
   Grid,
@@ -24,7 +24,7 @@ const Schema = forwardRef(({ request, response }, ref) => {
   const [selected, setSelected] = useState(null);
 
   const root = schema[Object.keys(schema)[0]].id;
-  const map = compileSchema(schema);
+  const map = mapSchema(schema);
 
   function addSchemaProperty(selected) {
     const key = uuid();
@@ -128,7 +128,7 @@ const compile = (map, schema, name) => {
 
     switch (property.type) {
       case "object":
-        children.push(compile(map, { property }, name));
+        children.push(compile(map, { root: property }, name));
         break;
       case "array":
         children.push(
