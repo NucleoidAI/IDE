@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const APIBody = forwardRef(({ method }, { params, request, response }) => {
+const APIBody = forwardRef(({ method, params }, { request, response }) => {
   const classes = useStyles();
 
   return (
@@ -23,7 +23,7 @@ const APIBody = forwardRef(({ method }, { params, request, response }) => {
         {method === "get" && (
           <>
             <br />
-            <ParamView params={params.current} />
+            <ParamView params={params} />
           </>
         )}
         {method !== "get" && <Schema request ref={request} />}

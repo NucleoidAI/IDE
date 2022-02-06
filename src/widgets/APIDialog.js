@@ -30,38 +30,39 @@ function APIDialog() {
   const [path, setPath] = useState("/");
   const [view, setView] = useState(context.get("pages.api.dialog.view"));
 
-  const types = context.get("pages.api.dialog.types");
-  const api = context.get("nucleoid.api");
-
-  const params = useRef(api[path][method].params);
+  const paramsRef = useRef();
+  const [params, setParams] = useState();
   const request = useRef();
   const response = useRef();
 
   useEffect(() => {
     const selected = context.get("pages.api.selected");
+    if (!selected) return;
 
-    if (selected) {
-      setMethod(selected.method);
-      setPath(selected.path);
-    }
-  }, [context]);
+    const { method, path } = selected;
+    setMethod(method);
+    setPath(path);
 
-  useEffect(() => {
+    const api = context.get("nucleoid.api");
+    const params = api[path][method].params;
+    setParams(params);
+
+    paramsRef.current = index(params);
     request.current = compile(api[path][method].request);
     response.current = compile(api[path][method].response);
-  }, [api, path, method]);
+  }, [context, path, method]);
 
   const handleClose = () => dispatch({ type: "CLOSE_API_DIALOG" });
-  const saveApiDialog = () => {
+  const saveApiDialog = () =>
     dispatch({
       type: "SAVE_API_DIALOG",
       payload: {
-        params: deindex(params.current),
+        params: deindex(paramsRef.current),
         request: decompile(request.current),
         response: decompile(response.current),
       },
     });
-  };
+
   const setApiDialogView = (view) => {
     setView((pages.api.dialog.view = view));
   };
@@ -78,10 +79,14 @@ function APIDialog() {
         <APIPath view={view} setApiDialogView={setApiDialogView} />
         <Grid className={classes.root}>
           {view === "BODY" && (
-            <APIBody method={method} ref={{ params, request, response }} />
+            <APIBody
+              method={method}
+              params={params}
+              ref={{ request, response }}
+            />
           )}
-          {view === "PARAMS" && <APIParams params={params} />}
-          {view === "TYPES" && <APITypes types={types} dialogTypes={types} />}
+          {view === "PARAMS" && <APIParams ref={paramsRef} />}
+          {view === "TYPES" && <APITypes />}
         </Grid>
       </DialogContent>
       <DialogActions>
