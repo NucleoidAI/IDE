@@ -32,6 +32,7 @@ function APIDialog() {
 
   const paramsRef = useRef();
   const [params, setParams] = useState();
+  const types = useRef();
   const request = useRef();
   const response = useRef();
 
@@ -48,6 +49,14 @@ function APIDialog() {
     setParams(params);
 
     paramsRef.current = index(params);
+    types.current = Object.entries(context.nucleoid.types)
+      .map(([key, value]) => ({
+        ...value,
+        name: key,
+        type: value.type,
+      }))
+      .map((type) => compile(type));
+
     request.current = compile(api[path][method].request);
     response.current = compile(api[path][method].response);
   }, [context, path, method]);
@@ -60,6 +69,11 @@ function APIDialog() {
         params: deindex(paramsRef.current),
         request: decompile(request.current),
         response: decompile(response.current),
+        types: types.current.reduce((previous, current) => {
+          const object = decompile(current);
+          const name = current[Object.keys(current)[0]].name;
+          return { ...previous, [name]: object };
+        }, {}),
       },
     });
 
@@ -86,7 +100,7 @@ function APIDialog() {
             />
           )}
           {view === "PARAMS" && <APIParams ref={paramsRef} />}
-          {view === "TYPES" && <APITypes />}
+          {view === "TYPES" && <APITypes ref={types} />}
         </Grid>
       </DialogContent>
       <DialogActions>

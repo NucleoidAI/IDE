@@ -18,6 +18,7 @@ function reducer(state, action) {
       api[path][method].request = action.payload.request;
       api[path][method].response = action.payload.response;
       api[path][method].params = action.payload.params;
+      nucleoid.types = action.payload.types;
     }
     // eslint-disable-next-line no-fallthrough
     case "CLOSE_API_DIALOG":

@@ -1,9 +1,7 @@
 import "./ParamTable.css";
 import { DataGrid } from "@mui/x-data-grid";
 import Schema from "./Schema";
-import { compile } from "../widgets/APIDialog";
-import { compile as compileSchema } from "../utils/Map";
-import { useContext } from "../context";
+import { v4 as uuid } from "uuid";
 import {
   Divider,
   Grid,
@@ -12,7 +10,7 @@ import {
   TextField,
   makeStyles,
 } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -31,21 +29,18 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function APITypes() {
+const APITypes = forwardRef((props, ref) => {
+  const types = ref.current;
   const classes = useStyles();
-  const [context] = useContext();
-  const types = Object.entries(context.get("nucleoid.types"))
-    .map(([key, value]) => ({
-      ...value,
-      name: key,
-      type: value.type,
-    }))
-    .map((type) => compile(type));
 
   const [selected, setSelected] = useState(types.length ? types[0] : {});
   const [selectionModel, setSelectionModel] = useState([]);
 
-  const map = compileSchema(selected);
+  const schema = useRef(selected);
+
+  useEffect(() => {
+    schema.current = selected;
+  }, [selected]);
 
   useEffect(() => {
     const initial = Object.keys(selected)[0];
@@ -58,13 +53,7 @@ function APITypes() {
       field: "name",
       headerName: "Name",
       renderCell: (type) => {
-        const { id } = type.row;
-        return (
-          <TextField
-            defaultValue={type.value}
-            onChange={(event) => (map[id].name = event.target.value)}
-          />
-        );
+        return <TextField defaultValue={type.value} />;
       },
       flex: 1,
     },
@@ -101,10 +90,10 @@ function APITypes() {
       </Grid>
       <Divider orientation={"vertical"} className={classes.divider} />
       <Grid item className={classes.params}>
-        <Schema key={selectionModel[0]} schema={selected} edit />
+        <Schema key={uuid()} ref={schema} />
       </Grid>
     </Grid>
   );
-}
+});
 
 export default APITypes;
