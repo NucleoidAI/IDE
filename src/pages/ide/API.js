@@ -8,29 +8,14 @@ import React from "react";
 import { Card, CardActions, CardContent, Grid, Paper } from "@mui/material";
 // eslint-disable-next-line
 import { Context } from "../../context";
-import makeStyles from "@mui/styles/makeStyles";
-
-const useStyles = makeStyles((theme) => {
-  const ratio = 0.65;
-  const height = window.innerHeight - theme.spacing(1) * 2 - 1;
-
-  return {
-    tree: {
-      height,
-    },
-    editor: {
-      height: height * ratio - theme.spacing(1) / 2,
-    },
-    settings: {
-      height: height * (1 - ratio) - theme.spacing(1) / 2,
-      padding: theme.spacing(1),
-    },
-  };
-});
+import { useTheme } from "@mui/material/styles";
 
 function API() {
-  const classes = useStyles();
   const dispatch = React.useContext(Context)[1];
+  const theme = useTheme();
+
+  const ratio = 0.65;
+  const height = window.innerHeight - theme.spacing(1) * 2 - 1;
 
   function openApiDialog(item) {
     dispatch({
@@ -44,7 +29,7 @@ function API() {
       <APIDialog />
       <Grid container spacing={1}>
         <Grid item xs={3}>
-          <Card className={classes.tree}>
+          <Card sx={{ height: height }}>
             <CardContent>
               <APITree />
             </CardContent>
@@ -59,12 +44,17 @@ function API() {
         <Grid item xs={9}>
           <Grid container spacing={1}>
             <Grid item xs={12}>
-              <Paper className={classes.editor}>
+              <Paper sx={{ height: height * ratio - theme.spacing(1) / 2 }}>
                 <Editor name={"api"} api />
               </Paper>
             </Grid>
             <Grid item xs={12}>
-              <Card className={classes.settings}>
+              <Card
+                sx={{
+                  height: height * (1 - ratio) - theme.spacing(1) / 2,
+                  padding: theme.spacing(1),
+                }}
+              >
                 <APISettings />
               </Card>
             </Grid>
