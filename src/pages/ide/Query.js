@@ -2,7 +2,7 @@ import Editor from "../../widgets/Editor";
 import IDE from "../../layouts/IDE";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import QueryResult from "../../components/QueryResult";
-import makeStyles from "@mui/styles/makeStyles";
+import useTheme from "@mui/material/styles/useTheme";
 import {
   Card,
   Fab,
@@ -12,13 +12,10 @@ import {
   Paper,
   Switch,
 } from "@mui/material";
+
 import React, { useEffect, useRef, useState } from "react";
 
-const useStyles = makeStyles((theme) => {
-  const ratio = 0.5;
-  const height = window.innerHeight - theme.spacing(1) * 2 - 1;
-
-  return {
+/*
     editor: {
       height: height * ratio - theme.spacing(1) / 2,
     },
@@ -44,13 +41,16 @@ const useStyles = makeStyles((theme) => {
         },
       },
     },
-  };
-});
+
+*/
 
 function Query() {
-  const classes = useStyles();
   const [result, setResult] = useState();
   const editor = useRef();
+  const theme = useTheme();
+
+  const ratio = 0.5;
+  const height = window.innerHeight - theme.spacing(1) * 2 - 1;
 
   useEffect(() => {
     editor.current.commands.addCommand({
@@ -82,12 +82,16 @@ function Query() {
     <IDE anchor={false}>
       <Grid container spacing={1}>
         <Grid item xs={12}>
-          <Paper className={classes.editor}>
+          <Paper sx={{ height: height * ratio - theme.spacing(1) / 2 }}>
             <Editor name={"query"} ref={editor} />
             <Grid
               container
               item
-              className={classes.run}
+              sx={{
+                position: "relative",
+                bottom: 40 + theme.spacing(1),
+                right: theme.spacing(1),
+              }}
               justifyContent={"flex-end"}
             >
               <Fab size={"small"} onClick={() => query()}>
@@ -101,7 +105,13 @@ function Query() {
           </Paper>
         </Grid>
         <Grid item xs={12}>
-          <Card className={classes.results}>
+          <Card
+            sx={{
+              height: height * (1 - ratio) - theme.spacing(1) / 2,
+              justifyContent: "flex-start",
+              paddingLeft: theme.spacing(1) * 2,
+            }}
+          >
             <Grid container justifyContent={"flex-end"}>
               <FormGroup>
                 <FormControlLabel control={<Switch />} label={"JSON"} checked />
