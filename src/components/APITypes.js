@@ -1,6 +1,9 @@
 import "./ParamTable.css";
 import { DataGrid } from "@mui/x-data-grid";
 import Schema from "./Schema";
+import { compile } from "../widgets/APIDialog";
+import { compile as compileSchema } from "../utils/Map";
+import { useContext } from "../context";
 import {
   Divider,
   Grid,
@@ -28,18 +31,21 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function APITypes({
-  map,
-  dialogTypes,
-  addSchemaProperty,
-  removeSchemaProperty,
-  updateType,
-}) {
+function APITypes() {
   const classes = useStyles();
-  const types = Object.values(dialogTypes || {});
+  const [context] = useContext();
+  const types = Object.entries(context.get("nucleoid.types"))
+    .map(([key, value]) => ({
+      ...value,
+      name: key,
+      type: value.type,
+    }))
+    .map((type) => compile(type));
 
   const [selected, setSelected] = useState(types.length ? types[0] : {});
   const [selectionModel, setSelectionModel] = useState([]);
+
+  const map = compileSchema(selected);
 
   useEffect(() => {
     const initial = Object.keys(selected)[0];
@@ -95,15 +101,7 @@ function APITypes({
       </Grid>
       <Divider orientation={"vertical"} className={classes.divider} />
       <Grid item className={classes.params}>
-        <Schema
-          key={selectionModel[0]}
-          schema={selected}
-          edit
-          map={map}
-          addSchemaProperty={addSchemaProperty}
-          removeSchemaProperty={removeSchemaProperty}
-          updateType={updateType}
-        />
+        <Schema key={selectionModel[0]} schema={selected} edit />
       </Grid>
     </Grid>
   );
