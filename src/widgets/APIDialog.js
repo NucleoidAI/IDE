@@ -4,7 +4,6 @@ import APIParams from "../components/APIParams";
 import APIPath from "../components/APIPath";
 import APITypes from "../components/APITypes";
 import ClosableDialogTitle from "../components/ClosableDialogTitle";
-import React from "react";
 import { useContext } from "../context";
 import { v4 as uuid } from "uuid";
 import {
@@ -14,6 +13,7 @@ import {
   Grid,
   makeStyles,
 } from "@material-ui/core";
+import React, { useEffect, useRef, useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,41 +23,52 @@ const useStyles = makeStyles((theme) => ({
 
 function APIDialog() {
   const classes = useStyles();
-  const [state, dispatch] = useContext();
-  const { pages } = state;
+  const [context, dispatch] = useContext();
+  const { pages } = context;
 
-  const [view, setView] = React.useState(state.get("pages.api.dialog.view"));
+  const [method, setMethod] = useState("get");
+  const [path, setPath] = useState("/");
+  const [view, setView] = useState(context.get("pages.api.dialog.view"));
 
-  const api = state.get("nucleoid.api");
-  const { method, path } = state.get("pages.api.selected") || {
-    method: "get",
-    path: "/",
-  };
-  const types = state.get("pages.api.dialog.types");
+  const types = context.get("pages.api.dialog.types");
+  const api = context.get("nucleoid.api");
 
-  const params = api[path][method].params;
-  const request = compile(api[path][method].request);
-  const response = compile(api[path][method].response);
+  const params = useRef(api[path][method].params);
+  const request = useRef();
+  const response = useRef();
+
+  useEffect(() => {
+    const { method, path } = context.get("pages.api.selected") || {
+      method: "get",
+      path: "/",
+    };
+    setMethod(method);
+    setPath(path);
+  }, [context, setMethod, setPath]);
+
+  useEffect(() => {
+    request.current = compile(api[path][method].request);
+    response.current = compile(api[path][method].response);
+  }, [api, path, method]);
 
   const handleClose = () => dispatch({ type: "CLOSE_API_DIALOG" });
-  const saveApiDialog = () =>
+  const saveApiDialog = () => {
     dispatch({
       type: "SAVE_API_DIALOG",
       payload: {
-        params: deindex(params),
-        request: decompile(request),
-        response: decompile(response),
+        params: deindex(params.current),
+        request: decompile(request.current),
+        response: decompile(response.current),
       },
     });
-
-  function setApiDialogView(view) {
-    pages.api.dialog.view = view;
-    setView(pages.api.dialog.view);
-  }
+  };
+  const setApiDialogView = (view) => {
+    setView((pages.api.dialog.view = view));
+  };
 
   return (
     <Dialog
-      open={Boolean(state.get("pages.api.dialog.open"))}
+      open={Boolean(context.get("pages.api.dialog.open"))}
       fullWidth
       maxWidth={"md"}
       onClose={(event) => (event.key === "Escape" ? handleClose() : null)}
@@ -67,12 +78,7 @@ function APIDialog() {
         <APIPath view={view} setApiDialogView={setApiDialogView} />
         <Grid className={classes.root}>
           {view === "BODY" && (
-            <APIBody
-              method={method}
-              params={params}
-              request={request}
-              response={response}
-            />
+            <APIBody method={method} ref={{ params, request, response }} />
           )}
           {view === "PARAMS" && <APIParams params={params} />}
           {view === "TYPES" && <APITypes types={types} dialogTypes={types} />}

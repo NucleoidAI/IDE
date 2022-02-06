@@ -15,17 +15,16 @@ import {
   Select,
   Typography,
 } from "@material-ui/core";
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 
-const Schema = ({ request, response, schema }) => {
+const Schema = forwardRef(({ request, response }, ref) => {
+  const [schema, setSchema] = useState(ref.current);
   const [addIcon, setAddIcon] = useState();
   const [removeIcon, setRemoveIcon] = useState();
   const [selected, setSelected] = useState(null);
 
   const root = schema[Object.keys(schema)[0]].id;
   const map = compileSchema(schema);
-
-  const [mp, setMp] = useState(false);
 
   function addSchemaProperty(selected) {
     const key = uuid();
@@ -38,13 +37,13 @@ const Schema = ({ request, response, schema }) => {
       type: "integer",
     };
 
-    setMp(!mp);
+    setSchema({ ...schema });
   }
 
   function removeSchemaProperty(selected) {
     delete map[selected].id;
 
-    setMp(!mp);
+    setSchema({ ...schema });
   }
 
   const select = (id) => {
@@ -113,7 +112,7 @@ const Schema = ({ request, response, schema }) => {
       </Grid>
     </Grid>
   );
-};
+});
 
 const compile = (map, schema, name) => {
   schema = schema[Object.keys(schema)[0]];
