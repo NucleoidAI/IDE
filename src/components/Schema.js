@@ -120,6 +120,8 @@ const compile = (map, schema, name) => {
   const children = [];
 
   for (const key in properties) {
+    if (!map[key]) continue;
+
     const { name } = map[key];
     const property = properties[key];
     const id = key;

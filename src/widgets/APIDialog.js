@@ -38,13 +38,13 @@ function APIDialog() {
   const response = useRef();
 
   useEffect(() => {
-    const { method, path } = context.get("pages.api.selected") || {
-      method: "get",
-      path: "/",
-    };
-    setMethod(method);
-    setPath(path);
-  }, [context, setMethod, setPath]);
+    const selected = context.get("pages.api.selected");
+
+    if (selected) {
+      setMethod(selected.method);
+      setPath(selected.path);
+    }
+  }, [context]);
 
   useEffect(() => {
     request.current = compile(api[path][method].request);
