@@ -1,9 +1,9 @@
 name: Analysis
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 jobs:
   analyze:
     runs-on: ubuntu-latest
@@ -14,11 +14,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'javascript' ]
+        language: ["javascript"]
     steps:
-    - uses: actions/checkout@v2
-    - uses: github/codeql-action/init@v1
-      with:
-        languages: ${{ matrix.language }}
-    - uses: github/codeql-action/autobuild@v1
-    - uses: github/codeql-action/analyze@v1
+      - uses: actions/checkout@v2
+      - uses: github/codeql-action/init@v1
+        with:
+          languages: ${{ matrix.language }}
+      - uses: github/codeql-action/autobuild@v1
+      - uses: github/codeql-action/analyze@v1

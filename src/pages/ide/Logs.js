@@ -1,4 +1,4 @@
-import Editor from "../../components/Editor";
+import Editor from "../../widgets/Editor";
 import IDE from "../../layouts/IDE";
 import Moment from "react-moment";
 import { makeStyles } from "@material-ui/core/styles";

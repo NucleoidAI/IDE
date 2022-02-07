@@ -1,6 +1,6 @@
 import AddList from "../../components/AddList";
-import Editor from "../../components/Editor";
-import FunctionTree from "../../components/FunctionTree";
+import Editor from "../../widgets/Editor";
+import FunctionTree from "../../widgets/FunctionTree";
 import IDE from "../../layouts/IDE";
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";

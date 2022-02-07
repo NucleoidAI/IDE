@@ -1,12 +1,14 @@
-import APIDialog from "../../components/APIDialog";
-import APISettings from "../../components/APISettings";
-import APITree from "../../components/APITree";
+import APIDialog from "../../widgets/APIDialog";
+import APISettings from "../../widgets/APISettings";
+import APITree from "../../widgets/APITree";
 import AddList from "../../components/AddList";
-import Editor from "../../components/Editor";
+import Editor from "../../widgets/Editor";
 import IDE from "../../layouts/IDE";
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import { Card, CardActions, CardContent, Grid, Paper } from "@material-ui/core";
+// eslint-disable-next-line
+import { Context } from "../../context";
+import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => {
   const ratio = 0.65;
@@ -28,6 +30,14 @@ const useStyles = makeStyles((theme) => {
 
 function API() {
   const classes = useStyles();
+  const dispatch = React.useContext(Context)[1];
+
+  function openApiDialog(item) {
+    dispatch({
+      type: "OPEN_API_DIALOG",
+      payload: item.toUpperCase(),
+    });
+  }
 
   return (
     <IDE>
@@ -39,7 +49,10 @@ function API() {
               <APITree />
             </CardContent>
             <CardActions>
-              <AddList list={["Resource", "Method"]} type={"OPEN_API_DIALOG"} />
+              <AddList
+                list={["Resource", "Method"]}
+                clickEvent={openApiDialog}
+              />
             </CardActions>
           </Card>
         </Grid>

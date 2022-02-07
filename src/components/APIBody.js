@@ -1,8 +1,7 @@
 import ParamView from "./ParamView";
-import React from "react";
 import Schema from "./Schema";
-import { useContext } from "../context";
 import { Divider, Grid, makeStyles } from "@material-ui/core";
+import React, { forwardRef } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,36 +14,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function APIBody() {
+const APIBody = forwardRef(({ method, params }, { request, response }) => {
   const classes = useStyles();
-  const [state] = useContext();
-  const { method } = state.get("pages.api.selected");
-  const request = state.get("pages.api.dialog.request");
-  const response = state.get("pages.api.dialog.response");
-
-  const selected = state.get("pages.api.selected");
-  const api = state.get("nucleoid.api");
-  const params = api[selected.path][selected.method].params;
 
   return (
     <Grid container justifyContent={"space-between"} className={classes.root}>
       <Grid item className={classes.schema}>
-        {request && method === "get" && (
+        {method === "get" && (
           <>
             <br />
             <ParamView params={params} />
           </>
         )}
-        {request && method !== "get" && (
-          <Schema request edit schema={request} />
-        )}
+        {method !== "get" && <Schema request ref={request} />}
       </Grid>
       <Divider orientation={"vertical"} style={{ height: 350 }} />
       <Grid item className={classes.schema}>
-        {response && <Schema response edit schema={response} />}
+        <Schema response ref={response} />
       </Grid>
     </Grid>
   );
-}
+});
 
 export default APIBody;

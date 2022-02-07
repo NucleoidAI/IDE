@@ -3,8 +3,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import TypeMenu from "./TypeMenu";
 import { makeStyles } from "@material-ui/core/styles";
-import { useContext } from "../context";
 import { Checkbox, IconButton, TextField } from "@material-ui/core";
+import React, { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,10 +13,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ParamTable = ({ params }) => {
+const ParamTable = React.forwardRef((props, ref) => {
   const classes = useStyles();
-  const [state, dispatch] = useContext();
-  const map = state.get("pages.api.dialog.map");
+  const [params, setParams] = useState(ref.current);
+
+  const removeParam = (id) => {
+    delete params[id];
+    setParams({ ...params });
+    // TODO Check "No row with id" issue in MUI 5
+  };
 
   const columns = [
     {
@@ -27,7 +32,7 @@ const ParamTable = ({ params }) => {
         return (
           <TextField
             defaultValue={param.value}
-            onChange={(event) => (map[id].name = event.target.value)}
+            onChange={(event) => (params[id].name = event.target.value)}
           />
         );
       },
@@ -38,7 +43,7 @@ const ParamTable = ({ params }) => {
       headerName: "Type",
       renderCell: (param) => {
         const { id } = param.row;
-        return <TypeMenu id={id} type={param.value} edit />;
+        return <TypeMenu ref={params} id={id} type={param.value} edit />;
       },
       flex: 1,
     },
@@ -56,7 +61,7 @@ const ParamTable = ({ params }) => {
         return (
           <Checkbox
             checked={param.value}
-            onChange={(event) => (map[id].required = event.target.checked)}
+            onChange={(event) => (params[id].required = event.target.checked)}
           />
         );
       },
@@ -70,7 +75,7 @@ const ParamTable = ({ params }) => {
         return (
           <TextField
             defaultValue={param.value}
-            onChange={(event) => (map[id].description = event.target.value)}
+            onChange={(event) => (params[id].description = event.target.value)}
             fullWidth
           />
         );
@@ -84,9 +89,7 @@ const ParamTable = ({ params }) => {
       renderCell: (param) => {
         const { id } = param.row;
         return (
-          <IconButton
-            onClick={() => dispatch({ type: "REMOVE_PARAM", payload: { id } })}
-          >
+          <IconButton onClick={() => removeParam(id)}>
             <HighlightOffIcon />
           </IconButton>
         );
@@ -98,11 +101,11 @@ const ParamTable = ({ params }) => {
     <DataGrid
       className={classes.root}
       columns={columns}
-      rows={Object.values(params || {})}
+      rows={Object.values(params).filter((p) => p.id)}
       hideFooter
       disableSelectionOnClick
     />
   );
-};
+});
 
 export default ParamTable;

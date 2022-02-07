@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function SchemaObject({ name, edit, children, ...other }) {
+function SchemaObject({ name, edit, map, children, ...other }) {
   const classes = useStyles();
   const [value, setValue] = useState(name);
   const textField = useRef();
@@ -25,7 +25,9 @@ function SchemaObject({ name, edit, children, ...other }) {
                   size={"small"}
                   className={classes.textField}
                   value={value || ""}
-                  onChange={(event) => setValue(event.target.value)}
+                  onChange={(event) =>
+                    setValue((map.name = event.target.value))
+                  }
                   inputRef={textField}
                   onClick={() => setTimeout(() => textField.current.focus(), 0)}
                 />

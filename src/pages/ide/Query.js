@@ -1,4 +1,4 @@
-import Editor from "../../components/Editor";
+import Editor from "../../widgets/Editor";
 import IDE from "../../layouts/IDE";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import QueryResult from "../../components/QueryResult";

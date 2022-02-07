@@ -1,10 +1,15 @@
-import APITree from "../components/APITree";
-import Editor from "../components/Editor";
-import FunctionTree from "../components/FunctionTree";
+import APIDialog from "../widgets/APIDialog";
+import APISettings from "../widgets/APISettings";
+import APITree from "../widgets/APITree";
+import AddList from "../components/AddList";
+import Editor from "../widgets/Editor";
+import FunctionTree from "../widgets/FunctionTree";
 import Logo from "../components/Logo";
 import ParamView from "../components/ParamView";
 import React from "react";
 import Schema from "../components/Schema";
+import Security from "../components/Security";
+import SummaryForm from "../components/SummaryForm";
 import { Grid, Paper } from "@material-ui/core";
 
 const apis = [
@@ -67,6 +72,17 @@ const params = [
 const style = { height: 300, width: 300 };
 
 function Dev() {
+  const ref = React.useRef([]);
+
+  function textChangeHandler() {
+    console.log(ref.current["Summary"].value);
+    console.log(ref.current["Description"].value);
+  }
+
+  function openDialog(event) {
+    console.log(event);
+  }
+
   return (
     <Grid
       container
@@ -76,18 +92,20 @@ function Dev() {
     >
       <Logo title="Dev" />
       <br />
-      <Paper style={style}>
-        <APITree apis={apis} />
-      </Paper>
+
+      <h1>Components</h1>
       <br />
-      <Paper style={style}>
-        <Editor name={"dev"} />
-      </Paper>
-      <br />
+
       <Paper style={style}>
         <FunctionTree functions={functions} />
       </Paper>
       <br />
+
+      <Paper style={style}>
+        <ParamView params={params} />
+      </Paper>
+      <br />
+
       <Paper style={style}>
         <Schema
           schema={{
@@ -104,8 +122,45 @@ function Dev() {
         />
       </Paper>
       <br />
+
       <Paper style={style}>
-        <ParamView params={params} />
+        <Security />
+      </Paper>
+      <br />
+      <Paper style={style}>
+        <SummaryForm
+          summaryText="a"
+          descriptionText="b"
+          summaryTextChangeHandler={textChangeHandler}
+          descriptionTextChangeHandler={textChangeHandler}
+          ref={ref}
+        />
+      </Paper>
+      <br />
+      <Paper style={style}>
+        <AddList list={["Resource", "Method"]} clickEvent={openDialog} />
+      </Paper>
+      <br />
+
+      <h1>Widgets</h1>
+      <br />
+
+      <Paper style={style}>
+        <APITree apis={apis} />
+      </Paper>
+      <br />
+
+      <Paper style={{ width: 800, height: 300 }}>
+        <APISettings />
+      </Paper>
+      <br />
+
+      <Paper style={style}>
+        <Editor name={"api"} api />
+      </Paper>
+      <br />
+      <Paper style={{ width: 800, height: 400 }}>
+        <APIDialog />
       </Paper>
       <br />
     </Grid>

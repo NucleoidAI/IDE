@@ -1,22 +1,25 @@
-import React from "react";
-import { useContext } from "../context";
+//import { useContext } from "../context";
 import { v4 as uuid } from "uuid";
 import { Divider, MenuItem, Select } from "@material-ui/core";
+import { forwardRef, useState } from "react";
+const TypeMenu = forwardRef(({ id, type, map, edit, noNested }, ref) => {
+  const [selectedType, setSelectedType] = useState(type);
 
-function TypeMenu({ id, type, edit, noNested }) {
-  const dispatch = useContext()[1];
+  function updateType(id, value) {
+    if (ref) {
+      ref[id].type = value;
+    } else {
+      map.type = value;
+    }
+    setSelectedType(value);
+  }
 
   return (
     <>
       {edit && (
         <Select
-          value={type}
-          onChange={(event) =>
-            dispatch({
-              type: "UPDATE_TYPE",
-              payload: { id, type: event.target.value },
-            })
-          }
+          value={selectedType}
+          onChange={(event) => updateType(id, event.target.value)}
         >
           <MenuItem value={"integer"}>integer</MenuItem>
           <MenuItem value={"string"}>string</MenuItem>
@@ -38,6 +41,6 @@ function TypeMenu({ id, type, edit, noNested }) {
       {!edit && <>{type}</>}
     </>
   );
-}
+});
 
 export default TypeMenu;

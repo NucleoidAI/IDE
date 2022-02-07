@@ -1,5 +1,5 @@
-import { Context } from "../context";
 import LanguageIcon from "@material-ui/icons/Language";
+import React from "react";
 import {
   Box,
   Button,
@@ -9,11 +9,8 @@ import {
   Select,
   TextField,
 } from "@material-ui/core";
-import React, { useContext } from "react";
 
-function APIPath() {
-  const [state, dispatch] = useContext(Context);
-
+function APIPath({ setApiDialogView, view }) {
   return (
     <Grid container justifyContent={"space-between"}>
       <Grid style={{ width: 50 }} />
@@ -32,14 +29,8 @@ function APIPath() {
         </Grid>
       </Grid>
       <Button
-        variant={
-          state.get("pages.api.dialog.view") === "TYPES"
-            ? "contained"
-            : "outlined"
-        }
-        onClick={() =>
-          dispatch({ type: "SET_API_DIALOG_VIEW", payload: { view: "TYPES" } })
-        }
+        variant={view === "TYPES" ? "contained" : "outlined"}
+        onClick={() => setApiDialogView("TYPES")}
       >
         <LanguageIcon style={{ fill: "#5d5d5d" }} />
         &nbsp;Types
