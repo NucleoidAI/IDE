@@ -3,6 +3,9 @@ const styles = {
   schema: {
     margin: 1,
   },
+  divider: {
+    height: 350,
+  },
 };
 
 export default styles;

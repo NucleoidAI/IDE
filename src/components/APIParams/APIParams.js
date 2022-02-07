@@ -1,21 +1,17 @@
 import AddIcon from "@mui/icons-material/Add";
-import ParamTable from "./ParamTable";
+import ParamTable from "../ParamTable";
+import styles from "./styles";
 import { Fab, Grid } from "@mui/material";
 import { forwardRef, useRef } from "react";
 
 const APIParams = forwardRef((props, paramsRef) => {
   const addParams = useRef();
   return (
-    <Grid
-      container
-      direction={"column"}
-      justifyContent={"space-between"}
-      sx={{ height: "100%" }}
-    >
-      <Grid item sx={{ margin: 2, height: 350 }}>
+    <Grid container sx={styles.root}>
+      <Grid item sx={styles.params}>
         <ParamTable ref={{ paramsRef: paramsRef, addParams: addParams }} />
       </Grid>
-      <Grid container item justifyContent="flex-end">
+      <Grid container item sx={styles.button}>
         {/* TODO Move add icon into ParamTable */}
         <Fab size={"small"} onClick={() => addParams.current()}>
           <AddIcon />

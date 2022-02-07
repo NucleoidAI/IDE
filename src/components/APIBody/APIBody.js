@@ -16,7 +16,7 @@ const APIBody = forwardRef(({ method, params }, { request, response }) => {
         )}
         {method !== "get" && <Schema request ref={request} />}
       </Grid>
-      <Divider orientation={"vertical"} style={{ height: 350 }} />
+      <Divider orientation={"vertical"} sx={styles.divider} />
       <Grid item md sx={styles.schema}>
         <Schema response ref={response} />
       </Grid>
