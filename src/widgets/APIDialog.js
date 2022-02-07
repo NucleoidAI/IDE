@@ -4,83 +4,73 @@ import APIParams from "../components/APIParams";
 import APIPath from "../components/APIPath";
 import APITypes from "../components/APITypes";
 import ClosableDialogTitle from "../components/ClosableDialogTitle";
-import React from "react";
 import { useContext } from "../context";
 import { v4 as uuid } from "uuid";
 import { Dialog, DialogActions, DialogContent, Grid } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
 
 function APIDialog() {
-  const [state, dispatch] = useContext();
-  const { pages } = state;
+  const [context, dispatch] = useContext();
+  const { pages } = context;
 
-  const [view, setView] = React.useState(state.get("pages.api.dialog.view"));
+  const [method, setMethod] = useState("get");
+  const [path, setPath] = useState("/");
+  const [view, setView] = useState(context.get("pages.api.dialog.view"));
 
-  const api = state.get("nucleoid.api");
-  const selected = state.get("pages.api.selected");
-  const types = state.get("pages.api.dialog.types");
+  const paramsRef = useRef();
+  const [params, setParams] = useState();
+  const types = useRef();
+  const request = useRef();
+  const response = useRef();
 
-  let method;
-  let path;
+  useEffect(() => {
+    const selected = context.get("pages.api.selected");
+    if (!selected) return;
 
-  if (selected) {
-    method = selected.method;
-    path = selected.path;
-  } else {
-    method = "get";
-    path = "/";
-  }
+    const { method, path } = selected;
+    setMethod(method);
+    setPath(path);
 
-  const params = api[path][method].params;
-  const request = api[path][method].request;
-  const response = api[path][method].response;
+    const api = context.get("nucleoid.api");
+    const params = api[path][method].params;
+    setParams(params);
 
-  const paramsRef = React.useRef(index({}, params));
-  const requestRef = React.useRef(compile({}, request));
-  const responseRef = React.useRef(compile({}, response));
+    paramsRef.current = index(params);
+    types.current = Object.entries(context.nucleoid.types)
+      .map(([key, value]) => ({
+        ...value,
+        name: key,
+        type: value.type,
+      }))
+      .map((type) => compile(type));
 
-  if (
-    paramsRef.current === undefined &&
-    requestRef.current === undefined &&
-    responseRef.current === undefined
-  ) {
-    paramsRef.current = index({}, params);
-    requestRef.current = compile({}, request);
-    responseRef.current = compile({}, response);
-  }
+    request.current = compile(api[path][method].request);
+    response.current = compile(api[path][method].response);
+  }, [context, path, method]);
 
-  const handleClose = () => {
-    pages.api.dialog.open = false;
-    dispatch({ type: "CLOSE_API_DIALOG" });
-    setTimeout(() => {
-      paramsRef.current = undefined;
-      requestRef.current = undefined;
-      responseRef.current = undefined;
-    }, 0);
-  };
-
-  function saveApiDialog() {
-    console.log(responseRef.current);
-    console.log(decompile({}, responseRef.current));
-    /*
+  const handleClose = () => dispatch({ type: "CLOSE_API_DIALOG" });
+  const saveApiDialog = () =>
     dispatch({
       type: "SAVE_API_DIALOG",
       payload: {
-        params: deindex({}, paramsRef.current),
-        request: decompile({}, requestRef.current),
-        response: decompile({}, responseRef.current),
+        params: deindex(paramsRef.current),
+        request: decompile(request.current),
+        response: decompile(response.current),
+        types: types.current.reduce((previous, current) => {
+          const object = decompile(current);
+          const name = current[Object.keys(current)[0]].name;
+          return { ...previous, [name]: object };
+        }, {}),
       },
     });
-    */
-  }
 
-  function setApiDialogView(view) {
-    pages.api.dialog.view = view;
-    setView(pages.api.dialog.view);
-  }
+  const setApiDialogView = (view) => {
+    setView((pages.api.dialog.view = view));
+  };
 
   return (
     <Dialog
-      open={Boolean(state.get("pages.api.dialog.open"))}
+      open={Boolean(context.get("pages.api.dialog.open"))}
       fullWidth
       maxWidth={"md"}
       onClose={(event) => (event.key === "Escape" ? handleClose() : null)}
@@ -91,16 +81,13 @@ function APIDialog() {
         <Grid sx={{ height: 450 }}>
           {view === "BODY" && (
             <APIBody
-              ref={{
-                requestRef: requestRef,
-                responseRef: responseRef,
-                paramsRef: paramsRef,
-              }}
               method={method}
+              params={params}
+              ref={{ request, response }}
             />
           )}
           {view === "PARAMS" && <APIParams ref={paramsRef} />}
-          {view === "TYPES" && <APITypes ref={paramsRef} dialogTypes={types} />}
+          {view === "TYPES" && <APITypes ref={types} />}
         </Grid>
       </DialogContent>
       <DialogActions>
@@ -110,19 +97,16 @@ function APIDialog() {
           view={view}
         />
       </DialogActions>
-      <button onClick={() => console.log(paramsRef, requestRef, responseRef)}>
-        params
-      </button>
     </Dialog>
   );
 }
 
-const compile = (map, schema) => {
+const compile = (schema) => {
   const { properties, type, ...other } = schema || {};
   const root = uuid();
   const object = {};
 
-  object[root] = map[root] = {
+  object[root] = {
     ...other,
     id: root,
     type: type ? type : "object",
@@ -135,56 +119,52 @@ const compile = (map, schema) => {
     const id = uuid();
 
     if (property.type === "object") {
-      const nested = compile(map, property);
+      const nested = compile(property);
       const key = Object.keys(nested)[0];
-      object[root].properties[key] = map[key] = { name, ...nested[key] };
+      object[root].properties[key] = { name, ...nested[key] };
     } else {
-      object[root].properties[id] = map[id] = { id, name, type };
+      object[root].properties[id] = { id, name, type };
 
-      if (type === "array") map[id].items = { type: property.items.type };
+      if (type === "array")
+        object[root].properties[id].items = { type: property.items.type };
     }
   }
 
   return object;
 };
 
-const decompile = (map, schema) => {
+const decompile = (schema) => {
   const { type, properties, ...other } = schema[Object.keys(schema)[0]];
   const object = { ...other, type, properties: {} };
   delete object.id;
   delete object.name;
 
   for (const key in properties) {
-    //if (!map[key]) continue;
+    const property = properties[key];
 
-    const property = schema[Object.keys(schema)[0]];
-
-    const { type } = property;
-    console.log(type);
+    const { name, type } = property;
 
     if (type === "object") {
-      const nested = decompile(map, property[key]);
-      object.properties[property.name] = nested;
+      const nested = decompile({ root: property });
+      object.properties[name] = nested;
     } else {
-      object.properties[property.name] = { type };
+      object.properties[name] = { type };
 
       if (type === "array")
-        object.properties[property.name].items = { type: property.items.type };
+        object.properties[name].items = { type: property.items.type };
     }
   }
 
   return object;
 };
 
-const index = (map, list) => {
-  map = map || {};
-
+const index = (list) => {
   const object = {};
   if (!list) return object;
 
   for (const item of list) {
     const id = uuid();
-    object[id] = map[id] = { id, ...item };
+    object[id] = { id, ...item };
   }
 
   return object;

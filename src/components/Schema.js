@@ -6,27 +6,19 @@ import SchemaArray from "./SchemaArray";
 import SchemaObject from "./SchemaObject";
 import SchemaProperty from "./SchemaProperty";
 import { TreeView } from "@mui/lab";
+import { compile as mapSchema } from "../utils/Map";
 import { v4 as uuid } from "uuid";
 import { Grid, IconButton, MenuItem, Select, Typography } from "@mui/material";
 import { forwardRef, useEffect, useState } from "react";
 
-const Schema = forwardRef(({ request, schema, response, edit }, ref) => {
-  schema = schema || {};
-
-  const [add, setAdd] = useState();
-  const [remove, setRemove] = useState();
+const Schema = forwardRef(({ request, response }, ref) => {
+  const [schema, setSchema] = useState(ref.current);
+  const [addIcon, setAddIcon] = useState();
+  const [removeIcon, setRemoveIcon] = useState();
   const [selected, setSelected] = useState(null);
 
-  let root = edit ? schema[Object.keys(schema)[0]] : "root";
-  const map = {};
-  const [mp, setMp] = useState(false);
-
-  if (ref?.current) {
-    schema = ref?.current[Object.keys(ref?.current)];
-    root = edit ? schema[Object.keys(schema)[0]] : "root";
-
-    createMap(schema, map);
-  }
+  const root = schema[Object.keys(schema)[0]].id;
+  const map = mapSchema(schema);
 
   function addSchemaProperty(selected) {
     const key = uuid();
@@ -39,29 +31,27 @@ const Schema = forwardRef(({ request, schema, response, edit }, ref) => {
       type: "integer",
     };
 
-    setMp(!mp);
+    setSchema({ ...schema });
   }
 
   function removeSchemaProperty(selected) {
     delete map[selected].id;
 
-    setMp(!mp);
+    setSchema({ ...schema });
   }
 
   const select = (id) => {
-    if (!edit) return;
+    if (map[id] && map[id].type === "object") setAddIcon(true);
+    else setAddIcon(false);
 
-    if (map[id] && map[id].type === "object") setAdd(true);
-    else setAdd(false);
+    if (id === root) setRemoveIcon(false);
+    else setRemoveIcon(true);
 
-    if (id === root) setRemove(false);
-    else setRemove(true);
-
-    if (edit) setSelected(id);
+    setSelected(id);
   };
 
   useEffect(() => {
-    if (!selected || (selected && !map[selected])) select(root);
+    select(root);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -74,19 +64,15 @@ const Schema = forwardRef(({ request, schema, response, edit }, ref) => {
     >
       <Grid item>
         <Grid container justifyContent={"center"} alignItems={"center"}>
-          {!edit && request && <b>Request</b>}
-          {!edit && response && <b>Response</b>}
-          {edit && (
-            <>
-              Type:&nbsp;
-              <Select value={"object"}>
-                <MenuItem value={"object"}>Object</MenuItem>
-                <MenuItem value={"array"}>Array</MenuItem>
-              </Select>
-            </>
-          )}
+          <>
+            Type:&nbsp;
+            <Select value={"object"}>
+              <MenuItem value={"object"}>Object</MenuItem>
+              <MenuItem value={"array"}>Array</MenuItem>
+            </Select>
+          </>
         </Grid>
-        {edit && <br />}
+        <br />
         <TreeView
           defaultCollapseIcon={<RemoveCircleOutlineIcon />}
           defaultExpandIcon={<AddCircleOutlineIcon />}
@@ -94,81 +80,49 @@ const Schema = forwardRef(({ request, schema, response, edit }, ref) => {
           selected={selected}
           onNodeSelect={(event, value) => select(value)}
         >
-          {compile(map, schema, edit)}
+          {compile(map, schema)}
         </TreeView>
       </Grid>
-      {edit && (
-        <Grid container item justifyContent={"space-between"}>
-          <Grid style={{ width: 50 }} />
-          <Grid item>
-            <Typography variant={"h6"}>
-              {request && <>Request</>}
-              {response && <>Response</>}
-            </Typography>
-          </Grid>
-          <Grid item>
-            {add && (
-              <IconButton
-                onClick={() => addSchemaProperty(selected)}
-                size="large"
-              >
-                <AddIcon />
-              </IconButton>
-            )}
-            {remove && (
-              <IconButton
-                onClick={() => removeSchemaProperty(selected)}
-                size="large"
-              >
-                <RemoveIcon />
-              </IconButton>
-            )}
-          </Grid>
+      <Grid container item justifyContent={"space-between"}>
+        <Grid style={{ width: 50 }} />
+        <Grid item>
+          <Typography variant={"h6"}>
+            {request && <>Request</>}
+            {response && <>Response</>}
+          </Typography>
         </Grid>
-      )}
+        <Grid item>
+          {addIcon && (
+            <IconButton onClick={() => addSchemaProperty(selected)}>
+              <AddIcon />
+            </IconButton>
+          )}
+          {removeIcon && (
+            <IconButton onClick={() => removeSchemaProperty(selected)}>
+              <RemoveIcon />
+            </IconButton>
+          )}
+        </Grid>
+      </Grid>
     </Grid>
   );
 });
 
-const createMap = (schema, map) => {
-  const { properties, type } = schema;
-
-  if (schema.name === undefined) {
-    const { id } = schema;
-    map[id] = schema;
-  }
-
-  for (const key in properties) {
-    const property = properties[key];
-
-    const { id } = property;
-    switch (type) {
-      case "object":
-        createMap(property, map);
-        map[id] = property;
-        break;
-
-      default: {
-        map[id] = property;
-      }
-    }
-  }
-};
-
-const compile = (map, schema, edit, name) => {
+const compile = (map, schema, name) => {
+  schema = schema[Object.keys(schema)[0]];
   const { id, properties } = schema || {};
   const children = [];
 
   for (const key in properties) {
-    if (edit && !map[key]) continue;
+    if (!map[key]) continue;
 
-    const { name } = edit ? map[key] : {};
+    const { name } = map[key];
     const property = properties[key];
-    const id = edit ? key : uuid();
+    const id = key;
 
     switch (property.type) {
       case "object":
-        children.push(compile(map, property, edit, edit ? name || "" : key));
+        children.push(compile(map, { root: property }, name));
         break;
       case "array":
         children.push(
@@ -176,9 +130,9 @@ const compile = (map, schema, edit, name) => {
             id={id}
             key={id}
             nodeId={id}
-            name={edit ? name || "" : key}
+            name={name}
             type={property.type}
-            edit={edit}
+            edit
             map={map[id]}
           />
         );
@@ -189,9 +143,9 @@ const compile = (map, schema, edit, name) => {
             id={id}
             key={id}
             nodeId={id}
-            name={edit ? name : key}
+            name={name}
             type={property.type}
-            edit={edit}
+            edit
             map={map[id]}
           />
         );
@@ -203,7 +157,7 @@ const compile = (map, schema, edit, name) => {
       key={id || (name ? uuid() : "root")}
       nodeId={id || (name ? uuid() : "root")}
       name={name}
-      edit={edit}
+      edit
       children={children}
       map={map[id]}
     />

@@ -4,7 +4,7 @@ import { createContext, useContext } from "react";
 
 function reducer(state, action) {
   state = State.copy(state);
-  const { pages } = state;
+  const { nucleoid, pages } = state;
 
   switch (action.type) {
     case "OPEN_API_DIALOG": {
@@ -13,14 +13,12 @@ function reducer(state, action) {
     }
 
     case "SAVE_API_DIALOG": {
-      //const { path, method } = pages.api.selected;
-      // const api = nucleoid.api;
-      console.log(action.payload);
-      /*
+      const { path, method } = pages.api.selected;
+      const api = nucleoid.api;
       api[path][method].request = action.payload.request;
       api[path][method].response = action.payload.response;
       api[path][method].params = action.payload.params;
-      */
+      nucleoid.types = action.payload.types;
     }
     // eslint-disable-next-line no-fallthrough
     case "CLOSE_API_DIALOG":

@@ -3,6 +3,8 @@ import SchemaArray from "../SchemaArray";
 import SchemaObject from "../SchemaObject";
 import SchemaProperty from "../SchemaProperty";
 import { compile } from "../Schema";
+import { compile as compileSchema } from "../../widgets/APIDialog";
+import { compile as mapSchema } from "../../utils/Map";
 import Enzyme, { shallow } from "enzyme";
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -20,7 +22,9 @@ test("List properties of schema", () => {
     },
   };
 
-  const root = shallow(compile({}, {}, schema));
+  const compiledSchema = compileSchema(schema);
+  const map = mapSchema(compiledSchema);
+  const root = shallow(compile(map, compiledSchema));
 
   const child1 = root.children().first();
   expect(child1.type()).toEqual(SchemaProperty);
@@ -46,11 +50,14 @@ test("List array as property of schema", () => {
     },
   };
 
-  const root = shallow(compile({}, {}, schema));
+  const compiledSchema = compileSchema(schema);
+  const map = mapSchema(compiledSchema);
+  const root = shallow(compile(map, compiledSchema));
+
   const child = root.children().first();
   expect(child.type()).toEqual(SchemaArray);
   expect(child.prop("name")).toEqual("list");
-  expect(child.prop("type")).toEqual("integer");
+  expect(child.prop("type")).toEqual("array");
 });
 
 test("List nested object in schema", () => {
@@ -68,7 +75,9 @@ test("List nested object in schema", () => {
     },
   };
 
-  const root = shallow(compile({}, {}, schema));
+  const compiledSchema = compileSchema(schema);
+  const map = mapSchema(compiledSchema);
+  const root = shallow(compile(map, compiledSchema));
 
   const child = root.children().first();
   expect(child.type()).toEqual(SchemaObject);

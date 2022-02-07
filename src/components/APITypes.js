@@ -1,21 +1,21 @@
 import "./ParamTable.css";
 import { DataGrid } from "@mui/x-data-grid";
 import Schema from "./Schema";
+import { v4 as uuid } from "uuid";
 import { Divider, Grid, MenuItem, Select, TextField } from "@mui/material";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 
-import React, { useEffect, useState } from "react";
-
-function APITypes({
-  map,
-  dialogTypes,
-  addSchemaProperty,
-  removeSchemaProperty,
-  updateType,
-}) {
-  const types = Object.values(dialogTypes || {});
+const APITypes = forwardRef((props, ref) => {
+  const types = ref.current;
 
   const [selected, setSelected] = useState(types.length ? types[0] : {});
   const [selectionModel, setSelectionModel] = useState([]);
+
+  const schema = useRef(selected);
+
+  useEffect(() => {
+    schema.current = selected;
+  }, [selected]);
 
   useEffect(() => {
     const initial = Object.keys(selected)[0];
@@ -28,13 +28,7 @@ function APITypes({
       field: "name",
       headerName: "Name",
       renderCell: (type) => {
-        const { id } = type.row;
-        return (
-          <TextField
-            defaultValue={type.value}
-            onChange={(event) => (map[id].name = event.target.value)}
-          />
-        );
+        return <TextField defaultValue={type.value} />;
       },
       flex: 1,
     },
@@ -69,20 +63,12 @@ function APITypes({
           hideFooter
         />
       </Grid>
-      <Divider orientation={"vertical"} flexItem sx={{ height: 350 }} />
+      <Divider orientation={"vertical"} sx={{ height: 350 }} />
       <Grid item md sx={{ margin: 3 }}>
-        <Schema
-          key={selectionModel[0]}
-          schema={selected}
-          edit
-          map={map}
-          addSchemaProperty={addSchemaProperty}
-          removeSchemaProperty={removeSchemaProperty}
-          updateType={updateType}
-        />
+        <Schema key={uuid()} ref={schema} />
       </Grid>
     </Grid>
   );
-}
+});
 
 export default APITypes;

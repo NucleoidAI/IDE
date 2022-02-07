@@ -1,36 +1,18 @@
 import "./ParamTable.css";
-
 import { DataGrid } from "@mui/x-data-grid";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import React from "react";
 import TypeMenu from "./TypeMenu";
-import { v4 as uuid } from "uuid";
-
 import { Checkbox, IconButton, TextField } from "@mui/material";
+import React, { useState } from "react";
 
 const ParamTable = React.forwardRef((props, ref) => {
-  const { paramsRef, addParamRef } = ref;
+  const [params, setParams] = useState(ref.current);
 
-  const [params, setParams] = React.useState(paramsRef);
-
-  addParamRef.current = () => {
-    const id = uuid();
-
-    paramsRef[id] = {
-      id: id,
-      type: "string",
-      required: true,
-    };
-    setParams({ ...paramsRef });
+  const removeParam = (id) => {
+    delete params[id];
+    setParams({ ...params });
+    // TODO Check "No row with id" issue in MUI 5
   };
-
-  function removeParam(id) {
-    delete paramsRef[id];
-    //TODO: https://github.com/mui-org/material-ui-x/issues/2714 mui problem?
-    setTimeout(() => {
-      setParams({ ...paramsRef });
-    });
-  }
 
   const columns = [
     {
@@ -52,7 +34,7 @@ const ParamTable = React.forwardRef((props, ref) => {
       headerName: "Type",
       renderCell: (param) => {
         const { id } = param.row;
-        return <TypeMenu ref={paramsRef} id={id} type={param.value} edit />;
+        return <TypeMenu ref={params} id={id} type={param.value} edit />;
       },
       flex: 1,
     },
@@ -70,9 +52,7 @@ const ParamTable = React.forwardRef((props, ref) => {
         return (
           <Checkbox
             checked={param.value}
-            onChange={(event) =>
-              (paramsRef[id].required = event.target.checked)
-            }
+            onChange={(event) => (params[id].required = event.target.checked)}
           />
         );
       },
@@ -86,9 +66,7 @@ const ParamTable = React.forwardRef((props, ref) => {
         return (
           <TextField
             defaultValue={param.value}
-            onChange={(event) =>
-              (paramsRef[id].description = event.target.value)
-            }
+            onChange={(event) => (params[id].description = event.target.value)}
             fullWidth
           />
         );
@@ -114,7 +92,7 @@ const ParamTable = React.forwardRef((props, ref) => {
     <DataGrid
       sx={{ border: "none", width: 850 }}
       columns={columns}
-      rows={Object.values(paramsRef || {})}
+      rows={Object.values(params).filter((p) => p.id)}
       hideFooter
       disableSelectionOnClick
     />
