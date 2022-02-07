@@ -1,12 +1,13 @@
-import ParamView from "./ParamView";
-import Schema from "./Schema";
+import ParamView from "../ParamView";
+import Schema from "../Schema";
+import styles from "./styles";
 import { Divider, Grid } from "@mui/material";
 import React, { forwardRef } from "react";
 
 const APIBody = forwardRef(({ method, params }, { request, response }) => {
   return (
-    <Grid container justifyContent={"space-between"} sx={{ height: "100%" }}>
-      <Grid item md sx={{ margin: 1 }}>
+    <Grid container justifyContent={"space-between"} sx={styles.root}>
+      <Grid item md sx={styles.schema}>
         {method === "get" && (
           <>
             <br />
@@ -16,7 +17,7 @@ const APIBody = forwardRef(({ method, params }, { request, response }) => {
         {method !== "get" && <Schema request ref={request} />}
       </Grid>
       <Divider orientation={"vertical"} style={{ height: 350 }} />
-      <Grid item md sx={{ margin: 1 }}>
+      <Grid item md sx={styles.schema}>
         <Schema response ref={response} />
       </Grid>
     </Grid>
