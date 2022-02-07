@@ -6,7 +6,7 @@ import React, { forwardRef } from "react";
 const APIBody = forwardRef(({ method, params }, { request, response }) => {
   return (
     <Grid container justifyContent={"space-between"} sx={{ height: "100%" }}>
-      <Grid item sx={{ margin: 3 }}>
+      <Grid item md sx={{ margin: 1 }}>
         {method === "get" && (
           <>
             <br />
@@ -16,7 +16,7 @@ const APIBody = forwardRef(({ method, params }, { request, response }) => {
         {method !== "get" && <Schema request ref={request} />}
       </Grid>
       <Divider orientation={"vertical"} style={{ height: 350 }} />
-      <Grid item sx={{ margin: 3 }}>
+      <Grid item md sx={{ margin: 1 }}>
         <Schema response ref={response} />
       </Grid>
     </Grid>

@@ -52,7 +52,7 @@ function API() {
               <Card
                 sx={{
                   height: height * (1 - ratio) - theme.spacing(1) / 2,
-                  padding: theme.spacing(1),
+                  padding: 1,
                 }}
               >
                 <APISettings />
