@@ -1,3 +1,4 @@
+import styles from "./styles";
 import { Button, Grid } from "@mui/material";
 import React, { useEffect } from "react";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
@@ -10,8 +11,8 @@ function APIDialogAction({ view, setApiDialogView, saveApiDialog }) {
   }, [view]);
 
   return (
-    <Grid container justifyContent={"space-between"}>
-      <Grid style={{ width: 50 }} />
+    <Grid container sx={styles.root}>
+      <Grid />
       <Grid item>
         <ToggleButtonGroup
           value={alignment}
