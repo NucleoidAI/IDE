@@ -12,7 +12,7 @@ function APIDialogAction({ view, setApiDialogView, saveApiDialog }) {
 
   return (
     <Grid container sx={styles.root}>
-      <Grid />
+      <Grid sx={styles.firstelement} />
       <Grid item>
         <ToggleButtonGroup
           value={alignment}

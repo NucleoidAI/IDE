@@ -1,5 +1,6 @@
 import LanguageIcon from "@mui/icons-material/Language";
 import React from "react";
+import styles from "./styles";
 import {
   Box,
   Button,
@@ -12,27 +13,27 @@ import {
 
 function APIPath({ setApiDialogView, view }) {
   return (
-    <Grid container justifyContent={"space-between"}>
-      <Grid style={{ width: 50 }} />
+    <Grid container sx={styles.root}>
+      <Grid sx={styles.firstelement} />
       <Grid item>
-        <Grid container item justifyContent={"center"} alignItems={"center"}>
+        <Grid container item sx={styles.content}>
           <FormControl variant={"outlined"} size={"small"}>
             <Select value={"get"}>
               <MenuItem value={"get"}>GET</MenuItem>
               <MenuItem value={"post"}>POST</MenuItem>
             </Select>
           </FormControl>
-          <Box component={"span"} style={{ fontSize: 16 }}>
+          <Box component={"span"} sx={styles.text}>
             &nbsp;&nbsp;&nbsp;/devices/devicesId/items/&nbsp;
           </Box>
-          <TextField style={{ width: 75 }} defaultValue={"itemId"} />
+          <TextField defaultValue={"itemId"} sx={styles.textfield} />
         </Grid>
       </Grid>
       <Button
         variant={view === "TYPES" ? "contained" : "outlined"}
         onClick={() => setApiDialogView("TYPES")}
       >
-        <LanguageIcon style={{ fill: "#5d5d5d" }} />
+        <LanguageIcon sx={styles.icon} />
         &nbsp;Types
       </Button>
     </Grid>
