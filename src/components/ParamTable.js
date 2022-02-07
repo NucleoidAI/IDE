@@ -2,15 +2,29 @@ import "./ParamTable.css";
 import { DataGrid } from "@mui/x-data-grid";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import TypeMenu from "./TypeMenu";
+import { v4 as uuid } from "uuid";
 import { Checkbox, IconButton, TextField } from "@mui/material";
 import React, { useState } from "react";
 
 const ParamTable = React.forwardRef((props, ref) => {
-  const [params, setParams] = useState(ref.current);
+  const { paramsRef, addParams } = ref;
+
+  const [params, setParams] = useState(paramsRef.current);
+
+  addParams.current = () => {
+    const id = uuid();
+    paramsRef.current[id] = {
+      id: id,
+      type: "string",
+      required: true,
+    };
+    setParams({ ...paramsRef.current });
+  };
 
   const removeParam = (id) => {
-    delete params[id];
-    setParams({ ...params });
+    delete paramsRef.current[id];
+    setTimeout(() => setParams({ ...paramsRef.current }), 0);
+
     // TODO Check "No row with id" issue in MUI 5
   };
 
