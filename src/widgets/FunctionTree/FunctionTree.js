@@ -1,7 +1,8 @@
-import Arrow from "../icons/Arrow";
+import Arrow from "../../icons/Arrow";
 import FolderIcon from "@mui/icons-material/FolderRounded";
-import { useContext } from "../context";
-import { Menu, MenuItem, Typography } from "@mui/material";
+import styles from "./styles";
+import { useContext } from "../../context";
+import { Grid, Menu, MenuItem, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { TreeItem, TreeView } from "@mui/lab";
 
@@ -116,13 +117,7 @@ const compile = (folders, handleContextMenu) =>
             handleContextMenu(event, `${root(folder.path)}${fn.name}`)
           }
           label={
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                flexWrap: "wrap",
-              }}
-            >
+            <Grid sx={styles.treeitem}>
               <Typography style={{ font: "9px sans-serif" }}>
                 {fn.type === "FUNCTION" ? (
                   <span>&nbsp;&nbsp;&nbsp;&nbsp;fn</span>
@@ -132,7 +127,7 @@ const compile = (folders, handleContextMenu) =>
               </Typography>
               &nbsp;
               {`${fn.name} (${fn.params.join(", ")})`}
-            </div>
+            </Grid>
           }
         />
       ))

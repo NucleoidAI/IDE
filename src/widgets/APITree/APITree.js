@@ -1,21 +1,9 @@
-import ArrowIcon from "../icons/Arrow";
-import { useContext } from "../context";
+import ArrowIcon from "../../icons/Arrow";
+import styles from "./styles";
+import { useContext } from "../../context";
 import { Box, Menu, MenuItem } from "@mui/material";
 import React, { useEffect } from "react";
 import { TreeItem, TreeView } from "@mui/lab";
-
-const style = {
-  fontSize: 12,
-  color: "#666",
-  fontWeight: "bold",
-  backgroundColor: "#fdfdfd",
-  border: `1px solid #c3c5c8`,
-  width: 44,
-  borderRadius: 8,
-  marginTop: 1,
-  marginBottom: 1,
-  boxShadow: "1px 1px #b8b8b8",
-};
 
 const map = {};
 
@@ -129,7 +117,7 @@ const compile = (list, handleContextMenu) =>
             nodeId={hash}
             onContextMenu={(event) => handleContextMenu(event, hash)}
             label={
-              <Box style={style}>
+              <Box sx={styles.apitreeitem}>
                 <center>{method.toUpperCase()}</center>
               </Box>
             }

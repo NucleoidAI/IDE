@@ -1,6 +1,7 @@
 import AceEditor from "react-ace";
 import Prettier from "prettier-standalone";
-import { useContext } from "../context";
+import styles from "./styles";
+import { useContext } from "../../context";
 import React, { useEffect, useRef, useState } from "react";
 
 // eslint-disable-next-line sort-imports
@@ -40,7 +41,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
   return (
     <AceEditor
       ref={ace}
-      style={{ width: "100%", height: "100%" }}
+      style={styles.editor}
       name={name}
       mode={"javascript"}
       theme={"chrome"}
