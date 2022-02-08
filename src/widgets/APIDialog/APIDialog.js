@@ -24,6 +24,8 @@ function APIDialog() {
   const request = useRef();
   const response = useRef();
 
+  const api = useRef();
+
   useEffect(() => {
     const selected = context.get("pages.api.selected");
     if (!selected) return;
@@ -32,8 +34,12 @@ function APIDialog() {
     setMethod(method);
     setPath(path);
 
-    const api = context.get("nucleoid.api");
-    const params = api[path][method].params;
+    api.current = context.get("nucleoid.api");
+
+    //console.log(api);
+    //console.log(pages);
+
+    const params = api.current[path][method].params;
     setParams(params);
 
     paramsRef.current = index(params);
@@ -45,8 +51,8 @@ function APIDialog() {
       }))
       .map((type) => compile(type));
 
-    request.current = compile(api[path][method].request);
-    response.current = compile(api[path][method].response);
+    request.current = compile(api.current[path][method].request);
+    response.current = compile(api.current[path][method].response);
   }, [context, path, method]);
 
   const handleClose = () => dispatch({ type: "CLOSE_API_DIALOG" });

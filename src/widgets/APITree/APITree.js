@@ -1,9 +1,10 @@
 import ArrowIcon from "../../icons/Arrow";
+import CustomTreeItem from "../../CustomTreeItem";
+import TreeView from "@mui/lab/TreeView";
 import styles from "./styles";
 import { useContext } from "../../context";
 import { Box, Menu, MenuItem } from "@mui/material";
 import React, { useEffect } from "react";
-import { TreeItem, TreeView } from "@mui/lab";
 
 const map = {};
 
@@ -18,6 +19,7 @@ function APITree() {
   }));
 
   const select = (id) => {
+    console.log(id);
     if (map[id]) {
       setSelected(id);
 
@@ -75,7 +77,7 @@ function APITree() {
         defaultExpandIcon={<ArrowIcon right />}
         defaultExpanded={list.map((api) => api.path)}
         onNodeSelect={(event, value) => select(value)}
-        selected={selected}
+        // selected={selected}
       >
         {compile([graph["/"]], handleContextMenu)}
       </TreeView>
@@ -112,7 +114,7 @@ const compile = (list, handleContextMenu) =>
         map[hash] = payload;
 
         return (
-          <TreeItem
+          <CustomTreeItem
             key={hash}
             nodeId={hash}
             onContextMenu={(event) => handleContextMenu(event, hash)}
@@ -127,7 +129,7 @@ const compile = (list, handleContextMenu) =>
       .concat(children);
 
     return (
-      <TreeItem
+      <CustomTreeItem
         key={api.path}
         nodeId={api.path}
         label={api.label}

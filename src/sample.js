@@ -226,6 +226,64 @@ const api = {
       action: `return json.name;`,
     },
   },
+  "/questions/reviews/{rev3}": {
+    post: {
+      summary: "Create a review",
+      description: "Create a review",
+      request: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          name: {
+            type: "string",
+          },
+        },
+      },
+      response: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          name: {
+            type: "string",
+          },
+        },
+      },
+      action: `return json.name;`,
+    },
+  },
+  "/questions/reviews/{rev3}/items": {
+    post: {
+      summary: "Create a review",
+      description: "Create a review",
+      request: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          name: {
+            type: "string",
+          },
+        },
+      },
+      response: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          name: {
+            type: "string",
+          },
+        },
+      },
+      action: `return json.name;`,
+    },
+  },
 };
 
 const types = {
