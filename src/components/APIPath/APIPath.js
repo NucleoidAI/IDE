@@ -1,5 +1,5 @@
 import LanguageIcon from "@mui/icons-material/Language";
-import React from "react";
+import { forwardRef } from "react";
 import styles from "./styles";
 import {
   Box,
@@ -11,7 +11,7 @@ import {
   TextField,
 } from "@mui/material";
 
-function APIPath({ setApiDialogView, view }) {
+const APIPath = forwardRef(({ setApiDialogView, view }, ref) => {
   return (
     <Grid container sx={styles.root}>
       <Grid sx={styles.firstelement} />
@@ -38,6 +38,6 @@ function APIPath({ setApiDialogView, view }) {
       </Button>
     </Grid>
   );
-}
+});
 
 export default APIPath;
