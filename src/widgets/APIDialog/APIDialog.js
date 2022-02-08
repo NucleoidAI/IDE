@@ -25,19 +25,17 @@ function APIDialog() {
   const response = useRef();
 
   const api = useRef();
+  const selected = useRef();
 
   useEffect(() => {
-    const selected = context.get("pages.api.selected");
-    if (!selected) return;
+    selected.current = context.get("pages.api.selected");
+    if (!selected.current) return;
 
-    const { method, path } = selected;
+    const { method, path } = selected.current;
     setMethod(method);
     setPath(path);
 
     api.current = context.get("nucleoid.api");
-
-    //console.log(api);
-    //console.log(pages);
 
     const params = api.current[path][method].params;
     setParams(params);
@@ -84,7 +82,13 @@ function APIDialog() {
     >
       <ClosableDialogTitle label={"API"} handleClose={handleClose} />
       <DialogContent>
-        <APIPath view={view} setApiDialogView={setApiDialogView} />
+        <APIPath
+          view={view}
+          setApiDialogView={setApiDialogView}
+          path={path}
+          method={method}
+          ref={api}
+        />
         <Grid sx={styles.content}>
           {view === "BODY" && (
             <APIBody
