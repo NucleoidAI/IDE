@@ -1,4 +1,5 @@
 import { Doughnut } from "react-chartjs-2";
+import styles from "./styles";
 import { Box, Grid } from "@mui/material";
 
 const data = {
@@ -23,7 +24,7 @@ const options = {
 
 function Status() {
   return (
-    <Grid container justifyContent={"center"}>
+    <Grid container sx={styles.root}>
       <Box width={150} height={150}>
         <Doughnut data={data} options={options} />
       </Box>
