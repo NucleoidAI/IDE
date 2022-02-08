@@ -1,12 +1,13 @@
 import LockIcon from "@mui/icons-material/Lock";
+import styles from "./styles";
 import { Button, Grid } from "@mui/material";
 
 function Security({ onClick }) {
   return (
-    <Grid container justifyContent={"center"}>
+    <Grid container sx={styles.root}>
       <Button
         onClick={() => onClick()}
-        style={{ textTransform: "none" }}
+        sx={styles.button}
         variant={"text"}
         fullWidth
       >
