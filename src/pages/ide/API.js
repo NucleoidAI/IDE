@@ -17,6 +17,15 @@ function API() {
   const ratio = 0.65;
   const height = window.innerHeight - theme.spacing(1) * 2 - 1;
 
+  const styles = {
+    editor: { height: height * ratio - theme.spacing(1) / 2 },
+    sidemenucard: { height: height },
+    settings: {
+      height: height * (1 - ratio) - theme.spacing(1) / 2,
+      padding: 1,
+    },
+  };
+
   function openApiDialog(item) {
     dispatch({
       type: "OPEN_API_DIALOG",
@@ -29,7 +38,7 @@ function API() {
       <APIDialog />
       <Grid container spacing={1}>
         <Grid item xs={3}>
-          <Card sx={{ height: height }}>
+          <Card sx={styles.sidemenucard}>
             <CardContent>
               <APITree />
             </CardContent>
@@ -44,17 +53,12 @@ function API() {
         <Grid item xs={9}>
           <Grid container spacing={1}>
             <Grid item xs={12}>
-              <Paper sx={{ height: height * ratio - theme.spacing(1) / 2 }}>
+              <Paper sx={styles.editor}>
                 <Editor name={"api"} api />
               </Paper>
             </Grid>
             <Grid item xs={12}>
-              <Card
-                sx={{
-                  height: height * (1 - ratio) - theme.spacing(1) / 2,
-                  padding: 1,
-                }}
-              >
+              <Card sx={styles.settings}>
                 <APISettings />
               </Card>
             </Grid>

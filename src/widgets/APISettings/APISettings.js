@@ -1,9 +1,10 @@
 import EditIcon from "@mui/icons-material/Edit";
-import ParamView from "../components/ParamView";
-import SchemaView from "../components/SchemaView";
-import Security from "../components/Security";
-import SummaryForm from "../components/SummaryForm";
-import { useContext } from "../context";
+import ParamView from "../../components/ParamView";
+import SchemaView from "../../components/SchemaView";
+import Security from "../../components/Security";
+import SummaryForm from "../../components/SummaryForm";
+import styles from "./styles";
+import { useContext } from "../../context";
 import { Fab, Grid } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 
@@ -29,7 +30,7 @@ function APISettings() {
   }, [state]);
 
   return (
-    <Grid container sx={{ width: "100%", height: "100%" }}>
+    <Grid container sx={styles.root}>
       <Grid
         container
         item
@@ -37,23 +38,17 @@ function APISettings() {
         direction={"column"}
         justifyContent={"space-between"}
       >
-        <Grid container sx={{ padding: 1 }}>
-          <Grid item xs={6} sx={{ height: 200, overflow: "auto" }}>
+        <Grid container sx={styles.content}>
+          <Grid item xs={6} sx={styles.schema}>
             {method === "get" && <ParamView params={params} />}
             {method !== "get" && <SchemaView />}
           </Grid>
-          <Grid item xs={6} sx={{ height: 200, overflow: "auto" }}>
+          <Grid item xs={6} sx={styles.schema}>
             <SchemaView />
           </Grid>
         </Grid>
       </Grid>
-      <Grid
-        container
-        item
-        xs={3}
-        direction={"column"}
-        justifyContent={"space-between"}
-      >
+      <Grid container item xs={3} sx={styles.summaryformroot}>
         <SummaryForm
           summaryText={summary}
           descriptionText={description}
@@ -62,7 +57,7 @@ function APISettings() {
         <Security
           onClick={() => console.log(summaryRef.current["Summary"].value)}
         />
-        <Grid container justifyContent={"flex-end"}>
+        <Grid container sx={styles.editicon}>
           <Fab
             size={"small"}
             onClick={() => {

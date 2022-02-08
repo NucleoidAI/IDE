@@ -1,10 +1,11 @@
-import APIBody from "../components/APIBody";
-import APIDialogAction from "../components/APIDialogAction";
-import APIParams from "../components/APIParams";
-import APIPath from "../components/APIPath";
-import APITypes from "../components/APITypes";
-import ClosableDialogTitle from "../components/ClosableDialogTitle";
-import { useContext } from "../context";
+import APIBody from "../../components/APIBody";
+import APIDialogAction from "../../components/APIDialogAction";
+import APIParams from "../../components/APIParams";
+import APIPath from "../../components/APIPath";
+import APITypes from "../../components/APITypes";
+import ClosableDialogTitle from "../../components/ClosableDialogTitle";
+import styles from "./styles";
+import { useContext } from "../../context";
 import { v4 as uuid } from "uuid";
 import { Dialog, DialogActions, DialogContent, Grid } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
@@ -78,7 +79,7 @@ function APIDialog() {
       <ClosableDialogTitle label={"API"} handleClose={handleClose} />
       <DialogContent>
         <APIPath view={view} setApiDialogView={setApiDialogView} />
-        <Grid sx={{ height: 450 }}>
+        <Grid sx={styles.content}>
           {view === "BODY" && (
             <APIBody
               method={method}
