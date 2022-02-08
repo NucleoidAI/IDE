@@ -1,30 +1,17 @@
-import APIDialog from "../../widgets/APIDialog";
-import APISettings from "../../widgets/APISettings";
-import APITree from "../../widgets/APITree";
-import AddList from "../../components/AddList";
-import Editor from "../../widgets/Editor";
-import IDE from "../../layouts/IDE";
+import APIDialog from "../../../widgets/APIDialog";
+import APISettings from "../../../widgets/APISettings";
+import APITree from "../../../widgets/APITree";
+import AddList from "../../../components/AddList";
+import Editor from "../../../widgets/Editor";
+import IDE from "../../../layouts/IDE";
 import React from "react";
+import styles from "./styles";
 import { Card, CardActions, CardContent, Grid, Paper } from "@mui/material";
 // eslint-disable-next-line
-import { Context } from "../../context";
-import { useTheme } from "@mui/material/styles";
+import { Context } from "../../../context";
 
 function API() {
   const dispatch = React.useContext(Context)[1];
-  const theme = useTheme();
-
-  const ratio = 0.65;
-  const height = window.innerHeight - theme.spacing(1) * 2 - 1;
-
-  const styles = {
-    editor: { height: height * ratio - theme.spacing(1) / 2 },
-    sidemenucard: { height: height },
-    settings: {
-      height: height * (1 - ratio) - theme.spacing(1) / 2,
-      padding: 1,
-    },
-  };
 
   function openApiDialog(item) {
     dispatch({
