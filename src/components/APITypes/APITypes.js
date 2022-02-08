@@ -1,6 +1,6 @@
-import "./ParamTable.css";
 import { DataGrid } from "@mui/x-data-grid";
-import Schema from "./Schema";
+import Schema from "../Schema";
+import styles from "./styles";
 import { v4 as uuid } from "uuid";
 import { Divider, Grid, MenuItem, Select, TextField } from "@mui/material";
 import React, { forwardRef, useEffect, useRef, useState } from "react";
@@ -48,10 +48,10 @@ const APITypes = forwardRef((props, ref) => {
   ];
 
   return (
-    <Grid container justifyContent={"space-between"} sx={{ height: "100%" }}>
-      <Grid item md sx={{ margin: 3 }}>
+    <Grid container sx={styles.root}>
+      <Grid item md sx={styles.content}>
         <DataGrid
-          sx={{ border: "none" }}
+          sx={styles.datagrid}
           columns={columns}
           rows={types.map((type) => type[Object.keys(type)[0]])}
           onSelectionModelChange={(newSelectionModel) => {
@@ -63,8 +63,8 @@ const APITypes = forwardRef((props, ref) => {
           hideFooter
         />
       </Grid>
-      <Divider orientation={"vertical"} sx={{ height: 350 }} />
-      <Grid item md sx={{ margin: 3 }}>
+      <Divider orientation={"vertical"} sx={styles.divider} />
+      <Grid item md sx={styles.content}>
         <Schema key={uuid()} ref={schema} />
       </Grid>
     </Grid>
