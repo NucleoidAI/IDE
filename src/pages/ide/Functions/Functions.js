@@ -1,8 +1,9 @@
-import AddList from "../../components/AddList";
-import Editor from "../../widgets/Editor";
-import FunctionTree from "../../widgets/FunctionTree";
-import IDE from "../../layouts/IDE";
+import AddList from "../../../components/AddList";
+import Editor from "../../../widgets/Editor";
+import FunctionTree from "../../../widgets/FunctionTree";
+import IDE from "../../../layouts/IDE";
 import React from "react";
+import styles from "./styles";
 import { Card, CardActions, CardContent, Grid, Paper } from "@mui/material";
 
 function Functions() {
@@ -10,11 +11,7 @@ function Functions() {
     <IDE>
       <Grid container spacing={1}>
         <Grid item xs={3}>
-          <Card
-            sx={{
-              height: (theme) => window.innerHeight - theme.spacing(1) * 2 - 1,
-            }}
-          >
+          <Card sx={styles.pageheight}>
             <CardContent>
               <FunctionTree />
             </CardContent>
@@ -24,11 +21,7 @@ function Functions() {
           </Card>
         </Grid>
         <Grid item xs={9}>
-          <Paper
-            sx={{
-              height: (theme) => window.innerHeight - theme.spacing(1) * 2 - 1,
-            }}
-          >
+          <Paper sx={styles.pageheight}>
             <Editor name={"functions"} functions />
           </Paper>
         </Grid>

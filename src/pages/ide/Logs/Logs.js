@@ -1,6 +1,7 @@
-import Editor from "../../widgets/Editor";
-import IDE from "../../layouts/IDE";
+import Editor from "../../../widgets/Editor";
+import IDE from "../../../layouts/IDE";
 import Moment from "react-moment";
+import styles from "./styles";
 import { v4 as uuid } from "uuid";
 import { Grid, Paper, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -46,14 +47,7 @@ function Logs() {
           alignContent={"center"}
         >
           {logs.map((log) => (
-            <Paper
-              key={uuid()}
-              sx={{
-                minHeight: 200,
-                width: 500,
-                margin: 3,
-              }}
-            >
+            <Paper key={uuid()} sx={styles.logitem}>
               <Editor name={"log"} log={log.s} readOnly />
               <Grid container justifyContent={"center"}>
                 <Moment date={log.d} format="MM/DD hh:mm:ss" />{" "}

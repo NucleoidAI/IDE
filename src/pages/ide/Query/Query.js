@@ -1,8 +1,8 @@
-import Editor from "../../widgets/Editor";
-import IDE from "../../layouts/IDE";
+import Editor from "../../../widgets/Editor";
+import IDE from "../../../layouts/IDE";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import QueryResult from "../../components/QueryResult";
-import useTheme from "@mui/material/styles/useTheme";
+import QueryResult from "../../../components/QueryResult";
+import styles from "./styles";
 import {
   Card,
   Fab,
@@ -47,10 +47,6 @@ import React, { useEffect, useRef, useState } from "react";
 function Query() {
   const [result, setResult] = useState();
   const editor = useRef();
-  const theme = useTheme();
-
-  const ratio = 0.5;
-  const height = window.innerHeight - theme.spacing(1) * 2 - 1;
 
   useEffect(() => {
     editor.current.commands.addCommand({
@@ -82,18 +78,9 @@ function Query() {
     <IDE anchor={false}>
       <Grid container spacing={1}>
         <Grid item xs={12}>
-          <Paper sx={{ height: height * ratio - theme.spacing(1) / 2 }}>
+          <Paper sx={styles.editor}>
             <Editor name={"query"} ref={editor} />
-            <Grid
-              container
-              item
-              sx={{
-                position: "relative",
-                bottom: 40 + theme.spacing(1),
-                right: theme.spacing(1),
-              }}
-              justifyContent={"flex-end"}
-            >
+            <Grid container item sx={styles.run}>
               <Fab size={"small"} onClick={() => query()}>
                 <PlayArrowIcon
                   style={{
@@ -105,13 +92,7 @@ function Query() {
           </Paper>
         </Grid>
         <Grid item xs={12}>
-          <Card
-            sx={{
-              height: height * (1 - ratio) - theme.spacing(1) / 2,
-              justifyContent: "flex-start",
-              paddingLeft: theme.spacing(1) * 2,
-            }}
-          >
+          <Card sx={styles.results}>
             <Grid container justifyContent={"flex-end"}>
               <FormGroup>
                 <FormControlLabel control={<Switch />} label={"JSON"} checked />
