@@ -1,5 +1,6 @@
 import React from "react";
 import SettingsIcon from "@mui/icons-material/Settings";
+import styles from "./styles";
 import {
   Button,
   Dialog,
@@ -24,7 +25,7 @@ function Settings() {
 
   return (
     <>
-      <Grid container direction={"column"} justifyContent="center">
+      <Grid container sx={styles.root}>
         <Button
           variant={"text"}
           sx={{ color: (theme) => theme.palette.custom.grey }}
