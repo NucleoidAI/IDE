@@ -1,4 +1,4 @@
-import { compile, decompile, deindex, index } from "../APIDialog";
+import { compile, decompile, deindex, index } from "../APIDialog/APIDialog";
 
 test("Compile and decompile schema", () => {
   const schema = {
