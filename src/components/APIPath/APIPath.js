@@ -1,5 +1,5 @@
 import LanguageIcon from "@mui/icons-material/Language";
-import methods from "./methods";
+import methods from "../../utils/constants/methods";
 import styles from "./styles";
 
 import {
@@ -11,47 +11,18 @@ import {
   Select,
   TextField,
 } from "@mui/material";
+import { checkPathUsed, splitPathPrefixAndSuffix } from "../../utils/Path";
 import { forwardRef, useState } from "react";
 
 const APIPath = forwardRef(({ setApiDialogView, view, path, method }, ref) => {
-  const pathArr = path.split("/").filter(Boolean);
+  const [alert, setAlert] = useState();
+  const prefix = splitPathPrefixAndSuffix(path)[0];
+  const suffix = splitPathPrefixAndSuffix(path)[1];
 
-  const [isValidSuffix, setIsValidSuffix] = useState(true);
+  const pathNames = Object.keys(ref.current);
 
-  const suffix = pathArr.pop();
-
-  let prefix = "/";
-  pathArr.forEach((item) => {
-    prefix += item + "/";
-  });
-
-  const usedNames = Object.keys(ref.current).filter(
-    (item) =>
-      item.substring(0, prefix.length - 1) ===
-      prefix.substring(0, prefix.length - 1)
-  );
-
-  const checkSuffixUse = (value) => {
-    if (value === suffix) {
-      return null;
-    }
-
-    if (value === "") {
-      if (
-        usedNames.find(
-          (item) => item === prefix.substring(0, prefix.length - 1) + value
-        )
-      ) {
-        setIsValidSuffix(false);
-        return null;
-      }
-    }
-    if (usedNames.find((item) => item === prefix + value)) {
-      setIsValidSuffix(false);
-      return null;
-    }
-
-    setIsValidSuffix(true);
+  const handleCheck = (value) => {
+    setAlert(checkPathUsed(pathNames, prefix, suffix, value));
   };
 
   return (
@@ -75,9 +46,9 @@ const APIPath = forwardRef(({ setApiDialogView, view, path, method }, ref) => {
           </Box>
           <TextField
             defaultValue={suffix}
-            onChange={(e) => checkSuffixUse(e.target.value)}
+            onChange={(e) => handleCheck(e.target.value)}
             sx={styles.textfield}
-            style={isValidSuffix ? null : { backgroundColor: "red" }}
+            style={alert ? { backgroundColor: "red" } : null}
           />
         </Grid>
       </Grid>
