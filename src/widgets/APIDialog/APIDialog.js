@@ -58,9 +58,7 @@ function APIDialog() {
 
   const handleClose = () => dispatch({ type: "CLOSE_API_DIALOG" });
 
-  const changePathNames = (object, selected, pathname, newpathname) => {
-    selected.path = newpathname;
-
+  const changePathNames = (object, pathname, newpathname) => {
     Object.keys(object).forEach((objectname) => {
       if (objectname.includes(pathname)) {
         const objectvalue = { ...object[objectname] };
@@ -73,7 +71,8 @@ function APIDialog() {
 
   const saveApiDialog = () => {
     if (pathName !== path) {
-      changePathNames(api.current, selected.current, path, pathName.current);
+      selected.current.path = pathName.current;
+      changePathNames(api.current, path, pathName.current);
     }
 
     dispatch({
