@@ -1,20 +1,14 @@
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import AddIcon from "@material-ui/icons/Add";
-import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
-import RemoveIcon from "@material-ui/icons/Remove";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import RemoveIcon from "@mui/icons-material/Remove";
 import SchemaArray from "./SchemaArray";
 import SchemaObject from "./SchemaObject";
 import SchemaProperty from "./SchemaProperty";
-import { TreeView } from "@material-ui/lab";
+import { TreeView } from "@mui/lab";
 import { compile as mapSchema } from "../utils/Map";
 import { v4 as uuid } from "uuid";
-import {
-  Grid,
-  IconButton,
-  MenuItem,
-  Select,
-  Typography,
-} from "@material-ui/core";
+import { Grid, IconButton, MenuItem, Select, Typography } from "@mui/material";
 import { forwardRef, useEffect, useState } from "react";
 
 const Schema = forwardRef(({ request, response }, ref) => {
@@ -36,12 +30,15 @@ const Schema = forwardRef(({ request, response }, ref) => {
       id: key,
       type: "integer",
     };
+    console.log(map);
 
     setSchema({ ...schema });
   }
 
   function removeSchemaProperty(selected) {
     delete map[selected].id;
+
+    console.log(ref.current);
 
     setSchema({ ...schema });
   }

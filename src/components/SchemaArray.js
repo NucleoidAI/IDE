@@ -1,16 +1,9 @@
-import { TreeItem } from "@material-ui/lab";
+import TextField from "@mui/material/TextField";
+import TreeItem from "@mui/lab/TreeItem";
 import TypeMenu from "./TypeMenu";
 import React, { useRef, useState } from "react";
-import { TextField, makeStyles } from "@material-ui/core";
-
-const useStyles = makeStyles((theme) => ({
-  textField: {
-    width: theme.custom.schema.width,
-  },
-}));
 
 function SchemaArray({ id, name, edit, map, type, ...other }) {
-  const classes = useStyles();
   const [value, setValue] = useState(name);
   const textField = useRef();
 
@@ -24,7 +17,7 @@ function SchemaArray({ id, name, edit, map, type, ...other }) {
               {edit && (
                 <TextField
                   size={"small"}
-                  className={classes.textField}
+                  sx={{ width: (theme) => theme.custom.schema.width }}
                   value={value || ""}
                   onChange={(event) =>
                     setValue((map.name = event.target.value))

@@ -3,12 +3,11 @@ import SchemaArray from "../SchemaArray";
 import SchemaObject from "../SchemaObject";
 import SchemaProperty from "../SchemaProperty";
 import { compile } from "../Schema";
-import { compile as compileSchema } from "../../widgets/APIDialog";
+import { compile as compileSchema } from "../../widgets/APIDialog/APIDialog";
 import { compile as mapSchema } from "../../utils/Map";
 import Enzyme, { shallow } from "enzyme";
 
 Enzyme.configure({ adapter: new Adapter() });
-jest.mock("@material-ui/core", () => ({ makeStyles: () => () => {} }));
 
 test("List properties of schema", () => {
   const schema = {

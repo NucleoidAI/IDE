@@ -1,6 +1,6 @@
-import { Alert } from "@material-ui/lab";
+import { Alert } from "@mui/material";
 import React from "react";
-import Snackbar from "@material-ui/core/Snackbar";
+import Snackbar from "@mui/material/Snackbar";
 
 export default function AlertMassage({ message }) {
   const [open, setOpen] = React.useState(true);

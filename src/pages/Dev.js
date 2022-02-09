@@ -1,7 +1,7 @@
-import APIDialog from "../widgets/APIDialog";
 import APISettings from "../widgets/APISettings";
 import APITree from "../widgets/APITree";
 import AddList from "../components/AddList";
+import Button from "@mui/material/Button";
 import Editor from "../widgets/Editor";
 import FunctionTree from "../widgets/FunctionTree";
 import Logo from "../components/Logo";
@@ -10,7 +10,7 @@ import React from "react";
 import Schema from "../components/Schema";
 import Security from "../components/Security";
 import SummaryForm from "../components/SummaryForm";
-import { Grid, Paper } from "@material-ui/core";
+import { Grid, Paper } from "@mui/material";
 
 const apis = [
   {
@@ -159,10 +159,18 @@ function Dev() {
         <Editor name={"api"} api />
       </Paper>
       <br />
-      <Paper style={{ width: 800, height: 400 }}>
-        <APIDialog />
-      </Paper>
+      <Paper
+        sx={{
+          bgcolor: "background.default",
+          width: "800px",
+          height: "400px",
+          borderRadius: "2",
+        }}
+      ></Paper>
       <br />
+      <Paper>
+        <Button>font-size: 1rem</Button>
+      </Paper>
     </Grid>
   );
 }

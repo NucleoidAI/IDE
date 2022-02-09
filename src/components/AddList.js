@@ -1,7 +1,7 @@
-import AddIcon from "@material-ui/icons/Add";
+import AddIcon from "@mui/icons-material/Add";
 import React from "react";
 import { v4 as uuid } from "uuid";
-import { Divider, Fab, Menu, MenuItem } from "@material-ui/core";
+import { Divider, Fab, Menu, MenuItem } from "@mui/material";
 
 function AddList(props) {
   const { list, clickEvent } = props;

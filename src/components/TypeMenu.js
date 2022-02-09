@@ -1,6 +1,6 @@
 //import { useContext } from "../context";
 import { v4 as uuid } from "uuid";
-import { Divider, MenuItem, Select } from "@material-ui/core";
+import { Divider, MenuItem, Select } from "@mui/material";
 import { forwardRef, useState } from "react";
 const TypeMenu = forwardRef(({ id, type, map, edit, noNested }, ref) => {
   const [selectedType, setSelectedType] = useState(type);
