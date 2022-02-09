@@ -119,7 +119,7 @@ const compile = (list, handleContextMenu) =>
             nodeId={hash}
             onContextMenu={(event) => handleContextMenu(event, hash)}
             label={
-              <Box sx={styles.apitreeitem}>
+              <Box sx={styles.apiTreeItem}>
                 <center>{method.toUpperCase()}</center>
               </Box>
             }

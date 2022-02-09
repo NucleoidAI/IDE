@@ -1,5 +1,5 @@
 const styles = {
-  dialogtitle: {
+  dialogTitle: {
     margin: 0,
     marginRight: 1,
     padding: 3,
@@ -8,7 +8,7 @@ const styles = {
   content: {
     justifyContent: "space-between",
   },
-  iconbutton: {
+  iconButton: {
     position: "absolute",
     right: 1,
     top: 1,

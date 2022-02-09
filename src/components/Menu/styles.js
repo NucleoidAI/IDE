@@ -9,14 +9,14 @@ const styles = {
       justifyContent: "space-between",
     },
   },
-  listitem: {
+  listItem: {
     background: "#353e48",
     color: "rgba(255, 255, 255, 0.7)",
     "&:hover,&:focus": {
       color: "rgba(255, 255, 255, 1)",
     },
   },
-  listitemicon: {
+  listItemIcon: {
     color: "custom.grey",
   },
 };

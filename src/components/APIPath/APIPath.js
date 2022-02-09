@@ -56,7 +56,7 @@ const APIPath = forwardRef(({ setApiDialogView, view, path, method }, ref) => {
 
   return (
     <Grid container sx={styles.root}>
-      <Grid sx={styles.firstelement} />
+      <Grid sx={styles.firstElement} />
       <Grid item>
         <Grid container item sx={styles.content}>
           <FormControl variant={"outlined"} size={"small"}>

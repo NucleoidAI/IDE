@@ -1,5 +1,5 @@
 const styles = {
-  treeitem: {
+  treeItem: {
     display: "flex",
     alignItems: "center",
     flexWrap: "wrap",

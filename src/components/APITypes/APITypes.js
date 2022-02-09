@@ -51,7 +51,7 @@ const APITypes = forwardRef((props, ref) => {
     <Grid container sx={styles.root}>
       <Grid item md sx={styles.content}>
         <DataGrid
-          sx={styles.datagrid}
+          sx={styles.dataGrid}
           columns={columns}
           rows={types.map((type) => type[Object.keys(type)[0]])}
           onSelectionModelChange={(newSelectionModel) => {
