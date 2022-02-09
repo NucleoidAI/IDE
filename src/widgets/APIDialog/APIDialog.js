@@ -1,7 +1,7 @@
 import APIBody from "../../components/APIBody";
 import APIDialogAction from "../../components/APIDialogAction";
 import APIParams from "../../components/APIParams";
-import APIPath from "../../components/APIPath";
+import APIPath from "../../components/APIPath/APIPath"; //TODO: index not working?
 import APITypes from "../../components/APITypes";
 import ClosableDialogTitle from "../../components/ClosableDialogTitle";
 import styles from "./styles";
