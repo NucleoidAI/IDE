@@ -1,5 +1,5 @@
 const styles = {
-  apitreeitem: {
+  apiTreeItem: {
     fontSize: 12,
     color: "#666",
     fontWeight: "bold",

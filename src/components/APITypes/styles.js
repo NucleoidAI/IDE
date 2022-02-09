@@ -7,7 +7,7 @@ const styles = {
   divider: {
     height: 350,
   },
-  datagrid: {
+  dataGrid: {
     border: "none",
     "& .MuiDataGrid-cell": {
       cursor: "pointer",

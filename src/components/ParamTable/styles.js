@@ -1,5 +1,5 @@
 const styles = {
-  datagrid: {
+  dataGrid: {
     border: "none",
     width: 850,
     "& .MuiDataGrid-cell": {

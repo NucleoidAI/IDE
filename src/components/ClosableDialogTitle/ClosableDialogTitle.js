@@ -4,10 +4,10 @@ import { DialogTitle, Grid, IconButton, Typography } from "@mui/material";
 
 function ClosableDialogTitle({ handleClose, label }) {
   return (
-    <DialogTitle sx={styles.dialogtitle}>
+    <DialogTitle sx={styles.dialogTitle}>
       <Grid container sx={styles.content}>
         <Typography variant="h6">{label}</Typography>
-        <IconButton onClick={handleClose} sx={styles.iconbutton} size="large">
+        <IconButton onClick={handleClose} sx={styles.iconButton} size="large">
           <CloseIcon />
         </IconButton>
       </Grid>

@@ -2,7 +2,7 @@ const styles = {
   root: {
     justifyContent: "space-between",
   },
-  firstelement: { width: 50 },
+  firstElement: { width: 50 },
   content: {
     justifyContent: "center",
     alignItems: "center",

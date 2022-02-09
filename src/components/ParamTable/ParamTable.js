@@ -103,7 +103,7 @@ const ParamTable = React.forwardRef((props, ref) => {
 
   return (
     <DataGrid
-      sx={styles.datagrid}
+      sx={styles.dataGrid}
       columns={columns}
       rows={Object.values(params).filter((p) => p.id)}
       hideFooter

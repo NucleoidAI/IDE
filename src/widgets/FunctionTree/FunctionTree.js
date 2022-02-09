@@ -117,7 +117,7 @@ const compile = (folders, handleContextMenu) =>
             handleContextMenu(event, `${root(folder.path)}${fn.name}`)
           }
           label={
-            <Grid sx={styles.treeitem}>
+            <Grid sx={styles.treeItem}>
               <Typography style={{ font: "9px sans-serif" }}>
                 {fn.type === "FUNCTION" ? (
                   <span>&nbsp;&nbsp;&nbsp;&nbsp;fn</span>

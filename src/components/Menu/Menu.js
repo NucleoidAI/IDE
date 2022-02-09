@@ -18,8 +18,8 @@ function Menu(props) {
           <br />
           {props.list.map(({ title, link, icon }) => (
             <React.Fragment key={title}>
-              <ListItem sx={styles.listitem} component={Link} to={link} button>
-                <ListItemIcon sx={styles.listitemicon}>{icon}</ListItemIcon>
+              <ListItem sx={styles.listItem} component={Link} to={link} button>
+                <ListItemIcon sx={styles.listItemIcon}>{icon}</ListItemIcon>
                 <ListItemText primary={title} />
               </ListItem>
             </React.Fragment>

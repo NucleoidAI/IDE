@@ -48,7 +48,7 @@ function APISettings() {
           </Grid>
         </Grid>
       </Grid>
-      <Grid container item xs={3} sx={styles.summaryformroot}>
+      <Grid container item xs={3} sx={styles.summaryFormRoot}>
         <SummaryForm
           summaryText={summary}
           descriptionText={description}
@@ -57,7 +57,7 @@ function APISettings() {
         <Security
           onClick={() => console.log(summaryRef.current["Summary"].value)}
         />
-        <Grid container sx={styles.editicon}>
+        <Grid container sx={styles.editIcon}>
           <Fab
             size={"small"}
             onClick={() => {
