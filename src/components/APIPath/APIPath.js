@@ -48,7 +48,7 @@ const APIPath = forwardRef(({ setApiDialogView, view, path, method }, ref) => {
             defaultValue={suffix}
             onChange={(e) => handleCheck(e.target.value)}
             sx={styles.textfield}
-            style={alert ? { backgroundColor: "red" } : null}
+            error={alert}
           />
         </Grid>
       </Grid>
