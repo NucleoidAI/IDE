@@ -14,53 +14,62 @@ import {
 import { checkPathUsed, splitPathPrefixAndSuffix } from "../../utils/Path";
 import { forwardRef, useState } from "react";
 
-const APIPath = forwardRef(({ setApiDialogView, view, path, method }, ref) => {
-  const [alert, setAlert] = useState();
-  const prefix = splitPathPrefixAndSuffix(path)[0];
-  const suffix = splitPathPrefixAndSuffix(path)[1];
+const APIPath = forwardRef(
+  (
+    { setApiDialogView, view, path, method, handleSaveButtonStatus },
+    { pathName, api }
+  ) => {
+    const [alert, setAlert] = useState();
+    const prefix = splitPathPrefixAndSuffix(path)[0];
+    const suffix = splitPathPrefixAndSuffix(path)[1];
 
-  const pathNames = Object.keys(ref.current);
+    const pathNames = Object.keys(api.current);
 
-  const handleCheck = (value) => {
-    setAlert(checkPathUsed(pathNames, prefix, suffix, value));
-  };
+    const handleCheck = (value) => {
+      pathName.current = prefix + "/" + value;
 
-  return (
-    <Grid container sx={styles.root}>
-      <Grid sx={styles.firstElement} />
-      <Grid item>
-        <Grid container item sx={styles.content}>
-          <FormControl variant={"outlined"} size={"small"}>
-            <Select value={method}>
-              {Object.keys(methods).map((item, index) => {
-                return (
-                  <MenuItem value={item} key={index}>
-                    {methods[item]}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-          <Box component={"span"} sx={styles.text}>
-            &nbsp;&nbsp;&nbsp;{prefix}&nbsp;
-          </Box>
-          <TextField
-            defaultValue={suffix}
-            onChange={(e) => handleCheck(e.target.value)}
-            sx={styles.textfield}
-            error={alert}
-          />
+      const pathStatus = checkPathUsed(pathNames, prefix, suffix, value);
+      handleSaveButtonStatus(pathStatus);
+      setAlert(pathStatus);
+    };
+
+    return (
+      <Grid container sx={styles.root}>
+        <Grid sx={styles.firstElement} />
+        <Grid item>
+          <Grid container item sx={styles.content}>
+            <FormControl variant={"outlined"} size={"small"}>
+              <Select value={method}>
+                {Object.keys(methods).map((item, index) => {
+                  return (
+                    <MenuItem value={item} key={index}>
+                      {methods[item]}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+            <Box component={"span"} sx={styles.text}>
+              {prefix}
+            </Box>
+            <TextField
+              defaultValue={suffix}
+              onChange={(e) => handleCheck(e.target.value)}
+              sx={styles.textfield}
+              error={alert}
+            />
+          </Grid>
         </Grid>
+        <Button
+          variant={view === "TYPES" ? "contained" : "outlined"}
+          onClick={() => setApiDialogView("TYPES")}
+        >
+          <LanguageIcon sx={styles.icon} />
+          Types
+        </Button>
       </Grid>
-      <Button
-        variant={view === "TYPES" ? "contained" : "outlined"}
-        onClick={() => setApiDialogView("TYPES")}
-      >
-        <LanguageIcon sx={styles.icon} />
-        &nbsp;Types
-      </Button>
-    </Grid>
-  );
-});
+    );
+  }
+);
 
 export default APIPath;

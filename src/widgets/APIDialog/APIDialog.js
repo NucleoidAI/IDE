@@ -15,7 +15,8 @@ function APIDialog() {
   const { pages } = context;
 
   const [method, setMethod] = useState("get");
-  const [path, setPath] = useState("/");
+  const [path, setPath] = useState();
+  const [saveDisable, setSaveDisable] = useState(false);
   const [view, setView] = useState(context.get("pages.api.dialog.view"));
 
   const paramsRef = useRef();
@@ -23,6 +24,7 @@ function APIDialog() {
   const types = useRef();
   const request = useRef();
   const response = useRef();
+  const pathName = useRef();
 
   const api = useRef();
   const selected = useRef();
@@ -40,6 +42,7 @@ function APIDialog() {
     const params = api.current[path][method].params;
     setParams(params);
 
+    pathName.current = path;
     paramsRef.current = index(params);
     types.current = Object.entries(context.nucleoid.types)
       .map(([key, value]) => ({
@@ -54,7 +57,25 @@ function APIDialog() {
   }, [context, path, method]);
 
   const handleClose = () => dispatch({ type: "CLOSE_API_DIALOG" });
-  const saveApiDialog = () =>
+
+  const changePathNames = (object, selected, pathname, newpathname) => {
+    selected.path = newpathname;
+
+    Object.keys(object).forEach((objectname) => {
+      if (objectname.includes(pathname)) {
+        const objectvalue = { ...object[objectname] };
+        delete object[objectname];
+        objectname = objectname.replace(pathname, newpathname);
+        object[objectname] = { ...objectvalue };
+      }
+    });
+  };
+
+  const saveApiDialog = () => {
+    if (pathName !== path) {
+      changePathNames(api.current, selected.current, path, pathName.current);
+    }
+
     dispatch({
       type: "SAVE_API_DIALOG",
       payload: {
@@ -68,6 +89,11 @@ function APIDialog() {
         }, {}),
       },
     });
+  };
+
+  const handleSaveButtonStatus = (status) => {
+    setSaveDisable(status);
+  };
 
   const setApiDialogView = (view) => {
     setView((pages.api.dialog.view = view));
@@ -87,7 +113,8 @@ function APIDialog() {
           setApiDialogView={setApiDialogView}
           path={path}
           method={method}
-          ref={api}
+          handleSaveButtonStatus={handleSaveButtonStatus}
+          ref={{ api: api, pathName: pathName }}
         />
         <Grid sx={styles.content}>
           {view === "BODY" && (
@@ -105,6 +132,7 @@ function APIDialog() {
         <APIDialogAction
           setApiDialogView={setApiDialogView}
           saveApiDialog={saveApiDialog}
+          saveDisable={saveDisable}
           view={view}
         />
       </DialogActions>
