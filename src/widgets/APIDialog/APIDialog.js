@@ -20,8 +20,7 @@ function APIDialog() {
   const [saveDisable, setSaveDisable] = useState(false);
   const [view, setView] = useState(context.get("pages.api.dialog.view"));
 
-  const paramsRef = useRef();
-  const [params, setParams] = useState();
+  const params = useRef();
   const types = useRef();
   const request = useRef();
   const response = useRef();
@@ -40,11 +39,9 @@ function APIDialog() {
 
     api.current = context.get("nucleoid.api");
 
-    const params = api.current[path][method].params;
-    setParams(params);
-
     pathName.current = path;
-    paramsRef.current = index(params);
+    params.current = index(api.current[path][method].params);
+
     types.current = Object.entries(context.nucleoid.types)
       .map(([key, value]) => ({
         ...value,
@@ -70,7 +67,7 @@ function APIDialog() {
       type: "SAVE_API_DIALOG",
       payload: {
         method: method,
-        params: deindex(paramsRef.current),
+        params: deindex(params.current),
         request: decompile(request.current),
         response: decompile(response.current),
         types: types.current.reduce((previous, current) => {
@@ -120,7 +117,7 @@ function APIDialog() {
               ref={{ request, response }}
             />
           )}
-          {view === "PARAMS" && <APIParams ref={paramsRef} />}
+          {view === "PARAMS" && <APIParams ref={params} />}
           {view === "TYPES" && <APITypes ref={types} />}
         </Grid>
       </DialogContent>

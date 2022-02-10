@@ -11,7 +11,11 @@ const APIBody = forwardRef(({ method, params }, { request, response }) => {
         {method === "get" && (
           <>
             <br />
-            <ParamView params={params} />
+            <ParamView
+              params={Object.keys(params.current).map((item) => {
+                return params.current[item];
+              })}
+            />
           </>
         )}
         {method !== "get" && <Schema request ref={request} />}

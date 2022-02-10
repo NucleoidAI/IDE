@@ -29,10 +29,14 @@ function reducer(state, action) {
       api[path][method].response = action.payload.response;
       api[path][method].params = action.payload.params;
       nucleoid.types = action.payload.types;
-
-      console.log(api);
     }
     // eslint-disable-next-line no-fallthrough
+
+    case "ADD_RESOURCE": {
+      break;
+    }
+    // eslint-disable-next-line no-fallthrough
+
     case "CLOSE_API_DIALOG":
       pages.api.dialog.open = false;
       break;
