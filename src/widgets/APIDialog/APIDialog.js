@@ -1,7 +1,7 @@
 import APIBody from "../../components/APIBody";
 import APIDialogAction from "../../components/APIDialogAction";
 import APIParams from "../../components/APIParams";
-import APIPath from "../../components/APIPath/APIPath"; //TODO: index not working?
+import APIPath from "../../components/APIPath";
 import APITypes from "../../components/APITypes";
 import ClosableDialogTitle from "../../components/ClosableDialogTitle";
 import styles from "./styles";
@@ -14,7 +14,8 @@ function APIDialog() {
   const [context, dispatch] = useContext();
   const { pages } = context;
 
-  const [method, setMethod] = useState("get");
+  const [method, setMethod] = useState();
+
   const [path, setPath] = useState();
   const [saveDisable, setSaveDisable] = useState(false);
   const [view, setView] = useState(context.get("pages.api.dialog.view"));
@@ -54,30 +55,21 @@ function APIDialog() {
 
     request.current = compile(api.current[path][method].request);
     response.current = compile(api.current[path][method].response);
-  }, [context, path, method]);
+  }, [context]);
 
   const handleClose = () => dispatch({ type: "CLOSE_API_DIALOG" });
-
-  const changePathNames = (object, pathname, newpathname) => {
-    Object.keys(object).forEach((objectname) => {
-      if (objectname.includes(pathname)) {
-        const objectvalue = { ...object[objectname] };
-        delete object[objectname];
-        objectname = objectname.replace(pathname, newpathname);
-        object[objectname] = { ...objectvalue };
-      }
-    });
-  };
 
   const saveApiDialog = () => {
     if (pathName !== path) {
       selected.current.path = pathName.current;
+
       changePathNames(api.current, path, pathName.current);
     }
 
     dispatch({
       type: "SAVE_API_DIALOG",
       payload: {
+        method: method,
         params: deindex(paramsRef.current),
         request: decompile(request.current),
         response: decompile(response.current),
@@ -88,6 +80,10 @@ function APIDialog() {
         }, {}),
       },
     });
+  };
+
+  const handleChangeMethod = (method) => {
+    setMethod(method);
   };
 
   const handleSaveButtonStatus = (status) => {
@@ -113,6 +109,7 @@ function APIDialog() {
           path={path}
           method={method}
           handleSaveButtonStatus={handleSaveButtonStatus}
+          handleChangeMethod={handleChangeMethod}
           ref={{ api: api, pathName: pathName }}
         />
         <Grid sx={styles.content}>
@@ -138,6 +135,18 @@ function APIDialog() {
     </Dialog>
   );
 }
+
+//TODO: Add test.
+const changePathNames = (object, pathname, newpathname) => {
+  Object.keys(object).forEach((objectname) => {
+    if (objectname.includes(pathname)) {
+      const objectvalue = { ...object[objectname] };
+      delete object[objectname];
+      objectname = objectname.replace(pathname, newpathname);
+      object[objectname] = { ...objectvalue };
+    }
+  });
+};
 
 const compile = (schema) => {
   const { properties, type, ...other } = schema || {};

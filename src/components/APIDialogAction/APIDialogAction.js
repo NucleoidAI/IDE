@@ -11,7 +11,6 @@ function APIDialogAction({
 }) {
   const [alignment, setAlignment] = React.useState();
 
-  console.log(saveDisable);
   useEffect(() => {
     setAlignment(view);
   }, [view]);

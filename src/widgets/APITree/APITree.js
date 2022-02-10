@@ -19,7 +19,6 @@ function APITree() {
   }));
 
   const select = (id) => {
-    console.log(id);
     if (map[id]) {
       setSelected(id);
 

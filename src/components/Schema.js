@@ -30,15 +30,12 @@ const Schema = forwardRef(({ request, response }, ref) => {
       id: key,
       type: "integer",
     };
-    console.log(map);
 
     setSchema({ ...schema });
   }
 
   function removeSchemaProperty(selected) {
     delete map[selected].id;
-
-    console.log(ref.current);
 
     setSchema({ ...schema });
   }

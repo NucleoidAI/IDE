@@ -12,11 +12,18 @@ import {
   TextField,
 } from "@mui/material";
 import { checkPathUsed, splitPathPrefixAndSuffix } from "../../utils/Path";
-import { forwardRef, useState } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 
 const APIPath = forwardRef(
   (
-    { setApiDialogView, view, path, method, handleSaveButtonStatus },
+    {
+      setApiDialogView,
+      view,
+      path,
+      method,
+      handleSaveButtonStatus,
+      handleChangeMethod,
+    },
     { pathName, api }
   ) => {
     const [alert, setAlert] = useState();
@@ -24,6 +31,21 @@ const APIPath = forwardRef(
     const suffix = splitPathPrefixAndSuffix(path)[1];
 
     const pathNames = Object.keys(api.current);
+
+    const originalMethodName = useRef();
+
+    useEffect(() => {
+      originalMethodName.current = method;
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const methodNames = api.current[path]
+      ? Object.keys(api.current[path]).filter((item) => {
+          if (item !== method && item !== originalMethodName.current) {
+            return item;
+          } else return null;
+        })
+      : [];
 
     const handleCheck = (value) => {
       pathName.current = prefix + "/" + value;
@@ -39,13 +61,18 @@ const APIPath = forwardRef(
         <Grid item>
           <Grid container item sx={styles.content}>
             <FormControl variant={"outlined"} size={"small"}>
-              <Select value={method}>
+              <Select
+                defaultValue={method}
+                onChange={(e) => handleChangeMethod(e.target.value)}
+              >
                 {Object.keys(methods).map((item, index) => {
-                  return (
-                    <MenuItem value={item} key={index}>
-                      {methods[item]}
-                    </MenuItem>
-                  );
+                  if (!methodNames?.find((metodname) => metodname === item)) {
+                    return (
+                      <MenuItem value={item} key={index}>
+                        {methods[item]}
+                      </MenuItem>
+                    );
+                  } else return null;
                 })}
               </Select>
             </FormControl>

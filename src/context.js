@@ -13,12 +13,24 @@ function reducer(state, action) {
     }
 
     case "SAVE_API_DIALOG": {
-      const { path, method } = pages.api.selected;
+      let method = pages.api.selected.method;
+      const path = pages.api.selected.path;
       const api = nucleoid.api;
+
+      if (method !== action.payload.method) {
+        api[path][action.payload.method] = { ...api[path][method] };
+        delete api[path][method];
+
+        method = action.payload.method;
+        pages.api.selected.method = method;
+      }
+
       api[path][method].request = action.payload.request;
       api[path][method].response = action.payload.response;
       api[path][method].params = action.payload.params;
       nucleoid.types = action.payload.types;
+
+      console.log(api);
     }
     // eslint-disable-next-line no-fallthrough
     case "CLOSE_API_DIALOG":

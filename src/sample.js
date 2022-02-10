@@ -257,20 +257,18 @@ const api = {
   },
 
   "/questions/reviews/{rev3}/deneme": {
-    post: {
+    get: {
       summary: "Create a review",
       description: "Create a review",
-      request: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-          name: {
-            type: "string",
-          },
+      params: [
+        {
+          name: "order",
+          in: "query",
+          type: "string",
+          required: true,
+          description: "filter by order",
         },
-      },
+      ],
       response: {
         type: "object",
         properties: {
