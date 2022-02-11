@@ -47,6 +47,13 @@ function reducer(state, action) {
     case "SET_SELECTED_FUNCTION":
       pages.functions.selected = action.payload.function;
       break;
+    case "OPEN_FUNCTION_DIALOG": {
+      pages.functions.dialog.open = true;
+      break;
+    }
+    case "CLOSE_FUNCTION_DIALOG":
+      pages.functions.dialog.open = false;
+      break;
     case "UPDATE_TYPE": {
       const { id, name, type } = action.payload;
       const map = pages.api.dialog.map;
