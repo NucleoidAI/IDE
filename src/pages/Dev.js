@@ -7,9 +7,11 @@ import FunctionTree from "../widgets/FunctionTree";
 import Logo from "../components/Logo";
 import ParamView from "../components/ParamView";
 import React from "react";
-import Schema from "../components/Schema";
+//import Schema from "../components/Schema";
+//import SchemaView from "../components/SchemaView";
 import Security from "../components/Security";
 import SummaryForm from "../components/SummaryForm";
+
 import { Grid, Paper } from "@mui/material";
 
 const apis = [
@@ -107,19 +109,7 @@ function Dev() {
       <br />
 
       <Paper style={style}>
-        <Schema
-          schema={{
-            type: "object",
-            properties: {
-              id: {
-                type: "integer",
-              },
-              text: {
-                type: "string",
-              },
-            },
-          }}
-        />
+.
       </Paper>
       <br />
 

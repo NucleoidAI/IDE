@@ -32,11 +32,6 @@ function reducer(state, action) {
     }
     // eslint-disable-next-line no-fallthrough
 
-    case "ADD_RESOURCE": {
-      break;
-    }
-    // eslint-disable-next-line no-fallthrough
-
     case "CLOSE_API_DIALOG":
       pages.api.dialog.open = false;
       break;

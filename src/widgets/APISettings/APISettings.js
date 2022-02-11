@@ -4,6 +4,7 @@ import SchemaView from "../../components/SchemaView";
 import Security from "../../components/Security";
 import SummaryForm from "../../components/SummaryForm";
 import styles from "./styles";
+
 import { useContext } from "../../context";
 import { Fab, Grid } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
@@ -13,6 +14,8 @@ function APISettings() {
   const [method, setMethod] = useState();
   const [params, setParams] = useState();
   const [summary, setSummary] = useState();
+  const [request, setRequest] = useState();
+  const [response, setResponse] = useState();
   const [description, setDescription] = useState();
 
   const summaryRef = useRef([]);
@@ -25,6 +28,8 @@ function APISettings() {
       setMethod(selected.method);
       setParams(api[selected.path][selected.method].params);
       setSummary(api[selected.path][selected.method].summary);
+      setRequest(api[selected.path][selected.method].request);
+      setResponse(api[selected.path][selected.method].response);
       setDescription(api[selected.path][selected.method].description);
     }
   }, [state]);
@@ -41,10 +46,10 @@ function APISettings() {
         <Grid container sx={styles.content}>
           <Grid item xs={6} sx={styles.schema}>
             {method === "get" && <ParamView params={params} />}
-            {method !== "get" && <SchemaView />}
+            {method !== "get" && <SchemaView schema={request} />}
           </Grid>
           <Grid item xs={6} sx={styles.schema}>
-            <SchemaView />
+            <SchemaView schema={response} />
           </Grid>
         </Grid>
       </Grid>

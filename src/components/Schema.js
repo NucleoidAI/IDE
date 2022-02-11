@@ -80,7 +80,7 @@ const Schema = forwardRef(({ request, response }, ref) => {
           selected={selected}
           onNodeSelect={(event, value) => select(value)}
         >
-          {compile(map, schema)}
+          {compile(true, map, schema)}
         </TreeView>
       </Grid>
       <Grid container item justifyContent={"space-between"}>
@@ -108,7 +108,7 @@ const Schema = forwardRef(({ request, response }, ref) => {
   );
 });
 
-const compile = (map, schema, name) => {
+const compile = (edit, map, schema, name) => {
   schema = schema[Object.keys(schema)[0]];
   const { id, properties } = schema || {};
   const children = [];
@@ -122,7 +122,7 @@ const compile = (map, schema, name) => {
 
     switch (property.type) {
       case "object":
-        children.push(compile(map, { root: property }, name));
+        children.push(compile(edit, map, { root: property }, name));
         break;
       case "array":
         children.push(
@@ -132,7 +132,7 @@ const compile = (map, schema, name) => {
             nodeId={id}
             name={name}
             type={property.type}
-            edit
+            edit={edit}
             map={map[id]}
           />
         );
@@ -145,7 +145,7 @@ const compile = (map, schema, name) => {
             nodeId={id}
             name={name}
             type={property.type}
-            edit
+            edit={edit}
             map={map[id]}
           />
         );
@@ -157,7 +157,7 @@ const compile = (map, schema, name) => {
       key={id || (name ? uuid() : "root")}
       nodeId={id || (name ? uuid() : "root")}
       name={name}
-      edit
+      edit={edit}
       children={children}
       map={map[id]}
     />

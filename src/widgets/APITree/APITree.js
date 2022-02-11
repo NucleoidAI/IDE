@@ -1,5 +1,5 @@
 import ArrowIcon from "../../icons/Arrow";
-import CustomTreeItem from "../../CustomTreeItem";
+import CustomTreeItem from "../../components/CustomTreeItem";
 import TreeView from "@mui/lab/TreeView";
 import styles from "./styles";
 import { useContext } from "../../context";
@@ -76,7 +76,7 @@ function APITree() {
         defaultExpandIcon={<ArrowIcon right />}
         defaultExpanded={list.map((api) => api.path)}
         onNodeSelect={(event, value) => select(value)}
-        // selected={selected}
+        selected={selected}
       >
         {compile([graph["/"]], handleContextMenu)}
       </TreeView>
