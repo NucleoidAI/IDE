@@ -133,7 +133,7 @@ const compile = (list, handleContextMenu) =>
         nodeId={api.path}
         label={api.label}
         children={children}
-        onLabelClick={(event) => {
+        onClick={(event) => {
           event.preventDefault();
         }}
       />

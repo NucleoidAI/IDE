@@ -8,7 +8,7 @@ function SchemaObject({ name, edit, map, children, ...other }) {
 
   return (
     <TreeItem
-      onLabelClick={(event) => event.preventDefault()}
+      onClick={(event) => event.preventDefault()}
       label={
         <>
           {name !== undefined && (

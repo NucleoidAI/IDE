@@ -9,7 +9,7 @@ function SchemaArray({ id, name, edit, map, type, ...other }) {
 
   return (
     <TreeItem
-      onLabelClick={(event) => event.preventDefault()}
+      onClick={(event) => event.preventDefault()}
       label={
         <>
           {name !== undefined && (
