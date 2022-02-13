@@ -1,11 +1,11 @@
+import AccountCircle from "@mui/icons-material/AccountCircle";
 import Button from "@mui/material/Button";
-
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 
-import { TextField, Box, DialogTitle } from "@mui/material";
+
+import { Box, DialogTitle, TextField } from "@mui/material";
 import { useContext } from "../../context";
 //import { useContext } from "react";
 

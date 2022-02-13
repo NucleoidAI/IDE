@@ -134,13 +134,13 @@ function APIDialog() {
 }
 
 //TODO: Add test.
-const changePathNames = (object, pathname, newpathname) => {
-  Object.keys(object).forEach((objectname) => {
-    if (objectname.includes(pathname)) {
-      const objectvalue = { ...object[objectname] };
-      delete object[objectname];
-      objectname = objectname.replace(pathname, newpathname);
-      object[objectname] = { ...objectvalue };
+const changePathNames = (object, pathName, newPathName) => {
+  Object.keys(object).forEach((objectName) => {
+    if (objectName.includes(pathName)) {
+      const objectValue = { ...object[objectName] };
+      delete object[objectName];
+      objectName = objectName.replace(pathName, newPathName);
+      object[objectName] = { ...objectValue };
     }
   });
 };
