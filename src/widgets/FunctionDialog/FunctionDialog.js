@@ -3,9 +3,9 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+
+import { TextField, Box, DialogTitle } from "@mui/material";
 import { useContext } from "../../context";
 //import { useContext } from "react";
 
@@ -28,14 +28,10 @@ export default function FunctionDialog() {
     >
       <DialogTitle>path</DialogTitle>
       <DialogContent>
-        <DialogContentText></DialogContentText>
-        <TextField
-          autoFocus
-          margin="dense"
-          id="name"
-          fullWidth
-          variant="standard"
-        />
+        <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+          <AccountCircle sx={{ color: "action.active", mr: 1, my: 0.5 }} />
+          <TextField id="input-with-sx" label="With sx" variant="standard" />
+        </Box>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
