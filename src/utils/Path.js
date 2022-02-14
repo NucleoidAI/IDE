@@ -14,3 +14,7 @@ export const splitPathPrefixAndSuffix = (path) => {
 
   return [prefix, suffix];
 };
+
+export const checkLastCharSlashMark = (path) => {
+  return path.substring(path.length - 1) === "/" ? true : false;
+};

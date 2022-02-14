@@ -11,7 +11,11 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { checkPathUsed, splitPathPrefixAndSuffix } from "../../utils/Path";
+import {
+  checkLastCharSlashMark,
+  checkPathUsed,
+  splitPathPrefixAndSuffix,
+} from "../../utils/Path";
 import { forwardRef, useEffect, useRef, useState } from "react";
 
 const APIPath = forwardRef(
@@ -78,6 +82,7 @@ const APIPath = forwardRef(
             </FormControl>
             <Box component={"span"} sx={styles.text}>
               {prefix}
+              {checkLastCharSlashMark(prefix) ? "" : "/"}
             </Box>
             <TextField
               defaultValue={suffix}
