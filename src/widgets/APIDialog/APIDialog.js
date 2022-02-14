@@ -13,31 +13,35 @@ import React, { useEffect, useRef, useState } from "react";
 function APIDialog() {
   const [context, dispatch] = useContext();
   const { pages } = context;
-
-  const [method, setMethod] = useState("get");
-  const [path, setPath] = useState("/");
+  const [method, setMethod] = useState();
+  const [path, setPath] = useState();
+  const [saveDisable, setSaveDisable] = useState(false);
   const [view, setView] = useState(context.get("pages.api.dialog.view"));
+  const [params, setParams] = useState([]);
 
   const paramsRef = useRef();
-  const [params, setParams] = useState();
-  const types = useRef();
-  const request = useRef();
-  const response = useRef();
+  const typesRef = useRef();
+  const requestRef = useRef();
+  const responseRef = useRef();
+  const pathRef = useRef();
+  const apiRef = useRef();
+  const selectedRef = useRef();
 
   useEffect(() => {
-    const selected = context.get("pages.api.selected");
-    if (!selected) return;
+    selectedRef.current = context.get("pages.api.selected");
+    if (!selectedRef.current) return;
 
-    const { method, path } = selected;
+    const { method, path } = selectedRef.current;
     setMethod(method);
     setPath(path);
 
-    const api = context.get("nucleoid.api");
-    const params = api[path][method].params;
-    setParams(params);
+    apiRef.current = context.get("nucleoid.api");
+    pathRef.current = path;
 
-    paramsRef.current = index(params);
-    types.current = Object.entries(context.nucleoid.types)
+    setParams(apiRef.current[path][method].params);
+    paramsRef.current = index(apiRef.current[path][method].params);
+
+    typesRef.current = Object.entries(context.get("nucleoid.types"))
       .map(([key, value]) => ({
         ...value,
         name: key,
@@ -45,25 +49,41 @@ function APIDialog() {
       }))
       .map((type) => compile(type));
 
-    request.current = compile(api[path][method].request);
-    response.current = compile(api[path][method].response);
-  }, [context, path, method]);
+    requestRef.current = compile(apiRef.current[path][method].request);
+    responseRef.current = compile(apiRef.current[path][method].response);
+  }, [context]);
 
   const handleClose = () => dispatch({ type: "CLOSE_API_DIALOG" });
-  const saveApiDialog = () =>
+
+  const saveApiDialog = () => {
+    if (selectedRef.current.path !== pathRef.current) {
+      selectedRef.current.path = pathRef.current;
+      updatePath(apiRef.current, path, pathRef.current);
+    }
+
     dispatch({
       type: "SAVE_API_DIALOG",
       payload: {
+        method,
         params: deindex(paramsRef.current),
-        request: decompile(request.current),
-        response: decompile(response.current),
-        types: types.current.reduce((previous, current) => {
+        request: decompile(requestRef.current),
+        response: decompile(responseRef.current),
+        types: typesRef.current.reduce((previous, current) => {
           const object = decompile(current);
           const name = current[Object.keys(current)[0]].name;
           return { ...previous, [name]: object };
         }, {}),
       },
     });
+  };
+
+  const handleChangeMethod = (method) => {
+    setMethod(method);
+  };
+
+  const handleSaveButtonStatus = (status) => {
+    setSaveDisable(status);
+  };
 
   const setApiDialogView = (view) => {
     setView((pages.api.dialog.view = view));
@@ -78,29 +98,50 @@ function APIDialog() {
     >
       <ClosableDialogTitle label={"API"} handleClose={handleClose} />
       <DialogContent>
-        <APIPath view={view} setApiDialogView={setApiDialogView} />
+        <APIPath
+          view={view}
+          setApiDialogView={setApiDialogView}
+          path={path}
+          method={method}
+          handleSaveButtonStatus={handleSaveButtonStatus}
+          handleChangeMethod={handleChangeMethod}
+          ref={{ apiRef, pathRef }}
+        />
         <Grid sx={styles.content}>
           {view === "BODY" && (
             <APIBody
               method={method}
               params={params}
-              ref={{ request, response }}
+              ref={{ requestRef, responseRef }}
             />
           )}
           {view === "PARAMS" && <APIParams ref={paramsRef} />}
-          {view === "TYPES" && <APITypes ref={types} />}
+          {view === "TYPES" && <APITypes ref={typesRef} />}
         </Grid>
       </DialogContent>
       <DialogActions>
         <APIDialogAction
           setApiDialogView={setApiDialogView}
           saveApiDialog={saveApiDialog}
+          saveDisable={saveDisable}
           view={view}
         />
       </DialogActions>
     </Dialog>
   );
 }
+
+//TODO: Add test.
+const updatePath = (object, oldPath, newPath) => {
+  Object.keys(object).forEach((objectName) => {
+    if (objectName.includes(oldPath)) {
+      const objectValue = { ...object[objectName] };
+      delete object[objectName];
+      objectName = objectName.replace(oldPath, newPath);
+      object[objectName] = { ...objectValue };
+    }
+  });
+};
 
 const compile = (schema) => {
   const { properties, type, ...other } = schema || {};

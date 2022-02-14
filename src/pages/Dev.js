@@ -7,9 +7,11 @@ import FunctionTree from "../widgets/FunctionTree";
 import Logo from "../components/Logo";
 import ParamView from "../components/ParamView";
 import React from "react";
-import Schema from "../components/Schema";
+//import Schema from "../components/Schema";
+//import SchemaView from "../components/SchemaView";
 import Security from "../components/Security";
 import SummaryForm from "../components/SummaryForm";
+
 import { Grid, Paper } from "@mui/material";
 
 const apis = [
@@ -74,15 +76,6 @@ const style = { height: 300, width: 300 };
 function Dev() {
   const ref = React.useRef([]);
 
-  function textChangeHandler() {
-    console.log(ref.current["Summary"].value);
-    console.log(ref.current["Description"].value);
-  }
-
-  function openDialog(event) {
-    console.log(event);
-  }
-
   return (
     <Grid
       container
@@ -106,21 +99,7 @@ function Dev() {
       </Paper>
       <br />
 
-      <Paper style={style}>
-        <Schema
-          schema={{
-            type: "object",
-            properties: {
-              id: {
-                type: "integer",
-              },
-              text: {
-                type: "string",
-              },
-            },
-          }}
-        />
-      </Paper>
+      <Paper style={style}>.</Paper>
       <br />
 
       <Paper style={style}>
@@ -128,17 +107,11 @@ function Dev() {
       </Paper>
       <br />
       <Paper style={style}>
-        <SummaryForm
-          summaryText="a"
-          descriptionText="b"
-          summaryTextChangeHandler={textChangeHandler}
-          descriptionTextChangeHandler={textChangeHandler}
-          ref={ref}
-        />
+        <SummaryForm summaryText="a" descriptionText="b" ref={ref} />
       </Paper>
       <br />
       <Paper style={style}>
-        <AddList list={["Resource", "Method"]} clickEvent={openDialog} />
+        <AddList list={["Resource", "Method"]} />
       </Paper>
       <br />
 

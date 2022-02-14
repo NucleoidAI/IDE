@@ -8,7 +8,7 @@ function SchemaObject({ name, edit, map, children, ...other }) {
 
   return (
     <TreeItem
-      onLabelClick={(event) => event.preventDefault()}
+      onClick={(event) => event.preventDefault()}
       label={
         <>
           {name !== undefined && (
@@ -22,7 +22,7 @@ function SchemaObject({ name, edit, map, children, ...other }) {
                     setValue((map.name = event.target.value))
                   }
                   inputRef={textField}
-                  onClick={() => setTimeout(() => textField.current.focus(), 0)}
+                  onClick={() => setImmediate(() => textField.current.focus())}
                 />
               )}
               {!edit && <>"{value}"</>}

@@ -1,4 +1,4 @@
-import { compile } from "./Map";
+import { compile } from "../Map";
 
 test("Compile object to map", () => {
   const object = {

@@ -6,9 +6,7 @@ import { v4 as uuid } from "uuid";
 import { Checkbox, IconButton, TextField } from "@mui/material";
 import React, { useState } from "react";
 
-const ParamTable = React.forwardRef((props, ref) => {
-  const { paramsRef, addParams } = ref;
-
+const ParamTable = React.forwardRef((props, { paramsRef, addParams }) => {
   const [params, setParams] = useState(paramsRef.current);
 
   addParams.current = () => {

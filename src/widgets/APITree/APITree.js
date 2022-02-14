@@ -1,9 +1,10 @@
 import ArrowIcon from "../../icons/Arrow";
+import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
+import TreeView from "@mui/lab/TreeView";
 import styles from "./styles";
 import { useContext } from "../../context";
 import { Box, Menu, MenuItem } from "@mui/material";
 import React, { useEffect } from "react";
-import { TreeItem, TreeView } from "@mui/lab";
 
 const map = {};
 
@@ -112,7 +113,7 @@ const compile = (list, handleContextMenu) =>
         map[hash] = payload;
 
         return (
-          <TreeItem
+          <NonExpandableTreeItem
             key={hash}
             nodeId={hash}
             onContextMenu={(event) => handleContextMenu(event, hash)}
@@ -127,12 +128,12 @@ const compile = (list, handleContextMenu) =>
       .concat(children);
 
     return (
-      <TreeItem
+      <NonExpandableTreeItem
         key={api.path}
         nodeId={api.path}
         label={api.label}
         children={children}
-        onLabelClick={(event) => {
+        onClick={(event) => {
           event.preventDefault();
         }}
       />

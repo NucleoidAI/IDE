@@ -9,9 +9,11 @@ const styles = {
   },
   text: {
     fontSize: 16,
+    ml: 2,
+    mr: 1,
   },
-  textfield: { width: 75 },
-  icon: { fill: "#5d5d5d" },
+  textField: { width: 75 },
+  icon: { fill: "#5d5d5d", mr: 1 },
 };
 
 export default styles;

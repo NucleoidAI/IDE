@@ -3,7 +3,12 @@ import { Button, Grid } from "@mui/material";
 import React, { useEffect } from "react";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 
-function APIDialogAction({ view, setApiDialogView, saveApiDialog }) {
+function APIDialogAction({
+  view,
+  setApiDialogView,
+  saveApiDialog,
+  saveDisable,
+}) {
   const [alignment, setAlignment] = React.useState();
 
   useEffect(() => {
@@ -40,6 +45,7 @@ function APIDialogAction({ view, setApiDialogView, saveApiDialog }) {
         variant={"text"}
         color={"primary"}
         onClick={() => saveApiDialog()}
+        disabled={saveDisable}
       >
         Save
       </Button>

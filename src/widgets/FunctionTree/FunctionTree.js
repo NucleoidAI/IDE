@@ -1,10 +1,12 @@
 import Arrow from "../../icons/Arrow";
 import FolderIcon from "@mui/icons-material/FolderRounded";
+import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
+import TreeView from "@mui/lab/TreeView";
 import styles from "./styles";
+
 import { useContext } from "../../context";
 import { Grid, Menu, MenuItem, Typography } from "@mui/material";
 import React, { useEffect } from "react";
-import { TreeItem, TreeView } from "@mui/lab";
 
 function FunctionTree() {
   const [selected, setSelected] = React.useState(null);
@@ -110,7 +112,7 @@ const compile = (folders, handleContextMenu) =>
 
     children = children.concat(
       folder.functions.map((fn) => (
-        <TreeItem
+        <NonExpandableTreeItem
           key={`${root(folder.path)}${fn.name}`}
           nodeId={`${root(folder.path)}${fn.name}`}
           onContextMenu={(event) =>
@@ -134,10 +136,10 @@ const compile = (folders, handleContextMenu) =>
     );
 
     return (
-      <TreeItem
+      <NonExpandableTreeItem
         key={root(folder.path)}
         nodeId={root(folder.path)}
-        onLabelClick={(event) => {
+        onClick={(event) => {
           event.preventDefault();
         }}
         label={
