@@ -15,9 +15,9 @@ const split = (path) => {
   return { prefix, suffix };
 };
 
-const PathExports = {
+const Path = {
   isUsed,
   split,
 };
 
-export default PathExports;
+export default Path;
