@@ -24,7 +24,7 @@ test("List properties of schema", () => {
 
   const compiledSchema = compileSchema(schema);
   const map = mapSchema(compiledSchema);
-  const root = shallow(compile(map, compiledSchema));
+  const root = shallow(compile(true, map, compiledSchema));
 
   const child1 = root.children().first();
   expect(child1.type()).toEqual(SchemaProperty);
@@ -52,7 +52,7 @@ test("List array as property of schema", () => {
 
   const compiledSchema = compileSchema(schema);
   const map = mapSchema(compiledSchema);
-  const root = shallow(compile(map, compiledSchema));
+  const root = shallow(compile(true, map, compiledSchema));
 
   const child = root.children().first();
   expect(child.type()).toEqual(SchemaArray);
@@ -77,7 +77,7 @@ test("List nested object in schema", () => {
 
   const compiledSchema = compileSchema(schema);
   const map = mapSchema(compiledSchema);
-  const root = shallow(compile(map, compiledSchema));
+  const root = shallow(compile(true, map, compiledSchema));
 
   const child = root.children().first();
   expect(child.type()).toEqual(SchemaObject);

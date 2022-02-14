@@ -5,8 +5,8 @@ import { v4 as uuid } from "uuid";
 import { Divider, Grid, MenuItem, Select, TextField } from "@mui/material";
 import React, { forwardRef, useEffect, useRef, useState } from "react";
 
-const APITypes = forwardRef((props, ref) => {
-  const types = ref.current;
+const APITypes = forwardRef((props, typesRef) => {
+  const types = typesRef.current;
 
   const [selected, setSelected] = useState(types.length ? types[0] : {});
   const [selectionModel, setSelectionModel] = useState([]);

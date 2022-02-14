@@ -1,4 +1,4 @@
-export const checkPathUsed = (paths, prefix, suffix, value) => {
+const isUsed = (paths, prefix, suffix, value) => {
   if (suffix === value) return false;
   if (value === "") return true;
   if (prefix.charAt(prefix.length - 1) !== "/") prefix += "/";
@@ -7,14 +7,18 @@ export const checkPathUsed = (paths, prefix, suffix, value) => {
   return false;
 };
 
-export const splitPathPrefixAndSuffix = (path) => {
+const split = (path) => {
   const pathArray = path.split("/");
   const suffix = pathArray.pop();
   const prefix = pathArray.length <= 1 ? "/" : pathArray.join("/");
 
-  return [prefix, suffix];
+  return { prefix, suffix };
 };
 
-export const checkLastCharSlashMark = (path) => {
-  return path.substring(path.length - 1) === "/" ? true : false;
+const Path = {
+  isUsed,
+  split,
 };
+
+export default Path;
+

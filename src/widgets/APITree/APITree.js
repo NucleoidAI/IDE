@@ -1,5 +1,5 @@
 import ArrowIcon from "../../icons/Arrow";
-import CustomTreeItem from "../../components/CustomTreeItem";
+import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
 import TreeView from "@mui/lab/TreeView";
 import styles from "./styles";
 import { useContext } from "../../context";
@@ -113,7 +113,7 @@ const compile = (list, handleContextMenu) =>
         map[hash] = payload;
 
         return (
-          <CustomTreeItem
+          <NonExpandableTreeItem
             key={hash}
             nodeId={hash}
             onContextMenu={(event) => handleContextMenu(event, hash)}
@@ -128,7 +128,7 @@ const compile = (list, handleContextMenu) =>
       .concat(children);
 
     return (
-      <CustomTreeItem
+      <NonExpandableTreeItem
         key={api.path}
         nodeId={api.path}
         label={api.label}

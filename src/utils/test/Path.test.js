@@ -1,8 +1,9 @@
-import { checkPathUsed, splitPathPrefixAndSuffix } from "../Path.js";
+import Path from "../Path.js";
 
 test("Split Path prefix, suffix", () => {
-  const result = splitPathPrefixAndSuffix("/questions/reviews/{rev3}/items");
-  expect(result).toEqual(["/questions/reviews/{rev3}", "items"]);
+  const { prefix, suffix } = Path.split("/questions/reviews/{rev3}/items");
+  expect(prefix).toEqual("/questions/reviews/{rev3}");
+  expect(suffix).toEqual("items");
 });
 
 test("Check path used?", () => {
@@ -16,27 +17,27 @@ test("Check path used?", () => {
     "/questions/reviews/{rev3}/items",
   ];
 
-  const resultSameValue = checkPathUsed(
+  const resultSameValue = Path.isUsed(
     paths,
     "/questions",
     "reviews",
     "reviews"
   );
 
-  const resultValueNull = checkPathUsed(paths, "/questions", "reviews", "");
+  const resultValueNull = Path.isUsed(paths, "/questions", "reviews", "");
 
-  const resultValueUsed = checkPathUsed(
+  const resultValueUsed = Path.isUsed(
     paths,
     "/questions",
     "reviews",
     "reviews2"
   );
 
-  const resultValueUnUsed = checkPathUsed(
+  const resultValueUnUsed = Path.isUsed(
     paths,
     "/questions",
     "reviews",
-    "gkhn"
+    "invalid"
   );
 
   expect(resultSameValue).toEqual(false);

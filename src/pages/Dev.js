@@ -76,15 +76,6 @@ const style = { height: 300, width: 300 };
 function Dev() {
   const ref = React.useRef([]);
 
-  function textChangeHandler() {
-    console.log(ref.current["Summary"].value);
-    console.log(ref.current["Description"].value);
-  }
-
-  function openDialog(event) {
-    console.log(event);
-  }
-
   return (
     <Grid
       container
@@ -108,9 +99,7 @@ function Dev() {
       </Paper>
       <br />
 
-      <Paper style={style}>
-.
-      </Paper>
+      <Paper style={style}>.</Paper>
       <br />
 
       <Paper style={style}>
@@ -118,17 +107,11 @@ function Dev() {
       </Paper>
       <br />
       <Paper style={style}>
-        <SummaryForm
-          summaryText="a"
-          descriptionText="b"
-          summaryTextChangeHandler={textChangeHandler}
-          descriptionTextChangeHandler={textChangeHandler}
-          ref={ref}
-        />
+        <SummaryForm summaryText="a" descriptionText="b" ref={ref} />
       </Paper>
       <br />
       <Paper style={style}>
-        <AddList list={["Resource", "Method"]} clickEvent={openDialog} />
+        <AddList list={["Resource", "Method"]} />
       </Paper>
       <br />
 

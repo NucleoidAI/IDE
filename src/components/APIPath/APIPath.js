@@ -1,7 +1,7 @@
+import Constants from "../../constants";
 import LanguageIcon from "@mui/icons-material/Language";
-import methods from "../../utils/constants/methods";
+import Path from "../../utils/Path";
 import styles from "./styles";
-
 import {
   Box,
   Button,
@@ -11,11 +11,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import {
-  checkLastCharSlashMark,
-  checkPathUsed,
-  splitPathPrefixAndSuffix,
-} from "../../utils/Path";
+
 import { forwardRef, useEffect, useRef, useState } from "react";
 
 const APIPath = forwardRef(
@@ -28,33 +24,29 @@ const APIPath = forwardRef(
       handleSaveButtonStatus,
       handleChangeMethod,
     },
-    { pathName, api }
+    { apiRef, pathRef }
   ) => {
+    const api = apiRef.current;
     const [alert, setAlert] = useState();
-    const prefix = splitPathPrefixAndSuffix(path)[0];
-    const suffix = splitPathPrefixAndSuffix(path)[1];
-
-    const pathNames = Object.keys(api.current);
-
-    const originalMethodName = useRef();
+    const { prefix, suffix } = Path.split(path);
+    const paths = Object.keys(api);
+    const originalMethod = useRef();
 
     useEffect(() => {
-      originalMethodName.current = method;
+      originalMethod.current = method;
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const methodNames = api.current[path]
-      ? Object.keys(api.current[path]).filter((item) => {
-          if (item !== method && item !== originalMethodName.current) {
-            return item;
-          } else return null;
-        })
+    const usedMethods = api[path]
+      ? Object.keys(api[path]).filter(
+          (item) => item !== method && item !== originalMethod.current
+        )
       : [];
 
     const handleCheck = (value) => {
-      pathName.current = prefix + "/" + value;
+      pathRef.current = prefix + "/" + value;
 
-      const pathStatus = checkPathUsed(pathNames, prefix, suffix, value);
+      const pathStatus = Path.isUsed(paths, prefix, suffix, value);
       handleSaveButtonStatus(pathStatus);
       setAlert(pathStatus);
     };
@@ -69,15 +61,15 @@ const APIPath = forwardRef(
                 defaultValue={method}
                 onChange={(e) => handleChangeMethod(e.target.value)}
               >
-                {Object.keys(methods).map((item, index) => {
-                  if (!methodNames?.find((metodname) => metodname === item)) {
+                {Constants.methods
+                  .filter((methodName) => !usedMethods.includes(methodName))
+                  .map((item, index) => {
                     return (
                       <MenuItem value={item} key={index}>
-                        {methods[item]}
+                        {item}
                       </MenuItem>
                     );
-                  } else return null;
-                })}
+                  })}
               </Select>
             </FormControl>
             <Box component={"span"} sx={styles.text}>
