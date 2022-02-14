@@ -1,6 +1,6 @@
-import LanguageIcon from "@mui/icons-material/Language";
-import methods from "../../utils/constants/methods";
 import Constants from "../../constants";
+import LanguageIcon from "@mui/icons-material/Language";
+import Path from "../../utils/Path";
 import styles from "./styles";
 import {
   Box,
@@ -11,7 +11,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import Path from "../../utils/Path";
+
 import { forwardRef, useEffect, useRef, useState } from "react";
 
 const APIPath = forwardRef(
@@ -30,16 +30,16 @@ const APIPath = forwardRef(
     const [alert, setAlert] = useState();
     const { prefix, suffix } = Path.split(path);
     const paths = Object.keys(api);
-    const originalMethodName = useRef(); // TODO Verify is being used
+    const originalMethod = useRef();
 
     useEffect(() => {
-      originalMethodName.current = method;
+      originalMethod.current = method;
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const usedMethods = api[path]
       ? Object.keys(api[path]).filter(
-          (item) => item !== method && item !== originalMethodName.current
+          (item) => item !== method && item !== originalMethod.current
         )
       : [];
 
@@ -61,15 +61,15 @@ const APIPath = forwardRef(
                 defaultValue={method}
                 onChange={(e) => handleChangeMethod(e.target.value)}
               >
-                {Object.keys(methods).map((item, index) => {
-                  if (!usedMethods?.find((methodName) => methodName === item)) {
+                {Constants.methods
+                  .filter((methodName) => !usedMethods.includes(methodName))
+                  .map((item, index) => {
                     return (
                       <MenuItem value={item} key={index}>
-                        {methods[item]}
+                        {item}
                       </MenuItem>
                     );
-                  } else return null;
-                })}
+                  })}
               </Select>
             </FormControl>
             <Box component={"span"} sx={styles.text}>
