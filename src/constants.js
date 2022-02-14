@@ -1,7 +1,7 @@
 const methods = ["get", "post", "put", "del"];
 
-const ConstansExports = {
+const Constants = {
   methods,
 };
 
-export default ConstansExports;
+export default Constants;
