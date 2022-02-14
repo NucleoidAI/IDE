@@ -1,6 +1,6 @@
 import Arrow from "../../icons/Arrow";
-import CustomTreeView from "../../components/CustomTreeItem";
 import FolderIcon from "@mui/icons-material/FolderRounded";
+import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
 import TreeView from "@mui/lab/TreeView";
 import styles from "./styles";
 
@@ -112,7 +112,7 @@ const compile = (folders, handleContextMenu) =>
 
     children = children.concat(
       folder.functions.map((fn) => (
-        <CustomTreeView
+        <NonExpandableTreeItem
           key={`${root(folder.path)}${fn.name}`}
           nodeId={`${root(folder.path)}${fn.name}`}
           onContextMenu={(event) =>
@@ -136,7 +136,7 @@ const compile = (folders, handleContextMenu) =>
     );
 
     return (
-      <CustomTreeView
+      <NonExpandableTreeItem
         key={root(folder.path)}
         nodeId={root(folder.path)}
         onClick={(event) => {
