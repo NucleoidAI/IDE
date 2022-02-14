@@ -12,7 +12,6 @@ const APIParams = forwardRef((props, paramsRef) => {
         <ParamTable ref={{ paramsRef, addParams }} />
       </Grid>
       <Grid container item sx={styles.button}>
-        {/* TODO Move add icon into ParamTable */}
         <Fab size={"small"} onClick={() => addParams.current()}>
           <AddIcon />
         </Fab>

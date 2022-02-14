@@ -72,4 +72,4 @@ const NonExpandableTreeItem = (props) => (
   <TreeItem ContentComponent={NonExpandableTreeContent} {...props} />
 );
 
-export default NonExpandableTreeItem; // TODO Rename to NonExpandableTreeItem
+export default NonExpandableTreeItem;
