@@ -12,7 +12,7 @@ const styles = {
     ml: 2,
     mr: 1,
   },
-  textfield: { width: 75 },
+  textField: { width: 75 },
   icon: { fill: "#5d5d5d", mr: 1 },
 };
 

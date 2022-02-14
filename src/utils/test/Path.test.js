@@ -36,7 +36,7 @@ test("Check path used?", () => {
     paths,
     "/questions",
     "reviews",
-    "gkhn"
+    "invalid"
   );
 
   expect(resultSameValue).toEqual(false);

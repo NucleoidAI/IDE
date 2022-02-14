@@ -13,36 +13,35 @@ import React, { useEffect, useRef, useState } from "react";
 function APIDialog() {
   const [context, dispatch] = useContext();
   const { pages } = context;
-
   const [method, setMethod] = useState();
-
   const [path, setPath] = useState();
   const [saveDisable, setSaveDisable] = useState(false);
   const [view, setView] = useState(context.get("pages.api.dialog.view"));
+  const [params, setParams] = useState([]);
 
-  const params = useRef();
-  const types = useRef();
-  const request = useRef();
-  const response = useRef();
-  const pathName = useRef();
-
-  const api = useRef();
-  const selected = useRef();
+  const paramsRef = useRef();
+  const typesRef = useRef();
+  const requestRef = useRef();
+  const responseRef = useRef();
+  const pathRef = useRef();
+  const apiRef = useRef();
+  const selectedRef = useRef();
 
   useEffect(() => {
-    selected.current = context.get("pages.api.selected");
-    if (!selected.current) return;
+    selectedRef.current = context.get("pages.api.selected");
+    if (!selectedRef.current) return;
 
-    const { method, path } = selected.current;
+    const { method, path } = selectedRef.current;
     setMethod(method);
     setPath(path);
 
-    api.current = context.get("nucleoid.api");
+    apiRef.current = context.get("nucleoid.api");
+    pathRef.current = path;
 
-    pathName.current = path;
-    params.current = index(api.current[path][method].params);
+    setParams(apiRef.current[path][method].params);
+    paramsRef.current = index(apiRef.current[path][method].params);
 
-    types.current = Object.entries(context.nucleoid.types)
+    typesRef.current = Object.entries(context.get("nucleoid.types"))
       .map(([key, value]) => ({
         ...value,
         name: key,
@@ -50,27 +49,26 @@ function APIDialog() {
       }))
       .map((type) => compile(type));
 
-    request.current = compile(api.current[path][method].request);
-    response.current = compile(api.current[path][method].response);
+    requestRef.current = compile(apiRef.current[path][method].request);
+    responseRef.current = compile(apiRef.current[path][method].response);
   }, [context]);
 
   const handleClose = () => dispatch({ type: "CLOSE_API_DIALOG" });
 
   const saveApiDialog = () => {
-    if (pathName !== path) {
-      selected.current.path = pathName.current;
-
-      changePathNames(api.current, path, pathName.current);
+    if (selectedRef.current.path !== pathRef.current) {
+      selectedRef.current.path = pathRef.current;
+      updatePath(apiRef.current, path, pathRef.current);
     }
 
     dispatch({
       type: "SAVE_API_DIALOG",
       payload: {
-        method: method,
-        params: deindex(params.current),
-        request: decompile(request.current),
-        response: decompile(response.current),
-        types: types.current.reduce((previous, current) => {
+        method,
+        params: deindex(paramsRef.current),
+        request: decompile(requestRef.current),
+        response: decompile(responseRef.current),
+        types: typesRef.current.reduce((previous, current) => {
           const object = decompile(current);
           const name = current[Object.keys(current)[0]].name;
           return { ...previous, [name]: object };
@@ -107,18 +105,18 @@ function APIDialog() {
           method={method}
           handleSaveButtonStatus={handleSaveButtonStatus}
           handleChangeMethod={handleChangeMethod}
-          ref={{ api: api, pathName: pathName }}
+          ref={{ apiRef, pathRef }}
         />
         <Grid sx={styles.content}>
           {view === "BODY" && (
             <APIBody
               method={method}
               params={params}
-              ref={{ request, response }}
+              ref={{ requestRef, responseRef }}
             />
           )}
-          {view === "PARAMS" && <APIParams ref={params} />}
-          {view === "TYPES" && <APITypes ref={types} />}
+          {view === "PARAMS" && <APIParams ref={paramsRef} />}
+          {view === "TYPES" && <APITypes ref={typesRef} />}
         </Grid>
       </DialogContent>
       <DialogActions>
@@ -134,12 +132,12 @@ function APIDialog() {
 }
 
 //TODO: Add test.
-const changePathNames = (object, pathName, newPathName) => {
+const updatePath = (object, oldPath, newPath) => {
   Object.keys(object).forEach((objectName) => {
-    if (objectName.includes(pathName)) {
+    if (objectName.includes(oldPath)) {
       const objectValue = { ...object[objectName] };
       delete object[objectName];
-      objectName = objectName.replace(pathName, newPathName);
+      objectName = objectName.replace(oldPath, newPath);
       object[objectName] = { ...objectValue };
     }
   });
