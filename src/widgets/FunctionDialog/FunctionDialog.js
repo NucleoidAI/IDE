@@ -4,14 +4,11 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import FolderIcon from "@mui/icons-material/FolderRounded";
+import Path from "../../utils/Path";
 // eslint-disable-next-line react-hooks/exhaustive-deps
 import { useContext } from "../../context";
 import { Grid, MenuItem, Select, TextField, Typography } from "@mui/material";
 
-import {
-  checkLastCharSlashMark,
-  splitPathPrefixAndSuffix,
-} from "../../utils/Path";
 //import { useContext } from "react";
 
 export default function FunctionDialog() {
@@ -20,8 +17,8 @@ export default function FunctionDialog() {
 
   const selectedFunction = pages.functions.selected;
 
-  const [prefix, suffix] = selectedFunction
-    ? splitPathPrefixAndSuffix(selectedFunction)
+  const { prefix, suffix } = selectedFunction
+    ? Path.split(selectedFunction)
     : [];
 
   //const handleClickOpen = () => {};
@@ -61,7 +58,7 @@ export default function FunctionDialog() {
           </Select>
           <Typography>
             {prefix}
-            {checkLastCharSlashMark(prefix) ? "" : "/"}
+            {Path.addSlashMark(prefix)}
           </Typography>
           <TextField defaultValue={suffix} sx={{ width: "30%", pl: "10px" }} />
         </Grid>

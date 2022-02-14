@@ -15,10 +15,14 @@ const split = (path) => {
   return { prefix, suffix };
 };
 
+const addSlashMark = (path) => {
+  return path?.substring(path.length - 1) !== "/" && "/";
+};
+
 const Path = {
   isUsed,
   split,
+  addSlashMark,
 };
 
 export default Path;
-

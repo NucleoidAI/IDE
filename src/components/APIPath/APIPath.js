@@ -74,7 +74,7 @@ const APIPath = forwardRef(
             </FormControl>
             <Box component={"span"} sx={styles.text}>
               {prefix}
-              {checkLastCharSlashMark(prefix) ? "" : "/"}
+              {Path.addSlashMark(prefix)}
             </Box>
             <TextField
               defaultValue={suffix}
