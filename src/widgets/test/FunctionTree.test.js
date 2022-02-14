@@ -2,7 +2,8 @@ import Adapter from "enzyme-adapter-react-16";
 import FunctionTree from "../FunctionTree";
 import React from "react";
 import State from "../../state";
-import { TreeItem } from "@mui/lab";
+//import { TreeItem } from "@mui/lab";
+import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
 import { useContext } from "../../context";
 import Enzyme, { shallow } from "enzyme";
 
@@ -23,7 +24,7 @@ test("List nested functions", () => {
   useContext.mockReturnValue([state]);
 
   const wrapper = shallow(<FunctionTree functions={functions} />);
-  const root = wrapper.find(TreeItem).first();
+  const root = wrapper.find(NonExpandableTreeItem).first();
   const child1 = root.children().first();
   const child2 = root.children().at(1);
   const child3 = child1.children().first();
