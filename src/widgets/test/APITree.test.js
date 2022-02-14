@@ -1,8 +1,9 @@
 import APITree from "../APITree";
 import Adapter from "enzyme-adapter-react-16";
+import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
 import React from "react";
 import State from "../../state";
-import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
+
 import { useContext } from "../../context";
 import Enzyme, { shallow } from "enzyme";
 

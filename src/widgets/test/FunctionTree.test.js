@@ -1,9 +1,9 @@
 import Adapter from "enzyme-adapter-react-16";
 import FunctionTree from "../FunctionTree";
+import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
 import React from "react";
 import State from "../../state";
-//import { TreeItem } from "@mui/lab";
-import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
+
 import { useContext } from "../../context";
 import Enzyme, { shallow } from "enzyme";
 
