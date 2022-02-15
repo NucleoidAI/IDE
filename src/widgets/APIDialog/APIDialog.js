@@ -131,7 +131,6 @@ function APIDialog() {
   );
 }
 
-
 const updatePath = (object, oldPath, newPath) => {
   Object.keys(object).forEach((objectName) => {
     if (objectName.includes(oldPath)) {

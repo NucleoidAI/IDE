@@ -5,6 +5,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import FolderIcon from "@mui/icons-material/FolderRounded";
 import Path from "../../utils/Path";
+import styles from "./styles";
 // eslint-disable-next-line react-hooks/exhaustive-deps
 import { useContext } from "../../context";
 import { Grid, MenuItem, Select, TextField, Typography } from "@mui/material";
@@ -14,14 +15,25 @@ import { Grid, MenuItem, Select, TextField, Typography } from "@mui/material";
 export default function FunctionDialog() {
   const [context, dispatch] = useContext();
   const { pages } = context;
-
+  let type = "FOLDER";
+  let path;
   const selectedFunction = pages.functions.selected;
-
   const { prefix, suffix } = selectedFunction
     ? Path.split(selectedFunction)
-    : [];
+    : {};
 
-  //const handleClickOpen = () => {};
+  const handleSaveFunction = () => {
+    dispatch({
+      type: "SAVE_FUNCTION_DIALOG",
+      payload: {
+        type: type === "FOLDER" ? "FUNCTION" : type,
+        path:
+          type === "FOLDER" ? prefix + "/" + path + "/A" : prefix + "/" + path,
+        code: "",
+        params: ["a", "b"],
+      },
+    });
+  };
 
   const handleClose = () => {
     dispatch({ type: "CLOSE_FUNCTION_DIALOG" });
@@ -35,36 +47,44 @@ export default function FunctionDialog() {
     >
       <ClosableDialogTitle label={"FUNCTIONS"} handleClose={handleClose} />
       <DialogContent>
-        <Grid
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            pt: "25px",
-          }}
-        >
+        <Grid sx={styles.dialogContent}>
           <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            // value={age}
-            label="Age"
-            // onChange={handleChange}
+            defaultValue={"FOLDER"}
+            sx={styles.select}
+            onChange={(e) => (type = e.target.value)}
           >
-            <MenuItem value={10}>
-              <FolderIcon></FolderIcon>Ten
+            <MenuItem value={"FUNCTION"}>
+              <Grid sx={styles.optionContainer}>
+                <Typography sx={styles.optionFunction}>fn</Typography>
+                <Typography>Function</Typography>
+              </Grid>
             </MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            <MenuItem value={"CLASS"}>
+              <Grid sx={styles.optionContainer}>
+                <Typography sx={styles.optionFunction}>class</Typography>
+                <Typography>Class</Typography>
+              </Grid>
+            </MenuItem>
+            <MenuItem value={"FOLDER"}>
+              <Grid sx={styles.optionContainer}>
+                <FolderIcon sx={styles.icon} />
+                <Typography>Folder</Typography>
+              </Grid>
+            </MenuItem>
           </Select>
           <Typography>
             {prefix}
             {Path.addSlashMark(prefix)}
           </Typography>
-          <TextField defaultValue={suffix} sx={{ width: "30%", pl: "10px" }} />
+          <TextField
+            defaultValue={""}
+            sx={styles.suffixText}
+            onChange={(e) => (path = e.target.value)}
+          />
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Save</Button>
+        <Button onClick={handleSaveFunction}>Save</Button>
       </DialogActions>
     </Dialog>
   );

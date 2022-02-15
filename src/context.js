@@ -51,6 +51,21 @@ function reducer(state, action) {
       pages.functions.dialog.open = true;
       break;
     }
+
+    case "SAVE_FUNCTION_DIALOG": {
+      const type = pages.functions.selected.type;
+      const path = action.payload.path;
+
+      const functions = nucleoid.functions;
+      console.log(functions);
+      console.log(action.payload);
+
+      functions[path] = {};
+      functions[path].type = action.payload.type;
+      functions[path].code = action.payload.code;
+      functions[path].params = action.payload.params;
+    }
+    // eslint-disable-next-line no-fallthrough
     case "CLOSE_FUNCTION_DIALOG":
       pages.functions.dialog.open = false;
       break;
