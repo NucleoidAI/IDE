@@ -18,9 +18,7 @@ export default function FunctionDialog() {
   let type = "FOLDER";
   let path;
   const selectedFunction = pages.functions.selected;
-  const { prefix, suffix } = selectedFunction
-    ? Path.split(selectedFunction)
-    : {};
+  const { prefix } = selectedFunction ? Path.split(selectedFunction) : {};
 
   const handleSaveFunction = () => {
     dispatch({
@@ -28,9 +26,11 @@ export default function FunctionDialog() {
       payload: {
         type: type === "FOLDER" ? "FUNCTION" : type,
         path:
-          type === "FOLDER" ? prefix + "/" + path + "/A" : prefix + "/" + path,
+          type === "FOLDER"
+            ? prefix + Path.addSlashMark(prefix) + path + "/A"
+            : prefix + Path.addSlashMark(prefix) + path,
         code: "",
-        params: ["a", "b"],
+        params: [],
       },
     });
   };

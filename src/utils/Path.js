@@ -16,7 +16,7 @@ const split = (path) => {
 };
 
 const addSlashMark = (path) => {
-  return path?.substring(path.length - 1) !== "/" && "/";
+  return path?.substring(path.length - 1) !== "/" ? "/" : "";
 };
 
 const Path = {

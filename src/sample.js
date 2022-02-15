@@ -363,6 +363,14 @@ const functions = {
       "  }\n" +
       "}",
   },
+  "/utils/verify": {
+    type: "FUNCTION",
+    params: ["array"],
+    code:
+      "function validate(array) {\n" +
+      "  return array.length ? true : false;\n" +
+      "}",
+  },
   "/utils/validate": {
     type: "FUNCTION",
     params: ["array"],
