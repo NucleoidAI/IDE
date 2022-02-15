@@ -1,17 +1,9 @@
-import SettingsIcon from "@mui/icons-material/Settings";
 import SettingDialog from "../../widgets/SettingDialog/SettingDialog";
+import SettingsIcon from "@mui/icons-material/Settings";
 import styles from "./styles";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Grid,
-  IconButton,
-} from "@mui/material";
+import { Button, Grid, IconButton } from "@mui/material";
 
-import React, { useState, useRef } from "react";
+import { useRef, useState } from "react";
 
 function Settings() {
   const [connect, setConnect] = useState(false);
@@ -29,8 +21,8 @@ function Settings() {
         </Button>
         <IconButton onClick={() => handleOpenRef.current()} size="large">
           <SettingsIcon sx={styles.settingIcon} fontSize={"large"} />
-          <SettingDialog ref={handleOpenRef} />
         </IconButton>
+        <SettingDialog ref={handleOpenRef} />
       </Grid>
     </>
   );

@@ -1,27 +1,32 @@
 import ClosableDialogTitle from "../../components/ClosableDialogTitle";
 import SettingDialogTabs from "../../components/SettingDialogTabs";
-import styles from "./styles";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from "@mui/material";
-import React, { forwardRef } from "react";
+//import styles from "./styles";
+import { useContext } from "../../context";
+import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
+import { forwardRef, useRef, useState } from "react";
 
 const SettingDialog = forwardRef((props, ref) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [context, dispatch] = useContext();
+  const { settings } = context;
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  ref.current = handleOpen;
+  const urlsRef = useRef(settings.urls);
 
   const handleClose = () => {
     setOpen(false);
   };
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  ref.current = handleOpen;
+
+  function saveSettingDialog() {
+    dispatch({
+      type: "SAVE_SETTING_DIALOG",
+      payload: { urls: urlsRef.current },
+    });
+    handleClose();
+  }
 
   return (
     <Dialog
@@ -32,15 +37,10 @@ const SettingDialog = forwardRef((props, ref) => {
     >
       <ClosableDialogTitle label="SETTINGS" handleClose={() => handleClose()} />
       <DialogContent>
-        <SettingDialogTabs />
+        <SettingDialogTabs ref={urlsRef} />
       </DialogContent>
       <DialogActions>
-        <Button
-          autoFocus
-          onClick={() => handleClose()}
-          variant={"text"}
-          style={{ color: "#90caf9" }}
-        >
+        <Button autoFocus onClick={() => saveSettingDialog()}>
           Save
         </Button>
       </DialogActions>

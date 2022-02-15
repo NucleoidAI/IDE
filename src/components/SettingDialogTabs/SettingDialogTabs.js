@@ -1,89 +1,42 @@
-import * as React from "react";
-import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
+import SettingDialogUrl from "../SettingDialogUrl";
+import TabPanel from "../TabPanel";
+import styles from "./styles";
+import { Grid, Tab, Tabs } from "@mui/material";
+import React, { forwardRef, useState } from "react";
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-function a11yProps(index) {
-  return {
-    id: `vertical-tab-${index}`,
-    "aria-controls": `vertical-tabpanel-${index}`,
-  };
-}
-
-export default function SettingDialogTabs() {
-  const [value, setValue] = React.useState(0);
+const SettingDialogTabs = forwardRef((props, ref) => {
+  const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  function tabProps(index) {
+    return {
+      id: `vertical-tab-${index}`,
+      "aria-controls": `vertical-tabpanel-${index}`,
+    };
+  }
+
   return (
-    <Box
-      sx={{
-        flexGrow: 1,
-        bgcolor: "background.paper",
-        display: "flex",
-        height: 400,
-      }}
-    >
+    <Grid sx={styles.root}>
       <Tabs
         orientation="vertical"
         variant="scrollable"
         value={value}
         onChange={handleChange}
-        aria-label="Vertical tabs example"
-        sx={{ borderRight: 1, borderColor: "divider" }}
+        sx={styles.tabs}
       >
-        <Tab label="Urls" {...a11yProps(0)} />
-        <Tab label="Settings" {...a11yProps(1)} />
+        <Tab label="Urls" {...tabProps(0)} />
+        <Tab label="Theme" {...tabProps(1)} />
+        <Tab label="Language" {...tabProps(2)} />
+        <Tab label="Advenced" {...tabProps(3)} />
       </Tabs>
       <TabPanel value={value} index={0}>
-        <URLS />
+        <SettingDialogUrl ref={ref} />
       </TabPanel>
-      <TabPanel value={value} index={1}>
-        Item Two
-      </TabPanel>
-    </Box>
+    </Grid>
   );
-}
+});
 
-function URLS() {
-  return (
-    <>
-      <TextField
-        label="Nucleoid Runtime URL"
-        defaultValue={"http://localhost:8484"}
-        sx={{ m: 1, width: "100%" }}
-      />
-
-      <TextField
-        label="OpenAPI URL"
-        defaultValue={"http://localhost:3000"}
-        sx={{ m: 1, width: "100%" }}
-      />
-    </>
-  );
-}
+export default SettingDialogTabs;

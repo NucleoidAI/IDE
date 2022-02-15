@@ -2,9 +2,11 @@ import State from "./state";
 import { v4 as uuid } from "uuid";
 import { createContext, useContext } from "react";
 
+let globalState;
+
 function reducer(state, action) {
   state = State.copy(state);
-  const { nucleoid, pages } = state;
+  const { nucleoid, pages, settings } = state;
 
   switch (action.type) {
     case "OPEN_API_DIALOG": {
@@ -65,6 +67,12 @@ function reducer(state, action) {
     case "CLOSE_FUNCTION_DIALOG":
       pages.functions.dialog.open = false;
       break;
+
+    case "SAVE_SETTING_DIALOG":
+      settings.urls = action.payload.urls;
+
+      break;
+
     case "UPDATE_TYPE": {
       const { id, name, type } = action.payload;
       const map = pages.api.dialog.map;
@@ -118,10 +126,10 @@ function reducer(state, action) {
 
     default:
   }
-
+  globalState = state;
   return state;
 }
 
 const Context = createContext();
 const useContextWrapper = () => useContext(Context);
-export { Context, reducer, useContextWrapper as useContext };
+export { Context, globalState, reducer, useContextWrapper as useContext };

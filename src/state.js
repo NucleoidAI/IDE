@@ -23,7 +23,13 @@ function init() {
       query: {},
       branches: {},
     },
-    settings: {},
+    settings: {
+      dialog: {},
+      urls: {
+        nucleoid: "http://localhost:8448",
+        openApi: "http://localhost:3000",
+      },
+    },
     get: (prop) => resolve(state, prop),
   };
 
