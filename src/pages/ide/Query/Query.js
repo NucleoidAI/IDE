@@ -2,7 +2,9 @@ import Editor from "../../../widgets/Editor";
 import IDE from "../../../layouts/IDE";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import QueryResult from "../../../components/QueryResult";
+import Service from "../../../service";
 import styles from "./styles";
+
 import {
   Card,
   Fab,
@@ -59,11 +61,7 @@ function Query() {
   }, []);
 
   const query = () => {
-    fetch("http://localhost:8448", {
-      method: "POST",
-      body: editor ? editor.current.getValue() : null,
-    })
-      .then((response) => response.text())
+    Service.query(editor ? editor.current.getValue() : null)
       .then((data) => {
         try {
           setResult(JSON.parse(data));
