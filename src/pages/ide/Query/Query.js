@@ -55,12 +55,12 @@ function Query() {
       name: "query",
       bindKey: { win: "Ctrl-Enter", mac: "Ctrl-Enter" },
       exec: () => {
-        query();
+        handleQuery();
       },
     });
   }, []);
 
-  const query = () => {
+  const handleQuery = () => {
     Service.query(editor ? editor.current.getValue() : null)
       .then((data) => {
         try {
@@ -79,7 +79,7 @@ function Query() {
           <Paper sx={styles.editor}>
             <Editor name={"query"} ref={editor} />
             <Grid container item sx={styles.run}>
-              <Fab size={"small"} onClick={() => query()}>
+              <Fab size={"small"} onClick={() => handleQuery()}>
                 <PlayArrowIcon
                   style={{
                     fill: "#212121",
