@@ -1,9 +1,9 @@
-import { globalState } from "./context";
+import Settings from "./settings";
 
 const query = (value) => {
-  const nucleoid = globalState.settings.urls.nucleoid;
+  const urls = Settings.urls;
 
-  return fetch(nucleoid, {
+  return fetch(urls.nucleoid, {
     method: "POST",
     body: value,
   }).then((response) => response.text());
