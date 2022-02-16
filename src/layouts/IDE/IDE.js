@@ -8,10 +8,13 @@ import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import PostmanIcon from "../../icons/Postman";
 import SaveIcon from "@mui/icons-material/Save";
 import SendIcon from "@mui/icons-material/Send";
+import Service from "../../service";
+import Settings from "../../settings";
 import SettingsEthernetIcon from "@mui/icons-material/SettingsEthernet";
 import StorageIcon from "@mui/icons-material/Storage";
 import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import ViewListIcon from "@mui/icons-material/ViewList";
+
 import styles from "./styles";
 import { useContext } from "../../context";
 import { v4 as uuid } from "uuid";
@@ -52,18 +55,11 @@ function IDE(props) {
             onClick={() => {
               if (!started) {
                 const nuc = state.get("nucleoid");
-                fetch("http://localhost:8448", {
-                  method: "POST",
-                  body: `
-                  let nuc=${JSON.stringify(nuc)});
-                  NUC.load(nuc);
-                  OpenAPI.start(nuc);
-                  `,
-                })
+                Service.openApiStart(nuc)
                   .then(() => {
                     if (!pages.opened) {
                       pages.opened = true;
-                      window.open("http://localhost:3000", "_blank").focus();
+                      window.open(Settings.urls.openApi, "_blank").focus();
                     }
                   })
                   .catch((error) => {
@@ -71,10 +67,7 @@ function IDE(props) {
                     setAlert("Nucleoid runtime is not running");
                   });
               } else {
-                fetch("http://localhost:8448", {
-                  method: "POST",
-                  body: "OpenAPI.stop()",
-                }).catch((error) => {
+                Service.openApiStop().catch((error) => {
                   setStarted(false);
                   setAlert("Nucleoid runtime is not reachable");
                 });
