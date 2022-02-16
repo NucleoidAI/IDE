@@ -25,6 +25,9 @@ const styles = {
       paddingLeft: theme.spacing(1) * 2,
     };
   },
+  playArrowIcon: {
+    fill: "#212121",
+  },
 };
 
 export default styles;

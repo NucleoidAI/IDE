@@ -80,11 +80,7 @@ function Query() {
             <Editor name={"query"} ref={editor} />
             <Grid container item sx={styles.run}>
               <Fab size={"small"} onClick={() => handleQuery()}>
-                <PlayArrowIcon
-                  style={{
-                    fill: "#212121",
-                  }}
-                />
+                <PlayArrowIcon style={styles.playArrowIcon} />
               </Fab>
             </Grid>
           </Paper>
