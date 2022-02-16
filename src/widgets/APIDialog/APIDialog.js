@@ -131,13 +131,13 @@ function APIDialog() {
   );
 }
 
-//TODO: Add test.
 const updatePath = (object, oldPath, newPath) => {
   Object.keys(object).forEach((objectName) => {
     if (objectName.includes(oldPath)) {
       const objectValue = { ...object[objectName] };
       delete object[objectName];
       objectName = objectName.replace(oldPath, newPath);
+
       object[objectName] = { ...objectValue };
     }
   });

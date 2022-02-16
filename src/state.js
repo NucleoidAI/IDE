@@ -15,7 +15,11 @@ function init() {
           view: "BODY",
         },
       },
-      functions: {},
+      functions: {
+        dialog: {
+          open: false,
+        },
+      },
       query: {},
       branches: {},
     },
