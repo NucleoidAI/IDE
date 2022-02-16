@@ -2,71 +2,76 @@ import State from "./state";
 import { v4 as uuid } from "uuid";
 import { createContext, useContext } from "react";
 
-function reducer(state, action) {
+function reducer(state, { type, payload }) {
   state = State.copy(state);
   const { nucleoid, pages } = state;
 
-  switch (action.type) {
+  switch (type) {
     case "OPEN_API_DIALOG": {
       pages.api.dialog.open = true;
       break;
     }
 
     case "SAVE_API_DIALOG": {
+      const { request, response, params, types } = payload;
+
       let method = pages.api.selected.method;
       const path = pages.api.selected.path;
       const api = nucleoid.api;
 
-      if (method !== action.payload.method) {
-        api[path][action.payload.method] = { ...api[path][method] };
+      if (method !== payload.method) {
+        api[path][payload.method] = { ...api[path][method] };
         delete api[path][method];
 
-        method = action.payload.method;
+        method = payload.method;
         pages.api.selected.method = method;
       }
 
-      api[path][method].request = action.payload.request;
-      api[path][method].response = action.payload.response;
-      api[path][method].params = action.payload.params;
-      nucleoid.types = action.payload.types;
+      api[path][method].request = request;
+      api[path][method].response = response;
+      api[path][method].params = params;
+      nucleoid.types = types;
     }
-    // eslint-disable-next-line no-fallthrough
 
+    // eslint-disable-next-line no-fallthrough
     case "CLOSE_API_DIALOG":
       pages.api.dialog.open = false;
       break;
+
     case "SET_API_DIALOG_VIEW":
-      pages.api.dialog.view = action.payload.view;
+      pages.api.dialog.view = payload.view;
       break;
+
     case "SET_SELECTED_API":
       pages.api.selected = {
-        path: action.payload.path,
-        method: action.payload.method,
+        path: payload.path,
+        method: payload.method,
       };
       break;
+
     case "SET_SELECTED_FUNCTION":
-      pages.functions.selected = action.payload.function;
+      pages.functions.selected = payload.function;
       break;
+
     case "OPEN_FUNCTION_DIALOG": {
       pages.functions.dialog.open = true;
       break;
     }
 
     case "SAVE_FUNCTION_DIALOG": {
-      const path = action.payload.path;
+      const { path, type, code, params } = payload;
       const functions = nucleoid.functions;
 
-      functions[path] = {};
-      functions[path].type = action.payload.type;
-      functions[path].code = action.payload.code;
-      functions[path].params = action.payload.params;
+      functions[path] = { type, params, code };
     }
+
     // eslint-disable-next-line no-fallthrough
     case "CLOSE_FUNCTION_DIALOG":
       pages.functions.dialog.open = false;
       break;
+
     case "UPDATE_TYPE": {
-      const { id, name, type } = action.payload;
+      const { id, name, type } = payload;
       const map = pages.api.dialog.map;
 
       if (name !== undefined) map[id].name = name;
@@ -82,8 +87,9 @@ function reducer(state, action) {
 
       break;
     }
+
     case "ADD_SCHEMA_PROPERTY": {
-      const { id } = action.payload;
+      const { id } = payload;
       const map = pages.api.dialog.map;
       const key = uuid();
       map[key] = map[id].properties[key] = {
@@ -92,12 +98,14 @@ function reducer(state, action) {
       };
       break;
     }
+
     case "REMOVE_SCHEMA_PROPERTY": {
-      const { id } = action.payload;
+      const { id } = payload;
       const map = pages.api.dialog.map;
       delete map[id];
       break;
     }
+
     case "ADD_PARAM": {
       const map = pages.api.dialog.map;
       const id = uuid();
@@ -108,8 +116,9 @@ function reducer(state, action) {
       };
       break;
     }
+
     case "REMOVE_PARAM": {
-      const { id } = action.payload;
+      const { id } = payload;
       const map = pages.api.dialog.map;
       delete pages.api.dialog.params[id];
       delete map[id];
