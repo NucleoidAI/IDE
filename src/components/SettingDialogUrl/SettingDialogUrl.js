@@ -1,11 +1,9 @@
-import Settings from "../../settings";
 import TextField from "@mui/material/TextField";
 import { forwardRef } from "react";
 import styles from "./styles";
 
 const SettingDialogUrl = forwardRef((props, ref) => {
-  //const urls = ref.current;
-  const urls = Settings.urls;
+  const urls = ref.current;
 
   return (
     <>

@@ -1,16 +1,13 @@
 import ClosableDialogTitle from "../../components/ClosableDialogTitle";
 import SettingDialogTabs from "../../components/SettingDialogTabs";
 //import styles from "./styles";
-import { useContext } from "../../context";
+import Settings from "../../settings";
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import { forwardRef, useRef, useState } from "react";
 
 const SettingDialog = forwardRef((props, ref) => {
   const [open, setOpen] = useState(false);
-  const [context, dispatch] = useContext();
-  const { settings } = context;
-
-  const urlsRef = useRef(settings.urls);
+  const urlsRef = useRef({ ...Settings.urls });
 
   const handleClose = () => {
     setOpen(false);
@@ -21,10 +18,8 @@ const SettingDialog = forwardRef((props, ref) => {
   ref.current = handleOpen;
 
   function saveSettingDialog() {
-    dispatch({
-      type: "SAVE_SETTING_DIALOG",
-      payload: { urls: urlsRef.current },
-    });
+    Settings.urls.nucleoid = urlsRef.current.nucleoid;
+    Settings.urls.openApi = urlsRef.current.openApi;
     handleClose();
   }
 
@@ -32,7 +27,7 @@ const SettingDialog = forwardRef((props, ref) => {
     <Dialog
       open={open}
       fullWidth
-      maxWidth={"md"}
+      maxWidth={"sm"}
       onClose={(event) => (event.key === "Escape" ? handleClose() : null)}
     >
       <ClosableDialogTitle label="SETTINGS" handleClose={() => handleClose()} />
