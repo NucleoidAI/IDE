@@ -14,6 +14,7 @@ const styles = {
       bottom: 40 + theme.spacing(1),
       right: theme.spacing(1),
       justifyContent: "flex-end",
+      alignItems:'center'
     };
   },
   results(theme) {
