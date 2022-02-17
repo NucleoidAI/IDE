@@ -27,10 +27,10 @@ const SettingDialogTabs = forwardRef((props, ref) => {
         onChange={handleChange}
         sx={styles.tabs}
       >
-        <Tab label="Urls" {...tabProps(0)} />
-        <Tab label="Theme" {...tabProps(1)} />
-        <Tab label="Language" {...tabProps(2)} />
-        <Tab label="Advenced" {...tabProps(3)} />
+        <Tab sx={styles.tab} label="Urls" {...tabProps(0)} />
+        <Tab sx={styles.tab} label="Theme" {...tabProps(1)} />
+        <Tab sx={styles.tab} label="Language" {...tabProps(2)} />
+        <Tab sx={styles.tab} label="Advenced" {...tabProps(3)} />
       </Tabs>
       <TabPanel value={value} index={0}>
         <SettingDialogUrl ref={ref} />

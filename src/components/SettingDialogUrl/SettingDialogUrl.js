@@ -4,7 +4,7 @@ import styles from "./styles";
 
 const SettingDialogUrl = forwardRef((props, ref) => {
   const url = ref.current;
-  console.log(url);
+
   return (
     <>
       <TextField

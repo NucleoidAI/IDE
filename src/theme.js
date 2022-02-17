@@ -7,10 +7,18 @@ let theme = createTheme({
       main: "#e0e0e0",
     },
     secondary: {
-      main: "#fe6b8b",
+      main: "#e0e0e0",
+    },
+    dark: {
+      main: "#e0e0e0",
     },
     background: {
       default: "#eaeff1",
+    },
+    text: {
+      primary: "#000",
+      secondary: "#e0e0e0",
+      dark: "#e0e0e0",
     },
     pressed: {
       default: "#e0e0e0",

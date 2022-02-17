@@ -29,6 +29,13 @@ const SettingDialog = forwardRef((props, ref) => {
       fullWidth
       maxWidth={"sm"}
       onClose={(event) => (event.key === "Escape" ? handleClose() : null)}
+      style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+      PaperProps={{
+        style: {
+          backgroundColor: "#424242",
+          color: "#e0e0e0",
+        },
+      }}
     >
       <ClosableDialogTitle label="SETTINGS" handleClose={() => handleClose()} />
       <DialogContent>
