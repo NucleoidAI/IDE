@@ -7,8 +7,8 @@ import FunctionTree from "../widgets/FunctionTree";
 import Logo from "../components/Logo";
 import ParamView from "../components/ParamView";
 import Security from "../components/Security";
-import Service from "../service";
 import SummaryForm from "../components/SummaryForm";
+import service from "../service";
 import { Grid, Paper } from "@mui/material";
 import React, { useEffect } from "react";
 
@@ -80,7 +80,7 @@ function Dev() {
   const ref = React.useRef([]);
 
   useEffect(() => {
-    Service.query();
+    service.query();
   }, []);
 
   return (

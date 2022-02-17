@@ -2,7 +2,7 @@ import Editor from "../../../widgets/Editor";
 import IDE from "../../../layouts/IDE";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import QueryResult from "../../../components/QueryResult";
-import Service from "../../../service";
+import service from "../../../service";
 import styles from "./styles";
 
 import {
@@ -61,7 +61,8 @@ function Query() {
   }, []);
 
   const handleQuery = () => {
-    Service.query(editor ? editor.current.getValue() : null)
+    service
+      .query(editor ? editor.current.getValue() : null)
       .then((data) => {
         try {
           setResult(JSON.parse(data));

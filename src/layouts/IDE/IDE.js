@@ -8,13 +8,12 @@ import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import PostmanIcon from "../../icons/Postman";
 import SaveIcon from "@mui/icons-material/Save";
 import SendIcon from "@mui/icons-material/Send";
-import Service from "../../service";
 import Settings from "../../settings";
 import SettingsEthernetIcon from "@mui/icons-material/SettingsEthernet";
 import StorageIcon from "@mui/icons-material/Storage";
 import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import ViewListIcon from "@mui/icons-material/ViewList";
-
+import service from "../../service";
 import styles from "./styles";
 import { useContext } from "../../context";
 import { v4 as uuid } from "uuid";
@@ -55,7 +54,8 @@ function IDE(props) {
             onClick={() => {
               if (!started) {
                 const nuc = state.get("nucleoid");
-                Service.openApiStart(nuc)
+                service
+                  .openApiStart(nuc)
                   .then(() => {
                     if (!pages.opened) {
                       pages.opened = true;
@@ -67,7 +67,7 @@ function IDE(props) {
                     setAlert("Nucleoid runtime is not running");
                   });
               } else {
-                Service.openApiStop().catch((error) => {
+                service.openApiStop().catch((error) => {
                   setStarted(false);
                   setAlert("Nucleoid runtime is not reachable");
                 });

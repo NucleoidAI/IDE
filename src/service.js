@@ -25,6 +25,6 @@ const openApiStop = () => {
   });
 };
 
-const Service = { query, openApiStart, openApiStop };
+const service = { query, openApiStart, openApiStop };
 
-export default Service;
+export default service;
