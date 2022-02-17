@@ -59,7 +59,7 @@ function IDE(props) {
                   .then(() => {
                     if (!pages.opened) {
                       pages.opened = true;
-                      window.open(Settings.urls.openApi, "_blank").focus();
+                      window.open(Settings.url.app, "_blank").focus();
                     }
                   })
                   .catch((error) => {

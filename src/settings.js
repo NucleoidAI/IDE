@@ -1,8 +1,8 @@
 const Settings = {
   dialog: {},
-  urls: {
-    nucleoid: "http://localhost:8448",
-    openApi: "http://localhost:3000",
+  url: {
+    terminal: "http://localhost:8448",
+    app: "http://localhost:3000",
   },
 };
 

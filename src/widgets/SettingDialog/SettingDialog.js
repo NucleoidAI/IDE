@@ -7,7 +7,7 @@ import { forwardRef, useRef, useState } from "react";
 
 const SettingDialog = forwardRef((props, ref) => {
   const [open, setOpen] = useState(false);
-  const urlsRef = useRef({ ...Settings.urls });
+  const urlRef = useRef({ ...Settings.url });
 
   const handleClose = () => {
     setOpen(false);
@@ -18,8 +18,8 @@ const SettingDialog = forwardRef((props, ref) => {
   ref.current = handleOpen;
 
   function saveSettingDialog() {
-    Settings.urls.nucleoid = urlsRef.current.nucleoid;
-    Settings.urls.openApi = urlsRef.current.openApi;
+    Settings.url.terminal = urlRef.current.terminal;
+    Settings.url.api = urlRef.current.api;
     handleClose();
   }
 
@@ -32,7 +32,7 @@ const SettingDialog = forwardRef((props, ref) => {
     >
       <ClosableDialogTitle label="SETTINGS" handleClose={() => handleClose()} />
       <DialogContent>
-        <SettingDialogTabs ref={urlsRef} />
+        <SettingDialogTabs ref={urlRef} />
       </DialogContent>
       <DialogActions>
         <Button autoFocus onClick={() => saveSettingDialog()}>

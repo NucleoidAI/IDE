@@ -1,18 +1,14 @@
 import Settings from "./settings";
 
 const query = async (body) => {
-  const urls = Settings.urls;
-
-  return fetch(urls.nucleoid, {
+  return fetch(Settings.url.terminal, {
     method: "POST",
     body: body,
   }).then((response) => response.text());
 };
 
 const openApiStart = (value) => {
-  const urls = Settings.urls;
-
-  return fetch(urls.nucleoid, {
+  return fetch(Settings.url.terminal, {
     method: "POST",
     body: `
     let nuc=${JSON.stringify(value)});
@@ -23,9 +19,7 @@ const openApiStart = (value) => {
 };
 
 const openApiStop = () => {
-  const urls = Settings.urls;
-
-  return fetch(urls.nucleoid, {
+  return fetch(Settings.url.terminal, {
     method: "POST",
     body: "OpenAPI.stop()",
   });

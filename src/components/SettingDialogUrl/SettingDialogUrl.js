@@ -3,21 +3,21 @@ import { forwardRef } from "react";
 import styles from "./styles";
 
 const SettingDialogUrl = forwardRef((props, ref) => {
-  const urls = ref.current;
-
+  const url = ref.current;
+  console.log(url);
   return (
     <>
       <TextField
         label="Nucleoid Runtime URL"
-        defaultValue={urls["nucleoid"]}
+        defaultValue={url["terminal"]}
         sx={styles.textField}
-        onChange={(e) => (urls["nucleoid"] = e.target.value)}
+        onChange={(e) => (url["terminal"] = e.target.value)}
       />
       <TextField
         label="OpenAPI URL"
-        defaultValue={urls["openApi"]}
+        defaultValue={url["app"]}
         sx={styles.textField}
-        onChange={(e) => (urls["openApi"] = e.target.value)}
+        onChange={(e) => (url["app"] = e.target.value)}
       />
     </>
   );
