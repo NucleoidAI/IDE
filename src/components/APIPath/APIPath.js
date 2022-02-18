@@ -36,14 +36,19 @@ const APIPath = forwardRef(
     useEffect(() => {
       originalMethod.current = method;
       if (!method) {
+        handleSetMethod();
         handleSaveButtonStatus(true);
         setAlertMethod(true);
       } else {
-        handleSaveButtonStatus(false);
-        setAlertMethod(false);
+        handleSetMethod();
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const handleSetMethod = () => {
+      handleSaveButtonStatus(false);
+      setAlertMethod(false);
+    };
 
     const usedMethods = api[path]
       ? Object.keys(api[path]).filter(
@@ -68,7 +73,10 @@ const APIPath = forwardRef(
               <Select
                 error={alertMethod}
                 defaultValue={method ? method : ""}
-                onChange={(e) => handleChangeMethod(e.target.value)}
+                onChange={(e) => {
+                  handleChangeMethod(e.target.value);
+                  handleSetMethod();
+                }}
               >
                 {Constants.methods
                   .filter((methodName) => !usedMethods.includes(methodName))
@@ -88,7 +96,7 @@ const APIPath = forwardRef(
             <TextField
               defaultValue={suffix}
               onChange={(e) => handleCheck(e.target.value)}
-              sx={styles.textfield}
+              sx={styles.textField}
               error={alertPath}
             />
           </Grid>

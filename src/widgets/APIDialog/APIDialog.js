@@ -30,7 +30,6 @@ function APIDialog() {
 
   useEffect(() => {
     selectedRef.current = context.get("pages.api.selected");
-    //type = context.get("pages.api.dialog.type");
 
     if (!selectedRef.current) return;
     const { method, path } = selectedRef.current;
@@ -39,44 +38,44 @@ function APIDialog() {
     apiRef.current = context.get("nucleoid.api");
     pathRef.current = path;
 
+    const initEdit = (method, path) => {
+      setMethod(method);
+      setParams(apiRef.current[path][method].params);
+      paramsRef.current = index(apiRef.current[path][method].params);
+
+      typesRef.current = Object.entries(context.get("nucleoid.types"))
+        .map(([key, value]) => ({
+          ...value,
+          name: key,
+          type: value.type,
+        }))
+        .map((type) => compile(type));
+
+      requestRef.current = compile(apiRef.current[path][method].request);
+      responseRef.current = compile(apiRef.current[path][method].response);
+    };
+
+    const initAdd = () => {
+      setMethod(null);
+      typesRef.current = index([]);
+      paramsRef.current = index([]);
+      requestRef.current = compile({ properties: {} });
+      responseRef.current = compile({ properties: {} });
+      typesRef.current = Object.entries([])
+        .map(([key, value]) => ({
+          ...value,
+          name: key,
+          type: value.type,
+        }))
+        .map((type) => compile(type));
+    };
+
     if (type === "edit") {
       initEdit(method, path);
     } else {
       initAdd();
     }
-  }, [context]);
-
-  const initEdit = (method, path) => {
-    setMethod(method);
-    setParams(apiRef.current[path][method].params);
-    paramsRef.current = index(apiRef.current[path][method].params);
-
-    typesRef.current = Object.entries(context.get("nucleoid.types"))
-      .map(([key, value]) => ({
-        ...value,
-        name: key,
-        type: value.type,
-      }))
-      .map((type) => compile(type));
-
-    requestRef.current = compile(apiRef.current[path][method].request);
-    responseRef.current = compile(apiRef.current[path][method].response);
-  };
-
-  const initAdd = () => {
-    setMethod(null);
-    typesRef.current = index([]);
-    paramsRef.current = index([]);
-    requestRef.current = compile({ properties: {} });
-    responseRef.current = compile({ properties: {} });
-    typesRef.current = Object.entries([])
-      .map(([key, value]) => ({
-        ...value,
-        name: key,
-        type: value.type,
-      }))
-      .map((type) => compile(type));
-  };
+  }, [context, type]);
 
   const handleClose = () => dispatch({ type: "CLOSE_API_DIALOG" });
 
