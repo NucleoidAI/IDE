@@ -16,7 +16,7 @@ function API() {
   function openApiDialog(item) {
     dispatch({
       type: "OPEN_API_DIALOG",
-      payload: item.toUpperCase(),
+      payload: { type: "add" },
     });
   }
 

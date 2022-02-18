@@ -27,13 +27,21 @@ const APIPath = forwardRef(
     { apiRef, pathRef }
   ) => {
     const api = apiRef.current;
-    const [alert, setAlert] = useState();
+    const [alertPath, setAlertPath] = useState();
+    const [alertMethod, setAlertMethod] = useState();
     const { prefix, suffix } = Path.split(path);
     const paths = Object.keys(api);
     const originalMethod = useRef();
 
     useEffect(() => {
       originalMethod.current = method;
+      if (!method) {
+        handleSaveButtonStatus(true);
+        setAlertMethod(true);
+      } else {
+        handleSaveButtonStatus(false);
+        setAlertMethod(false);
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -48,7 +56,7 @@ const APIPath = forwardRef(
 
       const pathStatus = Path.isUsed(paths, prefix, suffix, value);
       handleSaveButtonStatus(pathStatus);
-      setAlert(pathStatus);
+      setAlertPath(pathStatus);
     };
 
     return (
@@ -58,7 +66,8 @@ const APIPath = forwardRef(
           <Grid container item sx={styles.content}>
             <FormControl variant={"outlined"} size={"small"}>
               <Select
-                defaultValue={method}
+                error={alertMethod}
+                defaultValue={method ? method : ""}
                 onChange={(e) => handleChangeMethod(e.target.value)}
               >
                 {Constants.methods
@@ -80,7 +89,7 @@ const APIPath = forwardRef(
               defaultValue={suffix}
               onChange={(e) => handleCheck(e.target.value)}
               sx={styles.textfield}
-              error={alert}
+              error={alertPath}
             />
           </Grid>
         </Grid>

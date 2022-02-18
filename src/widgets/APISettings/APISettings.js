@@ -66,7 +66,7 @@ function APISettings() {
           <Fab
             size={"small"}
             onClick={() => {
-              dispatch({ type: "OPEN_API_DIALOG" });
+              dispatch({ type: "OPEN_API_DIALOG", payload: { type: "edit" } });
             }}
           >
             <EditIcon />

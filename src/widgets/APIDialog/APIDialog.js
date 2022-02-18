@@ -18,6 +18,7 @@ function APIDialog() {
   const [saveDisable, setSaveDisable] = useState(false);
   const [view, setView] = useState(context.get("pages.api.dialog.view"));
   const [params, setParams] = useState([]);
+  const type = context.get("pages.api.dialog.type");
 
   const paramsRef = useRef();
   const typesRef = useRef();
@@ -29,15 +30,24 @@ function APIDialog() {
 
   useEffect(() => {
     selectedRef.current = context.get("pages.api.selected");
+    //type = context.get("pages.api.dialog.type");
+
     if (!selectedRef.current) return;
-
     const { method, path } = selectedRef.current;
-    setMethod(method);
-    setPath(path);
 
+    setPath(path);
     apiRef.current = context.get("nucleoid.api");
     pathRef.current = path;
 
+    if (type === "edit") {
+      initEdit(method, path);
+    } else {
+      initAdd();
+    }
+  }, [context]);
+
+  const initEdit = (method, path) => {
+    setMethod(method);
     setParams(apiRef.current[path][method].params);
     paramsRef.current = index(apiRef.current[path][method].params);
 
@@ -51,7 +61,22 @@ function APIDialog() {
 
     requestRef.current = compile(apiRef.current[path][method].request);
     responseRef.current = compile(apiRef.current[path][method].response);
-  }, [context]);
+  };
+
+  const initAdd = () => {
+    setMethod(null);
+    typesRef.current = index([]);
+    paramsRef.current = index([]);
+    requestRef.current = compile({ properties: {} });
+    responseRef.current = compile({ properties: {} });
+    typesRef.current = Object.entries([])
+      .map(([key, value]) => ({
+        ...value,
+        name: key,
+        type: value.type,
+      }))
+      .map((type) => compile(type));
+  };
 
   const handleClose = () => dispatch({ type: "CLOSE_API_DIALOG" });
 
@@ -75,6 +100,7 @@ function APIDialog() {
         }, {}),
       },
     });
+    handleClose();
   };
 
   const handleChangeMethod = (method) => {
@@ -87,48 +113,55 @@ function APIDialog() {
 
   const setApiDialogView = (view) => {
     setView((pages.api.dialog.view = view));
+    const params = Object.keys(paramsRef.current).map(
+      (item) => paramsRef.current[item]
+    );
+
+    setParams(params);
   };
 
-  return (
-    <Dialog
-      open={Boolean(context.get("pages.api.dialog.open"))}
-      fullWidth
-      maxWidth={"md"}
-      onClose={(event) => (event.key === "Escape" ? handleClose() : null)}
-    >
-      <ClosableDialogTitle label={"API"} handleClose={handleClose} />
-      <DialogContent>
-        <APIPath
-          view={view}
-          setApiDialogView={setApiDialogView}
-          path={path}
-          method={method}
-          handleSaveButtonStatus={handleSaveButtonStatus}
-          handleChangeMethod={handleChangeMethod}
-          ref={{ apiRef, pathRef }}
-        />
-        <Grid sx={styles.content}>
-          {view === "BODY" && (
-            <APIBody
-              method={method}
-              params={params}
-              ref={{ requestRef, responseRef }}
-            />
-          )}
-          {view === "PARAMS" && <APIParams ref={paramsRef} />}
-          {view === "TYPES" && <APITypes ref={typesRef} />}
-        </Grid>
-      </DialogContent>
-      <DialogActions>
-        <APIDialogAction
-          setApiDialogView={setApiDialogView}
-          saveApiDialog={saveApiDialog}
-          saveDisable={saveDisable}
-          view={view}
-        />
-      </DialogActions>
-    </Dialog>
-  );
+  if (context.get("pages.api.dialog.open")) {
+    return (
+      <Dialog
+        open={true}
+        fullWidth
+        maxWidth={"md"}
+        onClose={(event) => (event.key === "Escape" ? handleClose() : null)}
+      >
+        <ClosableDialogTitle label={"API"} handleClose={handleClose} />
+        <DialogContent>
+          <APIPath
+            view={view}
+            setApiDialogView={setApiDialogView}
+            path={path}
+            method={method}
+            handleSaveButtonStatus={handleSaveButtonStatus}
+            handleChangeMethod={handleChangeMethod}
+            ref={{ apiRef, pathRef }}
+          />
+          <Grid sx={styles.content}>
+            {view === "BODY" && (
+              <APIBody
+                method={method}
+                params={params}
+                ref={{ requestRef, responseRef }}
+              />
+            )}
+            {view === "PARAMS" && <APIParams ref={paramsRef} />}
+            {view === "TYPES" && <APITypes ref={typesRef} />}
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <APIDialogAction
+            setApiDialogView={setApiDialogView}
+            saveApiDialog={saveApiDialog}
+            saveDisable={saveDisable}
+            view={view}
+          />
+        </DialogActions>
+      </Dialog>
+    );
+  } else return null;
 }
 
 const updatePath = (object, oldPath, newPath) => {

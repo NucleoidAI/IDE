@@ -8,6 +8,7 @@ function reducer(state, action) {
 
   switch (action.type) {
     case "OPEN_API_DIALOG": {
+      pages.api.dialog.type = action.payload.type;
       pages.api.dialog.open = true;
       break;
     }
@@ -16,6 +17,16 @@ function reducer(state, action) {
       let method = pages.api.selected.method;
       const path = pages.api.selected.path;
       const api = nucleoid.api;
+
+      if (pages.api.dialog.type === "add") {
+        api[path][action.payload.method] = {};
+        pages.api.selected.method = action.payload.method;
+        api[path][action.payload.method].request = action.payload.request;
+        api[path][action.payload.method].response = action.payload.response;
+        api[path][action.payload.method].params = action.payload.params;
+        nucleoid.types = action.payload.types;
+        break;
+      }
 
       if (method !== action.payload.method) {
         api[path][action.payload.method] = { ...api[path][method] };
@@ -29,6 +40,7 @@ function reducer(state, action) {
       api[path][method].response = action.payload.response;
       api[path][method].params = action.payload.params;
       nucleoid.types = action.payload.types;
+      break;
     }
     // eslint-disable-next-line no-fallthrough
 
