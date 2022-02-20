@@ -10,7 +10,7 @@ const map = {};
 function APITree() {
   const [selected, setSelected] = React.useState(null);
   const [contextMenu, setContextMenu] = React.useState(null);
-  //const [resourceMenu, setResourceMenu] = React.useState(null);
+  const [resourceMenu, setResourceMenu] = React.useState(null);
   const [state, dispatch] = useContext();
   const api = state.get("nucleoid.api");
   const list = Object.keys(api).map((key) => ({
@@ -40,9 +40,24 @@ function APITree() {
     );
   };
 
+  const handleResourceMenu = (event, path) => {
+    event.preventDefault();
+    console.log(path);
+
+    //if (hash) select(hash);
+    setResourceMenu(
+      !contextMenu
+        ? {
+            mouseX: event.clientX,
+            mouseY: event.clientY,
+          }
+        : null
+    );
+  };
+
   const handleClose = () => {
     setContextMenu(null);
-    //setResourceMenu(null);
+    setResourceMenu(null);
   };
 
   useEffect(() => {
@@ -79,7 +94,7 @@ function APITree() {
         onNodeSelect={(event, value) => select(value)}
         selected={selected}
       >
-        {compile([graph["/"]], handleContextMenu)}
+        {compile([graph["/"]], handleContextMenu, handleResourceMenu)}
       </TreeView>
       <Menu
         open={contextMenu !== null}
@@ -95,16 +110,30 @@ function APITree() {
         <MenuItem onClick={handleClose}>Edit</MenuItem>
         <MenuItem onClick={handleClose}>Delete</MenuItem>
       </Menu>
+      <Menu
+        open={resourceMenu !== null}
+        onClose={handleClose}
+        onContextMenu={(event) => event.preventDefault()}
+        anchorReference="anchorPosition"
+        anchorPosition={
+          resourceMenu !== null
+            ? { top: resourceMenu.mouseY, left: resourceMenu.mouseX }
+            : undefined
+        }
+      >
+        <MenuItem onClick={handleClose}>Method</MenuItem>
+        <MenuItem onClick={handleClose}>Delete</MenuItem>
+      </Menu>
     </>
   );
 }
 
-const compile = (list, handleContextMenu) =>
+const compile = (list, handleContextMenu, handleResourceMenu) =>
   list.map((api) => {
     let children = undefined;
 
     if (api.resources && api.resources.length > 0) {
-      children = compile(api.resources, handleContextMenu);
+      children = compile(api.resources, handleContextMenu, handleResourceMenu);
     }
 
     children = api.methods
@@ -132,8 +161,13 @@ const compile = (list, handleContextMenu) =>
       <NonExpandableTreeItem
         key={api.path}
         nodeId={api.path}
-        label={api.label} //
+        label={api.label}
         children={children}
+        onClick={(e) => {
+          if (e.type === "contextmenu") {
+            handleResourceMenu(e, api.path);
+          }
+        }}
       />
     );
   });
