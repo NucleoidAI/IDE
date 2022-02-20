@@ -1,16 +1,16 @@
 import ArrowIcon from "../../icons/Arrow";
 import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
-import TreeView from "@mui/lab/TreeView";
 import styles from "./styles";
 import { useContext } from "../../context";
 import { Box, Menu, MenuItem } from "@mui/material";
 import React, { useEffect } from "react";
-
+import { TreeItem, TreeView } from "@mui/lab";
 const map = {};
 
 function APITree() {
   const [selected, setSelected] = React.useState(null);
   const [contextMenu, setContextMenu] = React.useState(null);
+  //const [resourceMenu, setResourceMenu] = React.useState(null);
   const [state, dispatch] = useContext();
   const api = state.get("nucleoid.api");
   const list = Object.keys(api).map((key) => ({
@@ -42,6 +42,7 @@ function APITree() {
 
   const handleClose = () => {
     setContextMenu(null);
+    //setResourceMenu(null);
   };
 
   useEffect(() => {
@@ -113,10 +114,10 @@ const compile = (list, handleContextMenu) =>
         map[hash] = payload;
 
         return (
-          <NonExpandableTreeItem
+          <TreeItem
             key={hash}
             nodeId={hash}
-            onContextMenu={(event) => handleContextMenu(event, hash)}
+            onContextMenu={(event) => handleContextMenu(event, api.path)}
             label={
               <Box sx={styles.apiTreeItem}>
                 <center>{method.toUpperCase()}</center>
@@ -131,11 +132,8 @@ const compile = (list, handleContextMenu) =>
       <NonExpandableTreeItem
         key={api.path}
         nodeId={api.path}
-        label={api.label}
+        label={api.label} //
         children={children}
-        onClick={(event) => {
-          event.preventDefault();
-        }}
       />
     );
   });

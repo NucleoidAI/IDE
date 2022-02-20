@@ -70,11 +70,7 @@ function APIDialog() {
         .map((type) => compile(type));
     };
 
-    if (type === "edit") {
-      initEdit(method, path);
-    } else {
-      initAdd();
-    }
+    type === "edit" ? initEdit(method, path) : initAdd();
   }, [context, type]);
 
   const handleClose = () => dispatch({ type: "CLOSE_API_DIALOG" });

@@ -20,8 +20,6 @@ const NonExpandableTreeContent = React.forwardRef(function CustomContent(
   const {
     disabled,
     expanded,
-    selected,
-    focused,
     handleExpansion,
     handleSelection,
     preventSelection,
@@ -46,8 +44,6 @@ const NonExpandableTreeContent = React.forwardRef(function CustomContent(
     <div
       className={clsx(className, classes.root, {
         [classes.expanded]: expanded,
-        [classes.selected]: selected,
-        [classes.focused]: focused,
         [classes.disabled]: disabled,
       })}
       onMouseDown={handleMouseDown}
