@@ -51,6 +51,10 @@ function reducer(state, action) {
       pages.api.dialog.view = action.payload.view;
       break;
     case "SET_SELECTED_API":
+      if (action.payload.method === null) {
+        const method = Object.keys(nucleoid.api[action.payload.path])[0];
+        action.payload.method = method;
+      }
       pages.api.selected = {
         path: action.payload.path,
         method: action.payload.method,

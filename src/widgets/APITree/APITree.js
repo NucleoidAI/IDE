@@ -2,7 +2,7 @@ import ArrowIcon from "../../icons/Arrow";
 import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
 import styles from "./styles";
 import { useContext } from "../../context";
-import { Box, Menu, MenuItem } from "@mui/material";
+import { Box, Divider, Menu, MenuItem } from "@mui/material";
 import React, { useEffect } from "react";
 import { TreeItem, TreeView } from "@mui/lab";
 const map = {};
@@ -21,9 +21,16 @@ function APITree() {
   const select = (id) => {
     if (map[id]) {
       setSelected(id);
-
       dispatch({ type: "SET_SELECTED_API", payload: map[id] });
     }
+  };
+
+  const selectResource = (path) => {
+    dispatch({
+      type: "OPEN_API_DIALOG",
+      payload: { type: "add" },
+    });
+    handleClose();
   };
 
   const handleContextMenu = (event, hash) => {
@@ -42,11 +49,13 @@ function APITree() {
 
   const handleResourceMenu = (event, path) => {
     event.preventDefault();
-    console.log(path);
+    dispatch({
+      type: "SET_SELECTED_API",
+      payload: { path: path, method: null },
+    });
 
-    //if (hash) select(hash);
     setResourceMenu(
-      !contextMenu
+      !resourceMenu
         ? {
             mouseX: event.clientX,
             mouseY: event.clientY,
@@ -110,7 +119,7 @@ function APITree() {
         <MenuItem onClick={handleClose}>Edit</MenuItem>
         <MenuItem onClick={handleClose}>Delete</MenuItem>
       </Menu>
-      <Menu
+      <Menu //TODO REFACTOR MENU as a component
         open={resourceMenu !== null}
         onClose={handleClose}
         onContextMenu={(event) => event.preventDefault()}
@@ -121,7 +130,9 @@ function APITree() {
             : undefined
         }
       >
-        <MenuItem onClick={handleClose}>Method</MenuItem>
+        <MenuItem onClick={handleClose}>Resource</MenuItem>
+        <MenuItem onClick={() => selectResource()}>Method</MenuItem>
+        <Divider />
         <MenuItem onClick={handleClose}>Delete</MenuItem>
       </Menu>
     </>
