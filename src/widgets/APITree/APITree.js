@@ -1,4 +1,6 @@
 import ArrowIcon from "../../icons/Arrow";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
 import ResourceMenu from "../ResourceMenu";
 import styles from "./styles";
@@ -47,6 +49,15 @@ function APITree() {
       type: "SET_SELECTED_API",
       payload: { path: path, method: null },
     });
+    select(
+      btoa(
+        JSON.stringify(
+          Object.keys(map)
+            .map((item) => map[item])
+            .find((item) => item.path === path)
+        )
+      )
+    );
 
     dispatch({
       type: "OPEN_RESOURCE_MENU",
@@ -118,9 +129,12 @@ function APITree() {
             editMethod();
           }}
         >
+          <EditIcon />
           Edit
         </MenuItem>
-        <MenuItem onClick={handleClose}>Delete</MenuItem>
+        <MenuItem onClick={handleClose}>
+          <DeleteIcon /> Delete
+        </MenuItem>
       </Menu>
       <ResourceMenu />
     </>

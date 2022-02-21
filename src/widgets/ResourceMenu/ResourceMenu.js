@@ -1,7 +1,10 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import HttpIcon from "@mui/icons-material/Http";
 import React from "react";
+import SourceIcon from "@mui/icons-material/Source";
+
 import { useContext } from "../../context";
 import { Divider, Menu, MenuItem } from "@mui/material";
-
 
 export default function ResourceMenu(props) {
   const [state, dispatch] = useContext();
@@ -40,12 +43,19 @@ export default function ResourceMenu(props) {
         anchorReference="anchorPosition"
         anchorPosition={{ top: anchor.mouseY, left: anchor.mouseX }}
       >
-        <MenuItem onClick={handleClose}>Resource</MenuItem>
+        <MenuItem onClick={handleClose}>
+          <SourceIcon />
+          Resource
+        </MenuItem>
         <MenuItem onClick={addMethod} disabled={checkMethodAddable()}>
+          <HttpIcon />
           Method
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>Delete</MenuItem>
+        <MenuItem onClick={handleClose}>
+          <DeleteIcon />
+          Delete
+        </MenuItem>
       </Menu>
     );
   } else return null;
