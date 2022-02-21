@@ -1,24 +1,36 @@
 import APIDialog from "../../../widgets/APIDialog";
 import APISettings from "../../../widgets/APISettings";
 import APITree from "../../../widgets/APITree";
-import AddList from "../../../components/AddList";
+import AddIcon from "@mui/icons-material/Add";
 import Editor from "../../../widgets/Editor";
 import IDE from "../../../layouts/IDE";
 import React from "react";
 import styles from "./styles";
-import { Card, CardActions, CardContent, Grid, Paper } from "@mui/material";
+import { useContext } from "../../../context";
+import {
+  Card,
+  CardActions,
+  CardContent,
+  Fab,
+  Grid,
+  Paper,
+} from "@mui/material";
 // eslint-disable-next-line
-import { Context } from "../../../context";
 
 function API() {
-  const dispatch = React.useContext(Context)[1];
+  const [, dispatch] = useContext();
 
-  function openApiDialog(item) {
+  const handleResourceMenu = (event, path) => {
+    event.preventDefault();
+
     dispatch({
-      type: "OPEN_API_DIALOG",
-      payload: { type: "add" },
+      type: "OPEN_RESOURCE_MENU",
+      payload: {
+        mouseX: event.clientX,
+        mouseY: event.clientY,
+      },
     });
-  }
+  };
 
   return (
     <IDE>
@@ -30,10 +42,9 @@ function API() {
               <APITree />
             </CardContent>
             <CardActions>
-              <AddList
-                list={["Resource", "Method"]}
-                clickEvent={openApiDialog}
-              />
+              <Fab size={"small"} onClick={handleResourceMenu}>
+                <AddIcon />
+              </Fab>
             </CardActions>
           </Card>
         </Grid>

@@ -1,16 +1,18 @@
 import ArrowIcon from "../../icons/Arrow";
 import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
+import ResourceMenu from "../ResourceMenu";
 import styles from "./styles";
 import { useContext } from "../../context";
-import { Box, Divider, Menu, MenuItem } from "@mui/material";
+import { Box, Menu, MenuItem } from "@mui/material";
 import React, { useEffect } from "react";
 import { TreeItem, TreeView } from "@mui/lab";
+
 const map = {};
 
 function APITree() {
   const [selected, setSelected] = React.useState(null);
   const [contextMenu, setContextMenu] = React.useState(null);
-  const [resourceMenu, setResourceMenu] = React.useState(null);
+
   const [state, dispatch] = useContext();
   const api = state.get("nucleoid.api");
   const list = Object.keys(api).map((key) => ({
@@ -23,14 +25,6 @@ function APITree() {
       setSelected(id);
       dispatch({ type: "SET_SELECTED_API", payload: map[id] });
     }
-  };
-
-  const selectResource = (path) => {
-    dispatch({
-      type: "OPEN_API_DIALOG",
-      payload: { type: "add" },
-    });
-    handleClose();
   };
 
   const handleContextMenu = (event, hash) => {
@@ -54,19 +48,22 @@ function APITree() {
       payload: { path: path, method: null },
     });
 
-    setResourceMenu(
-      !resourceMenu
-        ? {
-            mouseX: event.clientX,
-            mouseY: event.clientY,
-          }
-        : null
-    );
+    dispatch({
+      type: "OPEN_RESOURCE_MENU",
+      payload: {
+        mouseX: event.clientX,
+        mouseY: event.clientY,
+      },
+    });
   };
 
   const handleClose = () => {
     setContextMenu(null);
-    setResourceMenu(null);
+  };
+
+  const editMethod = () => {
+    dispatch({ type: "OPEN_API_DIALOG", payload: { type: "edit" } });
+    handleClose();
   };
 
   useEffect(() => {
@@ -116,25 +113,16 @@ function APITree() {
             : undefined
         }
       >
-        <MenuItem onClick={handleClose}>Edit</MenuItem>
+        <MenuItem
+          onClick={() => {
+            editMethod();
+          }}
+        >
+          Edit
+        </MenuItem>
         <MenuItem onClick={handleClose}>Delete</MenuItem>
       </Menu>
-      <Menu //TODO REFACTOR MENU as a component
-        open={resourceMenu !== null}
-        onClose={handleClose}
-        onContextMenu={(event) => event.preventDefault()}
-        anchorReference="anchorPosition"
-        anchorPosition={
-          resourceMenu !== null
-            ? { top: resourceMenu.mouseY, left: resourceMenu.mouseX }
-            : undefined
-        }
-      >
-        <MenuItem onClick={handleClose}>Resource</MenuItem>
-        <MenuItem onClick={() => selectResource()}>Method</MenuItem>
-        <Divider />
-        <MenuItem onClick={handleClose}>Delete</MenuItem>
-      </Menu>
+      <ResourceMenu />
     </>
   );
 }
@@ -157,7 +145,7 @@ const compile = (list, handleContextMenu, handleResourceMenu) =>
           <TreeItem
             key={hash}
             nodeId={hash}
-            onContextMenu={(event) => handleContextMenu(event, api.path)}
+            onContextMenu={(event) => handleContextMenu(event, hash)}
             label={
               <Box sx={styles.apiTreeItem}>
                 <center>{method.toUpperCase()}</center>

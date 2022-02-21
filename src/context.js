@@ -63,6 +63,16 @@ function reducer(state, action) {
     case "SET_SELECTED_FUNCTION":
       pages.functions.selected = action.payload.function;
       break;
+
+    case "OPEN_RESOURCE_MENU":
+      pages.api.resourceMenu.open = true;
+      pages.api.resourceMenu.anchor = action.payload;
+
+      break;
+    case "CLOSE_RESOURCE_MENU":
+      pages.api.resourceMenu.open = false;
+      pages.api.resourceMenu.anchor = {};
+      break;
     case "OPEN_FUNCTION_DIALOG": {
       pages.functions.dialog.open = true;
       break;

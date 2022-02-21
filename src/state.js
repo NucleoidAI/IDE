@@ -14,6 +14,10 @@ function init() {
         dialog: {
           view: "BODY",
         },
+        resourceMenu: {
+          open: false,
+          anchor: {},
+        },
       },
       functions: {
         dialog: {
