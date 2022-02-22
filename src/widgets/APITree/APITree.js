@@ -45,27 +45,22 @@ function APITree() {
 
   const handleResourceMenu = (event, path) => {
     event.preventDefault();
-    dispatch({
-      type: "SET_SELECTED_API",
-      payload: { path: path, method: null },
-    });
-    select(
-      btoa(
-        JSON.stringify(
-          Object.keys(map)
-            .map((item) => map[item])
-            .find((item) => item.path === path)
-        )
-      )
-    );
 
     dispatch({
       type: "OPEN_RESOURCE_MENU",
       payload: {
-        mouseX: event.clientX,
-        mouseY: event.clientY,
+        path: path,
+        anchor: {
+          mouseX: event.clientX,
+          mouseY: event.clientY,
+        },
       },
     });
+    /*
+
+
+
+    */
   };
 
   const handleClose = () => {
@@ -136,7 +131,7 @@ function APITree() {
           <DeleteIcon /> Delete
         </MenuItem>
       </Menu>
-      <ResourceMenu />
+      <ResourceMenu select={select} map={map} />
     </>
   );
 }

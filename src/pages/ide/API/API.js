@@ -26,8 +26,10 @@ function API() {
     dispatch({
       type: "OPEN_RESOURCE_MENU",
       payload: {
-        mouseX: event.clientX,
-        mouseY: event.clientY,
+        anchor: {
+          mouseX: event.clientX,
+          mouseY: event.clientY,
+        },
       },
     });
   };

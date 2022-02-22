@@ -8,7 +8,8 @@ import { Divider, Menu, MenuItem } from "@mui/material";
 
 export default function ResourceMenu(props) {
   const [state, dispatch] = useContext();
-  const anchor = state.pages.api.resourceMenu.anchor;
+  const { anchor, path } = state.pages.api.resourceMenu;
+  const { select, map } = props;
 
   const handleClose = () => {
     dispatch({
@@ -17,6 +18,7 @@ export default function ResourceMenu(props) {
   };
 
   const addMethod = () => {
+    selectPath();
     dispatch({
       type: "OPEN_API_DIALOG",
       payload: { type: "method" },
@@ -24,11 +26,31 @@ export default function ResourceMenu(props) {
     handleClose();
   };
   const addResource = () => {
+    selectPath();
     dispatch({
       type: "OPEN_API_DIALOG",
       payload: { type: "resource" },
     });
     handleClose();
+  };
+
+  const selectPath = () => {
+    if (path) {
+      dispatch({
+        type: "SET_SELECTED_API",
+        payload: { path: path, method: null },
+      });
+
+      select(
+        btoa(
+          JSON.stringify(
+            Object.keys(map)
+              .map((item) => map[item])
+              .find((item) => item.path === path)
+          )
+        )
+      );
+    }
   };
 
   const checkMethodAddable = () => {

@@ -81,12 +81,12 @@ function reducer(state, action) {
 
     case "OPEN_RESOURCE_MENU":
       pages.api.resourceMenu.open = true;
-      pages.api.resourceMenu.anchor = action.payload;
-
+      pages.api.resourceMenu.anchor = action.payload.anchor;
+      pages.api.resourceMenu.path = action.payload.path;
       break;
     case "CLOSE_RESOURCE_MENU":
       pages.api.resourceMenu.open = false;
-      pages.api.resourceMenu.anchor = {};
+      pages.api.resourceMenu = {};
       break;
     case "OPEN_FUNCTION_DIALOG": {
       pages.functions.dialog.open = true;
