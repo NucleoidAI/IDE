@@ -9,6 +9,25 @@ import { Divider, Menu, MenuItem } from "@mui/material";
 export default function ResourceMenu(props) {
   const [state, dispatch] = useContext();
   const { anchor, path } = state.pages.api.resourceMenu;
+  const [methodDisabled, setMethodDisabled] = React.useState();
+
+  React.useEffect(() => {
+    const checkMethodAddable = () => {
+      const { pages, nucleoid } = state;
+      const { api } = nucleoid;
+      if (path) {
+        return Object.keys(api[path]).length > 3 ? true : false;
+      }
+
+      if (pages.api.selected) {
+        const apiSelectedPath = pages.api.selected.path;
+
+        return Object.keys(api[apiSelectedPath]).length > 3 ? true : false;
+      }
+    };
+    setMethodDisabled(checkMethodAddable());
+  }, [state, path]);
+
   const { select, map } = props;
 
   const handleClose = () => {
@@ -25,6 +44,7 @@ export default function ResourceMenu(props) {
     });
     handleClose();
   };
+
   const addResource = () => {
     selectPath();
     dispatch({
@@ -53,16 +73,6 @@ export default function ResourceMenu(props) {
     }
   };
 
-  const checkMethodAddable = () => {
-    const { pages, nucleoid } = state;
-    const { api } = nucleoid;
-    if (pages.api.selected) {
-      const path = pages.api.selected.path;
-
-      return Object.keys(api[path]).length > 3 ? true : false;
-    }
-  };
-
   if (state.pages.api.resourceMenu.open) {
     return (
       <Menu
@@ -76,7 +86,7 @@ export default function ResourceMenu(props) {
           <SourceIcon />
           Resource
         </MenuItem>
-        <MenuItem onClick={addMethod} disabled={checkMethodAddable()}>
+        <MenuItem onClick={addMethod} disabled={methodDisabled}>
           <HttpIcon />
           Method
         </MenuItem>

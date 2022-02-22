@@ -56,11 +56,6 @@ function APITree() {
         },
       },
     });
-    /*
-
-
-
-    */
   };
 
   const handleClose = () => {
