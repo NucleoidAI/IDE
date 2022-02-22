@@ -142,7 +142,7 @@ const compile = (list, handleContextMenu, handleResourceMenu) =>
     children = api.methods
       .map((method) => {
         const payload = { path: api.path, method };
-        const hash = btoa(JSON.stringify(payload));
+        const hash = window.btoa(JSON.stringify(payload));
         map[hash] = payload;
 
         return (

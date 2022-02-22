@@ -62,9 +62,11 @@ function reducer(state, action) {
     case "CLOSE_API_DIALOG":
       pages.api.dialog.open = false;
       break;
+
     case "SET_API_DIALOG_VIEW":
       pages.api.dialog.view = action.payload.view;
       break;
+
     case "SET_SELECTED_API":
       if (action.payload.method === null) {
         const method = Object.keys(nucleoid.api[action.payload.path])[0];
@@ -75,6 +77,7 @@ function reducer(state, action) {
         method: action.payload.method,
       };
       break;
+
     case "SET_SELECTED_FUNCTION":
       pages.functions.selected = action.payload.function;
       break;
@@ -84,10 +87,12 @@ function reducer(state, action) {
       pages.api.resourceMenu.anchor = action.payload.anchor;
       pages.api.resourceMenu.path = action.payload.path;
       break;
+
     case "CLOSE_RESOURCE_MENU":
       pages.api.resourceMenu.open = false;
       pages.api.resourceMenu = {};
       break;
+
     case "OPEN_FUNCTION_DIALOG": {
       pages.functions.dialog.open = true;
       break;
@@ -107,23 +112,24 @@ function reducer(state, action) {
       pages.functions.dialog.open = false;
       break;
 
-    case "UPDATE_TYPE": {
-      const { id, name, type } = action.payload;
-      const map = pages.api.dialog.map;
+    case "UPDATE_TYPE":
+      {
+        const { id, name, type } = action.payload;
+        const map = pages.api.dialog.map;
 
-      if (name !== undefined) map[id].name = name;
-      if (type !== undefined) {
-        if (map[id].type === "array") map[id].items.type = type;
-        else {
-          map[id].type = type;
+        if (name !== undefined) map[id].name = name;
+        if (type !== undefined) {
+          if (map[id].type === "array") map[id].items.type = type;
+          else {
+            map[id].type = type;
 
-          if (type === "array") map[id].items = { type: "integer" };
-          else if (type === "object") map[id].properties = {};
+            if (type === "array") map[id].items = { type: "integer" };
+            else if (type === "object") map[id].properties = {};
+          }
         }
       }
-
       break;
-    }
+
     case "ADD_SCHEMA_PROPERTY": {
       const { id } = action.payload;
       const map = pages.api.dialog.map;

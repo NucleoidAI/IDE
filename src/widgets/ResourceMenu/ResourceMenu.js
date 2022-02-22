@@ -62,7 +62,7 @@ export default function ResourceMenu(props) {
       });
 
       select(
-        btoa(
+        window.btoa(
           JSON.stringify(
             Object.keys(map)
               .map((item) => map[item])
