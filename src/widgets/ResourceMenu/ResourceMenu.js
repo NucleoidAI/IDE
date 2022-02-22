@@ -19,7 +19,14 @@ export default function ResourceMenu(props) {
   const addMethod = () => {
     dispatch({
       type: "OPEN_API_DIALOG",
-      payload: { type: "add" },
+      payload: { type: "method" },
+    });
+    handleClose();
+  };
+  const addResource = () => {
+    dispatch({
+      type: "OPEN_API_DIALOG",
+      payload: { type: "resource" },
     });
     handleClose();
   };
@@ -43,7 +50,7 @@ export default function ResourceMenu(props) {
         anchorReference="anchorPosition"
         anchorPosition={{ top: anchor.mouseY, left: anchor.mouseX }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={addResource}>
           <SourceIcon />
           Resource
         </MenuItem>

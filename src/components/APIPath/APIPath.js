@@ -33,6 +33,8 @@ const APIPath = forwardRef(
     const paths = Object.keys(api);
     const originalMethod = useRef();
 
+    const textFieldRef = useRef();
+
     useEffect(() => {
       originalMethod.current = method;
       if (!method) {
@@ -41,7 +43,11 @@ const APIPath = forwardRef(
         setAlertMethod(true);
       } else {
         handleSetMethod();
+        if (textFieldRef.current !== undefined) {
+          handleCheck(textFieldRef.current.value);
+        }
       }
+
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -58,8 +64,8 @@ const APIPath = forwardRef(
 
     const handleCheck = (value) => {
       pathRef.current = prefix + "/" + value;
-
       const pathStatus = Path.isUsed(paths, prefix, suffix, value);
+
       handleSaveButtonStatus(pathStatus);
       setAlertPath(pathStatus);
     };
@@ -94,6 +100,7 @@ const APIPath = forwardRef(
               {Path.addSlashMark(prefix)}
             </Box>
             <TextField
+              inputRef={textFieldRef}
               defaultValue={suffix}
               onChange={(e) => handleCheck(e.target.value)}
               sx={styles.textField}

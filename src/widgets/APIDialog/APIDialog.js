@@ -55,7 +55,7 @@ function APIDialog() {
       responseRef.current = compile(apiRef.current[path][method].response);
     };
 
-    const initAdd = () => {
+    const initMethod = () => {
       setMethod(null);
       typesRef.current = index([]);
       paramsRef.current = index([]);
@@ -70,7 +70,37 @@ function APIDialog() {
         .map((type) => compile(type));
     };
 
-    type === "edit" ? initEdit(method, path) : initAdd();
+    const initResource = () => {
+      setMethod("get");
+      pathRef.current = pathRef.current + "/";
+      typesRef.current = index([]);
+      paramsRef.current = index([]);
+      requestRef.current = compile({ properties: {} });
+      responseRef.current = compile({ properties: {} });
+      typesRef.current = Object.entries([])
+        .map(([key, value]) => ({
+          ...value,
+          name: key,
+          type: value.type,
+        }))
+        .map((type) => compile(type));
+    };
+
+    switch (type) {
+      case "edit":
+        initEdit(method, path);
+
+        break;
+      case "method":
+        initMethod();
+        break;
+      case "resource":
+        initResource();
+        setPath(path + "/");
+        break;
+      default:
+        break;
+    }
   }, [context, type]);
 
   const handleClose = () => dispatch({ type: "CLOSE_API_DIALOG" });
@@ -85,6 +115,7 @@ function APIDialog() {
       type: "SAVE_API_DIALOG",
       payload: {
         method,
+        path: pathRef.current,
         params: deindex(paramsRef.current),
         request: decompile(requestRef.current),
         response: decompile(responseRef.current),
@@ -95,6 +126,7 @@ function APIDialog() {
         }, {}),
       },
     });
+
     handleClose();
   };
 

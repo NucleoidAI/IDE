@@ -1,6 +1,8 @@
 const isUsed = (paths, prefix, suffix, value) => {
+  if (value === "" && paths.includes(prefix.charAt(0, prefix.length - 1)))
+    return true;
   if (suffix === value) return false;
-  if (value === "") return true;
+  if (value === "" || value === null) return true;
   if (prefix.charAt(prefix.length - 1) !== "/") prefix += "/";
   if (paths.includes(prefix + value)) return true;
 

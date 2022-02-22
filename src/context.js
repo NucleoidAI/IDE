@@ -18,13 +18,28 @@ function reducer(state, action) {
       const path = pages.api.selected.path;
       const api = nucleoid.api;
 
-      if (pages.api.dialog.type === "add") {
+      if (pages.api.dialog.type === "method") {
         api[path][action.payload.method] = {};
         pages.api.selected.method = action.payload.method;
         api[path][action.payload.method].request = action.payload.request;
         api[path][action.payload.method].response = action.payload.response;
         api[path][action.payload.method].params = action.payload.params;
         nucleoid.types = action.payload.types;
+        break;
+      }
+
+      if (pages.api.dialog.type === "resource") {
+        //TODO BUG : when a resource is added it changes in other resources
+        const path = action.payload.path;
+        const method = action.payload.method;
+
+        api[path] = { [method]: {} };
+        pages.api.selected.method = action.payload.method;
+        api[path][method].request = action.payload.request;
+        api[path][method].response = action.payload.response;
+        api[path][method].params = action.payload.params;
+        nucleoid.types = action.payload.types;
+
         break;
       }
 
