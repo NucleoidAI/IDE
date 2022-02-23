@@ -5,7 +5,7 @@ function init() {
     nucleoid: {
       api: {},
       types: {},
-      functions: {},
+      functions: [],
     },
     pages: {
       started: false,

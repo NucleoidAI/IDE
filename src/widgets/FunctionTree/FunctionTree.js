@@ -1,12 +1,11 @@
 import Arrow from "../../icons/Arrow";
 import FolderIcon from "@mui/icons-material/FolderRounded";
 import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
-import TreeView from "@mui/lab/TreeView";
 import styles from "./styles";
-
 import { useContext } from "../../context";
 import { Grid, Menu, MenuItem, Typography } from "@mui/material";
 import React, { useEffect } from "react";
+import { TreeItem, TreeView } from "@mui/lab";
 
 function FunctionTree() {
   const [selected, setSelected] = React.useState(null);
@@ -16,7 +15,7 @@ function FunctionTree() {
   const graph = { "": { name: "", subs: [], path: "", functions: [] } };
 
   const select = (value) => {
-    if (functions[value]) {
+    if (functions.find((item) => item.path === value)) {
       setSelected(value);
       dispatch({ type: "SET_SELECTED_FUNCTION", payload: { function: value } });
     }
@@ -42,15 +41,16 @@ function FunctionTree() {
 
   useEffect(() => {
     if (!selected) {
-      select(Object.keys(functions).shift());
+      select(functions[0].path);
     }
   });
 
-  const list = Object.keys(functions);
+  const list = functions;
 
   for (let i = 0; i < list.length; i++) {
     const each = list[i];
-    const parts = each.substring(1).split("/");
+
+    const parts = each.path.substring(1).split("/");
     const name = parts.pop();
     const path = parts.join("/");
     const folder = parts.pop() || "";
@@ -69,7 +69,7 @@ function FunctionTree() {
       }
     }
 
-    const { params, type } = functions[each];
+    const { params, type } = functions.find((item) => item.path === each.path);
     graph[path].functions.push({ name, params, type });
   }
 
@@ -112,7 +112,7 @@ const compile = (folders, handleContextMenu) =>
 
     children = children.concat(
       folder.functions.map((fn) => (
-        <NonExpandableTreeItem
+        <TreeItem
           key={`${root(folder.path)}${fn.name}`}
           nodeId={`${root(folder.path)}${fn.name}`}
           onContextMenu={(event) =>

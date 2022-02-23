@@ -30,7 +30,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
       if (functions) {
         const selected = state.get("pages.functions.selected");
         const functions = state.get("nucleoid.functions");
-        setCode(functions[selected].code);
+        setCode(functions.find((item) => item.path === selected).code);
         return;
       }
     }
@@ -85,7 +85,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
         if (functions) {
           const selected = state.get("pages.functions.selected");
           const functions = state.get("nucleoid.functions");
-          functions[selected].code = code;
+          functions.find((item) => item.path === selected).code = code;
         }
       }}
     />

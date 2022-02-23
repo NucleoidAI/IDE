@@ -13,14 +13,17 @@ jest.mock("../../context");
 test("List nested functions", () => {
   const state = State.init();
   const functions = state.get("nucleoid.functions");
-  functions["/getInfo"] = {
+
+  functions.push({
+    path: "/getInfo",
     params: [],
     type: "FUNCTION",
-  };
-  functions["/users/getUser"] = {
+  });
+  functions.push({
+    path: "/users/getUser",
     params: ["user"],
     type: "FUNCTION",
-  };
+  });
   useContext.mockReturnValue([state]);
 
   const wrapper = shallow(<FunctionTree functions={functions} />);
