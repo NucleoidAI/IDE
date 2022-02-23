@@ -3,6 +3,7 @@ import ParamView from "../../components/ParamView";
 import SchemaView from "../../components/SchemaView";
 import Security from "../../components/Security";
 import SummaryForm from "../../components/SummaryForm";
+import actions from "../../actions";
 import styles from "./styles";
 
 import { useContext } from "../../context";
@@ -66,7 +67,10 @@ function APISettings() {
           <Fab
             size={"small"}
             onClick={() => {
-              dispatch({ type: "OPEN_API_DIALOG", payload: { type: "edit" } });
+              dispatch({
+                type: actions.openApiDialog,
+                payload: { type: "edit" },
+              });
             }}
           >
             <EditIcon />

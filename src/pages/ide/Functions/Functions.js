@@ -3,6 +3,7 @@ import Editor from "../../../widgets/Editor";
 import FunctionDialog from "../../../widgets/FunctionDialog/FunctionDialog";
 import FunctionTree from "../../../widgets/FunctionTree";
 import IDE from "../../../layouts/IDE";
+import actions from "../../../actions";
 import styles from "./styles";
 import { Card, CardActions, CardContent, Grid, Paper } from "@mui/material";
 import { Context, useContext } from "../../../context";
@@ -12,7 +13,7 @@ function Functions() {
 
   function openFunctionDialog(item) {
     dispatch({
-      type: "OPEN_FUNCTION_DIALOG",
+      type: actions.openFunctionDialog,
       payload: item.toUpperCase(),
     });
   }

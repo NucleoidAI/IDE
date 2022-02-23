@@ -5,6 +5,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Editor from "../../../widgets/Editor";
 import IDE from "../../../layouts/IDE";
 import React from "react";
+import actions from "../../../actions";
 import styles from "./styles";
 import { useContext } from "../../../context";
 import {
@@ -24,7 +25,7 @@ function API() {
     event.preventDefault();
 
     dispatch({
-      type: "OPEN_RESOURCE_MENU",
+      type: actions.openResourceMenu,
       payload: {
         anchor: {
           mouseX: event.clientX,

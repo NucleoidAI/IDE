@@ -1,4 +1,5 @@
 import State from "./state";
+import actions from "./actions";
 import { v4 as uuid } from "uuid";
 import { createContext, useContext } from "react";
 
@@ -7,13 +8,13 @@ function reducer(state, action) {
   const { nucleoid, pages } = state;
 
   switch (action.type) {
-    case "OPEN_API_DIALOG": {
+    case actions.openApiDialog: {
       pages.api.dialog.type = action.payload.type;
       pages.api.dialog.open = true;
       break;
     }
 
-    case "SAVE_API_DIALOG": {
+    case actions.saveApiDialog: {
       let method = pages.api.selected.method;
       const path = pages.api.selected.path;
       const api = nucleoid.api;
@@ -59,15 +60,15 @@ function reducer(state, action) {
     }
     // eslint-disable-next-line no-fallthrough
 
-    case "CLOSE_API_DIALOG":
+    case actions.closeApiDialog:
       pages.api.dialog.open = false;
       break;
 
-    case "SET_API_DIALOG_VIEW":
+    case actions.setApiDialogView:
       pages.api.dialog.view = action.payload.view;
       break;
 
-    case "SET_SELECTED_API":
+    case actions.setSelectedApi:
       if (action.payload.method === null) {
         const method = Object.keys(nucleoid.api[action.payload.path])[0];
         action.payload.method = method;
@@ -78,27 +79,27 @@ function reducer(state, action) {
       };
       break;
 
-    case "SET_SELECTED_FUNCTION":
+    case actions.setSelectedFunction:
       pages.functions.selected = action.payload.function;
       break;
 
-    case "OPEN_RESOURCE_MENU":
+    case actions.openResourceMenu:
       pages.api.resourceMenu.open = true;
       pages.api.resourceMenu.anchor = action.payload.anchor;
       pages.api.resourceMenu.path = action.payload.path;
       break;
 
-    case "CLOSE_RESOURCE_MENU":
+    case actions.closeResourceMenu:
       pages.api.resourceMenu.open = false;
       pages.api.resourceMenu = {};
       break;
 
-    case "OPEN_FUNCTION_DIALOG": {
+    case actions.openFunctionDialog: {
       pages.functions.dialog.open = true;
       break;
     }
 
-    case "SAVE_FUNCTION_DIALOG": {
+    case actions.saveFunctionDialog: {
       const { path, code, params, type } = action.payload;
       const functions = nucleoid.functions;
 
@@ -110,11 +111,11 @@ function reducer(state, action) {
       });
     }
     // eslint-disable-next-line no-fallthrough
-    case "CLOSE_FUNCTION_DIALOG":
+    case actions.closeFunctionDialog:
       pages.functions.dialog.open = false;
       break;
 
-    case "UPDATE_TYPE":
+    case actions.updateType:
       {
         const { id, name, type } = action.payload;
         const map = pages.api.dialog.map;
@@ -132,7 +133,7 @@ function reducer(state, action) {
       }
       break;
 
-    case "ADD_SCHEMA_PROPERTY": {
+    case actions.addSchemaProperty: {
       const { id } = action.payload;
       const map = pages.api.dialog.map;
       const key = uuid();
@@ -142,13 +143,13 @@ function reducer(state, action) {
       };
       break;
     }
-    case "REMOVE_SCHEMA_PROPERTY": {
+    case actions.removeSchemaProperty: {
       const { id } = action.payload;
       const map = pages.api.dialog.map;
       delete map[id];
       break;
     }
-    case "ADD_PARAM": {
+    case actions.addParam: {
       const map = pages.api.dialog.map;
       const id = uuid();
       pages.api.dialog.params[id] = map[id] = {
@@ -158,7 +159,7 @@ function reducer(state, action) {
       };
       break;
     }
-    case "REMOVE_PARAM": {
+    case actions.removeParam: {
       const { id } = action.payload;
       const map = pages.api.dialog.map;
       delete pages.api.dialog.params[id];

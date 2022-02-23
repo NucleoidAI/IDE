@@ -1,6 +1,7 @@
 import Arrow from "../../icons/Arrow";
 import FolderIcon from "@mui/icons-material/FolderRounded";
 import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
+import actions from "../../actions";
 import styles from "./styles";
 import { useContext } from "../../context";
 import { Grid, Menu, MenuItem, Typography } from "@mui/material";
@@ -17,7 +18,10 @@ function FunctionTree() {
   const select = (value) => {
     if (functions.find((item) => item.path === value)) {
       setSelected(value);
-      dispatch({ type: "SET_SELECTED_FUNCTION", payload: { function: value } });
+      dispatch({
+        type: actions.setSelectedFunction,
+        payload: { function: value },
+      });
     }
   };
 
