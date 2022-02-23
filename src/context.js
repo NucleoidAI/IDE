@@ -99,13 +99,15 @@ function reducer(state, action) {
     }
 
     case "SAVE_FUNCTION_DIALOG": {
-      const path = action.payload.path;
+      const { path, code, params, type } = action.payload;
       const functions = nucleoid.functions;
 
-      functions[path] = {};
-      functions[path].type = action.payload.type;
-      functions[path].code = action.payload.code;
-      functions[path].params = action.payload.params;
+      functions.push({
+        path,
+        type,
+        code,
+        params,
+      });
     }
     // eslint-disable-next-line no-fallthrough
     case "CLOSE_FUNCTION_DIALOG":
