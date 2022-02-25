@@ -7,11 +7,31 @@ import React, { useEffect, useRef, useState } from "react";
 // eslint-disable-next-line sort-imports
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-chrome";
+import { addCompleter } from "ace-builds/src-noconflict/ext-language_tools";
 
 function Editor({ name, api, functions, log, editorRef, ...other }) {
   const [state] = useContext();
   const [code, setCode] = useState(null);
   const ace = useRef();
+
+  const nucfunctions = state.nucleoid.functions;
+
+  addCompleter({
+    getCompletions: function (editor, session, pos, prefix, callback) {
+      callback(
+        null,
+        nucfunctions.map((item) => {
+          return {
+            name: item.path.split("/").pop(),
+            value: item.code,
+            caption: item.path.split("/").pop(),
+            meta: "nucleoid functions",
+            score: 1,
+          };
+        })
+      );
+    },
+  });
 
   useEffect(() => {
     const { editor } = ace.current;
@@ -49,6 +69,8 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
         useWorker: false,
         tabSize: 2,
         useSoftTabs: true,
+        enableLiveAutocompletion: true,
+        enableBasicAutocompletion: true,
       }}
       value={code}
       onBlur={() => {
