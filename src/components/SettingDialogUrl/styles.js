@@ -1,5 +1,5 @@
 const styles = {
-  textField: { m: 1, width: "100%", input: { color: "#c3c5c8" } },
+  textField: { m: 1, width: "100%", input: { color: "secondary" } },
 };
 
 export default styles;
