@@ -43,7 +43,6 @@ function APIDialogAction({
       </Grid>
       <Button
         variant={"text"}
-        color={"primary"}
         onClick={() => saveApiDialog()}
         disabled={saveDisable}
       >

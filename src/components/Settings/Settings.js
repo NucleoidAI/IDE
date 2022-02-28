@@ -1,27 +1,13 @@
-import React from "react";
+import SettingDialog from "../../widgets/SettingDialog/SettingDialog";
 import SettingsIcon from "@mui/icons-material/Settings";
 import styles from "./styles";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Grid,
-  IconButton,
-} from "@mui/material";
+import { Button, Grid, IconButton } from "@mui/material";
+
+import { useRef, useState } from "react";
 
 function Settings() {
-  const [open, setOpen] = React.useState(false);
-  const [connect, setConnect] = React.useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const [connect, setConnect] = useState(false);
+  const handleOpenRef = useRef();
 
   return (
     <>
@@ -33,42 +19,11 @@ function Settings() {
         >
           {!connect ? "Connect" : "Disconnect"}
         </Button>
-        <IconButton onClick={handleOpen} size="large">
-          <SettingsIcon
-            sx={{ fill: (theme) => theme.palette.custom.grey }}
-            fontSize={"large"}
-          />
+        <IconButton onClick={() => handleOpenRef.current()} size="large">
+          <SettingsIcon sx={styles.settingIcon} fontSize={"large"} />
         </IconButton>
+        <SettingDialog ref={handleOpenRef} />
       </Grid>
-      <Dialog
-        onClose={handleClose}
-        aria-labelledby="settings-dialog-title"
-        open={open}
-        style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-        PaperProps={{
-          style: {
-            backgroundColor: "#424242",
-            color: "#ffffffb3",
-          },
-        }}
-        fullWidth
-        maxWidth={"sm"}
-      >
-        <DialogTitle id="settings-dialog-title" onClose={handleClose}>
-          Settings
-        </DialogTitle>
-        <DialogContent>Settings</DialogContent>
-        <DialogActions>
-          <Button
-            autoFocus
-            onClick={handleClose}
-            variant={"text"}
-            style={{ color: "#90caf9" }}
-          >
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 }

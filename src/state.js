@@ -23,7 +23,9 @@ function init() {
       query: {},
       branches: {},
     },
-    settings: {},
+    settings: {
+      dialog: {},
+    },
     get: (prop) => resolve(state, prop),
   };
 

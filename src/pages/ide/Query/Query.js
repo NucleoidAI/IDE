@@ -2,7 +2,9 @@ import Editor from "../../../widgets/Editor";
 import IDE from "../../../layouts/IDE";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import QueryResult from "../../../components/QueryResult";
+import service from "../../../service";
 import styles from "./styles";
+
 import {
   Card,
   Fab,
@@ -53,17 +55,14 @@ function Query() {
       name: "query",
       bindKey: { win: "Ctrl-Enter", mac: "Ctrl-Enter" },
       exec: () => {
-        query();
+        handleQuery();
       },
     });
   }, []);
 
-  const query = () => {
-    fetch("http://localhost:8448", {
-      method: "POST",
-      body: editor ? editor.current.getValue() : null,
-    })
-      .then((response) => response.text())
+  const handleQuery = () => {
+    service
+      .query(editor ? editor.current.getValue() : null)
       .then((data) => {
         try {
           setResult(JSON.parse(data));
@@ -81,12 +80,8 @@ function Query() {
           <Paper sx={styles.editor}>
             <Editor name={"query"} ref={editor} />
             <Grid container item sx={styles.run}>
-              <Fab size={"small"} onClick={() => query()}>
-                <PlayArrowIcon
-                  style={{
-                    fill: "#212121",
-                  }}
-                />
+              <Fab size={"small"} onClick={() => handleQuery()}>
+                <PlayArrowIcon style={styles.playArrowIcon} />
               </Fab>
             </Grid>
           </Paper>

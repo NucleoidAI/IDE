@@ -14,6 +14,7 @@ const styles = {
       bottom: 40 + theme.spacing(1),
       right: theme.spacing(1),
       justifyContent: "flex-end",
+      alignItems: "center",
     };
   },
   results(theme) {
@@ -24,6 +25,9 @@ const styles = {
       justifyContent: "flex-start",
       paddingLeft: theme.spacing(1) * 2,
     };
+  },
+  playArrowIcon: {
+    fill: "#212121",
   },
 };
 
