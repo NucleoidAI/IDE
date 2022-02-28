@@ -7,8 +7,7 @@ const styles = {
   tabs: {
     borderRight: 1,
     borderColor: "divider",
-    color: "secondary",
-    //textColor: "secondary",
+    color: "primary",
   },
   tab: {
     ".Mui-selected": {
