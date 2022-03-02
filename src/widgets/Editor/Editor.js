@@ -42,7 +42,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
       service.checkFormat(value).then((result) => {
         setCode(value);
         setAnnotations(
-          result.lint.map((item) => {
+          result.map((item) => {
             return {
               row: item.line - 1,
               column: item.column,
