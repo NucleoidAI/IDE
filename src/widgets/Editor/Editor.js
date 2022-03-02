@@ -1,5 +1,6 @@
 import AceEditor from "react-ace";
-import Prettier from "prettier-standalone";
+//import Prettier from "prettier-standalone";
+import service from "../../service";
 import styles from "./styles";
 import { useContext } from "../../context";
 import React, { useEffect, useRef, useState } from "react";
@@ -11,8 +12,10 @@ import { addCompleter } from "ace-builds/src-noconflict/ext-language_tools";
 
 function Editor({ name, api, functions, log, editorRef, ...other }) {
   const [state] = useContext();
+  const [annotations, setAnnotations] = useState([]);
   const [code, setCode] = useState(null);
   const ace = useRef();
+  let timer = null;
 
   const nucfunctions = state.nucleoid.functions;
 
@@ -32,6 +35,25 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
       );
     },
   });
+
+  function onChange(value) {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      service.checkFormat(value).then((result) => {
+        setCode(value);
+        setAnnotations(
+          result.lint.map((item) => {
+            return {
+              row: item.line - 1,
+              column: item.column,
+              text: item.message,
+              type: item.severity === 1 ? "error" : "warning",
+            };
+          })
+        );
+      });
+    }, 1500);
+  }
 
   useEffect(() => {
     const { editor } = ace.current;
@@ -63,6 +85,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
       name={name}
       mode={"javascript"}
       theme={"chrome"}
+      annotations={annotations}
       fontSize={14}
       {...other}
       setOptions={{
@@ -73,10 +96,13 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
         enableBasicAutocompletion: true,
       }}
       value={code}
+      onChange={onChange}
       onBlur={() => {
         const { editor } = ace.current;
         const code = editor.getValue();
         const position = editor.getCursorPosition();
+
+        /*
         let formatted;
 
         try {
@@ -87,6 +113,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
           console.log(error.message);
           return;
         }
+        */
 
         editor.selection.moveCursorToPosition(position);
 
@@ -94,12 +121,14 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
           const selected = state.get("pages.api.selected");
           const api = state.get("nucleoid.api");
 
+          /*
           const string = formatted
             .substring(24 + selected.method.length)
             .slice(0, -1)
             .trim();
+            */
 
-          api[selected.path][selected.method].action = string;
+          api[selected.path][selected.method].action = code;
         }
 
         if (functions) {
