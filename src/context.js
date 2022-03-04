@@ -31,7 +31,6 @@ function reducer(state, { type, payload }) {
       }
 
       if (pages.api.dialog.type === "resource") {
-        //TODO BUG : when a resource is added it changes in other resources
         const path = payload.path;
         const method = payload.method;
 

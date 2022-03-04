@@ -89,7 +89,6 @@ function APIDialog() {
     switch (type) {
       case "edit":
         initEdit(method, path);
-
         break;
       case "method":
         initMethod();
@@ -108,7 +107,10 @@ function APIDialog() {
   const saveApiDialog = () => {
     if (selectedRef.current.path !== pathRef.current) {
       selectedRef.current.path = pathRef.current;
-      updatePath(apiRef.current, path, pathRef.current);
+      if (type !== "resource") {
+        selectedRef.current.path = pathRef.current;
+        updatePath(apiRef.current, path, pathRef.current);
+      }
     }
 
     dispatch({
