@@ -10,6 +10,11 @@ import Enzyme, { shallow } from "enzyme";
 Enzyme.configure({ adapter: new Adapter() });
 jest.mock("../../context");
 
+jest.mock("react", () => ({
+  ...jest.requireActual("react"),
+  useLayoutEffect: jest.requireActual("react").useEffect,
+}));
+
 test("List nested APIs", () => {
   const state = State.init();
   const api = state.get("nucleoid.api");
