@@ -32,6 +32,17 @@ let theme = createTheme({
       variant: "contained",
     },
   },
+  transitions: {
+    duration: {
+      shortest: 1,
+      shorter: 1,
+      short: 1,
+      standard: 1,
+      complex: 1,
+      enteringScreen: 1,
+      leavingScreen: 1,
+    },
+  },
 });
 
 theme = {

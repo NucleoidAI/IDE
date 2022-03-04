@@ -4,6 +4,7 @@ import APIParams from "../../components/APIParams";
 import APIPath from "../../components/APIPath";
 import APITypes from "../../components/APITypes";
 import ClosableDialogTitle from "../../components/ClosableDialogTitle";
+
 import actions from "../../actions";
 import styles from "./styles";
 import { useContext } from "../../context";
@@ -90,7 +91,6 @@ function APIDialog() {
     switch (type) {
       case "edit":
         initEdit(method, path);
-
         break;
       case "method":
         initMethod();

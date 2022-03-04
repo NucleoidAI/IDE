@@ -1,5 +1,4 @@
 import AceEditor from "react-ace";
-//import Prettier from "prettier-standalone";
 import service from "../../service";
 import styles from "./styles";
 import { useContext } from "../../context";
@@ -36,13 +35,14 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
     },
   });
 
-  function onChange(value) {
+  function checkEditorService(value) {
     clearTimeout(timer);
+
     timer = setTimeout(() => {
       service.checkFormat(value).then((result) => {
-        setCode(value);
+        setCode(result.output);
         setAnnotations(
-          result.map((item) => {
+          result.messages.map((item) => {
             return {
               row: item.line - 1,
               column: item.column,
@@ -72,6 +72,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
       const selected = state.get("pages.functions.selected");
       const functions = state.get("nucleoid.functions");
       setCode(functions.find((item) => item.path === selected).code);
+
       return;
     }
 
@@ -96,38 +97,11 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
         enableBasicAutocompletion: true,
       }}
       value={code}
-      onChange={onChange}
+      onChange={checkEditorService}
       onBlur={() => {
-        const { editor } = ace.current;
-        const code = editor.getValue();
-        const position = editor.getCursorPosition();
-
-        /*
-        let formatted;
-
-        try {
-          // editor.session.doc.positionToIndex(editor.selection.getCursor()) gets current offset
-          formatted = Prettier.format(code).slice(0, -1);
-          editor.session.setValue(formatted);
-        } catch (error) {
-          console.log(error.message);
-          return;
-        }
-        */
-
-        editor.selection.moveCursorToPosition(position);
-
         if (api) {
           const selected = state.get("pages.api.selected");
           const api = state.get("nucleoid.api");
-
-          /*
-          const string = formatted
-            .substring(24 + selected.method.length)
-            .slice(0, -1)
-            .trim();
-            */
-
           api[selected.path][selected.method].action = code;
         }
 

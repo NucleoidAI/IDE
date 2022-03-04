@@ -6,6 +6,7 @@ const checkFormat = async (body) => {
     headers: {
       "Content-Type": "text/plain",
     },
+
     body: body,
   }).then((response) => response.json());
 };

@@ -1,4 +1,5 @@
 import Arrow from "../../icons/Arrow";
+import Fade from "@mui/material/Fade";
 import FolderIcon from "@mui/icons-material/FolderRounded";
 import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
 import actions from "../../actions";
@@ -98,6 +99,7 @@ function FunctionTree() {
             ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
             : undefined
         }
+        TransitionComponent={Fade}
       >
         <MenuItem onClick={handleClose}>Move</MenuItem>
         <MenuItem onClick={handleClose}>Delete</MenuItem>

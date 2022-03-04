@@ -1,6 +1,7 @@
 import ArrowIcon from "../../icons/Arrow";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import Fade from "@mui/material/Fade";
 import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
 import ResourceMenu from "../ResourceMenu";
 import actions from "../../actions";
@@ -114,6 +115,7 @@ function APITree() {
             ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
             : undefined
         }
+        TransitionComponent={Fade}
       >
         <MenuItem
           onClick={() => {
