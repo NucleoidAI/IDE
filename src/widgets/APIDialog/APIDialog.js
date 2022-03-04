@@ -18,7 +18,7 @@ function APIDialog() {
   const [saveDisable, setSaveDisable] = useState(false);
   const [view, setView] = useState(context.get("pages.api.dialog.view"));
   const [params, setParams] = useState([]);
-  const type = context.get("pages.api.dialog.type");
+  const { action, type } = pages.api.dialog;
 
   const paramsRef = useRef();
   const typesRef = useRef();
@@ -86,31 +86,28 @@ function APIDialog() {
         .map((type) => compile(type));
     };
 
-    switch (type) {
-      case "edit":
-        initEdit(method, path);
-        break;
-      case "method":
-        initMethod();
-        break;
-      case "resource":
-        initResource();
-        setPath(path + "/");
-        break;
-      default:
-        break;
+    if (type === "method" && action === "edit") {
+      initEdit(method, path);
     }
-  }, [context, type]);
+
+    if (type === "method" && action === "add") {
+      initMethod();
+    }
+
+    if (type === "resource" && action === "add") {
+      initResource();
+      setPath(path + "/");
+    }
+  }, [context, type, action]);
 
   const handleClose = () => dispatch({ type: "CLOSE_API_DIALOG" });
 
   const saveApiDialog = () => {
     if (selectedRef.current.path !== pathRef.current) {
       selectedRef.current.path = pathRef.current;
-      if (type !== "resource") {
-        selectedRef.current.path = pathRef.current;
-        updatePath(apiRef.current, path, pathRef.current);
-      }
+    }
+    if (type === "method" && action === "edit") {
+      updatePath(apiRef.current, path, pathRef.current);
     }
 
     dispatch({

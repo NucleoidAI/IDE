@@ -63,7 +63,10 @@ function APITree() {
   };
 
   const editMethod = () => {
-    dispatch({ type: "OPEN_API_DIALOG", payload: { type: "edit" } });
+    dispatch({
+      type: "OPEN_API_DIALOG",
+      payload: { type: "method", action: "edit" },
+    });
     handleClose();
   };
 

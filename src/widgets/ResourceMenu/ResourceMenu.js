@@ -40,7 +40,7 @@ export default function ResourceMenu(props) {
     selectPath();
     dispatch({
       type: "OPEN_API_DIALOG",
-      payload: { type: "method" },
+      payload: { type: "method", action: "add" },
     });
     handleClose();
   };
@@ -49,7 +49,7 @@ export default function ResourceMenu(props) {
     selectPath();
     dispatch({
       type: "OPEN_API_DIALOG",
-      payload: { type: "resource" },
+      payload: { type: "resource", action: "add" },
     });
     handleClose();
   };

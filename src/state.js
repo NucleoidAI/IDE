@@ -13,6 +13,8 @@ function init() {
       api: {
         dialog: {
           view: "BODY",
+          type: "",
+          action: "",
         },
         resourceMenu: {
           open: false,

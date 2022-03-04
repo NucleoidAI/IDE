@@ -9,6 +9,7 @@ function reducer(state, { type, payload }) {
   switch (type) {
     case "OPEN_API_DIALOG": {
       pages.api.dialog.type = payload.type;
+      pages.api.dialog.action = payload.action;
       pages.api.dialog.open = true;
       break;
     }
