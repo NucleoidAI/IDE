@@ -105,10 +105,10 @@ function APIDialog() {
   const saveApiDialog = () => {
     if (selectedRef.current.path !== pathRef.current) {
       selectedRef.current.path = pathRef.current;
-    }
 
-    if (type === "method" && action === "edit") {
-      updatePath(apiRef.current, path, pathRef.current);
+      if (type === "method") {
+        updatePath(apiRef.current, path, pathRef.current);
+      }
     }
 
     dispatch({

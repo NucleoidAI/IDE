@@ -74,7 +74,7 @@ const APIPath = forwardRef(
       if (path === undefined) path = alertPath;
       if (method === undefined) method = alertMethod;
 
-      if (path === true || method === true) {
+      if (path || method) {
         handleSaveButtonStatus(true);
       } else {
         handleSaveButtonStatus(false);

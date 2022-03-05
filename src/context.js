@@ -25,12 +25,16 @@ function reducer(state, { type, payload }) {
         pages.api.dialog.type === "method" &&
         pages.api.dialog.action === "add"
       ) {
+        console.log(method, path);
+        console.log(payload.method);
+        console.log(api);
         api[path][payload.method] = {};
         pages.api.selected.method = payload.method;
         api[path][payload.method].request = payload.request;
         api[path][payload.method].response = payload.response;
         api[path][payload.method].params = payload.params;
         nucleoid.types = payload.types;
+
         break;
       }
 
