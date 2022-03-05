@@ -21,7 +21,10 @@ function reducer(state, { type, payload }) {
       const path = pages.api.selected.path;
       const api = nucleoid.api;
 
-      if (pages.api.dialog.type === "method") {
+      if (
+        pages.api.dialog.type === "method" &&
+        pages.api.dialog.action === "add"
+      ) {
         api[path][payload.method] = {};
         pages.api.selected.method = payload.method;
         api[path][payload.method].request = payload.request;
@@ -31,7 +34,10 @@ function reducer(state, { type, payload }) {
         break;
       }
 
-      if (pages.api.dialog.type === "resource") {
+      if (
+        pages.api.dialog.type === "resource" &&
+        pages.api.dialog.action === "add"
+      ) {
         const path = payload.path;
         const method = payload.method;
 
@@ -41,7 +47,6 @@ function reducer(state, { type, payload }) {
         api[path][method].response = payload.response;
         api[path][method].params = payload.params;
         nucleoid.types = payload.types;
-
         break;
       }
 
