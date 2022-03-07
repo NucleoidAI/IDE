@@ -4,6 +4,7 @@ import APIParams from "../../components/APIParams";
 import APIPath from "../../components/APIPath";
 import APITypes from "../../components/APITypes";
 import ClosableDialogTitle from "../../components/ClosableDialogTitle";
+import actions from "../../actions";
 import styles from "./styles";
 import { useContext } from "../../context";
 import { v4 as uuid } from "uuid";
@@ -100,7 +101,7 @@ function APIDialog() {
     }
   }, [context, type, action]);
 
-  const handleClose = () => dispatch({ type: "CLOSE_API_DIALOG" });
+  const handleClose = () => dispatch({ type: actions.closeApiDialog });
 
   const saveApiDialog = () => {
     if (selectedRef.current.path !== pathRef.current) {
@@ -112,7 +113,7 @@ function APIDialog() {
     }
 
     dispatch({
-      type: "SAVE_API_DIALOG",
+      type: actions.saveApiDialog,
       payload: {
         method,
         path: pathRef.current,

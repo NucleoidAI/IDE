@@ -17,22 +17,20 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
     const { editor } = ace.current;
     if (editorRef) editorRef.current = editor;
 
-    if (state.get("pages.api.selected")) {
-      editor.selection.moveCursorToPosition({ row: 0, column: 0 });
-      if (api) {
-        const selected = state.get("pages.api.selected");
-        const api = state.get("nucleoid.api");
-        const action = api[selected.path][selected.method].action;
-        setCode(`function ${selected.method}(query, json) {\n  ${action}\n}`);
-        return;
-      }
+    editor.selection.moveCursorToPosition({ row: 0, column: 0 });
+    if (api) {
+      const selected = state.get("pages.api.selected");
+      const api = state.get("nucleoid.api");
+      const action = api[selected.path][selected.method].action;
+      setCode(`function ${selected.method}(query, json) {\n  ${action}\n}`);
+      return;
+    }
 
-      if (functions) {
-        const selected = state.get("pages.functions.selected");
-        const functions = state.get("nucleoid.functions");
-        setCode(functions[selected].code);
-        return;
-      }
+    if (functions) {
+      const selected = state.get("pages.functions.selected");
+      const functions = state.get("nucleoid.functions");
+      setCode(functions.find((item) => item.path === selected).code);
+      return;
     }
 
     setCode(log);
@@ -85,7 +83,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
         if (functions) {
           const selected = state.get("pages.functions.selected");
           const functions = state.get("nucleoid.functions");
-          functions[selected].code = code;
+          functions.find((item) => item.path === selected).code = code;
         }
       }}
     />

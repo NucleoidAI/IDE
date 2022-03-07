@@ -112,7 +112,12 @@ function reducer(state, { type, payload }) {
       const { path, type, code, params } = payload;
       const functions = nucleoid.functions;
 
-      functions[path] = { type, params, code };
+      functions.push({
+        path,
+        type,
+        code,
+        params,
+      });
     }
 
     // eslint-disable-next-line no-fallthrough

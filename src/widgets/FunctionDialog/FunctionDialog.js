@@ -5,6 +5,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import FolderIcon from "@mui/icons-material/FolderRounded";
 import Path from "../../utils/Path";
+import actions from "../../actions";
 import styles from "./styles";
 // eslint-disable-next-line react-hooks/exhaustive-deps
 import { useContext } from "../../context";
@@ -22,7 +23,7 @@ export default function FunctionDialog() {
 
   const handleSaveFunction = () => {
     dispatch({
-      type: "SAVE_FUNCTION_DIALOG",
+      type: actions.saveFunctionDialog,
       payload: {
         type: type === "FOLDER" ? "FUNCTION" : type,
         path:
@@ -36,7 +37,7 @@ export default function FunctionDialog() {
   };
 
   const handleClose = () => {
-    dispatch({ type: "CLOSE_FUNCTION_DIALOG" });
+    dispatch({ type: actions.closeFunctionDialog });
   };
 
   return (
