@@ -2,8 +2,8 @@ import TextField from "@mui/material/TextField";
 import { forwardRef } from "react";
 import styles from "./styles";
 
-const SettingDialogUrl = forwardRef((props, ref) => {
-  const url = ref.current;
+const SettingDialogUrl = forwardRef((props, urlRef) => {
+  const url = urlRef.current;
 
   return (
     <>

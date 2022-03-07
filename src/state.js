@@ -13,6 +13,8 @@ function init() {
       api: {
         dialog: {
           view: "BODY",
+          type: "",
+          action: "",
         },
         resourceMenu: {
           open: false,
@@ -29,10 +31,6 @@ function init() {
     },
     settings: {
       dialog: {},
-      urls: {
-        nucleoid: "http://localhost:8448",
-        openApi: "http://localhost:3000",
-      },
     },
     get: (prop) => resolve(state, prop),
   };

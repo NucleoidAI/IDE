@@ -4,7 +4,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import Fade from "@mui/material/Fade";
 import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
 import ResourceMenu from "../ResourceMenu";
-import actions from "../../actions";
 import styles from "./styles";
 import { useContext } from "../../context";
 import { Box, Menu, MenuItem } from "@mui/material";
@@ -27,7 +26,7 @@ function APITree() {
   const select = (id) => {
     if (map[id]) {
       setSelected(id);
-      dispatch({ type: actions.setSelectedApi, payload: map[id] });
+      dispatch({ type: "SET_SELECTED_API", payload: map[id] });
     }
   };
 
@@ -49,7 +48,7 @@ function APITree() {
     event.preventDefault();
 
     dispatch({
-      type: actions.openResourceMenu,
+      type: "OPEN_RESOURCE_MENU",
       payload: {
         path: path,
         anchor: {
@@ -65,7 +64,10 @@ function APITree() {
   };
 
   const editMethod = () => {
-    dispatch({ type: actions.openApiDialog, payload: { type: "edit" } });
+    dispatch({
+      type: "OPEN_API_DIALOG",
+      payload: { type: "method", action: "edit" },
+    });
     handleClose();
   };
 
