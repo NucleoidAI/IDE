@@ -39,11 +39,11 @@ const APIPath = forwardRef(
       originalMethod.current = method;
       if (!method) {
         handleSetMethod();
-        setSaveButtonStatus(undefined, true);
+        setSaveButtonStatus(null, true);
         setAlertMethod(true);
       } else {
         handleSetMethod();
-        if (textFieldRef.current !== undefined) {
+        if (textFieldRef.current !== null) {
           handleCheck(textFieldRef.current.value);
         }
       }
@@ -53,7 +53,7 @@ const APIPath = forwardRef(
 
     const handleSetMethod = () => {
       setAlertMethod(false);
-      setSaveButtonStatus(undefined, false);
+      setSaveButtonStatus(null, false);
     };
 
     const usedMethods = api[path]
@@ -67,12 +67,12 @@ const APIPath = forwardRef(
       const pathStatus = Path.isUsed(paths, prefix, suffix, value);
 
       setAlertPath(pathStatus);
-      setSaveButtonStatus(pathStatus, undefined);
+      setSaveButtonStatus(pathStatus, null);
     };
 
     const setSaveButtonStatus = (path, method) => {
-      if (path === undefined) path = alertPath;
-      if (method === undefined) method = alertMethod;
+      if (path === null) path = alertPath;
+      if (method === null) method = alertMethod;
 
       if (path || method) {
         handleSaveButtonStatus(true);
