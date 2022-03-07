@@ -1,16 +1,20 @@
 import ArrowIcon from "../../icons/Arrow";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
-import TreeView from "@mui/lab/TreeView";
+import ResourceMenu from "../ResourceMenu";
 import styles from "./styles";
 import { useContext } from "../../context";
 import { Box, Menu, MenuItem } from "@mui/material";
 import React, { useEffect } from "react";
+import { TreeItem, TreeView } from "@mui/lab";
 
 const map = {};
 
 function APITree() {
   const [selected, setSelected] = React.useState(null);
   const [contextMenu, setContextMenu] = React.useState(null);
+
   const [state, dispatch] = useContext();
   const api = state.get("nucleoid.api");
   const list = Object.keys(api).map((key) => ({
@@ -21,7 +25,6 @@ function APITree() {
   const select = (id) => {
     if (map[id]) {
       setSelected(id);
-
       dispatch({ type: "SET_SELECTED_API", payload: map[id] });
     }
   };
@@ -40,8 +43,31 @@ function APITree() {
     );
   };
 
+  const handleResourceMenu = (event, path) => {
+    event.preventDefault();
+
+    dispatch({
+      type: "OPEN_RESOURCE_MENU",
+      payload: {
+        path: path,
+        anchor: {
+          mouseX: event.clientX,
+          mouseY: event.clientY,
+        },
+      },
+    });
+  };
+
   const handleClose = () => {
     setContextMenu(null);
+  };
+
+  const editMethod = () => {
+    dispatch({
+      type: "OPEN_API_DIALOG",
+      payload: { type: "method", action: "edit" },
+    });
+    handleClose();
   };
 
   useEffect(() => {
@@ -78,7 +104,7 @@ function APITree() {
         onNodeSelect={(event, value) => select(value)}
         selected={selected}
       >
-        {compile([graph["/"]], handleContextMenu)}
+        {compile([graph["/"]], handleContextMenu, handleResourceMenu)}
       </TreeView>
       <Menu
         open={contextMenu !== null}
@@ -91,29 +117,39 @@ function APITree() {
             : undefined
         }
       >
-        <MenuItem onClick={handleClose}>Edit</MenuItem>
-        <MenuItem onClick={handleClose}>Delete</MenuItem>
+        <MenuItem
+          onClick={() => {
+            editMethod();
+          }}
+        >
+          <EditIcon />
+          Edit
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          <DeleteIcon /> Delete
+        </MenuItem>
       </Menu>
+      <ResourceMenu select={select} map={map} />
     </>
   );
 }
 
-const compile = (list, handleContextMenu) =>
+const compile = (list, handleContextMenu, handleResourceMenu) =>
   list.map((api) => {
     let children = undefined;
 
     if (api.resources && api.resources.length > 0) {
-      children = compile(api.resources, handleContextMenu);
+      children = compile(api.resources, handleContextMenu, handleResourceMenu);
     }
 
     children = api.methods
       .map((method) => {
         const payload = { path: api.path, method };
-        const hash = btoa(JSON.stringify(payload));
+        const hash = window.btoa(JSON.stringify(payload));
         map[hash] = payload;
 
         return (
-          <NonExpandableTreeItem
+          <TreeItem
             key={hash}
             nodeId={hash}
             onContextMenu={(event) => handleContextMenu(event, hash)}
@@ -133,8 +169,10 @@ const compile = (list, handleContextMenu) =>
         nodeId={api.path}
         label={api.label}
         children={children}
-        onClick={(event) => {
-          event.preventDefault();
+        onClick={(e) => {
+          if (e.type === "contextmenu") {
+            handleResourceMenu(e, api.path);
+          }
         }}
       />
     );

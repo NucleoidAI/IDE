@@ -27,15 +27,34 @@ const APIPath = forwardRef(
     { apiRef, pathRef }
   ) => {
     const api = apiRef.current;
-    const [alert, setAlert] = useState();
+    const [alertPath, setAlertPath] = useState();
+    const [alertMethod, setAlertMethod] = useState();
     const { prefix, suffix } = Path.split(path);
     const paths = Object.keys(api);
     const originalMethod = useRef();
 
+    const textFieldRef = useRef();
+
     useEffect(() => {
       originalMethod.current = method;
+      if (!method) {
+        handleSetMethod();
+        setSaveButtonStatus(null, true);
+        setAlertMethod(true);
+      } else {
+        handleSetMethod();
+        if (textFieldRef.current !== null) {
+          handleCheck(textFieldRef.current.value);
+        }
+      }
+
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const handleSetMethod = () => {
+      setAlertMethod(false);
+      setSaveButtonStatus(null, false);
+    };
 
     const usedMethods = api[path]
       ? Object.keys(api[path]).filter(
@@ -45,10 +64,21 @@ const APIPath = forwardRef(
 
     const handleCheck = (value) => {
       pathRef.current = prefix + "/" + value;
-
       const pathStatus = Path.isUsed(paths, prefix, suffix, value);
-      handleSaveButtonStatus(pathStatus);
-      setAlert(pathStatus);
+
+      setAlertPath(pathStatus);
+      setSaveButtonStatus(pathStatus, null);
+    };
+
+    const setSaveButtonStatus = (path, method) => {
+      if (path === null) path = alertPath;
+      if (method === null) method = alertMethod;
+
+      if (path || method) {
+        handleSaveButtonStatus(true);
+      } else {
+        handleSaveButtonStatus(false);
+      }
     };
 
     return (
@@ -58,8 +88,12 @@ const APIPath = forwardRef(
           <Grid container item sx={styles.content}>
             <FormControl variant={"outlined"} size={"small"}>
               <Select
-                defaultValue={method}
-                onChange={(e) => handleChangeMethod(e.target.value)}
+                error={alertMethod}
+                defaultValue={method ? method : ""}
+                onChange={(e) => {
+                  handleChangeMethod(e.target.value);
+                  handleSetMethod();
+                }}
               >
                 {Constants.methods
                   .filter((methodName) => !usedMethods.includes(methodName))
@@ -77,10 +111,11 @@ const APIPath = forwardRef(
               {Path.addSlashMark(prefix)}
             </Box>
             <TextField
+              inputRef={textFieldRef}
               defaultValue={suffix}
               onChange={(e) => handleCheck(e.target.value)}
-              sx={styles.textfield}
-              error={alert}
+              sx={styles.textField}
+              error={alertPath}
             />
           </Grid>
         </Grid>

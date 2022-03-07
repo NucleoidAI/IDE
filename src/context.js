@@ -8,6 +8,8 @@ function reducer(state, { type, payload }) {
 
   switch (type) {
     case "OPEN_API_DIALOG": {
+      pages.api.dialog.type = payload.type;
+      pages.api.dialog.action = payload.action;
       pages.api.dialog.open = true;
       break;
     }
@@ -18,6 +20,39 @@ function reducer(state, { type, payload }) {
       let method = pages.api.selected.method;
       const path = pages.api.selected.path;
       const api = nucleoid.api;
+
+      if (
+        pages.api.dialog.type === "method" &&
+        pages.api.dialog.action === "add"
+      ) {
+        console.log(method, path);
+        console.log(payload.method);
+        console.log(api);
+        api[path][payload.method] = {};
+        pages.api.selected.method = payload.method;
+        api[path][payload.method].request = payload.request;
+        api[path][payload.method].response = payload.response;
+        api[path][payload.method].params = payload.params;
+        nucleoid.types = payload.types;
+
+        break;
+      }
+
+      if (
+        pages.api.dialog.type === "resource" &&
+        pages.api.dialog.action === "add"
+      ) {
+        const path = payload.path;
+        const method = payload.method;
+
+        api[path] = { [method]: {} };
+        pages.api.selected.method = payload.method;
+        api[path][method].request = payload.request;
+        api[path][method].response = payload.response;
+        api[path][method].params = payload.params;
+        nucleoid.types = payload.types;
+        break;
+      }
 
       if (method !== payload.method) {
         api[path][payload.method] = { ...api[path][method] };
@@ -43,6 +78,10 @@ function reducer(state, { type, payload }) {
       break;
 
     case "SET_SELECTED_API":
+      if (payload.method === null) {
+        const method = Object.keys(nucleoid.api[payload.path])[0];
+        payload.method = method;
+      }
       pages.api.selected = {
         path: payload.path,
         method: payload.method,
@@ -51,6 +90,17 @@ function reducer(state, { type, payload }) {
 
     case "SET_SELECTED_FUNCTION":
       pages.functions.selected = payload.function;
+      break;
+
+    case "OPEN_RESOURCE_MENU":
+      pages.api.resourceMenu.open = true;
+      pages.api.resourceMenu.anchor = payload.anchor;
+      pages.api.resourceMenu.path = payload.path;
+      break;
+
+    case "CLOSE_RESOURCE_MENU":
+      pages.api.resourceMenu.open = false;
+      pages.api.resourceMenu = {};
       break;
 
     case "OPEN_FUNCTION_DIALOG": {
