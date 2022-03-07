@@ -3,7 +3,6 @@ import ParamView from "../../components/ParamView";
 import SchemaView from "../../components/SchemaView";
 import Security from "../../components/Security";
 import SummaryForm from "../../components/SummaryForm";
-import actions from "../../actions";
 import styles from "./styles";
 
 import { useContext } from "../../context";
@@ -68,8 +67,8 @@ function APISettings() {
             size={"small"}
             onClick={() => {
               dispatch({
-                type: actions.openApiDialog,
-                payload: { type: "edit" },
+                type: "OPEN_API_DIALOG",
+                payload: { type: "method", action: "edit" },
               });
             }}
           >

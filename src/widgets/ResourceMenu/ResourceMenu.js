@@ -2,7 +2,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import HttpIcon from "@mui/icons-material/Http";
 import React from "react";
 import SourceIcon from "@mui/icons-material/Source";
-import actions from "../../actions";
 
 import { useContext } from "../../context";
 import { Divider, Menu, MenuItem } from "@mui/material";
@@ -33,15 +32,15 @@ export default function ResourceMenu(props) {
 
   const handleClose = () => {
     dispatch({
-      type: actions.closeResourceMenu,
+      type: "CLOSE_RESOURCE_MENU",
     });
   };
 
   const addMethod = () => {
     selectPath();
     dispatch({
-      type: actions.openApiDialog,
-      payload: { type: "method" },
+      type: "OPEN_API_DIALOG",
+      payload: { type: "method", action: "add" },
     });
     handleClose();
   };
@@ -49,8 +48,8 @@ export default function ResourceMenu(props) {
   const addResource = () => {
     selectPath();
     dispatch({
-      type: actions.openApiDialog,
-      payload: { type: "resource" },
+      type: "OPEN_API_DIALOG",
+      payload: { type: "resource", action: "add" },
     });
     handleClose();
   };
@@ -58,7 +57,7 @@ export default function ResourceMenu(props) {
   const selectPath = () => {
     if (path) {
       dispatch({
-        type: actions.setSelectedApi,
+        type: "SET_SELECTED_API",
         payload: { path: path, method: null },
       });
 

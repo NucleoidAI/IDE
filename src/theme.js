@@ -2,27 +2,6 @@ import { createTheme } from "@mui/material";
 
 let theme = createTheme({
   palette: {
-    mode: "light",
-    primary: {
-      main: "#e0e0e0",
-    },
-    secondary: {
-      main: "#e0e0e0",
-    },
-    dark: {
-      main: "#e0e0e0",
-    },
-    background: {
-      default: "#eaeff1",
-    },
-    text: {
-      primary: "#000",
-      secondary: "#e0e0e0",
-      dark: "#e0e0e0",
-    },
-    pressed: {
-      default: "#e0e0e0",
-    },
     custom: {
       grey: "rgba(255, 255, 255, 0.7)",
     },
@@ -39,7 +18,6 @@ theme = {
   components: {
     MuiDrawer: {
       styleOverrides: {
-        // Name of the slot
         paper: {
           backgroundColor: "#323a40",
         },
