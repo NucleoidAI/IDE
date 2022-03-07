@@ -3,6 +3,7 @@ const Settings = {
   url: {
     terminal: "http://localhost:8448",
     app: "http://localhost:3000",
+    editor: "http://localhost:4545/",
   },
 };
 

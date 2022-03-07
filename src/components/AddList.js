@@ -1,4 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
+import Fade from "@mui/material/Fade";
 import React from "react";
 import { v4 as uuid } from "uuid";
 import { Divider, Fab, Menu, MenuItem } from "@mui/material";
@@ -20,7 +21,12 @@ function AddList(props) {
       <Fab size={"small"} onClick={handleClick}>
         <AddIcon />
       </Fab>
-      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        TransitionComponent={Fade}
+      >
         {list &&
           list.map((item) =>
             item === "|" ? (

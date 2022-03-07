@@ -1,4 +1,5 @@
 import DeleteIcon from "@mui/icons-material/Delete";
+import Fade from "@mui/material/Fade";
 import HttpIcon from "@mui/icons-material/Http";
 import React from "react";
 import SourceIcon from "@mui/icons-material/Source";
@@ -81,6 +82,7 @@ export default function ResourceMenu(props) {
         onContextMenu={(event) => event.preventDefault()}
         anchorReference="anchorPosition"
         anchorPosition={{ top: anchor.mouseY, left: anchor.mouseX }}
+        TransitionComponent={Fade}
       >
         <MenuItem onClick={addResource}>
           <SourceIcon />
