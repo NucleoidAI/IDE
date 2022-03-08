@@ -98,6 +98,28 @@ function reducer(state, { type, payload }) {
       pages.api.resourceMenu.path = payload.path;
       break;
 
+    case "DELETE_RESOURCE": {
+      const newObj = {};
+
+      Object.keys(state.nucleoid.api)
+        .filter((item) => {
+          return !item.includes(state.pages.api.selected.path);
+        })
+        .forEach((objName) => {
+          newObj[objName] = state.nucleoid.api[objName];
+        });
+      state.nucleoid.api = newObj;
+      state.pages.api.selected.path = "/";
+      state.pages.api.selected.method = "get";
+
+      break;
+    }
+
+    case "DELETE_METHOD":
+      console.log(pages.api.dialog.selected);
+      console.log(payload);
+      break;
+
     case "CLOSE_RESOURCE_MENU":
       pages.api.resourceMenu.open = false;
       pages.api.resourceMenu = {};
