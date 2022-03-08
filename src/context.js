@@ -115,10 +115,17 @@ function reducer(state, { type, payload }) {
       break;
     }
 
-    case "DELETE_METHOD":
-      console.log(pages.api.dialog.selected);
-      console.log(payload);
+    case "DELETE_METHOD": {
+      const { path, method } = pages.api.selected;
+      console.log(nucleoid.api);
+      console.log(state.pages.api.selected.path);
+      if (Object.keys(nucleoid.api[path]).length > 1) {
+        delete nucleoid.api[path][method];
+        state.pages.api.selected.method = Object.keys(nucleoid.api[path])[0];
+      }
+
       break;
+    }
 
     case "CLOSE_RESOURCE_MENU":
       pages.api.resourceMenu.open = false;

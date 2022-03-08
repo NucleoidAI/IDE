@@ -1,5 +1,6 @@
 import ArrowIcon from "../../icons/Arrow";
 import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteMethodDialog from "../../components/DeleteMethodDialog";
 import EditIcon from "@mui/icons-material/Edit";
 import Fade from "@mui/material/Fade";
 import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
@@ -7,7 +8,7 @@ import ResourceMenu from "../ResourceMenu";
 import styles from "./styles";
 import { useContext } from "../../context";
 import { Box, Menu, MenuItem } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { TreeItem, TreeView } from "@mui/lab";
 
 const map = {};
@@ -15,6 +16,7 @@ const map = {};
 function APITree() {
   const [selected, setSelected] = React.useState(null);
   const [contextMenu, setContextMenu] = React.useState(null);
+  const [open, setOpen] = useState(false);
 
   const [state, dispatch] = useContext();
   const api = state.get("nucleoid.api");
@@ -71,6 +73,16 @@ function APITree() {
     handleClose();
   };
 
+  const deleteMethod = () => {
+    dispatch({ type: "DELETE_METHOD" });
+    setOpen(false);
+  };
+
+  const handleDeleteMethod = () => {
+    setOpen(true);
+    handleClose();
+  };
+
   useEffect(() => {
     if (!selected) {
       select(Object.keys(map).pop());
@@ -98,6 +110,9 @@ function APITree() {
 
   return (
     <>
+      {open && (
+        <DeleteMethodDialog setOpen={setOpen} deleteMethod={deleteMethod} />
+      )}
       <TreeView
         defaultCollapseIcon={<ArrowIcon down />}
         defaultExpandIcon={<ArrowIcon right />}
@@ -127,7 +142,7 @@ function APITree() {
           <EditIcon />
           Edit
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleDeleteMethod}>
           <DeleteIcon /> Delete
         </MenuItem>
       </Menu>
