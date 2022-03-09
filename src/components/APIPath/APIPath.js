@@ -100,7 +100,7 @@ const APIPath = forwardRef(
                   .map((item, index) => {
                     return (
                       <MenuItem value={item} key={index}>
-                        {item}
+                        {item.toUpperCase()}
                       </MenuItem>
                     );
                   })}
