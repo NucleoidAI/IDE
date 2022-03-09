@@ -79,7 +79,7 @@ function APITree() {
     setOpen(false);
   };
 
-   const handleDeleteMethod = () => {
+  const handleDeleteMethod = () => {
     setOpen(true);
     handleClose();
   };

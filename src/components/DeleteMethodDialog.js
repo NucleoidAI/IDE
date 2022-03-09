@@ -16,9 +16,7 @@ const DeleteMethodDialog = ({ setOpen, deleteMethod }) => {
       onClose={handleClose}
       aria-labelledby="responsive-dialog-title"
     >
-      <DialogTitle id="responsive-dialog-title">
-        {"Delete method"}
-      </DialogTitle>
+      <DialogTitle id="responsive-dialog-title">{"Delete method"}</DialogTitle>
       <DialogContent>
         <DialogContentText>
           The selected method will be deleted.
