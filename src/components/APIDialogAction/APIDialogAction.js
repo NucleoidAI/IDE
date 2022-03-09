@@ -1,7 +1,13 @@
+import Button from "@mui/material/Button";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Grid from "@mui/material/Grid";
+import SaveIcon from "@mui/icons-material/Save";
+import styled from "@mui/material/styles/styled";
 import styles from "./styles";
-import { Button, Grid } from "@mui/material";
-import React, { useEffect } from "react";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import { useEffect, useState } from "react";
 
 function APIDialogAction({
   view,
@@ -11,7 +17,39 @@ function APIDialogAction({
   deleteDisable,
   deleteMethod,
 }) {
-  const [alignment, setAlignment] = React.useState();
+  const [alignment, setAlignment] = useState();
+  const [openToolTip, setOpenToolTip] = useState();
+
+  const DeleteTooltip = styled(({ className, ...props }) => (
+    <Tooltip
+      open={openToolTip}
+      PopperProps={{
+        disablePortal: true,
+      }}
+      onClose={handleTooltipClose}
+      disableFocusListener
+      disableHoverListener
+      disableTouchListener
+      {...props}
+      classes={{ popper: className }}
+    />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: "#f5f5f9",
+      color: "rgba(0, 0, 0, 0.87)",
+      maxWidth: 220,
+      fontSize: theme.typography.pxToRem(12),
+      border: "1px solid #dadde9",
+    },
+  }));
+
+  const handleTooltipClose = () => {
+    setOpenToolTip(false);
+  };
+
+  const handleTooltipOpen = () => {
+    setOpenToolTip(true);
+  };
 
   useEffect(() => {
     setAlignment(view);
@@ -43,12 +81,40 @@ function APIDialogAction({
           </ToggleButton>
         </ToggleButtonGroup>
       </Grid>
-      <Button variant={"text"} onClick={deleteMethod} disabled={deleteDisable}>
-        Delete
-      </Button>
-      <Button variant={"text"} onClick={saveApiDialog} disabled={saveDisable}>
-        Save
-      </Button>
+      <ClickAwayListener onClickAway={handleTooltipClose}>
+        <Grid>
+          <DeleteTooltip
+            title={
+              <>
+                This method will be <b>deleted.</b>
+                <br /> Do you want to continue ?
+                <Button color={"warning"} onClick={deleteMethod}>
+                  Delete
+                </Button>
+              </>
+            }
+          >
+            <Button
+              variant={"outlined"}
+              color={"warning"}
+              onClick={handleTooltipOpen}
+              disabled={deleteDisable}
+              startIcon={<DeleteIcon />}
+            >
+              Delete
+            </Button>
+          </DeleteTooltip>
+          &nbsp;
+          <Button
+            variant={"outlined"}
+            onClick={saveApiDialog}
+            disabled={saveDisable}
+            startIcon={<SaveIcon />}
+          >
+            Save
+          </Button>
+        </Grid>
+      </ClickAwayListener>
     </Grid>
   );
 }

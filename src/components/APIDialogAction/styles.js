@@ -1,6 +1,6 @@
 const styles = {
   root: { justifyContent: "space-between" },
-  firstElement: { width: 50 },
+  firstElement: { width: 200 },
 };
 
 export default styles;
