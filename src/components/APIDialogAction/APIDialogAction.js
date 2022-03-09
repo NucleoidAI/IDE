@@ -3,7 +3,7 @@ import ClickAwayListener from "@mui/material/ClickAwayListener";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Grid from "@mui/material/Grid";
 import SaveIcon from "@mui/icons-material/Save";
-import styled from "@mui/material/styles/styled";
+import { styled } from "@mui/material/styles";
 import styles from "./styles";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
