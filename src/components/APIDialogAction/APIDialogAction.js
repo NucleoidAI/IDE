@@ -8,6 +8,8 @@ function APIDialogAction({
   setApiDialogView,
   saveApiDialog,
   saveDisable,
+  deleteDisable,
+  deleteMethod,
 }) {
   const [alignment, setAlignment] = React.useState();
 
@@ -41,11 +43,10 @@ function APIDialogAction({
           </ToggleButton>
         </ToggleButtonGroup>
       </Grid>
-      <Button
-        variant={"text"}
-        onClick={() => saveApiDialog()}
-        disabled={saveDisable}
-      >
+      <Button variant={"text"} onClick={deleteMethod} disabled={deleteDisable}>
+        Delete
+      </Button>
+      <Button variant={"text"} onClick={saveApiDialog} disabled={saveDisable}>
         Save
       </Button>
     </Grid>

@@ -16,6 +16,7 @@ const map = {};
 function APITree() {
   const [selected, setSelected] = React.useState(null);
   const [contextMenu, setContextMenu] = React.useState(null);
+  const [methodDisabled, setMethodDisabled] = useState();
   const [open, setOpen] = useState(false);
 
   const [state, dispatch] = useContext();
@@ -78,16 +79,27 @@ function APITree() {
     setOpen(false);
   };
 
-  const handleDeleteMethod = () => {
+   const handleDeleteMethod = () => {
     setOpen(true);
     handleClose();
+  };
+
+  const checkMethodDeletable = () => {
+    const { pages, nucleoid } = state;
+    const { api } = nucleoid;
+    const path = pages.api.selected.path;
+    if (pages.api) {
+      return Object.keys(api[path]).length <= 1 ? true : false;
+    }
   };
 
   useEffect(() => {
     if (!selected) {
       select(Object.keys(map).pop());
     }
-  });
+    setMethodDisabled(checkMethodDeletable());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected, state]);
 
   const graph = {};
 
@@ -142,7 +154,7 @@ function APITree() {
           <EditIcon />
           Edit
         </MenuItem>
-        <MenuItem onClick={handleDeleteMethod}>
+        <MenuItem onClick={handleDeleteMethod} disabled={methodDisabled}>
           <DeleteIcon /> Delete
         </MenuItem>
       </Menu>

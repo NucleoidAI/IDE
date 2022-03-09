@@ -25,9 +25,6 @@ function reducer(state, { type, payload }) {
         pages.api.dialog.type === "method" &&
         pages.api.dialog.action === "add"
       ) {
-        console.log(method, path);
-        console.log(payload.method);
-        console.log(api);
         api[path][payload.method] = {};
         pages.api.selected.method = payload.method;
         api[path][payload.method].request = payload.request;
@@ -117,8 +114,7 @@ function reducer(state, { type, payload }) {
 
     case "DELETE_METHOD": {
       const { path, method } = pages.api.selected;
-      console.log(nucleoid.api);
-      console.log(state.pages.api.selected.path);
+
       if (Object.keys(nucleoid.api[path]).length > 1) {
         delete nucleoid.api[path][method];
         state.pages.api.selected.method = Object.keys(nucleoid.api[path])[0];
