@@ -97,14 +97,11 @@ function reducer(state, { type, payload }) {
 
     case "DELETE_RESOURCE": {
       const newObj = {};
-
+      //TODO functional programming
       Object.keys(state.nucleoid.api)
-        .filter((item) => {
-          return !item.includes(state.pages.api.selected.path);
-        })
-        .forEach((objName) => {
-          newObj[objName] = state.nucleoid.api[objName];
-        });
+        .filter((item) => !item.includes(state.pages.api.selected.path))
+        .forEach((objName) => (newObj[objName] = state.nucleoid.api[objName]));
+
       state.nucleoid.api = newObj;
       state.pages.api.selected.path = "/";
       state.pages.api.selected.method = "get";
