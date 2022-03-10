@@ -23,7 +23,11 @@ import { Outlet, useLocation } from "react-router-dom"; // eslint-disable-line
 
 const list = [
   { title: "API", link: "/", icon: <SendIcon /> },
-  { title: "Functions", link: "/ide/functions", icon: <FolderIcon /> },
+  {
+    title: "Functions",
+    link: "/ide/functions",
+    icon: <FolderIcon />,
+  },
   { title: "Query", link: "/ide/query", icon: <StorageIcon />, anchor: false },
   {
     title: "Branches",
@@ -46,9 +50,7 @@ function IDE(props) {
   const [alert, setAlert] = useState();
 
   const location = useLocation();
-  const { anchor } = location.state;
-
-  console.log(location);
+  const anchor = location.state?.anchor;
 
   return (
     <>

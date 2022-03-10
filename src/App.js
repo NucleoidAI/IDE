@@ -7,7 +7,7 @@ import Logs from "./pages/ide/Logs";
 import Query from "./pages/ide/Query";
 import State from "./state";
 import theme from "./theme";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Context, reducer } from "./context";
 import {
   CssBaseline,
@@ -27,13 +27,13 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<IDE />}>
-                <Route index element={<API />} />
-                <Route path={"/dev"} element={<Dev />} />
-                {/* }<Route path={"/ide/api"} element={<API />} /> {*/}
+                <Route index element={<Navigate to="/ide/api" />} />
+                <Route path="/ide/api" element={<API />} />
                 <Route path={"/ide/functions"} element={<Functions />} />
                 <Route path={"/ide/query"} element={<Query />} />
                 <Route path={"/ide/branches"} element={<Branches />} />
                 <Route path={"/ide/logs"} element={<Logs />} />
+                <Route path={"/dev"} element={<Dev />} />
               </Route>
             </Routes>
           </BrowserRouter>
