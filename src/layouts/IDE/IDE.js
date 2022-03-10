@@ -19,13 +19,24 @@ import { useContext } from "../../context";
 import { v4 as uuid } from "uuid";
 import { Box, Drawer, Grid, ListItem } from "@mui/material";
 import React, { useState } from "react";
+import { Outlet, useLocation } from "react-router-dom"; // eslint-disable-line
 
 const list = [
-  { title: "API", link: "/ide/api", icon: <SendIcon /> },
+  { title: "API", link: "/", icon: <SendIcon /> },
   { title: "Functions", link: "/ide/functions", icon: <FolderIcon /> },
-  { title: "Query", link: "/ide/query", icon: <StorageIcon /> },
-  { title: "Branches", link: "/ide/branches", icon: <SettingsEthernetIcon /> },
-  { title: "Logs", link: "/ide/logs", icon: <ViewCarouselIcon /> },
+  { title: "Query", link: "/ide/query", icon: <StorageIcon />, anchor: false },
+  {
+    title: "Branches",
+    link: "/ide/branches",
+    icon: <SettingsEthernetIcon />,
+    anchor: false,
+  },
+  {
+    title: "Logs",
+    link: "/ide/logs",
+    icon: <ViewCarouselIcon />,
+    anchor: false,
+  },
 ];
 
 function IDE(props) {
@@ -34,18 +45,25 @@ function IDE(props) {
   const [started, setStarted] = useState(pages.started);
   const [alert, setAlert] = useState();
 
+  const location = useLocation();
+  const { anchor } = location.state;
+
+  console.log(location);
+
   return (
     <>
       <Grid sx={styles.root}>
         <Menu list={list} title="IDE" />
         <Grid sx={styles.content}>
-          <Grid sx={styles.childrens}>{props.children}</Grid>
+          <Grid sx={styles.childrens}>
+            <Outlet />
+          </Grid>
         </Grid>
       </Grid>
       <Drawer
         variant="persistent"
         anchor={"right"}
-        open={props.anchor === undefined ? true : props.anchor}
+        open={anchor === undefined ? true : anchor}
         sx={styles.drawer}
       >
         <Box>

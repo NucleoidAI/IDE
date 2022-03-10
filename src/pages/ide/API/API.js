@@ -3,7 +3,6 @@ import APISettings from "../../../widgets/APISettings";
 import APITree from "../../../widgets/APITree";
 import AddIcon from "@mui/icons-material/Add";
 import Editor from "../../../widgets/Editor";
-import IDE from "../../../layouts/IDE";
 import React from "react";
 import actions from "../../../actions";
 import styles from "./styles";
@@ -36,7 +35,7 @@ function API() {
   };
 
   return (
-    <IDE>
+    <>
       <APIDialog />
       <Grid container spacing={1}>
         <Grid item xs={3}>
@@ -66,7 +65,7 @@ function API() {
           </Grid>
         </Grid>
       </Grid>
-    </IDE>
+    </>
   );
 }
 

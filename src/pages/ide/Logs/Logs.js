@@ -1,5 +1,4 @@
 import Editor from "../../../widgets/Editor";
-import IDE from "../../../layouts/IDE";
 import Moment from "react-moment";
 import styles from "./styles";
 import { v4 as uuid } from "uuid";
@@ -32,7 +31,7 @@ function Logs() {
   }, []);
 
   return (
-    <IDE anchor={false}>
+    <>
       <Grid container>
         <Grid container item justifyContent={"center"}>
           <Typography variant="h5" gutterBottom component="div">
@@ -58,7 +57,7 @@ function Logs() {
           ))}
         </Grid>
       </Grid>
-    </IDE>
+    </>
   );
 }
 
