@@ -1,3 +1,4 @@
+import AlertMassage from "../../components/AlertMassage";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteResourceDialog from "../../components/DeleteResourceDialog";
 import Fade from "@mui/material/Fade";
@@ -8,10 +9,11 @@ import { useContext } from "../../context";
 import { useRef } from "react";
 import { Divider, Menu, MenuItem } from "@mui/material";
 
-export default function ResourceMenu(props) {
+const ResourceMenu = (props) => {
   const [state, dispatch] = useContext();
   const { anchor, path } = state.pages.api.resourceMenu;
   const [methodDisabled, setMethodDisabled] = React.useState();
+  const [alertMessage, setAlertMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const resourceRef = useRef();
 
@@ -29,6 +31,7 @@ export default function ResourceMenu(props) {
         return Object.keys(api[apiSelectedPath]).length > 3 ? true : false;
       }
     };
+
     setMethodDisabled(checkMethodAddable());
   }, [state, path]);
 
@@ -69,15 +72,21 @@ export default function ResourceMenu(props) {
 
   const handleResourceDeleteDialog = () => {
     selectPath();
-    resourceRef.current = {
-      deleteAdress: state.pages.api.selected,
-      deleteList: Object.keys(state.nucleoid.api).filter((item) => {
-        return item.includes(state.pages.api.selected.path);
-      }),
-    };
 
-    handleClose();
-    setOpen(true);
+    if (state.pages.api.selected.path === "/") {
+      setAlertMessage("Root path cannot be deleted");
+      handleClose();
+    } else {
+      resourceRef.current = {
+        deleteAdress: state.pages.api.selected,
+        deleteList: Object.keys(state.nucleoid.api).filter((item) => {
+          return item.includes(state.pages.api.selected.path);
+        }),
+      };
+
+      handleClose();
+      setOpen(true);
+    }
   };
 
   const selectPath = () => {
@@ -109,6 +118,7 @@ export default function ResourceMenu(props) {
           ref={resourceRef}
         />
       )}
+      {alertMessage && <AlertMassage message={alertMessage} />}
       {state.pages.api.resourceMenu.open && (
         <Menu
           open={Boolean(state.pages.api.resourceMenu.open)}
@@ -135,4 +145,6 @@ export default function ResourceMenu(props) {
       )}
     </>
   );
-}
+};
+
+export default ResourceMenu;

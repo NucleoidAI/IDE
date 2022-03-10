@@ -48,6 +48,7 @@ function reducer(state, { type, payload }) {
         api[path][method].response = payload.response;
         api[path][method].params = payload.params;
         nucleoid.types = payload.types;
+
         break;
       }
 
