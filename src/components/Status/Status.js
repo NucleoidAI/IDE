@@ -17,9 +17,6 @@ const options = {
   legend: {
     position: false,
   },
-  animation: {
-    duration: 0,
-  },
 };
 
 function Status() {

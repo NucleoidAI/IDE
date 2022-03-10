@@ -7,23 +7,24 @@ import Logs from "./pages/ide/Logs";
 import Query from "./pages/ide/Query";
 import State from "./state";
 import theme from "./theme";
+
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { Context, reducer } from "./context";
 import {
   CssBaseline,
   StyledEngineProvider,
   ThemeProvider,
 } from "@mui/material";
-import React, { useReducer } from "react";
+import { StoreProvider } from "./store"; // eslint-disable-line
+import { reducer } from "./context";
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, State.withSample());
+  console.log("mainden render");
 
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Context.Provider value={[state, dispatch]}>
+        <StoreProvider initialState={State.withSample()} reducer={reducer}>
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<IDE />}>
@@ -37,7 +38,7 @@ function App() {
               </Route>
             </Routes>
           </BrowserRouter>
-        </Context.Provider>
+        </StoreProvider>
       </ThemeProvider>
     </StyledEngineProvider>
   );

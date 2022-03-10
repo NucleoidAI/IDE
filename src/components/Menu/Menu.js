@@ -4,11 +4,12 @@ import React from "react";
 import Settings from "../Settings";
 import Status from "../Status";
 import styles from "./styles";
-import { useNavigate } from "react-router-dom";
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import { Link } from "react-router-dom"; // eslint-disable-line
 
 function Menu(props) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  console.log("menu renderlendi?");
 
   return (
     <nav style={styles.root}>
@@ -20,20 +21,12 @@ function Menu(props) {
           <br />
           {props.list.map(({ title, link, anchor, icon }) => (
             <React.Fragment key={title}>
-              <ListItem
-                sx={styles.listItem}
-                onClick={() =>
-                  navigate(link, {
-                    state: {
-                      anchor,
-                    },
-                  })
-                }
-                button
-              >
-                <ListItemIcon sx={styles.listItemIcon}>{icon}</ListItemIcon>
-                <ListItemText primary={title} />
-              </ListItem>
+              <Link to={link}>
+                <ListItem sx={styles.listItem} button>
+                  <ListItemIcon sx={styles.listItemIcon}>{icon}</ListItemIcon>
+                  <ListItemText primary={title} />
+                </ListItem>
+              </Link>
             </React.Fragment>
           ))}
         </List>

@@ -4,11 +4,11 @@ import FunctionDialog from "../../../widgets/FunctionDialog/FunctionDialog";
 import FunctionTree from "../../../widgets/FunctionTree";
 import actions from "../../../actions";
 import styles from "./styles";
+import { useStore } from "../../../store";
 import { Card, CardActions, CardContent, Grid, Paper } from "@mui/material";
-import { Context, useContext } from "../../../context";
 
 function Functions() {
-  const dispatch = useContext(Context)[1];
+  const [, dispatch] = useStore();
 
   function openFunctionDialog(item) {
     dispatch({

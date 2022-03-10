@@ -8,13 +8,11 @@ import Path from "../../utils/Path";
 import actions from "../../actions";
 import styles from "./styles";
 // eslint-disable-next-line react-hooks/exhaustive-deps
-import { useContext } from "../../context";
+import { useStore } from "../../store";
 import { Grid, MenuItem, Select, TextField, Typography } from "@mui/material";
 
-//import { useContext } from "react";
-
 export default function FunctionDialog() {
-  const [context, dispatch] = useContext();
+  const [context, dispatch] = useStore();
   const { pages } = context;
   let type = "FOLDER";
   let path;

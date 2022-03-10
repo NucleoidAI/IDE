@@ -6,7 +6,7 @@ import Editor from "../../../widgets/Editor";
 import React from "react";
 import actions from "../../../actions";
 import styles from "./styles";
-import { useContext } from "../../../context";
+import { useStore } from "../../../store";
 import {
   Card,
   CardActions,
@@ -18,7 +18,7 @@ import {
 // eslint-disable-next-line
 
 function API() {
-  const [, dispatch] = useContext();
+  const [, dispatch] = useStore();
 
   const handleResourceMenu = (event, path) => {
     event.preventDefault();

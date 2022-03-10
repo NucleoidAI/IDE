@@ -1,7 +1,7 @@
 import AceEditor from "react-ace";
 import service from "../../service";
 import styles from "./styles";
-import { useContext } from "../../context";
+import { useStore } from "../../store";
 import React, { useEffect, useRef, useState } from "react";
 
 // eslint-disable-next-line sort-imports
@@ -10,7 +10,7 @@ import "ace-builds/src-noconflict/theme-chrome";
 import { addCompleter } from "ace-builds/src-noconflict/ext-language_tools";
 
 function Editor({ name, api, functions, log, editorRef, ...other }) {
-  const [state] = useContext();
+  const [state] = useStore();
   const [annotations, setAnnotations] = useState([]);
   const [code, setCode] = useState(null);
   const ace = useRef();

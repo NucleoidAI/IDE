@@ -6,7 +6,7 @@ import Fade from "@mui/material/Fade";
 import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
 import ResourceMenu from "../ResourceMenu";
 import styles from "./styles";
-import { useContext } from "../../context";
+import { useStore } from "../../store";
 import { Box, Menu, MenuItem } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { TreeItem, TreeView } from "@mui/lab";
@@ -19,7 +19,7 @@ function APITree() {
   const [methodDisabled, setMethodDisabled] = useState();
   const [open, setOpen] = useState(false);
 
-  const [state, dispatch] = useContext();
+  const [state, dispatch] = useStore();
   const api = state.get("nucleoid.api");
   const list = Object.keys(api).map((key) => ({
     path: key,

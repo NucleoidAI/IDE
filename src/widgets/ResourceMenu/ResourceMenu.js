@@ -5,12 +5,12 @@ import Fade from "@mui/material/Fade";
 import HttpIcon from "@mui/icons-material/Http";
 import React from "react";
 import SourceIcon from "@mui/icons-material/Source";
-import { useContext } from "../../context";
 import { useRef } from "react";
+import { useStore } from "../../store";
 import { Divider, Menu, MenuItem } from "@mui/material";
 
 const ResourceMenu = (props) => {
-  const [state, dispatch] = useContext();
+  const [state, dispatch] = useStore();
   const { anchor, path } = state.pages.api.resourceMenu;
   const [methodDisabled, setMethodDisabled] = React.useState();
   const [alertMessage, setAlertMessage] = React.useState("");
