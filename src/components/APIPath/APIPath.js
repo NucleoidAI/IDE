@@ -28,6 +28,7 @@ const APIPath = forwardRef(
   ) => {
     const api = apiRef.current;
     const [alertPath, setAlertPath] = useState();
+    const [disablePath, setDisablePath] = useState();
     const [alertMethod, setAlertMethod] = useState();
     const { prefix, suffix } = Path.split(path);
     const paths = Object.keys(api);
@@ -37,6 +38,7 @@ const APIPath = forwardRef(
 
     useEffect(() => {
       originalMethod.current = method;
+
       if (!method) {
         handleSetMethod();
         setSaveButtonStatus(null, true);
@@ -46,6 +48,11 @@ const APIPath = forwardRef(
         if (textFieldRef.current !== null) {
           handleCheck(textFieldRef.current.value);
         }
+      }
+      if (path === "/") {
+        setDisablePath(true);
+        setAlertPath(false);
+        setSaveButtonStatus(false, null);
       }
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -63,7 +70,7 @@ const APIPath = forwardRef(
       : [];
 
     const handleCheck = (value) => {
-      pathRef.current = prefix + "/" + value;
+      pathRef.current = prefix + prefix && "/" + value;
       const pathStatus = Path.isUsed(paths, prefix, suffix, value);
 
       setAlertPath(pathStatus);
@@ -100,7 +107,7 @@ const APIPath = forwardRef(
                   .map((item, index) => {
                     return (
                       <MenuItem value={item} key={index}>
-                        {item}
+                        {item.toUpperCase()}
                       </MenuItem>
                     );
                   })}
@@ -116,6 +123,7 @@ const APIPath = forwardRef(
               onChange={(e) => handleCheck(e.target.value)}
               sx={styles.textField}
               error={alertPath}
+              disabled={disablePath}
             />
           </Grid>
         </Grid>

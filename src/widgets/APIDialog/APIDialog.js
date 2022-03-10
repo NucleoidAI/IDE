@@ -17,6 +17,7 @@ function APIDialog() {
   const [method, setMethod] = useState();
   const [path, setPath] = useState();
   const [saveDisable, setSaveDisable] = useState(false);
+  const [deleteDisable, setDeleteDisable] = useState(false);
   const [view, setView] = useState(context.get("pages.api.dialog.view"));
   const [params, setParams] = useState([]);
   const { action, type } = pages.api.dialog;
@@ -99,6 +100,9 @@ function APIDialog() {
       initResource();
       setPath(path + "/");
     }
+
+    setDeleteDisable(checkMethodDeletable());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context, type, action]);
 
   const handleClose = () => dispatch({ type: actions.closeApiDialog });
@@ -148,6 +152,22 @@ function APIDialog() {
     setParams(params);
   };
 
+  const deleteMethod = () => {
+    dispatch({ type: "DELETE_METHOD" });
+    handleClose();
+  };
+
+  const checkMethodDeletable = () => {
+    const { pages, nucleoid } = context;
+    const { api } = nucleoid;
+    const path = pages.api.selected.path;
+
+    if (action === "add") return true;
+    if (pages.api) {
+      return Object.keys(api[path]).length <= 1 ? true : false;
+    }
+  };
+
   if (context.get("pages.api.dialog.open")) {
     return (
       <Dialog
@@ -185,6 +205,8 @@ function APIDialog() {
             saveApiDialog={saveApiDialog}
             saveDisable={saveDisable}
             view={view}
+            deleteDisable={deleteDisable}
+            deleteMethod={deleteMethod}
           />
         </DialogActions>
       </Dialog>

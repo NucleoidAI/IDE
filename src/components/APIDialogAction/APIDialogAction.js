@@ -1,15 +1,31 @@
+import Button from "@mui/material/Button";
+import DeleteIcon from "@mui/icons-material/Delete";
+import DialogTooltip from "../DialogTootip/DialogTooltip";
+import Grid from "@mui/material/Grid";
+import SaveIcon from "@mui/icons-material/Save";
 import styles from "./styles";
-import { Button, Grid } from "@mui/material";
-import React, { useEffect } from "react";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+
+import { useEffect, useState } from "react";
 
 function APIDialogAction({
   view,
   setApiDialogView,
   saveApiDialog,
   saveDisable,
+  deleteDisable,
+  deleteMethod,
 }) {
-  const [alignment, setAlignment] = React.useState();
+  const [alignment, setAlignment] = useState();
+  const [openToolTip, setOpenToolTip] = useState(false);
+
+  const handleTooltipClose = () => {
+    setOpenToolTip(false);
+  };
+
+  const handleTooltipOpen = () => {
+    setOpenToolTip(true);
+  };
 
   useEffect(() => {
     setAlignment(view);
@@ -41,13 +57,43 @@ function APIDialogAction({
           </ToggleButton>
         </ToggleButtonGroup>
       </Grid>
-      <Button
-        variant={"text"}
-        onClick={() => saveApiDialog()}
-        disabled={saveDisable}
-      >
-        Save
-      </Button>
+      <Grid>
+        <DialogTooltip
+          open={openToolTip}
+          title={<b>Delete method</b>}
+          message={
+            <>
+              This method will be <b>deleted.</b>
+              <br /> Do you want to continue ?
+            </>
+          }
+          footer={
+            <Button color={"warning"} onClick={deleteMethod}>
+              Delete
+            </Button>
+          }
+          handleTooltipClose={handleTooltipClose}
+        >
+          <Button
+            variant={"outlined"}
+            color={"warning"}
+            onClick={handleTooltipOpen}
+            disabled={deleteDisable}
+            startIcon={<DeleteIcon />}
+          >
+            Delete
+          </Button>
+        </DialogTooltip>
+        &nbsp;
+        <Button
+          variant={"outlined"}
+          onClick={saveApiDialog}
+          disabled={saveDisable}
+          startIcon={<SaveIcon />}
+        >
+          Save
+        </Button>
+      </Grid>
     </Grid>
   );
 }
