@@ -5,12 +5,9 @@ import Settings from "../Settings";
 import Status from "../Status";
 import styles from "./styles";
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
-import { Link } from "react-router-dom"; // eslint-disable-line
+import { useNavigate } from "react-router-dom"; // eslint-disable-line
 
 function Menu(props) {
-  // const navigate = useNavigate();
-  console.log("menu renderlendi?");
-
   return (
     <nav style={styles.root}>
       <Drawer variant="permanent" sx={styles.drawer}>
@@ -19,16 +16,7 @@ function Menu(props) {
             <Logo title={props.title} />
           </ListItem>
           <br />
-          {props.list.map(({ title, link, anchor, icon }) => (
-            <React.Fragment key={title}>
-              <Link to={link}>
-                <ListItem sx={styles.listItem} button>
-                  <ListItemIcon sx={styles.listItemIcon}>{icon}</ListItemIcon>
-                  <ListItemText primary={title} />
-                </ListItem>
-              </Link>
-            </React.Fragment>
-          ))}
+          <MenuLinks {...props} />
         </List>
         <Status />
         <Settings />
@@ -36,5 +24,25 @@ function Menu(props) {
     </nav>
   );
 }
+
+const MenuLinks = (props) => {
+  const navigate = useNavigate();
+  return (
+    <>
+      {props.list.map(({ title, link, anchor, icon }) => (
+        <React.Fragment key={title}>
+          <ListItem
+            sx={styles.listItem}
+            onClick={() => navigate(link, { state: { anchor } })}
+            button
+          >
+            <ListItemIcon sx={styles.listItemIcon}>{icon}</ListItemIcon>
+            <ListItemText primary={title} />
+          </ListItem>
+        </React.Fragment>
+      ))}
+    </>
+  );
+};
 
 export default Menu;

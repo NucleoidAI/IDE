@@ -4,11 +4,11 @@ import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
 import React from "react";
 import State from "../../state";
 
-import { useContext } from "../../context";
+import { useStore } from "../../store";
 import Enzyme, { shallow } from "enzyme";
 
 Enzyme.configure({ adapter: new Adapter() });
-jest.mock("../../context");
+jest.mock("../../store");
 
 //https://stackoverflow.com/questions/58070996/how-to-fix-the-warning-uselayouteffect-does-nothing-on-the-server
 jest.mock("react", () => ({
@@ -21,7 +21,7 @@ test("List nested APIs", () => {
   const api = state.get("nucleoid.api");
   api["/"] = { get: {} };
   api["/questions"] = { get: {} };
-  useContext.mockReturnValue([state]);
+  useStore.mockReturnValue([state]);
 
   const wrapper = shallow(<APITree />);
   const root = wrapper.find(NonExpandableTreeItem).first();
@@ -36,7 +36,7 @@ test("List APIs with methods", () => {
   const api = state.get("nucleoid.api");
   api["/"] = { get: {}, post: {} };
   api["/questions"] = { get: {}, post: {} };
-  useContext.mockReturnValue([state]);
+  useStore.mockReturnValue([state]);
 
   const wrapper = shallow(<APITree />);
   const root = wrapper.find(NonExpandableTreeItem).first();

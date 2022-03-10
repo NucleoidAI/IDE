@@ -9,6 +9,7 @@ import Settings from "../../settings";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import service from "../../service";
 import styles from "./styles";
+import { useLocation } from "react-router-dom";
 import { useStore } from "../../store";
 import { v4 as uuid } from "uuid";
 import { Box, Drawer, ListItem } from "@mui/material";
@@ -16,6 +17,7 @@ import React, { useState } from "react";
 
 const ProcessDrawer = () => {
   const [state] = useStore();
+  const location = useLocation();
   const { pages } = state;
   const [started, setStarted] = useState(pages.started);
   const [alert, setAlert] = useState();
@@ -25,7 +27,9 @@ const ProcessDrawer = () => {
       <Drawer
         variant="persistent"
         anchor={"right"}
-        open={true}
+        open={
+          location.state?.anchor === undefined ? true : location.state?.anchor
+        }
         sx={styles.drawer}
       >
         <Box>

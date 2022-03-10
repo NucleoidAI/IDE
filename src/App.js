@@ -18,8 +18,6 @@ import { StoreProvider } from "./store"; // eslint-disable-line
 import { reducer } from "./context";
 
 function App() {
-  console.log("mainden render");
-
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
