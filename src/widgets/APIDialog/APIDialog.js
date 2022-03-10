@@ -161,7 +161,8 @@ function APIDialog() {
     const { pages, nucleoid } = context;
     const { api } = nucleoid;
     const path = pages.api.selected.path;
-    if (type === "add") return true;
+
+    if (action === "add") return true;
     if (pages.api) {
       return Object.keys(api[path]).length <= 1 ? true : false;
     }
