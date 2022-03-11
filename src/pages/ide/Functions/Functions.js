@@ -2,14 +2,13 @@ import AddList from "../../../components/AddList";
 import Editor from "../../../widgets/Editor";
 import FunctionDialog from "../../../widgets/FunctionDialog/FunctionDialog";
 import FunctionTree from "../../../widgets/FunctionTree";
-import IDE from "../../../layouts/IDE";
 import actions from "../../../actions";
 import styles from "./styles";
+import { useStore } from "../../../store";
 import { Card, CardActions, CardContent, Grid, Paper } from "@mui/material";
-import { Context, useContext } from "../../../context";
 
 function Functions() {
-  const dispatch = useContext(Context)[1];
+  const [, dispatch] = useStore();
 
   function openFunctionDialog(item) {
     dispatch({
@@ -19,7 +18,7 @@ function Functions() {
   }
 
   return (
-    <IDE>
+    <>
       <Grid container spacing={1}>
         <Grid item xs={3}>
           <Card sx={styles.pageheight}>
@@ -41,7 +40,7 @@ function Functions() {
           </Paper>
         </Grid>
       </Grid>
-    </IDE>
+    </>
   );
 }
 

@@ -1,5 +1,4 @@
 import Editor from "../../../widgets/Editor";
-import IDE from "../../../layouts/IDE";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import QueryResult from "../../../components/QueryResult";
 import service from "../../../service";
@@ -74,7 +73,7 @@ function Query() {
   };
 
   return (
-    <IDE anchor={false}>
+    <>
       <Grid container spacing={1}>
         <Grid item xs={12}>
           <Paper sx={styles.editor}>
@@ -98,7 +97,7 @@ function Query() {
           </Card>
         </Grid>
       </Grid>
-    </IDE>
+    </>
   );
 }
 

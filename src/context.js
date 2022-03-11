@@ -1,6 +1,5 @@
 import State from "./state";
 import { v4 as uuid } from "uuid";
-import { createContext, useContext } from "react";
 
 function reducer(state, { type, payload }) {
   state = State.copy(state);
@@ -209,6 +208,4 @@ function reducer(state, { type, payload }) {
   return state;
 }
 
-const Context = createContext();
-const useContextWrapper = () => useContext(Context);
-export { Context, reducer, useContextWrapper as useContext };
+export { reducer };

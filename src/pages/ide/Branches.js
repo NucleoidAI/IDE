@@ -1,5 +1,4 @@
 import ArrowIcon from "../../icons/Arrow";
-import IDE from "../../layouts/IDE";
 import React from "react";
 import {
   Box,
@@ -32,7 +31,7 @@ function Branches() {
   const [open, setOpen] = React.useState(rows[0].branch);
 
   return (
-    <IDE anchor={false}>
+    <>
       <Typography variant="h5" gutterBottom component="div">
         Branches
       </Typography>
@@ -146,7 +145,7 @@ function Branches() {
           </List>
         </Grid>
       </Grid>
-    </IDE>
+    </>
   );
 }
 

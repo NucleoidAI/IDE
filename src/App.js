@@ -2,37 +2,41 @@ import API from "./pages/ide/API";
 import Branches from "./pages/ide/Branches";
 import Dev from "./pages/Dev";
 import Functions from "./pages/ide/Functions";
+import IDE from "./layouts/IDE";
 import Logs from "./pages/ide/Logs";
 import Query from "./pages/ide/Query";
 import State from "./state";
 import theme from "./theme";
-import { Context, reducer } from "./context";
+
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import {
   CssBaseline,
   StyledEngineProvider,
   ThemeProvider,
 } from "@mui/material";
-import React, { useReducer } from "react";
-import { Redirect, Route, BrowserRouter as Router } from "react-router-dom";
+import { StoreProvider } from "./store"; // eslint-disable-line
+import { reducer } from "./context";
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, State.withSample());
-
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Context.Provider value={[state, dispatch]}>
-          <Router>
-            <Route exact path="/" render={() => <Redirect to="/ide/api" />} />
-            <Route path={["/dev"]} component={Dev} />
-            <Route path={"/ide/api"} component={API} />
-            <Route path={"/ide/functions"} component={Functions} />
-            <Route path={"/ide/query"} component={Query} />
-            <Route path={"/ide/branches"} component={Branches} />
-            <Route path={"/ide/logs"} component={Logs} />
-          </Router>
-        </Context.Provider>
+        <StoreProvider initialState={State.withSample()} reducer={reducer}>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<IDE />}>
+                <Route index element={<Navigate to="/ide/api" />} />
+                <Route path="/ide/api" element={<API />} />
+                <Route path={"/ide/functions"} element={<Functions />} />
+                <Route path={"/ide/query"} element={<Query />} />
+                <Route path={"/ide/branches"} element={<Branches />} />
+                <Route path={"/ide/logs"} element={<Logs />} />
+                <Route path={"/dev"} element={<Dev />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </StoreProvider>
       </ThemeProvider>
     </StyledEngineProvider>
   );

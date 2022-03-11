@@ -6,13 +6,13 @@ import APITypes from "../../components/APITypes";
 import ClosableDialogTitle from "../../components/ClosableDialogTitle";
 import actions from "../../actions";
 import styles from "./styles";
-import { useContext } from "../../context";
+import { useStore } from "../../store";
 import { v4 as uuid } from "uuid";
 import { Dialog, DialogActions, DialogContent, Grid } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
 function APIDialog() {
-  const [context, dispatch] = useContext();
+  const [context, dispatch] = useStore();
   const { pages } = context;
   const [method, setMethod] = useState();
   const [path, setPath] = useState();
