@@ -37,9 +37,7 @@ function IDE() {
       <Grid sx={styles.root}>
         <Menu list={list} title="IDE" />
         <Grid sx={styles.content}>
-          <Grid sx={styles.childrens}>
-            <Outlet />
-          </Grid>
+          <Outlet />
         </Grid>
       </Grid>
       <ProcessDrawer />

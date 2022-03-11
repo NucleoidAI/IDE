@@ -4,9 +4,6 @@ const styles = {
     flex: 1,
     display: "flex",
     flexDirection: "column",
-  },
-  childrens: {
-    flex: 1,
     padding: 1,
   },
 };
