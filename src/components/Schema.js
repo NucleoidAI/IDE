@@ -36,6 +36,7 @@ const Schema = forwardRef(({ request, response }, ref) => {
 
   function removeSchemaProperty(selected) {
     delete map[selected].id;
+    //TODO delete object if it hasn't id in compile method
 
     setSchema({ ...schema });
   }

@@ -324,6 +324,9 @@ const types = {
       name: {
         type: "string",
       },
+      date: {
+        type: "string",
+      },
     },
   },
   Item: {
