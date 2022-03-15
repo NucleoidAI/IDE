@@ -18,6 +18,7 @@ import React, { forwardRef, useRef, useState } from "react";
 const APITypes = forwardRef((props, typesRef) => {
   const types = typesRef.current;
   const [selected, setSelected] = useState(types.length ? types[0] : {});
+  const [rf, setRf] = useState(true);
 
   const schema = useRef(types.length ? types[0] : null);
 
@@ -67,8 +68,20 @@ const APITypes = forwardRef((props, typesRef) => {
       field: "type",
       headerName: "Type",
       renderCell: (type) => {
+        const { id } = type.row;
+
+        const objectIndex = types.findIndex(
+          (item) => Object.keys(item)[0] === id
+        );
+
         return (
-          <Select value={type.value}>
+          <Select
+            value={type.value}
+            onChange={(e) => {
+              types[objectIndex][id].type = e.target.value;
+              setRf(!rf);
+            }}
+          >
             <MenuItem value={"object"}>Object</MenuItem>
             <MenuItem value={"array"}>Array</MenuItem>
           </Select>
@@ -105,6 +118,7 @@ const APITypes = forwardRef((props, typesRef) => {
       <Grid item md sx={styles.content}>
         {schema.current && <Schema key={uuid()} ref={schema} />}
       </Grid>
+      {rf}
     </Grid>
   );
 });
