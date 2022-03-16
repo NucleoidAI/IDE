@@ -16,12 +16,12 @@ const APIBody = forwardRef(
             </>
           )}
           {method !== "get" && (
-            <Schema types={types} request ref={requestRef} />
+            <Schema edit types={types} request ref={requestRef} />
           )}
         </Grid>
         <Divider orientation={"vertical"} sx={styles.divider} />
         <Grid item md sx={styles.schema}>
-          <Schema response types={types} ref={responseRef} />
+          <Schema edit response types={types} ref={responseRef} />
         </Grid>
       </Grid>
     );

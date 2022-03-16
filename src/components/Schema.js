@@ -5,14 +5,15 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import SchemaArray from "./SchemaArray";
 import SchemaObject from "./SchemaObject";
 import SchemaProperty from "./SchemaProperty";
+import SchemaType from "./SchemaType";
 import { TreeView } from "@mui/lab";
 import { compile as mapSchema } from "../utils/Map";
 import { v4 as uuid } from "uuid";
 import { Grid, IconButton, MenuItem, Select, Typography } from "@mui/material";
 import { forwardRef, useEffect, useState } from "react";
 
-const Schema = forwardRef(({ request, response, types }, ref) => {
-  const [schema, setSchema] = useState(ref.current);
+const Schema = forwardRef(({ request, response, types, edit }, ref) => {
+  const [schema, setSchema] = useState(ref.current || ref);
   const [addIcon, setAddIcon] = useState();
   const [removeIcon, setRemoveIcon] = useState();
   const [selected, setSelected] = useState(null);
@@ -65,24 +66,27 @@ const Schema = forwardRef(({ request, response, types }, ref) => {
       justifyContent={"space-between"}
     >
       <Grid item>
-        <Grid container justifyContent={"center"} alignItems={"center"}>
-          <>
-            Type:&nbsp;
-            <Select
-              value={schema[Object.keys(schema)].type}
-              onChange={(e) => {
-                schema[Object.keys(schema)].type = e.target.value;
-                setRf(!rf);
-              }}
-            >
-              {rf}
-              <MenuItem value={"object"}>Object</MenuItem>
-              <MenuItem value={"array"}>Array</MenuItem>
-            </Select>
-          </>
-        </Grid>
+        {edit && (
+          <Grid container justifyContent={"center"} alignItems={"center"}>
+            <>
+              Type:&nbsp;
+              <Select
+                value={schema[Object.keys(schema)].type}
+                onChange={(e) => {
+                  schema[Object.keys(schema)].type = e.target.value;
+                  setRf(!rf);
+                }}
+              >
+                {rf}
+                <MenuItem value={"object"}>Object</MenuItem>
+                <MenuItem value={"array"}>Array</MenuItem>
+              </Select>
+            </>
+          </Grid>
+        )}
+
         <br />
-        <Grid sx={{ width: "100%", height: 310, overflowY: "auto" }}>
+        <Grid sx={edit && { width: "100%", height: 310, overflowY: "auto" }}>
           <TreeView
             defaultCollapseIcon={<RemoveCircleOutlineIcon />}
             defaultExpandIcon={<AddCircleOutlineIcon />}
@@ -90,31 +94,33 @@ const Schema = forwardRef(({ request, response, types }, ref) => {
             selected={selected}
             onNodeSelect={(event, value) => select(value)}
           >
-            {compile(true, map, schema, types)}
+            {compile(edit, map, schema, types)}
           </TreeView>
         </Grid>
       </Grid>
-      <Grid container item justifyContent={"space-between"}>
-        <Grid style={{ width: 50 }} />
-        <Grid item>
-          <Typography variant={"h6"}>
-            {request && <>Request</>}
-            {response && <>Response</>}
-          </Typography>
+      {edit && (
+        <Grid container item justifyContent={"space-between"}>
+          <Grid style={{ width: 50 }} />
+          <Grid item>
+            <Typography variant={"h6"}>
+              {request && <>Request</>}
+              {response && <>Response</>}
+            </Typography>
+          </Grid>
+          <Grid item>
+            {addIcon && (
+              <IconButton onClick={() => addSchemaProperty(selected)}>
+                <AddIcon />
+              </IconButton>
+            )}
+            {removeIcon && (
+              <IconButton onClick={() => removeSchemaProperty(selected)}>
+                <RemoveIcon />
+              </IconButton>
+            )}
+          </Grid>
         </Grid>
-        <Grid item>
-          {addIcon && (
-            <IconButton onClick={() => addSchemaProperty(selected)}>
-              <AddIcon />
-            </IconButton>
-          )}
-          {removeIcon && (
-            <IconButton onClick={() => removeSchemaProperty(selected)}>
-              <RemoveIcon />
-            </IconButton>
-          )}
-        </Grid>
-      </Grid>
+      )}
     </Grid>
   );
 });
@@ -149,7 +155,29 @@ const compile = (edit, map, schema, types, name) => {
           />
         );
         break;
+
       default:
+        if (
+          types &&
+          types.find(
+            (item) => item[Object.keys(item)[0]].name === property.type
+          )
+        ) {
+          children.push(
+            <SchemaType
+              id={id}
+              key={id}
+              nodeId={id}
+              name={name}
+              type={property.type}
+              types={types}
+              edit={edit}
+              map={map[id]}
+            />
+          );
+          break;
+        }
+
         children.push(
           <SchemaProperty
             id={id}
