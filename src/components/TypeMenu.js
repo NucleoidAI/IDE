@@ -2,7 +2,7 @@
 import { v4 as uuid } from "uuid";
 import { Divider, MenuItem, Select } from "@mui/material";
 import { forwardRef, useState } from "react";
-const TypeMenu = forwardRef(({ id, type, map, edit, noNested }, ref) => {
+const TypeMenu = forwardRef(({ id, type, types, map, edit, noNested }, ref) => {
   const [selectedType, setSelectedType] = useState(type);
 
   function updateType(id, value) {
@@ -19,7 +19,9 @@ const TypeMenu = forwardRef(({ id, type, map, edit, noNested }, ref) => {
       {edit && (
         <Select
           value={selectedType}
-          onChange={(event) => updateType(id, event.target.value)}
+          onChange={(event) => {
+            updateType(id, event.target.value);
+          }}
         >
           <MenuItem value={"integer"}>integer</MenuItem>
           <MenuItem value={"string"}>string</MenuItem>
@@ -34,8 +36,11 @@ const TypeMenu = forwardRef(({ id, type, map, edit, noNested }, ref) => {
             </MenuItem>,
           ]}
           <Divider />
-          <MenuItem value={"Order"}>Order</MenuItem>
-          <MenuItem value={"Item"}>Item</MenuItem>
+          {types.map((item) => (
+            <MenuItem value={item[Object.keys(item)].name}>
+              {item[Object.keys(item)].name}
+            </MenuItem>
+          ))}
         </Select>
       )}
       {!edit && <>{type}</>}

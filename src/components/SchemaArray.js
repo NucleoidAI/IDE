@@ -3,7 +3,7 @@ import TreeItem from "@mui/lab/TreeItem";
 import TypeMenu from "./TypeMenu";
 import React, { useRef, useState } from "react";
 
-function SchemaArray({ id, name, edit, map, type, ...other }) {
+function SchemaArray({ id, name, edit, map, type, types, ...other }) {
   const [value, setValue] = useState(name);
   const textField = useRef();
 
@@ -38,7 +38,14 @@ function SchemaArray({ id, name, edit, map, type, ...other }) {
       {edit && (
         <>
           &nbsp;&nbsp;&nbsp;&nbsp;
-          <TypeMenu id={id} type={type} map={map} edit={edit} noNested />
+          <TypeMenu
+            id={id}
+            type={type}
+            types={types}
+            map={map}
+            edit={edit}
+            noNested
+          />
           <br />
         </>
       )}

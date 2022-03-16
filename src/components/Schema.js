@@ -11,7 +11,7 @@ import { v4 as uuid } from "uuid";
 import { Grid, IconButton, MenuItem, Select, Typography } from "@mui/material";
 import { forwardRef, useEffect, useState } from "react";
 
-const Schema = forwardRef(({ request, response }, ref) => {
+const Schema = forwardRef(({ request, response, types }, ref) => {
   const [schema, setSchema] = useState(ref.current);
   const [addIcon, setAddIcon] = useState();
   const [removeIcon, setRemoveIcon] = useState();
@@ -90,7 +90,7 @@ const Schema = forwardRef(({ request, response }, ref) => {
             selected={selected}
             onNodeSelect={(event, value) => select(value)}
           >
-            {compile(true, map, schema)}
+            {compile(true, map, schema, types)}
           </TreeView>
         </Grid>
       </Grid>
@@ -119,7 +119,7 @@ const Schema = forwardRef(({ request, response }, ref) => {
   );
 });
 
-const compile = (edit, map, schema, name) => {
+const compile = (edit, map, schema, types, name) => {
   schema = schema[Object.keys(schema)[0]];
   const { id, properties } = schema || {};
   const children = [];
@@ -133,7 +133,7 @@ const compile = (edit, map, schema, name) => {
 
     switch (property.type) {
       case "object":
-        children.push(compile(edit, map, { root: property }, name));
+        children.push(compile(edit, map, { root: property }, types, name));
         break;
       case "array":
         children.push(
@@ -143,6 +143,7 @@ const compile = (edit, map, schema, name) => {
             nodeId={id}
             name={name}
             type={property.type}
+            types={types}
             edit={edit}
             map={map[id]}
           />
@@ -156,6 +157,7 @@ const compile = (edit, map, schema, name) => {
             nodeId={id}
             name={name}
             type={property.type}
+            types={types}
             edit={edit}
             map={map[id]}
           />
@@ -174,5 +176,6 @@ const compile = (edit, map, schema, name) => {
     />
   );
 };
+
 export { compile };
 export default Schema;

@@ -192,6 +192,7 @@ function APIDialog() {
               <APIBody
                 method={method}
                 params={params}
+                types={typesRef.current}
                 ref={{ requestRef, responseRef }}
               />
             )}
