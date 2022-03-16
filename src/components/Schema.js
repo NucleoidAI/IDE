@@ -16,11 +16,12 @@ const Schema = forwardRef(({ request, response }, ref) => {
   const [addIcon, setAddIcon] = useState();
   const [removeIcon, setRemoveIcon] = useState();
   const [selected, setSelected] = useState(null);
+  const [rf, setRf] = useState(true);
 
   const root = schema[Object.keys(schema)[0]].id;
   const map = mapSchema(schema);
 
-  function addSchemaProperty(selected) {
+  const addSchemaProperty = (selected) => {
     const key = uuid();
     if (!map[selected].properties) {
       map[selected].properties = {};
@@ -32,14 +33,14 @@ const Schema = forwardRef(({ request, response }, ref) => {
     };
 
     setSchema({ ...schema });
-  }
+  };
 
-  function removeSchemaProperty(selected) {
+  const removeSchemaProperty = (selected) => {
     delete map[selected].id;
     //TODO delete object if it hasn't id in compile method
 
     setSchema({ ...schema });
-  }
+  };
 
   const select = (id) => {
     if (map[id] && map[id].type === "object") setAddIcon(true);
@@ -67,22 +68,31 @@ const Schema = forwardRef(({ request, response }, ref) => {
         <Grid container justifyContent={"center"} alignItems={"center"}>
           <>
             Type:&nbsp;
-            <Select value={"object"}>
+            <Select
+              value={schema[Object.keys(schema)].type}
+              onChange={(e) => {
+                schema[Object.keys(schema)].type = e.target.value;
+                setRf(!rf);
+              }}
+            >
+              {rf}
               <MenuItem value={"object"}>Object</MenuItem>
               <MenuItem value={"array"}>Array</MenuItem>
             </Select>
           </>
         </Grid>
         <br />
-        <TreeView
-          defaultCollapseIcon={<RemoveCircleOutlineIcon />}
-          defaultExpandIcon={<AddCircleOutlineIcon />}
-          defaultExpanded={[root]}
-          selected={selected}
-          onNodeSelect={(event, value) => select(value)}
-        >
-          {compile(true, map, schema)}
-        </TreeView>
+        <Grid sx={{ width: "100%", height: 310, overflowY: "auto" }}>
+          <TreeView
+            defaultCollapseIcon={<RemoveCircleOutlineIcon />}
+            defaultExpandIcon={<AddCircleOutlineIcon />}
+            defaultExpanded={[root]}
+            selected={selected}
+            onNodeSelect={(event, value) => select(value)}
+          >
+            {compile(true, map, schema)}
+          </TreeView>
+        </Grid>
       </Grid>
       <Grid container item justifyContent={"space-between"}>
         <Grid style={{ width: 50 }} />

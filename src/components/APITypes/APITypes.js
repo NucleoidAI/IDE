@@ -5,20 +5,12 @@ import Schema from "../Schema";
 
 import styles from "./styles";
 import { v4 as uuid } from "uuid";
-import {
-  Divider,
-  Grid,
-  IconButton,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
+import { Divider, Grid, IconButton, TextField } from "@mui/material";
 import React, { forwardRef, useRef, useState } from "react";
 
 const APITypes = forwardRef((props, typesRef) => {
   const types = typesRef.current;
   const [selected, setSelected] = useState(types.length ? types[0] : {});
-  const [rf, setRf] = useState(true);
 
   const schema = useRef(types.length ? types[0] : null);
 
@@ -56,35 +48,11 @@ const APITypes = forwardRef((props, typesRef) => {
         return (
           <TextField
             defaultValue={type.value}
+            sx={{ width: "100%" }}
             onChange={(e) => {
               types[objectIndex][id].name = e.target.value;
             }}
           />
-        );
-      },
-      flex: 1,
-    },
-    {
-      field: "type",
-      headerName: "Type",
-      renderCell: (type) => {
-        const { id } = type.row;
-
-        const objectIndex = types.findIndex(
-          (item) => Object.keys(item)[0] === id
-        );
-
-        return (
-          <Select
-            value={type.value}
-            onChange={(e) => {
-              types[objectIndex][id].type = e.target.value;
-              setRf(!rf);
-            }}
-          >
-            <MenuItem value={"object"}>Object</MenuItem>
-            <MenuItem value={"array"}>Array</MenuItem>
-          </Select>
         );
       },
       flex: 1,
@@ -116,9 +84,10 @@ const APITypes = forwardRef((props, typesRef) => {
       </Grid>
       <Divider orientation={"vertical"} sx={styles.divider} />
       <Grid item md sx={styles.content}>
-        {schema.current && <Schema key={uuid()} ref={schema} />}
+        {schema.current && (
+          <Schema key={uuid()} ref={schema} type={schema.current} />
+        )}
       </Grid>
-      {rf}
     </Grid>
   );
 });
