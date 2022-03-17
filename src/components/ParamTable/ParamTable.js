@@ -6,7 +6,7 @@ import { v4 as uuid } from "uuid";
 import { Checkbox, IconButton, TextField } from "@mui/material";
 import React, { useState } from "react";
 
-const ParamTable = React.forwardRef((props, { paramsRef, addParams }) => {
+const ParamTable = React.forwardRef(({ types }, { paramsRef, addParams }) => {
   const [params, setParams] = useState(paramsRef.current);
 
   addParams.current = () => {
@@ -45,7 +45,15 @@ const ParamTable = React.forwardRef((props, { paramsRef, addParams }) => {
       headerName: "Type",
       renderCell: (param) => {
         const { id } = param.row;
-        return <TypeMenu ref={params} id={id} type={param.value} edit />;
+        return (
+          <TypeMenu
+            types={types}
+            ref={params}
+            id={id}
+            type={param.value}
+            edit
+          />
+        );
       },
       flex: 1,
     },

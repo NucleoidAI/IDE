@@ -9,7 +9,14 @@ import SchemaType from "./SchemaType";
 import { TreeView } from "@mui/lab";
 import { compile as mapSchema } from "../utils/Map";
 import { v4 as uuid } from "uuid";
-import { Grid, IconButton, MenuItem, Select, Typography } from "@mui/material";
+import {
+  Divider,
+  Grid,
+  IconButton,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
 import { forwardRef, useEffect, useState } from "react";
 
 const Schema = forwardRef(({ request, response, types, edit }, ref) => {
@@ -80,6 +87,12 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
                 {rf}
                 <MenuItem value={"object"}>Object</MenuItem>
                 <MenuItem value={"array"}>Array</MenuItem>
+                <Divider />
+                {types.map((item) => (
+                  <MenuItem value={item[Object.keys(item)].name}>
+                    {item[Object.keys(item)].name}
+                  </MenuItem>
+                ))}
               </Select>
             </>
           </Grid>

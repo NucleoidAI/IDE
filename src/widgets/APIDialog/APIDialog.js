@@ -196,7 +196,9 @@ function APIDialog() {
                 ref={{ requestRef, responseRef }}
               />
             )}
-            {view === "PARAMS" && <APIParams ref={paramsRef} />}
+            {view === "PARAMS" && (
+              <APIParams types={typesRef.current} ref={paramsRef} />
+            )}
             {view === "TYPES" && <APITypes ref={typesRef} />}
           </Grid>
         </DialogContent>
