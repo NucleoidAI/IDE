@@ -5,7 +5,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import SchemaArray from "./SchemaArray";
 import SchemaObject from "./SchemaObject";
 import SchemaProperty from "./SchemaProperty";
-import SchemaType from "./SchemaType";
+//import SchemaType from "./SchemaType";
 import { TreeView } from "@mui/lab";
 import { compile as mapSchema } from "../utils/Map";
 import { v4 as uuid } from "uuid";
@@ -28,6 +28,8 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
 
   const root = schema[Object.keys(schema)[0]].id;
   const map = mapSchema(schema);
+
+  console.log(schema);
 
   const addSchemaProperty = (selected) => {
     const key = uuid();
@@ -140,82 +142,77 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
 
 const compile = (edit, map, schema, types, name) => {
   schema = schema[Object.keys(schema)[0]];
-  const { id, properties } = schema || {};
+  const { id, properties, items, type } = schema || {};
+
   const children = [];
 
-  for (const key in properties) {
-    if (!map[key]) continue;
+  switch (type) {
+    case "array": {
+      const item = items[Object.keys(items)[0]];
 
-    const { name } = map[key];
-    const property = properties[key];
-    const id = key;
+      children.push(compile(edit, map, { root: item }, types, name));
 
-    switch (property.type) {
-      case "object":
-        children.push(compile(edit, map, { root: property }, types, name));
-        break;
-      case "array":
-        children.push(
-          <SchemaArray
-            id={id}
-            key={id}
-            nodeId={id}
-            name={name}
-            type={property.type}
-            types={types}
-            edit={edit}
-            map={map[id]}
-          />
-        );
-        break;
-
-      default:
-        if (
-          types &&
-          types.find(
-            (item) => item[Object.keys(item)[0]].name === property.type
-          )
-        ) {
-          children.push(
-            <SchemaType
-              id={id}
-              key={id}
-              nodeId={id}
-              name={name}
-              type={property.type}
-              types={types}
-              edit={edit}
-              map={map[id]}
-            />
-          );
-          break;
-        }
-
-        children.push(
-          <SchemaProperty
-            id={id}
-            key={id}
-            nodeId={id}
-            name={name}
-            type={property.type}
-            types={types}
-            edit={edit}
-            map={map[id]}
-          />
-        );
+      return (
+        <SchemaArray
+          key={id || (name ? uuid() : "root")}
+          nodeId={id || (name ? uuid() : "root")}
+          name={name}
+          edit={edit}
+          children={children}
+          map={map[id]}
+        />
+      );
     }
-  }
+    case "object": {
+      for (const key in properties) {
+        //if (!map[key]) continue;
 
-  return (
-    <SchemaObject
-      key={id || (name ? uuid() : "root")}
-      nodeId={id || (name ? uuid() : "root")}
-      name={name}
-      edit={edit}
-      children={children}
-      map={map[id]}
-    />
-  );
+        //const { name } = map[key];
+
+        const property = properties[key];
+
+        const id = key;
+
+        switch (property.type) {
+          case "object":
+            children.push(compile(edit, map, { root: property }, types, name));
+            break;
+          case "array":
+            children.push(compile(edit, map, { root: property }, types, name));
+            break;
+
+          default:
+            children.push(
+              <SchemaProperty
+                id={id}
+                key={id}
+                nodeId={id}
+                name={property.name}
+                type={property.type}
+                types={types}
+                edit={edit}
+                map={map[id]}
+              />
+            );
+            break;
+        }
+      }
+
+      return (
+        <SchemaObject
+          key={id || (name ? uuid() : "root")}
+          nodeId={id || (name ? uuid() : "root")}
+          name={name}
+          edit={edit}
+          children={children}
+          map={map[id]}
+        />
+      );
+    }
+
+    default:
+      return "global type";
+  }
 };
 
 export { compile };

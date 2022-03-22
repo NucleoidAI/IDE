@@ -2,7 +2,7 @@ import Schema from "./Schema";
 import TextField from "@mui/material/TextField";
 import TreeItem from "@mui/lab/TreeItem";
 import TypeMenu from "./TypeMenu";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 function SchemaType({ id, name, map, type, types, edit, ...other }) {
   const [value, setValue] = useState(name);
@@ -15,17 +15,26 @@ function SchemaType({ id, name, map, type, types, edit, ...other }) {
     <TreeItem
       label={
         <>
-          <TextField
-            size={"small"}
-            sx={{ width: (theme) => theme.custom.schema.width }}
-            value={value || ""}
-            onChange={(event) => setValue((map.name = event.target.value))}
-            inputRef={textField}
-            onClick={() => setTimeout(() => textField.current.focus(), 0)}
-          />
-          :&nbsp;
-          <TypeMenu id={id} type={type} types={types} map={map} edit={edit} />
-          <Schema ref={typeSchema} types={types} />
+          {edit && (
+            <>
+              <TextField
+                size={"small"}
+                sx={{ width: (theme) => theme.custom.schema.width }}
+                value={value || ""}
+                onChange={(event) => setValue((map.name = event.target.value))}
+                inputRef={textField}
+                onClick={() => setTimeout(() => textField.current.focus(), 0)}
+              />
+              :&nbsp;
+              <TypeMenu id={id} type={type} types={types} map={map} edit />
+              <Schema ref={typeSchema} types={types} />
+            </>
+          )}
+          {!edit && (
+            <>
+              {type} <Schema ref={typeSchema} types={types} />
+            </>
+          )}
         </>
       }
       {...other}

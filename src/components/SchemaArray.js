@@ -1,61 +1,20 @@
-import TextField from "@mui/material/TextField";
+//import TextField from "@mui/material/TextField";
+import React from "react";
 import TreeItem from "@mui/lab/TreeItem";
-import TypeMenu from "./TypeMenu";
-import React, { useRef, useState } from "react";
+//import TypeMenu from "./TypeMenu"; { useRef, useState }
 
-function SchemaArray({ id, name, edit, map, type, types, ...other }) {
-  const [value, setValue] = useState(name);
-  const textField = useRef();
 
+function SchemaArray({ id, name, children, edit, map, type, types, ...other }) {
   return (
     <TreeItem
       onClick={(event) => event.preventDefault()}
-      label={
-        <>
-          {name !== undefined && (
-            <>
-              {edit && (
-                <TextField
-                  size={"small"}
-                  sx={{ width: (theme) => theme.custom.schema.width }}
-                  value={value || ""}
-                  onChange={(event) =>
-                    setValue((map.name = event.target.value))
-                  }
-                  inputRef={textField}
-                  onClick={() => setTimeout(() => textField.current.focus(), 0)}
-                />
-              )}
-              {!edit && <>"{name}"</>}
-              <>:&nbsp;</>
-            </>
-          )}
-          &#91;
-        </>
-      }
+      label={<>&#91;</>}
       {...other}
     >
-      {edit && (
-        <>
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          <TypeMenu
-            id={id}
-            type={type}
-            types={types}
-            map={map}
-            edit={edit}
-            noNested
-          />
-          <br />
-        </>
-      )}
-      {!edit && (
-        <>
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          {type}
-          <br />
-        </>
-      )}
+      <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      {children}
+      <br />
       &nbsp;&nbsp;&#93;
     </TreeItem>
   );

@@ -230,31 +230,57 @@ const updatePath = (object, oldPath, newPath) => {
 };
 
 const compile = (schema) => {
-  const { properties, type, ...other } = schema || {};
+  const { properties, items, type, ...other } = schema || {};
   const root = uuid();
   const object = {};
 
-  object[root] = {
-    ...other,
-    id: root,
-    type: type ? type : "object",
-    properties: {},
-  };
+  if (type === "array") {
+    object[root] = {
+      ...other,
+      id: root,
+      type: type ? type : "array",
+      items: {},
+    };
 
-  for (const name in properties) {
-    const property = properties[name];
-    const { type } = property;
-    const id = uuid();
+    const nested = compile(items);
+    const key = Object.keys(nested)[0];
 
-    if (property.type === "object") {
-      const nested = compile(property);
-      const key = Object.keys(nested)[0];
-      object[root].properties[key] = { name, ...nested[key] };
-    } else {
-      object[root].properties[id] = { id, name, type };
+    object[root].items[key] = { ...nested[key] };
+  } else if (type === "object") {
+    object[root] = {
+      ...other,
+      id: root,
+      type: type ? type : "object",
+      properties: {},
+    };
 
-      if (type === "array")
-        object[root].properties[id].items = { type: property.items.type };
+    for (const name in properties) {
+      const property = properties[name];
+      const { type } = property;
+      const id = uuid();
+
+      if (property.type === "object") {
+        const nested = compile(property);
+        const key = Object.keys(nested)[0];
+        object[root].properties[key] = { name, ...nested[key] };
+      } else {
+        if (type === "array") {
+          const nested = compile(property);
+          const key = Object.keys(nested)[0];
+
+          object[root].properties[id] = { id: id, ...nested[key] };
+        } else {
+          object[root].properties[id] = { id, name, type };
+        }
+      }
+    }
+  } else {
+    if (schema) {
+      object[root] = {
+        id: root,
+        name: Object.keys(schema)[0],
+        type: schema[Object.keys(schema)[0]].type,
+      };
     }
   }
 

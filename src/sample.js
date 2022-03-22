@@ -316,16 +316,24 @@ const api = {
 
 const types = {
   Order: {
-    type: "array",
+    type: "object",
     properties: {
       id: {
         type: "integer",
       },
-      name: {
-        type: "string",
-      },
-      date: {
-        type: "string",
+      adresses: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          name: {
+            type: "string",
+          },
+          date: {
+            type: "string",
+          },
+        },
       },
     },
   },
@@ -335,7 +343,123 @@ const types = {
       id: {
         type: "integer",
       },
-      sku: {
+      name: {
+        type: "string",
+      },
+    },
+  },
+  User: {
+    type: "object",
+    properties: {
+      id: {
+        type: "integer",
+      },
+      name: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            id: {
+              type: "integer",
+            },
+            persons: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: {
+                    type: "integer",
+                  },
+                  ar1: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        id: { type: "integer" },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  Users: {
+    type: "array",
+    items: {
+      type: "object",
+      properties: {
+        id: {
+          type: "integer",
+        },
+        persons: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              name: {
+                type: "integer",
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  Gokhan: {
+    type: "array",
+    items: {
+      type: "object",
+      properties: {
+        arr: {
+          type: "array",
+          items: {
+            type: "array",
+            items: {
+              type: "object",
+
+              properties: {
+                obj1: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    adresses: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          person: {
+                            type: "array",
+                            items: {
+                              type: "object",
+                              properties: {
+                                name: {
+                                  type: "integer",
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  Cat: {
+    type: "array",
+    items: {
+      ayra: {
         type: "string",
       },
     },
