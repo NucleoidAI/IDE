@@ -1,17 +1,66 @@
-//import TextField from "@mui/material/TextField";
-import React from "react";
+import TextField from "@mui/material/TextField";
 import TreeItem from "@mui/lab/TreeItem";
-//import TypeMenu from "./TypeMenu"; { useRef, useState }
-
+import TypeMenu from "./TypeMenu";
+import React, { useRef, useState } from "react";
 
 function SchemaArray({ id, name, children, edit, map, type, types, ...other }) {
+  const [value, setValue] = useState(name);
+  const textField = useRef();
+  //TODO  if in object show textfield and typemenu, if in array show only typemenu
+
   return (
     <TreeItem
       onClick={(event) => event.preventDefault()}
-      label={<>&#91;</>}
+      label={
+        <>
+          {name !== undefined && (
+            <>
+              {edit && (
+                <>
+                  <TextField
+                    size={"small"}
+                    sx={{ width: (theme) => theme.custom.schema.width }}
+                    value={value || ""}
+                    onChange={(event) =>
+                      setValue((map.name = event.target.value))
+                    }
+                    inputRef={textField}
+                    onClick={() =>
+                      setTimeout(() => textField.current.focus(), 0)
+                    }
+                  />
+                </>
+              )}
+              {!edit && <>"{name}"</>}
+              <>:&nbsp;</>
+            </>
+          )}
+          &#91;
+        </>
+      }
       {...other}
     >
-      <br />
+      {edit && (
+        <>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          {/*} this menu will show in map type {*/}
+          <TypeMenu
+            id={id}
+            //type={type}
+            types={types}
+            // map={map}
+            edit={edit}
+            noNested
+          />
+          <br />
+        </>
+      )}
+      {!edit && (
+        <>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          {type}
+        </>
+      )}
       &nbsp;&nbsp;&nbsp;&nbsp;
       {children}
       <br />

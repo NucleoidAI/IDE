@@ -29,8 +29,6 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
   const root = schema[Object.keys(schema)[0]].id;
   const map = mapSchema(schema);
 
-  console.log(schema);
-
   const addSchemaProperty = (selected) => {
     const key = uuid();
     if (!map[selected].properties) {
@@ -143,59 +141,31 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
 const compile = (edit, map, schema, types, name) => {
   schema = schema[Object.keys(schema)[0]];
   const { id, properties, items, type } = schema || {};
-
   const children = [];
 
   switch (type) {
     case "array": {
       const item = items[Object.keys(items)[0]];
-
       children.push(compile(edit, map, { root: item }, types, name));
 
       return (
         <SchemaArray
           key={id || (name ? uuid() : "root")}
           nodeId={id || (name ? uuid() : "root")}
-          name={name}
+          name={schema.name}
           edit={edit}
           children={children}
+          type={type}
+          types={types}
           map={map[id]}
         />
       );
     }
     case "object": {
       for (const key in properties) {
-        //if (!map[key]) continue;
-
-        //const { name } = map[key];
-
         const property = properties[key];
 
-        const id = key;
-
-        switch (property.type) {
-          case "object":
-            children.push(compile(edit, map, { root: property }, types, name));
-            break;
-          case "array":
-            children.push(compile(edit, map, { root: property }, types, name));
-            break;
-
-          default:
-            children.push(
-              <SchemaProperty
-                id={id}
-                key={id}
-                nodeId={id}
-                name={property.name}
-                type={property.type}
-                types={types}
-                edit={edit}
-                map={map[id]}
-              />
-            );
-            break;
-        }
+        children.push(compile(edit, map, { root: property }, types, name));
       }
 
       return (
@@ -209,9 +179,19 @@ const compile = (edit, map, schema, types, name) => {
         />
       );
     }
-
     default:
-      return "global type";
+      return (
+        <SchemaProperty
+          id={schema.id}
+          key={schema.id}
+          nodeId={schema.id}
+          name={schema.name}
+          type={type}
+          types={types}
+          edit={edit}
+          map={map[id]}
+        />
+      );
   }
 };
 

@@ -272,7 +272,11 @@ const compile = (schema) => {
             const nested = compile(property);
             const key = Object.keys(nested)[0];
 
-            object[root].properties[id] = { id: id, ...nested[key] };
+            object[root].properties[id] = {
+              id: id,
+              name: name,
+              ...nested[key],
+            };
           } else {
             object[root].properties[id] = { id, name, type };
           }

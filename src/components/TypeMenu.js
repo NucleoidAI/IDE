@@ -6,6 +6,7 @@ const TypeMenu = forwardRef(({ id, type, types, map, edit, noNested }, ref) => {
   const [selectedType, setSelectedType] = useState(type);
 
   function updateType(id, value) {
+    //TODO two cases, if array selected delete all keys and add items, object selected add properties
     if (ref) {
       ref[id].type = value;
     } else {
@@ -13,7 +14,7 @@ const TypeMenu = forwardRef(({ id, type, types, map, edit, noNested }, ref) => {
     }
     setSelectedType(value);
   }
-
+  //TODO refactor global types
   return (
     <>
       {edit && (
