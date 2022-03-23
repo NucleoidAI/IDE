@@ -234,54 +234,62 @@ const compile = (schema) => {
   const root = uuid();
   const object = {};
 
-  if (type === "array") {
-    object[root] = {
-      ...other,
-      id: root,
-      type: type ? type : "array",
-      items: {},
-    };
+  switch (type) {
+    case "array":
+      {
+        object[root] = {
+          ...other,
+          id: root,
+          type: type ? type : "array",
+          items: {},
+        };
 
-    const nested = compile(items);
-    const key = Object.keys(nested)[0];
-
-    object[root].items[key] = { ...nested[key] };
-  } else if (type === "object") {
-    object[root] = {
-      ...other,
-      id: root,
-      type: type ? type : "object",
-      properties: {},
-    };
-
-    for (const name in properties) {
-      const property = properties[name];
-      const { type } = property;
-      const id = uuid();
-
-      if (property.type === "object") {
-        const nested = compile(property);
+        const nested = compile(items);
         const key = Object.keys(nested)[0];
-        object[root].properties[key] = { name, ...nested[key] };
-      } else {
-        if (type === "array") {
+
+        object[root].items[key] = { ...nested[key] };
+      }
+      break;
+    case "object":
+      object[root] = {
+        ...other,
+        id: root,
+        type: type ? type : "object",
+        properties: {},
+      };
+
+      for (const name in properties) {
+        const property = properties[name];
+        const { type } = property;
+        const id = uuid();
+
+        if (property.type === "object") {
           const nested = compile(property);
           const key = Object.keys(nested)[0];
-
-          object[root].properties[id] = { id: id, ...nested[key] };
+          object[root].properties[key] = { name, ...nested[key] };
         } else {
-          object[root].properties[id] = { id, name, type };
+          if (type === "array") {
+            const nested = compile(property);
+            const key = Object.keys(nested)[0];
+
+            object[root].properties[id] = { id: id, ...nested[key] };
+          } else {
+            object[root].properties[id] = { id, name, type };
+          }
         }
       }
-    }
-  } else {
-    if (schema) {
-      object[root] = {
-        id: root,
-        name: Object.keys(schema)[0],
-        type: schema[Object.keys(schema)[0]].type,
-      };
-    }
+
+      break;
+    default:
+      if (schema) {
+        object[root] = {
+          id: root,
+          name: Object.keys(schema)[0],
+          type: schema[Object.keys(schema)[0]].type,
+        };
+      }
+
+      break;
   }
 
   return object;
