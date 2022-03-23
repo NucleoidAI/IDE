@@ -24,7 +24,7 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
   const [addIcon, setAddIcon] = useState();
   const [removeIcon, setRemoveIcon] = useState();
   const [selected, setSelected] = useState(null);
-  const [rf, setRf] = useState(true);
+  const [rf, setRf] = useState(false);
 
   const root = schema[Object.keys(schema)[0]].id;
   const map = mapSchema(schema);
@@ -81,6 +81,32 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
                 value={schema[Object.keys(schema)].type}
                 onChange={(e) => {
                   schema[Object.keys(schema)].type = e.target.value;
+                  const id = uuid();
+                  switch (e.target.value) {
+                    case "object":
+                      if (schema[Object.keys(schema)].items) {
+                        delete schema[Object.keys(schema)]["items"];
+                      }
+                      schema[Object.keys(schema)]["properties"] = {};
+
+                      break;
+                    case "array":
+                      if (schema[Object.keys(schema)].properties) {
+                        delete schema[Object.keys(schema)]["properties"];
+                      }
+
+                      schema[Object.keys(schema)]["items"] = {
+                        [id]: {
+                          id: id,
+                          type: "integer",
+                          name: "id",
+                        },
+                      };
+
+                      break;
+                    default:
+                  }
+
                   setRf(!rf);
                 }}
               >
@@ -89,7 +115,11 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
                 <MenuItem value={"array"}>Array</MenuItem>
                 <Divider />
                 {types.map((item) => (
-                  <MenuItem value={item[Object.keys(item)].name}>
+                  <MenuItem
+                    key={uuid()}
+                    id={uuid()}
+                    value={item[Object.keys(item)].name}
+                  >
                     {item[Object.keys(item)].name}
                   </MenuItem>
                 ))}
@@ -152,6 +182,7 @@ const compile = (edit, map, schema, types, name) => {
         <SchemaArray
           key={id || (name ? uuid() : "root")}
           nodeId={id || (name ? uuid() : "root")}
+          id={id || (name ? uuid() : "root")}
           name={schema.name}
           edit={edit}
           children={children}
@@ -170,6 +201,7 @@ const compile = (edit, map, schema, types, name) => {
 
       return (
         <SchemaObject
+          id={id || (name ? uuid() : "root")}
           key={id || (name ? uuid() : "root")}
           nodeId={id || (name ? uuid() : "root")}
           name={name}
@@ -182,7 +214,7 @@ const compile = (edit, map, schema, types, name) => {
     default:
       return (
         <SchemaProperty
-          id={schema.id}
+          id={id}
           key={schema.id}
           nodeId={schema.id}
           name={schema.name}

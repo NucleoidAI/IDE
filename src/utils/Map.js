@@ -1,5 +1,6 @@
 function compile(object) {
   //TODO test
+
   if (!object) return {};
   object = object[Object.keys(object)[0]];
   let map = {};
@@ -25,7 +26,10 @@ function compile(object) {
           map[id] = property;
         }
       }
+      break;
     }
+    default:
+      break;
   }
 
   return map;
