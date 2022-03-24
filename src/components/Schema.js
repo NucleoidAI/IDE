@@ -6,17 +6,12 @@ import SchemaArray from "./SchemaArray";
 import SchemaObject from "./SchemaObject";
 import SchemaProperty from "./SchemaProperty";
 //import SchemaType from "./SchemaType";
-import { TreeView } from "@mui/lab";
+import TreeView from "@mui/lab/TreeView";
+import TypeMenu from "./TypeMenu";
+
 import { compile as mapSchema } from "../utils/Map";
 import { v4 as uuid } from "uuid";
-import {
-  Divider,
-  Grid,
-  IconButton,
-  MenuItem,
-  Select,
-  Typography,
-} from "@mui/material";
+import { Grid, IconButton, Typography } from "@mui/material";
 import { forwardRef, useEffect, useState } from "react";
 
 const Schema = forwardRef(({ request, response, types, edit }, ref) => {
@@ -24,7 +19,6 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
   const [addIcon, setAddIcon] = useState();
   const [removeIcon, setRemoveIcon] = useState();
   const [selected, setSelected] = useState(null);
-  const [rf, setRf] = useState(false);
 
   const root = schema[Object.keys(schema)[0]].id;
   const map = mapSchema(schema);
@@ -77,53 +71,12 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
           <Grid container justifyContent={"center"} alignItems={"center"}>
             <>
               Type:&nbsp;
-              <Select
-                value={schema[Object.keys(schema)].type}
-                onChange={(e) => {
-                  schema[Object.keys(schema)].type = e.target.value;
-                  const id = uuid();
-                  switch (e.target.value) {
-                    case "object":
-                      if (schema[Object.keys(schema)].items) {
-                        delete schema[Object.keys(schema)]["items"];
-                      }
-                      schema[Object.keys(schema)]["properties"] = {};
-
-                      break;
-                    case "array":
-                      if (schema[Object.keys(schema)].properties) {
-                        delete schema[Object.keys(schema)]["properties"];
-                      }
-
-                      schema[Object.keys(schema)]["items"] = {
-                        [id]: {
-                          id: id,
-                          type: "integer",
-                          name: "id",
-                        },
-                      };
-
-                      break;
-                    default:
-                  }
-
-                  setRf(!rf);
-                }}
-              >
-                {rf}
-                <MenuItem value={"object"}>Object</MenuItem>
-                <MenuItem value={"array"}>Array</MenuItem>
-                <Divider />
-                {types.map((item) => (
-                  <MenuItem
-                    key={uuid()}
-                    id={uuid()}
-                    value={item[Object.keys(item)].name}
-                  >
-                    {item[Object.keys(item)].name}
-                  </MenuItem>
-                ))}
-              </Select>
+              <TypeMenu
+                type={schema[Object.keys(schema)].type}
+                types={types}
+                map={schema[Object.keys(schema)]}
+                edit={edit}
+              />
             </>
           </Grid>
         )}

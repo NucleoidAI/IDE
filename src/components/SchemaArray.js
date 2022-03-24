@@ -6,11 +6,9 @@ import React, { useRef, useState } from "react";
 function SchemaArray({ id, name, children, edit, map, type, types, ...other }) {
   const [value, setValue] = useState(name);
   const textField = useRef();
-  const [rf, setRf] = useState(false);
   //TODO  if in object show textfield and typemenu, if in array show only typemenu
-
   const item = map.items[Object.keys(map.items)[0]];
-  console.log("refresh");
+
   return (
     <TreeItem
       onClick={(event) => event.preventDefault()}
@@ -52,8 +50,6 @@ function SchemaArray({ id, name, children, edit, map, type, types, ...other }) {
             types={types}
             map={item}
             edit={edit}
-            rf={rf}
-            setRf={setRf}
           />
           <br />
         </>

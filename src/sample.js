@@ -7,21 +7,10 @@ const api = {
         type: "object",
         properties: {
           id: {
-            type: "string",
+            type: "integer",
           },
           name: {
             type: "string",
-          },
-          user: {
-            type: "object",
-            properties: {
-              name: {
-                type: "string",
-              },
-              age: {
-                type: "string",
-              },
-            },
           },
         },
       },
@@ -68,7 +57,7 @@ const api = {
         type: "object",
         properties: {
           id: {
-            type: "sa",
+            type: "integer",
           },
           name: {
             type: "string",
@@ -101,15 +90,6 @@ const api = {
           },
           name: {
             type: "string",
-          },
-          type: "object",
-          properties: {
-            id: {
-              type: "integer",
-            },
-            name: {
-              type: "string",
-            },
           },
         },
       },
@@ -226,125 +206,45 @@ const api = {
       action: `return json.name;`,
     },
   },
-  "/questions/reviews/{rev3}": {
-    post: {
-      summary: "Create a review",
-      description: "Create a review",
-      request: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-          name: {
-            type: "string",
-          },
-        },
-      },
-      response: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-          name: {
-            type: "string",
-          },
-        },
-      },
-      action: `return json.name;`,
-    },
-  },
-
-  "/questions/reviews/{rev3}/deneme": {
-    get: {
-      summary: "Create a review",
-      description: "Create a review",
-      params: [
-        {
-          name: "order",
-          in: "query",
-          type: "string",
-          required: true,
-          description: "filter by order",
-        },
-      ],
-      response: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-          name: {
-            type: "string",
-          },
-        },
-      },
-      action: `return json.name;`,
-    },
-  },
-  "/questions/reviews/{rev3}/items": {
-    post: {
-      summary: "Create a review",
-      description: "Create a review",
-      request: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-          name: {
-            type: "string",
-          },
-        },
-      },
-      response: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-          name: {
-            type: "string",
-          },
-        },
-      },
-      action: `return json.name;`,
-    },
-  },
 };
 
 const types = {
-  Order: {
-    type: "object",
-    properties: {
-      id: {
-        type: "integer",
-      },
-      adresses: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-          name: {
-            type: "string",
-          },
-          date: {
-            type: "string",
-          },
-        },
-      },
-    },
-  },
   Item: {
     type: "object",
     properties: {
       id: {
         type: "integer",
       },
-      name: {
+      sku: {
         type: "string",
+      },
+    },
+  },
+  Cat: {
+    type: "array",
+    items: {
+      type: "object",
+      properties: {
+        person: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+        },
+      },
+    },
+  },
+  Order: {
+    type: "array",
+    items: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+        },
       },
     },
   },
@@ -387,94 +287,15 @@ const types = {
       },
     },
   },
-  Users: {
-    type: "array",
-    items: {
-      type: "object",
-      properties: {
-        id: {
-          type: "integer",
-        },
-        persons: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              name: {
-                type: "integer",
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  Gokhan: {
-    type: "array",
-    items: {
-      type: "object",
-      properties: {
-        arr: {
-          type: "array",
-          items: {
-            type: "array",
-            items: {
-              type: "object",
-
-              properties: {
-                obj1: {
-                  type: "object",
-                  properties: {
-                    id: {
-                      type: "integer",
-                    },
-                    adresses: {
-                      type: "array",
-                      items: {
-                        type: "object",
-                        properties: {
-                          person: {
-                            type: "array",
-                            items: {
-                              type: "object",
-                              properties: {
-                                name: {
-                                  type: "integer",
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  Cat: {
-    type: "array",
-    items: {
-      ayra: {
-        type: "string",
-      },
-    },
-  },
 };
 
-const functions = [
-  {
-    path: "/getInfo",
+const functions = {
+  "/getInfo": {
     params: [],
     type: "FUNCTION",
     code: `function getInfo() {\n  return "Hello";\n}`,
   },
-  {
-    path: "/users/getUser",
+  "/users/getUser": {
     params: ["user"],
     type: "FUNCTION",
     code:
@@ -482,8 +303,7 @@ const functions = [
       "  return Users.find(u => u.user == user);\n" +
       "}",
   },
-  {
-    path: "/users/User",
+  "/users/User": {
     type: "CLASS",
     params: ["email", "password"],
     code:
@@ -493,8 +313,7 @@ const functions = [
       "  }\n" +
       "}",
   },
-  {
-    path: "/utils/verify",
+  "/utils/validate": {
     type: "FUNCTION",
     params: ["array"],
     code:
@@ -502,15 +321,6 @@ const functions = [
       "  return array.length ? true : false;\n" +
       "}",
   },
-  {
-    path: "/utils/validate",
-    type: "FUNCTION",
-    params: ["array"],
-    code:
-      "function validate(array) {\n" +
-      "  return array.length ? true : false;\n" +
-      "}",
-  },
-];
+};
 
 export { api, types, functions };
