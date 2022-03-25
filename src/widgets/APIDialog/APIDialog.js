@@ -59,11 +59,11 @@ function APIDialog() {
 
     const initMethod = () => {
       setMethod(null);
-      typesRef.current = index([]);
+      // typesRef.current = index([]);
       paramsRef.current = index([]);
-      requestRef.current = compile({ properties: {} });
-      responseRef.current = compile({ properties: {} });
-      typesRef.current = Object.entries([])
+      requestRef.current = compile({ type: "object", properties: {} });
+      responseRef.current = compile({ type: "object", properties: {} });
+      typesRef.current = Object.entries(context.get("nucleoid.types"))
         .map(([key, value]) => ({
           ...value,
           name: key,
@@ -75,11 +75,11 @@ function APIDialog() {
     const initResource = () => {
       setMethod("get");
       pathRef.current = pathRef.current + "/";
-      typesRef.current = index([]);
+      // typesRef.current = index([]);
       paramsRef.current = index([]);
-      requestRef.current = compile({ properties: {} });
-      responseRef.current = compile({ properties: {} });
-      typesRef.current = Object.entries([])
+      requestRef.current = compile({ type: "object", properties: {} });
+      responseRef.current = compile({ type: "object", properties: {} });
+      typesRef.current = Object.entries(context.get("nucleoid.types"))
         .map(([key, value]) => ({
           ...value,
           name: key,

@@ -6,8 +6,11 @@ import SchemaArray from "./SchemaArray";
 import SchemaObject from "./SchemaObject";
 import SchemaProperty from "./SchemaProperty";
 //import SchemaType from "./SchemaType";
+import SchemaView from "./SchemaView";
 import TreeView from "@mui/lab/TreeView";
 import TypeMenu from "./TypeMenu";
+
+import { decompile } from "../widgets/APIDialog/Context";
 
 import { compile as mapSchema } from "../utils/Map";
 import { v4 as uuid } from "uuid";
@@ -72,7 +75,7 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
             <>
               Type:&nbsp;
               <TypeMenu
-                type={schema[Object.keys(schema)].type}
+                type={schema[Object.keys(schema)].type || "object"}
                 types={types}
                 map={schema[Object.keys(schema)]}
                 edit={edit}
@@ -165,6 +168,29 @@ const compile = (edit, map, schema, types, name) => {
       );
     }
     default:
+      if (
+        schema.type !== "integer" &&
+        schema.type !== "string" &&
+        schema.type !== "boolean"
+      ) {
+        //TODO return global type
+
+        if (types) {
+          const item = decompile(
+            types.filter(
+              (type) => type[Object.keys(type)].name === schema.type
+            )[0]
+          );
+
+          return (
+            <>
+              {type} &nbsp;
+              <SchemaView schema={item} />
+            </>
+          );
+        }
+      }
+
       return (
         <SchemaProperty
           id={id}

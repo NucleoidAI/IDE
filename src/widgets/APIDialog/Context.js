@@ -13,7 +13,8 @@ const updatePath = (object, oldPath, newPath) => {
 };
 
 const compile = (schema) => {
-  const { properties, items, type, ...other } = schema || {};
+  const { properties, items, $ref, type, ...other } = schema || {};
+  const ref = $ref && $ref.split("/")[$ref.split("/").length - 1];
   const root = uuid();
   const object = {};
 
@@ -43,7 +44,8 @@ const compile = (schema) => {
 
       for (const name in properties) {
         const property = properties[name];
-        const { type } = property;
+        const { type, $ref } = property;
+        const ref = $ref && $ref.split("/")[$ref.split("/").length - 1];
         const id = uuid();
 
         if (property.type === "object") {
@@ -61,18 +63,17 @@ const compile = (schema) => {
               ...nested[key],
             };
           } else {
-            object[root].properties[id] = { id, name, type };
+            object[root].properties[id] = { id, name, type: type || ref };
           }
         }
       }
 
       break;
     default:
-      //TODO check in global types
       if (schema) {
         object[root] = {
           id: root,
-          type: schema.type,
+          type: type || ref,
         };
       }
 
@@ -89,11 +90,11 @@ const decompile = (schema) => {
   switch (type) {
     case "array":
       {
+        delete object.name;
         const nested = decompile({ root: items[Object.keys(items)[0]] });
         object.items = nested;
         delete object.properties;
         delete object.id;
-        delete object.name;
       }
 
       break;
@@ -102,26 +103,55 @@ const decompile = (schema) => {
       delete object.items;
       delete object.id;
       delete object.name;
+
       for (const key in properties) {
         const property = properties[key];
 
         const { name, type } = property;
 
-        if (type === "object") {
+        if (property.type === "object") {
+          delete object.name;
           const nested = decompile({ root: property });
           object.properties[name] = nested;
         } else {
           object.properties[name] = { type };
 
-          if (type === "array") {
+          if (property.type === "array") {
+            object.properties[name] = { type };
             const nested = decompile({ root: property });
-            object.properties[name].items = nested;
+            object.properties[name] = nested;
+          } else {
+            //TODO refactor here
+
+            let tp = "type";
+            if (type !== "integer" && type !== "string" && type !== "boolean") {
+              tp = "$ref";
+              object.properties[name] = {
+                [tp]: "#/components/schemas/" + type,
+              };
+            } else {
+              object.properties[name] = { type };
+            }
           }
         }
       }
 
       break;
-    default:
+    default: {
+      //TODO refactor here too
+      let tp = "type";
+      if (type !== "integer" && type !== "string" && type !== "boolean") {
+        tp = "$ref";
+        object[tp] = "#/components/schemas/" + type;
+        delete object.type;
+      } else {
+        object[tp] = { type };
+      }
+      delete object.name;
+      delete object.id;
+      delete object.properties;
+      delete object.items;
+    }
   }
 
   return object;
