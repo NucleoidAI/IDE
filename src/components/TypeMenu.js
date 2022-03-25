@@ -1,4 +1,4 @@
-import { useStore } from "../store";
+//import { useStore } from "../store";
 import { v4 as uuid } from "uuid";
 import { Divider, MenuItem, Select } from "@mui/material";
 
@@ -25,11 +25,10 @@ const newObject = (id) => {
 };
 
 const TypeMenu = forwardRef(({ id, type, types, map, edit, noNested }, ref) => {
-  const [, dispatch] = useStore();
+  //const [, dispatch] = useStore();
   const [selectedType, setSelectedType] = useState(type);
 
   function updateType(id, value) {
-    //TODO decide how to render
     //TODO adapt to params, ref for this feature
 
     switch (value) {
@@ -56,7 +55,8 @@ const TypeMenu = forwardRef(({ id, type, types, map, edit, noNested }, ref) => {
 
         break;
     }
-    dispatch({ type: "" });
+    //TODO decide how to render, context doesnt work, if trigger context, apidialog rerender and run compile methods again.
+    // dispatch({ type: "" });
     setSelectedType(value);
   }
 

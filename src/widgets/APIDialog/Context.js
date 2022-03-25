@@ -75,7 +75,7 @@ const compile = (schema) => {
           type: schema.type,
         };
       }
-    
+
       break;
   }
 
@@ -83,25 +83,45 @@ const compile = (schema) => {
 };
 
 const decompile = (schema) => {
-  const { type, properties, ...other } = schema[Object.keys(schema)[0]];
-  const object = { ...other, type, properties: {} };
-  delete object.id;
-  delete object.name;
+  const { type, properties, items, ...other } = schema[Object.keys(schema)[0]];
+  const object = { ...other, type, properties: {}, items: {} };
 
-  for (const key in properties) {
-    const property = properties[key];
+  switch (type) {
+    case "array":
+      {
+        const nested = decompile({ root: items[Object.keys(items)[0]] });
+        object.items = nested;
+        delete object.properties;
+        delete object.id;
+        delete object.name;
+      }
 
-    const { name, type } = property;
+      break;
 
-    if (type === "object") {
-      const nested = decompile({ root: property });
-      object.properties[name] = nested;
-    } else {
-      object.properties[name] = { type };
+    case "object":
+      delete object.items;
+      delete object.id;
+      delete object.name;
+      for (const key in properties) {
+        const property = properties[key];
 
-      if (type === "array")
-        object.properties[name].items = { type: property.items.type };
-    }
+        const { name, type } = property;
+
+        if (type === "object") {
+          const nested = decompile({ root: property });
+          object.properties[name] = nested;
+        } else {
+          object.properties[name] = { type };
+
+          if (type === "array") {
+            const nested = decompile({ root: property });
+            object.properties[name].items = nested;
+          }
+        }
+      }
+
+      break;
+    default:
   }
 
   return object;

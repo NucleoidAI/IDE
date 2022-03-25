@@ -228,7 +228,12 @@ const types = {
         person: {
           type: "array",
           items: {
-            type: "string",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+            },
           },
         },
       },
@@ -289,13 +294,15 @@ const types = {
   },
 };
 
-const functions = {
-  "/getInfo": {
+const functions = [
+  {
+    path: "/getInfo",
     params: [],
     type: "FUNCTION",
     code: `function getInfo() {\n  return "Hello";\n}`,
   },
-  "/users/getUser": {
+  {
+    path: "/users/getUser",
     params: ["user"],
     type: "FUNCTION",
     code:
@@ -303,7 +310,8 @@ const functions = {
       "  return Users.find(u => u.user == user);\n" +
       "}",
   },
-  "/users/User": {
+  {
+    path: "/users/User",
     type: "CLASS",
     params: ["email", "password"],
     code:
@@ -313,7 +321,8 @@ const functions = {
       "  }\n" +
       "}",
   },
-  "/utils/validate": {
+  {
+    path: "/utils/verify",
     type: "FUNCTION",
     params: ["array"],
     code:
@@ -321,6 +330,15 @@ const functions = {
       "  return array.length ? true : false;\n" +
       "}",
   },
-};
+  {
+    path: "/utils/validate",
+    type: "FUNCTION",
+    params: ["array"],
+    code:
+      "function validate(array) {\n" +
+      "  return array.length ? true : false;\n" +
+      "}",
+  },
+];
 
 export { api, types, functions };
