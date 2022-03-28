@@ -15,6 +15,7 @@ const updatePath = (object, oldPath, newPath) => {
 const compile = (schema) => {
   const { properties, items, $ref, type, ...other } = schema || {};
   const ref = $ref && $ref.split("/")[$ref.split("/").length - 1];
+
   const root = uuid();
   const object = {};
 

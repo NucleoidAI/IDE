@@ -3,7 +3,7 @@ import SchemaArray from "../SchemaArray";
 import SchemaObject from "../SchemaObject";
 import SchemaProperty from "../SchemaProperty";
 import { compile } from "../Schema";
-import { compile as compileSchema } from "../../widgets/APIDialog/APIDialog";
+import { compile as compileSchema } from "../../widgets/APIDialog/Context";
 import { compile as mapSchema } from "../../utils/Map";
 import Enzyme, { shallow } from "enzyme";
 
