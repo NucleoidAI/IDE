@@ -71,7 +71,7 @@ const APITypes = forwardRef((props, typesRef) => {
             setSchema(types.find((type) => type[id]));
             setSelected(types.find((type) => type[id]) || {});
           }}
-          //TODO focus will be added
+          // TODO focus will be added
         />
         <IconButton onClick={addType}>
           <AddIcon />
@@ -84,7 +84,9 @@ const APITypes = forwardRef((props, typesRef) => {
       </Grid>
       <Divider orientation={"vertical"} sx={styles.divider} />
       <Grid item md sx={styles.content}>
-        {schema.current && <Schema edit key={uuid()} ref={schema} types={types} />}
+        {schema.current && (
+          <Schema edit key={uuid()} ref={schema} types={types} />
+        )}
       </Grid>
     </Grid>
   );

@@ -1,4 +1,3 @@
-//import { useStore } from "../store";
 import { v4 as uuid } from "uuid";
 import { Divider, MenuItem, Select } from "@mui/material";
 
@@ -25,11 +24,10 @@ const newObject = (id) => {
 };
 
 const TypeMenu = forwardRef(({ id, type, types, map, edit, noNested }, ref) => {
-  //const [, dispatch] = useStore();
   const [selectedType, setSelectedType] = useState(type);
 
   function updateType(id, value) {
-    //TODO adapt to params, ref for this feature
+    // TODO adapt to params, ref for this feature
 
     switch (value) {
       case "array":
@@ -55,12 +53,12 @@ const TypeMenu = forwardRef(({ id, type, types, map, edit, noNested }, ref) => {
 
         break;
     }
-    //TODO decide how to render, context doesnt work, if trigger context, apidialog rerender and run compile methods again.
+    // TODO decide how to render, context doesnt work, if trigger context, apidialog rerender and run compile methods again.
     // dispatch({ type: "" });
     setSelectedType(value);
   }
 
-  //TODO refactor for global types
+  // TODO refactor for global types
   return (
     <>
       {edit && (

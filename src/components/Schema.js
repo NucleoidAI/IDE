@@ -5,7 +5,6 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import SchemaArray from "./SchemaArray";
 import SchemaObject from "./SchemaObject";
 import SchemaProperty from "./SchemaProperty";
-//import SchemaType from "./SchemaType";
 import SchemaView from "./SchemaView";
 import TreeView from "@mui/lab/TreeView";
 import TypeMenu from "./TypeMenu";
@@ -42,7 +41,7 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
 
   const removeSchemaProperty = (selected) => {
     delete map[selected].id;
-    //TODO delete object if it hasn't id in compile method
+    // TODO delete object if it hasn't id in compile method
 
     setSchema({ ...schema });
   };
@@ -173,7 +172,7 @@ const compile = (edit, map, schema, types, name) => {
         schema.type !== "string" &&
         schema.type !== "boolean"
       ) {
-        //TODO return global type
+        // TODO return global type
 
         if (types) {
           const item = decompile(

@@ -1,5 +1,5 @@
 function compile(object) {
-  //TODO test
+  // TODO add test
 
   if (!object) return {};
   object = object[Object.keys(object)[0]];

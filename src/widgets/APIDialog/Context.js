@@ -122,7 +122,7 @@ const decompile = (schema) => {
             const nested = decompile({ root: property });
             object.properties[name] = nested;
           } else {
-            //TODO refactor here
+            // TODO refactor here
 
             let tp = "type";
             if (type !== "integer" && type !== "string" && type !== "boolean") {
@@ -139,7 +139,7 @@ const decompile = (schema) => {
 
       break;
     default: {
-      //TODO refactor here too
+      // TODO refactor here
       let tp = "type";
       if (type !== "integer" && type !== "string" && type !== "boolean") {
         tp = "$ref";
