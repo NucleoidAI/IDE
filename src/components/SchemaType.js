@@ -2,7 +2,7 @@ import Schema from "./Schema";
 import TextField from "@mui/material/TextField";
 import TreeItem from "@mui/lab/TreeItem";
 import TypeMenu from "./TypeMenu";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
 function SchemaType({ id, name, map, type, types, edit, ...other }) {
   const [value, setValue] = useState(name);
