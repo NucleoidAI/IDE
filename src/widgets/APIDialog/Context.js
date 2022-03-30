@@ -146,7 +146,7 @@ const decompile = (schema) => {
         object[tp] = "#/components/schemas/" + type;
         delete object.type;
       } else {
-        object[tp] = { type };
+        object[tp] = type;
       }
       delete object.name;
       delete object.id;
