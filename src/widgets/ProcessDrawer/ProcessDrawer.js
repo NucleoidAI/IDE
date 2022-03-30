@@ -1,4 +1,4 @@
-import AlertMassage from "../../components/AlertMassage";
+import CopyClipboard from "../../components/CopyClipboard";
 import DialogTooltip from "../../components/DialogTootip/";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
@@ -12,8 +12,7 @@ import service from "../../service";
 import styles from "./styles";
 import { useLocation } from "react-router-dom";
 import { useStore } from "../../store";
-import { v4 as uuid } from "uuid";
-import { Box, Drawer, ListItem } from "@mui/material";
+import { Box, CircularProgress, Drawer, ListItem } from "@mui/material";
 import React, { useState } from "react";
 
 const ProcessDrawer = () => {
@@ -21,11 +20,14 @@ const ProcessDrawer = () => {
   const location = useLocation();
   const { pages } = state;
   const [started, setStarted] = useState(pages.started);
-  const [alert, setAlert] = useState();
+  const [alert, setAlert] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleClose = () => {
     setAlert(false);
   };
+
+  console.log(pages);
 
   return (
     <>
@@ -41,8 +43,15 @@ const ProcessDrawer = () => {
           <DialogTooltip
             open={alert}
             placement="left"
-            title={<b>title</b>}
-            message={<>message</>}
+            title={<b>Runtime Status</b>}
+            message={
+              <>
+                The nucleoid runtime is not started. Run the following code in
+                terminal.
+                <br />
+                <CopyClipboard />
+              </>
+            }
             handleTooltipClose={handleClose}
           >
             <ListItem
@@ -50,31 +59,46 @@ const ProcessDrawer = () => {
               onClick={() => {
                 if (!started) {
                   const nuc = state.get("nucleoid");
+                  setLoading(true);
+                  setAlert(false);
                   service
                     .openApiStart(nuc)
                     .then(() => {
                       if (!pages.opened) {
                         pages.opened = true;
                         window.open(Settings.url.app, "_blank").focus();
+                        setAlert(false);
+
+                        setLoading(false);
                       }
                     })
                     .catch((error) => {
                       setStarted(false);
+                      setLoading(false);
                       setAlert(true);
-                      //setAlert("Nucleoid runtime is not running");
                     });
                 } else {
                   service.openApiStop().catch((error) => {
+                    setLoading(false);
                     setStarted(false);
-                    setAlert("Nucleoid runtime is not reachable");
+                    setAlert(true);
                   });
                 }
 
                 setStarted((pages.started = !started));
               }}
             >
-              {!started && <PlayCircleFilledIcon sx={styles.listitem} />}
-              {started && <PauseCircleFilledIcon sx={styles.listitem} />}
+              {loading ? (
+                <CircularProgress
+                  size={25}
+                  color="inherit"
+                  sx={{ width: 100 }}
+                />
+              ) : !started ? (
+                <PlayCircleFilledIcon sx={styles.listitem} />
+              ) : (
+                started && <PauseCircleFilledIcon sx={styles.listitem} />
+              )}
             </ListItem>
           </DialogTooltip>
           <ListItem button>
@@ -94,7 +118,6 @@ const ProcessDrawer = () => {
           <SaveIcon sx={styles.listitem} />
         </ListItem>
       </Drawer>
-      {alert && <AlertMassage key={uuid()} message={alert} />}
     </>
   );
 };
