@@ -17,9 +17,6 @@ const DialogTooltip = styled(
   }) => (
     <Tooltip
       open={open}
-      PopperProps={{
-        disablePortal: true,
-      }}
       onClose={handleTooltipClose}
       disableFocusListener
       disableHoverListener

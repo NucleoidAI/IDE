@@ -1,4 +1,5 @@
 import AlertMassage from "../../components/AlertMassage";
+import DialogTooltip from "../../components/DialogTootip/";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
@@ -22,6 +23,10 @@ const ProcessDrawer = () => {
   const [started, setStarted] = useState(pages.started);
   const [alert, setAlert] = useState();
 
+  const handleClose = () => {
+    setAlert(false);
+  };
+
   return (
     <>
       <Drawer
@@ -33,36 +38,45 @@ const ProcessDrawer = () => {
         sx={styles.drawer}
       >
         <Box>
-          <ListItem
-            button
-            onClick={() => {
-              if (!started) {
-                const nuc = state.get("nucleoid");
-                service
-                  .openApiStart(nuc)
-                  .then(() => {
-                    if (!pages.opened) {
-                      pages.opened = true;
-                      window.open(Settings.url.app, "_blank").focus();
-                    }
-                  })
-                  .catch((error) => {
-                    setStarted(false);
-                    setAlert("Nucleoid runtime is not running");
-                  });
-              } else {
-                service.openApiStop().catch((error) => {
-                  setStarted(false);
-                  setAlert("Nucleoid runtime is not reachable");
-                });
-              }
-
-              setStarted((pages.started = !started));
-            }}
+          <DialogTooltip
+            open={alert}
+            placement="left"
+            title={<b>title</b>}
+            message={<>message</>}
+            handleTooltipClose={handleClose}
           >
-            {!started && <PlayCircleFilledIcon sx={styles.listitem} />}
-            {started && <PauseCircleFilledIcon sx={styles.listitem} />}
-          </ListItem>
+            <ListItem
+              button
+              onClick={() => {
+                if (!started) {
+                  const nuc = state.get("nucleoid");
+                  service
+                    .openApiStart(nuc)
+                    .then(() => {
+                      if (!pages.opened) {
+                        pages.opened = true;
+                        window.open(Settings.url.app, "_blank").focus();
+                      }
+                    })
+                    .catch((error) => {
+                      setStarted(false);
+                      setAlert(true);
+                      //setAlert("Nucleoid runtime is not running");
+                    });
+                } else {
+                  service.openApiStop().catch((error) => {
+                    setStarted(false);
+                    setAlert("Nucleoid runtime is not reachable");
+                  });
+                }
+
+                setStarted((pages.started = !started));
+              }}
+            >
+              {!started && <PlayCircleFilledIcon sx={styles.listitem} />}
+              {started && <PauseCircleFilledIcon sx={styles.listitem} />}
+            </ListItem>
+          </DialogTooltip>
           <ListItem button>
             <ViewListIcon sx={styles.listitem} />
           </ListItem>
