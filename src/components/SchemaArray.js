@@ -3,9 +3,11 @@ import TreeItem from "@mui/lab/TreeItem";
 import TypeMenu from "./TypeMenu";
 import React, { useRef, useState } from "react";
 
-function SchemaArray({ id, name, edit, map, type, ...other }) {
+function SchemaArray({ id, name, children, edit, map, type, types, ...other }) {
   const [value, setValue] = useState(name);
   const textField = useRef();
+  // TODO  if in object show textfield and typemenu, if in array show only typemenu
+  const item = map.items[Object.keys(map.items)[0]];
 
   return (
     <TreeItem
@@ -15,16 +17,20 @@ function SchemaArray({ id, name, edit, map, type, ...other }) {
           {name !== undefined && (
             <>
               {edit && (
-                <TextField
-                  size={"small"}
-                  sx={{ width: (theme) => theme.custom.schema.width }}
-                  value={value || ""}
-                  onChange={(event) =>
-                    setValue((map.name = event.target.value))
-                  }
-                  inputRef={textField}
-                  onClick={() => setTimeout(() => textField.current.focus(), 0)}
-                />
+                <>
+                  <TextField
+                    size={"small"}
+                    sx={{ width: (theme) => theme.custom.schema.width }}
+                    value={value || ""}
+                    onChange={(event) =>
+                      setValue((map.name = event.target.value))
+                    }
+                    inputRef={textField}
+                    onClick={() =>
+                      setTimeout(() => textField.current.focus(), 0)
+                    }
+                  />
+                </>
               )}
               {!edit && <>"{name}"</>}
               <>:&nbsp;</>
@@ -38,7 +44,13 @@ function SchemaArray({ id, name, edit, map, type, ...other }) {
       {edit && (
         <>
           &nbsp;&nbsp;&nbsp;&nbsp;
-          <TypeMenu id={id} type={type} map={map} edit={edit} noNested />
+          <TypeMenu
+            id={id}
+            type={item.type}
+            types={types}
+            map={item}
+            edit={edit}
+          />
           <br />
         </>
       )}
@@ -46,9 +58,11 @@ function SchemaArray({ id, name, edit, map, type, ...other }) {
         <>
           &nbsp;&nbsp;&nbsp;&nbsp;
           {type}
-          <br />
         </>
       )}
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      {children}
+      <br />
       &nbsp;&nbsp;&#93;
     </TreeItem>
   );

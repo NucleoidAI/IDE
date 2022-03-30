@@ -7,21 +7,10 @@ const api = {
         type: "object",
         properties: {
           id: {
-            type: "string",
+            type: "integer",
           },
           name: {
             type: "string",
-          },
-          user: {
-            type: "object",
-            properties: {
-              name: {
-                type: "string",
-              },
-              age: {
-                type: "string",
-              },
-            },
           },
         },
       },
@@ -68,7 +57,7 @@ const api = {
         type: "object",
         properties: {
           id: {
-            type: "sa",
+            type: "integer",
           },
           name: {
             type: "string",
@@ -101,15 +90,6 @@ const api = {
           },
           name: {
             type: "string",
-          },
-          type: "object",
-          properties: {
-            id: {
-              type: "integer",
-            },
-            name: {
-              type: "string",
-            },
           },
         },
       },
@@ -226,106 +206,9 @@ const api = {
       action: `return json.name;`,
     },
   },
-  "/questions/reviews/{rev3}": {
-    post: {
-      summary: "Create a review",
-      description: "Create a review",
-      request: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-          name: {
-            type: "string",
-          },
-        },
-      },
-      response: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-          name: {
-            type: "string",
-          },
-        },
-      },
-      action: `return json.name;`,
-    },
-  },
-
-  "/questions/reviews/{rev3}/deneme": {
-    get: {
-      summary: "Create a review",
-      description: "Create a review",
-      params: [
-        {
-          name: "order",
-          in: "query",
-          type: "string",
-          required: true,
-          description: "filter by order",
-        },
-      ],
-      response: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-          name: {
-            type: "string",
-          },
-        },
-      },
-      action: `return json.name;`,
-    },
-  },
-  "/questions/reviews/{rev3}/items": {
-    post: {
-      summary: "Create a review",
-      description: "Create a review",
-      request: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-          name: {
-            type: "string",
-          },
-        },
-      },
-      response: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-          name: {
-            type: "string",
-          },
-        },
-      },
-      action: `return json.name;`,
-    },
-  },
 };
 
 const types = {
-  Order: {
-    type: "array",
-    properties: {
-      id: {
-        type: "integer",
-      },
-      name: {
-        type: "string",
-      },
-    },
-  },
   Item: {
     type: "object",
     properties: {
@@ -334,6 +217,78 @@ const types = {
       },
       sku: {
         type: "string",
+      },
+    },
+  },
+  Cat: {
+    type: "array",
+    items: {
+      type: "object",
+      properties: {
+        person: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  Order: {
+    type: "array",
+    items: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+        },
+      },
+    },
+  },
+  User: {
+    type: "object",
+    properties: {
+      id: {
+        type: "integer",
+      },
+      name: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            id: {
+              type: "integer",
+            },
+            persons: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: {
+                    type: "integer",
+                  },
+                  ar1: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        id: { type: "integer" },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     },
   },

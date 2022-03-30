@@ -5,14 +5,19 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import SchemaArray from "./SchemaArray";
 import SchemaObject from "./SchemaObject";
 import SchemaProperty from "./SchemaProperty";
-import { TreeView } from "@mui/lab";
+import SchemaView from "./SchemaView";
+import TreeView from "@mui/lab/TreeView";
+import TypeMenu from "./TypeMenu";
+
+import { decompile } from "../widgets/APIDialog/Context";
+
 import { compile as mapSchema } from "../utils/Map";
 import { v4 as uuid } from "uuid";
-import { Grid, IconButton, MenuItem, Select, Typography } from "@mui/material";
+import { Grid, IconButton, Typography } from "@mui/material";
 import { forwardRef, useEffect, useState } from "react";
 
-const Schema = forwardRef(({ request, response }, ref) => {
-  const [schema, setSchema] = useState(ref.current);
+const Schema = forwardRef(({ request, response, types, edit }, ref) => {
+  const [schema, setSchema] = useState(ref.current || ref);
   const [addIcon, setAddIcon] = useState();
   const [removeIcon, setRemoveIcon] = useState();
   const [selected, setSelected] = useState(null);
@@ -20,7 +25,7 @@ const Schema = forwardRef(({ request, response }, ref) => {
   const root = schema[Object.keys(schema)[0]].id;
   const map = mapSchema(schema);
 
-  function addSchemaProperty(selected) {
+  const addSchemaProperty = (selected) => {
     const key = uuid();
     if (!map[selected].properties) {
       map[selected].properties = {};
@@ -32,13 +37,14 @@ const Schema = forwardRef(({ request, response }, ref) => {
     };
 
     setSchema({ ...schema });
-  }
+  };
 
-  function removeSchemaProperty(selected) {
+  const removeSchemaProperty = (selected) => {
     delete map[selected].id;
+    // TODO delete object if it hasn't id in compile method
 
     setSchema({ ...schema });
-  }
+  };
 
   const select = (id) => {
     if (map[id] && map[id].type === "object") setAddIcon(true);
@@ -63,105 +69,141 @@ const Schema = forwardRef(({ request, response }, ref) => {
       justifyContent={"space-between"}
     >
       <Grid item>
-        <Grid container justifyContent={"center"} alignItems={"center"}>
-          <>
-            Type:&nbsp;
-            <Select value={"object"}>
-              <MenuItem value={"object"}>Object</MenuItem>
-              <MenuItem value={"array"}>Array</MenuItem>
-            </Select>
-          </>
-        </Grid>
+        {edit && (
+          <Grid container justifyContent={"center"} alignItems={"center"}>
+            <>
+              Type:&nbsp;
+              <TypeMenu
+                type={schema[Object.keys(schema)].type || "object"}
+                types={types}
+                map={schema[Object.keys(schema)]}
+                edit={edit}
+              />
+            </>
+          </Grid>
+        )}
+
         <br />
-        <TreeView
-          defaultCollapseIcon={<RemoveCircleOutlineIcon />}
-          defaultExpandIcon={<AddCircleOutlineIcon />}
-          defaultExpanded={[root]}
-          selected={selected}
-          onNodeSelect={(event, value) => select(value)}
-        >
-          {compile(true, map, schema)}
-        </TreeView>
-      </Grid>
-      <Grid container item justifyContent={"space-between"}>
-        <Grid style={{ width: 50 }} />
-        <Grid item>
-          <Typography variant={"h6"}>
-            {request && <>Request</>}
-            {response && <>Response</>}
-          </Typography>
-        </Grid>
-        <Grid item>
-          {addIcon && (
-            <IconButton onClick={() => addSchemaProperty(selected)}>
-              <AddIcon />
-            </IconButton>
-          )}
-          {removeIcon && (
-            <IconButton onClick={() => removeSchemaProperty(selected)}>
-              <RemoveIcon />
-            </IconButton>
-          )}
+        <Grid sx={edit && { width: "100%", height: 310, overflowY: "auto" }}>
+          <TreeView
+            defaultCollapseIcon={<RemoveCircleOutlineIcon />}
+            defaultExpandIcon={<AddCircleOutlineIcon />}
+            defaultExpanded={[root]}
+            selected={selected}
+            onNodeSelect={(event, value) => select(value)}
+          >
+            {compile(edit, map, schema, types)}
+          </TreeView>
         </Grid>
       </Grid>
+      {edit && (
+        <Grid container item justifyContent={"space-between"}>
+          <Grid style={{ width: 50 }} />
+          <Grid item>
+            <Typography variant={"h6"}>
+              {request && <>Request</>}
+              {response && <>Response</>}
+            </Typography>
+          </Grid>
+          <Grid item>
+            {addIcon && (
+              <IconButton onClick={() => addSchemaProperty(selected)}>
+                <AddIcon />
+              </IconButton>
+            )}
+            {removeIcon && (
+              <IconButton onClick={() => removeSchemaProperty(selected)}>
+                <RemoveIcon />
+              </IconButton>
+            )}
+          </Grid>
+        </Grid>
+      )}
     </Grid>
   );
 });
 
-const compile = (edit, map, schema, name) => {
+const compile = (edit, map, schema, types, name) => {
   schema = schema[Object.keys(schema)[0]];
-  const { id, properties } = schema || {};
+  const { id, properties, items, type } = schema || {};
   const children = [];
 
-  for (const key in properties) {
-    if (!map[key]) continue;
+  switch (type) {
+    case "array": {
+      const item = items[Object.keys(items)[0]];
+      children.push(compile(edit, map, { root: item }, types, name));
 
-    const { name } = map[key];
-    const property = properties[key];
-    const id = key;
-
-    switch (property.type) {
-      case "object":
-        children.push(compile(edit, map, { root: property }, name));
-        break;
-      case "array":
-        children.push(
-          <SchemaArray
-            id={id}
-            key={id}
-            nodeId={id}
-            name={name}
-            type={property.type}
-            edit={edit}
-            map={map[id]}
-          />
-        );
-        break;
-      default:
-        children.push(
-          <SchemaProperty
-            id={id}
-            key={id}
-            nodeId={id}
-            name={name}
-            type={property.type}
-            edit={edit}
-            map={map[id]}
-          />
-        );
+      return (
+        <SchemaArray
+          key={id || (name ? uuid() : "root")}
+          nodeId={id || (name ? uuid() : "root")}
+          id={id || (name ? uuid() : "root")}
+          name={schema.name}
+          edit={edit}
+          children={children}
+          type={type}
+          types={types}
+          map={map[id]}
+        />
+      );
     }
-  }
+    case "object": {
+      for (const key in properties) {
+        const property = properties[key];
 
-  return (
-    <SchemaObject
-      key={id || (name ? uuid() : "root")}
-      nodeId={id || (name ? uuid() : "root")}
-      name={name}
-      edit={edit}
-      children={children}
-      map={map[id]}
-    />
-  );
+        children.push(compile(edit, map, { root: property }, types, name));
+      }
+
+      return (
+        <SchemaObject
+          id={id || (name ? uuid() : "root")}
+          key={id || (name ? uuid() : "root")}
+          nodeId={id || (name ? uuid() : "root")}
+          name={name}
+          edit={edit}
+          children={children}
+          map={map[id]}
+        />
+      );
+    }
+    default:
+      if (
+        schema.type !== "integer" &&
+        schema.type !== "string" &&
+        schema.type !== "boolean"
+      ) {
+        // TODO return global type
+
+        if (types) {
+          const item = decompile(
+            types.filter(
+              (type) => type[Object.keys(type)].name === schema.type
+            )[0]
+          );
+
+          return (
+            <>
+              {type} &nbsp;
+              <SchemaView schema={item} />
+            </>
+          );
+        }
+      }
+
+      return (
+        <SchemaProperty
+          id={id}
+          key={schema.id}
+          nodeId={schema.id}
+          name={schema.name}
+          type={type}
+          types={types}
+          edit={edit}
+          map={map[id]}
+        />
+      );
+  }
 };
+
 export { compile };
 export default Schema;

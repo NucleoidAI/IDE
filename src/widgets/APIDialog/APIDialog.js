@@ -7,9 +7,9 @@ import ClosableDialogTitle from "../../components/ClosableDialogTitle";
 import actions from "../../actions";
 import styles from "./styles";
 import { useStore } from "../../store";
-import { v4 as uuid } from "uuid";
 import { Dialog, DialogActions, DialogContent, Grid } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
+import { compile, decompile, deindex, index, updatePath } from "./Context";
 
 function APIDialog() {
   const [context, dispatch] = useStore();
@@ -59,11 +59,10 @@ function APIDialog() {
 
     const initMethod = () => {
       setMethod(null);
-      typesRef.current = index([]);
       paramsRef.current = index([]);
-      requestRef.current = compile({ properties: {} });
-      responseRef.current = compile({ properties: {} });
-      typesRef.current = Object.entries([])
+      requestRef.current = compile({ type: "object", properties: {} });
+      responseRef.current = compile({ type: "object", properties: {} });
+      typesRef.current = Object.entries(context.get("nucleoid.types"))
         .map(([key, value]) => ({
           ...value,
           name: key,
@@ -75,11 +74,10 @@ function APIDialog() {
     const initResource = () => {
       setMethod("get");
       pathRef.current = pathRef.current + "/";
-      typesRef.current = index([]);
       paramsRef.current = index([]);
-      requestRef.current = compile({ properties: {} });
-      responseRef.current = compile({ properties: {} });
-      typesRef.current = Object.entries([])
+      requestRef.current = compile({ type: "object", properties: {} });
+      responseRef.current = compile({ type: "object", properties: {} });
+      typesRef.current = Object.entries(context.get("nucleoid.types"))
         .map(([key, value]) => ({
           ...value,
           name: key,
@@ -192,10 +190,13 @@ function APIDialog() {
               <APIBody
                 method={method}
                 params={params}
+                types={typesRef.current}
                 ref={{ requestRef, responseRef }}
               />
             )}
-            {view === "PARAMS" && <APIParams ref={paramsRef} />}
+            {view === "PARAMS" && (
+              <APIParams types={typesRef.current} ref={paramsRef} />
+            )}
             {view === "TYPES" && <APITypes ref={typesRef} />}
           </Grid>
         </DialogContent>
@@ -214,94 +215,4 @@ function APIDialog() {
   } else return null;
 }
 
-const updatePath = (object, oldPath, newPath) => {
-  Object.keys(object).forEach((objectName) => {
-    if (objectName.includes(oldPath)) {
-      const objectValue = { ...object[objectName] };
-      delete object[objectName];
-      objectName = objectName.replace(oldPath, newPath);
-
-      object[objectName] = { ...objectValue };
-    }
-  });
-};
-
-const compile = (schema) => {
-  const { properties, type, ...other } = schema || {};
-  const root = uuid();
-  const object = {};
-
-  object[root] = {
-    ...other,
-    id: root,
-    type: type ? type : "object",
-    properties: {},
-  };
-
-  for (const name in properties) {
-    const property = properties[name];
-    const { type } = property;
-    const id = uuid();
-
-    if (property.type === "object") {
-      const nested = compile(property);
-      const key = Object.keys(nested)[0];
-      object[root].properties[key] = { name, ...nested[key] };
-    } else {
-      object[root].properties[id] = { id, name, type };
-
-      if (type === "array")
-        object[root].properties[id].items = { type: property.items.type };
-    }
-  }
-
-  return object;
-};
-
-const decompile = (schema) => {
-  const { type, properties, ...other } = schema[Object.keys(schema)[0]];
-  const object = { ...other, type, properties: {} };
-  delete object.id;
-  delete object.name;
-
-  for (const key in properties) {
-    const property = properties[key];
-
-    const { name, type } = property;
-
-    if (type === "object") {
-      const nested = decompile({ root: property });
-      object.properties[name] = nested;
-    } else {
-      object.properties[name] = { type };
-
-      if (type === "array")
-        object.properties[name].items = { type: property.items.type };
-    }
-  }
-
-  return object;
-};
-
-const index = (list) => {
-  const object = {};
-  if (!list) return object;
-
-  for (const item of list) {
-    const id = uuid();
-    object[id] = { id, ...item };
-  }
-
-  return object;
-};
-
-const deindex = (list) =>
-  Object.values(list)
-    .filter((item) => item.name)
-    .map((item) => {
-      delete item.id;
-      return item;
-    });
-
-export { compile, decompile, index, deindex };
 export default APIDialog;

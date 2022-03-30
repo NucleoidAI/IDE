@@ -12,11 +12,6 @@ import service from "../service";
 import { Grid, Paper } from "@mui/material";
 import React, { useEffect } from "react";
 
-//import Schema from "../components/Schema";
-//import SchemaView from "../components/SchemaView";
-
-//
-
 const apis = [
   {
     path: "/",

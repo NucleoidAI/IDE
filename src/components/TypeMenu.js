@@ -1,25 +1,72 @@
-//import { useContext } from "../context";
 import { v4 as uuid } from "uuid";
 import { Divider, MenuItem, Select } from "@mui/material";
+
 import { forwardRef, useState } from "react";
-const TypeMenu = forwardRef(({ id, type, map, edit, noNested }, ref) => {
+
+const newArray = (objID, objPropID) => {
+  return {
+    [objID]: {
+      type: "object",
+      id: objID,
+      properties: newObject(objPropID),
+    },
+  };
+};
+
+const newObject = (id) => {
+  return {
+    [id]: {
+      id: id,
+      name: "id",
+      type: "integer",
+    },
+  };
+};
+
+const TypeMenu = forwardRef(({ id, type, types, map, edit, noNested }, ref) => {
   const [selectedType, setSelectedType] = useState(type);
 
   function updateType(id, value) {
-    if (ref) {
-      ref[id].type = value;
-    } else {
-      map.type = value;
+    // TODO adapt to params, ref for this feature
+
+    switch (value) {
+      case "array":
+        if (map.type === "object") delete map["properties"];
+        map.type = "array";
+        map["items"] = newArray(uuid(), uuid());
+
+        break;
+      case "object":
+        if (map.type === "array") delete map["items"];
+        map.type = "object";
+        map["properties"] = newObject(uuid());
+
+        break;
+      default:
+        if (ref) {
+          ref[id].type = value;
+        } else {
+          if (map["properties"]) delete map["properties"];
+          if (map["items"]) delete map["items"];
+          map.type = value;
+        }
+
+        break;
     }
+    // TODO decide how to render, context doesnt work, if trigger context, apidialog rerender and run compile methods again.
+    // dispatch({ type: "" });
     setSelectedType(value);
   }
 
+  // TODO refactor for global types
   return (
     <>
       {edit && (
         <Select
           value={selectedType}
-          onChange={(event) => updateType(id, event.target.value)}
+          onChange={(event) => {
+            updateType(id, event.target.value);
+          }}
         >
           <MenuItem value={"integer"}>integer</MenuItem>
           <MenuItem value={"string"}>string</MenuItem>
@@ -34,8 +81,15 @@ const TypeMenu = forwardRef(({ id, type, map, edit, noNested }, ref) => {
             </MenuItem>,
           ]}
           <Divider />
-          <MenuItem value={"Order"}>Order</MenuItem>
-          <MenuItem value={"Item"}>Item</MenuItem>
+          {types.map((item, id) => (
+            <MenuItem
+              key={uuid()}
+              id={uuid()}
+              value={item[Object.keys(item)].name}
+            >
+              {item[Object.keys(item)].name}
+            </MenuItem>
+          ))}
         </Select>
       )}
       {!edit && <>{type}</>}

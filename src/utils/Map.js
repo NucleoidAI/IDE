@@ -1,20 +1,35 @@
 function compile(object) {
-  let map = {};
-  object = object[Object.keys(object)[0]];
-  if (!object) return {};
+  // TODO add test
 
-  const { id, properties } = object;
+  if (!object) return {};
+  object = object[Object.keys(object)[0]];
+  let map = {};
+
+  const { id, properties, items, type } = object;
+
   map[id] = object;
 
-  for (const key in properties) {
-    const property = properties[key];
-    const { id, type } = property;
-
-    if (type === "object") {
-      map = { ...map, ...compile({ root: property }) };
-    } else {
-      map[id] = property;
+  switch (type) {
+    case "array": {
+      const item = items[Object.keys(items)[0]];
+      map = { ...map, ...compile({ root: item }) };
+      break;
     }
+    case "object": {
+      for (const key in properties) {
+        const property = properties[key];
+        const { id, type } = property;
+
+        if (type === "object" || type === "array") {
+          map = { ...map, ...compile({ root: property }) };
+        } else {
+          map[id] = property;
+        }
+      }
+      break;
+    }
+    default:
+      break;
   }
 
   return map;

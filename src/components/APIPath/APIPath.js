@@ -70,7 +70,9 @@ const APIPath = forwardRef(
       : [];
 
     const handleCheck = (value) => {
-      pathRef.current = prefix + prefix && "/" + value;
+      const slashMark = prefix === "/" ? "" : "/";
+      pathRef.current = prefix + slashMark + value;
+
       const pathStatus = Path.isUsed(paths, prefix, suffix, value);
 
       setAlertPath(pathStatus);

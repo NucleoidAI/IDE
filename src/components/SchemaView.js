@@ -1,7 +1,7 @@
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { TreeView } from "@mui/lab";
-import { compile as cmp } from "../widgets/APIDialog/APIDialog";
+import { compile as cmp } from "../widgets/APIDialog/Context";
 import { compile } from "./Schema";
 import { compile as mapSchema } from "../utils/Map";
 
