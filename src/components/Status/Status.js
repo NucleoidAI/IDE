@@ -1,6 +1,6 @@
 import { Doughnut } from "react-chartjs-2";
 import styles from "./styles";
-import { Box, Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 
 const data = {
   labels: ["Used", "Free"],
@@ -21,12 +21,29 @@ const options = {
 
 function Status() {
   return (
-    <Grid container sx={styles.root}>
-      <Box width={150} height={150}>
+    <Grid
+      container
+      flexDirection={"column"}
+      alignItems={"center"}
+      justifyContent={"space-between"}
+      sx={styles.root}
+    >
+      <Grid />
+
+      <Grid sx={styles.chart}>
         <Doughnut data={data} options={options} />
-      </Box>
+      </Grid>
+      <StatusText />
     </Grid>
   );
 }
+
+const StatusText = () => {
+  return (
+    <Grid>
+      <Typography sx={styles.statusText}>status</Typography>
+    </Grid>
+  );
+};
 
 export default Status;
