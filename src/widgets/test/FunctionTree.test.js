@@ -3,12 +3,11 @@ import FunctionTree from "../FunctionTree";
 import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
 import React from "react";
 import State from "../../state";
-
-import { useStore } from "../../store";
+import { useNucleoidStore } from "../../Context/providers/NucleoidStoreProvider";
 import Enzyme, { shallow } from "enzyme";
 
 Enzyme.configure({ adapter: new Adapter() });
-jest.mock("../../store");
+jest.mock("../../Context/providers/NucleoidStoreProvider");
 
 test("List nested functions", () => {
   const state = State.init();
@@ -24,7 +23,7 @@ test("List nested functions", () => {
     params: ["user"],
     type: "FUNCTION",
   });
-  useStore.mockReturnValue([state]);
+  useNucleoidStore.mockReturnValue([state]);
 
   const wrapper = shallow(<FunctionTree functions={functions} />);
   const root = wrapper.find(NonExpandableTreeItem).first();

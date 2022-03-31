@@ -1,6 +1,10 @@
-import { Doughnut } from "react-chartjs-2";
+import Err from "../../icons/pngs/close.png";
+import Ok from "../../icons/pngs/check.png";
+import Warn from "../../icons/pngs/warning.png";
 import styles from "./styles";
-import { Grid, Typography } from "@mui/material";
+import { useApiStatusStore } from "../../Context/providers/ApiStatusStoreProvider";
+import { Avatar, Button, Grid, Typography } from "@mui/material";
+import { Doughnut } from "react-chartjs-2"; // eslint-disable-line
 
 const data = {
   labels: ["Used", "Free"],
@@ -20,6 +24,8 @@ const options = {
 };
 
 function Status() {
+  const [state, dispatch] = useApiStatusStore();
+
   return (
     <Grid
       container
@@ -29,19 +35,29 @@ function Status() {
       sx={styles.root}
     >
       <Grid />
-
+      {state.name}
       <Grid sx={styles.chart}>
         <Doughnut data={data} options={options} />
       </Grid>
-      <StatusText />
+      <StatusText warn />
+      <Button onClick={() => dispatch({ type: "SELAM" })}>sa</Button>
     </Grid>
   );
 }
 
-const StatusText = () => {
+const StatusText = ({ ok, warn, err }) => {
   return (
-    <Grid>
-      <Typography sx={styles.statusText}>status</Typography>
+    <Grid container justifyContent={"center"} alignItems={"center"}>
+      <Grid>
+        <Avatar
+          sx={{ width: 15, height: 15 }}
+          src={ok ? Ok : warn ? Warn : Err}
+        />
+      </Grid>
+      <Grid>&nbsp;</Grid>
+      <Grid>
+        <Typography sx={styles.statusText}>connected</Typography>
+      </Grid>
     </Grid>
   );
 };

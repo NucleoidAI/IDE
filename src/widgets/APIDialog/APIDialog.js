@@ -6,13 +6,13 @@ import APITypes from "../../components/APITypes";
 import ClosableDialogTitle from "../../components/ClosableDialogTitle";
 import actions from "../../actions";
 import styles from "./styles";
-import { useStore } from "../../store";
+import { useNucleoidStore } from "../../Context/providers/NucleoidStoreProvider";
 import { Dialog, DialogActions, DialogContent, Grid } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { compile, decompile, deindex, index, updatePath } from "./Context";
 
 function APIDialog() {
-  const [context, dispatch] = useStore();
+  const [context, dispatch] = useNucleoidStore();
   const { pages } = context;
   const [method, setMethod] = useState();
   const [path, setPath] = useState();

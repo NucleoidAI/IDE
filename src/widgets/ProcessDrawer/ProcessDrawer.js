@@ -10,13 +10,15 @@ import Settings from "../../settings";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import service from "../../service";
 import styles from "./styles";
+import { useApiStatusStore } from "../../Context/providers/ApiStatusStoreProvider";
 import { useLocation } from "react-router-dom";
-import { useStore } from "../../store";
+import { useNucleoidStore } from "../../Context/providers/NucleoidStoreProvider";
 import { Box, CircularProgress, Drawer, ListItem } from "@mui/material";
 import React, { useState } from "react";
 
 const ProcessDrawer = () => {
-  const [state] = useStore();
+  const [state] = useNucleoidStore();
+  const [status] = useApiStatusStore();
   const location = useLocation();
   const { pages } = state;
   const [started, setStarted] = useState(pages.started);
@@ -26,8 +28,6 @@ const ProcessDrawer = () => {
   const handleClose = () => {
     setAlert(false);
   };
-
-  console.log(pages);
 
   return (
     <>
@@ -118,6 +118,7 @@ const ProcessDrawer = () => {
           <SaveIcon sx={styles.listitem} />
         </ListItem>
       </Drawer>
+      {status.name}
     </>
   );
 };

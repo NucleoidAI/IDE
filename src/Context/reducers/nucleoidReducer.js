@@ -1,7 +1,7 @@
-import State from "./state";
+import State from "../../state";
 import { v4 as uuid } from "uuid";
 
-function reducer(state, { type, payload }) {
+function nucleoidReducer(state, { type, payload }) {
   state = State.copy(state);
   const { nucleoid, pages } = state;
 
@@ -208,4 +208,4 @@ function reducer(state, { type, payload }) {
   return state;
 }
 
-export { reducer };
+export { nucleoidReducer };
