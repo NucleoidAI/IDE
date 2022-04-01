@@ -1,9 +1,20 @@
 import React from "react";
 import State from "../state";
-import { ApiStatusStoreProvider } from "./providers/ApiStatusStoreProvider";// eslint-disable-line
+import { ApiStatusStoreProvider } from "./providers/ApiStatusStoreProvider"; // eslint-disable-line
 import { NucleoidStoreProvider } from "./providers/NucleoidStoreProvider";
 import { apiStatusReducer } from "./reducers/apiStatusReducer";
 import { nucleoidReducer } from "./reducers/nucleoidReducer";
+
+const initStatus = {
+  status: "disconnected",
+  started: false,
+  opened: false,
+  metrics: {
+    free: 15,
+    total: 45,
+    animation: 800,
+  },
+};
 
 const GlobalStoreProvider = ({ children }) => {
   return (
@@ -12,7 +23,7 @@ const GlobalStoreProvider = ({ children }) => {
       nucleoidReducer={nucleoidReducer}
     >
       <ApiStatusStoreProvider
-        apiStatusInitialState={{ name: "" }}
+        apiStatusInitialState={initStatus}
         apiStatusReducer={apiStatusReducer}
       >
         {children}

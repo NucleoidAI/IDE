@@ -14,19 +14,54 @@ import { useApiStatusStore } from "../../Context/providers/ApiStatusStoreProvide
 import { useLocation } from "react-router-dom";
 import { useNucleoidStore } from "../../Context/providers/NucleoidStoreProvider";
 import { Box, CircularProgress, Drawer, ListItem } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const ProcessDrawer = () => {
   const [state] = useNucleoidStore();
-  const [status] = useApiStatusStore();
+  const [status, dispatch] = useApiStatusStore();
   const location = useLocation();
-  const { pages } = state;
-  const [started, setStarted] = useState(pages.started);
   const [alert, setAlert] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const apiStatus = status.status;
+
+  useEffect(() => {
+    if (location.state?.anchor === false) {
+      setAlert(false);
+    }
+  }, [location.state]);
 
   const handleClose = () => {
     setAlert(false);
+  };
+
+  const handleRunApi = () => {
+    if (apiStatus === "disconnected" || apiStatus === "unreachable") {
+      const nuc = state.get("nucleoid");
+      dispatch({ type: "SET_STATUS", payload: "connecting" });
+      setAlert(false);
+      service
+        .openApiStart(nuc)
+        .then(() => {
+          window.open(Settings.url.app, "_blank").focus();
+          dispatch({ type: "SET_STATUS", payload: "connected" });
+          setAlert(false);
+        })
+        .catch((error) => {
+          dispatch({ type: "SET_STATUS", payload: "unreachable" });
+          setAlert(true);
+        });
+    } else {
+      service
+        .openApiStop()
+        .then(() => {
+          dispatch({ type: "SET_STATUS", payload: "disconnected" });
+          setAlert(false);
+        })
+        .catch((error) => {
+          dispatch({ type: "SET_STATUS", payload: "unreachable" });
+
+          setAlert(true);
+        });
+    }
   };
 
   return (
@@ -54,52 +89,7 @@ const ProcessDrawer = () => {
             }
             handleTooltipClose={handleClose}
           >
-            <ListItem
-              button
-              onClick={() => {
-                if (!started) {
-                  const nuc = state.get("nucleoid");
-                  setLoading(true);
-                  setAlert(false);
-                  service
-                    .openApiStart(nuc)
-                    .then(() => {
-                      if (!pages.opened) {
-                        pages.opened = true;
-                        window.open(Settings.url.app, "_blank").focus();
-                        setAlert(false);
-
-                        setLoading(false);
-                      }
-                    })
-                    .catch((error) => {
-                      setStarted(false);
-                      setLoading(false);
-                      setAlert(true);
-                    });
-                } else {
-                  service.openApiStop().catch((error) => {
-                    setLoading(false);
-                    setStarted(false);
-                    setAlert(true);
-                  });
-                }
-
-                setStarted((pages.started = !started));
-              }}
-            >
-              {loading ? (
-                <CircularProgress
-                  size={25}
-                  color="inherit"
-                  sx={{ width: 100 }}
-                />
-              ) : !started ? (
-                <PlayCircleFilledIcon sx={styles.listitem} />
-              ) : (
-                started && <PauseCircleFilledIcon sx={styles.listitem} />
-              )}
-            </ListItem>
+            {ApiButton(apiStatus, handleRunApi)}
           </DialogTooltip>
           <ListItem button>
             <ViewListIcon sx={styles.listitem} />
@@ -121,6 +111,36 @@ const ProcessDrawer = () => {
       {status.name}
     </>
   );
+};
+
+const ApiButton = (status, handleRunApi, handleClose, anchor) => {
+  switch (status) {
+    case "connected":
+      return (
+        <ListItem button onClick={() => handleRunApi()}>
+          <PauseCircleFilledIcon sx={styles.listitem} />
+        </ListItem>
+      );
+    case "connecting":
+      return (
+        <ListItem>
+          <CircularProgress size={25} color="inherit" sx={{ width: 90 }} />
+        </ListItem>
+      );
+    case "disconnected":
+      return (
+        <ListItem button onClick={() => handleRunApi()}>
+          <PlayCircleFilledIcon sx={styles.listitem} />
+        </ListItem>
+      );
+    case "unreachable":
+      return (
+        <ListItem button onClick={() => handleRunApi()}>
+          <PlayCircleFilledIcon sx={styles.listitem} />
+        </ListItem>
+      );
+    default:
+  }
 };
 
 export default ProcessDrawer;

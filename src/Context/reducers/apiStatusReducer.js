@@ -1,8 +1,15 @@
 function apiStatusReducer(state, { type, payload }) {
   switch (type) {
-    case "SELAM": {
-      return "selam";
+    case "SET_METRICS":
+      console.log("SET_METRICS");
       break;
+    case "SET_STATUS": {
+      const tmpState = state;
+      tmpState.status = payload;
+      tmpState.metrics.free = Math.random() % 100;
+      tmpState.metrics.total = Math.random() % 100;
+      tmpState.metrics.animation = false;
+      return { ...tmpState };
     }
 
     default:
