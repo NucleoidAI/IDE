@@ -4,7 +4,7 @@ import Ok from "../../icons/pngs/check.png";
 import Warn from "../../icons/pngs/warning.png";
 import styles from "./styles";
 import { useApiStatusStore } from "../../Context/providers/ApiStatusStoreProvider";
-import { Avatar, Grid, Typography } from "@mui/material";
+import { Avatar, Grid, Tooltip, Typography } from "@mui/material";
 import { Doughnut } from "react-chartjs-2"; // eslint-disable-line
 
 function Status() {
@@ -76,7 +76,18 @@ const StatusContent = (status, isText) => {
     case "disconnected":
       return isText ? "Disconnected" : Warn;
     case "unreachable":
-      return isText ? "Unreachable" : Err;
+      return isText ? (
+        <Tooltip
+          title="The nucleoid runtime is not started. Run the `npx nucleoidjs start` in
+        terminal."
+          placement="top-start"
+        >
+          <Typography>Unreachable</Typography>
+        </Tooltip>
+      ) : (
+        Err
+      );
+
     default:
   }
 };

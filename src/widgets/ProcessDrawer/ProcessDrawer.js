@@ -113,7 +113,7 @@ const ProcessDrawer = () => {
   );
 };
 
-const ApiButton = (status, handleRunApi, handleClose, anchor) => {
+const ApiButton = (status, handleRunApi) => {
   switch (status) {
     case "connected":
       return (
