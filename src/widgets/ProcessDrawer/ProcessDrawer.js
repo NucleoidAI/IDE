@@ -7,6 +7,7 @@ import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import PostmanIcon from "../../icons/Postman";
 import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
+import SyncIcon from "@mui/icons-material/Sync";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import service from "../../service";
 import styles from "./styles";
@@ -51,8 +52,8 @@ const ProcessDrawer = () => {
     setAlert(false);
   };
 
-  const handleRunApi = () => {
-    if (apiStatus === "disconnected" || apiStatus === "unreachable") {
+  const handleRunApi = (reload) => {
+    if (reload) {
       const nuc = state.get("nucleoid");
       dispatch({ type: "SET_STATUS", payload: "connecting" });
 
@@ -69,17 +70,35 @@ const ProcessDrawer = () => {
           setAlert(true);
         });
     } else {
-      service
-        .openApiStop()
-        .then(() => {
-          getApiMetricsAndStatus();
-          setAlert(false);
-        })
-        .catch((error) => {
-          dispatch({ type: "SET_STATUS", payload: "unreachable" });
+      if (apiStatus === "disconnected" || apiStatus === "unreachable") {
+        const nuc = state.get("nucleoid");
+        dispatch({ type: "SET_STATUS", payload: "connecting" });
 
-          setAlert(true);
-        });
+        setAlert(false);
+        service
+          .openApiStart(nuc)
+          .then(() => {
+            window.open(Settings.url.app, "_blank").focus();
+            getApiMetricsAndStatus();
+            setAlert(false);
+          })
+          .catch((error) => {
+            dispatch({ type: "SET_STATUS", payload: "unreachable" });
+            setAlert(true);
+          });
+      } else {
+        service
+          .openApiStop()
+          .then(() => {
+            getApiMetricsAndStatus();
+            setAlert(false);
+          })
+          .catch((error) => {
+            dispatch({ type: "SET_STATUS", payload: "unreachable" });
+
+            setAlert(true);
+          });
+      }
     }
   };
 
@@ -136,9 +155,14 @@ const ApiButton = (status, handleRunApi) => {
   switch (status) {
     case "connected":
       return (
-        <ListItem button onClick={() => handleRunApi()}>
-          <PauseCircleFilledIcon sx={styles.listitem} />
-        </ListItem>
+        <>
+          <ListItem button onClick={() => handleRunApi(true)}>
+            <SyncIcon sx={styles.listitem} />
+          </ListItem>
+          <ListItem button onClick={() => handleRunApi()}>
+            <PauseCircleFilledIcon sx={styles.listitem} />
+          </ListItem>
+        </>
       );
     case "connecting":
       return (
