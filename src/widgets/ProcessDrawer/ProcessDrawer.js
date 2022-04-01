@@ -61,7 +61,6 @@ const ProcessDrawer = () => {
         .openApiStart(nuc)
         .then(() => {
           window.open(Settings.url.app, "_blank").focus();
-          //dispatch({ type: "SET_STATUS", payload: "connected" });
           getApiMetricsAndStatus();
           setAlert(false);
         })
@@ -73,7 +72,6 @@ const ProcessDrawer = () => {
       service
         .openApiStop()
         .then(() => {
-          // dispatch({ type: "SET_STATUS", payload: "disconnected" });
           getApiMetricsAndStatus();
           setAlert(false);
         })
