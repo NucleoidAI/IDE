@@ -15,7 +15,6 @@ import {
   ThemeProvider,
 } from "@mui/material";
 
-
 function App() {
   return (
     <StyledEngineProvider injectFirst>

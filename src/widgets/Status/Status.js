@@ -52,7 +52,10 @@ const StatusText = ({ ok, warn, err, state }) => {
   return (
     <Grid container justifyContent={"center"} alignItems={"center"}>
       <Grid>
-        <Avatar sx={{ width: 15, height: 15 }} src={StatusContent(state.status)} />
+        <Avatar
+          sx={{ width: 15, height: 15 }}
+          src={StatusContent(state.status)}
+        />
       </Grid>
       <Grid>&nbsp;</Grid>
       <Grid>
