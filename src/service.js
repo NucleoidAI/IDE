@@ -19,7 +19,6 @@ const query = async (body) => {
 };
 
 const openApiStart = (value) => {
-  console.log(JSON.stringify(value));
   return fetch(Settings.url.terminal + "openapi", {
     method: "POST",
     headers: {
@@ -33,9 +32,15 @@ const openApiStart = (value) => {
 };
 
 const openApiStop = () => {
-  return fetch(Settings.url.terminal, {
+  return fetch(Settings.url.terminal + "openapi", {
     method: "POST",
-    body: "OpenAPI.stop()",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: `{
+      "nuc": {},
+      "action": "stop"
+    }`,
   });
 };
 
