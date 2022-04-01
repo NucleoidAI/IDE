@@ -9,6 +9,7 @@ const styles = {
   statusText: {
     color: "#A5A7AB",
   },
+  icon: { fill: "grey", height: 15, width: 15 },
 };
 
 export default styles;

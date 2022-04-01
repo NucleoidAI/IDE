@@ -5,6 +5,7 @@ import service from "../../../service";
 import styles from "./styles";
 
 import {
+  Box,
   Card,
   Fab,
   FormControlLabel,
@@ -12,6 +13,7 @@ import {
   Grid,
   Paper,
   Switch,
+  Typography,
 } from "@mui/material";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -48,6 +50,7 @@ import React, { useEffect, useRef, useState } from "react";
 function Query() {
   const [result, setResult] = useState();
   const editor = useRef();
+  const [checked, setChecked] = useState(true);
 
   useEffect(() => {
     editor.current.commands.addCommand({
@@ -87,18 +90,47 @@ function Query() {
         </Grid>
         <Grid item xs={12}>
           <Card sx={styles.results}>
-            <Grid container justifyContent={"flex-end"}>
+            <Box sx={styles.jsonSwitch}>
               <FormGroup>
-                <FormControlLabel control={<Switch />} label={"JSON"} checked />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={checked}
+                      onChange={() => setChecked(!checked)}
+                    />
+                  }
+                  label={"JSON"}
+                />
               </FormGroup>
-            </Grid>
-            {typeof result === "object" && <QueryResult json={result} />}
-            {typeof result !== "object" && <>{result}</>}
+              {result && <Typography>time :{result.time} ms</Typography>}
+            </Box>
+            {ResultTypes(result, checked)}
           </Card>
         </Grid>
       </Grid>
     </>
   );
 }
+
+const ResultTypes = (result, isTable) => {
+  if (typeof result === "object") {
+    switch (typeof result.result) {
+      case "object":
+        if (Array.isArray(result.result)) {
+          if (isTable) {
+            return "table olcak";
+          } else {
+            return <QueryResult json={result.result} />;
+          }
+        } else {
+          return <QueryResult json={result.result} />;
+        }
+      default:
+        return result.result;
+    }
+  } else {
+    return <>{result}</>;
+  }
+};
 
 export default Query;

@@ -5,6 +5,7 @@ function QueryResult({ json }) {
   return (
     <ReactJsonView
       src={json}
+      name={null}
       theme={"grayscale:inverted"}
       displayDataTypes={false}
       displayObjectSize={false}

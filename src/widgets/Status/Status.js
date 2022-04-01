@@ -1,10 +1,10 @@
-import Err from "../../icons/pngs/close.png";
-import Loading from "../../icons/pngs/loading.png";
-import Ok from "../../icons/pngs/check.png";
-import Warn from "../../icons/pngs/warning.png";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import LoopIcon from "@mui/icons-material/Loop";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import styles from "./styles";
 import { useApiStatusStore } from "../../Context/providers/ApiStatusStoreProvider";
-import { Avatar, Grid, Tooltip, Typography } from "@mui/material";
+import { Grid, Tooltip, Typography } from "@mui/material";
 import { Doughnut } from "react-chartjs-2"; // eslint-disable-line
 
 function Status() {
@@ -51,12 +51,7 @@ function Status() {
 const StatusText = ({ ok, warn, err, state }) => {
   return (
     <Grid container justifyContent={"center"} alignItems={"center"}>
-      <Grid>
-        <Avatar
-          sx={{ width: 15, height: 15 }}
-          src={StatusContent(state.status)}
-        />
-      </Grid>
+      <Grid justifyContent={"center"}>{StatusContent(state.status)}</Grid>
       <Grid>&nbsp;</Grid>
       <Grid>
         <Typography sx={styles.statusText}>
@@ -70,11 +65,11 @@ const StatusText = ({ ok, warn, err, state }) => {
 const StatusContent = (status, isText) => {
   switch (status) {
     case "connected":
-      return isText ? "Connected" : Ok;
+      return isText ? "Connected" : <CheckCircleOutlineIcon sx={styles.icon} />;
     case "connecting":
-      return isText ? "Connecting" : Loading;
+      return isText ? "Connecting" : <LoopIcon sx={styles.icon} />;
     case "disconnected":
-      return isText ? "Disconnected" : Warn;
+      return isText ? "Disconnected" : <WarningAmberIcon sx={styles.icon} />;
     case "unreachable":
       return isText ? (
         <Tooltip
@@ -85,7 +80,7 @@ const StatusContent = (status, isText) => {
           <Typography>Unreachable</Typography>
         </Tooltip>
       ) : (
-        Err
+        <ErrorOutlineIcon sx={styles.icon} />
       );
 
     default:
