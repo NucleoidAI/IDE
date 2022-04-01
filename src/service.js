@@ -44,6 +44,25 @@ const openApiStop = () => {
   });
 };
 
-const service = { query, checkFormat, openApiStart, openApiStop };
+const getMetrics = () => {
+  return fetch(Settings.url.terminal + "metrics", {
+    method: "GET",
+  }).then((response) => response.json());
+};
+
+const getOpenApiStatus = () => {
+  return fetch(Settings.url.terminal + "openapi", {
+    method: "GET",
+  }).then((response) => response.json());
+};
+
+const service = {
+  query,
+  checkFormat,
+  openApiStart,
+  openApiStop,
+  getMetrics,
+  getOpenApiStatus,
+};
 
 export default service;

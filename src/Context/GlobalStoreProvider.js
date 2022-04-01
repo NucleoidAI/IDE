@@ -10,8 +10,8 @@ const initStatus = {
   started: false,
   opened: false,
   metrics: {
-    free: 15,
-    total: 45,
+    free: 1,
+    total: 99,
     animation: 800,
   },
 };

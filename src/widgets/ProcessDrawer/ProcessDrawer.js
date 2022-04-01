@@ -14,7 +14,7 @@ import { useApiStatusStore } from "../../Context/providers/ApiStatusStoreProvide
 import { useLocation } from "react-router-dom";
 import { useNucleoidStore } from "../../Context/providers/NucleoidStoreProvider";
 import { Box, CircularProgress, Drawer, ListItem } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 const ProcessDrawer = () => {
   const [state] = useNucleoidStore();
@@ -22,12 +22,30 @@ const ProcessDrawer = () => {
   const location = useLocation();
   const [alert, setAlert] = useState(false);
   const apiStatus = status.status;
+  const getStatusTask = useRef();
+
+  const getApiMetricsAndStatus = useCallback(() => {
+    Promise.all([service.getMetrics(), service.getOpenApiStatus()])
+      .then((values) => {
+        dispatch({
+          type: "SET_METRICS",
+          payload: { metrics: values[0], status: values[1] },
+        });
+      })
+      .catch((err) => console.log(err));
+  }, [dispatch]);
 
   useEffect(() => {
+    clearInterval(getStatusTask.current);
+    getApiMetricsAndStatus();
+    getStatusTask.current = setInterval(() => {
+      getApiMetricsAndStatus();
+    }, 10000);
+
     if (location.state?.anchor === false) {
       setAlert(false);
     }
-  }, [location.state]);
+  }, [location.state, getApiMetricsAndStatus]);
 
   const handleClose = () => {
     setAlert(false);
@@ -37,12 +55,14 @@ const ProcessDrawer = () => {
     if (apiStatus === "disconnected" || apiStatus === "unreachable") {
       const nuc = state.get("nucleoid");
       dispatch({ type: "SET_STATUS", payload: "connecting" });
+
       setAlert(false);
       service
         .openApiStart(nuc)
         .then(() => {
           window.open(Settings.url.app, "_blank").focus();
-          dispatch({ type: "SET_STATUS", payload: "connected" });
+          //dispatch({ type: "SET_STATUS", payload: "connected" });
+          getApiMetricsAndStatus();
           setAlert(false);
         })
         .catch((error) => {
@@ -53,7 +73,8 @@ const ProcessDrawer = () => {
       service
         .openApiStop()
         .then(() => {
-          dispatch({ type: "SET_STATUS", payload: "disconnected" });
+          // dispatch({ type: "SET_STATUS", payload: "disconnected" });
+          getApiMetricsAndStatus();
           setAlert(false);
         })
         .catch((error) => {
