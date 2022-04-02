@@ -10,7 +10,7 @@ function QueryResult({ json }) {
       displayDataTypes={false}
       displayObjectSize={false}
       quotesOnKeys={false}
-      style={{ border: 0 }}
+      style={{ border: 0, "overflow-y": "scroll" }}
       iconStyle={"circle"}
     />
   );
