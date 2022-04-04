@@ -1,6 +1,6 @@
 import Settings from "./settings";
 
-const checkFormat = async (body) => {
+const format = async (body) => {
   return fetch(Settings.url.editor, {
     method: "POST",
     headers: {
@@ -14,47 +14,35 @@ const checkFormat = async (body) => {
 const query = async (body) => {
   return fetch(Settings.url.terminal, {
     method: "POST",
-    body: body,
+    body,
   }).then((response) => response.text());
 };
 
-const openApiStart = (value) => {
-  return fetch(Settings.url.terminal + "openapi", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: `{
-      "nuc": ${JSON.stringify(value)},
-      "action": "start"
-    }`,
-  });
+const getOpenApiStatus = () => {};
+
+const openapi = (action, nuc) => {
+  if (action === undefined) {
+    return fetch(Settings.url.terminal + "openapi", {
+      method: "GET",
+    }).then((response) => response.json());
+  } else {
+    return fetch(Settings.url.terminal + "openapi", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        nuc,
+        action,
+      }),
+    });
+  }
 };
 
-const openApiStop = () => {
-  return fetch(Settings.url.terminal + "openapi", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: `{
-      "nuc": {},
-      "action": "stop"
-    }`,
-  });
-};
-
-const getMetrics = () => {
-  return fetch(Settings.url.terminal + "metrics", {
+const metrics = () =>
+  fetch(Settings.url.terminal + "metrics", {
     method: "GET",
   }).then((response) => response.json());
-};
-
-const getOpenApiStatus = () => {
-  return fetch(Settings.url.terminal + "openapi", {
-    method: "GET",
-  }).then((response) => response.json());
-};
 
 const logs = () =>
   fetch(Settings.url.terminal + "logs", {
@@ -63,11 +51,9 @@ const logs = () =>
 
 const service = {
   query,
-  checkFormat,
-  openApiStart,
-  openApiStop,
-  getMetrics,
-  getOpenApiStatus,
+  format,
+  openapi,
+  metrics,
   logs,
 };
 

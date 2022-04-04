@@ -26,7 +26,7 @@ const ProcessDrawer = () => {
   const getStatusTask = useRef();
 
   const getApiMetricsAndStatus = useCallback(() => {
-    Promise.all([service.getMetrics(), service.getOpenApiStatus()])
+    Promise.all([service.metrics(), service.openapi()])
       .then((values) => {
         dispatch({
           type: "SET_METRICS",
@@ -59,7 +59,7 @@ const ProcessDrawer = () => {
 
       setAlert(false);
       service
-        .openApiStart(nuc)
+        .openapi("start", nuc)
         .then(() => {
           window.open(Settings.url.app, "_blank").focus();
           getApiMetricsAndStatus();
@@ -76,7 +76,7 @@ const ProcessDrawer = () => {
 
         setAlert(false);
         service
-          .openApiStart(nuc)
+          .openapi("start", nuc)
           .then(() => {
             window.open(Settings.url.app, "_blank").focus();
             getApiMetricsAndStatus();
@@ -88,7 +88,7 @@ const ProcessDrawer = () => {
           });
       } else {
         service
-          .openApiStop()
+          .openapi("stop")
           .then(() => {
             getApiMetricsAndStatus();
             setAlert(false);

@@ -39,7 +39,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
     clearTimeout(timer);
 
     timer = setTimeout(() => {
-      service.checkFormat(value).then((result) => {
+      service.format(value).then((result) => {
         setCode(result.output);
         setAnnotations(
           result.messages.map((item) => {
