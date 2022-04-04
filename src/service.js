@@ -56,6 +56,11 @@ const getOpenApiStatus = () => {
   }).then((response) => response.json());
 };
 
+const logs = () =>
+  fetch(Settings.url.terminal + "logs", {
+    method: "GET",
+  }).then((response) => response.json());
+
 const service = {
   query,
   checkFormat,
@@ -63,6 +68,7 @@ const service = {
   openApiStop,
   getMetrics,
   getOpenApiStatus,
+  logs,
 };
 
 export default service;
