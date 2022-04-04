@@ -18,8 +18,6 @@ const query = async (body) => {
   }).then((response) => response.text());
 };
 
-const getOpenApiStatus = () => {};
-
 const openapi = (action, nuc) => {
   if (action === undefined) {
     return fetch(Settings.url.terminal + "openapi", {
