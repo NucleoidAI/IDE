@@ -1,7 +1,7 @@
 import React from "react";
 import State from "../state";
-import { ContextProvider } from "./providers/contextProvider";// eslint-disable-line
-import { LayoutContextProvider } from "./providers/layoutContextProvider"; 
+import { ContextProvider } from "./providers/contextProvider"; // eslint-disable-line
+import { LayoutContextProvider } from "./providers/layoutContextProvider";
 import { contextReducer } from "./reducers/contextReducer";
 import { layoutReducer } from "./reducers/layoutReducer";
 
