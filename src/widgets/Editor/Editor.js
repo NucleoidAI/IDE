@@ -15,6 +15,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
   const [code, setCode] = useState(null);
   const ace = useRef();
   const timer = useRef();
+  const abortController = useRef();
 
   const nucfunctions = state.nucleoid.functions;
 
@@ -37,10 +38,16 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
 
   function checkEditorService(value) {
     clearTimeout(timer.current);
+    if (abortController.current) abortController.current.abort();
 
     timer.current = setTimeout(() => {
-      service.lint(value).then((result) => {
+      abortController.current = new AbortController();
+
+      service.lint(value, abortController.current.signal).then((result) => {
+        abortController.current = null;
+        console.log(result);
         setCode(result.output);
+
         setAnnotations(
           result.messages.map((item) => {
             return {

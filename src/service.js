@@ -1,7 +1,8 @@
 import Settings from "./settings";
 
-const lint = async (body) => {
+const lint = async (body, signal) => {
   return fetch(Settings.url.editor, {
+    signal: signal,
     method: "POST",
     headers: {
       "Content-Type": "text/plain",
