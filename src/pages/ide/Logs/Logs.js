@@ -10,7 +10,9 @@ function Logs() {
   const [logs, setLogs] = useState([]);
 
   useEffect(() => {
-    service.logs().then((logs) => setLogs(logs));
+    service.logs().then((logs) => {
+      setLogs([...logs.slice(0, 25)]);
+    });
   }, []);
 
   return (

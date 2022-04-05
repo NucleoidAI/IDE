@@ -9,8 +9,8 @@ const initStatus = {
   status: "unreachable",
   openApi: false,
   metrics: {
-    free: 1,
-    total: 99,
+    free: 50,
+    total: 100,
     animation: 800,
   },
 };

@@ -14,20 +14,22 @@ import styles from "./styles";
 import { useApiStatusStore } from "../../Context/providers/ApiStatusStoreProvider";
 import { useLocation } from "react-router-dom";
 import { useNucleoidStore } from "../../Context/providers/NucleoidStoreProvider";
-import { Box, Drawer, ListItem } from "@mui/material";
+import { Box, CircularProgress, Drawer, ListItem } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
 const ProcessDrawer = () => {
   const [state] = useNucleoidStore();
   const [status, dispatch] = useApiStatusStore();
   const location = useLocation();
+
   const [alert, setAlert] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const getStatusTask = useRef();
 
   const defaultMetric = {
     total: 100,
-    free: 1,
+    free: 50,
   };
 
   const getStatus = () => {
@@ -74,6 +76,7 @@ const ProcessDrawer = () => {
   };
 
   const handleRunApi = (restart) => {
+    setLoading(true);
     if (
       (status.status !== "unreachable" && status.openapi === false) ||
       restart
@@ -86,10 +89,12 @@ const ProcessDrawer = () => {
         .then(() => {
           window.open(Settings.url.app, "_blank").focus();
           getStatus();
+          setLoading(false);
           setAlert(false);
         })
         .catch(() => {
           getStatus();
+          setLoading(false);
           setAlert(true);
         });
     } else {
@@ -97,10 +102,12 @@ const ProcessDrawer = () => {
         .openapi("stop")
         .then(() => {
           getStatus();
+          setLoading(false);
           setAlert(false);
         })
         .catch(() => {
           getStatus();
+          setLoading(false);
           setAlert(true);
         });
     }
@@ -131,7 +138,13 @@ const ProcessDrawer = () => {
             }
             handleTooltipClose={handleClose}
           >
-            {ApiButton(status, handleRunApi)}
+            {loading ? (
+              <ListItem sx={styles.listitem}>
+                <CircularProgress color="inherit" size={23} />
+              </ListItem>
+            ) : (
+              ApiButton(status, handleRunApi)
+            )}
           </DialogTooltip>
           <ListItem button>
             <ViewListIcon sx={styles.listitem} />
