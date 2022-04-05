@@ -11,15 +11,15 @@ import SyncIcon from "@mui/icons-material/Sync";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import service from "../../service";
 import styles from "./styles";
-import { useApiStatusStore } from "../../Context/providers/ApiStatusStoreProvider";
+import { useContext } from "../../Context/providers/contextProvider";
+import { useLayoutContext } from "../../Context/providers/layoutContextProvider";
 import { useLocation } from "react-router-dom";
-import { useNucleoidStore } from "../../Context/providers/NucleoidStoreProvider";
 import { Box, CircularProgress, Drawer, ListItem } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
 const ProcessDrawer = () => {
-  const [state] = useNucleoidStore();
-  const [status, dispatch] = useApiStatusStore();
+  const [state] = useContext();
+  const [status, dispatch] = useLayoutContext();
   const location = useLocation();
 
   const [alert, setAlert] = useState(false);

@@ -5,7 +5,7 @@ import Settings from "../Settings";
 import Status from "../../widgets/Status";
 import styles from "./styles";
 
-import { useApiStatusStore } from "../../Context/providers/ApiStatusStoreProvider";
+import { useLayoutContext } from "../../Context/providers/layoutContextProvider";
 import { useNavigate } from "react-router-dom";
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
@@ -28,7 +28,7 @@ function Menu(props) {
 }
 
 const MenuLinks = (props) => {
-  const [layoutContext] = useApiStatusStore();
+  const [layoutContext] = useLayoutContext();
   const navigate = useNavigate();
 
   return (

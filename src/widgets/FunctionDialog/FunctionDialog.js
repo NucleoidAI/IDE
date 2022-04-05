@@ -8,11 +8,11 @@ import Path from "../../utils/Path";
 import actions from "../../actions";
 import styles from "./styles";
 // eslint-disable-next-line react-hooks/exhaustive-deps
-import { useNucleoidStore } from "../../Context/providers/NucleoidStoreProvider";
+import { useContext } from "../../Context/providers/contextProvider";
 import { Grid, MenuItem, Select, TextField, Typography } from "@mui/material";
 
 export default function FunctionDialog() {
-  const [context, dispatch] = useNucleoidStore();
+  const [context, dispatch] = useContext();
   const { pages } = context;
   let type = "FOLDER";
   let path;

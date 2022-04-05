@@ -3,12 +3,12 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import LoopIcon from "@mui/icons-material/Loop";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import styles from "./styles";
-import { useApiStatusStore } from "../../Context/providers/ApiStatusStoreProvider";
+import { useLayoutContext } from "../../Context/providers/layoutContextProvider";
 import { Grid, Tooltip, Typography } from "@mui/material";
 import { Doughnut } from "react-chartjs-2"; // eslint-disable-line
 
 function Status() {
-  const [state] = useApiStatusStore();
+  const [state] = useLayoutContext();
   const metrics = state.metrics;
 
   const options = {

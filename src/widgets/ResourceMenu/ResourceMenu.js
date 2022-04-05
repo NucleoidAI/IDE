@@ -5,12 +5,12 @@ import Fade from "@mui/material/Fade";
 import HttpIcon from "@mui/icons-material/Http";
 import React from "react";
 import SourceIcon from "@mui/icons-material/Source";
-import { useNucleoidStore } from "../../Context/providers/NucleoidStoreProvider";
+import { useContext } from "../../Context/providers/contextProvider";
 import { useRef } from "react";
 import { Divider, Menu, MenuItem } from "@mui/material";
 
 const ResourceMenu = (props) => {
-  const [state, dispatch] = useNucleoidStore();
+  const [state, dispatch] = useContext();
   const { anchor, path } = state.pages.api.resourceMenu;
   const [methodDisabled, setMethodDisabled] = React.useState();
   const [alertMessage, setAlertMessage] = React.useState("");

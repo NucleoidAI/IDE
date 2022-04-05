@@ -1,9 +1,9 @@
 import React from "react";
 import State from "../state";
-import { LayoutStoreProvider } from "./providers/ApiStatusStoreProvider"; // eslint-disable-line
-import { NucleoidStoreProvider } from "./providers/NucleoidStoreProvider";
+import { ContextProvider } from "./providers/contextProvider";// eslint-disable-line
+import { LayoutContextProvider } from "./providers/layoutContextProvider"; 
+import { contextReducer } from "./reducers/contextReducer";
 import { layoutReducer } from "./reducers/layoutReducer";
-import { nucleoidReducer } from "./reducers/nucleoidReducer";
 
 const initStatus = {
   status: "unreachable",
@@ -17,17 +17,11 @@ const initStatus = {
 
 const GlobalStoreProvider = ({ children }) => {
   return (
-    <NucleoidStoreProvider
-      nucleoidInitialState={State.withSample()}
-      nucleoidReducer={nucleoidReducer}
-    >
-      <LayoutStoreProvider
-        apiStatusInitialState={initStatus}
-        layoutReducer={layoutReducer}
-      >
+    <ContextProvider state={State.withSample()} reducer={contextReducer}>
+      <LayoutContextProvider state={initStatus} reducer={layoutReducer}>
         {children}
-      </LayoutStoreProvider>
-    </NucleoidStoreProvider>
+      </LayoutContextProvider>
+    </ContextProvider>
   );
 };
 
