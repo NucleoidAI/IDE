@@ -7,6 +7,9 @@ export default function QueryArrayTable({ json }) {
     const columns = [];
     if (typeof json[0] === "object") {
       if (isRow) {
+        //const arr = [];
+        // json.forEach((item) => Object.keys(item).forEach((key) => typeof item[key] === 'object' && ));
+
         return json;
       } else {
         const obj = json[0];

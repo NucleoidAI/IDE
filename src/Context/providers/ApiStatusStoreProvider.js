@@ -1,25 +1,25 @@
 import React from "react";
 
-const ApiStatusStore = React.createContext();
-ApiStatusStore.displayName = "ApiStatusStore";
+const LayoutStore = React.createContext();
+LayoutStore.displayName = "ApiStatusStore";
 
-const useApiStatusStore = () => React.useContext(ApiStatusStore);
+const useApiStatusStore = () => React.useContext(LayoutStore);
 
-const ApiStatusStoreProvider = ({
+const LayoutStoreProvider = ({
   children,
   apiStatusInitialState,
-  apiStatusReducer,
+  layoutReducer,
 }) => {
   const [apiStatusState, apiStatusDispatch] = React.useReducer(
-    apiStatusReducer,
+    layoutReducer,
     apiStatusInitialState
   );
 
   return (
-    <ApiStatusStore.Provider value={[apiStatusState, apiStatusDispatch]}>
+    <LayoutStore.Provider value={[apiStatusState, apiStatusDispatch]}>
       {children}
-    </ApiStatusStore.Provider>
+    </LayoutStore.Provider>
   );
 };
 
-export { useApiStatusStore, ApiStatusStoreProvider };
+export { useApiStatusStore, LayoutStoreProvider };

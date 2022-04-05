@@ -14,7 +14,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
   const [annotations, setAnnotations] = useState([]);
   const [code, setCode] = useState(null);
   const ace = useRef();
-  let timer = null;
+  const timer = useRef();
 
   const nucfunctions = state.nucleoid.functions;
 
@@ -36,10 +36,10 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
   });
 
   function checkEditorService(value) {
-    clearTimeout(timer);
+    clearTimeout(timer.current);
 
-    timer = setTimeout(() => {
-      service.format(value).then((result) => {
+    timer.current = setTimeout(() => {
+      service.lint(value).then((result) => {
         setCode(result.output);
         setAnnotations(
           result.messages.map((item) => {

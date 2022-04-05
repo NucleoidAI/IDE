@@ -53,11 +53,7 @@ const StatusText = ({ ok, warn, err, state }) => {
     <Grid container justifyContent={"center"} alignItems={"center"}>
       <Grid justifyContent={"center"}>{StatusContent(state.status)}</Grid>
       <Grid>&nbsp;</Grid>
-      <Grid>
-        <Typography sx={styles.statusText}>
-          {StatusContent(state.status, true)}
-        </Typography>
-      </Grid>
+      <Grid>{StatusContent(state.status, true)}</Grid>
     </Grid>
   );
 };
@@ -65,11 +61,23 @@ const StatusText = ({ ok, warn, err, state }) => {
 const StatusContent = (status, isText) => {
   switch (status) {
     case "connected":
-      return isText ? "Connected" : <CheckCircleOutlineIcon sx={styles.icon} />;
+      return isText ? (
+        <Typography sx={styles.statusText}>Connected</Typography>
+      ) : (
+        <CheckCircleOutlineIcon sx={styles.icon} />
+      );
     case "connecting":
-      return isText ? "Connecting" : <LoopIcon sx={styles.icon} />;
+      return isText ? (
+        <Typography sx={styles.statusText}>Connecting</Typography>
+      ) : (
+        <LoopIcon sx={styles.icon} />
+      );
     case "disconnected":
-      return isText ? "Disconnected" : <WarningAmberIcon sx={styles.icon} />;
+      return isText ? (
+        <Typography sx={styles.statusText}>Disconnecting</Typography>
+      ) : (
+        <WarningAmberIcon sx={styles.icon} />
+      );
     case "unreachable":
       return isText ? (
         <Tooltip
@@ -77,7 +85,7 @@ const StatusContent = (status, isText) => {
         terminal."
           placement="top-start"
         >
-          <Typography>Unreachable</Typography>
+          <Typography sx={styles.statusText}>Unreachable</Typography>
         </Tooltip>
       ) : (
         <ErrorOutlineIcon sx={styles.icon} />

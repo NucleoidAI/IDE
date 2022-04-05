@@ -1,12 +1,11 @@
 import Settings from "./settings";
 
-const format = async (body) => {
+const lint = async (body) => {
   return fetch(Settings.url.editor, {
     method: "POST",
     headers: {
       "Content-Type": "text/plain",
     },
-
     body: body,
   }).then((response) => response.json());
 };
@@ -15,7 +14,7 @@ const query = async (body) => {
   return fetch(Settings.url.terminal, {
     method: "POST",
     body,
-  }).then((response) => response.text());
+  }).then((response) => response.json());
 };
 
 const openapi = (action, nuc) => {
@@ -49,7 +48,7 @@ const logs = () =>
 
 const service = {
   query,
-  format,
+  lint,
   openapi,
   metrics,
   logs,

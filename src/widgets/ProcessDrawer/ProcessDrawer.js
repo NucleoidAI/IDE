@@ -14,91 +14,95 @@ import styles from "./styles";
 import { useApiStatusStore } from "../../Context/providers/ApiStatusStoreProvider";
 import { useLocation } from "react-router-dom";
 import { useNucleoidStore } from "../../Context/providers/NucleoidStoreProvider";
-import { Box, CircularProgress, Drawer, ListItem } from "@mui/material";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Box, Drawer, ListItem } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
 
 const ProcessDrawer = () => {
   const [state] = useNucleoidStore();
   const [status, dispatch] = useApiStatusStore();
   const location = useLocation();
   const [alert, setAlert] = useState(false);
-  const apiStatus = status.status;
+
   const getStatusTask = useRef();
 
-  const getApiMetricsAndStatus = useCallback(() => {
+  const defaultMetric = {
+    total: 100,
+    free: 1,
+  };
+
+  const getStatus = () => {
     Promise.all([service.metrics(), service.openapi()])
       .then((values) => {
         dispatch({
-          type: "SET_METRICS",
-          payload: { metrics: values[0], status: values[1] },
+          type: "SET_STATUS",
+          payload: {
+            metrics: values[0],
+            status: "connected",
+            openapi: values[1].started,
+          },
         });
+        setAlert(false);
       })
-      .catch((err) => console.log(err));
-  }, [dispatch]);
+      .catch((err) => {
+        dispatch({
+          type: "SET_STATUS",
+          payload: {
+            metrics: defaultMetric,
+            status: "unreachable",
+            openapi: false,
+          },
+        });
+      });
+  };
 
   useEffect(() => {
+    getStatus();
+
     clearInterval(getStatusTask.current);
-    getApiMetricsAndStatus();
+
     getStatusTask.current = setInterval(() => {
-      getApiMetricsAndStatus();
-    }, 10000);
+      getStatus();
+    }, 1000 * 60);
 
     if (location.state?.anchor === false) {
       setAlert(false);
     }
-  }, [location.state, getApiMetricsAndStatus]);
+  }, [location.state]); //eslint-disable-line
 
   const handleClose = () => {
     setAlert(false);
   };
 
-  const handleRunApi = (reload) => {
-    if (reload) {
+  const handleRunApi = (restart) => {
+    if (
+      (status.status !== "unreachable" && status.openapi === false) ||
+      restart
+    ) {
       const nuc = state.get("nucleoid");
-      dispatch({ type: "SET_STATUS", payload: "connecting" });
 
       setAlert(false);
       service
         .openapi("start", nuc)
         .then(() => {
           window.open(Settings.url.app, "_blank").focus();
-          getApiMetricsAndStatus();
+          getStatus();
           setAlert(false);
         })
-        .catch((error) => {
-          dispatch({ type: "SET_STATUS", payload: "unreachable" });
+        .catch(() => {
+          getStatus();
           setAlert(true);
         });
     } else {
-      if (apiStatus === "disconnected" || apiStatus === "unreachable") {
-        const nuc = state.get("nucleoid");
-        dispatch({ type: "SET_STATUS", payload: "connecting" });
-
-        setAlert(false);
-        service
-          .openapi("start", nuc)
-          .then(() => {
-            window.open(Settings.url.app, "_blank").focus();
-            getApiMetricsAndStatus();
-            setAlert(false);
-          })
-          .catch((error) => {
-            dispatch({ type: "SET_STATUS", payload: "unreachable" });
-            setAlert(true);
-          });
-      } else {
-        service
-          .openapi("stop")
-          .then(() => {
-            getApiMetricsAndStatus();
-            setAlert(false);
-          })
-          .catch((error) => {
-            dispatch({ type: "SET_STATUS", payload: "unreachable" });
-
-            setAlert(true);
-          });
-      }
+      service
+        .openapi("stop")
+        .then(() => {
+          getStatus();
+          setAlert(false);
+        })
+        .catch(() => {
+          getStatus();
+          setAlert(true);
+        });
     }
   };
 
@@ -127,7 +131,7 @@ const ProcessDrawer = () => {
             }
             handleTooltipClose={handleClose}
           >
-            {ApiButton(apiStatus, handleRunApi)}
+            {ApiButton(status, handleRunApi)}
           </DialogTooltip>
           <ListItem button>
             <ViewListIcon sx={styles.listitem} />
@@ -151,31 +155,29 @@ const ProcessDrawer = () => {
   );
 };
 
-const ApiButton = (status, handleRunApi) => {
+const ApiButton = (layoutStatus, handleRunApi) => {
+  const { status, openapi } = layoutStatus;
   switch (status) {
     case "connected":
-      return (
-        <>
-          <ListItem button onClick={() => handleRunApi(true)}>
-            <SyncIcon sx={styles.listitem} />
-          </ListItem>
+      if (openapi) {
+        return (
+          <>
+            <ListItem button onClick={() => handleRunApi(true)}>
+              <SyncIcon sx={styles.listitem} />
+            </ListItem>
+            <ListItem button onClick={() => handleRunApi()}>
+              <PauseCircleFilledIcon sx={styles.listitem} />
+            </ListItem>
+          </>
+        );
+      } else {
+        return (
           <ListItem button onClick={() => handleRunApi()}>
-            <PauseCircleFilledIcon sx={styles.listitem} />
+            <PlayCircleFilledIcon sx={styles.listitem} />
           </ListItem>
-        </>
-      );
-    case "connecting":
-      return (
-        <ListItem>
-          <CircularProgress size={25} color="inherit" sx={{ width: 90 }} />
-        </ListItem>
-      );
-    case "disconnected":
-      return (
-        <ListItem button onClick={() => handleRunApi()}>
-          <PlayCircleFilledIcon sx={styles.listitem} />
-        </ListItem>
-      );
+        );
+      }
+
     case "unreachable":
       return (
         <ListItem button onClick={() => handleRunApi()}>

@@ -1,14 +1,13 @@
 import React from "react";
 import State from "../state";
-import { ApiStatusStoreProvider } from "./providers/ApiStatusStoreProvider"; // eslint-disable-line
+import { LayoutStoreProvider } from "./providers/ApiStatusStoreProvider"; // eslint-disable-line
 import { NucleoidStoreProvider } from "./providers/NucleoidStoreProvider";
-import { apiStatusReducer } from "./reducers/apiStatusReducer";
+import { layoutReducer } from "./reducers/layoutReducer";
 import { nucleoidReducer } from "./reducers/nucleoidReducer";
 
 const initStatus = {
-  status: "disconnected",
-  started: false,
-  opened: false,
+  status: "unreachable",
+  openApi: false,
   metrics: {
     free: 1,
     total: 99,
@@ -22,12 +21,12 @@ const GlobalStoreProvider = ({ children }) => {
       nucleoidInitialState={State.withSample()}
       nucleoidReducer={nucleoidReducer}
     >
-      <ApiStatusStoreProvider
+      <LayoutStoreProvider
         apiStatusInitialState={initStatus}
-        apiStatusReducer={apiStatusReducer}
+        layoutReducer={layoutReducer}
       >
         {children}
-      </ApiStatusStoreProvider>
+      </LayoutStoreProvider>
     </NucleoidStoreProvider>
   );
 };
