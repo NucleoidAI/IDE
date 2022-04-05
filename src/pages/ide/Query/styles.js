@@ -23,7 +23,6 @@ const styles = {
         (window.innerHeight - theme.spacing(1) * 2 - 1) * (1 - ratio) -
         theme.spacing(1) / 2,
       position: "relative",
-      paddingLeft: theme.spacing(1 / 2),
     };
   },
   playArrowIcon: {

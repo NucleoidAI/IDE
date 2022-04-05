@@ -122,7 +122,9 @@ function Query() {
                     label={"JSON"}
                   />
                 </FormGroup>
-                {result && <Typography>time :{result.time} ms</Typography>}
+                {result && (
+                  <Typography variant="h7">time :{result.time} ms</Typography>
+                )}
               </Box>
               {ResultTypes(result, checked)}
             </Card>

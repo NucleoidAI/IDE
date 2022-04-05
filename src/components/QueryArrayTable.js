@@ -7,14 +7,19 @@ export default function QueryArrayTable({ json }) {
     const columns = [];
     if (typeof json[0] === "object") {
       if (isRow) {
-        //const arr = [];
-        // json.forEach((item) => Object.keys(item).forEach((key) => typeof item[key] === 'object' && ));
+        json.forEach((item) => {
+          Object.keys(item).forEach((obj) => {
+            if (typeof item[obj] === "object") {
+              item[obj] = JSON.stringify(item[obj]);
+            }
+          });
+        });
 
         return json;
       } else {
         const obj = json[0];
         Object.keys(obj).forEach((key) => {
-          columns.push({ field: key, headerName: key });
+          columns.push({ field: key, headerName: key, width: 150 });
         });
       }
     } else {
@@ -23,12 +28,13 @@ export default function QueryArrayTable({ json }) {
           return {
             id: uuid(),
             item,
+            width: 150,
           };
         });
       } else {
         columns.push(
-          { field: "id", headerName: "ID" },
-          { field: "item", headerName: "item" }
+          { field: "id", headerName: "ID", width: 150 },
+          { field: "item", headerName: "item", width: 150 }
         );
       }
     }
@@ -37,7 +43,7 @@ export default function QueryArrayTable({ json }) {
   };
 
   return (
-    <div style={{ height: 400, width: "100%" }}>
+    <div style={{ height: "100%", width: "100%" }}>
       <DataGrid
         columns={generateRowsandColumns(json)}
         rows={generateRowsandColumns(json, true)}
