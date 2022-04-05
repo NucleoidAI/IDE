@@ -9,7 +9,6 @@ import { useApiStatusStore } from "../../Context/providers/ApiStatusStoreProvide
 import { useNavigate } from "react-router-dom";
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
-
 function Menu(props) {
   return (
     <nav style={styles.root}>
