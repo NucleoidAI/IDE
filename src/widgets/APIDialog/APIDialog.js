@@ -6,13 +6,13 @@ import APITypes from "../../components/APITypes";
 import ClosableDialogTitle from "../../components/ClosableDialogTitle";
 import actions from "../../actions";
 import styles from "./styles";
-import { useStore } from "../../store";
+import { useContext } from "../../Context/providers/contextProvider";
 import { Dialog, DialogActions, DialogContent, Grid } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { compile, decompile, deindex, index, updatePath } from "./Context";
 
 function APIDialog() {
-  const [context, dispatch] = useStore();
+  const [context, dispatch] = useContext();
   const { pages } = context;
   const [method, setMethod] = useState();
   const [path, setPath] = useState();
@@ -40,6 +40,7 @@ function APIDialog() {
     apiRef.current = context.get("nucleoid.api");
     pathRef.current = path;
 
+    // TODO bug: edit get not working
     const initEdit = (method, path) => {
       setMethod(method);
       setParams(apiRef.current[path][method].params);

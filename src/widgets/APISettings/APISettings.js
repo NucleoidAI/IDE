@@ -5,12 +5,12 @@ import Security from "../../components/Security";
 import SummaryForm from "../../components/SummaryForm";
 import styles from "./styles";
 
-import { useStore } from "../../store";
+import { useContext } from "../../Context/providers/contextProvider";
 import { Fab, Grid } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 
 function APISettings() {
-  const [state, dispatch] = useStore();
+  const [state, dispatch] = useContext();
   const [method, setMethod] = useState();
   const [params, setParams] = useState();
   const [summary, setSummary] = useState();

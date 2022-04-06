@@ -59,6 +59,7 @@ function APIDialogAction({
       </Grid>
       <Grid>
         <DialogTooltip
+          placement="top"
           open={openToolTip}
           title={<b>Delete method</b>}
           message={

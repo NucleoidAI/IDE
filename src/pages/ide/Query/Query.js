@@ -1,17 +1,21 @@
 import Editor from "../../../widgets/Editor";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import QueryArrayTable from "../../../components/QueryArrayTable";
 import QueryResult from "../../../components/QueryResult";
 import service from "../../../service";
 import styles from "./styles";
 
 import {
+  Box,
   Card,
   Fab,
   FormControlLabel,
   FormGroup,
   Grid,
+  LinearProgress,
   Paper,
   Switch,
+  Typography,
 } from "@mui/material";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -48,6 +52,8 @@ import React, { useEffect, useRef, useState } from "react";
 function Query() {
   const [result, setResult] = useState();
   const editor = useRef();
+  const [checked, setChecked] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     editor.current.commands.addCommand({
@@ -60,16 +66,22 @@ function Query() {
   }, []);
 
   const handleQuery = () => {
+    setLoading(true);
     service
       .query(editor ? editor.current.getValue() : null)
       .then((data) => {
         try {
           setResult(JSON.parse(data));
+          setLoading(false);
         } catch (error) {
+          setLoading(false);
           setResult(data);
         }
       })
-      .catch((error) => setResult(error.message));
+      .catch((error) => {
+        setLoading(false);
+        setResult(error.message);
+      });
   };
 
   return (
@@ -86,19 +98,62 @@ function Query() {
           </Paper>
         </Grid>
         <Grid item xs={12}>
-          <Card sx={styles.results}>
-            <Grid container justifyContent={"flex-end"}>
-              <FormGroup>
-                <FormControlLabel control={<Switch />} label={"JSON"} checked />
-              </FormGroup>
-            </Grid>
-            {typeof result === "object" && <QueryResult json={result} />}
-            {typeof result !== "object" && <>{result}</>}
-          </Card>
+          {loading && (
+            <Box
+              sx={{
+                width: "100%",
+                marginTop: 25,
+              }}
+            >
+              <LinearProgress color="inherit" />
+            </Box>
+          )}
+          {!loading && (
+            <Card sx={styles.results}>
+              <Box sx={styles.jsonSwitch}>
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={checked}
+                        onChange={() => setChecked(!checked)}
+                      />
+                    }
+                    label={"JSON"}
+                  />
+                </FormGroup>
+                {result && (
+                  <Typography variant="h7">time :{result.time} ms</Typography>
+                )}
+              </Box>
+              {ResultTypes(result, checked)}
+            </Card>
+          )}
         </Grid>
       </Grid>
     </>
   );
 }
+
+const ResultTypes = (result, isTable) => {
+  if (typeof result === "object") {
+    switch (typeof result.result) {
+      case "object":
+        if (Array.isArray(result.result)) {
+          if (isTable) {
+            return <QueryResult json={result.result} />;
+          } else {
+            return <QueryArrayTable json={result.result} />;
+          }
+        } else {
+          return <QueryResult json={result.result} />;
+        }
+      default:
+        return result.result;
+    }
+  } else {
+    return <>{result}</>;
+  }
+};
 
 export default Query;

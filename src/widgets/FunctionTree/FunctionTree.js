@@ -4,7 +4,7 @@ import FolderIcon from "@mui/icons-material/FolderRounded";
 import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
 import actions from "../../actions";
 import styles from "./styles";
-import { useStore } from "../../store";
+import { useContext } from "../../Context/providers/contextProvider";
 import { Grid, Menu, MenuItem, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { TreeItem, TreeView } from "@mui/lab";
@@ -12,7 +12,7 @@ import { TreeItem, TreeView } from "@mui/lab";
 function FunctionTree() {
   const [selected, setSelected] = React.useState(null);
   const [contextMenu, setContextMenu] = React.useState(null);
-  const [state, dispatch] = useStore();
+  const [state, dispatch] = useContext();
   const functions = state.get("nucleoid.functions");
   const graph = { "": { name: "", subs: [], path: "", functions: [] } };
 

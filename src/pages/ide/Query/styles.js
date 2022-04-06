@@ -22,12 +22,17 @@ const styles = {
       height:
         (window.innerHeight - theme.spacing(1) * 2 - 1) * (1 - ratio) -
         theme.spacing(1) / 2,
-      justifyContent: "flex-start",
-      paddingLeft: theme.spacing(1) * 2,
+      position: "relative",
     };
   },
   playArrowIcon: {
     fill: "#212121",
+  },
+  jsonSwitch: {
+    "z-index": 1,
+    position: "absolute",
+    right: 0,
+    width: 100,
   },
 };
 

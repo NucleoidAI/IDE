@@ -17,9 +17,6 @@ const DialogTooltip = styled(
   }) => (
     <Tooltip
       open={open}
-      PopperProps={{
-        disablePortal: true,
-      }}
       onClose={handleTooltipClose}
       disableFocusListener
       disableHoverListener
@@ -46,7 +43,8 @@ const DialogTooltip = styled(
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: "#f5f5f9",
     color: "rgba(0, 0, 0, 0.87)",
-    maxWidth: 220,
+    // maxWidth: 220,
+    width: 600,
     fontSize: theme.typography.pxToRem(12),
     border: "1px solid #dadde9",
   },

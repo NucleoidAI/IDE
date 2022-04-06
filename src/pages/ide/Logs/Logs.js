@@ -1,5 +1,6 @@
 import Editor from "../../../widgets/Editor";
 import Moment from "react-moment";
+import service from "../../../service";
 import styles from "./styles";
 import { v4 as uuid } from "uuid";
 import { Grid, Paper, Typography } from "@mui/material";
@@ -9,25 +10,9 @@ function Logs() {
   const [logs, setLogs] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8448", {
-      method: "POST",
-      body: "Data.retrieve()",
-    })
-      .then((response) => response.text())
-      .then((data) => {
-        try {
-          const string = atob(JSON.parse(data));
-          setLogs(
-            string
-              .split("\n")
-              .map((row) => row.trim())
-              .filter((row) => row)
-              .map((row) => JSON.parse(row))
-          );
-        } catch (error) {
-          console.log(error);
-        }
-      });
+    service.logs().then((logs) => {
+      setLogs([...logs.slice(0, 25)]);
+    });
   }, []);
 
   return (

@@ -1,8 +1,8 @@
 import State from "../state";
-import { reducer } from "../context";
+import { contextReducer } from "../Context/reducers/contextReducer";
 
 test("Resolve context with property", () => {
-  const state = reducer(State.init(), {
+  const state = contextReducer(State.init(), {
     type: "SET_SELECTED_API",
     payload: { path: "/", method: "get" },
   });
@@ -10,6 +10,6 @@ test("Resolve context with property", () => {
 });
 
 test("Resolve context with invalid property", () => {
-  const state = reducer(State.init(), { type: "CLOSE_API_DIALOG" });
+  const state = contextReducer(State.init(), { type: "CLOSE_API_DIALOG" });
   expect(state.get("pages.apix.dialog.open")).toEqual(undefined);
 });

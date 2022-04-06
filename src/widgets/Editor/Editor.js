@@ -1,7 +1,7 @@
 import AceEditor from "react-ace";
 import service from "../../service";
 import styles from "./styles";
-import { useStore } from "../../store";
+import { useContext } from "../../Context/providers/contextProvider";
 import React, { useEffect, useRef, useState } from "react";
 
 // eslint-disable-next-line sort-imports
@@ -10,11 +10,12 @@ import "ace-builds/src-noconflict/theme-chrome";
 import { addCompleter } from "ace-builds/src-noconflict/ext-language_tools";
 
 function Editor({ name, api, functions, log, editorRef, ...other }) {
-  const [state] = useStore();
+  const [state] = useContext();
   const [annotations, setAnnotations] = useState([]);
   const [code, setCode] = useState(null);
   const ace = useRef();
-  let timer = null;
+  const timer = useRef();
+  const abortController = useRef();
 
   const nucfunctions = state.nucleoid.functions;
 
@@ -36,11 +37,17 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
   });
 
   function checkEditorService(value) {
-    clearTimeout(timer);
+    clearTimeout(timer.current);
+    if (abortController.current) abortController.current.abort();
 
-    timer = setTimeout(() => {
-      service.checkFormat(value).then((result) => {
+    timer.current = setTimeout(() => {
+      abortController.current = new AbortController();
+
+      service.lint(value, abortController.current.signal).then((result) => {
+        abortController.current = null;
+        console.log(result);
         setCode(result.output);
+
         setAnnotations(
           result.messages.map((item) => {
             return {

@@ -1,12 +1,12 @@
 import Settings from "./settings";
 
-const checkFormat = async (body) => {
+const lint = async (body, signal) => {
   return fetch(Settings.url.editor, {
+    signal: signal,
     method: "POST",
     headers: {
       "Content-Type": "text/plain",
     },
-
     body: body,
   }).then((response) => response.json());
 };
@@ -14,28 +14,45 @@ const checkFormat = async (body) => {
 const query = async (body) => {
   return fetch(Settings.url.terminal, {
     method: "POST",
-    body: body,
-  }).then((response) => response.text());
+    body,
+  }).then((response) => response.json());
 };
 
-const openApiStart = (value) => {
-  return fetch(Settings.url.terminal, {
-    method: "POST",
-    body: `
-    let nuc=${JSON.stringify(value)});
-    NUC.load(nuc);
-    OpenAPI.start(nuc);
-    `,
-  });
+const openapi = (action, nuc) => {
+  if (action === undefined) {
+    return fetch(Settings.url.terminal + "openapi", {
+      method: "GET",
+    }).then((response) => response.json());
+  } else {
+    return fetch(Settings.url.terminal + "openapi", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        nuc,
+        action,
+      }),
+    });
+  }
 };
 
-const openApiStop = () => {
-  return fetch(Settings.url.terminal, {
-    method: "POST",
-    body: "OpenAPI.stop()",
-  });
-};
+const metrics = () =>
+  fetch(Settings.url.terminal + "metrics", {
+    method: "GET",
+  }).then((response) => response.json());
 
-const service = { query, checkFormat, openApiStart, openApiStop };
+const logs = () =>
+  fetch(Settings.url.terminal + "logs", {
+    method: "GET",
+  }).then((response) => response.json());
+
+const service = {
+  query,
+  lint,
+  openapi,
+  metrics,
+  logs,
+};
 
 export default service;

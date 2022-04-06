@@ -2,10 +2,10 @@ import API from "./pages/ide/API";
 import Branches from "./pages/ide/Branches";
 import Dev from "./pages/Dev";
 import Functions from "./pages/ide/Functions";
+import GlobalStoreProvider from "./Context/GlobalStoreProvider";
 import IDE from "./layouts/IDE";
 import Logs from "./pages/ide/Logs";
 import Query from "./pages/ide/Query";
-import State from "./state";
 import theme from "./theme";
 
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
@@ -14,15 +14,13 @@ import {
   StyledEngineProvider,
   ThemeProvider,
 } from "@mui/material";
-import { StoreProvider } from "./store"; // eslint-disable-line
-import { reducer } from "./context";
 
 function App() {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <StoreProvider initialState={State.withSample()} reducer={reducer}>
+        <GlobalStoreProvider>
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<IDE />}>
@@ -36,7 +34,7 @@ function App() {
               </Route>
             </Routes>
           </BrowserRouter>
-        </StoreProvider>
+        </GlobalStoreProvider>
       </ThemeProvider>
     </StyledEngineProvider>
   );
