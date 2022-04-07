@@ -4,10 +4,12 @@ import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
 import React, { useEffect, useRef, useState } from "react";
 
+
 // eslint-disable-next-line sort-imports
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-chrome";
 import { addCompleter } from "ace-builds/src-noconflict/ext-language_tools";
+import { parser } from "react-nucleoid";
 
 function Editor({ name, api, functions, log, editorRef, ...other }) {
   const [state] = useContext();
