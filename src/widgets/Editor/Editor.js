@@ -17,6 +17,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
   const ace = useRef();
   const timer = useRef();
   const abortController = useRef();
+  const cursor = useRef();
 
   const nucFuncs = state.nucleoid.functions;
 
@@ -64,12 +65,16 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
     const { editor } = ace.current;
     if (editorRef) editorRef.current = editor;
 
-    editor.selection.moveCursorToPosition({ row: 0, column: 0 });
-
     if (api) {
       const selected = state.get("pages.api.selected");
       const api = state.get("nucleoid.api");
-      const action = api[selected.path][selected.method].action;
+      const { action, cursor } = api[selected.path][selected.method];
+
+      editor.selection.moveCursorToPosition({
+        row: cursor?.row || 0,
+        column: cursor?.column || 0,
+      });
+
       setCode(action);
       return;
     }
@@ -93,7 +98,10 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
       mode={"javascript"}
       theme={"chrome"}
       annotations={annotations}
-      onCursorChange={(e) => console.log(e.cursor.row, e.cursor.column)}
+      cursorStart={cursor.current}
+      onCursorChange={(e) =>
+        (cursor.current = { row: e.cursor.row, column: e.cursor.column })
+      }
       fontSize={14}
       {...other}
       setOptions={{
@@ -106,11 +114,11 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
       value={code}
       onChange={lint}
       onBlur={() => {
-        console.log(code);
         if (api) {
           const selected = state.get("pages.api.selected");
           const api = state.get("nucleoid.api");
           api[selected.path][selected.method].action = code;
+          api[selected.path][selected.method].cursor = cursor.current;
         }
 
         if (functions) {
