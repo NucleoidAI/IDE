@@ -4,7 +4,6 @@ import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
 import React, { useEffect, useRef, useState } from "react";
 
-
 // eslint-disable-next-line sort-imports
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-chrome";
@@ -19,26 +18,25 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
   const timer = useRef();
   const abortController = useRef();
 
-  const nucfunctions = state.nucleoid.functions;
+  const nucFuncs = state.nucleoid.functions;
 
   addCompleter({
     getCompletions: function (editor, session, pos, prefix, callback) {
       callback(
         null,
-        nucfunctions.map((item) => {
-          return {
-            name: item.path.split("/").pop(),
-            value: item.code,
-            caption: item.path.split("/").pop(),
-            meta: "nucleoid functions",
-            score: 1,
-          };
-        })
+        nucFuncs.map((item) => ({
+          name: item.path.split("/").pop(),
+          value: item.code,
+          caption: item.path.split("/").pop(),
+          meta: "nucleoid functions",
+          score: 1,
+        }))
       );
     },
   });
 
-  function checkEditorService(value) {
+  const lint = (value) => {
+    setCode(value);
     clearTimeout(timer.current);
     if (abortController.current) abortController.current.abort();
 
@@ -47,8 +45,6 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
 
       service.lint(value, abortController.current.signal).then((result) => {
         abortController.current = null;
-        console.log(result);
-        setCode(result.output);
 
         setAnnotations(
           result.messages.map((item) => {
@@ -62,18 +58,19 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
         );
       });
     }, 1500);
-  }
+  };
 
   useEffect(() => {
     const { editor } = ace.current;
     if (editorRef) editorRef.current = editor;
 
     editor.selection.moveCursorToPosition({ row: 0, column: 0 });
+
     if (api) {
       const selected = state.get("pages.api.selected");
       const api = state.get("nucleoid.api");
       const action = api[selected.path][selected.method].action;
-      setCode(`function ${selected.method}(query, json) {\n  ${action}\n}`);
+      setCode(action);
       return;
     }
 
@@ -96,6 +93,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
       mode={"javascript"}
       theme={"chrome"}
       annotations={annotations}
+      onCursorChange={(e) => console.log(e.cursor.row, e.cursor.column)}
       fontSize={14}
       {...other}
       setOptions={{
@@ -106,8 +104,9 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
         enableBasicAutocompletion: true,
       }}
       value={code}
-      onChange={checkEditorService}
+      onChange={lint}
       onBlur={() => {
+        console.log(code);
         if (api) {
           const selected = state.get("pages.api.selected");
           const api = state.get("nucleoid.api");
