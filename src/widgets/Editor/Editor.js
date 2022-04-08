@@ -13,6 +13,7 @@ import { parser } from "react-nucleoid";
 
 function Editor({ name, api, functions, log, editorRef, ...other }) {
   const [state] = useContext();
+
   const [annotations, setAnnotations] = useState([]);
   const [code, setCode] = useState(null);
   const ace = useRef();
@@ -23,30 +24,20 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
 
   const checkFunction = (value) => {
     try {
-      if (!parser.fn(value).fn) {
-        setAnnotations([
-          {
-            row: 0,
-            column: 1,
-            text: "Must be written with an appropriate syntax",
-            type: "error",
-          },
-        ]);
-        return false;
-      } else {
-        setAnnotations([]);
-        return true;
-      }
+      parser.fn(value);
+      setAnnotations([]);
+      return true;
     } catch (err) {
       setAnnotations([
         {
           key: uuid(),
           row: 0,
           column: 1,
-          text: "Must be written with an appropriate syntax",
+          text: err,
           type: "error",
         },
       ]);
+
       return false;
     }
   };
@@ -75,6 +66,9 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
 
       service.lint(value, abortController.current.signal).then((result) => {
         abortController.current = null;
+        console.log(result);
+
+        setCode(result.output);
 
         setAnnotations([
           annotations,
@@ -94,19 +88,34 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
   useEffect(() => {
     const { editor } = ace.current;
     if (editorRef) editorRef.current = editor;
+
+    clearTimeout(timer.current);
+
+    /*
     editor.selection.moveCursorToPosition({
       row: 0,
       column: 0,
     });
+    */
 
     setAnnotations([]);
 
     if (api) {
       const selected = state.get("pages.api.selected");
       const api = state.get("nucleoid.api");
-      const { action } = api[selected.path][selected.method];
+      let action = api[selected.path][selected.method].action;
 
-      checkFunction(action) && lint(action);
+      if (checkFunction(action)) {
+        const { args, fn } = parser.fn(action);
+
+        if (fn[0] === "{" && fn[fn.length - 1] === "}") {
+          action = fn.slice(1, -1);
+        }
+
+        action = `function (${args[0] || ""}){\n\t${action}\n}`;
+
+        lint(action);
+      }
       setCode(action);
 
       return;
@@ -149,8 +158,6 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
         if (api) {
           const selected = state.get("pages.api.selected");
           const api = state.get("nucleoid.api");
-
-          const { args, fn } = parser.fn(code);
 
           api[selected.path][selected.method].action = code;
         }
