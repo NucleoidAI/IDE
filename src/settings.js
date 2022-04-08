@@ -3,7 +3,7 @@ const Settings = {
   url: {
     terminal: "http://localhost:8448/",
     app: "http://localhost:3000/",
-    editor: "https://editor.nucleoid.com/lint",
+    editor: "http://localhost:8448/lint",
   },
 };
 
