@@ -2,9 +2,8 @@ import AceEditor from "react-ace";
 import service from "../../service";
 import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
-import React, { useEffect, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
-
+import React, { useCallback, useEffect, useRef, useState } from "react";
 // eslint-disable-next-line sort-imports
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-chrome";
@@ -57,33 +56,37 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
     },
   });
 
-  const lint = (value) => {
-    clearTimeout(timer.current);
-    if (abortController.current) abortController.current.abort();
+  const lint = useCallback(
+    (value) => {
+      clearTimeout(timer.current);
+      if (abortController.current) abortController.current.abort();
 
-    timer.current = setTimeout(() => {
-      abortController.current = new AbortController();
+      timer.current = setTimeout(() => {
+        abortController.current = new AbortController();
 
-      service.lint(value, abortController.current.signal).then((result) => {
-        abortController.current = null;
-        console.log(result);
+        service.lint(value, abortController.current.signal).then((result) => {
+          abortController.current = null;
+          console.log(result);
 
-        setCode(result.output);
+          setCode(result.output);
 
-        setAnnotations([
-          annotations,
-          ...result.messages.map((item) => {
-            return {
-              row: item.line - 1,
-              column: item.column,
-              text: item.message,
-              type: item.severity === 1 ? "error" : "warning",
-            };
-          }),
-        ]);
-      });
-    }, 1500);
-  };
+          setAnnotations([
+            annotations,
+            ...result.messages.map((item) => {
+              return {
+                row: item.line - 1,
+                column: item.column,
+                text: item.message,
+                type: item.severity === 1 ? "error" : "warning",
+              };
+            }),
+          ]);
+        });
+      }, 1500);
+    },
+    //eslint-disable-next-line
+    []
+  );
 
   useEffect(() => {
     const { editor } = ace.current;
@@ -130,7 +133,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
     }
 
     setCode(log);
-  }, [state, api, functions, editorRef, log]);
+  }, [state, api, functions, editorRef, log, lint]);
 
   return (
     <AceEditor
