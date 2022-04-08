@@ -14,7 +14,7 @@ const api = {
           },
         },
       },
-      action: `return json.name;`,
+      action: `function (req){\n\treturn json.name;\n}`,
       params: [
         {
           name: "order",
@@ -48,7 +48,7 @@ const api = {
           },
         },
       },
-      action: `return json.name;`,
+      action: `function (req){\n\treturn json.name;\n}`,
     },
     post: {
       summary: "Update the device",
@@ -75,7 +75,7 @@ const api = {
           },
         },
       },
-      action: `return json.name;`,
+      action: `function (req){\n\treturn json.name;\n}`,
     },
   },
   "/questions": {
@@ -93,7 +93,7 @@ const api = {
           },
         },
       },
-      action: `return json.name;`,
+      action: `function (req){\n\treturn json.name;\n}`,
     },
     post: {
       summary: "Update the question",
@@ -120,7 +120,7 @@ const api = {
           },
         },
       },
-      action: `return json.name;`,
+      action: `function (req){\n\treturn json.name;\n}`,
     },
     put: {
       summary: "Create a question",
@@ -147,7 +147,7 @@ const api = {
           },
         },
       },
-      action: `return json.name;`,
+      action: `function (req){\n\treturn json.name;\n}`,
     },
     del: {
       summary: "Delete the question",
@@ -174,7 +174,7 @@ const api = {
           },
         },
       },
-      action: `return json.name;`,
+      action: `function (req){\n\treturn json.name;\n}`,
     },
   },
   "/questions/reviews": {
@@ -203,7 +203,7 @@ const api = {
           },
         },
       },
-      action: `return json.name;`,
+      action: `function (req){\n\treturn json.name;\n}`,
     },
   },
 };

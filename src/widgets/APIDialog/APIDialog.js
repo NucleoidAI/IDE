@@ -123,7 +123,7 @@ function APIDialog() {
         params: deindex(paramsRef.current),
         request: decompile(requestRef.current),
         response: decompile(responseRef.current),
-        action: "return req.body",
+        action: `function (req){\n\treturn json.name;\n}`,
         summary: "Summary",
         description: "Description",
         types: typesRef.current.reduce((previous, current) => {

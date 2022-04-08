@@ -3,6 +3,7 @@ import service from "../../service";
 import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
 import React, { useEffect, useRef, useState } from "react";
+import { v4 as uuid } from "uuid";
 
 // eslint-disable-next-line sort-imports
 import "ace-builds/src-noconflict/mode-javascript";
@@ -17,9 +18,38 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
   const ace = useRef();
   const timer = useRef();
   const abortController = useRef();
-  const cursor = useRef();
 
   const nucFuncs = state.nucleoid.functions;
+
+  const checkFunction = (value) => {
+    try {
+      if (!parser.fn(value).fn) {
+        setAnnotations([
+          {
+            row: 0,
+            column: 1,
+            text: "Must be written with an appropriate syntax",
+            type: "error",
+          },
+        ]);
+        return false;
+      } else {
+        setAnnotations([]);
+        return true;
+      }
+    } catch (err) {
+      setAnnotations([
+        {
+          key: uuid(),
+          row: 0,
+          column: 1,
+          text: "Must be written with an appropriate syntax",
+          type: "error",
+        },
+      ]);
+      return false;
+    }
+  };
 
   addCompleter({
     getCompletions: function (editor, session, pos, prefix, callback) {
@@ -37,7 +67,6 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
   });
 
   const lint = (value) => {
-    setCode(value);
     clearTimeout(timer.current);
     if (abortController.current) abortController.current.abort();
 
@@ -47,16 +76,17 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
       service.lint(value, abortController.current.signal).then((result) => {
         abortController.current = null;
 
-        setAnnotations(
-          result.messages.map((item) => {
+        setAnnotations([
+          annotations,
+          ...result.messages.map((item) => {
             return {
               row: item.line - 1,
               column: item.column,
               text: item.message,
               type: item.severity === 1 ? "error" : "warning",
             };
-          })
-        );
+          }),
+        ]);
       });
     }, 1500);
   };
@@ -64,18 +94,21 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
   useEffect(() => {
     const { editor } = ace.current;
     if (editorRef) editorRef.current = editor;
+    editor.selection.moveCursorToPosition({
+      row: 0,
+      column: 0,
+    });
+
+    setAnnotations([]);
 
     if (api) {
       const selected = state.get("pages.api.selected");
       const api = state.get("nucleoid.api");
-      const { action, cursor } = api[selected.path][selected.method];
+      const { action } = api[selected.path][selected.method];
 
-      editor.selection.moveCursorToPosition({
-        row: cursor?.row || 0,
-        column: cursor?.column || 0,
-      });
-
+      checkFunction(action) && lint(action);
       setCode(action);
+
       return;
     }
 
@@ -98,10 +131,6 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
       mode={"javascript"}
       theme={"chrome"}
       annotations={annotations}
-      cursorStart={cursor.current}
-      onCursorChange={(e) =>
-        (cursor.current = { row: e.cursor.row, column: e.cursor.column })
-      }
       fontSize={14}
       {...other}
       setOptions={{
@@ -112,13 +141,18 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
         enableBasicAutocompletion: true,
       }}
       value={code}
-      onChange={lint}
+      onChange={(e) => {
+        checkFunction(e) && lint(e);
+        setCode(e);
+      }}
       onBlur={() => {
         if (api) {
           const selected = state.get("pages.api.selected");
           const api = state.get("nucleoid.api");
+
+          const { args, fn } = parser.fn(code);
+
           api[selected.path][selected.method].action = code;
-          api[selected.path][selected.method].cursor = cursor.current;
         }
 
         if (functions) {
