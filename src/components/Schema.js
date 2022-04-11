@@ -13,7 +13,7 @@ import { decompile } from "../widgets/APIDialog/Context";
 
 import { compile as mapSchema } from "../utils/Map";
 import { v4 as uuid } from "uuid";
-import { Grid, IconButton, Typography } from "@mui/material";
+import { Button, Grid, IconButton, Typography } from "@mui/material";
 import { forwardRef, useEffect, useState } from "react";
 
 const Schema = forwardRef(({ request, response, types, edit }, ref) => {
@@ -21,9 +21,21 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
   const [addIcon, setAddIcon] = useState();
   const [removeIcon, setRemoveIcon] = useState();
   const [selected, setSelected] = useState(null);
+  const [expanded, setExpanded] = useState([]);
+  const [forceRender, setRender] = useState("");
+
+  const expandList = [];
 
   const root = schema[Object.keys(schema)[0]].id;
   const map = mapSchema(schema);
+
+  const handleToggle = (event, ids) => {
+    setExpanded(ids);
+  };
+
+  const handleExpandClick = () => {
+    setExpanded([...expandList]);
+  };
 
   const addSchemaProperty = (selected) => {
     const key = uuid();
@@ -58,8 +70,9 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
 
   useEffect(() => {
     select(root);
+    handleExpandClick();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [forceRender]);
 
   return (
     <Grid
@@ -78,6 +91,7 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
                 types={types}
                 map={schema[Object.keys(schema)]}
                 edit={edit}
+                handleRender={setRender}
               />
             </>
           </Grid>
@@ -85,14 +99,17 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
 
         <br />
         <Grid sx={edit && { width: "100%", height: 310, overflowY: "auto" }}>
+          <Button onClick={handleExpandClick}>expand all</Button>
+          {/*forceRender*/}
           <TreeView
             defaultCollapseIcon={<RemoveCircleOutlineIcon />}
             defaultExpandIcon={<AddCircleOutlineIcon />}
-            defaultExpanded={[root]}
+            onNodeToggle={handleToggle}
+            expanded={expanded}
             selected={selected}
             onNodeSelect={(event, value) => select(value)}
           >
-            {compile(edit, map, schema, types)}
+            {compile(edit, map, schema, types, expandList)}
           </TreeView>
         </Grid>
       </Grid>
@@ -123,7 +140,7 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
   );
 });
 
-const compile = (edit, map, schema, types, name) => {
+const compile = (edit, map, schema, types, expandList, name) => {
   schema = schema[Object.keys(schema)[0]];
   const { id, properties, items, type } = schema || {};
   const children = [];
@@ -131,7 +148,11 @@ const compile = (edit, map, schema, types, name) => {
   switch (type) {
     case "array": {
       const item = items[Object.keys(items)[0]];
-      children.push(compile(edit, map, { root: item }, types, name));
+      expandList.push(id);
+
+      children.push(
+        compile(edit, map, { root: item }, types, expandList, name)
+      );
 
       return (
         <SchemaArray
@@ -150,8 +171,11 @@ const compile = (edit, map, schema, types, name) => {
     case "object": {
       for (const key in properties) {
         const property = properties[key];
+        expandList.push(id);
 
-        children.push(compile(edit, map, { root: property }, types, name));
+        children.push(
+          compile(edit, map, { root: property }, types, expandList, name)
+        );
       }
 
       return (

@@ -6,6 +6,7 @@ import { compile } from "./Schema";
 import { compile as mapSchema } from "../utils/Map";
 
 export default function SchemaView({ schema }) {
+  /*
   if (schema !== undefined) {
     schema = cmp(schema);
     const map = mapSchema(schema);
@@ -21,5 +22,6 @@ export default function SchemaView({ schema }) {
       </TreeView>
     );
   }
-  return null;
+  */
+  return "schema test";
 }
