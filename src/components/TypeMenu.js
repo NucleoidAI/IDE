@@ -24,7 +24,7 @@ const newObject = (id) => {
 };
 
 const TypeMenu = forwardRef(
-  ({ id, type, types, map, edit, noNested, handleRender }, ref) => {
+  ({ id, type, types, map, edit, noNested, setKey }, ref) => {
     const [selectedType, setSelectedType] = useState(type);
 
     function updateType(id, value) {
@@ -56,7 +56,7 @@ const TypeMenu = forwardRef(
       }
       // TODO decide how to render, context doesnt work, if trigger context, apidialog rerender and run compile methods again.
       // dispatch({ type: "" });
-      handleRender && handleRender(uuid());
+      setKey && setKey(uuid());
       setSelectedType(value);
     }
 

@@ -22,7 +22,7 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
   const [removeIcon, setRemoveIcon] = useState();
   const [selected, setSelected] = useState(null);
   const [expanded, setExpanded] = useState([]);
-  const [forceRender, setRender] = useState("");
+  const [key, setKey] = useState("");
 
   const expandList = [];
 
@@ -72,7 +72,7 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
     select(root);
     handleExpandClick();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [forceRender]);
+  }, [key]);
 
   return (
     <Grid
@@ -91,7 +91,7 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
                 types={types}
                 map={schema[Object.keys(schema)]}
                 edit={edit}
-                handleRender={setRender}
+                setKey={setKey}
               />
             </>
           </Grid>
@@ -99,8 +99,6 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
 
         <br />
         <Grid sx={edit && { width: "100%", height: 310, overflowY: "auto" }}>
-          <Button onClick={handleExpandClick}>expand all</Button>
-          {/*forceRender*/}
           <TreeView
             defaultCollapseIcon={<RemoveCircleOutlineIcon />}
             defaultExpandIcon={<AddCircleOutlineIcon />}
@@ -109,7 +107,7 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
             selected={selected}
             onNodeSelect={(event, value) => select(value)}
           >
-            {compile(edit, map, schema, types, expandList)}
+            {compile(edit, map, schema, types, expandList, setKey)}
           </TreeView>
         </Grid>
       </Grid>
@@ -140,7 +138,7 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
   );
 });
 
-const compile = (edit, map, schema, types, expandList, name) => {
+const compile = (edit, map, schema, types, expandList, setKey, name) => {
   schema = schema[Object.keys(schema)[0]];
   const { id, properties, items, type } = schema || {};
   const children = [];
@@ -151,7 +149,7 @@ const compile = (edit, map, schema, types, expandList, name) => {
       expandList.push(id);
 
       children.push(
-        compile(edit, map, { root: item }, types, expandList, name)
+        compile(edit, map, { root: item }, types, expandList, setKey, name)
       );
 
       return (
@@ -165,6 +163,7 @@ const compile = (edit, map, schema, types, expandList, name) => {
           type={type}
           types={types}
           map={map[id]}
+          setKey={setKey}
         />
       );
     }
@@ -174,7 +173,15 @@ const compile = (edit, map, schema, types, expandList, name) => {
         expandList.push(id);
 
         children.push(
-          compile(edit, map, { root: property }, types, expandList, name)
+          compile(
+            edit,
+            map,
+            { root: property },
+            types,
+            expandList,
+            setKey,
+            name
+          )
         );
       }
 
@@ -224,6 +231,7 @@ const compile = (edit, map, schema, types, expandList, name) => {
           types={types}
           edit={edit}
           map={map[id]}
+          setKey={setKey}
         />
       );
   }
