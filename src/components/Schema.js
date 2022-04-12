@@ -87,6 +87,9 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
             <>
               Type:&nbsp;
               <TypeMenu
+                primitive
+                objAndArr
+                globalTypes
                 type={schema[Object.keys(schema)].type || "object"}
                 types={types}
                 map={schema[Object.keys(schema)]}

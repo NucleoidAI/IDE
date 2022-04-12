@@ -33,6 +33,9 @@ function SchemaProperty({
           {!edit && <>"{name}"</>}
           :&nbsp;
           <TypeMenu
+            primitive
+            objAndArr
+            globalTypes
             id={id}
             type={type}
             types={types}

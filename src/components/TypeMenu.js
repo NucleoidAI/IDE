@@ -24,7 +24,21 @@ const newObject = (id) => {
 };
 
 const TypeMenu = forwardRef(
-  ({ id, type, types, map, edit, noNested, setKey }, ref) => {
+  (
+    {
+      id,
+      type,
+      types,
+      map,
+      edit,
+      noNested,
+      setKey,
+      primitive,
+      objAndArr,
+      globalTypes,
+    },
+    ref
+  ) => {
     const [selectedType, setSelectedType] = useState(type);
 
     function updateType(id, value) {
@@ -70,11 +84,20 @@ const TypeMenu = forwardRef(
               updateType(id, event.target.value);
             }}
           >
-            <MenuItem value={"integer"}>integer</MenuItem>
-            <MenuItem value={"string"}>string</MenuItem>
-            <MenuItem value={"boolean"}>boolean</MenuItem>
-            {!noNested && [
+            {primitive && [
+              <MenuItem key={uuid()} value={"integer"}>
+                integer
+              </MenuItem>,
+              <MenuItem key={uuid()} value={"string"}>
+                string
+              </MenuItem>,
+              <MenuItem key={uuid()} value={"boolean"}>
+                boolean
+              </MenuItem>,
               <Divider key={uuid()} id={uuid()} />,
+            ]}
+
+            {objAndArr && [
               <MenuItem key={uuid()} id={uuid()} value={"object"}>
                 object
               </MenuItem>,
@@ -82,16 +105,17 @@ const TypeMenu = forwardRef(
                 array
               </MenuItem>,
             ]}
-            <Divider />
-            {types.map((item, id) => (
-              <MenuItem
-                key={uuid()}
-                id={uuid()}
-                value={item[Object.keys(item)].name}
-              >
-                {item[Object.keys(item)].name}
-              </MenuItem>
-            ))}
+            {globalTypes && <Divider />}
+            {globalTypes &&
+              types.map((item, id) => (
+                <MenuItem
+                  key={uuid()}
+                  id={uuid()}
+                  value={item[Object.keys(item)].name}
+                >
+                  {item[Object.keys(item)].name}
+                </MenuItem>
+              ))}
           </Select>
         )}
         {!edit && <>{type}</>}

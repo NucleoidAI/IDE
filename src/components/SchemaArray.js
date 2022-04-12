@@ -55,6 +55,9 @@ function SchemaArray({
         <>
           &nbsp;&nbsp;&nbsp;&nbsp;
           <TypeMenu
+           // primitive
+            objAndArr
+            globalTypes
             id={id}
             type={item.type}
             types={types}
