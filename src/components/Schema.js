@@ -13,7 +13,7 @@ import { decompile } from "../widgets/APIDialog/Context";
 
 import { compile as mapSchema } from "../utils/Map";
 import { v4 as uuid } from "uuid";
-import { Button, Grid, IconButton, Typography } from "@mui/material";
+import { Grid, IconButton, Typography } from "@mui/material";
 import { forwardRef, useEffect, useState } from "react";
 
 const Schema = forwardRef(({ request, response, types, edit }, ref) => {

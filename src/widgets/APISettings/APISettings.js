@@ -1,10 +1,10 @@
 import EditIcon from "@mui/icons-material/Edit";
 import ParamView from "../../components/ParamView";
-import SchemaView from "../../components/SchemaView";
+import Schema from "../../components/Schema";
 import Security from "../../components/Security";
 import SummaryForm from "../../components/SummaryForm";
+import { compile } from "../../widgets/APIDialog/Context";
 import styles from "./styles";
-
 import { useContext } from "../../Context/providers/contextProvider";
 import { Fab, Grid } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
@@ -28,11 +28,11 @@ function APISettings() {
       setMethod(selected.method);
       setParams(api[selected.path][selected.method].params);
       setSummary(api[selected.path][selected.method].summary);
-      setRequest(api[selected.path][selected.method].request);
-      setResponse(api[selected.path][selected.method].response);
+      setRequest(compile(api[selected.path][selected.method].request));
+      setResponse(compile(api[selected.path][selected.method].response));
       setDescription(api[selected.path][selected.method].description);
     }
-  }, [state]);
+  }, [state, method]);
 
   return (
     <Grid container sx={styles.root}>
@@ -46,10 +46,14 @@ function APISettings() {
         <Grid container sx={styles.content}>
           <Grid item xs={6} sx={styles.schema}>
             {method === "get" && <ParamView params={params} />}
-            {method !== "get" && <SchemaView schema={request} />}
+            {method !== "get" && request && (
+              <Schema key={Object.keys(request)[0]} request ref={request} />
+            )}
           </Grid>
           <Grid item xs={6} sx={styles.schema}>
-            <SchemaView schema={response} />
+            {response && (
+              <Schema key={Object.keys(response)[0]} response ref={response} />
+            )}
           </Grid>
         </Grid>
       </Grid>
