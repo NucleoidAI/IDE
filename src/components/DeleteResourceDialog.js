@@ -24,18 +24,14 @@ const DeleteResourceDialog = forwardRef(({ setOpen, deleteResource }, ref) => {
       onClose={handleClose}
       aria-labelledby="responsive-dialog-title"
     >
-      <DialogTitle id="responsive-dialog-title">
-        {"Delete resource"}
-      </DialogTitle>
+      <DialogTitle id="responsive-dialog-title">Delete resource</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          The selected resource and all methods and resources under it will be
-          deleted. Resources to be deleted :<br />
-          <br />
-          {resource.deleteList.map((item, index) => {
-            return <Typography key={index}>{item}</Typography>;
-          })}
-        </DialogContentText>
+        The selected resource and all methods and resources under it will be
+        deleted. Resources to be deleted :<br />
+        <br />
+        {resource.deleteList.map((item, index) => {
+          return <Typography key={index}>{item}</Typography>;
+        })}
       </DialogContent>
       <DialogActions>
         <Button autoFocus onClick={handleClose}>
