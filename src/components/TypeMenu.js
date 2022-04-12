@@ -25,56 +25,40 @@ const newObject = (id) => {
 
 const TypeMenu = forwardRef(
   (
-    {
-      id,
-      type,
-      types,
-      map,
-      edit,
-      noNested,
-      setKey,
-      primitive,
-      objAndArr,
-      globalTypes,
-    },
+    { id, type, types, map, edit, setKey, primitive, objAndArr, globalTypes },
     ref
   ) => {
     const [selectedType, setSelectedType] = useState(type);
 
     function updateType(id, value) {
-      // TODO adapt to params, ref for this feature
+      if (ref) {
+        ref[id].type = value;
+      } else {
+        switch (value) {
+          case "array":
+            if (map.type === "object") delete map["properties"];
+            map.type = "array";
+            map["items"] = newArray(uuid(), uuid());
 
-      switch (value) {
-        case "array":
-          if (map.type === "object") delete map["properties"];
-          map.type = "array";
-          map["items"] = newArray(uuid(), uuid());
+            break;
+          case "object":
+            if (map.type === "array") delete map["items"];
+            map.type = "object";
+            map["properties"] = newObject(uuid());
 
-          break;
-        case "object":
-          if (map.type === "array") delete map["items"];
-          map.type = "object";
-          map["properties"] = newObject(uuid());
-
-          break;
-        default:
-          if (ref) {
-            ref[id].type = value;
-          } else {
+            break;
+          default:
             if (map["properties"]) delete map["properties"];
             if (map["items"]) delete map["items"];
             map.type = value;
-          }
 
-          break;
+            break;
+        }
       }
-      // TODO decide how to render, context doesnt work, if trigger context, apidialog rerender and run compile methods again.
-      // dispatch({ type: "" });
       setKey && setKey(uuid());
       setSelectedType(value);
     }
 
-    // TODO refactor for global types
     return (
       <>
         {edit && (
