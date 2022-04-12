@@ -29,6 +29,10 @@ function contextReducer(state, { type, payload }) {
         api[path][payload.method].request = payload.request;
         api[path][payload.method].response = payload.response;
         api[path][payload.method].params = payload.params;
+        api[path][payload.method].action = payload.action;
+        api[path][payload.method].summary = payload.summary;
+        api[path][payload.method].description = payload.description;
+
         nucleoid.types = payload.types;
 
         break;
@@ -46,6 +50,10 @@ function contextReducer(state, { type, payload }) {
         api[path][method].request = payload.request;
         api[path][method].response = payload.response;
         api[path][method].params = payload.params;
+        api[path][payload.method].action = payload.action;
+        api[path][payload.method].summary = payload.summary;
+        api[path][payload.method].description = payload.description;
+
         nucleoid.types = payload.types;
 
         break;
@@ -62,6 +70,9 @@ function contextReducer(state, { type, payload }) {
       api[path][method].request = request;
       api[path][method].response = response;
       api[path][method].params = params;
+      api[path][method].action = payload.action;
+      api[path][method].summary = payload.summary;
+      api[path][method].description = payload.description;
       nucleoid.types = types;
     }
 

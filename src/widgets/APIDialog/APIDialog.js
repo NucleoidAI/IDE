@@ -123,6 +123,9 @@ function APIDialog() {
         params: deindex(paramsRef.current),
         request: decompile(requestRef.current),
         response: decompile(responseRef.current),
+        action: `function (req){\n\treturn json.name;\n}`,
+        summary: "Summary",
+        description: "Description",
         types: typesRef.current.reduce((previous, current) => {
           const object = decompile(current);
           const name = current[Object.keys(current)[0]].name;
