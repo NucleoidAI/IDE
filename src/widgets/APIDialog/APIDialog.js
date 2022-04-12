@@ -40,7 +40,6 @@ function APIDialog() {
     apiRef.current = context.get("nucleoid.api");
     pathRef.current = path;
 
-    // TODO bug: edit get not working
     const initEdit = (method, path) => {
       setMethod(method);
       setParams(apiRef.current[path][method].params);
