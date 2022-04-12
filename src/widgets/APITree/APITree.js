@@ -19,12 +19,24 @@ function APITree() {
   const [methodDisabled, setMethodDisabled] = useState();
   const [open, setOpen] = useState(false);
 
+  const [expanded, setExpanded] = useState([]);
+
   const [state, dispatch] = useContext();
   const api = state.get("nucleoid.api");
   const list = Object.keys(api).map((key) => ({
     path: key,
     methods: Object.keys(api[key]),
   }));
+
+  const expandList = [];
+
+  const handleToggle = (event, ids) => {
+    setExpanded(ids);
+  };
+
+  const handleExpandClick = () => {
+    setExpanded([...expandList]);
+  };
 
   const select = (id) => {
     if (map[id]) {
@@ -98,6 +110,7 @@ function APITree() {
       select(Object.keys(map).pop());
     }
     setMethodDisabled(checkMethodDeletable());
+    handleExpandClick();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected, state]);
 
@@ -128,11 +141,18 @@ function APITree() {
       <TreeView
         defaultCollapseIcon={<ArrowIcon down />}
         defaultExpandIcon={<ArrowIcon right />}
-        defaultExpanded={list.map((api) => api.path)}
+        // defaultExpanded={list.map((api) => api.path)}
+        onNodeToggle={handleToggle}
+        expanded={expanded}
         onNodeSelect={(event, value) => select(value)}
         selected={selected}
       >
-        {compile([graph["/"]], handleContextMenu, handleResourceMenu)}
+        {compile(
+          [graph["/"]],
+          handleContextMenu,
+          handleResourceMenu,
+          expandList
+        )}
       </TreeView>
       <Menu
         open={contextMenu !== null}
@@ -163,12 +183,17 @@ function APITree() {
   );
 }
 
-const compile = (list, handleContextMenu, handleResourceMenu) =>
+const compile = (list, handleContextMenu, handleResourceMenu, expandList) =>
   list.map((api) => {
     let children = undefined;
 
     if (api.resources && api.resources.length > 0) {
-      children = compile(api.resources, handleContextMenu, handleResourceMenu);
+      children = compile(
+        api.resources,
+        handleContextMenu,
+        handleResourceMenu,
+        expandList
+      );
     }
 
     children = api.methods
@@ -191,7 +216,7 @@ const compile = (list, handleContextMenu, handleResourceMenu) =>
         );
       })
       .concat(children);
-
+    expandList.push(api.path);
     return (
       <NonExpandableTreeItem
         key={api.path}
