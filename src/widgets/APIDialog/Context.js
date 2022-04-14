@@ -85,7 +85,7 @@ const compile = (schema) => {
 };
 
 const decompile = (schema) => {
-  if (!schema[Object.keys(schema)[0]]) return {};
+  if (!schema) return {};
 
   const { type, properties, items, ...other } = schema[Object.keys(schema)[0]];
   const object = { ...other, type, properties: {}, items: {} };

@@ -115,8 +115,11 @@ const api = {
     del: {
       summary: "Delete item",
       description: "Delete item",
-      request: {},
-      response: {},
+      request: {
+        type: "object",
+        properties: {},
+      },
+      response: { type: "object", properties: {} },
       params: [
         {
           name: "id",
@@ -216,8 +219,8 @@ const api = {
           description: "Order id",
         },
       ],
-      request: {},
-      response: {},
+      request: { type: "object", properties: {} },
+      response: { type: "object", properties: {} },
       action: `function action(req) {\n\tdelete Order[req.params.order];\n}\n`,
     },
   },

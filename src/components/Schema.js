@@ -214,6 +214,7 @@ const compile = (edit, map, schema, types, expandList, setKey, name) => {
 
           return (
             <>
+              {!edit && type}
               {schema.name && (
                 <SchemaProperty
                   id={id}

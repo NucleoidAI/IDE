@@ -16,6 +16,7 @@ function APISettings() {
   const [summary, setSummary] = useState();
   const [request, setRequest] = useState();
   const [response, setResponse] = useState();
+  const [types, setTypes] = useState();
   const [description, setDescription] = useState();
 
   const summaryRef = useRef([]);
@@ -31,6 +32,16 @@ function APISettings() {
       setRequest(compile(api[selected.path][selected.method].request));
       setResponse(compile(api[selected.path][selected.method].response));
       setDescription(api[selected.path][selected.method].description);
+
+      setTypes(
+        Object.entries(state.get("nucleoid.types"))
+          .map(([key, value]) => ({
+            ...value,
+            name: key,
+            type: value.type,
+          }))
+          .map((type) => compile(type))
+      );
     }
   }, [state, method]);
 
@@ -47,12 +58,22 @@ function APISettings() {
           <Grid item xs={6} sx={styles.schema}>
             {method === "get" && <ParamView params={params} />}
             {method !== "get" && request && (
-              <Schema key={Object.keys(request)[0]} request ref={request} />
+              <Schema
+                key={Object.keys(request)[0]}
+                request
+                types={types}
+                ref={request}
+              />
             )}
           </Grid>
           <Grid item xs={6} sx={styles.schema}>
             {response && (
-              <Schema key={Object.keys(response)[0]} response ref={response} />
+              <Schema
+                key={Object.keys(response)[0]}
+                response
+                types={types}
+                ref={response}
+              />
             )}
           </Grid>
         </Grid>
