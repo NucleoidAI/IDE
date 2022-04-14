@@ -202,7 +202,7 @@ const api = {
         },
       },
       response: { $ref: "#/components/schemas/Order" },
-      action: `function action(req) {\n\tconst item = Item[req.body.item];\n\tconst qty = req.body.qty;\n\tconst order = Order[req.params.order];\n\torder.item = item;\n\torder.qty = qty;\r\n \r\nreturn order;\n}\n`,
+      action: `function action(req) {\n\tconst item = Item[req.body.item];\n\tconst qty = req.body.qty;\n\tconst order = Order[req.params.order];\n\torder.item = item;\n\torder.qty = qty;\n\treturn order;\n}\n`,
     },
     del: {
       summary: "Delete order",
