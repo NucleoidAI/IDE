@@ -3,11 +3,27 @@ const api = {
     get: {
       summary: "Hello",
       description: "Hello",
+      params: [
+        {
+          name: "order",
+          in: "query",
+          type: "string",
+          required: true,
+          description: "order",
+        },
+        {
+          name: "item",
+          in: "query",
+          type: "string",
+          required: false,
+          description: "item",
+        },
+      ],
       response: {
         type: "object",
         properties: {
           id: {
-            type: "integer",
+            type: "string",
           },
           name: {
             type: "string",
@@ -15,22 +31,6 @@ const api = {
         },
       },
       action: `function action(req){\n\treturn "Hello World";\n}`,
-      params: [
-        {
-          name: "order",
-          in: "query",
-          type: "string",
-          required: true,
-          description: "filter by order",
-        },
-        {
-          name: "item",
-          in: "query",
-          type: "integer",
-          required: false,
-          description: "filter by item",
-        },
-      ],
     },
   },
   "/items": {
@@ -131,7 +131,7 @@ const api = {
   },
   "/orders": {
     get: {
-      summary: "Read order",
+      summary: "Read orders",
       description: "Read order list",
       params: [],
       response: {

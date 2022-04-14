@@ -205,8 +205,6 @@ const compile = (edit, map, schema, types, expandList, setKey, name) => {
         schema.type !== "string" &&
         schema.type !== "boolean"
       ) {
-        // TODO return global type
-
         if (types) {
           const item = decompile(
             types.filter(
@@ -216,8 +214,20 @@ const compile = (edit, map, schema, types, expandList, setKey, name) => {
 
           return (
             <>
-              {type} &nbsp;
-              <SchemaView schema={item} />
+              {schema.name && (
+                <SchemaProperty
+                  id={id}
+                  key={schema.id}
+                  nodeId={schema.id}
+                  name={schema.name}
+                  type={type}
+                  types={types}
+                  edit={edit}
+                  map={map[id]}
+                  setKey={setKey}
+                />
+              )}
+              <SchemaView key={uuid()} schema={item} />
             </>
           );
         }
