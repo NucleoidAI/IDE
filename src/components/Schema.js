@@ -213,8 +213,8 @@ const compile = (edit, map, schema, types, expandList, setKey, name) => {
           );
 
           return (
-            <>
-              {!edit && type}
+            <Grid key={schema.id}>
+              {!edit && <>{schema.type}</>}
               {schema.name && (
                 <SchemaProperty
                   id={id}
@@ -229,7 +229,7 @@ const compile = (edit, map, schema, types, expandList, setKey, name) => {
                 />
               )}
               <SchemaView key={uuid()} schema={item} />
-            </>
+            </Grid>
           );
         }
       }
