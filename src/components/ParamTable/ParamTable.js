@@ -48,8 +48,6 @@ const ParamTable = React.forwardRef(({ types }, { paramsRef, addParams }) => {
         return (
           <TypeMenu
             primitive
-            objAndArr
-            globalTypes
             types={types}
             ref={params}
             id={id}

@@ -66,8 +66,6 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
 
         service.lint(value, abortController.current.signal).then((result) => {
           abortController.current = null;
-          console.log(result);
-
           setCode(result.output);
 
           setAnnotations([
@@ -115,7 +113,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
           action = fn.slice(1, -1);
         }
 
-        action = `function (${args[0] || ""}){\n\t${action}\n}`;
+        action = `function action(${args[0] || ""}){\n\t${action}\n}`;
 
         lint(action);
       }
