@@ -63,11 +63,7 @@ const api = {
       response: {
         $ref: "#/components/schemas/Item",
       },
-      action: `function action(req){
-        const name=req.body.name;
-        const barcode=req.body.barcode;
-        return new Item(name,barcode);
-      }`,
+      action: `function action(req){\n\tconst name=req.body.name;\n\tconst barcode=req.body.barcode;\n\n\treturn new Item(name,barcode);\n}\n`,
     },
   },
   "/items/{item}": {
@@ -110,7 +106,7 @@ const api = {
         },
       },
       response: { $ref: "#/components/schemas/Item" },
-      action: `function action(req) {\n\tconst name = req.body.name;\n\tconst barcode = req.body.barcode;\n\tconst item = Item[req.params.item];\n\titem.name = name;\n\titem.barcode = barcode;\n\treturn item;\n}\n`,
+      action: `function action(req) {\n\tconst name = req.body.name;\n\tconst barcode = req.body.barcode;\n\tconst item = Item[req.params.item];\n\titem.name = name;\n\titem.barcode = barcode;\n\n\treturn item;\n}\n`,
     },
     del: {
       summary: "Delete item",
@@ -162,7 +158,7 @@ const api = {
       response: {
         $ref: "#/components/schemas/Order",
       },
-      action: `function (req) {\n\tconst item = Item[req.body.item];\n\tconst qty = req.body.qty;\n\treturn new Order(item, qty);\n}\n`,
+      action: `function (req) {\n\tconst item = Item[req.body.item];\n\tconst qty = req.body.qty;\n\n\treturn new Order(item, qty);\n}\n`,
     },
   },
   "/orders/{order}": {
@@ -205,7 +201,7 @@ const api = {
         },
       },
       response: { $ref: "#/components/schemas/Order" },
-      action: `function action(req) {\n\tconst item = Item[req.body.item];\n\tconst qty = req.body.qty;\n\tconst order = Order[req.params.order];\n\torder.item = item;\n\torder.qty = qty;\n\treturn order;\n}\n`,
+      action: `function action(req) {\n\tconst item = Item[req.body.item];\n\tconst qty = req.body.qty;\n\tconst order = Order[req.params.order];\n\torder.item = item;\n\torder.qty = qty;\n\n\treturn order;\n}\n`,
     },
     del: {
       summary: "Delete order",
