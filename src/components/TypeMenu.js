@@ -1,27 +1,7 @@
+import Defaults from "../defaults";
 import { v4 as uuid } from "uuid";
 import { Divider, MenuItem, Select } from "@mui/material";
-
 import { forwardRef, useState } from "react";
-
-const newArray = (objID, objPropID) => {
-  return {
-    [objID]: {
-      type: "object",
-      id: objID,
-      properties: newObject(objPropID),
-    },
-  };
-};
-
-const newObject = (id) => {
-  return {
-    [id]: {
-      id: id,
-      name: "id",
-      type: "integer",
-    },
-  };
-};
 
 const TypeMenu = forwardRef(
   (
@@ -38,13 +18,13 @@ const TypeMenu = forwardRef(
           case "array":
             if (map.type === "object") delete map["properties"];
             map.type = "array";
-            map["items"] = newArray(uuid(), uuid());
+            map["items"] = Defaults.compiledObject(uuid(), uuid());
 
             break;
           case "object":
             if (map.type === "array") delete map["items"];
             map.type = "object";
-            map["properties"] = newObject(uuid());
+            map["properties"] = Defaults.compiledProperty(uuid());
 
             break;
           default:

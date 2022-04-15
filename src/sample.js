@@ -19,6 +19,7 @@ const api = {
           description: "item",
         },
       ],
+      request: { type: "object", properties: {} },
       response: {
         type: "object",
         properties: {
@@ -38,6 +39,7 @@ const api = {
       summary: "Read items",
       description: "Read item list",
       params: [],
+      request: { type: "object", properties: {} },
       response: {
         type: "array",
         items: {
@@ -79,6 +81,7 @@ const api = {
           description: "Item id",
         },
       ],
+      request: { type: "object", properties: {} },
       response: { $ref: "#/components/schemas/Item" },
       action: `function action(req) {\n\treturn Item[req.params.item];\n}\n`,
     },
@@ -111,11 +114,6 @@ const api = {
     del: {
       summary: "Delete item",
       description: "Delete item",
-      request: {
-        type: "object",
-        properties: {},
-      },
-      response: { type: "object", properties: {} },
       params: [
         {
           name: "id",
@@ -125,6 +123,22 @@ const api = {
           description: "Item id",
         },
       ],
+      request: {
+        type: "object",
+        properties: {
+          id: {
+            type: "string",
+          },
+        },
+      },
+      response: {
+        type: "object",
+        properties: {
+          id: {
+            type: "string",
+          },
+        },
+      },
       action: `function action(req) {\n\tdelete Item[req.params.item];\n}\n`,
     },
   },
@@ -133,6 +147,14 @@ const api = {
       summary: "Read orders",
       description: "Read order list",
       params: [],
+      request: {
+        type: "object",
+        properties: {
+          id: {
+            type: "string",
+          },
+        },
+      },
       response: {
         type: "array",
         items: {
@@ -144,6 +166,7 @@ const api = {
     post: {
       summary: "Create order",
       description: "Create order",
+      params: [],
       request: {
         type: "object",
         properties: {
@@ -174,6 +197,7 @@ const api = {
           description: "Order id",
         },
       ],
+      request: { type: "object", properties: {} },
       response: { $ref: "#/components/schemas/Order" },
       action: `function action(req) {\n\treturn Order[req.params.order];\n}\n`,
     },
@@ -215,8 +239,22 @@ const api = {
           description: "Order id",
         },
       ],
-      request: { type: "object", properties: {} },
-      response: { type: "object", properties: {} },
+      request: {
+        type: "object",
+        properties: {
+          id: {
+            type: "string",
+          },
+        },
+      },
+      response: {
+        type: "object",
+        properties: {
+          id: {
+            type: "string",
+          },
+        },
+      },
       action: `function action(req) {\n\tdelete Order[req.params.order];\n}\n`,
     },
   },
