@@ -181,7 +181,7 @@ const api = {
       response: {
         $ref: "#/components/schemas/Order",
       },
-      action: `function (req) {\n\tconst item = Item[req.body.item];\n\tconst qty = req.body.qty;\n\n\treturn new Order(item, qty);\n}\n`,
+      action: `function action(req) {\n\tconst item = Item[req.body.item];\n\tconst qty = req.body.qty;\n\n\treturn new Order(item, qty);\n}\n`,
     },
   },
   "/orders/{order}": {
