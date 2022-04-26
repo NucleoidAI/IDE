@@ -3,7 +3,17 @@ import TreeItem from "@mui/lab/TreeItem";
 import TypeMenu from "./TypeMenu";
 import React, { useRef, useState } from "react";
 
-function SchemaArray({ id, name, children, edit, map, type, types, ...other }) {
+function SchemaArray({
+  id,
+  name,
+  children,
+  edit,
+  map,
+  type,
+  types,
+  setKey,
+  ...other
+}) {
   const [value, setValue] = useState(name);
   const textField = useRef();
   // TODO  if in object show textfield and typemenu, if in array show only typemenu
@@ -45,11 +55,14 @@ function SchemaArray({ id, name, children, edit, map, type, types, ...other }) {
         <>
           &nbsp;&nbsp;&nbsp;&nbsp;
           <TypeMenu
+            objAndArr
+            globalTypes
             id={id}
             type={item.type}
             types={types}
             map={item}
             edit={edit}
+            setKey={setKey}
           />
           <br />
         </>

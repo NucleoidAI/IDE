@@ -26,7 +26,16 @@ function SchemaType({ id, name, map, type, types, edit, ...other }) {
                 onClick={() => setTimeout(() => textField.current.focus(), 0)}
               />
               :&nbsp;
-              <TypeMenu id={id} type={type} types={types} map={map} edit />
+              <TypeMenu
+                primitive
+                objAndArr
+                globalTypes
+                id={id}
+                type={type}
+                types={types}
+                map={map}
+                edit
+              />
               <Schema ref={typeSchema} types={types} />
             </>
           )}

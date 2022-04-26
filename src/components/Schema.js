@@ -21,9 +21,21 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
   const [addIcon, setAddIcon] = useState();
   const [removeIcon, setRemoveIcon] = useState();
   const [selected, setSelected] = useState(null);
+  const [expanded, setExpanded] = useState([]);
+  const [key, setKey] = useState("");
+
+  const expandList = [];
 
   const root = schema[Object.keys(schema)[0]].id;
   const map = mapSchema(schema);
+
+  const handleToggle = (event, ids) => {
+    setExpanded(ids);
+  };
+
+  const handleExpandClick = () => {
+    setExpanded([...expandList]);
+  };
 
   const addSchemaProperty = (selected) => {
     const key = uuid();
@@ -58,8 +70,9 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
 
   useEffect(() => {
     select(root);
+    handleExpandClick();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [key]);
 
   return (
     <Grid
@@ -74,10 +87,13 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
             <>
               Type:&nbsp;
               <TypeMenu
+                objAndArr
+                globalTypes
                 type={schema[Object.keys(schema)].type || "object"}
                 types={types}
                 map={schema[Object.keys(schema)]}
                 edit={edit}
+                setKey={setKey}
               />
             </>
           </Grid>
@@ -88,11 +104,12 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
           <TreeView
             defaultCollapseIcon={<RemoveCircleOutlineIcon />}
             defaultExpandIcon={<AddCircleOutlineIcon />}
-            defaultExpanded={[root]}
+            onNodeToggle={handleToggle}
+            expanded={expanded}
             selected={selected}
             onNodeSelect={(event, value) => select(value)}
           >
-            {compile(edit, map, schema, types)}
+            {compile(edit, map, schema, types, expandList, setKey)}
           </TreeView>
         </Grid>
       </Grid>
@@ -123,7 +140,7 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
   );
 });
 
-const compile = (edit, map, schema, types, name) => {
+const compile = (edit, map, schema, types, expandList, setKey, name) => {
   schema = schema[Object.keys(schema)[0]];
   const { id, properties, items, type } = schema || {};
   const children = [];
@@ -131,7 +148,11 @@ const compile = (edit, map, schema, types, name) => {
   switch (type) {
     case "array": {
       const item = items[Object.keys(items)[0]];
-      children.push(compile(edit, map, { root: item }, types, name));
+      expandList.push(id);
+
+      children.push(
+        compile(edit, map, { root: item }, types, expandList, setKey, name)
+      );
 
       return (
         <SchemaArray
@@ -144,14 +165,26 @@ const compile = (edit, map, schema, types, name) => {
           type={type}
           types={types}
           map={map[id]}
+          setKey={setKey}
         />
       );
     }
     case "object": {
       for (const key in properties) {
         const property = properties[key];
+        expandList.push(id);
 
-        children.push(compile(edit, map, { root: property }, types, name));
+        children.push(
+          compile(
+            edit,
+            map,
+            { root: property },
+            types,
+            expandList,
+            setKey,
+            name
+          )
+        );
       }
 
       return (
@@ -172,8 +205,6 @@ const compile = (edit, map, schema, types, name) => {
         schema.type !== "string" &&
         schema.type !== "boolean"
       ) {
-        // TODO return global type
-
         if (types) {
           const item = decompile(
             types.filter(
@@ -182,10 +213,23 @@ const compile = (edit, map, schema, types, name) => {
           );
 
           return (
-            <>
-              {type} &nbsp;
-              <SchemaView schema={item} />
-            </>
+            <Grid key={schema.id}>
+              {!edit && <>{schema.type}</>}
+              {schema.name && (
+                <SchemaProperty
+                  id={id}
+                  key={schema.id}
+                  nodeId={schema.id}
+                  name={schema.name}
+                  type={type}
+                  types={types}
+                  edit={edit}
+                  map={map[id]}
+                  setKey={setKey}
+                />
+              )}
+              <SchemaView key={uuid()} schema={item} />
+            </Grid>
           );
         }
       }
@@ -200,6 +244,7 @@ const compile = (edit, map, schema, types, name) => {
           types={types}
           edit={edit}
           map={map[id]}
+          setKey={setKey}
         />
       );
   }

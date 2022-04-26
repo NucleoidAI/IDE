@@ -1,164 +1,132 @@
 const api = {
   "/": {
     get: {
-      summary: "Hello World",
-      description: "Hello World",
-      response: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-          name: {
-            type: "string",
-          },
-        },
-      },
-      action: `function (req){\n\treturn json.name;\n}`,
+      summary: "Hello",
+      description: "Hello",
       params: [
         {
           name: "order",
           in: "query",
           type: "string",
           required: true,
-          description: "filter by order",
+          description: "order",
         },
         {
           name: "item",
           in: "query",
-          type: "integer",
+          type: "string",
           required: false,
-          description: "filter by item",
+          description: "item",
         },
       ],
+      request: { type: "object", properties: {} },
+      response: {
+        type: "object",
+        properties: {
+          id: {
+            type: "string",
+          },
+          name: {
+            type: "string",
+          },
+        },
+      },
+      action: `function action(req){\n\treturn "Hello World";\n}`,
     },
   },
-  "/devices": {
+  "/items": {
     get: {
-      summary: "List devices",
-      description: "List devices",
+      summary: "Read items",
+      description: "Read item list",
+      params: [],
+      request: { type: "object", properties: {} },
       response: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-          name: {
-            type: "string",
-          },
+        type: "array",
+        items: {
+          $ref: "#/components/schemas/Item",
         },
       },
-      action: `function (req){\n\treturn json.name;\n}`,
+      action: `function action(req) {\n\treturn Item;\n}\n`,
     },
     post: {
-      summary: "Update the device",
-      description: "Update the device",
+      summary: "Add item",
+      description: "Add item",
       request: {
         type: "object",
         properties: {
-          id: {
-            type: "integer",
-          },
           name: {
+            type: "string",
+          },
+          barcode: {
             type: "string",
           },
         },
       },
       response: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-          name: {
-            type: "string",
-          },
-        },
+        $ref: "#/components/schemas/Item",
       },
-      action: `function (req){\n\treturn json.name;\n}`,
+      action: `function action(req){\n\tconst name=req.body.name;\n\tconst barcode=req.body.barcode;\n\n\treturn new Item(name,barcode);\n}\n`,
     },
   },
-  "/questions": {
+  "/items/{item}": {
     get: {
-      summary: "Retrieve the question",
-      description: "Retrieve the question",
-      response: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-          name: {
-            type: "string",
-          },
+      summary: "Read item",
+      description: "Read item by item id",
+      params: [
+        {
+          name: "id",
+          in: "param",
+          type: "string",
+          required: true,
+          description: "Item id",
         },
-      },
-      action: `function (req){\n\treturn json.name;\n}`,
+      ],
+      request: { type: "object", properties: {} },
+      response: { $ref: "#/components/schemas/Item" },
+      action: `function action(req) {\n\treturn Item[req.params.item];\n}\n`,
     },
     post: {
-      summary: "Update the question",
-      description: "Update the question",
+      summary: "Update item",
+      description: "Update item",
+      params: [
+        {
+          name: "id",
+          in: "param",
+          type: "string",
+          required: true,
+          description: "Item id",
+        },
+      ],
       request: {
         type: "object",
         properties: {
-          id: {
-            type: "integer",
-          },
           name: {
+            type: "string",
+          },
+          barcode: {
             type: "string",
           },
         },
       },
-      response: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-          name: {
-            type: "string",
-          },
-        },
-      },
-      action: `function (req){\n\treturn json.name;\n}`,
-    },
-    put: {
-      summary: "Create a question",
-      description: "Create a question",
-      request: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-          name: {
-            type: "string",
-          },
-        },
-      },
-      response: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-          name: {
-            type: "string",
-          },
-        },
-      },
-      action: `function (req){\n\treturn json.name;\n}`,
+      response: { $ref: "#/components/schemas/Item" },
+      action: `function action(req) {\n\tconst name = req.body.name;\n\tconst barcode = req.body.barcode;\n\tconst item = Item[req.params.item];\n\titem.name = name;\n\titem.barcode = barcode;\n\n\treturn item;\n}\n`,
     },
     del: {
-      summary: "Delete the question",
-      description: "Delete the question",
+      summary: "Delete item",
+      description: "Delete item",
+      params: [
+        {
+          name: "id",
+          in: "param",
+          type: "string",
+          required: true,
+          description: "Item id",
+        },
+      ],
       request: {
         type: "object",
         properties: {
           id: {
-            type: "integer",
-          },
-          name: {
             type: "string",
           },
         },
@@ -167,27 +135,114 @@ const api = {
         type: "object",
         properties: {
           id: {
-            type: "integer",
-          },
-          name: {
             type: "string",
           },
         },
       },
-      action: `function (req){\n\treturn json.name;\n}`,
+      action: `function action(req) {\n\tdelete Item[req.params.item];\n}\n`,
     },
   },
-  "/questions/reviews": {
-    post: {
-      summary: "Create a review",
-      description: "Create a review",
+  "/orders": {
+    get: {
+      summary: "Read orders",
+      description: "Read order list",
+      params: [],
       request: {
         type: "object",
         properties: {
           id: {
+            type: "string",
+          },
+        },
+      },
+      response: {
+        type: "array",
+        items: {
+          $ref: "#/components/schemas/Order",
+        },
+      },
+      action: `function action(req) {\n\treturn Order;\n}\n`,
+    },
+    post: {
+      summary: "Create order",
+      description: "Create order",
+      params: [],
+      request: {
+        type: "object",
+        properties: {
+          item: {
+            type: "string",
+          },
+          qty: {
             type: "integer",
           },
-          name: {
+        },
+      },
+      response: {
+        $ref: "#/components/schemas/Order",
+      },
+      action: `function action(req) {\n\tconst item = Item[req.body.item];\n\tconst qty = req.body.qty;\n\n\treturn new Order(item, qty);\n}\n`,
+    },
+  },
+  "/orders/{order}": {
+    get: {
+      summary: "Read order",
+      description: "Read order",
+      params: [
+        {
+          name: "id",
+          in: "param",
+          type: "string",
+          required: true,
+          description: "Order id",
+        },
+      ],
+      request: { type: "object", properties: {} },
+      response: { $ref: "#/components/schemas/Order" },
+      action: `function action(req) {\n\treturn Order[req.params.order];\n}\n`,
+    },
+    post: {
+      summary: "Update order",
+      description: "Update order",
+      params: [
+        {
+          name: "id",
+          in: "param",
+          type: "string",
+          required: true,
+          description: "Order id",
+        },
+      ],
+      request: {
+        type: "object",
+        properties: {
+          item: {
+            type: "string",
+          },
+          qty: {
+            type: "integer",
+          },
+        },
+      },
+      response: { $ref: "#/components/schemas/Order" },
+      action: `function action(req) {\n\tconst item = Item[req.body.item];\n\tconst qty = req.body.qty;\n\tconst order = Order[req.params.order];\n\torder.item = item;\n\torder.qty = qty;\n\n\treturn order;\n}\n`,
+    },
+    del: {
+      summary: "Delete order",
+      description: "Delete order",
+      params: [
+        {
+          name: "id",
+          in: "param",
+          type: "string",
+          required: true,
+          description: "Order id",
+        },
+      ],
+      request: {
+        type: "object",
+        properties: {
+          id: {
             type: "string",
           },
         },
@@ -196,14 +251,11 @@ const api = {
         type: "object",
         properties: {
           id: {
-            type: "integer",
-          },
-          name: {
             type: "string",
           },
         },
       },
-      action: `function (req){\n\treturn json.name;\n}`,
+      action: `function action(req) {\n\tdelete Order[req.params.order];\n}\n`,
     },
   },
 };
@@ -213,82 +265,28 @@ const types = {
     type: "object",
     properties: {
       id: {
-        type: "integer",
+        type: "string",
       },
-      sku: {
+      name: {
+        type: "string",
+      },
+      barcode: {
         type: "string",
       },
     },
   },
-  Cat: {
-    type: "array",
-    items: {
-      type: "object",
-      properties: {
-        person: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              id: {
-                type: "integer",
-              },
-            },
-          },
-        },
-      },
-    },
-  },
+
   Order: {
-    type: "array",
-    items: {
-      type: "array",
-      items: {
-        type: "object",
-        properties: {
-          id: {
-            type: "integer",
-          },
-        },
-      },
-    },
-  },
-  User: {
     type: "object",
     properties: {
       id: {
-        type: "integer",
+        type: "string",
       },
-      name: {
-        type: "array",
-        items: {
-          type: "object",
-          properties: {
-            id: {
-              type: "integer",
-            },
-            persons: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  name: {
-                    type: "integer",
-                  },
-                  ar1: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      properties: {
-                        id: { type: "integer" },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
+      item: {
+        $ref: "#/components/schemas/Item",
+      },
+      qty: {
+        type: "integer",
       },
     },
   },
@@ -296,48 +294,27 @@ const types = {
 
 const functions = [
   {
-    path: "/getInfo",
+    path: "/classes/Order",
     params: [],
-    type: "FUNCTION",
-    code: `function getInfo() {\n  return "Hello";\n}`,
-  },
-  {
-    path: "/users/getUser",
-    params: ["user"],
-    type: "FUNCTION",
-    code:
-      "function getUser(user) {\n" +
-      "  return Users.find(u => u.user == user);\n" +
-      "}",
-  },
-  {
-    path: "/users/User",
     type: "CLASS",
-    params: ["email", "password"],
-    code:
-      "class User {\n" +
-      "  constructor(name) {\n" +
-      "    this.name = name;\n" +
-      "  }\n" +
-      "}",
+    code: `class Order{
+      constructor(qty,item){
+        this.item = item;
+        this.qty = qty;
+        this.date = Date.now();
+      }
+    }`,
   },
   {
-    path: "/utils/verify",
-    type: "FUNCTION",
-    params: ["array"],
-    code:
-      "function validate(array) {\n" +
-      "  return array.length ? true : false;\n" +
-      "}",
-  },
-  {
-    path: "/utils/validate",
-    type: "FUNCTION",
-    params: ["array"],
-    code:
-      "function validate(array) {\n" +
-      "  return array.length ? true : false;\n" +
-      "}",
+    path: "/classes/Item",
+    params: [],
+    type: "CLASS",
+    code: `class Item {
+      constructor(name, barcode) {
+        this.name = name;
+        this.barcode = barcode;
+      }
+    }`,
   },
 ];
 

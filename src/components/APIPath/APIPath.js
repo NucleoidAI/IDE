@@ -98,7 +98,7 @@ const APIPath = forwardRef(
             <FormControl variant={"outlined"} size={"small"}>
               <Select
                 error={alertMethod}
-                defaultValue={method ? method : ""}
+                value={method || " "}
                 onChange={(e) => {
                   handleChangeMethod(e.target.value);
                   handleSetMethod();

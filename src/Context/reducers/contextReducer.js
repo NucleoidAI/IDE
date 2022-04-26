@@ -70,9 +70,9 @@ function contextReducer(state, { type, payload }) {
       api[path][method].request = request;
       api[path][method].response = response;
       api[path][method].params = params;
-      api[path][method].action = payload.action;
-      api[path][method].summary = payload.summary;
-      api[path][method].description = payload.description;
+      //api[path][method].action = payload.action;
+      //api[path][method].summary = payload.summary;
+      //api[path][method].description = payload.description;
       nucleoid.types = types;
     }
 

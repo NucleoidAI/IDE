@@ -4,6 +4,7 @@ import APIParams from "../../components/APIParams";
 import APIPath from "../../components/APIPath";
 import APITypes from "../../components/APITypes";
 import ClosableDialogTitle from "../../components/ClosableDialogTitle";
+import Defaults from "../../defaults";
 import actions from "../../actions";
 import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
@@ -40,12 +41,12 @@ function APIDialog() {
     apiRef.current = context.get("nucleoid.api");
     pathRef.current = path;
 
-    // TODO bug: edit get not working
     const initEdit = (method, path) => {
       setMethod(method);
       setParams(apiRef.current[path][method].params);
       paramsRef.current = index(apiRef.current[path][method].params);
-
+      requestRef.current = compile(apiRef.current[path][method].request);
+      responseRef.current = compile(apiRef.current[path][method].response);
       typesRef.current = Object.entries(context.get("nucleoid.types"))
         .map(([key, value]) => ({
           ...value,
@@ -53,16 +54,13 @@ function APIDialog() {
           type: value.type,
         }))
         .map((type) => compile(type));
-
-      requestRef.current = compile(apiRef.current[path][method].request);
-      responseRef.current = compile(apiRef.current[path][method].response);
     };
 
     const initMethod = () => {
       setMethod(null);
       paramsRef.current = index([]);
-      requestRef.current = compile({ type: "object", properties: {} });
-      responseRef.current = compile({ type: "object", properties: {} });
+      requestRef.current = compile(Defaults.object);
+      responseRef.current = compile(Defaults.object);
       typesRef.current = Object.entries(context.get("nucleoid.types"))
         .map(([key, value]) => ({
           ...value,
@@ -76,8 +74,8 @@ function APIDialog() {
       setMethod("get");
       pathRef.current = pathRef.current + "/";
       paramsRef.current = index([]);
-      requestRef.current = compile({ type: "object", properties: {} });
-      responseRef.current = compile({ type: "object", properties: {} });
+      requestRef.current = compile(Defaults.object);
+      responseRef.current = compile(Defaults.object);
       typesRef.current = Object.entries(context.get("nucleoid.types"))
         .map(([key, value]) => ({
           ...value,
@@ -123,9 +121,9 @@ function APIDialog() {
         params: deindex(paramsRef.current),
         request: decompile(requestRef.current),
         response: decompile(responseRef.current),
-        action: `function (req){\n\treturn json.name;\n}`,
-        summary: "Summary",
-        description: "Description",
+        action: Defaults.action,
+        summary: Defaults.summary,
+        description: Defaults.description,
         types: typesRef.current.reduce((previous, current) => {
           const object = decompile(current);
           const name = current[Object.keys(current)[0]].name;

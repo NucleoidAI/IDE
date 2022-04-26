@@ -1,10 +1,10 @@
 import EditIcon from "@mui/icons-material/Edit";
 import ParamView from "../../components/ParamView";
-import SchemaView from "../../components/SchemaView";
+import Schema from "../../components/Schema";
 import Security from "../../components/Security";
 import SummaryForm from "../../components/SummaryForm";
+import { compile } from "../../widgets/APIDialog/Context";
 import styles from "./styles";
-
 import { useContext } from "../../Context/providers/contextProvider";
 import { Fab, Grid } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
@@ -16,6 +16,7 @@ function APISettings() {
   const [summary, setSummary] = useState();
   const [request, setRequest] = useState();
   const [response, setResponse] = useState();
+  const [types, setTypes] = useState();
   const [description, setDescription] = useState();
 
   const summaryRef = useRef([]);
@@ -28,11 +29,21 @@ function APISettings() {
       setMethod(selected.method);
       setParams(api[selected.path][selected.method].params);
       setSummary(api[selected.path][selected.method].summary);
-      setRequest(api[selected.path][selected.method].request);
-      setResponse(api[selected.path][selected.method].response);
+      setRequest(compile(api[selected.path][selected.method].request));
+      setResponse(compile(api[selected.path][selected.method].response));
       setDescription(api[selected.path][selected.method].description);
+
+      setTypes(
+        Object.entries(state.get("nucleoid.types"))
+          .map(([key, value]) => ({
+            ...value,
+            name: key,
+            type: value.type,
+          }))
+          .map((type) => compile(type))
+      );
     }
-  }, [state]);
+  }, [state, method]);
 
   return (
     <Grid container sx={styles.root}>
@@ -46,10 +57,24 @@ function APISettings() {
         <Grid container sx={styles.content}>
           <Grid item xs={6} sx={styles.schema}>
             {method === "get" && <ParamView params={params} />}
-            {method !== "get" && <SchemaView schema={request} />}
+            {method !== "get" && request && (
+              <Schema
+                key={Object.keys(request)[0]}
+                request
+                types={types}
+                ref={request}
+              />
+            )}
           </Grid>
           <Grid item xs={6} sx={styles.schema}>
-            <SchemaView schema={response} />
+            {response && (
+              <Schema
+                key={Object.keys(response)[0]}
+                response
+                types={types}
+                ref={response}
+              />
+            )}
           </Grid>
         </Grid>
       </Grid>

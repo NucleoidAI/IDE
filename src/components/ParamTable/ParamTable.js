@@ -47,6 +47,7 @@ const ParamTable = React.forwardRef(({ types }, { paramsRef, addParams }) => {
         const { id } = param.row;
         return (
           <TypeMenu
+            primitive
             types={types}
             ref={params}
             id={id}

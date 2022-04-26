@@ -3,7 +3,16 @@ import TreeItem from "@mui/lab/TreeItem";
 import TypeMenu from "./TypeMenu";
 import React, { useRef, useState } from "react";
 
-function SchemaProperty({ id, name, map, type, types, edit, ...other }) {
+function SchemaProperty({
+  id,
+  name,
+  map,
+  type,
+  types,
+  edit,
+  setKey,
+  ...other
+}) {
   const [value, setValue] = useState(name);
   const textField = useRef();
 
@@ -23,7 +32,17 @@ function SchemaProperty({ id, name, map, type, types, edit, ...other }) {
           )}
           {!edit && <>"{name}"</>}
           :&nbsp;
-          <TypeMenu id={id} type={type} types={types} map={map} edit={edit} />
+          <TypeMenu
+            primitive
+            objAndArr
+            globalTypes
+            id={id}
+            type={type}
+            types={types}
+            map={map}
+            edit={edit}
+            setKey={setKey}
+          />
         </>
       }
       {...other}
