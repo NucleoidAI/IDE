@@ -106,7 +106,7 @@ const getUserFromGit = (token) =>
     },
   }).then((response) => response.json());
 
-const projects = () => {
+const getProject = () => {
   const token = localStorage.getItem("accessToken");
 
   return axios(Settings.github.projects, {
@@ -114,6 +114,18 @@ const projects = () => {
     headers: {
       Authentication: token,
     },
+  });
+};
+
+const setProject = (project) => {
+  const token = localStorage.getItem("accessToken");
+
+  return axios(Settings.github.projects, {
+    method: "POST",
+    headers: {
+      Authentication: token,
+    },
+    data: { project: project },
   });
 };
 
@@ -125,7 +137,8 @@ const service = {
   logs,
   auth,
   getUserFromGit,
-  projects,
+  getProject,
+  setProject,
 };
 
 export default service;

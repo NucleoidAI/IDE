@@ -138,8 +138,14 @@ const ProcessDrawer = () => {
     }
   };
 
-  const handleGetProjects = () => {
-    service.projects().then((response) => {
+  const handleGetProject = () => {
+    service.getProject().then((response) => {
+      console.log(response);
+    });
+  };
+
+  const handleSetProject = () => {
+    service.setProject(state).then((response) => {
       console.log(response);
     });
   };
@@ -180,7 +186,7 @@ const ProcessDrawer = () => {
           <ListItem button>
             <ViewListIcon sx={styles.listitem} />
           </ListItem>
-          <ListItem button onClick={handleGetProjects}>
+          <ListItem button onClick={handleGetProject}>
             <GitHubIcon sx={styles.listitem} />
           </ListItem>
           <ListItem button>
@@ -190,7 +196,7 @@ const ProcessDrawer = () => {
             <PostmanIcon />
           </ListItem>
         </Box>
-        <ListItem button onClick={handleGetProjects}>
+        <ListItem button onClick={handleSetProject}>
           <SaveIcon sx={styles.listitem} />
         </ListItem>
       </Drawer>
