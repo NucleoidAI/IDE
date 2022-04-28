@@ -1,3 +1,4 @@
+import Backdrop from "@mui/material/Backdrop";
 import CopyClipboard from "../../components/CopyClipboard";
 import DialogTooltip from "../../components/DialogTootip/";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -9,6 +10,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
 import SyncIcon from "@mui/icons-material/Sync";
 import ViewListIcon from "@mui/icons-material/ViewList";
+
 import service from "../../service";
 import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
@@ -24,6 +26,7 @@ const ProcessDrawer = () => {
 
   const [alert, setAlert] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [backdrop, setBackdrop] = useState(false);
 
   const getStatusTask = useRef();
 
@@ -57,7 +60,29 @@ const ProcessDrawer = () => {
       });
   };
 
+  const auth = (code) => {
+    return service.auth(code).then((data) => {
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("refreshToken", data.refreshToken);
+
+      return service.getUserFromGit(data.refreshToken);
+    });
+  };
+
   useEffect(() => {
+    const url = window.location.href;
+    const hasCode = url.includes("?code=");
+
+    if (hasCode) {
+      const newUrl = url.split("?code=");
+      window.history.pushState({}, null, newUrl[0]);
+      setBackdrop(true);
+
+      auth({ code: newUrl[1] }).then((user) => {
+        setBackdrop(false);
+      });
+    }
+
     getStatus();
 
     clearInterval(getStatusTask.current);
@@ -113,6 +138,12 @@ const ProcessDrawer = () => {
     }
   };
 
+  const handleGetProjects = () => {
+    service.projects().then((response) => {
+      console.log(response);
+    });
+  };
+
   return (
     <>
       <Drawer
@@ -149,7 +180,7 @@ const ProcessDrawer = () => {
           <ListItem button>
             <ViewListIcon sx={styles.listitem} />
           </ListItem>
-          <ListItem button>
+          <ListItem button onClick={handleGetProjects}>
             <GitHubIcon sx={styles.listitem} />
           </ListItem>
           <ListItem button>
@@ -159,10 +190,16 @@ const ProcessDrawer = () => {
             <PostmanIcon />
           </ListItem>
         </Box>
-        <ListItem button>
+        <ListItem button onClick={handleGetProjects}>
           <SaveIcon sx={styles.listitem} />
         </ListItem>
       </Drawer>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={backdrop}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       {status.name}
     </>
   );

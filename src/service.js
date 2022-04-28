@@ -1,4 +1,46 @@
 import Settings from "./settings";
+import axios from "axios";
+
+const responseHandler = (response) => {
+  if (response.data.message === "jwt expired")
+    localStorage.removeItem("accessToken");
+
+  if (response.data.message) {
+    return new Promise((resolve, reject) => {
+      const refreshToken = localStorage.getItem("refreshToken");
+      const accessToken = localStorage.getItem("accessToken");
+
+      if (!accessToken && !refreshToken) {
+        return window.open(
+          `https://github.com/login/oauth/authorize?scope=user&client_id=${Settings.github.client_id}&redirect_uri=${window.location.href}`,
+          "_self"
+        );
+      }
+
+      if (!accessToken) {
+        auth({ refreshToken: refreshToken })
+          .then((res) => {
+            localStorage.setItem("accessToken", res.accessToken);
+            localStorage.setItem("refreshToken", res.refreshToken);
+
+            service.projects().then((projects) => resolve(projects));
+          })
+          .catch((err) => reject(err));
+      }
+    });
+  } else {
+    return response;
+  }
+};
+
+const errorHandler = (error) => {
+  return Promise.reject(error);
+};
+
+axios.interceptors.response.use(
+  (response) => responseHandler(response),
+  (error) => errorHandler(error)
+);
 
 const lint = async (body, signal) => {
   return fetch(Settings.url.editor, {
@@ -47,12 +89,43 @@ const logs = () =>
     method: "GET",
   }).then((response) => response.json());
 
+const auth = (body) =>
+  fetch(Settings.github.auth, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  }).then((response) => response.json());
+
+const getUserFromGit = (token) =>
+  fetch(Settings.github.user, {
+    method: "POST",
+    headers: {
+      Authorization: "token " + token,
+    },
+  }).then((response) => response.json());
+
+const projects = () => {
+  const token = localStorage.getItem("accessToken");
+
+  return axios(Settings.github.projects, {
+    method: "GET",
+    headers: {
+      Authentication: token,
+    },
+  });
+};
+
 const service = {
   query,
   lint,
   openapi,
   metrics,
   logs,
+  auth,
+  getUserFromGit,
+  projects,
 };
 
 export default service;
