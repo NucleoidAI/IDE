@@ -117,6 +117,17 @@ const getProject = () => {
   });
 };
 
+const getProjects = (name, project) => {
+  const token = localStorage.getItem("accessToken");
+
+  return axios(Settings.github.projects, {
+    method: "GET",
+    headers: {
+      Authentication: token,
+    },
+  });
+};
+
 const setProject = (name, project) => {
   const token = localStorage.getItem("accessToken");
 
@@ -138,6 +149,7 @@ const service = {
   auth,
   getUserFromGit,
   getProject,
+  getProjects,
   setProject,
 };
 

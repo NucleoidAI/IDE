@@ -150,6 +150,12 @@ const ProcessDrawer = () => {
     });
   };
 
+  const handleGetProjects = (name) => {
+    service.getProjects().then((response) => {
+      console.log(response);
+    });
+  };
+
   return (
     <>
       <Drawer
@@ -196,7 +202,7 @@ const ProcessDrawer = () => {
             <PostmanIcon />
           </ListItem>
         </Box>
-        <ListItem button onClick={handleSetProject}>
+        <ListItem button onClick={handleGetProjects}>
           <SaveIcon sx={styles.listitem} />
         </ListItem>
       </Drawer>
