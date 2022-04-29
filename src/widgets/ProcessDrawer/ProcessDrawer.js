@@ -144,8 +144,8 @@ const ProcessDrawer = () => {
     });
   };
 
-  const handleSetProject = () => {
-    service.setProject(state).then((response) => {
+  const handleSetProject = (name) => {
+    service.setProject("project 6", state).then((response) => {
       console.log(response);
     });
   };

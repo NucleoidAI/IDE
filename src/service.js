@@ -117,7 +117,7 @@ const getProject = () => {
   });
 };
 
-const setProject = (project) => {
+const setProject = (name, project) => {
   const token = localStorage.getItem("accessToken");
 
   return axios(Settings.github.projects, {
@@ -125,7 +125,7 @@ const setProject = (project) => {
     headers: {
       Authentication: token,
     },
-    data: { project: project },
+    data: { name: name, project: project },
   });
 };
 
