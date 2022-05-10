@@ -139,21 +139,12 @@ const ProcessDrawer = () => {
   };
 
   const handleGetProject = () => {
-    service.getProject().then((response) => {
-      console.log(response);
-    });
-  };
-
-  const handleSetProject = (name) => {
-    service.setProject("project 6", state).then((response) => {
-      console.log(response);
-    });
-  };
-
-  const handleGetProjects = (name) => {
-    service.getProjects().then((response) => {
-      console.log(response);
-    });
+    service
+      .getProject()
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -202,7 +193,7 @@ const ProcessDrawer = () => {
             <PostmanIcon />
           </ListItem>
         </Box>
-        <ListItem button onClick={handleGetProjects}>
+        <ListItem button>
           <SaveIcon sx={styles.listitem} />
         </ListItem>
       </Drawer>

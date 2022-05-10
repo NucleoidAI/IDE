@@ -1,4 +1,5 @@
 const Settings = {
+  project: "project#default",
   dialog: {},
   url: {
     terminal: "http://localhost:8448/",

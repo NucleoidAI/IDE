@@ -2,38 +2,48 @@ import Settings from "./settings";
 import axios from "axios";
 
 const responseHandler = (response) => {
-  if (response.data.message === "jwt expired")
-    localStorage.removeItem("accessToken");
-
-  if (response.data.message) {
-    return new Promise((resolve, reject) => {
-      const refreshToken = localStorage.getItem("refreshToken");
-      const accessToken = localStorage.getItem("accessToken");
-
-      if (!accessToken && !refreshToken) {
-        return window.open(
-          `https://github.com/login/oauth/authorize?scope=user&client_id=${Settings.github.client_id}&redirect_uri=${window.location.href}`,
-          "_self"
-        );
-      }
-
-      if (!accessToken) {
-        auth({ refreshToken: refreshToken })
-          .then((res) => {
-            localStorage.setItem("accessToken", res.accessToken);
-            localStorage.setItem("refreshToken", res.refreshToken);
-
-            service.projects().then((projects) => resolve(projects));
-          })
-          .catch((err) => reject(err));
-      }
-    });
-  } else {
-    return response;
-  }
+  return response;
 };
 
-const errorHandler = (error) => {
+const invalidTokenCase = () => {
+  localStorage.removeItem("accessToken");
+
+  return new Promise((resolve, reject) => {
+    const refreshToken = localStorage.getItem("refreshToken");
+    const accessToken = localStorage.getItem("accessToken");
+
+    if (!accessToken && !refreshToken) {
+      return window.open(
+        `https://github.com/login/oauth/authorize?scope=user&client_id=${Settings.github.client_id}&redirect_uri=${window.location.href}`,
+        "_self"
+      );
+    }
+
+    if (!accessToken) {
+      auth({ refreshToken: refreshToken })
+        .then((res) => {
+          localStorage.setItem("accessToken", res.accessToken);
+          localStorage.setItem("refreshToken", res.refreshToken);
+
+          service.projects().then((projects) => resolve(projects));
+        })
+        .catch((err) => reject(err));
+    }
+  });
+};
+
+const errorHandler = async ({ response }) => {
+  const { error } = response.data;
+
+  switch (error) {
+    case "INVALID_TOKEN":
+      return await invalidTokenCase();
+
+    default:
+      console.log("unhandled error");
+      break;
+  }
+
   return Promise.reject(error);
 };
 

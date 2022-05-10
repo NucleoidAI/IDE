@@ -3,6 +3,7 @@ import Logo from "../Logo";
 import React from "react";
 import Settings from "../Settings";
 import Status from "../../widgets/Status";
+import ProjectSelect from "../../components/ProjectSelect";
 import styles from "./styles";
 
 import { useLayoutContext } from "../../Context/providers/layoutContextProvider";
@@ -20,6 +21,7 @@ function Menu(props) {
           <br />
           <MenuLinks {...props} />
         </List>
+        <ProjectSelect />
         <Status />
         <Settings />
       </Drawer>

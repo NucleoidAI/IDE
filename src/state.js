@@ -60,5 +60,5 @@ const resolve = (state, param) => {
   }
 };
 
-const State = { init, copy, withSample };
+const State = { init, copy, withSample, resolve };
 export default State;

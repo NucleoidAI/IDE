@@ -1,3 +1,4 @@
+import Settings from "../../settings";
 import State from "../../state";
 import { v4 as uuid } from "uuid";
 
@@ -6,6 +7,15 @@ function contextReducer(state, { type, payload }) {
   const { nucleoid, pages } = state;
 
   switch (type) {
+    case "SET_PROJECT":
+      nucleoid.api = payload.nucleoid.api;
+      nucleoid.functions = payload.nucleoid.functions;
+      nucleoid.types = payload.nucleoid.types;
+      state.pages = payload.pages;
+      state.settings = payload.settings;
+
+      break;
+
     case "OPEN_API_DIALOG": {
       pages.api.dialog.type = payload.type;
       pages.api.dialog.action = payload.action;
@@ -216,6 +226,7 @@ function contextReducer(state, { type, payload }) {
     default:
   }
 
+  localStorage.setItem(Settings.project, JSON.stringify(state));
   return state;
 }
 

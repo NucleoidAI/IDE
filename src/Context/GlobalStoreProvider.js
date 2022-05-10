@@ -1,4 +1,5 @@
 import React from "react";
+import Settings from "../settings";
 import State from "../state";
 import { ContextProvider } from "./providers/contextProvider"; // eslint-disable-line
 import { LayoutContextProvider } from "./providers/layoutContextProvider";
@@ -15,9 +16,36 @@ const initStatus = {
   },
 };
 
+const ProjectManager = () => {
+  Settings.project = localStorage.default;
+
+  if (!Settings.project) {
+    localStorage.setItem("default", "project#default");
+    Settings.project = "project#default";
+
+    return State.withSample();
+  }
+
+  if (
+    Object.keys(localStorage).filter(
+      (item) => item.split("#")[0] === "project" && item === Settings.project
+    ).length < 1
+  ) {
+    localStorage.setItem("default", "project#default");
+    Settings.project = "project#default";
+
+    return State.withSample();
+  }
+
+  const state = JSON.parse(localStorage.getItem(Settings.project));
+  state.get = (prop) => State.resolve(state, prop);
+
+  return state;
+};
+
 const GlobalStoreProvider = ({ children }) => {
   return (
-    <ContextProvider state={State.withSample()} reducer={contextReducer}>
+    <ContextProvider state={ProjectManager()} reducer={contextReducer}>
       <LayoutContextProvider state={initStatus} reducer={layoutReducer}>
         {children}
       </LayoutContextProvider>
