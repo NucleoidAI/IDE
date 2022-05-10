@@ -5,7 +5,6 @@ import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
 import { v4 as uuid } from "uuid";
 
-
 import {
   Button,
   Dialog,
@@ -114,7 +113,7 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
 
     dispatch({
       type: "SET_PROJECT",
-      payload: JSON.parse(localStorage.getItem(project)),
+      payload: { project: JSON.parse(localStorage.getItem(project)) },
     });
     handleClose();
   };

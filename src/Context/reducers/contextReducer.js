@@ -8,11 +8,9 @@ function contextReducer(state, { type, payload }) {
 
   switch (type) {
     case "SET_PROJECT":
-      nucleoid.api = payload.nucleoid.api;
-      nucleoid.functions = payload.nucleoid.functions;
-      nucleoid.types = payload.nucleoid.types;
-      state.pages = payload.pages;
-      state.settings = payload.settings;
+      nucleoid.api = payload.project.nucleoid.api;
+      nucleoid.functions = payload.project.nucleoid.functions;
+      nucleoid.types = payload.project.nucleoid.types;
 
       break;
 
@@ -227,6 +225,7 @@ function contextReducer(state, { type, payload }) {
   }
 
   localStorage.setItem(Settings.project, JSON.stringify(state));
+
   return state;
 }
 
