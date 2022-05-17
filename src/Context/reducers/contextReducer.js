@@ -1,5 +1,5 @@
-import Settings from "../../settings";
 import State from "../../state";
+import project from "../../project";
 import { v4 as uuid } from "uuid";
 
 function contextReducer(state, { type, payload }) {
@@ -224,7 +224,7 @@ function contextReducer(state, { type, payload }) {
     default:
   }
 
-  localStorage.setItem(Settings.project, JSON.stringify(state));
+  project.updateCurrent(state);
 
   return state;
 }

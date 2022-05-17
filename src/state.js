@@ -29,9 +29,10 @@ function init() {
       query: {},
       branches: {},
     },
+    /*
     settings: {
       dialog: {},
-    },
+    },*/
     get: (prop) => resolve(state, prop),
   };
 

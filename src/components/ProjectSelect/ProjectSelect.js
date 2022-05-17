@@ -1,7 +1,7 @@
 import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
 import ProjectDialog from "../../widgets/ProjectDialog";
 import React from "react";
-import Settings from "../../settings";
+import project from "../../project";
 
 import { Box, Button } from "@mui/material/";
 
@@ -10,7 +10,7 @@ export default function ProjectSelect() {
   const handleClose = (event) => {
     setOpen(!open);
   };
-
+console.log("hello")
   return (
     <Box sx={{ width: "100%" }}>
       <Button
@@ -19,7 +19,7 @@ export default function ProjectSelect() {
         onClick={() => setOpen(true)}
         endIcon={<ArrowDropDown />}
       >
-        {Settings.project.split("#")[1]}
+        {project.get().name}
       </Button>
       {open && <ProjectDialog handleClose={handleClose} />}
     </Box>

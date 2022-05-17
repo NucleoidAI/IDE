@@ -1,7 +1,11 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import React from "react";
+
 import State from "../../state";
+import React from "react";
+import service from "../../service";
+import project from "../../project";
 import styles from "./styles";
+import { Backdrop, CircularProgress } from "@mui/material";
 import { useContext } from "../../Context/providers/contextProvider";
 import { v4 as uuid } from "uuid";
 
@@ -16,6 +20,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material/";
+import { Delete } from "@mui/icons-material";
 //eslint-disable-next-line
 import { DataGrid } from "@mui/x-data-grid";
 import Settings from "../../settings";
@@ -24,11 +29,17 @@ const NewProjectScreen = ({ setScreen, handleClose }) => {
   const projectName = React.useRef("");
 
   const addProject = () => {
-    localStorage.setItem(
-      "project#" + projectName.current,
-      JSON.stringify(State.withSample())
-    );
-    setScreen("ListProjects");
+    service
+      .addProject(projectName.current, JSON.stringify(State.withSample()))
+      .then(({ data }) => {
+        project.set(data, projectName.current, State.withSample());
+        setScreen("ListProjects");
+        Settings.projects.push({
+          id: data,
+          name: projectName.current,
+          project: data,
+        });
+      });
   };
 
   return (
@@ -81,42 +92,56 @@ const NewProjectScreen = ({ setScreen, handleClose }) => {
 
 const ListProjectsScreen = ({ setScreen, handleClose }) => {
   const [, dispatch] = useContext();
+  const [open, setOpen] = React.useState(false);
   const select = React.useRef();
 
-  React.useEffect(() => {
-    // setSelect()
-  }, []);
+ // React.useEffect(() => {}, []);
+
+  const DeleteButton = ({ params, handleDelete }) => {
+    return (
+      <IconButton onClick={() => handleDelete(params)}>
+        <Delete />
+      </IconButton>
+    );
+  };
+
+  const handleDelete = (params) => {
+    console.log(project.get());
+    console.log(params);
+  };
+
+  const handleSelect = () => {
+    setOpen(true);
+    service.getProject(select.current).then(({ data }) => {
+      project.setWithoutStringify(data.project, data.name, data.context);
+      dispatch({
+        type: "SET_PROJECT",
+        payload: { project: JSON.parse(data.context) },
+      });
+      handleClose();
+      setOpen(false);
+    });
+  };
 
   const columns = [
     {
       field: "name",
       headerName: "Project name",
-      width: 150,
-      editable: true,
+      flex: 5,
+    },
+    {
+      field: "actions",
+      headerName: "Action",
+      flex: 1,
+      renderCell: (params) => (
+        <DeleteButton params={params} handleDelete={handleDelete} />
+      ),
     },
   ];
 
-  const projects = Object.keys(localStorage).filter(
-    (item) => item.split("#")[0] === "project"
-  );
-
-  const rows = projects.map((item) => {
-    return { id: uuid(), name: item.split("#")[1] };
+  const rows = Settings.projects.map((data) => {
+    return { id: data.project, ...data };
   });
-
-  const handleSelect = () => {
-    const project = Object.keys(localStorage).find(
-      (item) => item.split("#")[1] === select.current
-    );
-    Settings.project = project;
-    localStorage.setItem("default", project);
-
-    dispatch({
-      type: "SET_PROJECT",
-      payload: { project: JSON.parse(localStorage.getItem(project)) },
-    });
-    handleClose();
-  };
 
   return (
     <>
@@ -140,7 +165,11 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
           rows={rows}
           columns={columns}
           hideFooter={true}
-          onRowClick={(e) => (select.current = e.row.name)}
+          // selectionModel={selected}
+          onRowClick={(e) => {
+            select.current = e.row.project;
+            // setSelected(e.row);
+          }}
         />
       </DialogContent>
       <DialogActions>
@@ -158,6 +187,13 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
             <Button onClick={handleSelect}>Select</Button>
           </Grid>
         </Grid>
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={open}
+          onClick={handleClose}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
       </DialogActions>
     </>
   );

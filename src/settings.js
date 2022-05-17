@@ -1,5 +1,5 @@
 const Settings = {
-  project: "project#default",
+  projects: [],
   dialog: {},
   url: {
     terminal: "http://localhost:8448/",
@@ -14,6 +14,7 @@ const Settings = {
     auth: "http://localhost:4545/auth/tokens",
     projects: "http://localhost:4545/projects",
   },
+  projects: [],
 };
 
 export default Settings;

@@ -11,6 +11,7 @@ import Settings from "../../settings";
 import SyncIcon from "@mui/icons-material/Sync";
 import ViewListIcon from "@mui/icons-material/ViewList";
 
+import Project from "../../project";
 import service from "../../service";
 import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
@@ -18,9 +19,10 @@ import { useLayoutContext } from "../../Context/providers/layoutContextProvider"
 import { useLocation } from "react-router-dom";
 import { Box, CircularProgress, Drawer, ListItem } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
+import project from "../../project";
 
 const ProcessDrawer = () => {
-  const [state] = useContext();
+  const [state, contextDispatch] = useContext();
   const [status, dispatch] = useLayoutContext();
   const location = useLocation();
 
@@ -80,6 +82,7 @@ const ProcessDrawer = () => {
 
       auth({ code: newUrl[1] }).then((user) => {
         setBackdrop(false);
+        handleGetProject();
       });
     }
 
@@ -139,12 +142,34 @@ const ProcessDrawer = () => {
   };
 
   const handleGetProject = () => {
-    service
-      .getProject()
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => console.log(err));
+    setBackdrop(true);
+
+    service.getProjects().then((result) => {
+      Settings.projects = [...result.data];
+
+      if (result.data.length > 0) {
+        service.getProject(result.data[0].project).then(({ data }) => {
+          setBackdrop(false);
+          project.setWithoutStringify(data.project, data.name, data.context);
+          contextDispatch({
+            type: "SET_PROJECT",
+            payload: { project: JSON.parse(data.context) },
+          });
+        });
+      } else {
+        console.log("other way");
+      }
+    });
+  };
+
+  const handleSaveProject = () => {
+    const { project, context, name } = Project.getStringify();
+    setBackdrop(true);
+
+    service.updateProject(project, name, context).then((data) => {
+      setBackdrop(false);
+      console.log("success");
+    });
   };
 
   return (
@@ -193,7 +218,7 @@ const ProcessDrawer = () => {
             <PostmanIcon />
           </ListItem>
         </Box>
-        <ListItem button>
+        <ListItem button onClick={handleSaveProject}>
           <SaveIcon sx={styles.listitem} />
         </ListItem>
       </Drawer>

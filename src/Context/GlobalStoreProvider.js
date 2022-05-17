@@ -1,6 +1,9 @@
 import React from "react";
-import Settings from "../settings";
 import State from "../state";
+import project from "../project";
+import service from "../service";
+import Settings from "../settings";
+
 import { ContextProvider } from "./providers/contextProvider"; // eslint-disable-line
 import { LayoutContextProvider } from "./providers/layoutContextProvider";
 import { contextReducer } from "./reducers/contextReducer";
@@ -16,36 +19,24 @@ const initStatus = {
   },
 };
 
-const ProjectManager = () => {
-  Settings.project = localStorage.default;
+const InitContext = () => {
+  if (project.check()) {
+    const { context } = project.get();
 
-  if (!Settings.project) {
-    localStorage.setItem("default", "project#default");
-    Settings.project = "project#default";
+    context.get = (prop) => State.resolve(context, prop);
+    return context;
+  } else {
+    project.setDemo();
+    const { context } = project.get();
 
-    return State.withSample();
+    context.get = (prop) => State.resolve(context, prop);
+    return context;
   }
-
-  if (
-    Object.keys(localStorage).filter(
-      (item) => item.split("#")[0] === "project" && item === Settings.project
-    ).length < 1
-  ) {
-    localStorage.setItem("default", "project#default");
-    Settings.project = "project#default";
-
-    return State.withSample();
-  }
-
-  const state = JSON.parse(localStorage.getItem(Settings.project));
-  state.get = (prop) => State.resolve(state, prop);
-
-  return state;
 };
 
 const GlobalStoreProvider = ({ children }) => {
   return (
-    <ContextProvider state={ProjectManager()} reducer={contextReducer}>
+    <ContextProvider state={InitContext()} reducer={contextReducer}>
       <LayoutContextProvider state={initStatus} reducer={layoutReducer}>
         {children}
       </LayoutContextProvider>

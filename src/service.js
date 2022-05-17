@@ -1,5 +1,6 @@
 import Settings from "./settings";
 import axios from "axios";
+import project from "./project";
 
 const responseHandler = (response) => {
   return response;
@@ -25,9 +26,11 @@ const invalidTokenCase = () => {
           localStorage.setItem("accessToken", res.accessToken);
           localStorage.setItem("refreshToken", res.refreshToken);
 
-          service.projects().then((projects) => resolve(projects));
+          resolve(true);
         })
-        .catch((err) => reject(err));
+        .catch((err) => {
+          reject(err);
+        });
     }
   });
 };
@@ -116,37 +119,52 @@ const getUserFromGit = (token) =>
     },
   }).then((response) => response.json());
 
-const getProject = () => {
+const getProject = (project) => {
   const token = localStorage.getItem("accessToken");
 
-  return axios(Settings.github.projects, {
+  return axios(Settings.github.projects + "/" + project, {
     method: "GET",
     headers: {
-      Authentication: token,
+      Authentication: "Bearer " + token,
     },
   });
 };
 
-const getProjects = (name, project) => {
+const getProjects = (limit) => {
   const token = localStorage.getItem("accessToken");
 
   return axios(Settings.github.projects, {
     method: "GET",
+    params: {
+      limit: limit && 1,
+    },
     headers: {
-      Authentication: token,
+      Authentication: "Bearer " + token,
     },
   });
 };
 
-const setProject = (name, project) => {
+const addProject = (name, context) => {
   const token = localStorage.getItem("accessToken");
 
   return axios(Settings.github.projects, {
     method: "POST",
     headers: {
-      Authentication: token,
+      Authentication: "Bearer " + token,
     },
-    data: { name: name, project: project },
+    data: { name: name, context: context },
+  });
+};
+
+const updateProject = (project, name, context) => {
+  const token = localStorage.getItem("accessToken");
+
+  return axios(Settings.github.projects + "/" + project, {
+    method: "POST",
+    headers: {
+      Authentication: "Bearer " + token,
+    },
+    data: { name: name, context: context },
   });
 };
 
@@ -160,7 +178,8 @@ const service = {
   getUserFromGit,
   getProject,
   getProjects,
-  setProject,
+  addProject,
+  updateProject,
 };
 
 export default service;
