@@ -6,12 +6,13 @@ import ImportExportIcon from "@mui/icons-material/ImportExport";
 import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import PostmanIcon from "../../icons/Postman";
+import Project from "../../project";
 import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
 import SyncIcon from "@mui/icons-material/Sync";
 import ViewListIcon from "@mui/icons-material/ViewList";
 
-import Project from "../../project";
+import project from "../../project";
 import service from "../../service";
 import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
@@ -19,7 +20,6 @@ import { useLayoutContext } from "../../Context/providers/layoutContextProvider"
 import { useLocation } from "react-router-dom";
 import { Box, CircularProgress, Drawer, ListItem } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-import project from "../../project";
 
 const ProcessDrawer = () => {
   const [state, contextDispatch] = useContext();
@@ -157,7 +157,12 @@ const ProcessDrawer = () => {
           });
         });
       } else {
-        console.log("other way");
+        const { name, context } = project.getStringify();
+        service.addProject(name, context).then(({ data }) => {
+          Settings.projects = [{ project: data, name }];
+          project.setWithoutStringify(data, name, context);
+          setBackdrop(false);
+        });
       }
     });
   };
@@ -168,7 +173,6 @@ const ProcessDrawer = () => {
 
     service.updateProject(project, name, context).then((data) => {
       setBackdrop(false);
-      console.log("success");
     });
   };
 

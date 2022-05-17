@@ -1,8 +1,8 @@
 import React from "react";
+import Settings from "../settings";
 import State from "../state";
 import project from "../project";
 import service from "../service";
-import Settings from "../settings";
 
 import { ContextProvider } from "./providers/contextProvider"; // eslint-disable-line
 import { LayoutContextProvider } from "./providers/layoutContextProvider";
@@ -20,6 +20,12 @@ const initStatus = {
 };
 
 const InitContext = () => {
+  if (project.isAuth()) {
+    service.getProjects().then(({ data }) => {
+      Settings.projects = [...data];
+    });
+  }
+
   if (project.check()) {
     const { context } = project.get();
 

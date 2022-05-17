@@ -1,6 +1,5 @@
 import Settings from "./settings";
 import axios from "axios";
-import project from "./project";
 
 const responseHandler = (response) => {
   return response;
@@ -156,6 +155,17 @@ const addProject = (name, context) => {
   });
 };
 
+const deleteProject = (project) => {
+  const token = localStorage.getItem("accessToken");
+
+  return axios(Settings.github.projects + "/" + project, {
+    method: "DELETE",
+    headers: {
+      Authentication: "Bearer " + token,
+    },
+  });
+};
+
 const updateProject = (project, name, context) => {
   const token = localStorage.getItem("accessToken");
 
@@ -180,6 +190,7 @@ const service = {
   getProjects,
   addProject,
   updateProject,
+  deleteProject,
 };
 
 export default service;

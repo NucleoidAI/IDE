@@ -1,13 +1,12 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
-import State from "../../state";
+import Delete from "@mui/icons-material/Delete";
 import React from "react";
-import service from "../../service";
+import State from "../../state";
 import project from "../../project";
+import service from "../../service";
 import styles from "./styles";
-import { Backdrop, CircularProgress } from "@mui/material";
 import { useContext } from "../../Context/providers/contextProvider";
-import { v4 as uuid } from "uuid";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 import {
   Button,
@@ -20,25 +19,30 @@ import {
   TextField,
   Typography,
 } from "@mui/material/";
-import { Delete } from "@mui/icons-material";
+
 //eslint-disable-next-line
 import { DataGrid } from "@mui/x-data-grid";
 import Settings from "../../settings";
 
 const NewProjectScreen = ({ setScreen, handleClose }) => {
+  const [, dispatch] = useContext();
   const projectName = React.useRef("");
 
   const addProject = () => {
     service
       .addProject(projectName.current, JSON.stringify(State.withSample()))
       .then(({ data }) => {
-        project.set(data, projectName.current, State.withSample());
-        setScreen("ListProjects");
         Settings.projects.push({
           id: data,
           name: projectName.current,
           project: data,
         });
+        project.set(data, projectName.current, State.withSample());
+        dispatch({
+          type: "SET_PROJECT",
+          payload: { project: State.withSample() },
+        });
+        handleClose();
       });
   };
 
@@ -67,7 +71,7 @@ const NewProjectScreen = ({ setScreen, handleClose }) => {
           }}
           label="Project Name"
           variant="outlined"
-          sx={{ width: "100%" }}
+          sx={{ width: "100%", marginTop: 1 }}
         />
       </DialogContent>
       <DialogActions>
@@ -94,8 +98,9 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
   const [, dispatch] = useContext();
   const [open, setOpen] = React.useState(false);
   const select = React.useRef();
+  const [dialog, setDialog] = React.useState(false);
 
- // React.useEffect(() => {}, []);
+  // React.useEffect(() => {}, []);
 
   const DeleteButton = ({ params, handleDelete }) => {
     return (
@@ -105,9 +110,17 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
     );
   };
 
-  const handleDelete = (params) => {
-    console.log(project.get());
-    console.log(params);
+  const handleDelete = () => {
+    setOpen(true);
+    const id = select.current;
+    service.deleteProject(id).then(({ data }) => {
+      Settings.projects = Settings.projects.filter(
+        (item) => item.project !== id
+      );
+      setScreen("ListProjects");
+      setOpen(false);
+      setDialog(false);
+    });
   };
 
   const handleSelect = () => {
@@ -123,6 +136,15 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
     });
   };
 
+  const handleCloseDialog = () => {
+    setDialog(false);
+  };
+
+  const handleOpenDialog = (params) => {
+    select.current = params.id;
+    setDialog(true);
+  };
+
   const columns = [
     {
       field: "name",
@@ -133,9 +155,13 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
       field: "actions",
       headerName: "Action",
       flex: 1,
-      renderCell: (params) => (
-        <DeleteButton params={params} handleDelete={handleDelete} />
-      ),
+      renderCell: (params) =>
+        params.id !== project.get().project ? (
+          <DeleteButton
+            params={params}
+            handleDelete={(params) => handleOpenDialog(params)}
+          />
+        ) : null,
     },
   ];
 
@@ -194,6 +220,24 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
         >
           <CircularProgress color="inherit" />
         </Backdrop>
+        <Dialog
+          open={dialog}
+          onClose={handleClose}
+          aria-labelledby="responsive-dialog-title"
+        >
+          <DialogTitle id="responsive-dialog-title">
+            Delete resource
+          </DialogTitle>
+          <DialogContent>The selected project will be deleted.</DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={handleCloseDialog}>
+              Cancel
+            </Button>
+            <Button onClick={handleDelete} autoFocus>
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
       </DialogActions>
     </>
   );
