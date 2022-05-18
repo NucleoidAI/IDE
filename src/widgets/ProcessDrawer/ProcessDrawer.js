@@ -1,4 +1,5 @@
 import Backdrop from "@mui/material/Backdrop";
+import CodeSandboxDialog from "../../components/CodeSandboxDialog";
 import CopyClipboard from "../../components/CopyClipboard";
 import DialogTooltip from "../../components/DialogTootip/";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -26,6 +27,7 @@ const ProcessDrawer = () => {
   const [state, contextDispatch] = useContext();
   const [status, dispatch] = useLayoutContext();
   const location = useLocation();
+  const [openSandboxDialog, setOpenSandboxDialog] = useState(false);
 
   const [alert, setAlert] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -177,6 +179,26 @@ const ProcessDrawer = () => {
     });
   };
 
+  const handleCloseSandboxDialog = () => {
+    setOpenSandboxDialog(false);
+  };
+  const handleOpenSandboxDialog = async () => {
+    const { data } = await service.openCodeSandBox();
+    console.log(data.sandbox_id);
+    if (data.sandbox_id) {
+      Settings.codesandbox.sandbox_id = data.sandbox_id;
+      Settings.url.app = `https://${data.sandbox_id}.sse.codesandbox.io/`;
+      Settings.url.terminal = `https://${data.sandbox_id}-8448.sse.codesandbox.io/`;
+      Settings.url.lint = `https://${data.sandbox_id}-8448.sse.codesandbox.io/lint`;
+      Settings.url.editor = `https://${data.sandbox_id}-8448.sse.codesandbox.io/lint`;
+      setAlert(false);
+      setOpenSandboxDialog(true);
+    }
+
+    // setAlert(false);
+    //setOpenSandboxDialog(true);
+  };
+
   return (
     <>
       <Drawer
@@ -200,7 +222,9 @@ const ProcessDrawer = () => {
                 <CopyClipboard />
                 or
                 <br />
-                <OpenSandbox handleCloseTooltip={handleClose} />
+                <OpenSandbox
+                  handleOpenSandboxDialog={handleOpenSandboxDialog}
+                />
               </>
             }
             handleTooltipClose={handleClose}
@@ -213,7 +237,7 @@ const ProcessDrawer = () => {
               ApiButton(status, handleRunApi)
             )}
           </DialogTooltip>
-          <ListItem button>
+          <ListItem button onClick={() => console.log(Settings.url)}>
             <ViewListIcon sx={styles.listitem} />
           </ListItem>
           <ListItem button onClick={handleGetProject}>
@@ -236,6 +260,11 @@ const ProcessDrawer = () => {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
+      {openSandboxDialog && (
+        <CodeSandboxDialog
+          handleCloseSandboxDialog={handleCloseSandboxDialog}
+        />
+      )}
       {status.name}
     </>
   );

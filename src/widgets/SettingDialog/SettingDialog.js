@@ -4,17 +4,8 @@ import Settings from "../../settings";
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import { forwardRef, useRef, useState } from "react";
 
-const SettingDialog = forwardRef((props, ref) => {
-  const [open, setOpen] = useState(false);
+const SettingDialog = ({ handleClose }) => {
   const urlRef = useRef({ ...Settings.url });
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  ref.current = handleOpen;
 
   function saveSettingDialog() {
     Settings.url.terminal = urlRef.current.terminal;
@@ -24,7 +15,7 @@ const SettingDialog = forwardRef((props, ref) => {
 
   return (
     <Dialog
-      open={open}
+      open={true}
       fullWidth
       maxWidth={"sm"}
       onClose={(event) => (event.key === "Escape" ? handleClose() : null)}
@@ -47,6 +38,6 @@ const SettingDialog = forwardRef((props, ref) => {
       </DialogActions>
     </Dialog>
   );
-});
+};
 
 export default SettingDialog;

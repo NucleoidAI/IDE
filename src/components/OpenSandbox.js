@@ -2,19 +2,8 @@ import React, { useState } from "react";
 import { Box, Fab, Tooltip, Typography } from "@mui/material";
 import CodeSandbox from "../icons/CodeSandbox";
 import service from "../service";
-import CodeSandboxDialog from "./CodeSandboxDialog";
 
-const OpenSandbox = ({  }) => {
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+const OpenSandbox = ({ handleOpenSandboxDialog }) => {
   return (
     <Box
       sx={{
@@ -31,11 +20,10 @@ const OpenSandbox = ({  }) => {
         sx={{ pl: 2 }}
         fontFamily={"Trebuchet MS"}
         variant={"h6"}
-        onClick={handleClickOpen}
+        onClick={handleOpenSandboxDialog}
       >
-        open codesandbox
+        try it in codesandbox
       </Typography>
-      {open && <CodeSandboxDialog handleClose={handleClose} />}
       <Box />
     </Box>
   );

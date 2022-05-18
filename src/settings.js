@@ -8,6 +8,7 @@ const Settings = {
   },
   codesandbox: {
     url: "https://codesandbox.io/api/v1/sandboxes/define?json=1",
+    sandbox_id: "",
   },
   github: {
     client_id: "d96b1adfef0facc5eb94",
