@@ -28,6 +28,7 @@ const ProcessDrawer = () => {
   const [status, dispatch] = useLayoutContext();
   const location = useLocation();
   const [openSandboxDialog, setOpenSandboxDialog] = useState(false);
+  const [sandbox, setSandbox] = React.useState(false);
 
   const [alert, setAlert] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -183,8 +184,7 @@ const ProcessDrawer = () => {
     setOpenSandboxDialog(false);
   };
   const handleOpenSandboxDialog = async () => {
-    const { data } = await service.openCodeSandBox();
-    console.log(data.sandbox_id);
+    const { data } = await service.openCodeSandBox(state);
     if (data.sandbox_id) {
       Settings.codesandbox.sandbox_id = data.sandbox_id;
       Settings.url.app = `https://${data.sandbox_id}.sse.codesandbox.io/`;
@@ -193,6 +193,8 @@ const ProcessDrawer = () => {
       Settings.url.editor = `https://${data.sandbox_id}-8448.sse.codesandbox.io/lint`;
       setAlert(false);
       setOpenSandboxDialog(true);
+      setSandbox(true);
+      getStatus();
     }
 
     // setAlert(false);
@@ -234,10 +236,10 @@ const ProcessDrawer = () => {
                 <CircularProgress color="inherit" size={23} />
               </ListItem>
             ) : (
-              ApiButton(status, handleRunApi)
+              ApiButton(status, handleRunApi, sandbox, handleOpenSandboxDialog)
             )}
           </DialogTooltip>
-          <ListItem button onClick={() => console.log(Settings.url)}>
+          <ListItem button onClick={() => setOpenSandboxDialog(true)}>
             <ViewListIcon sx={styles.listitem} />
           </ListItem>
           <ListItem button onClick={handleGetProject}>
@@ -270,27 +272,40 @@ const ProcessDrawer = () => {
   );
 };
 
-const ApiButton = (layoutStatus, handleRunApi) => {
+const ApiButton = (
+  layoutStatus,
+  handleRunApi,
+  sandbox,
+  handleOpenSandboxDialog
+) => {
   const { status, openapi } = layoutStatus;
+
   switch (status) {
     case "connected":
-      if (openapi) {
-        return (
-          <>
-            <ListItem button onClick={() => handleRunApi(true)}>
-              <SyncIcon sx={styles.listitem} />
-            </ListItem>
-            <ListItem button onClick={() => handleRunApi()}>
+      // if (openapi) {
+      return (
+        <>
+          <ListItem
+            button
+            onClick={() =>
+              sandbox ? handleOpenSandboxDialog() : handleRunApi(true)
+            }
+          >
+            <SyncIcon sx={styles.listitem} />
+          </ListItem>
+          {/*}<ListItem button onClick={() => handleRunApi()}>
               <PauseCircleFilledIcon sx={styles.listitem} />
-            </ListItem>
-          </>
-        );
-      } else {
+        </ListItem>{*/}
+        </>
+      );
+      {
+        /*}} else {
         return (
           <ListItem button onClick={() => handleRunApi()}>
             <PlayCircleFilledIcon sx={styles.listitem} />
           </ListItem>
         );
+      }{*/
       }
 
     case "unreachable":

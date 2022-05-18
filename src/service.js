@@ -226,6 +226,9 @@ const openCodeSandBox = (context) => {
             },
           },
         },
+        "context.json": {
+          content: context,
+        },
       },
       template: "node",
       title: "hello world",

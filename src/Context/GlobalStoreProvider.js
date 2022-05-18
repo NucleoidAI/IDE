@@ -12,6 +12,7 @@ import { layoutReducer } from "./reducers/layoutReducer";
 const initStatus = {
   status: "unreachable",
   openApi: false,
+  sandbox: false,
   metrics: {
     free: 50,
     total: 100,

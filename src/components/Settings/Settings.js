@@ -1,4 +1,4 @@
-import SettingDialog from "../../widgets/SettingDialog/SettingDialog";
+import SettingsDialog from "../../widgets/SettingDialog/SettingDialog";
 import SettingsIcon from "@mui/icons-material/Settings";
 import styles from "./styles";
 import { useState } from "react";
@@ -20,7 +20,7 @@ function Settings() {
         <Button onClick={handleOpen} size="large">
           <SettingsIcon sx={styles.settingIcon} fontSize={"large"} />
         </Button>
-        {open && <SettingDialog handleClose={handleClose} />}
+        {open && <SettingsDialog handleClose={handleClose} />}
       </Grid>
     </>
   );
