@@ -178,6 +178,61 @@ const updateProject = (project, name, context) => {
   });
 };
 
+const openCodeSandBox = (context) => {
+  return axios(Settings.codesandbox.url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    data: JSON.stringify({
+      files: {
+        "sandbox.config.json": {
+          content: `{
+            "template": "node"
+          }`,
+        },
+        "index.js": {
+          content: `
+          const nucleoid = require("nucleoidjs");
+          const app = nucleoid();
+          
+          class User {
+            constructor(name) {
+              this.name = name;
+            }
+          }
+          nucleoid.register(User);
+          console.log("hello");
+          // 👇 This is it!
+          app.post("/users", () => new User("Daphne"));
+          
+          app.listen(3000);`,
+        },
+        "package.json": {
+          content: {
+            name: "nuc-example",
+            version: "1.0.0",
+            main: "index.js",
+            license: "MIT",
+            dependencies: {
+              nucleoidjs: "0.5.10",
+            },
+            scripts: {
+              start: "node index.js",
+            },
+            devDependencies: {
+              "@types/node": "^17.0.21",
+            },
+          },
+        },
+      },
+      template: "node",
+      title: "hello world",
+    }),
+  });
+};
+
 const service = {
   query,
   lint,
@@ -191,6 +246,7 @@ const service = {
   addProject,
   updateProject,
   deleteProject,
+  openCodeSandBox,
 };
 
 export default service;

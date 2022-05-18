@@ -3,6 +3,7 @@ import CopyClipboard from "../../components/CopyClipboard";
 import DialogTooltip from "../../components/DialogTootip/";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
+import OpenSandbox from "../../components/OpenSandbox";
 import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import PostmanIcon from "../../icons/Postman";
@@ -197,6 +198,9 @@ const ProcessDrawer = () => {
                 terminal.
                 <br />
                 <CopyClipboard />
+                or
+                <br />
+                <OpenSandbox handleCloseTooltip={handleClose} />
               </>
             }
             handleTooltipClose={handleClose}

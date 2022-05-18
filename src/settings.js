@@ -6,6 +6,9 @@ const Settings = {
     app: "http://localhost:3000/",
     editor: "http://localhost:8448/lint",
   },
+  codesandbox: {
+    url: "https://codesandbox.io/api/v1/sandboxes/define?json=1",
+  },
   github: {
     client_id: "d96b1adfef0facc5eb94",
     client_secret: "3123c2be7aa1aec88d2c52c9e1a124c33eba0b08",
