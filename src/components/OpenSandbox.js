@@ -1,28 +1,27 @@
-import React, { useState } from "react";
-import { Box, Fab, Tooltip, Typography } from "@mui/material";
 import CodeSandbox from "../icons/CodeSandbox";
-import service from "../service";
+import React from "react";
+import { Box, Typography } from "@mui/material";
 
-const OpenSandbox = ({ handleOpenSandboxDialog }) => {
+const OpenSandbox = ({ handleOpenSandboxDialog, create, fill }) => {
   return (
     <Box
       sx={{
         pt: 1,
         pb: 2,
         display: "flex",
-        //  justifyContent: "space-between",
         cursor: "pointer",
         alignItems: "center",
       }}
     >
-      <CodeSandbox />
+      <CodeSandbox fill={fill} />
       <Typography
         sx={{ pl: 2 }}
         fontFamily={"Trebuchet MS"}
         variant={"h6"}
         onClick={handleOpenSandboxDialog}
       >
-        try it in codesandbox
+        {!create && "try it in codesandbox"}
+        {create && "Open Sandbox"}
       </Typography>
       <Box />
     </Box>

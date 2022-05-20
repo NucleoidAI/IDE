@@ -13,6 +13,7 @@ const initStatus = {
   status: "unreachable",
   openApi: false,
   sandbox: false,
+  sandboxDialog: false,
   metrics: {
     free: 50,
     total: 100,

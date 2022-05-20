@@ -6,9 +6,10 @@ import styles from "./styles";
 import { useLayoutContext } from "../../Context/providers/layoutContextProvider";
 import { Grid, Tooltip, Typography } from "@mui/material";
 import { Doughnut } from "react-chartjs-2"; // eslint-disable-line
+import OpenSandbox from "../../components/OpenSandbox";
 
 function Status() {
-  const [state] = useLayoutContext();
+  const [state, dispatch] = useLayoutContext();
   const metrics = state.metrics;
 
   const options = {
@@ -43,14 +44,29 @@ function Status() {
       <Grid sx={styles.chart}>
         <Doughnut data={data} options={options} />
       </Grid>
-      <StatusText warn state={state} />
+      <StatusText warn state={state} dispatch={dispatch} />
     </Grid>
   );
 }
 
-const StatusText = ({ ok, warn, err, state }) => {
+const StatusText = ({ ok, warn, err, state, dispatch }) => {
   return (
     <Grid container justifyContent={"center"} alignItems={"center"}>
+      <Grid
+        lg={12}
+        container
+        justifyContent={"center"}
+        alignItems={"center"}
+        sx={{ color: "#A5A7AB" }}
+      >
+        <OpenSandbox
+          handleOpenSandboxDialog={() => {
+            dispatch({ type: "SANDBOX", payload: { dialogStatus: true } });
+          }}
+          create
+          fill={"#c3c5c8"}
+        />
+      </Grid>
       <Grid justifyContent={"center"}>{StatusContent(state.status)}</Grid>
       <Grid>&nbsp;</Grid>
       <Grid>{StatusContent(state.status, true)}</Grid>

@@ -13,6 +13,21 @@ function layoutReducer(state, { type, payload }) {
       return { ...tmpState };
     }
 
+    case "SANDBOX": {
+      const { status, dialogStatus } = payload;
+      const tmpState = state;
+
+      if (status !== undefined && status !== null) {
+        tmpState.sandbox = status;
+      }
+
+      if (dialogStatus !== undefined && dialogStatus !== null) {
+        tmpState.sandboxDialog = dialogStatus;
+      }
+
+      return { ...tmpState };
+    }
+
     default:
   }
 

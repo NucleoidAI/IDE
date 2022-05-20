@@ -203,7 +203,7 @@ const openCodeSandBox = (context) => {
             }
           }
           nucleoid.register(User);
-          console.log("hello");
+          
           // 👇 This is it!
           app.post("/users", () => new User("Daphne"));
           

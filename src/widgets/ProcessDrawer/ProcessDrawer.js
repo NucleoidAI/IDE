@@ -5,7 +5,7 @@ import DialogTooltip from "../../components/DialogTootip/";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import OpenSandbox from "../../components/OpenSandbox";
-import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
+//import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import PostmanIcon from "../../icons/Postman";
 import Project from "../../project";
@@ -27,8 +27,6 @@ const ProcessDrawer = () => {
   const [state, contextDispatch] = useContext();
   const [status, dispatch] = useLayoutContext();
   const location = useLocation();
-  const [openSandboxDialog, setOpenSandboxDialog] = useState(false);
-  const [sandbox, setSandbox] = React.useState(false);
 
   const [alert, setAlert] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -181,7 +179,7 @@ const ProcessDrawer = () => {
   };
 
   const handleCloseSandboxDialog = () => {
-    setOpenSandboxDialog(false);
+    dispatch({ type: "SANDBOX", payload: { dialogStatus: false } });
   };
   const handleOpenSandboxDialog = async () => {
     const { data } = await service.openCodeSandBox(state);
@@ -192,8 +190,11 @@ const ProcessDrawer = () => {
       Settings.url.lint = `https://${data.sandbox_id}-8448.sse.codesandbox.io/lint`;
       Settings.url.editor = `https://${data.sandbox_id}-8448.sse.codesandbox.io/lint`;
       setAlert(false);
-      setOpenSandboxDialog(true);
-      setSandbox(true);
+      dispatch({
+        type: "SANDBOX",
+        payload: { status: true },
+      });
+
       getStatus();
     }
 
@@ -236,10 +237,10 @@ const ProcessDrawer = () => {
                 <CircularProgress color="inherit" size={23} />
               </ListItem>
             ) : (
-              ApiButton(status, handleRunApi, sandbox, handleOpenSandboxDialog)
+              ApiButton(status, handleRunApi, handleOpenSandboxDialog)
             )}
           </DialogTooltip>
-          <ListItem button onClick={() => setOpenSandboxDialog(true)}>
+          <ListItem button>
             <ViewListIcon sx={styles.listitem} />
           </ListItem>
           <ListItem button onClick={handleGetProject}>
@@ -262,7 +263,7 @@ const ProcessDrawer = () => {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-      {openSandboxDialog && (
+      {status.sandboxDialog && (
         <CodeSandboxDialog
           handleCloseSandboxDialog={handleCloseSandboxDialog}
         />
@@ -272,13 +273,8 @@ const ProcessDrawer = () => {
   );
 };
 
-const ApiButton = (
-  layoutStatus,
-  handleRunApi,
-  sandbox,
-  handleOpenSandboxDialog
-) => {
-  const { status, openapi } = layoutStatus;
+const ApiButton = (layoutStatus, handleRunApi, handleOpenSandboxDialog) => {
+  const { status, sandbox } = layoutStatus;
 
   switch (status) {
     case "connected":
