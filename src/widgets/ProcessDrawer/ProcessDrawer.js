@@ -4,7 +4,7 @@ import CopyClipboard from "../../components/CopyClipboard";
 import DialogTooltip from "../../components/DialogTootip/";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
-import OpenSandbox from "../../components/OpenSandbox";
+import RunCodesandbox from "../../components/RunCodesandbox";
 //import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import PostmanIcon from "../../icons/Postman";
@@ -189,13 +189,14 @@ const ProcessDrawer = () => {
       Settings.url.terminal = `https://${data.sandbox_id}-8448.sse.codesandbox.io/`;
       Settings.url.lint = `https://${data.sandbox_id}-8448.sse.codesandbox.io/lint`;
       Settings.url.editor = `https://${data.sandbox_id}-8448.sse.codesandbox.io/lint`;
-      setAlert(false);
       dispatch({
         type: "SANDBOX",
-        payload: { status: true },
+        payload: { status: true, dialogStatus: true },
       });
-
-      getStatus();
+      setAlert(false);
+      setTimeout(() => {
+        getStatus();
+      }, 5000);
     }
 
     // setAlert(false);
@@ -225,7 +226,7 @@ const ProcessDrawer = () => {
                 <CopyClipboard />
                 or
                 <br />
-                <OpenSandbox
+                <RunCodesandbox
                   handleOpenSandboxDialog={handleOpenSandboxDialog}
                 />
               </>
