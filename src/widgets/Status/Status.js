@@ -53,7 +53,6 @@ const StatusText = ({ ok, warn, err, state, dispatch }) => {
   return (
     <Grid container justifyContent={"center"} alignItems={"center"}>
       <Grid
-        lg={12}
         container
         justifyContent={"center"}
         alignItems={"center"}

@@ -4,11 +4,10 @@ import CopyClipboard from "../../components/CopyClipboard";
 import DialogTooltip from "../../components/DialogTootip/";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
-import RunCodesandbox from "../../components/RunCodesandbox";
-//import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import PostmanIcon from "../../icons/Postman";
 import Project from "../../project";
+import RunCodesandbox from "../../components/RunCodesandbox";
 import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
 import SyncIcon from "@mui/icons-material/Sync";
@@ -17,6 +16,7 @@ import ViewListIcon from "@mui/icons-material/ViewList";
 import project from "../../project";
 import service from "../../service";
 import styles from "./styles";
+
 import { useContext } from "../../Context/providers/contextProvider";
 import { useLayoutContext } from "../../Context/providers/layoutContextProvider";
 import { useLocation } from "react-router-dom";
@@ -279,7 +279,6 @@ const ApiButton = (layoutStatus, handleRunApi, handleOpenSandboxDialog) => {
 
   switch (status) {
     case "connected":
-      // if (openapi) {
       return (
         <>
           <ListItem
@@ -290,20 +289,8 @@ const ApiButton = (layoutStatus, handleRunApi, handleOpenSandboxDialog) => {
           >
             <SyncIcon sx={styles.listitem} />
           </ListItem>
-          {/*}<ListItem button onClick={() => handleRunApi()}>
-              <PauseCircleFilledIcon sx={styles.listitem} />
-        </ListItem>{*/}
         </>
       );
-      {
-        /*}} else {
-        return (
-          <ListItem button onClick={() => handleRunApi()}>
-            <PlayCircleFilledIcon sx={styles.listitem} />
-          </ListItem>
-        );
-      }{*/
-      }
 
     case "unreachable":
       return (
