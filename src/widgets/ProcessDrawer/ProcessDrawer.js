@@ -1,3 +1,4 @@
+import Backdrop from "@mui/material/Backdrop";
 import CopyClipboard from "../../components/CopyClipboard";
 import DialogTooltip from "../../components/DialogTootip/";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -5,10 +6,13 @@ import ImportExportIcon from "@mui/icons-material/ImportExport";
 import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import PostmanIcon from "../../icons/Postman";
+import Project from "../../project";
 import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
 import SyncIcon from "@mui/icons-material/Sync";
 import ViewListIcon from "@mui/icons-material/ViewList";
+
+import project from "../../project";
 import service from "../../service";
 import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
@@ -18,12 +22,13 @@ import { Box, CircularProgress, Drawer, ListItem } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
 const ProcessDrawer = () => {
-  const [state] = useContext();
+  const [state, contextDispatch] = useContext();
   const [status, dispatch] = useLayoutContext();
   const location = useLocation();
 
   const [alert, setAlert] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [backdrop, setBackdrop] = useState(false);
 
   const getStatusTask = useRef();
 
@@ -57,7 +62,30 @@ const ProcessDrawer = () => {
       });
   };
 
+  const auth = (code) => {
+    return service.auth(code).then((data) => {
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("refreshToken", data.refreshToken);
+
+      return service.getUserFromGit(data.refreshToken);
+    });
+  };
+
   useEffect(() => {
+    const url = window.location.href;
+    const hasCode = url.includes("?code=");
+
+    if (hasCode) {
+      const newUrl = url.split("?code=");
+      window.history.pushState({}, null, newUrl[0]);
+      setBackdrop(true);
+
+      auth({ code: newUrl[1] }).then((user) => {
+        setBackdrop(false);
+        handleGetProject();
+      });
+    }
+
     getStatus();
 
     clearInterval(getStatusTask.current);
@@ -113,6 +141,41 @@ const ProcessDrawer = () => {
     }
   };
 
+  const handleGetProject = () => {
+    setBackdrop(true);
+
+    service.getProjects().then((result) => {
+      Settings.projects = [...result.data];
+
+      if (result.data.length > 0) {
+        service.getProject(result.data[0].project).then(({ data }) => {
+          setBackdrop(false);
+          project.setWithoutStringify(data.project, data.name, data.context);
+          contextDispatch({
+            type: "SET_PROJECT",
+            payload: { project: JSON.parse(data.context) },
+          });
+        });
+      } else {
+        const { name, context } = project.getStringify();
+        service.addProject(name, context).then(({ data }) => {
+          Settings.projects = [{ project: data, name }];
+          project.setWithoutStringify(data, name, context);
+          setBackdrop(false);
+        });
+      }
+    });
+  };
+
+  const handleSaveProject = () => {
+    const { project, context, name } = Project.getStringify();
+    setBackdrop(true);
+
+    service.updateProject(project, name, context).then((data) => {
+      setBackdrop(false);
+    });
+  };
+
   return (
     <>
       <Drawer
@@ -149,7 +212,7 @@ const ProcessDrawer = () => {
           <ListItem button>
             <ViewListIcon sx={styles.listitem} />
           </ListItem>
-          <ListItem button>
+          <ListItem button onClick={handleGetProject}>
             <GitHubIcon sx={styles.listitem} />
           </ListItem>
           <ListItem button>
@@ -159,10 +222,16 @@ const ProcessDrawer = () => {
             <PostmanIcon />
           </ListItem>
         </Box>
-        <ListItem button>
+        <ListItem button onClick={handleSaveProject}>
           <SaveIcon sx={styles.listitem} />
         </ListItem>
       </Drawer>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={backdrop}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       {status.name}
     </>
   );

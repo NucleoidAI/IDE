@@ -1,5 +1,6 @@
 import Drawer from "@mui/material/Drawer";
 import Logo from "../Logo";
+import ProjectSelect from "../../components/ProjectSelect";
 import React from "react";
 import Settings from "../Settings";
 import Status from "../../widgets/Status";
@@ -20,6 +21,7 @@ function Menu(props) {
           <br />
           <MenuLinks {...props} />
         </List>
+        <ProjectSelect />
         <Status />
         <Settings />
       </Drawer>

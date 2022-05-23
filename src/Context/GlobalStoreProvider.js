@@ -1,5 +1,9 @@
 import React from "react";
+import Settings from "../settings";
 import State from "../state";
+import project from "../project";
+import service from "../service";
+
 import { ContextProvider } from "./providers/contextProvider"; // eslint-disable-line
 import { LayoutContextProvider } from "./providers/layoutContextProvider";
 import { contextReducer } from "./reducers/contextReducer";
@@ -15,9 +19,30 @@ const initStatus = {
   },
 };
 
+const InitContext = () => {
+  if (project.isAuth()) {
+    service.getProjects().then(({ data }) => {
+      Settings.projects = [...data];
+    });
+  }
+
+  if (project.check()) {
+    const { context } = project.get();
+
+    context.get = (prop) => State.resolve(context, prop);
+    return context;
+  } else {
+    project.setDemo();
+    const { context } = project.get();
+
+    context.get = (prop) => State.resolve(context, prop);
+    return context;
+  }
+};
+
 const GlobalStoreProvider = ({ children }) => {
   return (
-    <ContextProvider state={State.withSample()} reducer={contextReducer}>
+    <ContextProvider state={InitContext()} reducer={contextReducer}>
       <LayoutContextProvider state={initStatus} reducer={layoutReducer}>
         {children}
       </LayoutContextProvider>

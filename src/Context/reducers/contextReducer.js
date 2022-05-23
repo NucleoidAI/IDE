@@ -1,4 +1,5 @@
 import State from "../../state";
+import project from "../../project";
 import { v4 as uuid } from "uuid";
 
 function contextReducer(state, { type, payload }) {
@@ -6,6 +7,13 @@ function contextReducer(state, { type, payload }) {
   const { nucleoid, pages } = state;
 
   switch (type) {
+    case "SET_PROJECT":
+      nucleoid.api = payload.project.nucleoid.api;
+      nucleoid.functions = payload.project.nucleoid.functions;
+      nucleoid.types = payload.project.nucleoid.types;
+
+      break;
+
     case "OPEN_API_DIALOG": {
       pages.api.dialog.type = payload.type;
       pages.api.dialog.action = payload.action;
@@ -215,6 +223,8 @@ function contextReducer(state, { type, payload }) {
 
     default:
   }
+
+  project.updateCurrent(state);
 
   return state;
 }
