@@ -50,8 +50,8 @@ function Status() {
           alignItems={"center"}
           sx={{ pt: 1 }}
         >
-          <Grid>{StatusContent(state.status)}</Grid>&nbsp;
-          <Grid>{StatusContent(state.status, true)}</Grid>
+          <Grid>{StatusContent(state)}</Grid>&nbsp;
+          <Grid>{StatusContent(state, true)}</Grid>
         </Grid>
       </Grid>
       <StatusText warn state={state} dispatch={dispatch} />
@@ -76,7 +76,8 @@ const StatusText = ({ state, dispatch }) => {
   );
 };
 
-const StatusContent = (status, isText) => {
+const StatusContent = (state, isText) => {
+  const { status, openapi } = state;
   switch (status) {
     case "connected":
       return isText ? (
@@ -99,8 +100,8 @@ const StatusContent = (status, isText) => {
     case "unreachable":
       return isText ? (
         <Tooltip
-          title="The nucleoid runtime is not started. Run the `npx nucleoidjs start` in
-        terminal."
+          title={!openapi ? "The nucleoid runtime is not started. Run the `npx nucleoidjs start` in terminal." : 
+        "Codesandbox is hibernated. Click re-run button or Open sandbox."}
           placement="top-start"
         >
           <Typography sx={styles.statusText}>Unreachable</Typography>
