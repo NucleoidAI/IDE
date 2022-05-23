@@ -4,7 +4,7 @@ import LoopIcon from "@mui/icons-material/Loop";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import styles from "./styles";
 import { useLayoutContext } from "../../Context/providers/layoutContextProvider";
-import { Grid, Tooltip, Typography } from "@mui/material";
+import { Button, Grid, Tooltip, Typography } from "@mui/material";
 import { Doughnut } from "react-chartjs-2"; // eslint-disable-line
 import OpenSandbox from "../../components/OpenSandbox";
 
@@ -43,32 +43,35 @@ function Status() {
       <Grid />
       <Grid sx={styles.chart}>
         <Doughnut data={data} options={options} />
+
+        <Grid
+          container
+          justifyContent={"center"}
+          alignItems={"center"}
+          sx={{ pt: 1 }}
+        >
+          <Grid>{StatusContent(state.status)}</Grid>&nbsp;
+          <Grid>{StatusContent(state.status, true)}</Grid>
+        </Grid>
       </Grid>
       <StatusText warn state={state} dispatch={dispatch} />
     </Grid>
   );
 }
 
-const StatusText = ({ ok, warn, err, state, dispatch }) => {
+const StatusText = ({ state, dispatch }) => {
   return (
-    <Grid container justifyContent={"center"} alignItems={"center"}>
-      <Grid
-        container
-        justifyContent={"center"}
-        alignItems={"center"}
-        sx={{ color: "#A5A7AB" }}
+    <Grid sx={{ width: "100%", pt: 4 }}>
+      <Button
+        disabled={!state.sandbox}
+        onClick={() =>
+          dispatch({ type: "SANDBOX", payload: { dialogStatus: true } })
+        }
+        size={"large"}
+        sx={{ width: "100%", color: "#A5A7AB", textTransform: "none" }}
       >
-        <OpenSandbox
-          handleOpenSandboxDialog={() => {
-            dispatch({ type: "SANDBOX", payload: { dialogStatus: true } });
-          }}
-          create
-          fill={"#c3c5c8"}
-        />
-      </Grid>
-      <Grid justifyContent={"center"}>{StatusContent(state.status)}</Grid>
-      <Grid>&nbsp;</Grid>
-      <Grid>{StatusContent(state.status, true)}</Grid>
+        <OpenSandbox create fill={!state.sandbox ? "#2d302f" : "#c3c5c8"} />
+      </Button>
     </Grid>
   );
 };

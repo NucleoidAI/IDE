@@ -19,7 +19,7 @@ const CodeSandbox = {
                   ");\n\n"
               )
               .join("") +
-            `\n\napp.openapi("./openapi.json");\napp.listen(3000);`,
+            `\n\n//app.openapi("./openapi.json");\napp.listen(3000);`,
         },
         "package.json": {
           content: {

@@ -2,7 +2,7 @@ import CodeSandbox from "../icons/CodeSandbox";
 import React from "react";
 import { Box, Typography } from "@mui/material";
 
-const OpenSandbox = ({ handleOpenSandboxDialog }) => {
+const OpenSandbox = ({ fill }) => {
   return (
     <Box
       sx={{
@@ -13,12 +13,8 @@ const OpenSandbox = ({ handleOpenSandboxDialog }) => {
         alignItems: "center",
       }}
     >
-      <CodeSandbox fill={"#c3c5c8"} />
-      <Typography
-        sx={{ pl: 2 / 3 }}
-        fontFamily={"Trebuchet MS"}
-        onClick={handleOpenSandboxDialog}
-      >
+      <CodeSandbox fill={fill} />
+      <Typography sx={{ pl: 2 / 3 }} fontFamily={"Trebuchet MS"}>
         Open Sandbox
       </Typography>
       <Box />

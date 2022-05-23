@@ -187,6 +187,7 @@ const ProcessDrawer = () => {
     const { data } = await service.openCodeSandBox(
       CodeSandbox.generateContent(state)
     );
+    console.log(data);
 
     if (data.sandbox_id) {
       Settings.codesandbox.setSandboxID(data.sandbox_id);
@@ -204,11 +205,8 @@ const ProcessDrawer = () => {
       setAlert(false);
       setTimeout(() => {
         getStatus();
-      }, 10000);
+      }, 20000);
     }
-
-    // setAlert(false);
-    //setOpenSandboxDialog(true);
   };
 
   return (
@@ -282,15 +280,22 @@ const ProcessDrawer = () => {
 
 const ApiButton = (layoutStatus, handleRunApi, handleRunSandbox) => {
   const { status, sandbox } = layoutStatus;
-  console.log(sandbox);
+
+  if (sandbox) {
+    return (
+      <>
+        <ListItem button onClick={() => handleRunSandbox()}>
+          <SyncIcon sx={styles.listitem} />
+        </ListItem>
+      </>
+    );
+  }
+
   switch (status) {
     case "connected":
       return (
         <>
-          <ListItem
-            button
-            onClick={() => (sandbox ? handleRunSandbox() : handleRunApi(true))}
-          >
+          <ListItem button onClick={() => handleRunApi(true)}>
             <SyncIcon sx={styles.listitem} />
           </ListItem>
         </>

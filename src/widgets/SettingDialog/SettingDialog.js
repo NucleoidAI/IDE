@@ -5,7 +5,10 @@ import Settings from "../../settings";
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 
 const SettingsDialog = ({ handleClose }) => {
-  const urlRef = React.useRef({ ...Settings.url });
+  const terminal = Settings.url.getTerminal();
+  const app = Settings.url.getApp();
+
+  const urlRef = React.useRef({ terminal, app });
 
   function saveSettingDialog() {
     Settings.url.setTerminal(urlRef.current.terminal);
