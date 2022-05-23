@@ -22,6 +22,7 @@ import { useLayoutContext } from "../../Context/providers/layoutContextProvider"
 import { useLocation } from "react-router-dom";
 import { Box, CircularProgress, Drawer, ListItem } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
+import CodeSandbox from "../../codesandbox";
 
 const ProcessDrawer = () => {
   const [state, contextDispatch] = useContext();
@@ -181,8 +182,11 @@ const ProcessDrawer = () => {
   const handleCloseSandboxDialog = () => {
     dispatch({ type: "SANDBOX", payload: { dialogStatus: false } });
   };
-  const handleOpenSandboxDialog = async () => {
-    const { data } = await service.openCodeSandBox(state);
+
+  const handleRunSandbox = async () => {
+    const { data } = await service.openCodeSandBox(
+      CodeSandbox.generateContent(state)
+    );
     if (data.sandbox_id) {
       Settings.codesandbox.sandbox_id = data.sandbox_id;
       Settings.url.app = `https://${data.sandbox_id}.sse.codesandbox.io/`;
@@ -217,18 +221,16 @@ const ProcessDrawer = () => {
           <DialogTooltip
             open={alert}
             placement="left"
-            title={<b>Runtime Status</b>}
+            title={<b>Runtime</b>}
             message={
               <>
-                The nucleoid runtime is not started. Run the following code in
-                terminal.
+                <RunCodesandbox handleRunSandbox={handleRunSandbox} />
+                <br />
+                Or run the following code in terminal.
+                <br />
                 <br />
                 <CopyClipboard />
-                or
                 <br />
-                <RunCodesandbox
-                  handleOpenSandboxDialog={handleOpenSandboxDialog}
-                />
               </>
             }
             handleTooltipClose={handleClose}
@@ -238,7 +240,7 @@ const ProcessDrawer = () => {
                 <CircularProgress color="inherit" size={23} />
               </ListItem>
             ) : (
-              ApiButton(status, handleRunApi, handleOpenSandboxDialog)
+              ApiButton(status, handleRunApi, handleRunSandbox)
             )}
           </DialogTooltip>
           <ListItem button>
@@ -274,7 +276,7 @@ const ProcessDrawer = () => {
   );
 };
 
-const ApiButton = (layoutStatus, handleRunApi, handleOpenSandboxDialog) => {
+const ApiButton = (layoutStatus, handleRunApi, handleRunSandbox) => {
   const { status, sandbox } = layoutStatus;
 
   switch (status) {
@@ -283,9 +285,7 @@ const ApiButton = (layoutStatus, handleRunApi, handleOpenSandboxDialog) => {
         <>
           <ListItem
             button
-            onClick={() =>
-              sandbox ? handleOpenSandboxDialog() : handleRunApi(true)
-            }
+            onClick={() => (sandbox ? handleRunSandbox() : handleRunApi(true))}
           >
             <SyncIcon sx={styles.listitem} />
           </ListItem>

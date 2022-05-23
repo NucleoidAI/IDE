@@ -2,12 +2,12 @@ import CodeSandbox from "../icons/CodeSandbox";
 import React from "react";
 import { Box, Typography } from "@mui/material";
 
-const RunCodesandbox = ({ handleOpenSandboxDialog }) => {
+const RunCodesandbox = ({ handleRunSandbox }) => {
   return (
     <Box
       sx={{
         pt: 1,
-        pb: 2,
+        pb: 1,
         display: "flex",
         cursor: "pointer",
         alignItems: "center",
@@ -18,7 +18,7 @@ const RunCodesandbox = ({ handleOpenSandboxDialog }) => {
         sx={{ pl: 2 }}
         fontFamily={"Trebuchet MS"}
         variant={"h6"}
-        onClick={handleOpenSandboxDialog}
+        onClick={handleRunSandbox}
       >
         try it in codesandbox
       </Typography>
