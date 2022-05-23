@@ -14,12 +14,12 @@ const CodeSandbox = {
               .map(
                 (item) =>
                   item.code +
-                  "\nnucleoid.register(" +
+                  "\n\nnucleoid.register(" +
                   item.path.split("/")[item.path.split("/").length - 1] +
-                  ");\n\n\n"
+                  ");\n\n"
               )
               .join("") +
-            `\n\napp.listen(3000);`,
+            `\n\napp.openapi("./openapi.json");\napp.listen(3000);`,
         },
         "package.json": {
           content: {
@@ -28,7 +28,7 @@ const CodeSandbox = {
             main: "index.js",
             license: "MIT",
             dependencies: {
-              nucleoidjs: "0.5.10",
+              nucleoidjs: "0.5.11-0",
             },
             scripts: {
               start: "node index.js",
@@ -46,7 +46,7 @@ const CodeSandbox = {
         },
       },
       template: "node",
-      title: "hello world",
+      title: "Nucleoid Runtime",
     };
   },
 };

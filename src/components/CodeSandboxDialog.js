@@ -1,14 +1,15 @@
-import * as React from "react";
-import Button from "@mui/material/Button";
-import { Dialog, Grid } from "@mui/material";
-
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
-import Slide from "@mui/material/Slide";
 import Settings from "../settings";
+import {
+  AppBar,
+  Dialog,
+  Grid,
+  IconButton,
+  Slide,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import * as React from "react";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -39,7 +40,8 @@ export default function CodeSandboxDialog({ handleCloseSandboxDialog }) {
         </AppBar>
         <Grid>
           <iframe
-            src={`https://codesandbox.io/s/${Settings.codesandbox.sandbox_id}`}
+            title="CodeSandbox"
+            src={`https://codesandbox.io/s/${Settings.codesandbox.getSandboxID()}`}
             style={{ width: "100%", height: "900px" }}
             allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
             sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"

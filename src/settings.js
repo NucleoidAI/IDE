@@ -2,13 +2,33 @@ const Settings = {
   projects: [],
   dialog: {},
   url: {
-    terminal: "http://localhost:8448/",
-    app: "http://localhost:3000/",
-    editor: "http://localhost:8448/lint",
+    setTerminal: (url) => {
+      localStorage.setItem("terminal", url);
+    },
+    getTerminal: () => {
+      return localStorage.getItem("terminal");
+    },
+    setApp: (url) => {
+      localStorage.setItem("app", url);
+    },
+    getApp: () => {
+      return localStorage.getItem("app");
+    },
+    setEditor: (url) => {
+      localStorage.setItem("editor", url);
+    },
+    getEditor: () => {
+      return localStorage.getItem("editor");
+    },
   },
   codesandbox: {
     url: "https://codesandbox.io/api/v1/sandboxes/define?json=1",
-    sandbox_id: "",
+    setSandboxID: (id) => {
+      localStorage.setItem("sandbox_id", id);
+    },
+    getSandboxID: () => {
+      return localStorage.getItem("sandbox_id");
+    },
   },
   github: {
     client_id: "d96b1adfef0facc5eb94",

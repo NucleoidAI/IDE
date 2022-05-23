@@ -55,7 +55,7 @@ axios.interceptors.response.use(
 );
 
 const lint = async (body, signal) => {
-  return fetch(Settings.url.editor, {
+  return fetch(Settings.url.getEditor(), {
     signal: signal,
     method: "POST",
     headers: {
@@ -66,7 +66,7 @@ const lint = async (body, signal) => {
 };
 
 const query = async (body) => {
-  return fetch(Settings.url.terminal, {
+  return fetch(Settings.url.getTerminal(), {
     method: "POST",
     body,
   }).then((response) => response.json());
@@ -74,11 +74,11 @@ const query = async (body) => {
 
 const openapi = (action, nuc) => {
   if (action === undefined) {
-    return fetch(Settings.url.terminal + "openapi", {
+    return fetch(Settings.url.getTerminal() + "openapi", {
       method: "GET",
     }).then((response) => response.json());
   } else {
-    return fetch(Settings.url.terminal + "openapi", {
+    return fetch(Settings.url.getTerminal() + "openapi", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -92,12 +92,12 @@ const openapi = (action, nuc) => {
 };
 
 const metrics = () =>
-  fetch(Settings.url.terminal + "metrics", {
+  fetch(Settings.url.getTerminal() + "metrics", {
     method: "GET",
   }).then((response) => response.json());
 
 const logs = () =>
-  fetch(Settings.url.terminal + "logs", {
+  fetch(Settings.url.getTerminal() + "logs", {
     method: "GET",
   }).then((response) => response.json());
 

@@ -1,15 +1,16 @@
 import ClosableDialogTitle from "../../components/ClosableDialogTitle";
+import React from "react";
 import SettingDialogTabs from "../../components/SettingDialogTabs";
 import Settings from "../../settings";
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
-import { useRef } from "react";
 
 const SettingsDialog = ({ handleClose }) => {
-  const urlRef = useRef({ ...Settings.url });
+  const urlRef = React.useRef({ ...Settings.url });
 
   function saveSettingDialog() {
-    Settings.url.terminal = urlRef.current.terminal;
-    Settings.url.api = urlRef.current.api;
+    Settings.url.setTerminal(urlRef.current.terminal);
+    Settings.url.setApp(urlRef.current.api);
+    Settings.url.setEditor(urlRef.current.api + "/lint");
     handleClose();
   }
 

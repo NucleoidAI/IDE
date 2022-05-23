@@ -1,4 +1,5 @@
 import Backdrop from "@mui/material/Backdrop";
+import CodeSandbox from "../../codesandbox";
 import CodeSandboxDialog from "../../components/CodeSandboxDialog";
 import CopyClipboard from "../../components/CopyClipboard";
 import DialogTooltip from "../../components/DialogTootip/";
@@ -22,7 +23,6 @@ import { useLayoutContext } from "../../Context/providers/layoutContextProvider"
 import { useLocation } from "react-router-dom";
 import { Box, CircularProgress, Drawer, ListItem } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-import CodeSandbox from "../../codesandbox";
 
 const ProcessDrawer = () => {
   const [state, contextDispatch] = useContext();
@@ -118,7 +118,7 @@ const ProcessDrawer = () => {
       service
         .openapi("start", nuc)
         .then(() => {
-          window.open(Settings.url.app, "_blank").focus();
+          window.open(Settings.url.getApp(), "_blank").focus();
           getStatus();
           setLoading(false);
           setAlert(false);
@@ -187,12 +187,16 @@ const ProcessDrawer = () => {
     const { data } = await service.openCodeSandBox(
       CodeSandbox.generateContent(state)
     );
+
     if (data.sandbox_id) {
-      Settings.codesandbox.sandbox_id = data.sandbox_id;
-      Settings.url.app = `https://${data.sandbox_id}.sse.codesandbox.io/`;
-      Settings.url.terminal = `https://${data.sandbox_id}-8448.sse.codesandbox.io/`;
-      Settings.url.lint = `https://${data.sandbox_id}-8448.sse.codesandbox.io/lint`;
-      Settings.url.editor = `https://${data.sandbox_id}-8448.sse.codesandbox.io/lint`;
+      Settings.codesandbox.setSandboxID(data.sandbox_id);
+      Settings.url.setApp(`https://${data.sandbox_id}.sse.codesandbox.io/`);
+      Settings.url.setTerminal(
+        `https://${data.sandbox_id}-8448.sse.codesandbox.io/`
+      );
+      Settings.url.setEditor(
+        `https://${data.sandbox_id}-8448.sse.codesandbox.io/lint`
+      );
       dispatch({
         type: "SANDBOX",
         payload: { status: true, dialogStatus: true },
@@ -200,7 +204,7 @@ const ProcessDrawer = () => {
       setAlert(false);
       setTimeout(() => {
         getStatus();
-      }, 5000);
+      }, 10000);
     }
 
     // setAlert(false);
@@ -278,7 +282,7 @@ const ProcessDrawer = () => {
 
 const ApiButton = (layoutStatus, handleRunApi, handleRunSandbox) => {
   const { status, sandbox } = layoutStatus;
-
+  console.log(sandbox);
   switch (status) {
     case "connected":
       return (
