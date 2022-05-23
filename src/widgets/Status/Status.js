@@ -77,7 +77,8 @@ const StatusText = ({ state, dispatch }) => {
 };
 
 const StatusContent = (state, isText) => {
-  const { status, openapi } = state;
+  const { status, sandbox } = state;
+
   switch (status) {
     case "connected":
       return isText ? (
@@ -100,8 +101,11 @@ const StatusContent = (state, isText) => {
     case "unreachable":
       return isText ? (
         <Tooltip
-          title={!openapi ? "The nucleoid runtime is not started. Run the `npx nucleoidjs start` in terminal." : 
-        "Codesandbox is hibernated. Click re-run button or Open sandbox."}
+          title={
+            !sandbox
+              ? "The nucleoid runtime is not started. Run the `npx nucleoidjs start` in terminal."
+              : "Codesandbox is hibernated. Click re-run button or Open sandbox."
+          }
           placement="top-start"
         >
           <Typography sx={styles.statusText}>Unreachable</Typography>
