@@ -41,8 +41,9 @@ export default function CodeSandboxDialog({ handleCloseSandboxDialog }) {
         <Grid>
           <iframe
             title="CodeSandbox"
-            src={`https://codesandbox.io/s/${Settings.codesandbox.getSandboxID()}`}
-            style={{ width: "100%", height: "900px" }}
+            src={`https://codesandbox.io/embed/${Settings.codesandbox.getSandboxID()}?fontsize=14&hidenavigation=1&theme=dark&editorsize=35`}
+            // src={`https://codesandbox.io/s/${Settings.codesandbox.getSandboxID()}?editorsize=100`}
+            style={{ width: "100%", height: "880px" }}
             allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
             sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
           ></iframe>

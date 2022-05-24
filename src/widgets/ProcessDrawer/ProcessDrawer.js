@@ -181,19 +181,19 @@ const ProcessDrawer = () => {
 
   const handleCloseSandboxDialog = () => {
     dispatch({ type: "SANDBOX", payload: { dialogStatus: false } });
+    getStatus();
   };
 
   const handleRunSandbox = async () => {
-    console.log(CodeSandbox.generateContent(state));
-    
     const { data } = await service.openCodeSandBox(
       CodeSandbox.generateContent(state)
     );
-    console.log(data);
 
     if (data.sandbox_id) {
       Settings.codesandbox.setSandboxID(data.sandbox_id);
-      Settings.url.setApp(`https://${data.sandbox_id}.sse.codesandbox.io/`);
+      Settings.url.setApp(
+        `https://${data.sandbox_id}-3000.sse.codesandbox.io/`
+      );
       Settings.url.setTerminal(
         `https://${data.sandbox_id}-8448.sse.codesandbox.io/`
       );
@@ -205,11 +205,7 @@ const ProcessDrawer = () => {
         payload: { status: true, dialogStatus: true },
       });
       setAlert(false);
-      setTimeout(() => {
-        getStatus();
-      }, 20000);
-    }/*
-    */
+    }
   };
 
   return (

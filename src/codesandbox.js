@@ -1,3 +1,4 @@
+import project from "./project";
 const CodeSandbox = {
   generateContent: (context) => {
     return {
@@ -14,16 +15,16 @@ const CodeSandbox = {
               .map(
                 (item) =>
                   item.code +
-                  "\n\nnucleoid.register(" +
+                  "\nnucleoid.register(" +
                   item.path.split("/")[item.path.split("/").length - 1] +
                   ");\n\n"
               )
               .join("") +
-            `\n\napp.openapi("./openapi.json");\napp.listen(3000);`,
+            `app.openapi("./openapi.json");\napp.listen(3000);`,
         },
         "package.json": {
           content: {
-            name: "nuc-example",
+            name: project.get().name,
             version: "1.0.0",
             main: "index.js",
             license: "MIT",
