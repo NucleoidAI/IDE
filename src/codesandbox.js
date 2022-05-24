@@ -19,7 +19,7 @@ const CodeSandbox = {
                   ");\n\n"
               )
               .join("") +
-            `\n\n//app.openapi("./openapi.json");\napp.listen(3000);`,
+            `\n\napp.openapi("./openapi.json");\napp.listen(3000);`,
         },
         "package.json": {
           content: {
@@ -39,10 +39,10 @@ const CodeSandbox = {
           },
         },
         "openapi.json": {
-          content: {
+          content: JSON.stringify({
             api: context.nucleoid.api,
             types: context.nucleoid.types,
-          },
+          }),
         },
       },
       template: "node",

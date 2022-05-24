@@ -184,6 +184,8 @@ const ProcessDrawer = () => {
   };
 
   const handleRunSandbox = async () => {
+    console.log(CodeSandbox.generateContent(state));
+    
     const { data } = await service.openCodeSandBox(
       CodeSandbox.generateContent(state)
     );
@@ -206,7 +208,8 @@ const ProcessDrawer = () => {
       setTimeout(() => {
         getStatus();
       }, 20000);
-    }
+    }/*
+    */
   };
 
   return (
