@@ -31,7 +31,7 @@ const CodeSandbox = {
             main: "index.js",
             license: "MIT",
             dependencies: {
-              nucleoidjs: Settings.beta.getBeta() ? "0.5.11-0" : "0.5.10",
+              nucleoidjs: Settings.beta() ? "0.5.11-0" : "0.5.10",
             },
             scripts: {
               start: "node index.js",

@@ -38,13 +38,12 @@ const Settings = {
     auth: "http://localhost:4545/auth/tokens",
     projects: "http://localhost:4545/projects",
   },
-  beta: {
-    setBeta: (data) => {
-      localStorage.setItem("beta", data);
-    },
-    getBeta: () => {
+  beta: (status) => {
+    if (status) {
+      localStorage.setItem("beta", status);
+    } else {
       return localStorage.getItem("beta");
-    },
+    }
   },
 };
 
