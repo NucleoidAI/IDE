@@ -28,8 +28,8 @@ const InitContext = () => {
     Settings.url.setApp("http://localhost:3000/");
   }
 
-  if (!Settings.url.getTerminal()) {
-    Settings.url.setTerminal("http://localhost:8448/");
+  if (!Settings.url.terminal()) {
+    Settings.url.terminal("http://localhost:8448/");
   }
 
   if (!Settings.url.getEditor()) {

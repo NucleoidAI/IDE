@@ -2,11 +2,12 @@ const Settings = {
   projects: [],
   dialog: {},
   url: {
-    setTerminal: (url) => {
-      localStorage.setItem("terminal", url);
-    },
-    getTerminal: () => {
-      return localStorage.getItem("terminal");
+    terminal: (url) => {
+      if (url) {
+        localStorage.setItem("terminal", url);
+      } else {
+        return localStorage.getItem("terminal");
+      }
     },
     setApp: (url) => {
       localStorage.setItem("app", url);

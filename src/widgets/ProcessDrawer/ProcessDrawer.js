@@ -195,7 +195,7 @@ const ProcessDrawer = () => {
       Settings.url.setApp(
         `https://${data.sandbox_id}-3000.sse.codesandbox.io/`
       );
-      Settings.url.setTerminal(
+      Settings.url.terminal(
         `https://${data.sandbox_id}-8448.sse.codesandbox.io/`
       );
       Settings.url.setEditor(

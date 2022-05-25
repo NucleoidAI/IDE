@@ -5,13 +5,13 @@ import Settings from "../../settings";
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 
 const SettingsDialog = ({ handleClose }) => {
-  const terminal = Settings.url.getTerminal();
+  const terminal = Settings.url.terminal();
   const app = Settings.url.getApp();
 
   const urlRef = React.useRef({ terminal, app });
 
   function saveSettingDialog() {
-    Settings.url.setTerminal(urlRef.current.terminal);
+    Settings.url.terminal(urlRef.current.terminal);
     Settings.url.setApp(urlRef.current.api);
     Settings.url.setEditor(urlRef.current.api + "/lint");
     handleClose();
