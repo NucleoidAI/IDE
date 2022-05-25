@@ -7,7 +7,11 @@ const CodeSandbox = {
       files: {
         "sandbox.config.json": {
           content: `{
-              "template": "node"
+              "template": "node",
+              "container": {
+                "port": 3000,
+                "node": "16"
+              }
             }`,
         },
         "index.js": {
