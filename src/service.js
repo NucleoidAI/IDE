@@ -55,7 +55,7 @@ axios.interceptors.response.use(
 );
 
 const lint = async (body, signal) => {
-  return fetch(Settings.url.getEditor(), {
+  return fetch(Settings.url.editor(), {
     signal: signal,
     method: "POST",
     headers: {

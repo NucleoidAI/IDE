@@ -4,9 +4,11 @@ import LoopIcon from "@mui/icons-material/Loop";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import styles from "./styles";
 import { useLayoutContext } from "../../Context/providers/layoutContextProvider";
-import { Button, Grid, Tooltip, Typography } from "@mui/material";
+import { Grid, Tooltip, Typography } from "@mui/material";
 import { Doughnut } from "react-chartjs-2"; // eslint-disable-line
-import OpenSandbox from "../../components/OpenSandbox";
+import OpenSandboxButton from "../../components/OpenSandboxButton";
+import OpenSwaggerButton from "../../components/OpenSwaggerButton";
+import Settings from "../../settings";
 
 function Status() {
   const [state, dispatch] = useLayoutContext();
@@ -62,16 +64,28 @@ function Status() {
 const StatusText = ({ state, dispatch }) => {
   return (
     <Grid sx={{ width: "100%", pt: 4 }}>
-      <Button
-        disabled={!state.sandbox}
-        onClick={() =>
-          dispatch({ type: "SANDBOX", payload: { dialogStatus: true } })
-        }
-        size={"large"}
-        sx={{ width: "100%", color: "#A5A7AB", textTransform: "none" }}
-      >
-        <OpenSandbox create fill={!state.sandbox ? "#2d302f" : "#c3c5c8"} />
-      </Button>
+      {!Settings.runtime() && ""}
+      {Settings.runtime() === "sandbox" && (
+        <OpenSandboxButton
+          clickEvent={() =>
+            dispatch({ type: "SANDBOX", payload: { dialogStatus: true } })
+          }
+          create
+          fill={"#c3c5c8"}
+        />
+      )}
+      {Settings.runtime() === "npx" && (
+        <OpenSwaggerButton
+          clickEvent={() =>
+            dispatch({
+              type: "SWAGGER_DIALOG",
+              payload: { dialogStatus: true },
+            })
+          }
+          create
+          fill={"#c3c5c8"}
+        />
+      )}
     </Grid>
   );
 };

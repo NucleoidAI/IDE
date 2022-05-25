@@ -49,6 +49,13 @@ const Settings = {
       return localStorage.getItem("beta");
     }
   },
+  runtime: (data) => {
+    if (data) {
+      localStorage.setItem("runtime", data);
+    } else {
+      return localStorage.getItem("runtime");
+    }
+  },
 };
 
 export default Settings;

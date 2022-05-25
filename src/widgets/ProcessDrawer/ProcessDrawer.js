@@ -107,6 +107,12 @@ const ProcessDrawer = () => {
     setAlert(false);
   };
 
+  const handleRun = () => {
+    if (!Settings.runtime()) {
+      setAlert(true);
+    }
+  };
+
   const handleRunApi = (restart) => {
     setLoading(true);
     if (
@@ -192,9 +198,7 @@ const ProcessDrawer = () => {
 
     if (data.sandbox_id) {
       Settings.codesandbox.sandboxID(data.sandbox_id);
-      Settings.url.app(
-        `https://${data.sandbox_id}-3000.sse.codesandbox.io/`
-      );
+      Settings.url.app(`https://${data.sandbox_id}-3000.sse.codesandbox.io/`);
       Settings.url.terminal(
         `https://${data.sandbox_id}-8448.sse.codesandbox.io/`
       );
@@ -205,6 +209,7 @@ const ProcessDrawer = () => {
         type: "SANDBOX",
         payload: { status: true, dialogStatus: true },
       });
+      Settings.runtime("sandbox");
       setAlert(false);
     }
   };
@@ -247,10 +252,18 @@ const ProcessDrawer = () => {
                 <CircularProgress color="inherit" size={23} />
               </ListItem>
             ) : (
-              ApiButton(status, handleRunApi, handleRunSandbox)
+              ApiButton(status, handleRun, handleRunApi, handleRunSandbox)
             )}
           </DialogTooltip>
-          <ListItem button>
+          <ListItem
+            button
+            onClick={() =>
+              dispatch({
+                type: "SANDBOX",
+                payload: { status: true, dialogStatus: true },
+              })
+            }
+          >
             <ViewListIcon sx={styles.listitem} />
           </ListItem>
           <ListItem button onClick={handleGetProject}>
@@ -286,7 +299,7 @@ const ProcessDrawer = () => {
   );
 };
 
-const ApiButton = (layoutStatus, handleRunApi, handleRunSandbox) => {
+const ApiButton = (layoutStatus, handleRun, handleRunApi, handleRunSandbox) => {
   const { status, sandbox } = layoutStatus;
 
   if (sandbox) {
@@ -311,7 +324,7 @@ const ApiButton = (layoutStatus, handleRunApi, handleRunSandbox) => {
 
     case "unreachable":
       return (
-        <ListItem button onClick={() => handleRunApi()}>
+        <ListItem button onClick={handleRun}>
           <PlayCircleFilledIcon sx={styles.listitem} />
         </ListItem>
       );
