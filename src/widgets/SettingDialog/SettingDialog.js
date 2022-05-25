@@ -6,13 +6,13 @@ import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 
 const SettingsDialog = ({ handleClose }) => {
   const terminal = Settings.url.terminal();
-  const app = Settings.url.getApp();
+  const app = Settings.url.app();
 
   const urlRef = React.useRef({ terminal, app });
 
   function saveSettingDialog() {
     Settings.url.terminal(urlRef.current.terminal);
-    Settings.url.setApp(urlRef.current.api);
+    Settings.url.app(urlRef.current.api);
     Settings.url.setEditor(urlRef.current.api + "/lint");
     handleClose();
   }

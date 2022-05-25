@@ -9,11 +9,12 @@ const Settings = {
         return localStorage.getItem("terminal");
       }
     },
-    setApp: (url) => {
-      localStorage.setItem("app", url);
-    },
-    getApp: () => {
-      return localStorage.getItem("app");
+    app: (url) => {
+      if (url) {
+        localStorage.setItem("app", url);
+      } else {
+        return localStorage.getItem("app");
+      }
     },
     setEditor: (url) => {
       localStorage.setItem("editor", url);

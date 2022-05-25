@@ -24,8 +24,8 @@ const initStatus = {
 const InitContext = () => {
   Settings.beta(true);
 
-  if (!Settings.url.getApp()) {
-    Settings.url.setApp("http://localhost:3000/");
+  if (!Settings.url.app()) {
+    Settings.url.app("http://localhost:3000/");
   }
 
   if (!Settings.url.terminal()) {

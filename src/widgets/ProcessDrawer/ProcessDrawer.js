@@ -192,7 +192,7 @@ const ProcessDrawer = () => {
 
     if (data.sandbox_id) {
       Settings.codesandbox.sandboxID(data.sandbox_id);
-      Settings.url.setApp(
+      Settings.url.app(
         `https://${data.sandbox_id}-3000.sse.codesandbox.io/`
       );
       Settings.url.terminal(
