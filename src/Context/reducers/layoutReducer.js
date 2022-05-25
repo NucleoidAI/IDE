@@ -27,6 +27,16 @@ function layoutReducer(state, { type, payload }) {
 
       return { ...tmpState };
     }
+    case "SWAGGER_DIALOG": {
+      const { dialogStatus } = payload;
+      const tmpState = state;
+
+      if (dialogStatus !== undefined && dialogStatus !== null) {
+        tmpState.swagger = dialogStatus;
+      }
+
+      return { ...tmpState };
+    }
 
     default:
   }

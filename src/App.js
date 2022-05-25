@@ -1,5 +1,4 @@
 import API from "./pages/ide/API";
-import Branches from "./pages/ide/Branches";
 import Dev from "./pages/Dev";
 import Functions from "./pages/ide/Functions";
 import GlobalStoreProvider from "./Context/GlobalStoreProvider";
@@ -28,7 +27,6 @@ function App() {
                 <Route path="/ide/api" element={<API />} />
                 <Route path={"/ide/functions"} element={<Functions />} />
                 <Route path={"/ide/query"} element={<Query />} />
-                <Route path={"/ide/branches"} element={<Branches />} />
                 <Route path={"/ide/logs"} element={<Logs />} />
                 <Route path={"/dev"} element={<Dev />} />
               </Route>

@@ -15,7 +15,7 @@ const OpenSandbox = ({ fill }) => {
     >
       <CodeSandbox fill={fill} />
       <Typography sx={{ pl: 2 / 3 }} fontFamily={"Trebuchet MS"}>
-        Open Sandbox
+        Open CodeSandbox
       </Typography>
       <Box />
     </Box>

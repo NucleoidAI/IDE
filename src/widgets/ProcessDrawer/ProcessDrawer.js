@@ -12,6 +12,7 @@ import RunCodesandbox from "../../components/RunCodesandbox";
 import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
 import SyncIcon from "@mui/icons-material/Sync";
+import SwaggerDialog from "../../components/SwaggerDialog";
 import ViewListIcon from "@mui/icons-material/ViewList";
 
 import project from "../../project";
@@ -118,7 +119,7 @@ const ProcessDrawer = () => {
       service
         .openapi("start", nuc)
         .then(() => {
-          window.open(Settings.url.getApp(), "_blank").focus();
+          dispatch({ type: "SWAGGER_DIALOG", payload: { dialogStatus: true } });
           getStatus();
           setLoading(false);
           setAlert(false);
@@ -208,6 +209,11 @@ const ProcessDrawer = () => {
     }
   };
 
+  const handleCloseSwaggerDialog = () => {
+    dispatch({ type: "SWAGGER_DIALOG", payload: { dialogStatus: false } });
+    getStatus();
+  };
+
   return (
     <>
       <Drawer
@@ -271,6 +277,9 @@ const ProcessDrawer = () => {
         <CodeSandboxDialog
           handleCloseSandboxDialog={handleCloseSandboxDialog}
         />
+      )}
+      {status.swagger && (
+        <SwaggerDialog handleClose={handleCloseSwaggerDialog} />
       )}
       {status.name}
     </>

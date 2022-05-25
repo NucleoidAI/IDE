@@ -38,6 +38,14 @@ const Settings = {
     auth: "http://localhost:4545/auth/tokens",
     projects: "http://localhost:4545/projects",
   },
+  beta: {
+    setBeta: (data) => {
+      localStorage.setItem("beta", data);
+    },
+    getBeta: () => {
+      return localStorage.getItem("beta");
+    },
+  },
 };
 
 export default Settings;

@@ -1,4 +1,6 @@
+import Settings from "./settings";
 import project from "./project";
+
 const CodeSandbox = {
   generateContent: (context) => {
     return {
@@ -29,7 +31,7 @@ const CodeSandbox = {
             main: "index.js",
             license: "MIT",
             dependencies: {
-              nucleoidjs: "0.5.11-0",
+              nucleoidjs: Settings.beta.getBeta() ? "0.5.11-0" : "0.5.10",
             },
             scripts: {
               start: "node index.js",
