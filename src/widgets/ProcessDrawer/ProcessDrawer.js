@@ -11,8 +11,8 @@ import Project from "../../project";
 import RunCodesandbox from "../../components/RunCodesandbox";
 import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
-import SyncIcon from "@mui/icons-material/Sync";
 import SwaggerDialog from "../../components/SwaggerDialog";
+import SyncIcon from "@mui/icons-material/Sync";
 import ViewListIcon from "@mui/icons-material/ViewList";
 
 import project from "../../project";
@@ -191,7 +191,7 @@ const ProcessDrawer = () => {
     );
 
     if (data.sandbox_id) {
-      Settings.codesandbox.setSandboxID(data.sandbox_id);
+      Settings.codesandbox.sandboxID(data.sandbox_id);
       Settings.url.setApp(
         `https://${data.sandbox_id}-3000.sse.codesandbox.io/`
       );

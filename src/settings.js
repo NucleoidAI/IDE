@@ -23,11 +23,12 @@ const Settings = {
   },
   codesandbox: {
     url: "https://codesandbox.io/api/v1/sandboxes/define?json=1",
-    setSandboxID: (id) => {
-      localStorage.setItem("sandbox_id", id);
-    },
-    getSandboxID: () => {
-      return localStorage.getItem("sandbox_id");
+    sandboxID: (id) => {
+      if (id) {
+        localStorage.setItem("sandbox_id", id);
+      } else {
+        return localStorage.getItem("sandbox_id");
+      }
     },
   },
   github: {
