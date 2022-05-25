@@ -32,8 +32,8 @@ const InitContext = () => {
     Settings.url.terminal("http://localhost:8448/");
   }
 
-  if (!Settings.url.getEditor()) {
-    Settings.url.setEditor("http://localhost:8448/lint");
+  if (!Settings.url.editor()) {
+    Settings.url.editor("http://localhost:8448/lint");
   }
 
   if (project.isAuth()) {

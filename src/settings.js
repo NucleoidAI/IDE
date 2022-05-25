@@ -16,11 +16,12 @@ const Settings = {
         return localStorage.getItem("app");
       }
     },
-    setEditor: (url) => {
-      localStorage.setItem("editor", url);
-    },
-    getEditor: () => {
-      return localStorage.getItem("editor");
+    editor: (url) => {
+      if (url) {
+        localStorage.setItem("editor", url);
+      } else {
+        return localStorage.getItem("editor");
+      }
     },
   },
   codesandbox: {

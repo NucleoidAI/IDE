@@ -198,7 +198,7 @@ const ProcessDrawer = () => {
       Settings.url.terminal(
         `https://${data.sandbox_id}-8448.sse.codesandbox.io/`
       );
-      Settings.url.setEditor(
+      Settings.url.editor(
         `https://${data.sandbox_id}-8448.sse.codesandbox.io/lint`
       );
       dispatch({

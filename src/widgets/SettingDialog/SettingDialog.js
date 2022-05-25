@@ -13,7 +13,7 @@ const SettingsDialog = ({ handleClose }) => {
   function saveSettingDialog() {
     Settings.url.terminal(urlRef.current.terminal);
     Settings.url.app(urlRef.current.api);
-    Settings.url.setEditor(urlRef.current.api + "/lint");
+    Settings.url.editor(urlRef.current.api + "/lint");
     handleClose();
   }
 
