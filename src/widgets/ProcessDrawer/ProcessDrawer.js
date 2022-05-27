@@ -14,20 +14,19 @@ import Settings from "../../settings";
 import SwaggerDialog from "../../components/SwaggerDialog";
 import SyncIcon from "@mui/icons-material/Sync";
 import ViewListIcon from "@mui/icons-material/ViewList";
-
 import project from "../../project";
 import service from "../../service";
 import styles from "./styles";
-
+import useLayout from "../../hooks/useLayout";
+//eslint-disable-next-line
 import { useContext } from "../../Context/providers/contextProvider";
-import { useLayoutContext } from "../../Context/providers/layoutContextProvider";
 import { useLocation } from "react-router-dom";
 import { Box, CircularProgress, Drawer, ListItem } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
 const ProcessDrawer = () => {
   const [state, contextDispatch] = useContext();
-  const [status, dispatch] = useLayoutContext();
+  const [status, dispatch, getStatus] = useLayout();
   const location = useLocation();
 
   const [alert, setAlert] = useState(false);
@@ -35,36 +34,6 @@ const ProcessDrawer = () => {
   const [backdrop, setBackdrop] = useState(false);
 
   const getStatusTask = useRef();
-
-  const defaultMetric = {
-    total: 100,
-    free: 50,
-  };
-
-  const getStatus = () => {
-    Promise.all([service.metrics(), service.openapi()])
-      .then((values) => {
-        dispatch({
-          type: "SET_STATUS",
-          payload: {
-            metrics: values[0],
-            status: "connected",
-            openapi: values[1].started,
-          },
-        });
-        setAlert(false);
-      })
-      .catch((err) => {
-        dispatch({
-          type: "SET_STATUS",
-          payload: {
-            metrics: defaultMetric,
-            status: "unreachable",
-            openapi: false,
-          },
-        });
-      });
-  };
 
   const auth = (code) => {
     return service.auth(code).then((data) => {
@@ -84,14 +53,13 @@ const ProcessDrawer = () => {
       window.history.pushState({}, null, newUrl[0]);
       setBackdrop(true);
 
-      auth({ code: newUrl[1] }).then((user) => {
+      auth({ code: newUrl[1] }).then(() => {
         setBackdrop(false);
         handleGetProject();
       });
     }
 
     getStatus();
-
     clearInterval(getStatusTask.current);
 
     getStatusTask.current = setInterval(() => {
@@ -103,39 +71,38 @@ const ProcessDrawer = () => {
     }
   }, [location.state]); //eslint-disable-line
 
-  const handleClose = () => {
+  const handleCloseAlert = () => {
     setAlert(false);
   };
 
   const handleRun = () => {
     if (!Settings.runtime()) {
       setAlert(true);
+      service.metrics().then((data) => {
+        Settings.runtime("npx");
+        handleRunApi();
+      });
     }
   };
 
-  const handleRunApi = (restart) => {
+  const handleRunApi = () => {
+    const nuc = state.get("nucleoid");
     setLoading(true);
-    if (
-      (status.status !== "unreachable" && status.openapi === false) ||
-      restart
-    ) {
-      const nuc = state.get("nucleoid");
 
-      setAlert(false);
-      service
-        .openapi("start", nuc)
-        .then(() => {
-          dispatch({ type: "SWAGGER_DIALOG", payload: { dialogStatus: true } });
-          getStatus();
-          setLoading(false);
-          setAlert(false);
-        })
-        .catch(() => {
-          getStatus();
-          setLoading(false);
-          setAlert(true);
-        });
-    } else {
+    service
+      .openapi("start", nuc)
+      .then(() => {
+        dispatch({ type: "SWAGGER_DIALOG", payload: { dialogStatus: true } });
+        getStatus();
+        setLoading(false);
+        setAlert(false);
+      })
+      .catch(() => {
+        getStatus();
+        setLoading(false);
+        setAlert(true);
+      });
+    /*else {
       service
         .openapi("stop")
         .then(() => {
@@ -149,6 +116,7 @@ const ProcessDrawer = () => {
           setAlert(true);
         });
     }
+    */
   };
 
   const handleGetProject = () => {
@@ -245,7 +213,7 @@ const ProcessDrawer = () => {
                 <br />
               </>
             }
-            handleTooltipClose={handleClose}
+            handleTooltipClose={handleCloseAlert}
           >
             {loading ? (
               <ListItem sx={styles.listitem}>

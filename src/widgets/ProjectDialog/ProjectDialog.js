@@ -165,9 +165,12 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
     },
   ];
 
-  const rows = Settings.projects.map((data) => {
-    return { id: data.project, ...data };
-  });
+  const rows =
+    Settings.projects.length > 0
+      ? Settings.projects.map((data) => {
+          return { id: data.project, ...data };
+        })
+      : [{ id: "", name: "SAMPLE" }];
 
   return (
     <>

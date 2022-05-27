@@ -3,7 +3,7 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import LoopIcon from "@mui/icons-material/Loop";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import styles from "./styles";
-import { useLayoutContext } from "../../Context/providers/layoutContextProvider";
+import useLayout from "../../hooks/useLayout";
 import { Grid, Tooltip, Typography } from "@mui/material";
 import { Doughnut } from "react-chartjs-2"; // eslint-disable-line
 import OpenSandboxButton from "../../components/OpenSandboxButton";
@@ -11,7 +11,8 @@ import OpenSwaggerButton from "../../components/OpenSwaggerButton";
 import Settings from "../../settings";
 
 function Status() {
-  const [state, dispatch] = useLayoutContext();
+  //const [state, dispatch] = useLayoutContext();
+  const [state, dispatch, getStatus] = useLayout();
   const metrics = state.metrics;
 
   const options = {
@@ -56,20 +57,26 @@ function Status() {
           <Grid>{StatusContent(state, true)}</Grid>
         </Grid>
       </Grid>
-      <StatusText warn state={state} dispatch={dispatch} />
+      <StatusText
+        warn
+        state={state}
+        dispatch={dispatch}
+        getStatus={getStatus}
+      />
     </Grid>
   );
 }
 
-const StatusText = ({ state, dispatch }) => {
+const StatusText = ({ state, dispatch, getStatus }) => {
   return (
     <Grid sx={{ width: "100%", pt: 4 }}>
       {!Settings.runtime() && ""}
       {Settings.runtime() === "sandbox" && (
         <OpenSandboxButton
-          clickEvent={() =>
-            dispatch({ type: "SANDBOX", payload: { dialogStatus: true } })
-          }
+          clickEvent={() => {
+            dispatch({ type: "SANDBOX", payload: { dialogStatus: true } });
+            getStatus();
+          }}
           create
           fill={"#c3c5c8"}
         />
