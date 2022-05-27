@@ -124,16 +124,21 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
   };
 
   const handleSelect = () => {
-    setOpen(true);
-    service.getProject(select.current).then(({ data }) => {
-      project.setWithoutStringify(data.project, data.name, data.context);
-      dispatch({
-        type: "SET_PROJECT",
-        payload: { project: JSON.parse(data.context) },
+    if (select.current) {
+      setOpen(true);
+
+      service.getProject(select.current).then(({ data }) => {
+        project.setWithoutStringify(data.project, data.name, data.context);
+        dispatch({
+          type: "SET_PROJECT",
+          payload: { project: JSON.parse(data.context) },
+        });
+        handleClose();
+        setOpen(false);
       });
+    } else {
       handleClose();
-      setOpen(false);
-    });
+    }
   };
 
   const handleCloseDialog = () => {
