@@ -54,17 +54,6 @@ axios.interceptors.response.use(
   (error) => errorHandler(error)
 );
 
-const lint = async (body, signal) => {
-  return fetch(Settings.url.editor(), {
-    signal: signal,
-    method: "POST",
-    headers: {
-      "Content-Type": "text/plain",
-    },
-    body: body,
-  }).then((response) => response.json());
-};
-
 const query = async (body) => {
   return fetch(Settings.url.terminal(), {
     method: "POST",
@@ -191,7 +180,6 @@ const openCodeSandBox = (data) => {
 
 const service = {
   query,
-  lint,
   openapi,
   metrics,
   logs,

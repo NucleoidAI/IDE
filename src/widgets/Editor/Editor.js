@@ -1,5 +1,5 @@
 import AceEditor from "react-ace";
-import service from "../../service";
+import linter from "../../linter";
 import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
 import { v4 as uuid } from "uuid";
@@ -17,7 +17,6 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
   const [code, setCode] = useState(null);
   const ace = useRef();
   const timer = useRef();
-  const abortController = useRef();
 
   const nucFuncs = state.nucleoid.functions;
 
@@ -59,27 +58,22 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
   const lint = useCallback(
     (value) => {
       clearTimeout(timer.current);
-      if (abortController.current) abortController.current.abort();
 
       timer.current = setTimeout(() => {
-        abortController.current = new AbortController();
+        const result = linter.verifyAndFix(value);
+        setCode(result.output);
 
-        service.lint(value, abortController.current.signal).then((result) => {
-          abortController.current = null;
-          setCode(result.output);
-
-          setAnnotations([
-            annotations,
-            ...result.messages.map((item) => {
-              return {
-                row: item.line - 1,
-                column: item.column,
-                text: item.message,
-                type: item.severity === 1 ? "error" : "warning",
-              };
-            }),
-          ]);
-        });
+        setAnnotations([
+          annotations,
+          ...result.messages.map((item) => {
+            return {
+              row: item.line - 1,
+              column: item.column,
+              text: item.message,
+              type: item.severity === 1 ? "error" : "warning",
+            };
+          }),
+        ]);
       }, 1500);
     },
     //eslint-disable-next-line
