@@ -1,5 +1,6 @@
 import AceEditor from "react-ace";
 import linter from "../../linter";
+import rules from "./rules";
 import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
 import { v4 as uuid } from "uuid";
@@ -19,6 +20,18 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
   const timer = useRef();
 
   const nucFuncs = state.nucleoid.functions;
+  console.log(rules);
+  const options = {
+    env: {
+      es6: true,
+      node: true,
+    },
+    parserOptions: {
+      ecmaVersion: 2018,
+      sourceType: "module",
+    },
+    rules,
+  };
 
   const checkFunction = (value) => {
     try {
@@ -60,7 +73,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
       clearTimeout(timer.current);
 
       timer.current = setTimeout(() => {
-        const result = linter.verifyAndFix(value);
+        const result = linter.verifyAndFix(value, options);
         setCode(result.output);
 
         setAnnotations([
