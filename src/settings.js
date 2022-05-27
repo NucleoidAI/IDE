@@ -42,6 +42,7 @@ const Settings = {
     auth: "http://localhost:4545/auth/tokens",
     projects: "http://localhost:4545/projects",
   },
+  connection: true,
   beta: (status) => {
     if (status) {
       localStorage.setItem("beta", status);

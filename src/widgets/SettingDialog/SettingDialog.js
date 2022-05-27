@@ -23,7 +23,7 @@ const SettingsDialog = ({ handleClose }) => {
       fullWidth
       maxWidth={"sm"}
       onClose={(event) => (event.key === "Escape" ? handleClose() : null)}
-      style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+      sx={{ bgcolor: "rgba(0,0,0,0.5)" }}
       PaperProps={{
         style: {
           backgroundColor: "#424242",

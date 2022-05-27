@@ -1,3 +1,4 @@
+import Settings from "../settings";
 import service from "../service";
 import { useLayoutContext } from "../Context/providers/layoutContextProvider";
 
@@ -12,6 +13,7 @@ function useLayout() {
   const getStatus = () => {
     Promise.all([service.metrics(), service.openapi()])
       .then((values) => {
+        Settings.connection = true;
         dispatch({
           type: "SET_STATUS",
           payload: {
@@ -22,6 +24,7 @@ function useLayout() {
         });
       })
       .catch((err) => {
+        Settings.connection = false;
         dispatch({
           type: "SET_STATUS",
           payload: {

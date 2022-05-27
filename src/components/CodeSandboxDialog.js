@@ -22,7 +22,14 @@ export default function CodeSandboxDialog({ handleCloseSandboxDialog }) {
       onClose={handleCloseSandboxDialog}
       TransitionComponent={Transition}
     >
-      <AppBar sx={{ position: "relative" }} color={"default"}>
+      <AppBar
+        sx={{
+          position: "relative",
+          backgroundColor: "#424242",
+          color: "#e0e0e0",
+        }}
+        color={"default"}
+      >
         <Toolbar>
           <IconButton
             edge="start"

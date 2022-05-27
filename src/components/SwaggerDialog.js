@@ -22,7 +22,13 @@ export default function SwaggerDialog({ handleClose }) {
       onClose={handleClose}
       TransitionComponent={Transition}
     >
-      <AppBar sx={{ position: "relative" }} color={"default"}>
+      <AppBar
+        sx={{
+          position: "relative",
+          backgroundColor: "#424242",
+          color: "#e0e0e0",
+        }}
+      >
         <Toolbar>
           <IconButton edge="start" onClick={handleClose} aria-label="close">
             <CloseIcon />

@@ -63,7 +63,9 @@ const ProcessDrawer = () => {
     clearInterval(getStatusTask.current);
 
     getStatusTask.current = setInterval(() => {
-      getStatus();
+      if (Settings.connection) {
+        getStatus();
+      }
     }, 1000 * 60);
 
     if (location.state?.anchor === false) {
