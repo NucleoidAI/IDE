@@ -20,7 +20,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
   const timer = useRef();
 
   const nucFuncs = state.nucleoid.functions;
-  console.log(rules);
+
   const options = {
     env: {
       es6: true,

@@ -186,6 +186,21 @@ const ProcessDrawer = () => {
     setLink(myURL.createObjectURL(file));
   };
 
+  const handleOpenDialog = () => {
+    if (Settings.runtime() === "npx") {
+      dispatch({
+        type: "SWAGGER_DIALOG",
+        payload: { dialogStatus: true },
+      });
+    }
+    if (Settings.runtime() === "sandbox") {
+      dispatch({
+        type: "SANDBOX",
+        payload: { status: true, dialogStatus: true },
+      });
+    }
+  };
+
   return (
     <>
       <Drawer
@@ -222,15 +237,7 @@ const ProcessDrawer = () => {
               ApiButton(status, handleRun, handleRunApi, handleRunSandbox)
             )}
           </DialogTooltip>
-          <ListItem
-            button
-            onClick={() =>
-              dispatch({
-                type: "SANDBOX",
-                payload: { status: true, dialogStatus: true },
-              })
-            }
-          >
+          <ListItem button onClick={handleOpenDialog}>
             <ViewListIcon sx={styles.listitem} />
           </ListItem>
           <ListItem button onClick={handleGetProject}>
