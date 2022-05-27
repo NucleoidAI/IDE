@@ -35,6 +35,8 @@ const ProcessDrawer = () => {
 
   const getStatusTask = useRef();
 
+  const [link, setLink] = useState("");
+
   const auth = (code) => {
     return service.auth(code).then((data) => {
       localStorage.setItem("accessToken", data.accessToken);
@@ -58,6 +60,8 @@ const ProcessDrawer = () => {
         handleGetProject();
       });
     }
+
+    handleDownloadContext();
 
     getStatus();
     clearInterval(getStatusTask.current);
@@ -104,21 +108,6 @@ const ProcessDrawer = () => {
         setLoading(false);
         setAlert(true);
       });
-    /*else {
-      service
-        .openapi("stop")
-        .then(() => {
-          getStatus();
-          setLoading(false);
-          setAlert(false);
-        })
-        .catch(() => {
-          getStatus();
-          setLoading(false);
-          setAlert(true);
-        });
-    }
-    */
   };
 
   const handleGetProject = () => {
@@ -189,6 +178,14 @@ const ProcessDrawer = () => {
     getStatus();
   };
 
+  const handleDownloadContext = () => {
+    const myURL = window.URL || window.webkitURL;
+    const file = new Blob([JSON.stringify(state.nucleoid)], {
+      type: "text/plain",
+    });
+    setLink(myURL.createObjectURL(file));
+  };
+
   return (
     <>
       <Drawer
@@ -239,9 +236,15 @@ const ProcessDrawer = () => {
           <ListItem button onClick={handleGetProject}>
             <GitHubIcon sx={styles.listitem} />
           </ListItem>
-          <ListItem button>
+          <ListItem
+            component={"a"}
+            href={link}
+            download={project.get().name + ".nuc"}
+            target="_blank"
+          >
             <ImportExportIcon sx={styles.listitem} />
           </ListItem>
+
           <ListItem button>
             <PostmanIcon />
           </ListItem>
