@@ -75,10 +75,16 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
       clearTimeout(timer.current);
 
       timer.current = setTimeout(() => {
-        const prettyText = prettier.format(value, {
-          parser: "babel",
-          plugins: prettierPlugins,
-        });
+        let prettyText;
+        try {
+          prettyText = prettier.format(value, {
+            parser: "babel",
+            plugins: prettierPlugins,
+          });
+        } catch (err) {
+          console.log(err);
+        }
+
         const result = linter.verifyAndFix(prettyText, options);
 
         setCode(result.output);
