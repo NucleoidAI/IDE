@@ -61,8 +61,6 @@ const ProcessDrawer = () => {
       });
     }
 
-    handleDownloadContext();
-
     getStatus();
     clearInterval(getStatusTask.current);
 
@@ -244,6 +242,7 @@ const ProcessDrawer = () => {
             <GitHubIcon sx={styles.listitem} />
           </ListItem>
           <ListItem
+            onClick={handleDownloadContext}
             component={"a"}
             href={link}
             download={project.get().name + ".nuc"}
