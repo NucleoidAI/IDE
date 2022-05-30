@@ -245,7 +245,7 @@ const ProcessDrawer = () => {
             onClick={handleDownloadContext}
             component={"a"}
             href={link}
-            download={project.get().name + ".nuc"}
+            download={project.get().name + ".nuc.json"}
             target="_blank"
           >
             <ImportExportIcon sx={styles.listitem} />
