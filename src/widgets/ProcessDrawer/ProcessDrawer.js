@@ -60,7 +60,7 @@ const ProcessDrawer = () => {
         handleGetProject();
       });
     }
-  
+
     handleDownloadContext();
 
     getStatus();
