@@ -60,7 +60,7 @@ const ProcessDrawer = () => {
         handleGetProject();
       });
     }
-
+  
     handleDownloadContext();
 
     getStatus();
@@ -75,7 +75,7 @@ const ProcessDrawer = () => {
     if (location.state?.anchor === false) {
       setAlert(false);
     }
-  }, [location.state, state]); //eslint-disable-line
+  }, [location.state]); //eslint-disable-line
 
   const handleCloseAlert = () => {
     setAlert(false);
