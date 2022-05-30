@@ -75,19 +75,22 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
       clearTimeout(timer.current);
 
       timer.current = setTimeout(() => {
-        let prettyText;
-        try {
-          prettyText = prettier.format(value, {
-            parser: "babel",
-            plugins: prettierPlugins,
-          });
-        } catch (err) {
-          console.log(err);
+        const result = linter.verifyAndFix(value, options);
+
+        let prettyText = result.output;
+
+        if (result.fixed) {
+          try {
+            prettyText = prettier.format(value, {
+              parser: "babel",
+              plugins: prettierPlugins,
+            });
+          } catch (err) {
+            console.log(err);
+          }
         }
 
-        const result = linter.verifyAndFix(prettyText, options);
-
-        setCode(result.output);
+        setCode(prettyText);
 
         setAnnotations([
           annotations,
