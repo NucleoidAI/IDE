@@ -1,5 +1,7 @@
 import AceEditor from "react-ace";
 import linter from "../../linter";
+import prettier from "../../prettier";
+import prettierPlugins from "../../prettierPlugins";
 import rules from "./rules";
 import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
@@ -73,7 +75,12 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
       clearTimeout(timer.current);
 
       timer.current = setTimeout(() => {
-        const result = linter.verifyAndFix(value, options);
+        const prettyText = prettier.format(value, {
+          parser: "babel",
+          plugins: prettierPlugins,
+        });
+        const result = linter.verifyAndFix(prettyText, options);
+
         setCode(result.output);
 
         setAnnotations([
