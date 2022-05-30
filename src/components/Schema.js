@@ -96,11 +96,19 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
                 setKey={setKey}
               />
             </>
+            <br />
           </Grid>
         )}
 
-        <br />
-        <Grid sx={edit && { width: "100%", height: 310, overflowY: "auto" }}>
+        <Grid
+          sx={
+            edit && {
+              width: "100%",
+              height: 310,
+              overflowY: "auto",
+            }
+          }
+        >
           <TreeView
             defaultCollapseIcon={<RemoveCircleOutlineIcon />}
             defaultExpandIcon={<AddCircleOutlineIcon />}

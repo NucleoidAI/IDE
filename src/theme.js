@@ -36,7 +36,7 @@ theme = {
           },
           "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
             borderRadius: 10,
-            backgroundColor: "#6b6b6b",
+            backgroundColor: "#353e48",
             minHeight: 24,
             border: "3px",
           },
