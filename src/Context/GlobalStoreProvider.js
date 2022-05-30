@@ -12,6 +12,8 @@ import { layoutReducer } from "./reducers/layoutReducer";
 const initStatus = {
   status: "unreachable",
   openApi: false,
+  sandbox: Settings.codesandbox.sandboxID() ? true : false,
+  sandboxDialog: false,
   metrics: {
     free: 50,
     total: 100,
@@ -20,6 +22,20 @@ const initStatus = {
 };
 
 const InitContext = () => {
+  Settings.beta(true);
+
+  if (!Settings.url.app()) {
+    Settings.url.app("http://localhost:3000/");
+  }
+
+  if (!Settings.url.terminal()) {
+    Settings.url.terminal("http://localhost:8448/");
+  }
+
+  if (!Settings.url.editor()) {
+    Settings.url.editor("http://localhost:8448/lint");
+  }
+
   if (project.isAuth()) {
     service.getProjects().then(({ data }) => {
       Settings.projects = [...data];

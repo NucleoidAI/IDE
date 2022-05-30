@@ -1,5 +1,8 @@
 import AceEditor from "react-ace";
-import service from "../../service";
+import linter from "../../linter";
+import prettier from "../../prettier";
+import prettierPlugins from "../../prettierPlugins";
+import rules from "./rules";
 import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
 import { v4 as uuid } from "uuid";
@@ -17,9 +20,20 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
   const [code, setCode] = useState(null);
   const ace = useRef();
   const timer = useRef();
-  const abortController = useRef();
 
   const nucFuncs = state.nucleoid.functions;
+
+  const options = {
+    env: {
+      es6: true,
+      node: true,
+    },
+    parserOptions: {
+      ecmaVersion: 2018,
+      sourceType: "module",
+    },
+    rules,
+  };
 
   const checkFunction = (value) => {
     try {
@@ -59,27 +73,36 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
   const lint = useCallback(
     (value) => {
       clearTimeout(timer.current);
-      if (abortController.current) abortController.current.abort();
 
       timer.current = setTimeout(() => {
-        abortController.current = new AbortController();
+        const result = linter.verifyAndFix(value, options);
 
-        service.lint(value, abortController.current.signal).then((result) => {
-          abortController.current = null;
-          setCode(result.output);
+        let prettyText = result.output;
 
-          setAnnotations([
-            annotations,
-            ...result.messages.map((item) => {
-              return {
-                row: item.line - 1,
-                column: item.column,
-                text: item.message,
-                type: item.severity === 1 ? "error" : "warning",
-              };
-            }),
-          ]);
-        });
+        if (result.fixed) {
+          try {
+            prettyText = prettier.format(value, {
+              parser: "babel",
+              plugins: prettierPlugins,
+            });
+          } catch (err) {
+            console.log(err);
+          }
+        }
+
+        setCode(prettyText);
+
+        setAnnotations([
+          annotations,
+          ...result.messages.map((item) => {
+            return {
+              row: item.line - 1,
+              column: item.column,
+              text: item.message,
+              type: item.severity === 1 ? "error" : "warning",
+            };
+          }),
+        ]);
       }, 1500);
     },
     //eslint-disable-next-line

@@ -10,7 +10,6 @@ const CopyClipboard = () => {
     <Box
       sx={{
         display: "flex",
-
         justifyContent: "space-between",
         alignItems: "center",
       }}

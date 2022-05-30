@@ -297,24 +297,13 @@ const functions = [
     path: "/classes/Order",
     params: [],
     type: "CLASS",
-    code: `class Order{
-      constructor(qty,item){
-        this.item = item;
-        this.qty = qty;
-        this.date = Date.now();
-      }
-    }`,
+    code: `class Order {\n\tconstructor(qty,item){\n\t\tthis.item = item;\n\t\tthis.qty = qty;\n\t\tthis.date = Date.now();\n\t}\n}`,
   },
   {
     path: "/classes/Item",
     params: [],
     type: "CLASS",
-    code: `class Item {
-      constructor(name, barcode) {
-        this.name = name;
-        this.barcode = barcode;
-      }
-    }`,
+    code: `class Item {\n\tconstructor(name, barcode) {\n\t\tthis.name = name;\n\t\tthis.barcode = barcode;\n\t}\n}`,
   },
 ];
 

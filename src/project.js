@@ -14,7 +14,7 @@ const project = {
   },
   setDemo: () => {
     localStorage.setItem("project", "");
-    localStorage.setItem("name", "DEMO");
+    localStorage.setItem("name", "SAMPLE");
     localStorage.setItem("context", JSON.stringify(state.withSample()));
   },
   set: (project, name, context) => {

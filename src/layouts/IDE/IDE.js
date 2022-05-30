@@ -3,7 +3,6 @@ import Grid from "@mui/material/Grid";
 import Menu from "../../components/Menu";
 import ProcessDrawer from "../../widgets/ProcessDrawer/ProcessDrawer";
 import SendIcon from "@mui/icons-material/Send";
-import SettingsEthernetIcon from "@mui/icons-material/SettingsEthernet";
 import StorageIcon from "@mui/icons-material/Storage";
 import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import styles from "./styles";
@@ -17,12 +16,7 @@ const list = [
     icon: <FolderIcon />,
   },
   { title: "Query", link: "/ide/query", icon: <StorageIcon />, anchor: false },
-  {
-    title: "Branches",
-    link: "/ide/branches",
-    icon: <SettingsEthernetIcon />,
-    anchor: false,
-  },
+
   {
     title: "Logs",
     link: "/ide/logs",

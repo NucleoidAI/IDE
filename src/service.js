@@ -54,19 +54,8 @@ axios.interceptors.response.use(
   (error) => errorHandler(error)
 );
 
-const lint = async (body, signal) => {
-  return fetch(Settings.url.editor, {
-    signal: signal,
-    method: "POST",
-    headers: {
-      "Content-Type": "text/plain",
-    },
-    body: body,
-  }).then((response) => response.json());
-};
-
 const query = async (body) => {
-  return fetch(Settings.url.terminal, {
+  return fetch(Settings.url.terminal(), {
     method: "POST",
     body,
   }).then((response) => response.json());
@@ -74,11 +63,11 @@ const query = async (body) => {
 
 const openapi = (action, nuc) => {
   if (action === undefined) {
-    return fetch(Settings.url.terminal + "openapi", {
+    return fetch(Settings.url.terminal() + "openapi", {
       method: "GET",
     }).then((response) => response.json());
   } else {
-    return fetch(Settings.url.terminal + "openapi", {
+    return fetch(Settings.url.terminal() + "openapi", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -92,12 +81,12 @@ const openapi = (action, nuc) => {
 };
 
 const metrics = () =>
-  fetch(Settings.url.terminal + "metrics", {
+  fetch(Settings.url.terminal() + "metrics", {
     method: "GET",
   }).then((response) => response.json());
 
 const logs = () =>
-  fetch(Settings.url.terminal + "logs", {
+  fetch(Settings.url.terminal() + "logs", {
     method: "GET",
   }).then((response) => response.json());
 
@@ -178,9 +167,19 @@ const updateProject = (project, name, context) => {
   });
 };
 
+const openCodeSandBox = (data) => {
+  return axios(Settings.codesandbox.url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    data: JSON.stringify(data),
+  });
+};
+
 const service = {
   query,
-  lint,
   openapi,
   metrics,
   logs,
@@ -191,6 +190,7 @@ const service = {
   addProject,
   updateProject,
   deleteProject,
+  openCodeSandBox,
 };
 
 export default service;

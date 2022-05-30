@@ -1,34 +1,29 @@
 import ClosableDialogTitle from "../../components/ClosableDialogTitle";
+import React from "react";
 import SettingDialogTabs from "../../components/SettingDialogTabs";
 import Settings from "../../settings";
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
-import { forwardRef, useRef, useState } from "react";
 
-const SettingDialog = forwardRef((props, ref) => {
-  const [open, setOpen] = useState(false);
-  const urlRef = useRef({ ...Settings.url });
+const SettingsDialog = ({ handleClose }) => {
+  const terminal = Settings.url.terminal();
+  const app = Settings.url.app();
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  ref.current = handleOpen;
+  const urlRef = React.useRef({ terminal, app });
 
   function saveSettingDialog() {
-    Settings.url.terminal = urlRef.current.terminal;
-    Settings.url.api = urlRef.current.api;
+    Settings.url.terminal(urlRef.current.terminal);
+    Settings.url.app(urlRef.current.api);
+    Settings.url.editor(urlRef.current.api + "/lint");
     handleClose();
   }
 
   return (
     <Dialog
-      open={open}
+      open={true}
       fullWidth
       maxWidth={"sm"}
       onClose={(event) => (event.key === "Escape" ? handleClose() : null)}
-      style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+      sx={{ bgcolor: "rgba(0,0,0,0.5)" }}
       PaperProps={{
         style: {
           backgroundColor: "#424242",
@@ -47,6 +42,6 @@ const SettingDialog = forwardRef((props, ref) => {
       </DialogActions>
     </Dialog>
   );
-});
+};
 
-export default SettingDialog;
+export default SettingsDialog;

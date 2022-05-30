@@ -3,12 +3,16 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import LoopIcon from "@mui/icons-material/Loop";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import styles from "./styles";
-import { useLayoutContext } from "../../Context/providers/layoutContextProvider";
+import useLayout from "../../hooks/useLayout";
 import { Grid, Tooltip, Typography } from "@mui/material";
 import { Doughnut } from "react-chartjs-2"; // eslint-disable-line
+import OpenSandboxButton from "../../components/OpenSandboxButton";
+import OpenSwaggerButton from "../../components/OpenSwaggerButton";
+import Settings from "../../settings";
 
 function Status() {
-  const [state] = useLayoutContext();
+  //const [state, dispatch] = useLayoutContext();
+  const [state, dispatch, getStatus] = useLayout();
   const metrics = state.metrics;
 
   const options = {
@@ -42,23 +46,60 @@ function Status() {
       <Grid />
       <Grid sx={styles.chart}>
         <Doughnut data={data} options={options} />
+
+        <Grid
+          container
+          justifyContent={"center"}
+          alignItems={"center"}
+          sx={{ pt: 1 }}
+        >
+          <Grid>{StatusContent(state)}</Grid>&nbsp;
+          <Grid>{StatusContent(state, true)}</Grid>
+        </Grid>
       </Grid>
-      <StatusText warn state={state} />
+      <StatusText
+        warn
+        state={state}
+        dispatch={dispatch}
+        getStatus={getStatus}
+      />
     </Grid>
   );
 }
 
-const StatusText = ({ ok, warn, err, state }) => {
+const StatusText = ({ state, dispatch, getStatus }) => {
   return (
-    <Grid container justifyContent={"center"} alignItems={"center"}>
-      <Grid justifyContent={"center"}>{StatusContent(state.status)}</Grid>
-      <Grid>&nbsp;</Grid>
-      <Grid>{StatusContent(state.status, true)}</Grid>
+    <Grid sx={{ width: "100%", pt: 4 }}>
+      {!Settings.runtime() && ""}
+      {Settings.runtime() === "sandbox" && (
+        <OpenSandboxButton
+          clickEvent={() => {
+            dispatch({ type: "SANDBOX", payload: { dialogStatus: true } });
+            getStatus();
+          }}
+          create
+          fill={"#c3c5c8"}
+        />
+      )}
+      {Settings.runtime() === "npx" && (
+        <OpenSwaggerButton
+          clickEvent={() =>
+            dispatch({
+              type: "SWAGGER_DIALOG",
+              payload: { dialogStatus: true },
+            })
+          }
+          create
+          fill={"#c3c5c8"}
+        />
+      )}
     </Grid>
   );
 };
 
-const StatusContent = (status, isText) => {
+const StatusContent = (state, isText) => {
+  const { status, sandbox } = state;
+
   switch (status) {
     case "connected":
       return isText ? (
@@ -81,8 +122,11 @@ const StatusContent = (status, isText) => {
     case "unreachable":
       return isText ? (
         <Tooltip
-          title="The nucleoid runtime is not started. Run the `npx nucleoidjs start` in
-        terminal."
+          title={
+            !sandbox
+              ? "The nucleoid runtime is not started. Run the `npx nucleoidjs start` in terminal."
+              : "Codesandbox is hibernated. Click re-run button or Open sandbox."
+          }
           placement="top-start"
         >
           <Typography sx={styles.statusText}>Unreachable</Typography>
