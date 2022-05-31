@@ -18,29 +18,27 @@ function Functions() {
   }
 
   return (
-    <>
-      <Grid container spacing={1}>
-        <Grid item xs={3}>
-          <Card sx={styles.pageheight}>
-            <FunctionDialog />
-            <CardContent>
-              <FunctionTree />
-            </CardContent>
-            <CardActions>
-              <AddList
-                clickEvent={openFunctionDialog}
-                list={["Folder", "|", "Class", "Function"]}
-              />
-            </CardActions>
-          </Card>
-        </Grid>
-        <Grid item xs={9}>
-          <Paper sx={styles.pageheight}>
-            <Editor name={"functions"} functions />
-          </Paper>
-        </Grid>
+    <Grid container sx={styles.root}>
+      <Grid item xs={3}>
+        <Card sx={styles.functionTreeCard}>
+          <FunctionDialog />
+          <CardContent>
+            <FunctionTree />
+          </CardContent>
+          <CardActions>
+            <AddList
+              clickEvent={openFunctionDialog}
+              list={["Folder", "|", "Class", "Function"]}
+            />
+          </CardActions>
+        </Card>
       </Grid>
-    </>
+      <Grid item xs={9} sx={styles.editorGrid}>
+        <Paper sx={styles.editorPaper}>
+          <Editor name={"functions"} functions />
+        </Paper>
+      </Grid>
+    </Grid>
   );
 }
 
