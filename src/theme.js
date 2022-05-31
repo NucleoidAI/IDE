@@ -33,6 +33,7 @@ theme = {
           "&::-webkit-scrollbar, & *::-webkit-scrollbar": {
             backgroundColor: "#fff",
             width: 6,
+            height: 6,
           },
           "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
             borderRadius: 10,

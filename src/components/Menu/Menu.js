@@ -5,28 +5,56 @@ import React from "react";
 import Settings from "../Settings";
 import Status from "../../widgets/Status";
 import styles from "./styles";
-
 import { useLayoutContext } from "../../Context/providers/layoutContextProvider";
 import { useNavigate } from "react-router-dom";
-import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import {
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  useMediaQuery,
+} from "@mui/material";
 
 function Menu(props) {
-  return (
-    <nav style={styles.root}>
-      <Drawer variant="permanent" sx={styles.drawer}>
-        <List>
-          <ListItem>
-            <Logo title={props.title} />
-          </ListItem>
-          <br />
-          <MenuLinks {...props} />
-        </List>
-        <ProjectSelect />
-        <Status />
-        <Settings />
-      </Drawer>
-    </nav>
-  );
+  const theme = useTheme();
+  const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
+  //TODO : small version of the menu will be made with mediaquery
+  if (isMdUp) {
+    return (
+      <nav style={styles.root}>
+        <Drawer variant="permanent" sx={styles.drawer}>
+          <List>
+            <ListItem>
+              <Logo title={props.title} />
+            </ListItem>
+            <br />
+            <MenuLinks {...props} />
+          </List>
+          <ProjectSelect />
+          <Status />
+          <Settings />
+        </Drawer>
+      </nav>
+    );
+  } else {
+    return (
+      <nav style={styles.root}>
+        <Drawer variant="permanent" sx={{ width: 10 }}>
+          <List>
+            <ListItem>
+              <Logo title={props.title} />
+            </ListItem>
+            <br />
+            <MenuLinks {...props} />
+          </List>
+          <ProjectSelect />
+          <Status />
+          <Settings />
+        </Drawer>
+      </nav>
+    );
+  }
 }
 
 const MenuLinks = (props) => {

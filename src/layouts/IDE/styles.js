@@ -1,9 +1,8 @@
 const styles = {
-  root: { display: "flex" },
+  root: { height: "100vh", display: "flex" },
   content: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
+    height: "100%",
+    width: "100%",
     padding: 1,
   },
 };

@@ -48,7 +48,7 @@ function APISettings() {
   return (
     <Box sx={styles.root}>
       <Grid container sx={styles.container}>
-        <Grid container xs={9} sx={styles.content}>
+        <Grid container xs={9} item sx={styles.content}>
           <Grid item xs={6} sx={styles.schema}>
             {method === "get" && <ParamView params={params} />}
             {method !== "get" && request && (
@@ -71,7 +71,7 @@ function APISettings() {
             )}
           </Grid>
         </Grid>
-        <Grid container xs={3} sx={styles.summaryFormRoot}>
+        <Grid container xs={3} item sx={styles.summaryFormRoot}>
           <SummaryForm
             summaryText={summary}
             descriptionText={description}

@@ -1,24 +1,11 @@
-const ratio = 0.65;
-
 const styles = {
-  editor(theme) {
-    return {
-      height:
-        (window.innerHeight - theme.spacing(1) * 2 - 1) * ratio -
-        theme.spacing(1) / 2,
-    };
-  },
-  sidemenucard(theme) {
-    return { height: window.innerHeight - theme.spacing(1) * 2 - 1 };
-  },
-  settings(theme) {
-    return {
-      height:
-        (window.innerHeight - theme.spacing(1) * 2 - 1) * (1 - ratio) -
-        theme.spacing(1) / 2,
-      padding: 1,
-    };
-  },
+  root: { height: "100%", width: "100%", flexGrow: 1 },
+  apiTree: { height: "100%" },
+  content: { flexDirection: "row", height: "100%", width: "100%", pl: 1 },
+  editorGrid: { pb: 1, height: "70%" },
+  editorPaper: { height: "100%" },
+  apiSettingsGrid: { height: "30%" },
+  apiSettingsCard: { height: "100%", padding: 1 },
 };
 
 export default styles;

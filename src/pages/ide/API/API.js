@@ -15,7 +15,6 @@ import {
   Grid,
   Paper,
 } from "@mui/material";
-// eslint-disable-next-line
 
 function API() {
   const [, dispatch] = useContext();
@@ -35,37 +34,33 @@ function API() {
   };
 
   return (
-    <>
+    <Grid container sx={styles.root}>
       <APIDialog />
-      <Grid container spacing={1}>
-        <Grid item xs={3}>
-          <Card sx={styles.sidemenucard}>
-            <CardContent>
-              <APITree />
-            </CardContent>
-            <CardActions>
-              <Fab size={"small"} onClick={handleResourceMenu}>
-                <AddIcon />
-              </Fab>
-            </CardActions>
+      <Grid item xs={3}>
+        <Card sx={styles.apiTree}>
+          <CardContent>
+            <APITree />
+          </CardContent>
+          <CardActions>
+            <Fab size={"small"} onClick={handleResourceMenu}>
+              <AddIcon />
+            </Fab>
+          </CardActions>
+        </Card>
+      </Grid>
+      <Grid container item xs={9} sx={styles.content}>
+        <Grid item xs={12} sx={styles.editorGrid}>
+          <Paper sx={styles.editorPaper}>
+            <Editor name={"api"} api />
+          </Paper>
+        </Grid>
+        <Grid item xs={12} sx={styles.apiSettingsGrid}>
+          <Card sx={styles.apiSettingsCard}>
+            <APISettings />
           </Card>
         </Grid>
-        <Grid item xs={9}>
-          <Grid container spacing={1}>
-            <Grid item xs={12}>
-              <Paper sx={styles.editor}>
-                <Editor name={"api"} api />
-              </Paper>
-            </Grid>
-            <Grid item xs={12}>
-              <Card sx={styles.settings}>
-                <APISettings />
-              </Card>
-            </Grid>
-          </Grid>
-        </Grid>
       </Grid>
-    </>
+    </Grid>
   );
 }
 
