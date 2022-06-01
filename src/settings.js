@@ -39,8 +39,8 @@ const Settings = {
     client_secret: "3123c2be7aa1aec88d2c52c9e1a124c33eba0b08",
     token_url: "https://github.com/login/oauth/access_token",
     user: "https://api.github.com/user",
-    auth: "http://localhost:4545/auth/tokens",
-    projects: "http://localhost:4545/projects",
+    auth: "http://3.235.105.238/auth/tokens",
+    projects: "http://3.235.105.238/projects",
   },
   connection: true,
   beta: (status) => {

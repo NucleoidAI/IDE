@@ -1,14 +1,8 @@
-const ratio = 0.5;
-
 const styles = {
-  editor(theme) {
-    return {
-      height:
-        (window.innerHeight - theme.spacing(1) * 2 - 1) * ratio -
-        theme.spacing(1) / 2,
-    };
-  },
-  run(theme) {
+  root: { width: "100%", height: "100%" },
+  editorGrid: { height: "50%" },
+  editorPaper: { height: "100%" },
+  runButton(theme) {
     return {
       position: "relative",
       bottom: 40 + theme.spacing(1),
@@ -17,21 +11,16 @@ const styles = {
       alignItems: "center",
     };
   },
-  results(theme) {
-    return {
-      height:
-        (window.innerHeight - theme.spacing(1) * 2 - 1) * (1 - ratio) -
-        theme.spacing(1) / 2,
-      position: "relative",
-    };
-  },
+  contentGrid: { pt: 1, height: "50%" },
+  loadingCard: { height: "100%" },
+  contentCard: { height: "100%", padding: 1 },
   playArrowIcon: {
     fill: "#212121",
   },
   jsonSwitch: {
     "z-index": 1,
     position: "absolute",
-    right: 0,
+    right: 15,
     width: 100,
   },
 };

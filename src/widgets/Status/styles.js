@@ -7,9 +7,10 @@ const styles = {
     height: 150,
   },
   statusText: {
-    color: "#A5A7AB",
+    color: "#666666",
+    fontSize: 14,
   },
-  icon: { fill: "grey", height: 15, width: 15 },
+  icon: { fill: "#666666", height: 15, width: 15 },
 };
 
 export default styles;

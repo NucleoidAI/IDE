@@ -7,14 +7,8 @@ import React from "react";
 import actions from "../../../actions";
 import styles from "./styles";
 import { useContext } from "../../../Context/providers/contextProvider";
-import {
-  Card,
-  CardActions,
-  CardContent,
-  Fab,
-  Grid,
-  Paper,
-} from "@mui/material";
+import { Card, CardActions, Fab, Grid, Paper } from "@mui/material";
+// eslint-disable-next-line
 
 function API() {
   const [, dispatch] = useContext();
@@ -38,9 +32,9 @@ function API() {
       <APIDialog />
       <Grid item xs={3}>
         <Card sx={styles.apiTree}>
-          <CardContent>
+          <Grid sx={styles.apiTreeGrid}>
             <APITree />
-          </CardContent>
+          </Grid>
           <CardActions>
             <Fab size={"small"} onClick={handleResourceMenu}>
               <AddIcon />
@@ -55,7 +49,7 @@ function API() {
           </Paper>
         </Grid>
         <Grid item xs={12} sx={styles.apiSettingsGrid}>
-          <Card sx={styles.apiSettingsCard}>
+          <Card sx={{ height: "100%", padding: 1 }}>
             <APISettings />
           </Card>
         </Grid>

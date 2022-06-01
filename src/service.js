@@ -103,7 +103,7 @@ const getUserFromGit = (token) =>
   fetch(Settings.github.user, {
     method: "POST",
     headers: {
-      Authorization: "token " + token,
+      authorization: "token " + token,
     },
   }).then((response) => response.json());
 
@@ -113,7 +113,7 @@ const getProject = (project) => {
   return axios(Settings.github.projects + "/" + project, {
     method: "GET",
     headers: {
-      Authentication: "Bearer " + token,
+      authorization: "Bearer " + token,
     },
   });
 };
@@ -127,7 +127,7 @@ const getProjects = (limit) => {
       limit: limit && 1,
     },
     headers: {
-      Authentication: "Bearer " + token,
+      authorization: "Bearer " + token,
     },
   });
 };
@@ -138,7 +138,7 @@ const addProject = (name, context) => {
   return axios(Settings.github.projects, {
     method: "POST",
     headers: {
-      Authentication: "Bearer " + token,
+      authorization: "Bearer " + token,
     },
     data: { name: name, context: context },
   });
@@ -150,7 +150,7 @@ const deleteProject = (project) => {
   return axios(Settings.github.projects + "/" + project, {
     method: "DELETE",
     headers: {
-      Authentication: "Bearer " + token,
+      authorization: "Bearer " + token,
     },
   });
 };
@@ -161,7 +161,7 @@ const updateProject = (project, name, context) => {
   return axios(Settings.github.projects + "/" + project, {
     method: "POST",
     headers: {
-      Authentication: "Bearer " + token,
+      authorization: "Bearer " + token,
     },
     data: { name: name, context: context },
   });

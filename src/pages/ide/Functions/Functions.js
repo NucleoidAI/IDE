@@ -5,7 +5,7 @@ import FunctionTree from "../../../widgets/FunctionTree";
 import actions from "../../../actions";
 import styles from "./styles";
 import { useContext } from "../../../Context/providers/contextProvider";
-import { Card, CardActions, CardContent, Grid, Paper } from "@mui/material";
+import { Card, CardActions, Grid, Paper } from "@mui/material";
 
 function Functions() {
   const [, dispatch] = useContext();
@@ -22,9 +22,9 @@ function Functions() {
       <Grid item xs={3}>
         <Card sx={styles.functionTreeCard}>
           <FunctionDialog />
-          <CardContent>
+          <Grid sx={styles.functionTreeGrid}>
             <FunctionTree />
-          </CardContent>
+          </Grid>
           <CardActions>
             <AddList
               clickEvent={openFunctionDialog}

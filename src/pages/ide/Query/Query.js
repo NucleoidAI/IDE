@@ -57,30 +57,25 @@ function Query() {
 
   return (
     <>
-      <Grid container spacing={1}>
-        <Grid item xs={12}>
-          <Paper sx={styles.editor}>
+      <Grid container sx={styles.root}>
+        <Grid item xs={12} sx={styles.editorGrid}>
+          <Paper sx={styles.editorPaper}>
             <Editor name={"query"} ref={editor} />
-            <Grid container item sx={styles.run}>
+            <Grid container item sx={styles.runButton}>
               <Fab size={"small"} onClick={() => handleQuery()}>
                 <PlayArrowIcon style={styles.playArrowIcon} />
               </Fab>
             </Grid>
           </Paper>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sx={styles.contentGrid}>
           {loading && (
-            <Box
-              sx={{
-                width: "100%",
-                marginTop: 25,
-              }}
-            >
+            <Card sx={styles.loadingCard}>
               <LinearProgress color="inherit" />
-            </Box>
+            </Card>
           )}
           {!loading && (
-            <Card sx={styles.results}>
+            <Card sx={styles.contentCard}>
               <Box sx={styles.jsonSwitch}>
                 <FormGroup>
                   <FormControlLabel
@@ -98,6 +93,7 @@ function Query() {
                 )}
               </Box>
               {ResultTypes(result, checked)}
+              {!result && <Typography variant="h7">Console output</Typography>}
             </Card>
           )}
         </Grid>

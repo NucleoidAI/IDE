@@ -53,8 +53,8 @@ function Status() {
           alignItems={"center"}
           sx={{ pt: 1 }}
         >
-          <Grid>{StatusContent(state)}</Grid>&nbsp;
-          <Grid>{StatusContent(state, true)}</Grid>
+          {StatusContent(state)}&nbsp;
+          {StatusContent(state, true)}
         </Grid>
       </Grid>
       <StatusText
@@ -129,7 +129,7 @@ const StatusContent = (state, isText) => {
           }
           placement="top-start"
         >
-          <Typography sx={styles.statusText}>Unreachable</Typography>
+          <Typography sx={styles.statusText}>Not Connected</Typography>
         </Tooltip>
       ) : (
         <ErrorOutlineIcon sx={styles.icon} />
