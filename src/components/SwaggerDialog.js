@@ -14,7 +14,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function SwaggerDialog({open, handleClose }) {
+export default function SwaggerDialog({ open, handleClose }) {
   return (
     <Dialog
       fullScreen
@@ -31,7 +31,7 @@ export default function SwaggerDialog({open, handleClose }) {
       >
         <Toolbar>
           <IconButton edge="start" onClick={handleClose} aria-label="close">
-            <KeyboardArrowDown />
+            <KeyboardArrowDown fontSize="large" />
           </IconButton>
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
             Swagger

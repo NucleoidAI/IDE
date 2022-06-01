@@ -3,22 +3,7 @@ const api = {
     get: {
       summary: "Hello",
       description: "Hello",
-      params: [
-        {
-          name: "order",
-          in: "query",
-          type: "string",
-          required: true,
-          description: "order",
-        },
-        {
-          name: "item",
-          in: "query",
-          type: "string",
-          required: false,
-          description: "item",
-        },
-      ],
+      params: [],
       request: { type: "object", properties: {} },
       response: {
         type: "object",

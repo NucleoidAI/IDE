@@ -38,10 +38,10 @@ export default function CodeSandboxDialog({ open, handleCloseSandboxDialog }) {
             onClick={handleCloseSandboxDialog}
             aria-label="close"
           >
-            <KeyboardArrowDown />
+            <KeyboardArrowDown fontSize="large" />
           </IconButton>
-          <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            codesandbox
+          <Typography sx={{ ml: 2, flex: 1 }} variant="h6">
+            CodeSandbox
           </Typography>
         </Toolbar>
       </AppBar>

@@ -8,6 +8,7 @@ import ImportExportIcon from "@mui/icons-material/ImportExport";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import PostmanIcon from "../../icons/Postman";
 import Project from "../../project";
+import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import RunCodesandbox from "../../components/RunCodesandbox";
 import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
@@ -21,7 +22,13 @@ import useLayout from "../../hooks/useLayout";
 //eslint-disable-next-line
 import { useContext } from "../../Context/providers/contextProvider";
 import { useLocation } from "react-router-dom";
-import { Box, CircularProgress, Drawer, ListItem } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Drawer,
+  ListItem,
+  Tooltip,
+} from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
 const ProcessDrawer = () => {
@@ -242,8 +249,8 @@ const ProcessDrawer = () => {
             <GitHubIcon sx={styles.listitem} />
           </ListItem>
           <ListItem
-            onClick={handleDownloadContext}
             component={"a"}
+            onClick={handleDownloadContext}
             href={link}
             download={project.get().name + ".nuc.json"}
             target="_blank"
@@ -253,6 +260,11 @@ const ProcessDrawer = () => {
 
           <ListItem button>
             <PostmanIcon />
+          </ListItem>
+          <ListItem button>
+            <Tooltip title="Vercel deploy will be here soon" placement="left">
+              <RocketLaunchIcon sx={styles.listitem} />
+            </Tooltip>
           </ListItem>
         </Box>
         <ListItem button onClick={handleSaveProject}>
