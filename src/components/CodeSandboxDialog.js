@@ -1,4 +1,4 @@
-import CloseIcon from "@mui/icons-material/Close";
+import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import Settings from "../settings";
 import {
   AppBar,
@@ -8,19 +8,21 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+
 import * as React from "react";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
+  return <Slide timeout={3000} direction="up" ref={ref} {...props} />;
 });
 
-export default function CodeSandboxDialog({ handleCloseSandboxDialog }) {
+export default function CodeSandboxDialog({ open, handleCloseSandboxDialog }) {
   return (
     <Dialog
       fullScreen
-      open={true}
+      open={open}
       onClose={handleCloseSandboxDialog}
       TransitionComponent={Transition}
+      aria-describedby="alert-dialog-slide-description"
     >
       <AppBar
         sx={{
@@ -36,7 +38,7 @@ export default function CodeSandboxDialog({ handleCloseSandboxDialog }) {
             onClick={handleCloseSandboxDialog}
             aria-label="close"
           >
-            <CloseIcon />
+            <KeyboardArrowDown />
           </IconButton>
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
             codesandbox
