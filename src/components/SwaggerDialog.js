@@ -18,7 +18,7 @@ export default function SwaggerDialog({ open, handleClose }) {
   return (
     <Dialog
       fullScreen
-      open={open}
+      open={open === undefined ? false : open}
       onClose={handleClose}
       TransitionComponent={Transition}
     >

@@ -100,8 +100,6 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
   const select = React.useRef();
   const [dialog, setDialog] = React.useState(false);
 
-  // React.useEffect(() => {}, []);
-
   const DeleteButton = ({ params, handleDelete }) => {
     return (
       <IconButton onClick={() => handleDelete(params)}>
@@ -150,6 +148,16 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
     setDialog(true);
   };
 
+  const handleOpenNewProject = () => {
+    if (project.get().project !== "") {
+      setScreen("NewProject");
+    } else {
+      service.getProjects().then((data) => {
+        // setScreen("NewProject");
+      });
+    }
+  };
+
   const columns = [
     {
       field: "name",
@@ -189,7 +197,7 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
           }}
         >
           <Typography variant="h6">Select a project</Typography>
-          <Button onClick={() => setScreen("NewProject")} variant="text">
+          <Button onClick={handleOpenNewProject} variant="text">
             NEW PROJECT
           </Button>
         </Grid>

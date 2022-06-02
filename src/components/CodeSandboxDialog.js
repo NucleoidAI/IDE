@@ -19,7 +19,7 @@ export default function CodeSandboxDialog({ open, handleCloseSandboxDialog }) {
   return (
     <Dialog
       fullScreen
-      open={open}
+      open={open === undefined ? false : open}
       onClose={handleCloseSandboxDialog}
       TransitionComponent={Transition}
       aria-describedby="alert-dialog-slide-description"
