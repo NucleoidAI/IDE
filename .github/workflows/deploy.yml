@@ -15,15 +15,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
       - run: npm ci
       - run: npm run build
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Build, tag, and push image to Amazon ECR
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: nuc
-          IMAGE_TAG: ide
-        run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      - run: docker build . -t 533052815932.dkr.ecr.us-east-1.amazonaws.com/nuc:ide
+      - run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 533052815932.dkr.ecr.us-east-1.amazonaws.com
+      - run: docker push 533052815932.dkr.ecr.us-east-1.amazonaws.com/nuc:ide
+      - run: aws ecs update-service --cluster nuc-cluster --service ide-service-2 --force-new-deployment
