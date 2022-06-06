@@ -152,9 +152,12 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
     if (project.get().project !== "") {
       setScreen("NewProject");
     } else {
-      service.getProjects().then((data) => {
-        // setScreen("NewProject");
-      });
+      service
+        .getProjects()
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((err) => console.log(err));
     }
   };
 

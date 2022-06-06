@@ -13,25 +13,59 @@ const invalidTokenCase = () => {
     const accessToken = localStorage.getItem("accessToken");
 
     if (!accessToken && !refreshToken) {
-      return window.open(
-        `https://github.com/login/oauth/authorize?scope=user&client_id=${Settings.github.client_id}&redirect_uri=${window.location.href}`,
-        "_self"
-      );
-    }
+      getCodeFromGithub((code) => {
+        if (code) {
+          auth({ code: code })
+            .then((res) => {
+              localStorage.setItem("accessToken", res.accessToken);
+              localStorage.setItem("refreshToken", res.refreshToken);
 
-    if (!accessToken) {
+              return reject(true);
+            })
+            .catch((err) => {
+              return reject(err);
+            });
+        } else {
+          return reject(false);
+        }
+      });
+    } else if (!accessToken) {
       auth({ refreshToken: refreshToken })
         .then((res) => {
           localStorage.setItem("accessToken", res.accessToken);
           localStorage.setItem("refreshToken", res.refreshToken);
 
-          resolve(true);
+          return reject(true);
         })
         .catch((err) => {
-          reject(err);
+          return reject(err);
         });
     }
   });
+};
+
+const getCodeFromGithub = (callback) => {
+  const gitHubWindow = window.open(
+    `https://github.com/login/oauth/authorize?scope=user&client_id=${
+      Settings.github.client_id
+    }&redirect_uri=${"http://" + window.location.hostname + ":4000/login"}`,
+    "_blank",
+    "toolbar=yes,scrollbars=yes,resizable=yes,top=50,left=50,width=500,height=800"
+  );
+
+  const myInterval = setInterval(() => {
+    if (gitHubWindow.closed) {
+      clearInterval(myInterval);
+      const url = gitHubWindow.location.href;
+
+      if (url) {
+        const newUrl = url.split("?code=");
+        callback(newUrl[1]);
+      } else {
+        callback(false);
+      }
+    }
+  }, 400);
 };
 
 const errorHandler = async ({ response }) => {
@@ -91,7 +125,7 @@ const logs = () =>
   }).then((response) => response.json());
 
 const auth = (body) =>
-  fetch(Settings.github.auth, {
+  fetch(Settings.service.auth, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -107,21 +141,10 @@ const getUserFromGit = (token) =>
     },
   }).then((response) => response.json());
 
-const getProject = (project) => {
-  const token = localStorage.getItem("accessToken");
-
-  return axios(Settings.github.projects + "/" + project, {
-    method: "GET",
-    headers: {
-      authorization: "Bearer " + token,
-    },
-  });
-};
-
 const getProjects = (limit) => {
   const token = localStorage.getItem("accessToken");
 
-  return axios(Settings.github.projects, {
+  return axios(Settings.service.projects, {
     method: "GET",
     params: {
       limit: limit && 1,
@@ -132,10 +155,33 @@ const getProjects = (limit) => {
   });
 };
 
+const getProject = (project) => {
+  const token = localStorage.getItem("accessToken");
+
+  return axios(Settings.service.projects + "/" + project, {
+    method: "GET",
+    headers: {
+      authorization: "Bearer " + token,
+    },
+  });
+};
+
 const addProject = (name, context) => {
   const token = localStorage.getItem("accessToken");
 
-  return axios(Settings.github.projects, {
+  return axios(Settings.service.projects, {
+    method: "POST",
+    headers: {
+      authorization: "Bearer " + token,
+    },
+    data: { name: name, context: context },
+  });
+};
+
+const updateProject = (project, name, context) => {
+  const token = localStorage.getItem("accessToken");
+
+  return axios(Settings.service.projects + "/" + project, {
     method: "POST",
     headers: {
       authorization: "Bearer " + token,
@@ -147,23 +193,11 @@ const addProject = (name, context) => {
 const deleteProject = (project) => {
   const token = localStorage.getItem("accessToken");
 
-  return axios(Settings.github.projects + "/" + project, {
+  return axios(Settings.service.projects + "/" + project, {
     method: "DELETE",
     headers: {
       authorization: "Bearer " + token,
     },
-  });
-};
-
-const updateProject = (project, name, context) => {
-  const token = localStorage.getItem("accessToken");
-
-  return axios(Settings.github.projects + "/" + project, {
-    method: "POST",
-    headers: {
-      authorization: "Bearer " + token,
-    },
-    data: { name: name, context: context },
   });
 };
 
@@ -191,6 +225,7 @@ const service = {
   updateProject,
   deleteProject,
   openCodeSandBox,
+  getCodeFromGithub,
 };
 
 export default service;

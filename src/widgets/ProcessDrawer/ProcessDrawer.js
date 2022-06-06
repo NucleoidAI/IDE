@@ -22,13 +22,7 @@ import useLayout from "../../hooks/useLayout";
 //eslint-disable-next-line
 import { useContext } from "../../Context/providers/contextProvider";
 import { useLocation } from "react-router-dom";
-import {
-  Box,
-  CircularProgress,
-  Drawer,
-  ListItem,
-  Tooltip,
-} from "@mui/material";
+import { Box, CircularProgress, Drawer, ListItem } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
 const ProcessDrawer = () => {
@@ -37,6 +31,7 @@ const ProcessDrawer = () => {
   const location = useLocation();
 
   const [alert, setAlert] = useState(false);
+  const [vercel, setVercel] = useState(false);
   const [loading, setLoading] = useState(false);
   const [backdrop, setBackdrop] = useState(false);
 
@@ -44,30 +39,23 @@ const ProcessDrawer = () => {
 
   const [link, setLink] = useState("");
 
-  const auth = (code) => {
-    return service.auth(code).then((data) => {
-      localStorage.setItem("accessToken", data.accessToken);
-      localStorage.setItem("refreshToken", data.refreshToken);
-
-      return service.getUserFromGit(data.refreshToken);
+  const auth = () => {
+    setBackdrop(true);
+    service.getCodeFromGithub((code) => {
+      if (code) {
+        return service.auth({ code: code }).then((data) => {
+          localStorage.setItem("accessToken", data.accessToken);
+          localStorage.setItem("refreshToken", data.refreshToken);
+          setBackdrop(false);
+          handleGetProject();
+        });
+      } else {
+        setBackdrop(false);
+      }
     });
   };
 
   useEffect(() => {
-    const url = window.location.href;
-    const hasCode = url.includes("?code=");
-
-    if (hasCode) {
-      const newUrl = url.split("?code=");
-      window.history.pushState({}, null, newUrl[0]);
-      setBackdrop(true);
-
-      auth({ code: newUrl[1] }).then(() => {
-        setBackdrop(false);
-        handleGetProject();
-      });
-    }
-
     getStatus();
     clearInterval(getStatusTask.current);
 
@@ -79,11 +67,16 @@ const ProcessDrawer = () => {
 
     if (location.state?.anchor === false) {
       setAlert(false);
+      setVercel(false);
     }
   }, [location.state]); //eslint-disable-line
 
   const handleCloseAlert = () => {
     setAlert(false);
+  };
+
+  const handleCloseVercel = () => {
+    setVercel(false);
   };
 
   const handleRun = () => {
@@ -145,9 +138,15 @@ const ProcessDrawer = () => {
     const { project, context, name } = Project.getStringify();
     setBackdrop(true);
 
-    service.updateProject(project, name, context).then((data) => {
-      setBackdrop(false);
-    });
+    service
+      .updateProject(project, name, context)
+      .then((data) => {
+        // handleGetProject()
+        setBackdrop(false);
+      })
+      .catch(() => {
+        setBackdrop(false);
+      });
   };
 
   const handleCloseSandboxDialog = () => {
@@ -245,7 +244,7 @@ const ProcessDrawer = () => {
           <ListItem button onClick={handleOpenDialog}>
             <ViewListIcon sx={styles.listitem} />
           </ListItem>
-          <ListItem button onClick={handleGetProject}>
+          <ListItem button onClick={auth}>
             <GitHubIcon sx={styles.listitem} />
           </ListItem>
           <ListItem
@@ -261,11 +260,22 @@ const ProcessDrawer = () => {
           <ListItem button>
             <PostmanIcon />
           </ListItem>
-          <ListItem button>
-            <Tooltip title="Vercel deploy will be here soon" placement="left">
+          <DialogTooltip
+            open={vercel}
+            placement="left"
+            title={<b>Deploy</b>}
+            message={
+              <>
+                Vercell deployment will be here soon
+                <br />
+              </>
+            }
+            handleTooltipClose={handleCloseVercel}
+          >
+            <ListItem button onClick={() => setVercel(true)}>
               <RocketLaunchIcon sx={styles.listitem} />
-            </Tooltip>
-          </ListItem>
+            </ListItem>
+          </DialogTooltip>
         </Box>
         <ListItem button onClick={handleSaveProject}>
           <SaveIcon sx={styles.listitem} />
