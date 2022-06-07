@@ -7,12 +7,14 @@ function contextReducer(state, { type, payload }) {
   const { nucleoid, pages } = state;
 
   switch (type) {
-    case "SET_PROJECT":
+    case "SET_PROJECT": {
       nucleoid.api = payload.project.nucleoid.api;
       nucleoid.functions = payload.project.nucleoid.functions;
       nucleoid.types = payload.project.nucleoid.types;
+      pages.api.selected.path = "/";
 
       break;
+    }
 
     case "OPEN_API_DIALOG": {
       pages.api.dialog.type = payload.type;

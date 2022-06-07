@@ -26,9 +26,11 @@ import Settings from "../../settings";
 
 const NewProjectScreen = ({ setScreen, handleClose }) => {
   const [, dispatch] = useGetProjects();
+  const [open, setOpen] = React.useState(false);
   const projectName = React.useRef("");
 
   const addProject = () => {
+    setOpen(true);
     service
       .addProject(projectName.current, JSON.stringify(State.withSample()))
       .then(({ data }) => {
@@ -42,6 +44,7 @@ const NewProjectScreen = ({ setScreen, handleClose }) => {
           type: "SET_PROJECT",
           payload: { project: State.withSample() },
         });
+        setOpen(false);
         handleClose();
       });
   };
@@ -88,6 +91,7 @@ const NewProjectScreen = ({ setScreen, handleClose }) => {
             <Button onClick={handleClose}>Cancel</Button>
             <Button onClick={addProject}>Save</Button>
           </Grid>
+          <ProgressBackDrop open={open} />
         </Grid>
       </DialogActions>
     </>
@@ -231,13 +235,7 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
             <Button onClick={handleSelect}>Select</Button>
           </Grid>
         </Grid>
-        <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={open}
-          onClick={handleClose}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
+        <ProgressBackDrop open={open} />
         <Dialog
           open={dialog}
           onClose={handleClose}
@@ -258,6 +256,17 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
         </Dialog>
       </DialogActions>
     </>
+  );
+};
+
+const ProgressBackDrop = ({ open }) => {
+  return (
+    <Backdrop
+      sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      open={open}
+    >
+      <CircularProgress color="inherit" />
+    </Backdrop>
   );
 };
 
