@@ -11,7 +11,9 @@ function useLayout() {
   };
 
   const getStatus = () => {
-    Promise.all([service.metrics(), service.openapi()])
+    console.log("metrics")
+    service
+      .metrics()
       .then((values) => {
         Settings.connection = true;
         dispatch({

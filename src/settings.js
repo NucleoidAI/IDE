@@ -16,13 +16,7 @@ const Settings = {
         return localStorage.getItem("app");
       }
     },
-    editor: (url) => {
-      if (url) {
-        localStorage.setItem("editor", url);
-      } else {
-        return localStorage.getItem("editor");
-      }
-    },
+
   },
   codesandbox: {
     url: "https://codesandbox.io/api/v1/sandboxes/define?json=1",

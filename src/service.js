@@ -1,50 +1,35 @@
 import Settings from "./settings";
 import axios from "axios";
+import createAuthRefreshInterceptor from "axios-auth-refresh";
 
-const responseHandler = (response) => {
-  return response;
+const refreshAuthLogic = async (failedRequest) => {
+  const refreshToken = localStorage.getItem("refreshToken");
+  const accessToken = localStorage.getItem("accessToken");
+
+  let tokenRefreshResponse;
+
+  if (!refreshToken && !accessToken) {
+    const code = await getCodeFromGithub();
+    tokenRefreshResponse = await auth({ code: code });
+  } else {
+    tokenRefreshResponse = await auth({ refreshToken: refreshToken });
+  }
+  localStorage.setItem("accessToken", tokenRefreshResponse.accessToken);
+  localStorage.setItem("refreshToken", tokenRefreshResponse.refreshToken);
+
+  failedRequest.response.config.headers["Authorization"] =
+    "Bearer " + tokenRefreshResponse.accessToken;
 };
 
-const invalidTokenCase = () => {
-  localStorage.removeItem("accessToken");
+createAuthRefreshInterceptor(axios, refreshAuthLogic);
 
-  return new Promise((resolve, reject) => {
-    const refreshToken = localStorage.getItem("refreshToken");
-    const accessToken = localStorage.getItem("accessToken");
+axios.interceptors.request.use((request) => {
+  const accessToken = localStorage.getItem("accessToken");
+  request.headers["Authorization"] = `Bearer ${accessToken}`;
+  return request;
+});
 
-    if (!accessToken && !refreshToken) {
-      getCodeFromGithub((code) => {
-        if (code) {
-          auth({ code: code })
-            .then((res) => {
-              localStorage.setItem("accessToken", res.accessToken);
-              localStorage.setItem("refreshToken", res.refreshToken);
-
-              return reject(true);
-            })
-            .catch((err) => {
-              return reject(err);
-            });
-        } else {
-          return reject(false);
-        }
-      });
-    } else if (!accessToken) {
-      auth({ refreshToken: refreshToken })
-        .then((res) => {
-          localStorage.setItem("accessToken", res.accessToken);
-          localStorage.setItem("refreshToken", res.refreshToken);
-
-          return reject(true);
-        })
-        .catch((err) => {
-          return reject(err);
-        });
-    }
-  });
-};
-
-const getCodeFromGithub = (callback) => {
+const getCodeFromGithub = () => {
   const gitHubWindow = window.open(
     `https://github.com/login/oauth/authorize?scope=user&client_id=${
       Settings.github.client_id
@@ -52,41 +37,22 @@ const getCodeFromGithub = (callback) => {
     "_blank",
     "toolbar=yes,scrollbars=yes,resizable=yes,top=50,left=50,width=500,height=800"
   );
+  return new Promise((resolve, reject) => {
+    const myInterval = setInterval(() => {
+      if (gitHubWindow.closed) {
+        clearInterval(myInterval);
+        const url = gitHubWindow.location.href;
 
-  const myInterval = setInterval(() => {
-    if (gitHubWindow.closed) {
-      clearInterval(myInterval);
-      const url = gitHubWindow.location.href;
-
-      if (url) {
-        const newUrl = url.split("?code=");
-        callback(newUrl[1]);
-      } else {
-        callback(false);
+        if (url) {
+          const newUrl = url.split("?code=");
+          resolve(newUrl[1]);
+        } else {
+          reject({ error: "ERROR_GIT_CODE" });
+        }
       }
-    }
-  }, 400);
+    }, 400);
+  });
 };
-
-const errorHandler = async ({ response }) => {
-  const { error } = response.data;
-
-  switch (error) {
-    case "INVALID_TOKEN":
-      return await invalidTokenCase();
-
-    default:
-      console.log("unhandled error");
-      break;
-  }
-
-  return Promise.reject(error);
-};
-
-axios.interceptors.response.use(
-  (response) => responseHandler(response),
-  (error) => errorHandler(error)
-);
 
 const query = async (body) => {
   return fetch(Settings.url.terminal(), {
@@ -95,7 +61,7 @@ const query = async (body) => {
   }).then((response) => response.json());
 };
 
-const openapi = (action, nuc) => {
+const openapi = async (action, nuc) => {
   if (action === undefined) {
     return fetch(Settings.url.terminal() + "openapi", {
       method: "GET",
@@ -142,62 +108,30 @@ const getUserFromGit = (token) =>
   }).then((response) => response.json());
 
 const getProjects = (limit) => {
-  const token = localStorage.getItem("accessToken");
-
-  return axios(Settings.service.projects, {
-    method: "GET",
-    params: {
-      limit: limit && 1,
-    },
-    headers: {
-      authorization: "Bearer " + token,
-    },
-  });
+  return axios.get(Settings.service.projects);
 };
 
 const getProject = (project) => {
-  const token = localStorage.getItem("accessToken");
-
-  return axios(Settings.service.projects + "/" + project, {
-    method: "GET",
-    headers: {
-      authorization: "Bearer " + token,
-    },
-  });
+  return axios.get(Settings.service.projects + "/" + project);
 };
 
 const addProject = (name, context) => {
-  const token = localStorage.getItem("accessToken");
-
   return axios(Settings.service.projects, {
     method: "POST",
-    headers: {
-      authorization: "Bearer " + token,
-    },
     data: { name: name, context: context },
   });
 };
 
 const updateProject = (project, name, context) => {
-  const token = localStorage.getItem("accessToken");
-
   return axios(Settings.service.projects + "/" + project, {
     method: "POST",
-    headers: {
-      authorization: "Bearer " + token,
-    },
     data: { name: name, context: context },
   });
 };
 
 const deleteProject = (project) => {
-  const token = localStorage.getItem("accessToken");
-
   return axios(Settings.service.projects + "/" + project, {
     method: "DELETE",
-    headers: {
-      authorization: "Bearer " + token,
-    },
   });
 };
 

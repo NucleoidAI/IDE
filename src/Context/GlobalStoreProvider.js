@@ -32,10 +32,6 @@ const InitContext = () => {
     Settings.url.terminal("http://localhost:8448/");
   }
 
-  if (!Settings.url.editor()) {
-    Settings.url.editor("http://localhost:8448/lint");
-  }
-
   if (project.isAuth()) {
     service.getProjects().then(({ data }) => {
       Settings.projects = [...data];

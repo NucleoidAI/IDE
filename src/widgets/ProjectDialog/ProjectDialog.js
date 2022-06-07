@@ -148,16 +148,12 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
     setDialog(true);
   };
 
-  const handleOpenNewProject = () => {
+  const handleOpenNewProject = async () => {
     if (project.get().project !== "") {
       setScreen("NewProject");
     } else {
-      service
-        .getProjects()
-        .then((data) => {
-          console.log(data);
-        })
-        .catch((err) => console.log(err));
+      const projects = await service.getProjects().catch((err) => err);
+      console.log(projects);
     }
   };
 

@@ -15,7 +15,6 @@ import Settings from "../../settings";
 import SwaggerDialog from "../../components/SwaggerDialog";
 import SyncIcon from "@mui/icons-material/Sync";
 import ViewListIcon from "@mui/icons-material/ViewList";
-import project from "../../project";
 import service from "../../service";
 import styles from "./styles";
 import useLayout from "../../hooks/useLayout";
@@ -40,19 +39,7 @@ const ProcessDrawer = () => {
   const [link, setLink] = useState("");
 
   const auth = () => {
-    setBackdrop(true);
-    service.getCodeFromGithub((code) => {
-      if (code) {
-        return service.auth({ code: code }).then((data) => {
-          localStorage.setItem("accessToken", data.accessToken);
-          localStorage.setItem("refreshToken", data.refreshToken);
-          setBackdrop(false);
-          handleGetProject();
-        });
-      } else {
-        setBackdrop(false);
-      }
-    });
+    handleGetProject();
   };
 
   useEffect(() => {
@@ -108,40 +95,57 @@ const ProcessDrawer = () => {
       });
   };
 
-  const handleGetProject = () => {
+  const handleGetProject = async () => {
     setBackdrop(true);
+    const projects = await service.getProjects().catch((err) => err);
 
-    service.getProjects().then((result) => {
-      Settings.projects = [...result.data];
+    if (!projects.data) {
+      console.log("Network error");
+      setBackdrop(false);
+      return false;
+    }
 
-      if (result.data.length > 0) {
-        service.getProject(result.data[0].project).then(({ data }) => {
-          setBackdrop(false);
-          project.setWithoutStringify(data.project, data.name, data.context);
-          contextDispatch({
-            type: "SET_PROJECT",
-            payload: { project: JSON.parse(data.context) },
-          });
-        });
-      } else {
-        const { name, context } = project.getStringify();
-        service.addProject(name, context).then(({ data }) => {
-          Settings.projects = [{ project: data, name }];
-          project.setWithoutStringify(data, name, context);
-          setBackdrop(false);
-        });
+    if (projects.data.length > 0) {
+      Settings.projects = [...projects.data];
+
+      const project = await service
+        .getProject(projects.data[0].project)
+        .catch((err) => err);
+
+      if (!project.data) {
+        console.log("project not found");
       }
-    });
+
+      contextDispatch({
+        type: "SET_PROJECT",
+        payload: { project: JSON.parse(project.data.context) },
+      });
+      Project.setWithoutStringify(
+        project.data.project,
+        project.data.name,
+        project.data.context
+      );
+      setBackdrop(false);
+    } else {
+      const { name, context } = Project.getStringify();
+      service.addProject(name, context).then(({ data }) => {
+        Settings.projects = [{ project: data, name }];
+        Project.setWithoutStringify(data, name, context);
+        setBackdrop(false);
+      });
+    }
   };
 
   const handleSaveProject = () => {
     const { project, context, name } = Project.getStringify();
     setBackdrop(true);
-
+    if (!project) {
+      return handleGetProject();
+    }
     service
       .updateProject(project, name, context)
       .then((data) => {
-        // handleGetProject()
+        console.log(data);
         setBackdrop(false);
       })
       .catch(() => {
@@ -251,7 +255,7 @@ const ProcessDrawer = () => {
             component={"a"}
             onClick={handleDownloadContext}
             href={link}
-            download={project.get().name + ".nuc.json"}
+            download={Project.get().name + ".nuc.json"}
             target="_blank"
           >
             <ImportExportIcon sx={styles.listitem} />
