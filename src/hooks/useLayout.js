@@ -11,7 +11,6 @@ function useLayout() {
   };
 
   const getStatus = () => {
-    console.log("metrics")
     service
       .metrics()
       .then((values) => {
@@ -19,9 +18,8 @@ function useLayout() {
         dispatch({
           type: "SET_STATUS",
           payload: {
-            metrics: values[0],
+            metrics: values,
             status: "connected",
-            openapi: values[1].started,
           },
         });
       })
@@ -32,7 +30,6 @@ function useLayout() {
           payload: {
             metrics: defaultMetric,
             status: "unreachable",
-            openapi: false,
           },
         });
       });

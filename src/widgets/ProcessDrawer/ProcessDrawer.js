@@ -168,14 +168,15 @@ const ProcessDrawer = () => {
       Settings.url.app(`https://${data.sandbox_id}-3000.sse.codesandbox.io/`);
       Settings.url.terminal(
         `https://${data.sandbox_id}-8448.sse.codesandbox.io/`
-      );
+      ); /*
       Settings.url.editor(
         `https://${data.sandbox_id}-8448.sse.codesandbox.io/lint`
-      );
+      );*/
       dispatch({
         type: "SANDBOX",
         payload: { status: true, dialogStatus: true },
       });
+
       Settings.runtime("sandbox");
       setAlert(false);
     }

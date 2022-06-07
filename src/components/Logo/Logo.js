@@ -1,16 +1,11 @@
 import React from "react";
+import Settings from "../../settings";
+import styles from "./styles";
 import { Box, Typography } from "@mui/material";
 
 function Logo(props) {
   return (
-    <Box
-      sx={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        justifyContent: "flex-start",
-      }}
-    >
+    <Box sx={styles.root}>
       <Box>
         <Typography display={"inline"} fontSize={"22px"} color={"#28a745"}>
           Nucleoid
@@ -19,15 +14,14 @@ function Logo(props) {
         <Typography display={"inline"} fontSize={"18px"} color={"#dfdfdf"}>
           {props.title}
         </Typography>
-        &nbsp;
-        <Typography
-          display={"inline"}
-          fontSize={"15px"}
-          color={"#dfdfdf"}
-          fontWeight={"lighter"}
-        >
-          <sub>Beta</sub>
-        </Typography>
+        {Settings.beta() && (
+          <>
+            &nbsp;
+            <Typography sx={styles.ideText}>
+              <sub>Beta</sub>
+            </Typography>
+          </>
+        )}
       </Box>
     </Box>
   );

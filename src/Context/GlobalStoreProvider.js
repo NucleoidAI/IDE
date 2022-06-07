@@ -11,7 +11,6 @@ import { layoutReducer } from "./reducers/layoutReducer";
 
 const initStatus = {
   status: "unreachable",
-  openApi: false,
   sandbox: Settings.codesandbox.sandboxID() ? true : false,
   sandboxDialog: false,
   metrics: {

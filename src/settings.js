@@ -16,7 +16,6 @@ const Settings = {
         return localStorage.getItem("app");
       }
     },
-
   },
   codesandbox: {
     url: "https://codesandbox.io/api/v1/sandboxes/define?json=1",
@@ -40,7 +39,7 @@ const Settings = {
   },
   connection: true,
   beta: (status) => {
-    if (status) {
+    if (status !== undefined && status !== null) {
       localStorage.setItem("beta", status);
     } else {
       return localStorage.getItem("beta");
