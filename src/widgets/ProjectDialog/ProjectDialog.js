@@ -5,7 +5,7 @@ import State from "../../state";
 import project from "../../project";
 import service from "../../service";
 import styles from "./styles";
-import { useContext } from "../../Context/providers/contextProvider";
+import useGetProjects from "../../hooks/useGetProjects";
 import { Backdrop, CircularProgress } from "@mui/material";
 
 import {
@@ -25,7 +25,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import Settings from "../../settings";
 
 const NewProjectScreen = ({ setScreen, handleClose }) => {
-  const [, dispatch] = useContext();
+  const [, dispatch] = useGetProjects();
   const projectName = React.useRef("");
 
   const addProject = () => {
@@ -95,7 +95,7 @@ const NewProjectScreen = ({ setScreen, handleClose }) => {
 };
 
 const ListProjectsScreen = ({ setScreen, handleClose }) => {
-  const [, dispatch] = useContext();
+  const [, dispatch, handleGetProjects] = useGetProjects();
   const [open, setOpen] = React.useState(false);
   const select = React.useRef();
   const [dialog, setDialog] = React.useState(false);
@@ -152,8 +152,11 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
     if (project.get().project !== "") {
       setScreen("NewProject");
     } else {
-      const projects = await service.getProjects().catch((err) => err);
-      console.log(projects);
+      setOpen(true);
+      handleGetProjects((result) => {
+        if (result) setScreen("NewProject");
+        setOpen(false);
+      });
     }
   };
 

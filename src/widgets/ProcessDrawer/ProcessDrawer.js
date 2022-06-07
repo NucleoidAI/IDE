@@ -17,7 +17,9 @@ import SyncIcon from "@mui/icons-material/Sync";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import service from "../../service";
 import styles from "./styles";
+import useGetProjects from "../../hooks/useGetProjects";
 import useLayout from "../../hooks/useLayout";
+
 //eslint-disable-next-line
 import { useContext } from "../../Context/providers/contextProvider";
 import { useLocation } from "react-router-dom";
@@ -25,7 +27,7 @@ import { Box, CircularProgress, Drawer, ListItem } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
 const ProcessDrawer = () => {
-  const [state, contextDispatch] = useContext();
+  const [state, , handleGetProject] = useGetProjects();
   const [status, dispatch, getStatus] = useLayout();
   const location = useLocation();
 
@@ -39,7 +41,8 @@ const ProcessDrawer = () => {
   const [link, setLink] = useState("");
 
   const auth = () => {
-    handleGetProject();
+    setBackdrop(true);
+    handleGetProject((result) => setBackdrop(false));
   };
 
   useEffect(() => {
@@ -95,62 +98,21 @@ const ProcessDrawer = () => {
       });
   };
 
-  const handleGetProject = async () => {
-    setBackdrop(true);
-    const projects = await service.getProjects().catch((err) => err);
-
-    if (!projects.data) {
-      console.log("Network error");
-      setBackdrop(false);
-      return false;
-    }
-
-    if (projects.data.length > 0) {
-      Settings.projects = [...projects.data];
-
-      const project = await service
-        .getProject(projects.data[0].project)
-        .catch((err) => err);
-
-      if (!project.data) {
-        console.log("project not found");
-      }
-
-      contextDispatch({
-        type: "SET_PROJECT",
-        payload: { project: JSON.parse(project.data.context) },
-      });
-      Project.setWithoutStringify(
-        project.data.project,
-        project.data.name,
-        project.data.context
-      );
-      setBackdrop(false);
-    } else {
-      const { name, context } = Project.getStringify();
-      service.addProject(name, context).then(({ data }) => {
-        Settings.projects = [{ project: data, name }];
-        Project.setWithoutStringify(data, name, context);
-        setBackdrop(false);
-      });
-    }
-  };
-
   const handleSaveProject = () => {
     const { project, context, name } = Project.getStringify();
     setBackdrop(true);
     if (!project) {
-      return handleGetProject();
+      return handleGetProject((result) => setBackdrop(false));
+    } else {
+      service
+        .updateProject(project, name, context)
+        .then((data) => {
+          setBackdrop(false);
+        })
+        .catch(() => {
+          setBackdrop(false);
+        });
     }
-    service
-      .updateProject(project, name, context)
-      .then((data) => {
-        console.log(data);
-        setBackdrop(false);
-      })
-      .catch(() => {
-        setBackdrop(false);
-      });
   };
 
   const handleCloseSandboxDialog = () => {
@@ -168,10 +130,7 @@ const ProcessDrawer = () => {
       Settings.url.app(`https://${data.sandbox_id}-3000.sse.codesandbox.io/`);
       Settings.url.terminal(
         `https://${data.sandbox_id}-8448.sse.codesandbox.io/`
-      ); /*
-      Settings.url.editor(
-        `https://${data.sandbox_id}-8448.sse.codesandbox.io/lint`
-      );*/
+      );
       dispatch({
         type: "SANDBOX",
         payload: { status: true, dialogStatus: true },
