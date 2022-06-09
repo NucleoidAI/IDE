@@ -282,13 +282,13 @@ const functions = [
     path: "/classes/Order",
     params: [],
     type: "CLASS",
-    code: `class Order {\n\tconstructor(qty,item){\n\t\tthis.item = item;\n\t\tthis.qty = qty;\n\t\tthis.date = Date.now();\n\t}\n}`,
+    definition: `class Order {\n\tconstructor(qty,item){\n\t\tthis.item = item;\n\t\tthis.qty = qty;\n\t\tthis.date = Date.now();\n\t}\n}`,
   },
   {
     path: "/classes/Item",
     params: [],
     type: "CLASS",
-    code: `class Item {\n\tconstructor(name, barcode) {\n\t\tthis.name = name;\n\t\tthis.barcode = barcode;\n\t}\n}`,
+    definition: `class Item {\n\tconstructor(name, barcode) {\n\t\tthis.name = name;\n\t\tthis.barcode = barcode;\n\t}\n}`,
   },
 ];
 

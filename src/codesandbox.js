@@ -20,7 +20,7 @@ const CodeSandbox = {
             context.nucleoid.functions
               .map(
                 (item) =>
-                  item.code +
+                  item.definition +
                   "\nnucleoid.register(" +
                   item.path.split("/")[item.path.split("/").length - 1] +
                   ");\n\n"

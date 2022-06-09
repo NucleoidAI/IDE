@@ -72,19 +72,17 @@ const ProcessDrawer = () => {
   const handleRun = () => {
     if (!Settings.runtime()) {
       setAlert(true);
-      service.metrics().then((data) => {
-        Settings.runtime("npx");
+      service.metrics().then((data) => { 
         handleRunApi();
       });
     }
   };
 
   const handleRunApi = () => {
-    const nuc = state.get("nucleoid");
     setLoading(true);
-
+    Settings.runtime("npx");
     service
-      .openapi("start", nuc)
+      .openapi("start", state.get("nucleoid"))
       .then(() => {
         dispatch({ type: "SWAGGER_DIALOG", payload: { dialogStatus: true } });
         getStatus();
