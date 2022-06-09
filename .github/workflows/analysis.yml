@@ -6,7 +6,7 @@ on:
     branches: [main]
 jobs:
   analyze:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     permissions:
       actions: read
       contents: read
@@ -16,7 +16,7 @@ jobs:
       matrix:
         language: ["javascript"]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: github/codeql-action/init@v1
         with:
           languages: ${{ matrix.language }}
