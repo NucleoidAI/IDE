@@ -1,6 +1,6 @@
 import Adapter from "enzyme-adapter-react-16";
 import FunctionTree from "../FunctionTree";
-import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
+import NonExpandableFunctionTreeItem from "../../components/NonExpandableFunctionTreeItem";
 import React from "react";
 import State from "../../state";
 import { useContext } from "../../Context/providers/contextProvider";
@@ -26,7 +26,7 @@ test("List nested functions", () => {
   useContext.mockReturnValue([state]);
 
   const wrapper = shallow(<FunctionTree functions={functions} />);
-  const root = wrapper.find(NonExpandableTreeItem).first();
+  const root = wrapper.find(NonExpandableFunctionTreeItem).first();
   const child1 = root.children().first();
   const child2 = root.children().at(1);
   const child3 = child1.children().first();
