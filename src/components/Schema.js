@@ -53,7 +53,6 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
 
   const removeSchemaProperty = (selected) => {
     delete map[selected].id;
-    // TODO delete object if it hasn't id in compile method
 
     setSchema({ ...schema });
   };
@@ -153,6 +152,8 @@ const compile = (edit, map, schema, types, expandList, setKey, name) => {
   const { id, properties, items, type } = schema || {};
   const children = [];
 
+  if (!id) return null;
+
   switch (type) {
     case "array": {
       const item = items[Object.keys(items)[0]];
@@ -200,7 +201,7 @@ const compile = (edit, map, schema, types, expandList, setKey, name) => {
           id={id || (name ? uuid() : "root")}
           key={id || (name ? uuid() : "root")}
           nodeId={id || (name ? uuid() : "root")}
-          name={name}
+          name={schema.name}
           edit={edit}
           children={children}
           map={map[id]}
