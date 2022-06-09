@@ -1,7 +1,7 @@
 import Arrow from "../../icons/Arrow";
 import Fade from "@mui/material/Fade";
 import FolderIcon from "@mui/icons-material/FolderRounded";
-import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
+import NonExpandableFunctionTreeItem from "../../components/NonExpandableFunctionTreeItem";
 import actions from "../../actions";
 import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
@@ -142,7 +142,7 @@ const compile = (folders, handleContextMenu) =>
     );
 
     return (
-      <NonExpandableTreeItem
+      <NonExpandableFunctionTreeItem
         key={root(folder.path)}
         nodeId={root(folder.path)}
         onClick={(event) => {

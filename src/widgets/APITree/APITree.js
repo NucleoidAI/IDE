@@ -1,13 +1,22 @@
+import AddIcon from "@mui/icons-material/Add";
 import ArrowIcon from "../../icons/Arrow";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteMethodDialog from "../../components/DeleteMethodDialog";
 import EditIcon from "@mui/icons-material/Edit";
 import Fade from "@mui/material/Fade";
-import NonExpandableTreeItem from "../../components/NonExpandableTreeItem";
+import NonExpandableAPITreeItem from "../../components/NonExpandableAPITreeItem";
 import ResourceMenu from "../ResourceMenu";
 import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
-import { Box, Menu, MenuItem } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardActions,
+  Fab,
+  Grid,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { TreeItem, TreeView } from "@mui/lab";
 
@@ -18,7 +27,8 @@ function APITree() {
   const [contextMenu, setContextMenu] = React.useState(null);
   const [methodDisabled, setMethodDisabled] = useState();
   const [open, setOpen] = useState(false);
-
+  const [resourceMenu, setResourceMenu] = React.useState(false);
+  const [anchor, setAnchor] = React.useState();
   const [expanded, setExpanded] = useState([]);
 
   const [state, dispatch] = useContext();
@@ -59,19 +69,15 @@ function APITree() {
     );
   };
 
-  const handleResourceMenu = (event, path) => {
+  const handleResourceMenu = (event) => {
     event.preventDefault();
 
-    dispatch({
-      type: "OPEN_RESOURCE_MENU",
-      payload: {
-        path: path,
-        anchor: {
-          mouseX: event.clientX,
-          mouseY: event.clientY,
-        },
-      },
-    });
+    setResourceMenu(true);
+    setAnchor(event);
+  };
+
+  const handleCloseResourceMenu = () => {
+    setResourceMenu(false);
   };
 
   const handleClose = () => {
@@ -134,72 +140,74 @@ function APITree() {
   });
 
   return (
-    <>
-      {open && (
-        <DeleteMethodDialog setOpen={setOpen} deleteMethod={deleteMethod} />
-      )}
-      <TreeView
-        defaultCollapseIcon={<ArrowIcon down />}
-        defaultExpandIcon={<ArrowIcon right />}
-        // defaultExpanded={list.map((api) => api.path)}
-        onNodeToggle={handleToggle}
-        expanded={expanded}
-        onNodeSelect={(event, value) => select(value)}
-        selected={selected}
-      >
-        {compile(
-          [graph["/"]],
-          handleContextMenu,
-          handleResourceMenu,
-          expandList
+    <Card sx={styles.apiTree}>
+      <Grid sx={styles.apiTreeGrid}>
+        {open && (
+          <DeleteMethodDialog setOpen={setOpen} deleteMethod={deleteMethod} />
         )}
-      </TreeView>
-      <Menu
-        open={contextMenu !== null}
-        onClose={handleClose}
-        onContextMenu={(event) => event.preventDefault()}
-        anchorReference="anchorPosition"
-        anchorPosition={
-          contextMenu !== null
-            ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-            : undefined
-        }
-        TransitionComponent={Fade}
-      >
-        <MenuItem
-          onClick={() => {
-            editMethod();
-          }}
+        <TreeView
+          defaultCollapseIcon={<ArrowIcon down />}
+          defaultExpandIcon={<ArrowIcon right />}
+          // defaultExpanded={list.map((api) => api.path)}
+          onNodeToggle={handleToggle}
+          expanded={expanded}
+          onNodeSelect={(event, value) => select(value)}
+          selected={selected}
         >
-          <EditIcon />
-          Edit
-        </MenuItem>
-        <MenuItem onClick={handleDeleteMethod} disabled={methodDisabled}>
-          <DeleteIcon /> Delete
-        </MenuItem>
-      </Menu>
-      <ResourceMenu select={select} map={map} />
-    </>
+          {compile([graph["/"]], handleContextMenu, expandList)}
+        </TreeView>
+        <Menu
+          open={contextMenu !== null}
+          onClose={handleClose}
+          onContextMenu={(event) => event.preventDefault()}
+          anchorReference="anchorPosition"
+          anchorPosition={
+            contextMenu !== null
+              ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+              : undefined
+          }
+          TransitionComponent={Fade}
+        >
+          <MenuItem
+            onClick={() => {
+              editMethod();
+            }}
+          >
+            <EditIcon />
+            Edit
+          </MenuItem>
+          <MenuItem onClick={handleDeleteMethod} disabled={methodDisabled}>
+            <DeleteIcon /> Delete
+          </MenuItem>
+        </Menu>
+        <ResourceMenu
+          anchor={anchor}
+          openMenu={resourceMenu}
+          handleClose={handleCloseResourceMenu}
+        />
+      </Grid>
+      <CardActions>
+        <Fab size={"small"} onClick={handleResourceMenu}>
+          <AddIcon />
+        </Fab>
+      </CardActions>
+    </Card>
   );
 }
 
-const compile = (list, handleContextMenu, handleResourceMenu, expandList) =>
+const compile = (list, handleContextMenu, expandList) =>
   list.map((api) => {
     let children = undefined;
+    let hash;
 
     if (api.resources && api.resources.length > 0) {
-      children = compile(
-        api.resources,
-        handleContextMenu,
-        handleResourceMenu,
-        expandList
-      );
+      children = compile(api.resources, handleContextMenu, expandList);
     }
 
     children = api.methods
       .map((method) => {
         const payload = { path: api.path, method };
-        const hash = window.btoa(JSON.stringify(payload));
+        hash = window.btoa(JSON.stringify(payload));
         map[hash] = payload;
 
         return (
@@ -217,16 +225,15 @@ const compile = (list, handleContextMenu, handleResourceMenu, expandList) =>
       })
       .concat(children);
     expandList.push(api.path);
+
     return (
-      <NonExpandableTreeItem
+      <NonExpandableAPITreeItem
         key={api.path}
         nodeId={api.path}
         label={api.label}
         children={children}
-        onClick={(e) => {
-          if (e.type === "contextmenu") {
-            handleResourceMenu(e, api.path);
-          }
+        onClick={() => {
+          return { hash: hash, map: map };
         }}
       />
     );
