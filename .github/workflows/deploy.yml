@@ -13,5 +13,9 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-      - run: npm ci && npm run build
-      - run: aws s3 sync ./build/ s3://ide.nucleoid.com --delete
+      - run: npm ci
+      - run: npm run build
+      - run: docker build . -t 533052815932.dkr.ecr.us-east-1.amazonaws.com/nuc:ide
+      - run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 533052815932.dkr.ecr.us-east-1.amazonaws.com
+      - run: docker push 533052815932.dkr.ecr.us-east-1.amazonaws.com/nuc:ide
+      - run: aws ecs update-service --cluster nuc-cluster --service ide-service-2 --force-new-deployment
