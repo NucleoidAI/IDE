@@ -22,14 +22,14 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <GlobalStoreProvider>
-          <BrowserRouter>
+          <BrowserRouter basename={"/ide"}>
             <Routes>
               <Route path="/" element={<IDE />}>
-                <Route index element={<Navigate to="/ide/api" />} />
-                <Route path="/ide/api" element={<API />} />
-                <Route path={"/ide/functions"} element={<Functions />} />
-                <Route path={"/ide/query"} element={<Query />} />
-                <Route path={"/ide/logs"} element={<Logs />} />
+                <Route index element={<Navigate to="/api" />} />
+                <Route path="/api" element={<API />} />
+                <Route path={"/functions"} element={<Functions />} />
+                <Route path={"/query"} element={<Query />} />
+                <Route path={"/logs"} element={<Logs />} />
                 <Route path={"/dev"} element={<Dev />} />
                 <Route path={"/login"} element={<Login />} />
               </Route>
