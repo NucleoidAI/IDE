@@ -10,10 +10,11 @@ import styles from "./styles";
 import { useLayoutContext } from "../../Context/providers/layoutContextProvider";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
-import { ArrowBackIosNew, ArrowForwardIos } from "@mui/icons-material/";
+import { ArrowForwardIos, DensityMedium } from "@mui/icons-material/";
 import {
   Box,
   Button,
+  IconButton,
   List,
   ListItem,
   ListItemIcon,
@@ -23,7 +24,7 @@ import {
 } from "@mui/material";
 
 const drawerWidth = 300;
-
+//TODO Split this page as components and styles
 function Menu(props) {
   const [openMd, setOpenMd] = React.useState(false);
   const [openLg, setOpenLg] = React.useState(true);
@@ -64,7 +65,6 @@ function Menu(props) {
               </Button>
             </Drawer>
           )}
-
           <Drawer
             open={openMd}
             onClose={handleClose}
@@ -84,18 +84,21 @@ function Menu(props) {
             <List>
               <ListItem>
                 <Logo title={props.title} />
+                <IconButton
+                  variant={"contained"}
+                  onClick={() => setOpenMd(false)}
+                >
+                  <DensityMedium
+                    fontSize="medium"
+                    sx={{ fill: theme.palette.custom.grey }}
+                  />
+                </IconButton>
               </ListItem>
               <br />
               <MenuLinks {...props} />
             </List>
             <ProjectSelect />
             <Status />
-            <Button onClick={() => setOpenMd(false)}>
-              <ArrowBackIosNew
-                fontSize="small"
-                sx={{ fill: theme.palette.custom.grey }}
-              />
-            </Button>
             <Settings />
           </Drawer>
         </>
@@ -131,18 +134,21 @@ function Menu(props) {
             <List>
               <ListItem>
                 <Logo title={props.title} />
+                <IconButton
+                  variant={"contained"}
+                  onClick={() => setOpenLg(false)}
+                >
+                  <DensityMedium
+                    fontSize="medium"
+                    sx={{ fill: theme.palette.custom.grey }}
+                  />
+                </IconButton>
               </ListItem>
               <br />
               <MenuLinks {...props} />
             </List>
             <ProjectSelect />
             <Status />
-            <Button onClick={() => setOpenLg(false)}>
-              <ArrowBackIosNew
-                fontSize="small"
-                sx={{ fill: theme.palette.custom.grey }}
-              />
-            </Button>
             <Settings />
           </LgDrawerStyled>
         </>
