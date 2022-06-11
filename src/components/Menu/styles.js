@@ -1,5 +1,5 @@
 const styles = {
-  root: { width: 300, flexShrink: 0 },
+  root: { flexShrink: 0 },
   drawer: {
     "& .MuiDrawer-paper": {
       boxSizing: "border-box",
@@ -18,6 +18,12 @@ const styles = {
   },
   listItemIcon: {
     color: "custom.grey",
+  },
+  listItemIconSmall: {
+    color: "custom.grey",
+    width: "100%",
+    pl: 1,
+    pr: 1,
   },
 };
 

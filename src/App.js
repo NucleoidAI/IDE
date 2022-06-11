@@ -8,7 +8,6 @@ import Logs from "./pages/ide/Logs";
 import Query from "./pages/ide/Query";
 import theme from "./theme";
 
-
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import {
   CssBaseline,
@@ -22,17 +21,30 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <GlobalStoreProvider>
-          <BrowserRouter basename={"/ide"}>
+          <BrowserRouter>
             <Routes>
-              <Route path="/" element={<IDE />}>
-                <Route index element={<Navigate to="/api" />} />
-                <Route path="/api" element={<API />} />
-                <Route path={"/functions"} element={<Functions />} />
-                <Route path={"/query"} element={<Query />} />
-                <Route path={"/logs"} element={<Logs />} />
-                <Route path={"/dev"} element={<Dev />} />
-                <Route path={"/login"} element={<Login />} />
-              </Route>
+              {!process.env.NODE_ENV === "development" && (
+                <Route path="/" element={<IDE />}>
+                  <Route index element={<Navigate to="/api" />} />
+                  <Route path="/api" element={<API />} />
+                  <Route path={"/functions"} element={<Functions />} />
+                  <Route path={"/query"} element={<Query />} />
+                  <Route path={"/logs"} element={<Logs />} />
+                  <Route path={"/dev"} element={<Dev />} />
+                  <Route path={"/login"} element={<Login />} />
+                </Route>
+              )}
+              {process.env.NODE_ENV === "development" && (
+                <Route path="/" element={<IDE />}>
+                  <Route index element={<Navigate to="/ide/api" />} />
+                  <Route path="/ide/api" element={<API />} />
+                  <Route path={"/ide/functions"} element={<Functions />} />
+                  <Route path={"/ide/query"} element={<Query />} />
+                  <Route path={"/ide/logs"} element={<Logs />} />
+                  <Route path={"/ide/login"} element={<Login />} />
+                  <Route path={"/dev"} element={<Dev />} />
+                </Route>
+              )}
             </Routes>
           </BrowserRouter>
         </GlobalStoreProvider>
