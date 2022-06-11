@@ -11,10 +11,10 @@ function API() {
   return (
     <Grid container sx={styles.root}>
       <APIDialog />
-      <Grid item xs={3}>
+      <Grid item sm={4} md={3} xl={2}>
         <APITree />
       </Grid>
-      <Grid container item xs={9} sx={styles.content}>
+      <Grid container item sm={8} md={9} xl={10} sx={styles.content}>
         <Grid item xs={12} sx={styles.editorGrid}>
           <Paper sx={styles.editorPaper}>
             <Editor name={"api"} api />

@@ -148,7 +148,6 @@ function APITree() {
         <TreeView
           defaultCollapseIcon={<ArrowIcon down />}
           defaultExpandIcon={<ArrowIcon right />}
-          // defaultExpanded={list.map((api) => api.path)}
           onNodeToggle={handleToggle}
           expanded={expanded}
           onNodeSelect={(event, value) => select(value)}
@@ -159,7 +158,6 @@ function APITree() {
         <Menu
           open={contextMenu !== null}
           onClose={handleClose}
-          onContextMenu={(event) => event.preventDefault()}
           anchorReference="anchorPosition"
           anchorPosition={
             contextMenu !== null
@@ -198,7 +196,7 @@ function APITree() {
 const compile = (list, handleContextMenu, expandList) =>
   list.map((api) => {
     let children = undefined;
-    let hash;
+    let resourceHash;
 
     if (api.resources && api.resources.length > 0) {
       children = compile(api.resources, handleContextMenu, expandList);
@@ -207,7 +205,7 @@ const compile = (list, handleContextMenu, expandList) =>
     children = api.methods
       .map((method) => {
         const payload = { path: api.path, method };
-        hash = window.btoa(JSON.stringify(payload));
+        const hash = (resourceHash = window.btoa(JSON.stringify(payload)));
         map[hash] = payload;
 
         return (
@@ -233,7 +231,7 @@ const compile = (list, handleContextMenu, expandList) =>
         label={api.label}
         children={children}
         onClick={() => {
-          return { hash: hash, map: map };
+          return { hash: resourceHash, map: map };
         }}
       />
     );
