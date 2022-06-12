@@ -8,6 +8,7 @@ const styles = {
     height: "100%",
     flexDirection: "column",
     justifyContent: "space-between",
+    alignItems: "flex-end",
   },
   editIcon: {
     flexDirection: "row",

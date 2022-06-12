@@ -13,7 +13,7 @@ const SummaryForm = forwardRef(
   ) => {
     if (ref) {
       return (
-        <form style={{ marginLeft: 24, marginRight: 24 }}>
+        <>
           <TextField
             label={"Summary"}
             fullWidth
@@ -31,7 +31,7 @@ const SummaryForm = forwardRef(
             label={"Description"}
             multiline
             fullWidth
-            rows={3}
+            rows={2}
             inputRef={(el) => {
               if (el) {
                 ref.current["Description"] = el;
@@ -42,7 +42,7 @@ const SummaryForm = forwardRef(
               descriptionTextChangeHandler && descriptionTextChangeHandler()
             }
           />
-        </form>
+        </>
       );
     }
   }
