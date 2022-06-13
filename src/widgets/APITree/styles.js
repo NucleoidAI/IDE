@@ -1,4 +1,6 @@
 const styles = {
+  apiTree: { height: "100%" },
+  apiTreeGrid: { maxHeight: "85vh", overflow: "auto" },
   apiTreeItem: {
     fontSize: 12,
     color: "#666",

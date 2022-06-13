@@ -5,7 +5,7 @@ import FunctionTree from "../../../widgets/FunctionTree";
 import actions from "../../../actions";
 import styles from "./styles";
 import { useContext } from "../../../Context/providers/contextProvider";
-import { Card, CardActions, CardContent, Grid, Paper } from "@mui/material";
+import { Card, CardActions, Grid, Paper } from "@mui/material";
 
 function Functions() {
   const [, dispatch] = useContext();
@@ -18,29 +18,27 @@ function Functions() {
   }
 
   return (
-    <>
-      <Grid container spacing={1}>
-        <Grid item xs={3}>
-          <Card sx={styles.pageheight}>
-            <FunctionDialog />
-            <CardContent>
-              <FunctionTree />
-            </CardContent>
-            <CardActions>
-              <AddList
-                clickEvent={openFunctionDialog}
-                list={["Folder", "|", "Class", "Function"]}
-              />
-            </CardActions>
-          </Card>
-        </Grid>
-        <Grid item xs={9}>
-          <Paper sx={styles.pageheight}>
-            <Editor name={"functions"} functions />
-          </Paper>
-        </Grid>
+    <Grid container sx={styles.root}>
+      <Grid item xs={3}>
+        <Card sx={styles.functionTreeCard}>
+          <FunctionDialog />
+          <Grid sx={styles.functionTreeGrid}>
+            <FunctionTree />
+          </Grid>
+          <CardActions>
+            <AddList
+              clickEvent={openFunctionDialog}
+              list={["Folder", "|", "Class", "Function"]}
+            />
+          </CardActions>
+        </Card>
       </Grid>
-    </>
+      <Grid item xs={9} sx={styles.editorGrid}>
+        <Paper sx={styles.editorPaper}>
+          <Editor name={"functions"} functions />
+        </Paper>
+      </Grid>
+    </Grid>
   );
 }
 

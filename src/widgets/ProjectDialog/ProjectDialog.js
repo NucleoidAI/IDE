@@ -5,7 +5,7 @@ import State from "../../state";
 import project from "../../project";
 import service from "../../service";
 import styles from "./styles";
-import { useContext } from "../../Context/providers/contextProvider";
+import useGetProjects from "../../hooks/useGetProjects";
 import { Backdrop, CircularProgress } from "@mui/material";
 
 import {
@@ -25,10 +25,12 @@ import { DataGrid } from "@mui/x-data-grid";
 import Settings from "../../settings";
 
 const NewProjectScreen = ({ setScreen, handleClose }) => {
-  const [, dispatch] = useContext();
+  const [, dispatch] = useGetProjects();
+  const [open, setOpen] = React.useState(false);
   const projectName = React.useRef("");
 
   const addProject = () => {
+    setOpen(true);
     service
       .addProject(projectName.current, JSON.stringify(State.withSample()))
       .then(({ data }) => {
@@ -42,6 +44,7 @@ const NewProjectScreen = ({ setScreen, handleClose }) => {
           type: "SET_PROJECT",
           payload: { project: State.withSample() },
         });
+        setOpen(false);
         handleClose();
       });
   };
@@ -88,6 +91,7 @@ const NewProjectScreen = ({ setScreen, handleClose }) => {
             <Button onClick={handleClose}>Cancel</Button>
             <Button onClick={addProject}>Save</Button>
           </Grid>
+          <ProgressBackDrop open={open} />
         </Grid>
       </DialogActions>
     </>
@@ -95,12 +99,10 @@ const NewProjectScreen = ({ setScreen, handleClose }) => {
 };
 
 const ListProjectsScreen = ({ setScreen, handleClose }) => {
-  const [, dispatch] = useContext();
+  const [, dispatch, handleGetProjects] = useGetProjects();
   const [open, setOpen] = React.useState(false);
   const select = React.useRef();
   const [dialog, setDialog] = React.useState(false);
-
-  // React.useEffect(() => {}, []);
 
   const DeleteButton = ({ params, handleDelete }) => {
     return (
@@ -150,6 +152,18 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
     setDialog(true);
   };
 
+  const handleOpenNewProject = async () => {
+    if (project.get().project !== "") {
+      setScreen("NewProject");
+    } else {
+      setOpen(true);
+      handleGetProjects((result) => {
+        if (result) setScreen("NewProject");
+        setOpen(false);
+      });
+    }
+  };
+
   const columns = [
     {
       field: "name",
@@ -189,7 +203,7 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
           }}
         >
           <Typography variant="h6">Select a project</Typography>
-          <Button onClick={() => setScreen("NewProject")} variant="text">
+          <Button onClick={handleOpenNewProject} variant="text">
             NEW PROJECT
           </Button>
         </Grid>
@@ -221,13 +235,7 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
             <Button onClick={handleSelect}>Select</Button>
           </Grid>
         </Grid>
-        <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={open}
-          onClick={handleClose}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
+        <ProgressBackDrop open={open} />
         <Dialog
           open={dialog}
           onClose={handleClose}
@@ -248,6 +256,17 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
         </Dialog>
       </DialogActions>
     </>
+  );
+};
+
+const ProgressBackDrop = ({ open }) => {
+  return (
+    <Backdrop
+      sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      open={open}
+    >
+      <CircularProgress color="inherit" />
+    </Backdrop>
   );
 };
 

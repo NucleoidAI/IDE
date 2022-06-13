@@ -11,22 +11,43 @@ let theme = createTheme({
       variant: "contained",
     },
   },
-  transitions: {
-    duration: {
-      shortest: 1,
-      shorter: 1,
-      short: 1,
-      standard: 1,
-      complex: 1,
-      enteringScreen: 1,
-      leavingScreen: 1,
-    },
-  },
 });
 
 theme = {
   ...theme,
   components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          "&::-webkit-scrollbar, & *::-webkit-scrollbar": {
+            backgroundColor: "#fff",
+            width: 6,
+            height: 6,
+          },
+          "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
+            borderRadius: 10,
+            backgroundColor: "#353e48",
+            minHeight: 24,
+            border: "3px",
+          },
+          "&::-webkit-scrollbar-thumb:focus, & *::-webkit-scrollbar-thumb:focus":
+            {
+              backgroundColor: "#959595",
+            },
+          "&::-webkit-scrollbar-thumb:active, & *::-webkit-scrollbar-thumb:active":
+            {
+              backgroundColor: "#959595",
+            },
+          "&::-webkit-scrollbar-thumb:hover, & *::-webkit-scrollbar-thumb:hover":
+            {
+              backgroundColor: "#959595",
+            },
+          "&::-webkit-scrollbar-corner, & *::-webkit-scrollbar-corner": {
+            backgroundColor: "#2b2b2b",
+          },
+        },
+      },
+    },
     MuiDrawer: {
       styleOverrides: {
         paper: {

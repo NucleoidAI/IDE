@@ -10,8 +10,9 @@ import { useRef } from "react";
 import { Divider, Menu, MenuItem } from "@mui/material";
 
 const ResourceMenu = (props) => {
+  const { anchor, openMenu, handleClose, hash, map } = props;
+
   const [state, dispatch] = useContext();
-  const { anchor, path } = state.pages.api.resourceMenu;
   const [methodDisabled, setMethodDisabled] = React.useState();
   const [alertMessage, setAlertMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
@@ -21,7 +22,10 @@ const ResourceMenu = (props) => {
     const checkMethodAddable = () => {
       const { pages, nucleoid } = state;
       const { api } = nucleoid;
-      if (path) {
+
+      if (hash) {
+        const path = map ? map[hash].path : null;
+
         return Object.keys(api[path]).length > 3 ? true : false;
       }
 
@@ -33,15 +37,7 @@ const ResourceMenu = (props) => {
     };
 
     setMethodDisabled(checkMethodAddable());
-  }, [state, path]);
-
-  const { select, map } = props;
-
-  const handleClose = () => {
-    dispatch({
-      type: "CLOSE_RESOURCE_MENU",
-    });
-  };
+  }, [state, hash, map]);
 
   const addMethod = () => {
     selectPath();
@@ -90,21 +86,18 @@ const ResourceMenu = (props) => {
   };
 
   const selectPath = () => {
-    if (path) {
+    const item = map ? map[hash] : null;
+
+    if (item) {
       dispatch({
         type: "SET_SELECTED_API",
-        payload: { path: path, method: null },
+        payload: { path: item.path, method: null },
       });
-
-      select(
-        window.btoa(
-          JSON.stringify(
-            Object.keys(map)
-              .map((item) => map[item])
-              .find((item) => item.path === path)
-          )
-        )
-      );
+    } else {
+      dispatch({
+        type: "SET_SELECTED_API",
+        payload: { path: state.pages.api.selected.path, method: null },
+      });
     }
   };
 
@@ -119,30 +112,32 @@ const ResourceMenu = (props) => {
         />
       )}
       {alertMessage && <AlertMassage message={alertMessage} />}
-      {state.pages.api.resourceMenu.open && (
-        <Menu
-          open={Boolean(state.pages.api.resourceMenu.open)}
-          onClose={handleClose}
-          onContextMenu={(event) => event.preventDefault()}
-          anchorReference="anchorPosition"
-          anchorPosition={{ top: anchor.mouseY, left: anchor.mouseX }}
-          TransitionComponent={Fade}
-        >
-          <MenuItem onClick={addResource}>
-            <SourceIcon />
-            Resource
-          </MenuItem>
-          <MenuItem onClick={addMethod} disabled={methodDisabled}>
-            <HttpIcon />
-            Method
-          </MenuItem>
-          <Divider />
-          <MenuItem onClick={handleResourceDeleteDialog}>
-            <DeleteIcon />
-            Delete
-          </MenuItem>
-        </Menu>
-      )}
+      {state.pages.api.resourceMenu.open && <></>}
+      <Menu
+        open={openMenu}
+        onClose={handleClose}
+        onContextMenu={(event) => event.preventDefault()}
+        anchorReference="anchorPosition"
+        anchorPosition={{
+          top: anchor?.clientY || 0,
+          left: anchor?.clientX || 0,
+        }}
+        TransitionComponent={Fade}
+      >
+        <MenuItem onClick={addResource}>
+          <SourceIcon />
+          Resource
+        </MenuItem>
+        <MenuItem onClick={addMethod} disabled={methodDisabled}>
+          <HttpIcon />
+          Method
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={handleResourceDeleteDialog}>
+          <DeleteIcon />
+          Delete
+        </MenuItem>
+      </Menu>
     </>
   );
 };

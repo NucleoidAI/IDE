@@ -20,7 +20,7 @@ const CodeSandbox = {
             context.nucleoid.functions
               .map(
                 (item) =>
-                  item.code +
+                  item.definition +
                   "\nnucleoid.register(" +
                   item.path.split("/")[item.path.split("/").length - 1] +
                   ");\n\n"
@@ -35,7 +35,7 @@ const CodeSandbox = {
             main: "index.js",
             license: "MIT",
             dependencies: {
-              nucleoidjs: Settings.beta() ? "0.5.11-0" : "0.5.10",
+              nucleoidjs: Settings.beta() ? "beta" : "latest",
             },
             scripts: {
               start: "node index.js",

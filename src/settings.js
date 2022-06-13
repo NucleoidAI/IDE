@@ -16,13 +16,6 @@ const Settings = {
         return localStorage.getItem("app");
       }
     },
-    editor: (url) => {
-      if (url) {
-        localStorage.setItem("editor", url);
-      } else {
-        return localStorage.getItem("editor");
-      }
-    },
   },
   codesandbox: {
     url: "https://codesandbox.io/api/v1/sandboxes/define?json=1",
@@ -39,12 +32,14 @@ const Settings = {
     client_secret: "3123c2be7aa1aec88d2c52c9e1a124c33eba0b08",
     token_url: "https://github.com/login/oauth/access_token",
     user: "https://api.github.com/user",
-    auth: "http://localhost:4545/auth/tokens",
-    projects: "http://localhost:4545/projects",
+  },
+  service: {
+    auth: "http://localhost:5000/auth/tokens",
+    projects: "http://localhost:5000/projects",
   },
   connection: true,
   beta: (status) => {
-    if (status) {
+    if (status !== undefined && status !== null) {
       localStorage.setItem("beta", status);
     } else {
       return localStorage.getItem("beta");
@@ -57,6 +52,15 @@ const Settings = {
       return localStorage.getItem("runtime");
     }
   },
+  /*
+  token:{
+    refreshToken:(data)=>{
+
+    },
+    accessToken:(data)=>{
+
+    }
+  }*/
 };
 
 export default Settings;

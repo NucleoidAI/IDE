@@ -2,7 +2,8 @@ import TextField from "@mui/material/TextField";
 import TreeItem from "@mui/lab/TreeItem";
 import React, { useRef, useState } from "react";
 
-function SchemaObject({ name, edit, map, children, ...other }) {
+function SchemaObject(props) {
+  const { name, edit, map, children, ...other } = props;
   const [value, setValue] = useState(name);
   const textField = useRef();
 

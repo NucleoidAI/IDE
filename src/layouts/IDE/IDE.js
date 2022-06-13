@@ -1,11 +1,12 @@
+import Box from "@mui/material/Box";
 import FolderIcon from "@mui/icons-material/Folder";
-import Grid from "@mui/material/Grid";
 import Menu from "../../components/Menu";
 import ProcessDrawer from "../../widgets/ProcessDrawer/ProcessDrawer";
 import SendIcon from "@mui/icons-material/Send";
 import StorageIcon from "@mui/icons-material/Storage";
 import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import styles from "./styles";
+
 import { Outlet } from "react-router-dom"; // eslint-disable-line
 
 const list = [
@@ -16,7 +17,6 @@ const list = [
     icon: <FolderIcon />,
   },
   { title: "Query", link: "/ide/query", icon: <StorageIcon />, anchor: false },
-
   {
     title: "Logs",
     link: "/ide/logs",
@@ -27,15 +27,13 @@ const list = [
 
 function IDE() {
   return (
-    <>
-      <Grid sx={styles.root}>
-        <Menu list={list} title="IDE" />
-        <Grid sx={styles.content}>
-          <Outlet />
-        </Grid>
-      </Grid>
+    <Box sx={styles.root}>
+      <Menu list={list} title="IDE" />
+      <Box sx={styles.content}>
+        <Outlet />
+      </Box>
       <ProcessDrawer />
-    </>
+    </Box>
   );
 }
 

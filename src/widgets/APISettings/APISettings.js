@@ -6,7 +6,7 @@ import SummaryForm from "../../components/SummaryForm";
 import { compile } from "../../widgets/APIDialog/Context";
 import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
-import { Fab, Grid } from "@mui/material";
+import { Box, Fab, Grid } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 
 function APISettings() {
@@ -46,15 +46,9 @@ function APISettings() {
   }, [state, method]);
 
   return (
-    <Grid container sx={styles.root}>
-      <Grid
-        container
-        item
-        xs={9}
-        direction={"column"}
-        justifyContent={"space-between"}
-      >
-        <Grid container sx={styles.content}>
+    <Box sx={styles.root}>
+      <Grid container sx={styles.container}>
+        <Grid container xs={9} item sx={styles.content}>
           <Grid item xs={6} sx={styles.schema}>
             {method === "get" && <ParamView params={params} />}
             {method !== "get" && request && (
@@ -77,31 +71,32 @@ function APISettings() {
             )}
           </Grid>
         </Grid>
-      </Grid>
-      <Grid container item xs={3} sx={styles.summaryFormRoot}>
-        <SummaryForm
-          summaryText={summary}
-          descriptionText={description}
-          ref={summaryRef}
-        />
-        <Security
-          onClick={() => console.log(summaryRef.current["Summary"].value)}
-        />
-        <Grid container sx={styles.editIcon}>
-          <Fab
-            size={"small"}
-            onClick={() => {
-              dispatch({
-                type: "OPEN_API_DIALOG",
-                payload: { type: "method", action: "edit" },
-              });
-            }}
-          >
-            <EditIcon />
-          </Fab>
+        <Grid container xs={3} item sx={styles.summaryFormRoot}>
+          <SummaryForm
+            summaryText={summary}
+            descriptionText={description}
+            ref={summaryRef}
+          />
+
+          <Security
+            onClick={() => console.log(summaryRef.current["Summary"].value)}
+          />
+          <Grid container sx={styles.editIcon}>
+            <Fab
+              size={"small"}
+              onClick={() => {
+                dispatch({
+                  type: "OPEN_API_DIALOG",
+                  payload: { type: "method", action: "edit" },
+                });
+              }}
+            >
+              <EditIcon />
+            </Fab>
+          </Grid>
         </Grid>
       </Grid>
-    </Grid>
+    </Box>
   );
 }
 

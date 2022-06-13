@@ -11,7 +11,6 @@ import { layoutReducer } from "./reducers/layoutReducer";
 
 const initStatus = {
   status: "unreachable",
-  openApi: false,
   sandbox: Settings.codesandbox.sandboxID() ? true : false,
   sandboxDialog: false,
   metrics: {
@@ -30,10 +29,6 @@ const InitContext = () => {
 
   if (!Settings.url.terminal()) {
     Settings.url.terminal("http://localhost:8448/");
-  }
-
-  if (!Settings.url.editor()) {
-    Settings.url.editor("http://localhost:8448/lint");
   }
 
   if (project.isAuth()) {

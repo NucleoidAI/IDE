@@ -61,9 +61,9 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
         null,
         nucFuncs.map((item) => ({
           name: item.path.split("/").pop(),
-          value: item.code,
+          value: item.path.split("/").pop(),
           caption: item.path.split("/").pop(),
-          meta: "nucleoid functions",
+          meta: "Nucleoid",
           score: 1,
         }))
       );

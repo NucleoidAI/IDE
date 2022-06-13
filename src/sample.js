@@ -3,22 +3,7 @@ const api = {
     get: {
       summary: "Hello",
       description: "Hello",
-      params: [
-        {
-          name: "order",
-          in: "query",
-          type: "string",
-          required: true,
-          description: "order",
-        },
-        {
-          name: "item",
-          in: "query",
-          type: "string",
-          required: false,
-          description: "item",
-        },
-      ],
+      params: [],
       request: { type: "object", properties: {} },
       response: {
         type: "object",
@@ -297,13 +282,13 @@ const functions = [
     path: "/classes/Order",
     params: [],
     type: "CLASS",
-    code: `class Order {\n\tconstructor(qty,item){\n\t\tthis.item = item;\n\t\tthis.qty = qty;\n\t\tthis.date = Date.now();\n\t}\n}`,
+    definition: `class Order {\n\tconstructor(qty,item){\n\t\tthis.item = item;\n\t\tthis.qty = qty;\n\t\tthis.date = Date.now();\n\t}\n}`,
   },
   {
     path: "/classes/Item",
     params: [],
     type: "CLASS",
-    code: `class Item {\n\tconstructor(name, barcode) {\n\t\tthis.name = name;\n\t\tthis.barcode = barcode;\n\t}\n}`,
+    definition: `class Item {\n\tconstructor(name, barcode) {\n\t\tthis.name = name;\n\t\tthis.barcode = barcode;\n\t}\n}`,
   },
 ];
 

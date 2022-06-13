@@ -8,16 +8,18 @@ import ImportExportIcon from "@mui/icons-material/ImportExport";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import PostmanIcon from "../../icons/Postman";
 import Project from "../../project";
+import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import RunCodesandbox from "../../components/RunCodesandbox";
 import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
 import SwaggerDialog from "../../components/SwaggerDialog";
 import SyncIcon from "@mui/icons-material/Sync";
 import ViewListIcon from "@mui/icons-material/ViewList";
-import project from "../../project";
 import service from "../../service";
 import styles from "./styles";
+import useGetProjects from "../../hooks/useGetProjects";
 import useLayout from "../../hooks/useLayout";
+
 //eslint-disable-next-line
 import { useContext } from "../../Context/providers/contextProvider";
 import { useLocation } from "react-router-dom";
@@ -25,11 +27,12 @@ import { Box, CircularProgress, Drawer, ListItem } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
 const ProcessDrawer = () => {
-  const [state, contextDispatch] = useContext();
+  const [state, , handleGetProject] = useGetProjects();
   const [status, dispatch, getStatus] = useLayout();
   const location = useLocation();
 
   const [alert, setAlert] = useState(false);
+  const [vercel, setVercel] = useState(false);
   const [loading, setLoading] = useState(false);
   const [backdrop, setBackdrop] = useState(false);
 
@@ -37,30 +40,12 @@ const ProcessDrawer = () => {
 
   const [link, setLink] = useState("");
 
-  const auth = (code) => {
-    return service.auth(code).then((data) => {
-      localStorage.setItem("accessToken", data.accessToken);
-      localStorage.setItem("refreshToken", data.refreshToken);
-
-      return service.getUserFromGit(data.refreshToken);
-    });
+  const auth = () => {
+    setBackdrop(true);
+    handleGetProject((result) => setBackdrop(false));
   };
 
   useEffect(() => {
-    const url = window.location.href;
-    const hasCode = url.includes("?code=");
-
-    if (hasCode) {
-      const newUrl = url.split("?code=");
-      window.history.pushState({}, null, newUrl[0]);
-      setBackdrop(true);
-
-      auth({ code: newUrl[1] }).then(() => {
-        setBackdrop(false);
-        handleGetProject();
-      });
-    }
-
     getStatus();
     clearInterval(getStatusTask.current);
 
@@ -72,6 +57,7 @@ const ProcessDrawer = () => {
 
     if (location.state?.anchor === false) {
       setAlert(false);
+      setVercel(false);
     }
   }, [location.state]); //eslint-disable-line
 
@@ -79,22 +65,24 @@ const ProcessDrawer = () => {
     setAlert(false);
   };
 
+  const handleCloseVercel = () => {
+    setVercel(false);
+  };
+
   const handleRun = () => {
     if (!Settings.runtime()) {
       setAlert(true);
       service.metrics().then((data) => {
-        Settings.runtime("npx");
         handleRunApi();
       });
     }
   };
 
   const handleRunApi = () => {
-    const nuc = state.get("nucleoid");
     setLoading(true);
-
+    Settings.runtime("npx");
     service
-      .openapi("start", nuc)
+      .openapi("start", state.get("nucleoid"))
       .then(() => {
         dispatch({ type: "SWAGGER_DIALOG", payload: { dialogStatus: true } });
         getStatus();
@@ -108,39 +96,21 @@ const ProcessDrawer = () => {
       });
   };
 
-  const handleGetProject = () => {
-    setBackdrop(true);
-
-    service.getProjects().then((result) => {
-      Settings.projects = [...result.data];
-
-      if (result.data.length > 0) {
-        service.getProject(result.data[0].project).then(({ data }) => {
-          setBackdrop(false);
-          project.setWithoutStringify(data.project, data.name, data.context);
-          contextDispatch({
-            type: "SET_PROJECT",
-            payload: { project: JSON.parse(data.context) },
-          });
-        });
-      } else {
-        const { name, context } = project.getStringify();
-        service.addProject(name, context).then(({ data }) => {
-          Settings.projects = [{ project: data, name }];
-          project.setWithoutStringify(data, name, context);
-          setBackdrop(false);
-        });
-      }
-    });
-  };
-
   const handleSaveProject = () => {
     const { project, context, name } = Project.getStringify();
     setBackdrop(true);
-
-    service.updateProject(project, name, context).then((data) => {
-      setBackdrop(false);
-    });
+    if (!project) {
+      return handleGetProject((result) => setBackdrop(false));
+    } else {
+      service
+        .updateProject(project, name, context)
+        .then((data) => {
+          setBackdrop(false);
+        })
+        .catch(() => {
+          setBackdrop(false);
+        });
+    }
   };
 
   const handleCloseSandboxDialog = () => {
@@ -159,13 +129,11 @@ const ProcessDrawer = () => {
       Settings.url.terminal(
         `https://${data.sandbox_id}-8448.sse.codesandbox.io/`
       );
-      Settings.url.editor(
-        `https://${data.sandbox_id}-8448.sse.codesandbox.io/lint`
-      );
       dispatch({
         type: "SANDBOX",
         payload: { status: true, dialogStatus: true },
       });
+
       Settings.runtime("sandbox");
       setAlert(false);
     }
@@ -238,14 +206,14 @@ const ProcessDrawer = () => {
           <ListItem button onClick={handleOpenDialog}>
             <ViewListIcon sx={styles.listitem} />
           </ListItem>
-          <ListItem button onClick={handleGetProject}>
+          <ListItem button onClick={auth}>
             <GitHubIcon sx={styles.listitem} />
           </ListItem>
           <ListItem
-            onClick={handleDownloadContext}
             component={"a"}
+            onClick={handleDownloadContext}
             href={link}
-            download={project.get().name + ".nuc.json"}
+            download={Project.get().name + ".nuc.json"}
             target="_blank"
           >
             <ImportExportIcon sx={styles.listitem} />
@@ -254,6 +222,22 @@ const ProcessDrawer = () => {
           <ListItem button>
             <PostmanIcon />
           </ListItem>
+          <DialogTooltip
+            open={vercel}
+            placement="left"
+            title={<b>Deploy</b>}
+            message={
+              <>
+                Vercel deployment will be here soon
+                <br />
+              </>
+            }
+            handleTooltipClose={handleCloseVercel}
+          >
+            <ListItem button onClick={() => setVercel(true)}>
+              <RocketLaunchIcon sx={styles.listitem} />
+            </ListItem>
+          </DialogTooltip>
         </Box>
         <ListItem button onClick={handleSaveProject}>
           <SaveIcon sx={styles.listitem} />
@@ -265,14 +249,15 @@ const ProcessDrawer = () => {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-      {status.sandboxDialog && (
-        <CodeSandboxDialog
-          handleCloseSandboxDialog={handleCloseSandboxDialog}
-        />
-      )}
-      {status.swagger && (
-        <SwaggerDialog handleClose={handleCloseSwaggerDialog} />
-      )}
+      <CodeSandboxDialog
+        open={status.sandboxDialog}
+        handleCloseSandboxDialog={handleCloseSandboxDialog}
+      />
+      <SwaggerDialog
+        open={status.swagger}
+        handleClose={handleCloseSwaggerDialog}
+      />
+
       {status.name}
     </>
   );
