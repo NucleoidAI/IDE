@@ -50,7 +50,7 @@ function Menu(props) {
               }}
             >
               <List>
-                <ListItem>
+                <ListItem button onClick={() => setOpenMd(true)}>
                   <SmallLogo />
                 </ListItem>
                 <br />
@@ -115,7 +115,7 @@ function Menu(props) {
               }}
             >
               <List>
-                <ListItem>
+                <ListItem button onClick={() => setOpenLg(true)}>
                   <SmallLogo />
                 </ListItem>
                 <br />
