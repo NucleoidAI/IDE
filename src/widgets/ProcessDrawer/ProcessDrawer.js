@@ -72,7 +72,7 @@ const ProcessDrawer = () => {
   const handleRun = () => {
     if (!Settings.runtime()) {
       setAlert(true);
-      service.metrics().then((data) => { 
+      service.metrics().then((data) => {
         handleRunApi();
       });
     }
@@ -228,7 +228,7 @@ const ProcessDrawer = () => {
             title={<b>Deploy</b>}
             message={
               <>
-                Vercell deployment will be here soon
+                Vercel deployment will be here soon
                 <br />
               </>
             }

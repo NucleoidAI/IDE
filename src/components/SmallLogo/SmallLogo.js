@@ -1,7 +1,12 @@
+import { Typography } from "@mui/material";
 import React from "react";
-import Icon from "../../icons/icon.png";
 
 const SmallLogo = () => {
-  return <img src={Icon} style={{ width: 45, height: 45 }} />;
+  return (
+    <Typography display={"inline"} fontSize={"22px"} color={"#28a745"}>
+      nuc
+    </Typography>
+  );
 };
+
 export default SmallLogo;
