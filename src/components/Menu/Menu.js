@@ -6,6 +6,7 @@ import React from "react";
 import Settings from "../Settings";
 import SmallLogo from "../SmallLogo";
 import Status from "../../widgets/Status";
+import { drawerWidth } from "../../config";
 import styles from "./styles";
 import { useLayoutContext } from "../../Context/providers/layoutContextProvider";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +24,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 
-const drawerWidth = 300;
 //TODO Split this page as components and styles
 function Menu(props) {
   const [openMd, setOpenMd] = React.useState(false);
