@@ -1,6 +1,6 @@
 const styles = {
   root: { width: "100%", height: "100%" },
-  editorGrid: { height: "50%" },
+  editorGrid: {},
   editorPaper: { height: "100%" },
   runButton(theme) {
     return {
@@ -11,7 +11,7 @@ const styles = {
       alignItems: "center",
     };
   },
-  contentGrid: { pt: 1, height: "50%" },
+  contentGrid: { pt: 1 },
   loadingCard: { height: "100%" },
   contentCard: { height: "100%", padding: 1 },
   playArrowIcon: {
