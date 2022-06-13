@@ -1,15 +1,16 @@
 const config = {
   layout: {
     ide: {
+      total: 12,
       tree: {
         xl: 3,
         lg: 3,
-        md: 3,
+        md: 4,
       },
       content: {
         xl: 9,
         lg: 9,
-        md: 9,
+        md: 8,
       },
     },
   },

@@ -9,7 +9,7 @@ import { Card, Grid, Paper } from "@mui/material";
 
 function API() {
   return (
-    <Grid container sx={styles.root}>
+    <Grid container sx={styles.root} columns={config.layout.ide.total}>
       <APIDialog />
       <Grid
         item
