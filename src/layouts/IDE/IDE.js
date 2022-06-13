@@ -13,13 +13,13 @@ const list = [
   { title: "API", link: "/", icon: <SendIcon /> },
   {
     title: "Functions",
-    link: "/ide/functions",
+    link: "/functions",
     icon: <FolderIcon />,
   },
-  { title: "Query", link: "/ide/query", icon: <StorageIcon />, anchor: false },
+  { title: "Query", link: "/query", icon: <StorageIcon />, anchor: false },
   {
     title: "Logs",
-    link: "/ide/logs",
+    link: "/logs",
     icon: <ViewCarouselIcon />,
     anchor: false,
   },
