@@ -57,7 +57,7 @@ function Menu(props) {
                 <SmallMenuLinks {...props} />
               </List>
               <Box sx={{ height: "100%" }}></Box>
-              <Button onClick={() => setOpenMd(true)}>
+              <Button sx={{ pb: 3 }} onClick={() => setOpenMd(true)}>
                 <ArrowForwardIos
                   fontSize="small"
                   sx={{ fill: theme.palette.custom.grey }}
@@ -122,10 +122,12 @@ function Menu(props) {
                 <SmallMenuLinks {...props} />
               </List>
               <Box sx={{ height: "100%" }}></Box>
-              <Button onClick={() => setOpenLg(true)}>
+              <Button sx={{ pb: 3 }} onClick={() => setOpenLg(true)}>
                 <ArrowForwardIos
                   fontSize="small"
-                  sx={{ fill: theme.palette.custom.grey }}
+                  sx={{
+                    fill: theme.palette.custom.grey,
+                  }}
                 />
               </Button>
             </Drawer>
