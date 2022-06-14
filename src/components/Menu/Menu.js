@@ -6,6 +6,7 @@ import React from "react";
 import Settings from "../Settings";
 import SmallLogo from "../SmallLogo";
 import Status from "../../widgets/Status";
+import { drawerWidth } from "../../config";
 import styles from "./styles";
 import { useLayoutContext } from "../../Context/providers/layoutContextProvider";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +24,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 
-const drawerWidth = 300;
 //TODO Split this page as components and styles
 function Menu(props) {
   const [openMd, setOpenMd] = React.useState(false);
@@ -50,14 +50,14 @@ function Menu(props) {
               }}
             >
               <List>
-                <ListItem>
+                <ListItem button onClick={() => setOpenMd(true)}>
                   <SmallLogo />
                 </ListItem>
                 <br />
                 <SmallMenuLinks {...props} />
               </List>
               <Box sx={{ height: "100%" }}></Box>
-              <Button onClick={() => setOpenMd(true)}>
+              <Button sx={{ pb: 3 }} onClick={() => setOpenMd(true)}>
                 <ArrowForwardIos
                   fontSize="small"
                   sx={{ fill: theme.palette.custom.grey }}
@@ -115,17 +115,19 @@ function Menu(props) {
               }}
             >
               <List>
-                <ListItem>
+                <ListItem button onClick={() => setOpenLg(true)}>
                   <SmallLogo />
                 </ListItem>
                 <br />
                 <SmallMenuLinks {...props} />
               </List>
               <Box sx={{ height: "100%" }}></Box>
-              <Button onClick={() => setOpenLg(true)}>
+              <Button sx={{ pb: 3 }} onClick={() => setOpenLg(true)}>
                 <ArrowForwardIos
                   fontSize="small"
-                  sx={{ fill: theme.palette.custom.grey }}
+                  sx={{
+                    fill: theme.palette.custom.grey,
+                  }}
                 />
               </Button>
             </Drawer>

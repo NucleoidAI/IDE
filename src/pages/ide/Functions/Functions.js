@@ -2,7 +2,7 @@ import AddList from "../../../components/AddList";
 import Editor from "../../../widgets/Editor";
 import FunctionDialog from "../../../widgets/FunctionDialog/FunctionDialog";
 import FunctionTree from "../../../widgets/FunctionTree";
-import actions from "../../../actions";
+import config from "../../../config";
 import styles from "./styles";
 import { useContext } from "../../../Context/providers/contextProvider";
 import { Card, CardActions, Grid, Paper } from "@mui/material";
@@ -12,14 +12,19 @@ function Functions() {
 
   function openFunctionDialog(item) {
     dispatch({
-      type: actions.openFunctionDialog,
+      type: "OPEN_FUNCTION_DIALOG",
       payload: item.toUpperCase(),
     });
   }
 
   return (
-    <Grid container sx={styles.root}>
-      <Grid item xs={3}>
+    <Grid container sx={styles.root} columns={config.layout.ide.total}>
+      <Grid
+        item
+        md={config.layout.ide.tree.md}
+        lg={config.layout.ide.tree.lg}
+        xl={config.layout.ide.tree.xl}
+      >
         <Card sx={styles.functionTreeCard}>
           <FunctionDialog />
           <Grid sx={styles.functionTreeGrid}>
@@ -33,7 +38,13 @@ function Functions() {
           </CardActions>
         </Card>
       </Grid>
-      <Grid item xs={9} sx={styles.editorGrid}>
+      <Grid
+        item
+        md={config.layout.ide.content.md}
+        lg={config.layout.ide.content.lg}
+        xl={config.layout.ide.content.xl}
+        sx={styles.editorGrid}
+      >
         <Paper sx={styles.editorPaper}>
           <Editor name={"functions"} functions />
         </Paper>

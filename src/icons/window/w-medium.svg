@@ -1,0 +1,16 @@
+<svg width='14px' height='14px' viewBox='0 0 14 14' version='1.1' xmlns='http://www.w3.org/2000/svg'>
+    <g id='Page-3' stroke='none' stroke-width='1'>
+        <g id='Instances-Split-Screen-Copy' transform='translate(-1130.000000, -50.000000)'>
+            <g id='Group-10' transform='translate(3.000000, 30.000000)'>
+                <g id='Group-9' transform='translate(0.000000, 19.000000)'>
+                    <g id='Group-2' transform='translate(1104.000000, 1.000000)'>
+                        <g id='Group-6' transform='translate(23.000000, 0.000000)'>
+                            <path d='M4,5 C3.44772,5 3,5.33579 3,5.75 L3,10.25 C3,10.664225 3.44772,11 4,11 L10,11 C10.5523,11 11,10.664225 11,10.25 L11,5.75 C11,5.33579 10.5523,5 10,5 L4,5 Z' id='Path' fill-rule='nonzero'></path>
+                            <path d='M1,0 C0.44772,0 0,0.44772 0,1 L0,13 C0,13.5523 0.44772,14 1,14 L13,14 C13.5523,14 14,13.5523 14,13 L14,1 C14,0.44772 13.5523,0 13,0 L1,0 Z M2,12 L2,2 L12,2 L12,12 L2,12 Z' id='Shape'></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

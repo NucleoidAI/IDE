@@ -27,7 +27,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <GlobalStoreProvider>
-          <BrowserRouter basename="/ide">
+          <BrowserRouter basename="ide">
             <Routes>
               <Route path="/" element={<IDE />}>
                 <Route index element={<Navigate to="/api" />} />
