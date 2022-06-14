@@ -127,7 +127,11 @@ function Query() {
                 )}
               </Box>
               {ResultTypes(result, checked)}
-              {!result && <Typography variant="h7">Console output</Typography>}
+              {!result && (
+                <Box sx={styles.consoleOutput}>
+                  <Typography variant="h7">Console output</Typography>
+                </Box>
+              )}
             </Card>
           )}
         </Grid>
