@@ -19,7 +19,12 @@ export default function QueryArrayTable({ json }) {
       } else {
         const obj = json[0];
         Object.keys(obj).forEach((key) => {
-          columns.push({ field: key, headerName: key, width: 150 });
+          columns.push({
+            field: key,
+            headerName: key,
+            width: 150,
+            editable: true,
+          });
         });
       }
     } else {
