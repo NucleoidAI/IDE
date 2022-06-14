@@ -91,7 +91,14 @@ function Query() {
             </Grid>
           </Paper>
         </Grid>
-        <Grid item xs={12} sx={{ ...styles.contentGrid, height: outputRatio }}>
+        <Grid
+          item
+          xs={12}
+          sx={{
+            ...styles.contentGrid,
+            height: outputRatio,
+          }}
+        >
           {loading && (
             <Card sx={styles.loadingCard}>
               <LinearProgress color="inherit" />
