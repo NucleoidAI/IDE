@@ -1,5 +1,6 @@
 import Settings from "./settings";
 import project from "./project";
+import { v4 as uuid } from "uuid";
 
 const CodeSandbox = {
   generateContent: (context) => {
@@ -16,7 +17,7 @@ const CodeSandbox = {
         },
         "index.js": {
           content:
-            `const nucleoid = require("nucleoidjs");\nconst app = nucleoid();\n\n` +
+            `const id = "${uuid()}";\nconst nucleoid = require("nucleoidjs");\nconst app = nucleoid();\n\n` +
             context.nucleoid.functions
               .map(
                 (item) =>
