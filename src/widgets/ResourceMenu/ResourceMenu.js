@@ -7,7 +7,7 @@ import React from "react";
 import SourceIcon from "@mui/icons-material/Source";
 import { useContext } from "../../Context/providers/contextProvider";
 import { useRef } from "react";
-import { Divider, Menu, MenuItem } from "@mui/material";
+import { Divider, Menu, MenuItem, Typography } from "@mui/material";
 
 const ResourceMenu = (props) => {
   const { anchor, openMenu, handleClose, hash, map } = props;
@@ -126,16 +126,16 @@ const ResourceMenu = (props) => {
       >
         <MenuItem onClick={addResource}>
           <SourceIcon />
-          Resource
+          <Typography sx={{ pl: 1 }}>Resource</Typography>
         </MenuItem>
         <MenuItem onClick={addMethod} disabled={methodDisabled}>
           <HttpIcon />
-          Method
+          <Typography sx={{ pl: 1 }}>Method</Typography>
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleResourceDeleteDialog}>
           <DeleteIcon />
-          Delete
+          <Typography sx={{ pl: 1 }}>Delete</Typography>
         </MenuItem>
       </Menu>
     </>
