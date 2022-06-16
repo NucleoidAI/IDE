@@ -17,7 +17,7 @@ export default function ProjectSelect() {
   return (
     <Box sx={{ width: "100%" }}>
       <Button
-        sx={{ width: "100%" }}
+        sx={{ width: "100%", textTransform: "none" }}
         variant="contained"
         color={"inherit"}
         onClick={() => setOpen(true)}

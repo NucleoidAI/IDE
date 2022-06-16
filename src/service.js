@@ -6,6 +6,8 @@ const refreshAuthLogic = async (failedRequest) => {
   const refreshToken = localStorage.getItem("refreshToken");
   const accessToken = localStorage.getItem("accessToken");
 
+  console.log("test")
+
   let tokenRefreshResponse;
 
   if (!refreshToken && !accessToken) {
@@ -33,7 +35,7 @@ const getCodeFromGithub = () => {
   const gitHubWindow = window.open(
     `https://github.com/login/oauth/authorize?scope=user&client_id=${
       Settings.github.client_id
-    }&redirect_uri=${"http://" + window.location.hostname + ":4000/login"}`,
+    }&redirect_uri=${"http://" + window.location.hostname + ":4000/ide/login"}`,
     "_blank",
     "toolbar=yes,scrollbars=yes,resizable=yes,top=50,left=50,width=500,height=800"
   );

@@ -34,7 +34,7 @@ const Settings = {
     user: "https://api.github.com/user",
   },
   service: {
-    auth: "http://localhost:5000/auth/tokens",
+    auth: "http://localhost:5000/oauth",
     projects: "http://localhost:5000/projects",
   },
   connection: true,
