@@ -2,6 +2,7 @@ import Drawer from "@mui/material/Drawer";
 import LgDrawerStyled from "../LgDrawerStyled";
 import Logo from "../Logo";
 import ProjectSelect from "../../components/ProjectSelect";
+import ProjectSelectSmall from "../ProjectSelectSmall/ProjectSelectSmall";
 import React from "react";
 import Settings from "../Settings";
 import SmallLogo from "../SmallLogo";
@@ -56,6 +57,7 @@ function Menu(props) {
                 <br />
                 <SmallMenuLinks {...props} />
               </List>
+              <ProjectSelectSmall />
               <Box sx={{ height: "100%" }}></Box>
               <Button sx={{ pb: 3 }} onClick={() => setOpenMd(true)}>
                 <ArrowForwardIos
@@ -121,6 +123,7 @@ function Menu(props) {
                 <br />
                 <SmallMenuLinks {...props} />
               </List>
+              <ProjectSelectSmall />
               <Box sx={{ height: "100%" }}></Box>
               <Button sx={{ pb: 3 }} onClick={() => setOpenLg(true)}>
                 <ArrowForwardIos
