@@ -1,7 +1,9 @@
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import Settings from "../settings";
+import Swagger from "../icons/Swagger";
 import {
   AppBar,
+  Box,
   Dialog,
   IconButton,
   Slide,
@@ -25,23 +27,33 @@ export default function SwaggerDialog({ open, handleClose }) {
       <AppBar
         sx={{
           position: "relative",
-          backgroundColor: "#424242",
+          backgroundColor: "#323a40",
           color: "#e0e0e0",
         }}
       >
         <Toolbar>
           <IconButton edge="start" onClick={handleClose} aria-label="close">
-            <KeyboardArrowDown fontSize="large" />
+            <KeyboardArrowDown sx={{ color: "#e0e0e0" }} fontSize="large" />
           </IconButton>
-          <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            Swagger
-          </Typography>
+          <Box
+            sx={{
+              ml: 2,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Swagger />
+            <Typography sx={{ pl: 1 }} variant="h6" component="div">
+              Swagger
+            </Typography>
+          </Box>
         </Toolbar>
       </AppBar>
       <iframe
         title="Swagger"
         src={Settings.url.app()}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100%", height: "100%", border: 0 }}
         allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
         sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
       ></iframe>

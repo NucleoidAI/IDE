@@ -16,6 +16,7 @@ import {
   Grid,
   Menu,
   MenuItem,
+  Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { TreeItem, TreeView } from "@mui/lab";
@@ -172,10 +173,11 @@ function APITree() {
             }}
           >
             <EditIcon />
-            Edit
+            <Typography sx={{ pl: 1 }}>Edit</Typography>
           </MenuItem>
           <MenuItem onClick={handleDeleteMethod} disabled={methodDisabled}>
-            <DeleteIcon /> Delete
+            <DeleteIcon />
+            <Typography sx={{ pl: 1 }}>Delete</Typography>
           </MenuItem>
         </Menu>
         <ResourceMenu

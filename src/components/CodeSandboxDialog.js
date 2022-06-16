@@ -1,10 +1,15 @@
+import CodeSandboxIcon from "../icons/CodeSandbox";
+import CopyClipboard from "./CopyClipboard";
+import DialogTooltip from "./DialogTootip";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import Settings from "../settings";
 import {
   AppBar,
+  Box,
   Dialog,
   IconButton,
   Slide,
+  Switch,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -16,6 +21,16 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function CodeSandboxDialog({ open, handleCloseSandboxDialog }) {
+  const [npx, setNpx] = React.useState(false);
+  const [alert, setAlert] = React.useState(false);
+
+  const switchSandboxToNpx = () => {
+    Settings.url.app(`http://localhost:3000/`);
+    Settings.url.terminal(`http://localhost:8448/`);
+    localStorage.removeItem("sandbox_id");
+    Settings.runtime("npx");
+  };
+
   return (
     <Dialog
       fullScreen
@@ -27,22 +42,86 @@ export default function CodeSandboxDialog({ open, handleCloseSandboxDialog }) {
       <AppBar
         sx={{
           position: "relative",
-          backgroundColor: "#424242",
+          backgroundColor: "#323a40",
           color: "#e0e0e0",
         }}
         color={"default"}
       >
         <Toolbar>
-          <IconButton
-            edge="start"
-            onClick={handleCloseSandboxDialog}
-            aria-label="close"
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
           >
-            <KeyboardArrowDown fontSize="large" />
-          </IconButton>
-          <Typography sx={{ ml: 2, flex: 1 }} variant="h6">
-            CodeSandbox
-          </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <IconButton
+                edge="start"
+                onClick={() => {
+                  if (npx) {
+                    switchSandboxToNpx();
+                  }
+                  handleCloseSandboxDialog();
+                }}
+                aria-label="close"
+              >
+                <KeyboardArrowDown sx={{ color: "#e0e0e0" }} fontSize="large" />
+              </IconButton>
+              <Box
+                sx={{
+                  ml: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <CodeSandboxIcon fill={"#e0e0e0"} />
+                <Typography sx={{ pl: 1 }} variant="h6">
+                  CodeSandbox
+                </Typography>
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography>Run on npx</Typography>
+              <DialogTooltip
+                open={alert}
+                placement="bottom-start"
+                title={<b>Runtime</b>}
+                message={
+                  <>
+                    Run the following code in your terminal
+                    <br />
+                    <CopyClipboard />
+                    <br />
+                  </>
+                }
+                handleTooltipClose={() => setAlert(false)}
+              >
+                <Switch
+                  value={alert}
+                  color="default"
+                  onChange={(e) => {
+                    setNpx(e.target.checked);
+                    setAlert(e.target.checked);
+                  }}
+                />
+              </DialogTooltip>
+            </Box>
+          </Box>
         </Toolbar>
       </AppBar>
       <iframe
