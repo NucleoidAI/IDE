@@ -23,7 +23,13 @@ import useLayout from "../../hooks/useLayout";
 //eslint-disable-next-line
 import { useContext } from "../../Context/providers/contextProvider";
 import { useLocation } from "react-router-dom";
-import { Box, CircularProgress, Drawer, ListItem } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Drawer,
+  ListItem,
+  Tooltip,
+} from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
 const ProcessDrawer = () => {
@@ -203,25 +209,34 @@ const ProcessDrawer = () => {
               ApiButton(status, handleRun, handleRunApi, handleRunSandbox)
             )}
           </DialogTooltip>
-          <ListItem button onClick={handleOpenDialog}>
-            <ViewListIcon sx={styles.listitem} />
-          </ListItem>
-          <ListItem button onClick={auth}>
-            <GitHubIcon sx={styles.listitem} />
-          </ListItem>
-          <ListItem
-            component={"a"}
-            onClick={handleDownloadContext}
-            href={link}
-            download={Project.get().name + ".nuc.json"}
-            target="_blank"
-          >
-            <ImportExportIcon sx={styles.listitem} />
-          </ListItem>
 
-          <ListItem button>
-            <PostmanIcon />
-          </ListItem>
+          <Tooltip placement="left" title="Open swagger dialog">
+            <ListItem button onClick={handleOpenDialog}>
+              <ViewListIcon sx={styles.listitem} />
+            </ListItem>
+          </Tooltip>
+          <Tooltip placement="left" title="Login with GitHub">
+            <ListItem button onClick={auth}>
+              <GitHubIcon sx={styles.listitem} />
+            </ListItem>
+          </Tooltip>
+          <Tooltip placement="left" title="Download project">
+            <ListItem
+              component={"a"}
+              onClick={handleDownloadContext}
+              href={link}
+              download={Project.get().name + ".nuc.json"}
+              target="_blank"
+            >
+              <ImportExportIcon sx={styles.listitem} />
+            </ListItem>
+          </Tooltip>
+          <Tooltip placement="left" title="Open postman">
+            <ListItem button>
+              <PostmanIcon />
+            </ListItem>
+          </Tooltip>
+
           <DialogTooltip
             open={vercel}
             placement="left"
@@ -234,14 +249,18 @@ const ProcessDrawer = () => {
             }
             handleTooltipClose={handleCloseVercel}
           >
-            <ListItem button onClick={() => setVercel(true)}>
-              <RocketLaunchIcon sx={styles.listitem} />
-            </ListItem>
+            <Tooltip placement="left" title="Deploy project">
+              <ListItem button onClick={() => setVercel(true)}>
+                <RocketLaunchIcon sx={styles.listitem} />
+              </ListItem>
+            </Tooltip>
           </DialogTooltip>
         </Box>
-        <ListItem button onClick={handleSaveProject}>
-          <SaveIcon sx={styles.listitem} />
-        </ListItem>
+        <Tooltip placement="left" title="Save project">
+          <ListItem button onClick={handleSaveProject}>
+            <SaveIcon sx={styles.listitem} />
+          </ListItem>
+        </Tooltip>
       </Drawer>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -269,9 +288,11 @@ const ApiButton = (layoutStatus, handleRun, handleRunApi, handleRunSandbox) => {
   if (sandbox) {
     return (
       <>
-        <ListItem button onClick={() => handleRunSandbox()}>
-          <SyncIcon sx={styles.listitem} />
-        </ListItem>
+        <Tooltip title="Reload project" placement="left">
+          <ListItem button onClick={() => handleRunSandbox()}>
+            <SyncIcon sx={styles.listitem} />
+          </ListItem>
+        </Tooltip>
       </>
     );
   }
@@ -280,17 +301,21 @@ const ApiButton = (layoutStatus, handleRun, handleRunApi, handleRunSandbox) => {
     case "connected":
       return (
         <>
-          <ListItem button onClick={() => handleRunApi(true)}>
-            <SyncIcon sx={styles.listitem} />
-          </ListItem>
+          <Tooltip title="Reload project" placement="left">
+            <ListItem button onClick={() => handleRunApi(true)}>
+              <SyncIcon sx={styles.listitem} />
+            </ListItem>
+          </Tooltip>
         </>
       );
 
     case "unreachable":
       return (
-        <ListItem button onClick={handleRun}>
-          <PlayCircleFilledIcon sx={styles.listitem} />
-        </ListItem>
+        <Tooltip title="Run project" placement="left">
+          <ListItem button onClick={handleRun}>
+            <PlayCircleFilledIcon sx={styles.listitem} />
+          </ListItem>
+        </Tooltip>
       );
     default:
   }
