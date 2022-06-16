@@ -6,7 +6,7 @@ const refreshAuthLogic = async (failedRequest) => {
   const refreshToken = localStorage.getItem("refreshToken");
   const accessToken = localStorage.getItem("accessToken");
 
-  console.log("test")
+  console.log("test");
 
   let tokenRefreshResponse;
 
