@@ -1,7 +1,6 @@
 import Backdrop from "@mui/material/Backdrop";
 import CodeSandbox from "../../codesandbox";
 import CodeSandboxDialog from "../../components/CodeSandboxDialog";
-import CopyClipboard from "../../components/CopyClipboard";
 import DialogTooltip from "../../components/DialogTootip/";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
@@ -9,11 +8,9 @@ import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import PostmanIcon from "../../icons/Postman";
 import Project from "../../project";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
-import RunCodesandbox from "../../components/RunCodesandbox";
 import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
 import SwaggerDialog from "../../components/SwaggerDialog";
-import SyncIcon from "@mui/icons-material/Sync";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import service from "../../service";
 import styles from "./styles";
@@ -21,7 +18,7 @@ import useGetProjects from "../../hooks/useGetProjects";
 import useLayout from "../../hooks/useLayout";
 
 //eslint-disable-next-line
-import { useContext } from "../../Context/providers/contextProvider";
+//import { useContext } from "../../Context/providers/contextProvider";
 import { useLocation } from "react-router-dom";
 import {
   Box,
@@ -37,7 +34,6 @@ const ProcessDrawer = () => {
   const [status, dispatch, getStatus] = useLayout();
   const location = useLocation();
 
-  const [alert, setAlert] = useState(false);
   const [vercel, setVercel] = useState(false);
   const [loading, setLoading] = useState(false);
   const [backdrop, setBackdrop] = useState(false);
@@ -62,14 +58,9 @@ const ProcessDrawer = () => {
     }, 1000 * 60);
 
     if (location.state?.anchor === false) {
-      setAlert(false);
       setVercel(false);
     }
   }, [location.state]); //eslint-disable-line
-
-  const handleCloseAlert = () => {
-    setAlert(false);
-  };
 
   const handleCloseVercel = () => {
     setVercel(false);
@@ -77,11 +68,15 @@ const ProcessDrawer = () => {
 
   const handleRun = () => {
     if (!Settings.runtime()) {
-      setAlert(true);
-      service.metrics().then((data) => {
+      handleRunSandbox();
+    } else {
+      if (Settings.runtime() === "npx") {
         handleRunApi();
-      });
+      } else {
+        handleRunSandbox();
+      }
     }
+    service.metrics().then((data) => {});
   };
 
   const handleRunApi = () => {
@@ -93,12 +88,10 @@ const ProcessDrawer = () => {
         dispatch({ type: "SWAGGER_DIALOG", payload: { dialogStatus: true } });
         getStatus();
         setLoading(false);
-        setAlert(false);
       })
       .catch(() => {
         getStatus();
         setLoading(false);
-        setAlert(true);
       });
   };
 
@@ -141,7 +134,6 @@ const ProcessDrawer = () => {
       });
 
       Settings.runtime("sandbox");
-      setAlert(false);
     }
   };
 
@@ -184,32 +176,13 @@ const ProcessDrawer = () => {
         sx={styles.drawer}
       >
         <Box>
-          <DialogTooltip
-            open={alert}
-            placement="left"
-            title={<b>Runtime</b>}
-            message={
-              <>
-                <RunCodesandbox handleRunSandbox={handleRunSandbox} />
-                <br />
-                Or run the following code in terminal.
-                <br />
-                <br />
-                <CopyClipboard />
-                <br />
-              </>
-            }
-            handleTooltipClose={handleCloseAlert}
-          >
-            {loading ? (
-              <ListItem sx={styles.listitem}>
-                <CircularProgress color="inherit" size={23} />
-              </ListItem>
-            ) : (
-              ApiButton(status, handleRun, handleRunApi, handleRunSandbox)
-            )}
-          </DialogTooltip>
-
+          {loading ? (
+            <ListItem sx={styles.listitem}>
+              <CircularProgress color="inherit" size={23} />
+            </ListItem>
+          ) : (
+            ApiButton(status, handleRun, handleRunApi, handleRunSandbox)
+          )}
           <Tooltip placement="left" title="Open swagger dialog">
             <ListItem button onClick={handleOpenDialog}>
               <ViewListIcon sx={styles.listitem} />
@@ -283,14 +256,14 @@ const ProcessDrawer = () => {
 };
 
 const ApiButton = (layoutStatus, handleRun, handleRunApi, handleRunSandbox) => {
-  const { status, sandbox } = layoutStatus;
+  const { status } = layoutStatus;
 
-  if (sandbox) {
+  if (Settings.runtime === "sandbox") {
     return (
       <>
-        <Tooltip title="Reload project" placement="left">
+        <Tooltip title="Reload project sandbox" placement="left">
           <ListItem button onClick={() => handleRunSandbox()}>
-            <SyncIcon sx={styles.listitem} />
+            <PlayCircleFilledIcon sx={styles.listitem} />
           </ListItem>
         </Tooltip>
       </>
@@ -301,9 +274,9 @@ const ApiButton = (layoutStatus, handleRun, handleRunApi, handleRunSandbox) => {
     case "connected":
       return (
         <>
-          <Tooltip title="Reload project" placement="left">
+          <Tooltip title="Reload project npx" placement="left">
             <ListItem button onClick={() => handleRunApi(true)}>
-              <SyncIcon sx={styles.listitem} />
+              <PlayCircleFilledIcon sx={styles.listitem} />
             </ListItem>
           </Tooltip>
         </>
