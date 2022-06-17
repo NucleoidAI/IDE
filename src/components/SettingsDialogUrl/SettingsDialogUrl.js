@@ -1,8 +1,8 @@
 import React from "react";
-import TextField from "@mui/material/TextField";
 import styles from "./styles";
+import { Box, Switch, TextField, Typography } from "@mui/material";
 
-const SettingDialogUrl = React.forwardRef((props, urlRef) => {
+const SettingsDialogUrl = React.forwardRef((props, urlRef) => {
   const url = urlRef.current;
 
   return (
@@ -19,8 +19,17 @@ const SettingDialogUrl = React.forwardRef((props, urlRef) => {
         sx={styles.textField}
         onChange={(e) => (url["app"] = e.target.value)}
       />
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-start",
+        }}
+      >
+        <Typography>select sandbox</Typography> <Switch />
+      </Box>
     </>
   );
 });
 
-export default SettingDialogUrl;
+export default SettingsDialogUrl;

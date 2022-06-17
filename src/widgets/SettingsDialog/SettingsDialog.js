@@ -1,7 +1,7 @@
 import ClosableDialogTitle from "../../components/ClosableDialogTitle";
 import React from "react";
-import SettingDialogTabs from "../../components/SettingDialogTabs";
 import Settings from "../../settings";
+import SettingsDialogTabs from "../../components/SettingsDialogTabs";
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 
 const SettingsDialog = ({ handleClose }) => {
@@ -30,9 +30,9 @@ const SettingsDialog = ({ handleClose }) => {
         },
       }}
     >
-      <ClosableDialogTitle label="Setting" handleClose={() => handleClose()} />
+      <ClosableDialogTitle label="Settings" handleClose={() => handleClose()} />
       <DialogContent>
-        <SettingDialogTabs ref={urlRef} />
+        <SettingsDialogTabs ref={urlRef} />
       </DialogContent>
       <DialogActions>
         <Button autoFocus onClick={() => saveSettingDialog()}>

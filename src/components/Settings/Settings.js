@@ -1,4 +1,4 @@
-import SettingsDialog from "../../widgets/SettingDialog/SettingDialog";
+import SettingsDialog from "../../widgets/SettingsDialog";
 import SettingsIcon from "@mui/icons-material/Settings";
 import styles from "./styles";
 import { useState } from "react";
