@@ -257,7 +257,6 @@ const ProcessDrawer = () => {
 
 const ApiButton = (layoutStatus, handleRun, handleRunApi, handleRunSandbox) => {
   const { status } = layoutStatus;
-  console.log(Settings.runtime());
 
   if (Settings.runtime() === "sandbox") {
     return (
