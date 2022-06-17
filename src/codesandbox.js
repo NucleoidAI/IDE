@@ -1,4 +1,7 @@
 import Settings from "./settings";
+import packageLock from "./sandboxPackageLock.json";
+import prettier from "./prettier";
+import prettierPlugins from "./prettierPlugins";
 import project from "./project";
 import { v4 as uuid } from "uuid";
 
@@ -41,17 +44,23 @@ const CodeSandbox = {
             scripts: {
               start: "node index.js",
             },
-            devDependencies: {
-              "@types/node": "^17.0.21",
-            },
           },
         },
         "openapi.json": {
-          content: JSON.stringify({
-            api: context.nucleoid.api,
-            types: context.nucleoid.types,
-            id: uuid(),
-          }),
+          content: prettier.format(
+            JSON.stringify({
+              api: context.nucleoid.api,
+              types: context.nucleoid.types,
+              id: uuid(),
+            }),
+            {
+              parser: "json",
+              plugins: prettierPlugins,
+            }
+          ),
+        },
+        "package-lock.json": {
+          content: packageLock,
         },
       },
       template: "node",
