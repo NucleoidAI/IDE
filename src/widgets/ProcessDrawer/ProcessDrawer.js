@@ -257,8 +257,9 @@ const ProcessDrawer = () => {
 
 const ApiButton = (layoutStatus, handleRun, handleRunApi, handleRunSandbox) => {
   const { status } = layoutStatus;
+  console.log(Settings.runtime());
 
-  if (Settings.runtime === "sandbox") {
+  if (Settings.runtime() === "sandbox") {
     return (
       <>
         <Tooltip title="Reload project sandbox" placement="left">
