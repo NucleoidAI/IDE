@@ -17,7 +17,7 @@ const CodeSandbox = {
         },
         "index.js": {
           content:
-            `const id = "${uuid()}";\nconst nucleoid = require("nucleoidjs");\nconst app = nucleoid();\n\n` +
+            `const nucleoid = require("nucleoidjs");\nconst app = nucleoid();\n\n` +
             context.nucleoid.functions
               .map(
                 (item) =>
@@ -50,6 +50,7 @@ const CodeSandbox = {
           content: JSON.stringify({
             api: context.nucleoid.api,
             types: context.nucleoid.types,
+            id: uuid(),
           }),
         },
       },
