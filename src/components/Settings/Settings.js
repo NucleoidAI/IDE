@@ -15,14 +15,12 @@ function Settings() {
   };
 
   return (
-    <>
-      <Grid container sx={styles.root}>
-        <Button onClick={handleOpen} size="large">
-          <SettingsIcon sx={styles.settingIcon} fontSize={"large"} />
-        </Button>
-        {open && <SettingsDialog handleClose={handleClose} />}
-      </Grid>
-    </>
+    <Grid container sx={styles.root}>
+      <Button onClick={handleOpen} size="large">
+        <SettingsIcon sx={styles.settingIcon} fontSize={"large"} />
+      </Button>
+      {open && <SettingsDialog handleClose={handleClose} />}
+    </Grid>
   );
 }
 

@@ -7,15 +7,16 @@ const styles = {
   tabs: {
     borderRight: 1,
     borderColor: "divider",
-    color: "primary",
+    "& .MuiTabs-indicator": {
+      backgroundColor: "#c3c5c8",
+      height: 3,
+    },
+    "& .MuiTab-root.Mui-selected": {
+      color: "#c3c5c8",
+    },
   },
   tab: {
-    ".Mui-selected": {
-      bgcolor: "red",
-    },
-    "&:hover": {
-      bgcolor: "rgba(255,255,255,0.1)",
-    },
+    "& label": { color: "#c3c5c8" },
   },
 };
 

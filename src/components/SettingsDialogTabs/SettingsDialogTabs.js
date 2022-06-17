@@ -27,10 +27,8 @@ const SettingsDialogTabs = forwardRef((props, urlRef) => {
         onChange={handleChange}
         sx={styles.tabs}
       >
-        <Tab sx={styles.tab} label="URL" {...tabProps(0)} />
-        <Tab sx={styles.tab} label="Theme" {...tabProps(1)} />
-        <Tab sx={styles.tab} label="Language" {...tabProps(2)} />
-        <Tab sx={styles.tab} label="Advanced" {...tabProps(3)} />
+        <Tab sx={styles.tab} label="Runtime" {...tabProps(0)} />
+        <Tab sx={styles.tab} label="Advanced" {...tabProps(1)} />
       </Tabs>
       <TabPanel value={value} index={0}>
         <SettingsDialogUrl ref={urlRef} />
