@@ -49,9 +49,9 @@ const CodeSandbox = {
         "openapi.json": {
           content: prettier.format(
             JSON.stringify({
+              codesandbox: uuid(),
               api: context.nucleoid.api,
               types: context.nucleoid.types,
-              id: uuid(),
             }),
             {
               parser: "json",
