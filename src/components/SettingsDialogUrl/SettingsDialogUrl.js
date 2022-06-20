@@ -1,23 +1,40 @@
 import React from "react";
-import Settings from "../../settings";
 import styles from "./styles";
-import {
-  Box,
-  FormControlLabel,
-  Switch,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Switch, TextField, Typography } from "@mui/material";
 
 const SettingsDialogUrl = React.forwardRef((props, urlRef) => {
+  const [terminal, setTerminal] = React.useState(urlRef.current.terminal);
+  const [app, setApp] = React.useState(urlRef.current.app);
   const [npx, setNpx] = React.useState(
-    Settings.runtime() === "npx" ? true : false
+    urlRef.current.runtime === "npx" ? true : false
   );
+
   const url = urlRef.current;
 
-  React.useEffect(() => {
-    Settings.runtime(npx ? "npx" : "sandbox");
-  }, [npx]);
+  React.useEffect(() => {}, []);
+
+  const handleSetTerminal = (value) => {
+    url["terminal"] = value;
+    setTerminal(value);
+  };
+  const handleSetApp = (value) => {
+    url["app"] = value;
+    setApp(value);
+  };
+
+  const handleSetRuntime = (value) => {
+    url["runtime"] = value ? "npx" : "sandbox";
+    if (
+      url["runtime"] === "npx" &&
+      url["terminal"] !== "http://localhost:8448/"
+    ) {
+      url["terminal"] = "http://localhost:8448/";
+      url["app"] = "http://localhost:3000/";
+      setTerminal(url["terminal"]);
+      setApp(url["app"]);
+    }
+    setNpx(value);
+  };
 
   return (
     <>
@@ -28,25 +45,33 @@ const SettingsDialogUrl = React.forwardRef((props, urlRef) => {
           justifyContent: "flex-start",
         }}
       >
-        <Typography sx={{ pr: 2 }}>Selected runtime</Typography>
-        <FormControlLabel
-          control={
-            <Switch checked={npx} onChange={(e) => setNpx(e.target.checked)} />
-          }
-          label={npx ? "npx" : "CodeSandbox"}
+        <Typography sx={{ pl: 1, textDecoration: npx ? "line-through" : null }}>
+          CodeSandbox
+        </Typography>
+        <Switch
+          checked={npx}
+          color="default"
+          onChange={(e) => handleSetRuntime(e.target.checked)}
         />
+        <Typography
+          sx={{ pr: 1, textDecoration: !npx ? "line-through" : null }}
+        >
+          npx
+        </Typography>
       </Box>
       <TextField
         label="Nucleoid Runtime URL"
-        defaultValue={url["terminal"]}
+        disabled={npx ? false : true}
+        value={terminal}
         sx={styles.textField}
-        onChange={(e) => (url["terminal"] = e.target.value)}
+        onChange={(e) => handleSetTerminal(e.target.value)}
       />
       <TextField
         label="OpenAPI URL"
-        defaultValue={url["app"]}
+        disabled={npx ? false : true}
+        value={app}
         sx={styles.textField}
-        onChange={(e) => (url["app"] = e.target.value)}
+        onChange={(e) => handleSetApp(e.target.value)}
       />
     </>
   );
