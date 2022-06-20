@@ -1,4 +1,6 @@
+import SettingsDialogAdvanced from "../SettingsDialogAdvanced";
 import SettingsDialogUrl from "../SettingsDialogUrl";
+
 import TabPanel from "../TabPanel";
 import styles from "./styles";
 import { Grid, Tab, Tabs } from "@mui/material";
@@ -32,6 +34,9 @@ const SettingsDialogTabs = forwardRef((props, urlRef) => {
       </Tabs>
       <TabPanel value={value} index={0}>
         <SettingsDialogUrl ref={urlRef} />
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <SettingsDialogAdvanced />
       </TabPanel>
     </Grid>
   );
