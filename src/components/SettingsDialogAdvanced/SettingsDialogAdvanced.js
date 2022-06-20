@@ -3,7 +3,9 @@ import Settings from "../../settings";
 import { Box, Switch, Typography } from "@mui/material";
 
 const SettingsDialogAdvanced = () => {
-  const [checked, setChecked] = React.useState(Settings.beta());
+  const [checked, setChecked] = React.useState(
+    Settings.beta() === "true" ? true : false
+  );
   return (
     <Box
       sx={{

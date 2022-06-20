@@ -33,9 +33,7 @@ axios.interceptors.request.use((request) => {
 
 const getCodeFromGithub = () => {
   const gitHubWindow = window.open(
-    `https://github.com/login/oauth/authorize?scope=user&client_id=${
-      Settings.github.client_id
-    }&redirect_uri=${"http://" + window.location.hostname + ":4000/ide/login"}`,
+    `https://github.com/login/oauth/authorize?scope=user&client_id=${Settings.github.client_id}`,
     "_blank",
     "toolbar=yes,scrollbars=yes,resizable=yes,top=50,left=50,width=500,height=800"
   );
