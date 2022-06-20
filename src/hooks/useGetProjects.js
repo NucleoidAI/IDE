@@ -39,8 +39,12 @@ function useGetProjects() {
     } else {
       const { name, context } = Project.getStringify();
       service.addProject(name, context).then(({ data }) => {
-        Settings.projects = [{ project: data, name }];
-        Project.setWithoutStringify(data, name, context);
+        Settings.projects = [{ project: data.project, name: data.name }];
+        dispatch({
+          type: "SET_PROJECT",
+          payload: { project: JSON.parse(data.context) },
+        });
+        Project.setWithoutStringify(data.project, data.name, data.context);
         callback(true);
       });
     }
