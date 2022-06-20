@@ -28,14 +28,14 @@ const Settings = {
     },
   },
   github: {
-    client_id: "d96b1adfef0facc5eb94",
-    client_secret: "3123c2be7aa1aec88d2c52c9e1a124c33eba0b08",
+    client_id: "6a44f854367bd3fb5f13",
+    client_secret: "6eb5b22d19d332c29ea0f81ffa88c1e02111eec1",
     token_url: "https://github.com/login/oauth/access_token",
     user: "https://api.github.com/user",
   },
   service: {
-    auth: "http://localhost:5000/oauth",
-    projects: "http://localhost:5000/projects",
+    auth: "https://nucleoid.com/oauth",
+    projects: "https://nucleoid.com/projects",
   },
   connection: true,
   beta: (status) => {
