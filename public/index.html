@@ -1,18 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <title>Nucleoid IDE</title>
+
     <meta charset="utf-8" />
     <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
     <link rel="icon" type="image/png" href="https://cdn.nucleoid.com/media/icon.png" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
 
-    <title>Nucleoid IDE</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-L9H12K94J4"></script>
     <script src="https://cdn.nucleoid.com/dist/eslint.bundle-8.16.0.js"></script>
     <script src="https://cdn.nucleoid.com/dist/standalone-2.6.2.js"></script>
     <script src="https://cdn.nucleoid.com/dist/parser-babel-2.6.2.js"></script>
 
     <script>
+      window.dataLayer = window.dataLayer || [];
+
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+
+      gtag("js", new Date());
+
+      if (window.location.hostname === "nucleoid.com") {
+        gtag("config", "G-L9H12K94J4", {
+          send_page_view: false,
+        });
+      }
+
+      gtag("event", "page_view", {
+        page_title: "IDE",
+        page_location: window.location.href,
+        page_path: window.location.pathname,
+      });
+
+      window.gtag = gtag;
       window.linter = new ESLint.Linter();
       window.prettier = prettier;
       window.prettierPlugins = prettierPlugins;
