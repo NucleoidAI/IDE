@@ -8,15 +8,15 @@ const styles = {
     borderRight: 1,
     borderColor: "divider",
     "& .MuiTabs-indicator": {
-      backgroundColor: "#c3c5c8",
+      backgroundColor: "custom.grey",
       height: 3,
     },
     "& .MuiTab-root.Mui-selected": {
-      color: "#c3c5c8",
+      color: "custom.grey",
     },
   },
   tab: {
-    "& label": { color: "#c3c5c8" },
+    "& label": { color: "custom.grey" },
   },
 };
 

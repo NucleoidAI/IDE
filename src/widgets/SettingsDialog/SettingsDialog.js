@@ -2,6 +2,7 @@ import ClosableDialogTitle from "../../components/ClosableDialogTitle";
 import React from "react";
 import Settings from "../../settings";
 import SettingsDialogTabs from "../../components/SettingsDialogTabs";
+import theme from "../../theme";
 import useLayout from "../../hooks/useLayout";
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 
@@ -40,11 +41,11 @@ const SettingsDialog = ({ handleClose }) => {
       fullWidth
       maxWidth={"sm"}
       onClose={(event) => (event.key === "Escape" ? handleClose() : null)}
-      sx={{ bgcolor: "rgba(0,0,0,0.5)" }}
+      sx={{ bgcolor: "custom.darkDialogBg" }}
       PaperProps={{
         style: {
-          backgroundColor: "#424242",
-          color: "#e0e0e0",
+          backgroundColor: theme.palette.custom.darkDialogPanel,
+          color: theme.palette.custom.grey,
         },
       }}
     >

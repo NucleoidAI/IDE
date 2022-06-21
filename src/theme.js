@@ -5,6 +5,8 @@ let theme = createTheme({
     custom: {
       grey: "rgba(255, 255, 255, 0.7)",
       fossil: "#747474",
+      darkDialogBg: "rgba(0,0,0,0.5)",
+      darkDialogPanel: "#424242",
     },
   },
   props: {
