@@ -6,6 +6,7 @@ const SettingsDialogAdvanced = () => {
   const [checked, setChecked] = React.useState(
     Settings.beta() === "true" ? true : false
   );
+
   return (
     <Box
       sx={{
@@ -16,8 +17,15 @@ const SettingsDialogAdvanced = () => {
     >
       <Typography sx={{ pr: 1 }}>Beta :</Typography>
       <Switch
+        color="default"
         checked={checked}
-        color="primary"
+        sx={{
+          "& + .MuiSwitch-track": {
+            backgroundColor: "red",
+            opacity: 1,
+            border: 0,
+          },
+        }}
         onChange={(e) => {
           setChecked(e.target.checked);
           Settings.beta(e.target.checked);

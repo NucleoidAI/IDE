@@ -1,10 +1,20 @@
 const styles = {
   textField: {
-    m: 1,
     width: "100%",
-    "& label": { color: "#c3c5c8" },
-    input: {
-      color: "#c3c5c8",
+    "& label.Mui-focused": {
+      color: "custom.fossil",
+    },
+    "& .MuiInput-underline:before": {
+      borderBottomColor: "custom.grey",
+    },
+    "& .MuiInput-underline:after": {
+      borderBottomColor: "custom.fossil",
+    },
+    "& .MuiInputBase-input": {
+      color: "custom.grey",
+    },
+    label: {
+      color: "custom.grey",
     },
   },
 };
