@@ -9,7 +9,7 @@ function Logo(props) {
   return (
     <Box sx={styles.root}>
       <Box>
-        <Typography display={"inline"} fontSize={"22px"} color={"#28a745"}>
+        <Typography display={"inline"} fontSize={"22px"} color={"#209958"}>
           Nucleoid
         </Typography>
         &nbsp;
