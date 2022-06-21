@@ -10,8 +10,6 @@ const SettingsDialogUrl = React.forwardRef((props, urlRef) => {
 
   const context = urlRef.current;
 
-  React.useEffect(() => {}, []);
-
   const handleSetUrl = (value) => {
     context["url"] = value;
     setUrl(value);
@@ -20,8 +18,11 @@ const SettingsDialogUrl = React.forwardRef((props, urlRef) => {
   const handleSetRuntime = (value) => {
     context["runtime"] = value ? "npx" : "sandbox";
 
-    if (context["runtime"] === "npx" && context["url"] !== "http://localhost") {
-      context["url"] = "http://localhost";
+    if (
+      context["runtime"] === "npx" &&
+      context["url"] !== "http://localhost:8448/"
+    ) {
+      context["url"] = "http://localhost:8448/";
       setUrl(context["url"]);
     }
     setNpx(value);
@@ -34,12 +35,15 @@ const SettingsDialogUrl = React.forwardRef((props, urlRef) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "flex-start",
+          height: 35,
         }}
       >
         <Typography
+          fontWeight={!npx ? "bold" : null}
           sx={{
             pl: 1,
-            textDecoration: npx ? "line-through" : null,
+            fontSize: !npx ? "16px" : "15px",
+            width: 108,
           }}
         >
           CodeSandbox
@@ -50,13 +54,14 @@ const SettingsDialogUrl = React.forwardRef((props, urlRef) => {
           onChange={(e) => handleSetRuntime(e.target.checked)}
         />
         <Typography
-          sx={{ pr: 1, textDecoration: !npx ? "line-through" : null }}
+          fontWeight={npx ? "bold" : null}
+          sx={{ pr: 1, fontSize: npx ? "16px" : "15px" }}
         >
           npx
         </Typography>
       </Box>
       <TextField
-        label="Nucleoid Runtime URL"
+        label="Runtime"
         disabled={npx ? false : true}
         value={url}
         sx={styles.textField}

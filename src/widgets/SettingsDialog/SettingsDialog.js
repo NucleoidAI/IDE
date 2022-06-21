@@ -15,7 +15,7 @@ const SettingsDialog = ({ handleClose }) => {
     const runtime = Settings.runtime();
     const parse = new URL(terminal);
 
-    const url = parse.protocol + "//" + parse.hostname;
+    const url = parse.protocol + "//" + parse.hostname + ":8448/";
     urlRef.current = { runtime, url };
   }, []);
 
