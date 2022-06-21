@@ -6,12 +6,11 @@ const refreshAuthLogic = async (failedRequest) => {
   const refreshToken = localStorage.getItem("refreshToken");
   const accessToken = localStorage.getItem("accessToken");
 
-  console.log("test");
-
   let tokenRefreshResponse;
 
   if (!refreshToken && !accessToken) {
     const code = await getCodeFromGithub();
+    console.log(code);
     tokenRefreshResponse = await auth({ code: code });
   } else {
     tokenRefreshResponse = await auth({ refreshToken: refreshToken });
@@ -33,7 +32,7 @@ axios.interceptors.request.use((request) => {
 
 const getCodeFromGithub = () => {
   const gitHubWindow = window.open(
-    `https://github.com/login/oauth/authorize?scope=user&client_id=${Settings.github.client_id}`,
+    `https://github.com/login/oauth/authorize?scope=user&client_id=${Settings.github.client_id}&redirect_uri=${Settings.github.redirect_uri}`,
     "_blank",
     "toolbar=yes,scrollbars=yes,resizable=yes,top=50,left=50,width=500,height=800"
   );
