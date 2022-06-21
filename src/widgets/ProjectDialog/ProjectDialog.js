@@ -189,7 +189,7 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
       ? Settings.projects.map((data) => {
           return { id: data.project, ...data };
         })
-      : [{ id: "", name: "SAMPLE" }];
+      : [{ id: "", name: project.get().name }];
 
   return (
     <>

@@ -7,6 +7,7 @@ import {
   Dialog,
   IconButton,
   Slide,
+  Switch,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -17,6 +18,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function SwaggerDialog({ open, handleClose }) {
+  const [sandbox, setSandbox] = React.useState(false);
+
+  const switchNpxToSandbox = () => {
+    Settings.runtime("sandbox");
+  };
+
   return (
     <Dialog
       fullScreen
@@ -32,21 +39,64 @@ export default function SwaggerDialog({ open, handleClose }) {
         }}
       >
         <Toolbar>
-          <IconButton edge="start" onClick={handleClose} aria-label="close">
-            <KeyboardArrowDown sx={{ color: "#e0e0e0" }} fontSize="large" />
-          </IconButton>
           <Box
             sx={{
-              ml: 2,
+              width: "100%",
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: "space-between",
             }}
           >
-            <Swagger />
-            <Typography sx={{ pl: 1 }} variant="h6" component="div">
-              Swagger
-            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <IconButton
+                edge="start"
+                onClick={() => {
+                  if (sandbox) {
+                    switchNpxToSandbox();
+                  }
+                  handleClose();
+                }}
+                aria-label="close"
+              >
+                <KeyboardArrowDown sx={{ color: "#e0e0e0" }} fontSize="large" />
+              </IconButton>
+              <Box
+                sx={{
+                  ml: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Swagger />
+                <Typography sx={{ pl: 1 }} variant="h6" component="div">
+                  Swagger
+                </Typography>
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography>Run on CodeSanddbox</Typography>
+
+              <Switch
+                checked={sandbox}
+                color="default"
+                onChange={(e) => {
+                  setSandbox(e.target.checked);
+                }}
+              />
+            </Box>
           </Box>
         </Toolbar>
       </AppBar>

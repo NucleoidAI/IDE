@@ -59,6 +59,7 @@ function Menu(props) {
               </List>
               <ProjectSelectSmall />
               <Box sx={{ height: "100%" }}></Box>
+              <Settings size={"medium"} />
               <Button sx={{ pb: 3 }} onClick={() => setOpenMd(true)}>
                 <ArrowForwardIos
                   fontSize="small"
@@ -101,7 +102,7 @@ function Menu(props) {
             </List>
             <ProjectSelect />
             <Status />
-            <Settings />
+            <Settings size={"large"} />
           </Drawer>
         </>
       ) : (
@@ -125,6 +126,7 @@ function Menu(props) {
               </List>
               <ProjectSelectSmall />
               <Box sx={{ height: "100%" }}></Box>
+              <Settings size="medium" />
               <Button sx={{ pb: 3 }} onClick={() => setOpenLg(true)}>
                 <ArrowForwardIos
                   fontSize="small"
@@ -154,7 +156,7 @@ function Menu(props) {
             </List>
             <ProjectSelect />
             <Status />
-            <Settings />
+            <Settings size={"large"} />
           </LgDrawerStyled>
         </>
       )}

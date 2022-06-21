@@ -222,11 +222,9 @@ const ProcessDrawer = () => {
             }
             handleTooltipClose={handleCloseVercel}
           >
-            <Tooltip placement="left" title="Deploy project">
-              <ListItem button onClick={() => setVercel(true)}>
-                <RocketLaunchIcon sx={styles.listitem} />
-              </ListItem>
-            </Tooltip>
+            <ListItem button onClick={() => setVercel(true)}>
+              <RocketLaunchIcon sx={styles.listitem} />
+            </ListItem>
           </DialogTooltip>
         </Box>
         <Tooltip placement="left" title="Save project">

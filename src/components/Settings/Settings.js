@@ -1,10 +1,10 @@
-import SettingsDialog from "../../widgets/SettingDialog/SettingDialog";
+import SettingsDialog from "../../widgets/SettingsDialog";
 import SettingsIcon from "@mui/icons-material/Settings";
 import styles from "./styles";
 import { useState } from "react";
 import { Button, Grid } from "@mui/material";
 
-function Settings() {
+function Settings({ size }) {
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
@@ -15,14 +15,12 @@ function Settings() {
   };
 
   return (
-    <>
-      <Grid container sx={styles.root}>
-        <Button onClick={handleOpen} size="large">
-          <SettingsIcon sx={styles.settingIcon} fontSize={"large"} />
-        </Button>
-        {open && <SettingsDialog handleClose={handleClose} />}
-      </Grid>
-    </>
+    <Grid container sx={styles.root}>
+      <Button onClick={handleOpen} size="large">
+        <SettingsIcon sx={styles.settingIcon} fontSize={size} />
+      </Button>
+      {open && <SettingsDialog handleClose={handleClose} />}
+    </Grid>
   );
 }
 
