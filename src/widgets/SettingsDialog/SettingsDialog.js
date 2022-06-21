@@ -8,15 +8,27 @@ import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 const SettingsDialog = ({ handleClose }) => {
   const [, dispatch] = useLayout();
 
-  const terminal = Settings.url.terminal();
-  const app = Settings.url.app();
-  const runtime = Settings.runtime();
+  const urlRef = React.useRef();
 
-  const urlRef = React.useRef({ terminal, app, runtime });
+  React.useEffect(() => {
+    const terminal = Settings.url.terminal();
+    const runtime = Settings.runtime();
+    const parse = new URL(terminal);
+
+    const url = parse.protocol + "//" + parse.hostname;
+    urlRef.current = { runtime, url };
+  }, []);
 
   function saveSettingDialog() {
-    Settings.url.terminal(urlRef.current.terminal);
-    Settings.url.app(urlRef.current.app);
+    if (urlRef.current.runtime === "npx") {
+      const url = new URL(urlRef.current.url);
+
+      const terminal = url.protocol + "//" + url.hostname + ":8448/";
+      const app = url.protocol + "//" + url.hostname + ":3000/";
+
+      Settings.url.terminal(terminal);
+      Settings.url.app(app);
+    }
     Settings.runtime(urlRef.current.runtime);
     dispatch({ type: "SWAGGER_DIALOG", payload: { dialogStatus: false } });
     handleClose();
