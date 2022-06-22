@@ -14,12 +14,12 @@ import SwaggerDialog from "../../components/SwaggerDialog";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import service from "../../service";
 import styles from "./styles";
+import theme from "../../theme";
 import useGetProjects from "../../hooks/useGetProjects";
 import useLayout from "../../hooks/useLayout";
-
-//eslint-disable-next-line
-//import { useContext } from "../../Context/providers/contextProvider";
 import { useLocation } from "react-router-dom";
+import useMediaQuery from "@mui/material/useMediaQuery";
+
 import {
   Box,
   CircularProgress,
@@ -41,6 +41,8 @@ const ProcessDrawer = () => {
   const getStatusTask = useRef();
 
   const [link, setLink] = useState("");
+
+  const matchDownMD = useMediaQuery(theme.breakpoints.down("lg"));
 
   const auth = () => {
     setBackdrop(true);
@@ -173,24 +175,34 @@ const ProcessDrawer = () => {
         open={
           location.state?.anchor === undefined ? true : location.state?.anchor
         }
-        sx={styles.drawer}
+        sx={matchDownMD ? styles.drawerSmall : styles.drawer}
       >
         <Box>
           {loading ? (
-            <ListItem sx={styles.listitem}>
+            <ListItem sx={matchDownMD ? styles.listItemSmall : styles.listItem}>
               <CircularProgress color="inherit" size={23} />
             </ListItem>
           ) : (
-            ApiButton(status, handleRun, handleRunApi, handleRunSandbox)
+            ApiButton(
+              status,
+              handleRun,
+              handleRunApi,
+              handleRunSandbox,
+              matchDownMD
+            )
           )}
           <Tooltip placement="left" title="Open swagger dialog">
             <ListItem button onClick={handleOpenDialog}>
-              <ViewListIcon sx={styles.listitem} />
+              <ViewListIcon
+                sx={matchDownMD ? styles.listItemSmall : styles.listItem}
+              />
             </ListItem>
           </Tooltip>
           <Tooltip placement="left" title="Login with GitHub">
             <ListItem button onClick={auth}>
-              <GitHubIcon sx={styles.listitem} />
+              <GitHubIcon
+                sx={matchDownMD ? styles.listItemSmall : styles.listItem}
+              />
             </ListItem>
           </Tooltip>
           <Tooltip placement="left" title="Download project">
@@ -201,7 +213,9 @@ const ProcessDrawer = () => {
               download={Project.get().name + ".nuc.json"}
               target="_blank"
             >
-              <ImportExportIcon sx={styles.listitem} />
+              <ImportExportIcon
+                sx={matchDownMD ? styles.listItemSmall : styles.listItem}
+              />
             </ListItem>
           </Tooltip>
           <Tooltip placement="left" title="Open postman">
@@ -223,13 +237,17 @@ const ProcessDrawer = () => {
             handleTooltipClose={handleCloseVercel}
           >
             <ListItem button onClick={() => setVercel(true)}>
-              <RocketLaunchIcon sx={styles.listitem} />
+              <RocketLaunchIcon
+                sx={matchDownMD ? styles.listItemSmall : styles.listItem}
+              />
             </ListItem>
           </DialogTooltip>
         </Box>
         <Tooltip placement="left" title="Save project">
           <ListItem button onClick={handleSaveProject}>
-            <SaveIcon sx={styles.listitem} />
+            <SaveIcon
+              sx={matchDownMD ? styles.listItemSmall : styles.listItem}
+            />
           </ListItem>
         </Tooltip>
       </Drawer>
@@ -253,7 +271,13 @@ const ProcessDrawer = () => {
   );
 };
 
-const ApiButton = (layoutStatus, handleRun, handleRunApi, handleRunSandbox) => {
+const ApiButton = (
+  layoutStatus,
+  handleRun,
+  handleRunApi,
+  handleRunSandbox,
+  matchDownMD
+) => {
   const { status } = layoutStatus;
 
   if (Settings.runtime() === "sandbox") {
@@ -261,7 +285,9 @@ const ApiButton = (layoutStatus, handleRun, handleRunApi, handleRunSandbox) => {
       <>
         <Tooltip title="Reload project sandbox" placement="left">
           <ListItem button onClick={() => handleRunSandbox()}>
-            <PlayCircleFilledIcon sx={styles.listitem} />
+            <PlayCircleFilledIcon
+              sx={matchDownMD ? styles.listItemSmall : styles.listItem}
+            />
           </ListItem>
         </Tooltip>
       </>
@@ -274,7 +300,9 @@ const ApiButton = (layoutStatus, handleRun, handleRunApi, handleRunSandbox) => {
         <>
           <Tooltip title="Reload project npx" placement="left">
             <ListItem button onClick={() => handleRunApi(true)}>
-              <PlayCircleFilledIcon sx={styles.listitem} />
+              <PlayCircleFilledIcon
+                sx={matchDownMD ? styles.listItemSmall : styles.listItem}
+              />
             </ListItem>
           </Tooltip>
         </>
@@ -284,7 +312,9 @@ const ApiButton = (layoutStatus, handleRun, handleRunApi, handleRunSandbox) => {
       return (
         <Tooltip title="Run project" placement="left">
           <ListItem button onClick={handleRun}>
-            <PlayCircleFilledIcon sx={styles.listitem} />
+            <PlayCircleFilledIcon
+              sx={matchDownMD ? styles.listItemSmall : styles.listItem}
+            />
           </ListItem>
         </Tooltip>
       );
