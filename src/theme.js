@@ -39,7 +39,7 @@ theme = {
             },
           "&::-webkit-scrollbar-thumb:active, & *::-webkit-scrollbar-thumb:active":
             {
-              backgroundColor:  "#c9c9c9",
+              backgroundColor: "#c9c9c9",
             },
           "&::-webkit-scrollbar-thumb:hover, & *::-webkit-scrollbar-thumb:hover":
             {
