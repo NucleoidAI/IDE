@@ -1,5 +1,5 @@
+import NonExtandableTreeItem from "../components/NonExtandableTreeItem";
 import TextField from "@mui/material/TextField";
-import TreeItem from "@mui/lab/TreeItem";
 import React, { useRef, useState } from "react";
 
 function SchemaObject(props) {
@@ -8,7 +8,7 @@ function SchemaObject(props) {
   const textField = useRef();
 
   return (
-    <TreeItem
+    <NonExtandableTreeItem
       onClick={(event) => event.preventDefault()}
       label={
         <>
@@ -37,7 +37,7 @@ function SchemaObject(props) {
     >
       {children}
       &nbsp;&nbsp;&#125;
-    </TreeItem>
+    </NonExtandableTreeItem>
   );
 }
 

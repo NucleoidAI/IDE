@@ -81,6 +81,13 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
       justifyContent={"space-between"}
     >
       <Grid item>
+        {!edit && (
+          <Grid container justifyContent={"center"} alignItems={"center"}>
+            <Typography fontWeight={"bolder"} fontSize={"medium"}>
+              {request ? "Request" : "Response"}
+            </Typography>
+          </Grid>
+        )}
         {edit && (
           <Grid container justifyContent={"center"} alignItems={"center"}>
             <>
