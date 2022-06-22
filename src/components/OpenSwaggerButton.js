@@ -19,7 +19,7 @@ const OpenSwaggerButton = ({ clickEvent }) => {
         }}
       >
         <Swagger />
-        <Typography sx={{ pl: 2 / 3 }} fontFamily={"Trebuchet MS"}>
+        <Typography sx={{ pl: 3 / 2 }} fontFamily={"Trebuchet MS"}>
           Open Swagger
         </Typography>
         <Box />

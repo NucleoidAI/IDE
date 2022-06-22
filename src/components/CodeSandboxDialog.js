@@ -84,7 +84,7 @@ export default function CodeSandboxDialog({ open, handleCloseSandboxDialog }) {
                 }}
               >
                 <CodeSandboxIcon fill={"#e0e0e0"} />
-                <Typography sx={{ pl: 1 }} variant="h6">
+                <Typography sx={{ pl: 3 / 2 }} variant="h6">
                   CodeSandbox
                 </Typography>
               </Box>

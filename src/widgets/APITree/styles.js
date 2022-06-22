@@ -13,6 +13,7 @@ const styles = {
     mb: 1 / 4,
     boxShadow: "1px 1px #b8b8b8",
   },
+  menuItemText: { pl: 3 / 2 },
 };
 
 export default styles;

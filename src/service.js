@@ -38,9 +38,13 @@ const getCodeFromGithub = () => {
   );
   return new Promise((resolve, reject) => {
     const myInterval = setInterval(() => {
+      let url;
+      gitHubWindow.onbeforeunload = () => {
+        url = gitHubWindow.location.href;
+      };
+
       if (gitHubWindow.closed) {
         clearInterval(myInterval);
-        const url = gitHubWindow.location.href;
 
         if (url) {
           const newUrl = url.split("?code=");

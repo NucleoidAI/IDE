@@ -1,5 +1,5 @@
+import NonExtandableTreeItem from "../components/NonExtandableTreeItem";
 import TextField from "@mui/material/TextField";
-import TreeItem from "@mui/lab/TreeItem";
 import TypeMenu from "./TypeMenu";
 import React, { useRef, useState } from "react";
 
@@ -20,7 +20,7 @@ function SchemaArray({
   const item = map.items[Object.keys(map.items)[0]];
 
   return (
-    <TreeItem
+    <NonExtandableTreeItem
       onClick={(event) => event.preventDefault()}
       label={
         <>
@@ -77,7 +77,7 @@ function SchemaArray({
       {children}
       <br />
       &nbsp;&nbsp;&#93;
-    </TreeItem>
+    </NonExtandableTreeItem>
   );
 }
 
