@@ -6,7 +6,7 @@ import SummaryForm from "../../components/SummaryForm";
 import { compile } from "../../widgets/APIDialog/Context";
 import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
-import { Box, Fab, Grid } from "@mui/material";
+import { Box, Fab, Grid, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 
 function APISettings() {
@@ -47,10 +47,17 @@ function APISettings() {
 
   return (
     <Box sx={styles.root}>
-      <Grid container sx={styles.container}>
-        <Grid container xs={9} item sx={styles.content}>
+      <Grid container sx={styles.container} spacing={1}>
+        <Grid container xs={9} item sx={styles.content} spacing={1}>
           <Grid item xs={6} sx={styles.schema}>
-            {method === "get" && <ParamView params={params} />}
+            {method === "get" && (
+              <Grid container justifyContent={"center"} alignItems={"center"}>
+                <Typography fontWeight={"bolder"} fontSize={"medium"}>
+                  Request
+                </Typography>
+                <ParamView params={params} />
+              </Grid>
+            )}
             {method !== "get" && request && (
               <Schema
                 key={Object.keys(request)[0]}

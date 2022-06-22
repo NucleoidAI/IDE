@@ -75,7 +75,7 @@ export default function SwaggerDialog({ open, handleClose }) {
                 }}
               >
                 <Swagger />
-                <Typography sx={{ pl: 1 }} variant="h6" component="div">
+                <Typography sx={{ pl: 3 / 2 }} variant="h6" component="div">
                   Swagger
                 </Typography>
               </Box>

@@ -173,11 +173,11 @@ function APITree() {
             }}
           >
             <EditIcon />
-            <Typography sx={{ pl: 1 }}>Edit</Typography>
+            <Typography sx={styles.menuItemText}>Edit</Typography>
           </MenuItem>
           <MenuItem onClick={handleDeleteMethod} disabled={methodDisabled}>
             <DeleteIcon />
-            <Typography sx={{ pl: 1 }}>Delete</Typography>
+            <Typography sx={styles.menuItemText}>Delete</Typography>
           </MenuItem>
         </Menu>
         <ResourceMenu

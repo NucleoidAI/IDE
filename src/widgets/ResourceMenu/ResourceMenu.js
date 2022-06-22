@@ -5,6 +5,7 @@ import Fade from "@mui/material/Fade";
 import HttpIcon from "@mui/icons-material/Http";
 import React from "react";
 import SourceIcon from "@mui/icons-material/Source";
+import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
 import { useRef } from "react";
 import { Divider, Menu, MenuItem, Typography } from "@mui/material";
@@ -126,16 +127,16 @@ const ResourceMenu = (props) => {
       >
         <MenuItem onClick={addResource}>
           <SourceIcon />
-          <Typography sx={{ pl: 1 }}>Resource</Typography>
+          <Typography sx={styles.menuItemText}>Resource</Typography>
         </MenuItem>
         <MenuItem onClick={addMethod} disabled={methodDisabled}>
           <HttpIcon />
-          <Typography sx={{ pl: 1 }}>Method</Typography>
+          <Typography sx={styles.menuItemText}>Method</Typography>
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleResourceDeleteDialog}>
           <DeleteIcon />
-          <Typography sx={{ pl: 1 }}>Delete</Typography>
+          <Typography sx={styles.menuItemText}>Delete</Typography>
         </MenuItem>
       </Menu>
     </>

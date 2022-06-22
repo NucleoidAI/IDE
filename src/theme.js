@@ -29,21 +29,21 @@ theme = {
           },
           "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
             borderRadius: 10,
-            backgroundColor: "#353e48",
+            backgroundColor: "#959595",
             minHeight: 24,
             border: "3px",
           },
           "&::-webkit-scrollbar-thumb:focus, & *::-webkit-scrollbar-thumb:focus":
             {
-              backgroundColor: "#959595",
+              backgroundColor: "#c9c9c9",
             },
           "&::-webkit-scrollbar-thumb:active, & *::-webkit-scrollbar-thumb:active":
             {
-              backgroundColor: "#959595",
+              backgroundColor:  "#c9c9c9",
             },
           "&::-webkit-scrollbar-thumb:hover, & *::-webkit-scrollbar-thumb:hover":
             {
-              backgroundColor: "#959595",
+              backgroundColor: "#c9c9c9",
             },
           "&::-webkit-scrollbar-corner, & *::-webkit-scrollbar-corner": {
             backgroundColor: "#2b2b2b",
