@@ -21,7 +21,7 @@ const initStatus = {
 };
 
 const InitContext = () => {
-  Settings.beta(true);
+  Settings.beta(false);
 
   if (!Settings.url.app()) {
     Settings.url.app("http://localhost:3000/");
