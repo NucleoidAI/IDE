@@ -10,7 +10,6 @@ import { useContext } from "../../Context/providers/contextProvider";
 import { Box, Fab, Grid, Typography, useMediaQuery } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 
-
 function APISettings() {
   const [state, dispatch] = useContext();
   const [method, setMethod] = useState();
