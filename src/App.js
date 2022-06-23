@@ -16,9 +16,20 @@ import {
   ThemeProvider,
   useMediaQuery,
 } from "@mui/material";
+import React from "react";
 
 function App() {
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+
+  React.useEffect(() => {
+    const ele = document.getElementById("ipl-progress-indicator");
+    if (ele) {
+      ele.classList.add("available");
+      setTimeout(() => {
+        ele.outerHTML = "";
+      }, 1000);
+    }
+  }, []);
 
   if (matchDownSM) return <Mobile />;
 
