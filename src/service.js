@@ -31,7 +31,6 @@ axios.interceptors.request.use((request) => {
 });
 
 const getCodeFromGithub = () => {
-  console.log("here");
   const gitHubWindow = window.open(
     `https://github.com/login/oauth/authorize?scope=user&client_id=${Settings.github.client_id}`,
     "_blank",

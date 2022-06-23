@@ -203,22 +203,6 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
             functions.find((item) => item.path === selected).code = e;
           }
         }}
-        onBlur={() => {
-          /*
-        if (api) {
-          const selected = state.get("pages.api.selected");
-          const api = state.get("nucleoid.api");
-
-          api[selected.path][selected.method].action = code;
-        }
-
-        if (functions) {
-          const selected = state.get("pages.functions.selected");
-          const functions = state.get("nucleoid.functions");
-          functions.find((item) => item.path === selected).code = code;
-        }
-        */
-        }}
       />
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}

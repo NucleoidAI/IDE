@@ -152,7 +152,7 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
     setDialog(true);
   };
 
-  const handleOpenNewProject = async () => {
+  const handleOpenNewProject = () => {
     if (project.get().project !== "") {
       setScreen("NewProject");
     } else {
@@ -203,7 +203,7 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
           }}
         >
           <Typography variant="h6">Select a project</Typography>
-          <Button onClick={handleOpenNewProject} variant="text">
+          <Button onClick={() => handleOpenNewProject()} variant="text">
             NEW PROJECT
           </Button>
         </Grid>
