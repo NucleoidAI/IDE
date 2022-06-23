@@ -1,3 +1,4 @@
+import EditButton from "../../components/EditButton";
 import EditIcon from "@mui/icons-material/Edit";
 import ParamView from "../../components/ParamView";
 import Schema from "../../components/Schema";
@@ -8,6 +9,7 @@ import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
 import { Box, Fab, Grid, Typography, useMediaQuery } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
+
 
 function APISettings() {
   const [state, dispatch] = useContext();
@@ -46,6 +48,13 @@ function APISettings() {
       );
     }
   }, [state, method]);
+
+  const openEditDialog = () => {
+    dispatch({
+      type: "OPEN_API_DIALOG",
+      payload: { type: "method", action: "edit" },
+    });
+  };
 
   return (
     <Box sx={styles.root}>
@@ -86,6 +95,7 @@ function APISettings() {
             )}
           </Grid>
         </Grid>
+        {!matchWidth && <EditButton openEditDialog={openEditDialog} />}
         {matchWidth && (
           <Grid container md={3} item sx={styles.summaryFormRoot}>
             <SummaryForm
@@ -98,15 +108,7 @@ function APISettings() {
               onClick={() => console.log(summaryRef.current["Summary"].value)}
             />
             <Grid container sx={styles.editIcon}>
-              <Fab
-                size={"small"}
-                onClick={() => {
-                  dispatch({
-                    type: "OPEN_API_DIALOG",
-                    payload: { type: "method", action: "edit" },
-                  });
-                }}
-              >
+              <Fab size={"small"} onClick={openEditDialog}>
                 <EditIcon />
               </Fab>
             </Grid>
