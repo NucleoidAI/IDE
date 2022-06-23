@@ -29,7 +29,6 @@ const Settings = {
   },
   github: {
     client_id: "6a44f854367bd3fb5f13",
-    redirect_uri: "https://localhost:4000/ide/login",
     token_url: "https://github.com/login/oauth/access_token",
     user: "https://api.github.com/user",
   },
