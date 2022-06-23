@@ -98,6 +98,14 @@ theme = {
         },
       },
     },
+    MuiLinearProgress: {
+      styleOverrides: {
+        root: {
+          background: "#c9c9c9",
+          color: "#959595",
+        },
+      },
+    },
   },
 };
 
