@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 
 function App() {
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   if (matchDownSM) return <Mobile />;
 

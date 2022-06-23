@@ -48,12 +48,14 @@ const getCodeFromGithub = () => {
       }
     });
 
+    /*
     const myInterval = setInterval(() => {
       if (gitHubWindow.closed) {
         clearInterval(myInterval);
         reject({ error: "USER_CLOSED_PAGE" });
       }
     }, 400);
+    */
   });
 };
 
