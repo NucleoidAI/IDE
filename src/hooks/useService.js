@@ -3,7 +3,7 @@ import Settings from "../settings";
 import service from "../service";
 import { useContext } from "../Context/providers/contextProvider";
 
-function useGetProjects() {
+function useService() {
   const [state, dispatch] = useContext();
 
   const handleGetProjects = async (callback) => {
@@ -50,7 +50,25 @@ function useGetProjects() {
     }
   };
 
-  return [state, dispatch, handleGetProjects];
+  const handleSaveProject = (callback) => {
+    const { project, name } = Project.getStringify();
+    const context = JSON.stringify(state);
+
+    if (!project) {
+      return handleGetProjects(() => callback(false));
+    } else {
+      service
+        .updateProject(project, name, context)
+        .then((data) => {
+          callback(data);
+        })
+        .catch(() => {
+          callback(false);
+        });
+    }
+  };
+
+  return [state, dispatch, handleGetProjects, handleSaveProject];
 }
 
-export default useGetProjects;
+export default useService;

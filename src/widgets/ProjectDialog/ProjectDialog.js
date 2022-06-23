@@ -5,7 +5,7 @@ import State from "../../state";
 import project from "../../project";
 import service from "../../service";
 import styles from "./styles";
-import useGetProjects from "../../hooks/useGetProjects";
+import useService from "../../hooks/useService";
 import { Backdrop, CircularProgress } from "@mui/material";
 
 import {
@@ -25,7 +25,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import Settings from "../../settings";
 
 const NewProjectScreen = ({ setScreen, handleClose }) => {
-  const [, dispatch] = useGetProjects();
+  const [, dispatch] = useService();
   const [open, setOpen] = React.useState(false);
   const projectName = React.useRef("");
 
@@ -99,7 +99,7 @@ const NewProjectScreen = ({ setScreen, handleClose }) => {
 };
 
 const ListProjectsScreen = ({ setScreen, handleClose }) => {
-  const [, dispatch, handleGetProjects] = useGetProjects();
+  const [, dispatch, handleGetProjects] = useService();
   const [open, setOpen] = React.useState(false);
   const select = React.useRef();
   const [dialog, setDialog] = React.useState(false);

@@ -15,11 +15,10 @@ import ViewListIcon from "@mui/icons-material/ViewList";
 import service from "../../service";
 import styles from "./styles";
 import theme from "../../theme";
-import useGetProjects from "../../hooks/useGetProjects";
 import useLayout from "../../hooks/useLayout";
 import { useLocation } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
-
+import useService from "../../hooks/useService";
 import {
   Box,
   CircularProgress,
@@ -30,19 +29,18 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 
 const ProcessDrawer = () => {
-  const [state, , handleGetProject] = useGetProjects();
+  const [state, , handleGetProject, saveProject] = useService();
   const [status, dispatch, getStatus] = useLayout();
+
+  const matchDownMD = useMediaQuery(theme.breakpoints.down("lg"));
   const location = useLocation();
 
   const [vercel, setVercel] = useState(false);
   const [loading, setLoading] = useState(false);
   const [backdrop, setBackdrop] = useState(false);
-
-  const getStatusTask = useRef();
-
   const [link, setLink] = useState("");
 
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("lg"));
+  const getStatusTask = useRef();
 
   const auth = () => {
     setBackdrop(true);
@@ -98,20 +96,11 @@ const ProcessDrawer = () => {
   };
 
   const handleSaveProject = () => {
-    const { project, context, name } = Project.getStringify();
     setBackdrop(true);
-    if (!project) {
-      return handleGetProject((result) => setBackdrop(false));
-    } else {
-      service
-        .updateProject(project, name, context)
-        .then((data) => {
-          setBackdrop(false);
-        })
-        .catch(() => {
-          setBackdrop(false);
-        });
-    }
+
+    saveProject(() => {
+      setBackdrop(false);
+    });
   };
 
   const handleCloseSandboxDialog = () => {

@@ -4,7 +4,7 @@ import prettier from "../../prettier";
 import prettierPlugins from "../../prettierPlugins";
 import rules from "./rules";
 import styles from "./styles";
-import { useContext } from "../../Context/providers/contextProvider";
+import useService from "../../hooks/useService";
 import { v4 as uuid } from "uuid";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 // eslint-disable-next-line sort-imports
@@ -12,10 +12,11 @@ import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-chrome";
 import { addCompleter } from "ace-builds/src-noconflict/ext-language_tools";
 import { parser } from "react-nucleoid";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 function Editor({ name, api, functions, log, editorRef, ...other }) {
-  const [state] = useContext();
-
+  const [state, , , saveProject] = useService();
+  const [backdrop, setBackdrop] = React.useState(false);
   const [annotations, setAnnotations] = useState([]);
   const [code, setCode] = useState(null);
   const ace = useRef();
@@ -115,12 +116,21 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
 
     clearTimeout(timer.current);
 
-    /*
-    editor.selection.moveCursorToPosition({
-      row: 0,
-      column: 0,
+    const handleSaveProject = () => {
+      setBackdrop(true);
+
+      saveProject(() => {
+        setBackdrop(false);
+      });
+    };
+
+    editor.commands.addCommand({
+      name: "query",
+      bindKey: { win: "Ctrl-S", mac: "Ctrl-S" },
+      exec: () => {
+        handleSaveProject();
+      },
     });
-    */
 
     setAnnotations([]);
 
@@ -154,31 +164,47 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
     }
 
     setCode(log);
+    //eslint-disable-next-line
   }, [state, api, functions, editorRef, log, lint]);
 
   return (
-    <AceEditor
-      ref={ace}
-      style={styles.editor}
-      name={name}
-      mode={"javascript"}
-      theme={"chrome"}
-      annotations={annotations}
-      fontSize={14}
-      {...other}
-      setOptions={{
-        useWorker: false,
-        tabSize: 2,
-        useSoftTabs: true,
-        enableLiveAutocompletion: true,
-        enableBasicAutocompletion: true,
-      }}
-      value={code}
-      onChange={(e) => {
-        checkFunction(e) && lint(e);
-        setCode(e);
-      }}
-      onBlur={() => {
+    <>
+      <AceEditor
+        ref={ace}
+        style={styles.editor}
+        name={name}
+        mode={"javascript"}
+        theme={"chrome"}
+        annotations={annotations}
+        fontSize={14}
+        {...other}
+        setOptions={{
+          useWorker: false,
+          tabSize: 2,
+          useSoftTabs: true,
+          enableLiveAutocompletion: true,
+          enableBasicAutocompletion: true,
+        }}
+        value={code}
+        onChange={(e) => {
+          checkFunction(e) && lint(e);
+          setCode(e);
+
+          if (api) {
+            const selected = state.get("pages.api.selected");
+            const api = state.get("nucleoid.api");
+
+            api[selected.path][selected.method].action = e;
+          }
+
+          if (functions) {
+            const selected = state.get("pages.functions.selected");
+            const functions = state.get("nucleoid.functions");
+            functions.find((item) => item.path === selected).code = e;
+          }
+        }}
+        onBlur={() => {
+          /*
         if (api) {
           const selected = state.get("pages.api.selected");
           const api = state.get("nucleoid.api");
@@ -191,8 +217,16 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
           const functions = state.get("nucleoid.functions");
           functions.find((item) => item.path === selected).code = code;
         }
-      }}
-    />
+        */
+        }}
+      />
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={backdrop}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </>
   );
 }
 
