@@ -6,7 +6,7 @@ import SummaryForm from "../../components/SummaryForm";
 import { compile } from "../../widgets/APIDialog/Context";
 import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
-import { Box, Fab, Grid, Typography } from "@mui/material";
+import { Box, Fab, Grid, Typography, useMediaQuery } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 
 function APISettings() {
@@ -19,6 +19,8 @@ function APISettings() {
   const [types, setTypes] = useState();
   const [description, setDescription] = useState();
 
+  const matchWidth = useMediaQuery("(min-width:900px)");
+  console.log(matchWidth);
   const summaryRef = useRef([]);
 
   useEffect(() => {
@@ -48,7 +50,13 @@ function APISettings() {
   return (
     <Box sx={styles.root}>
       <Grid container sx={styles.container} spacing={1}>
-        <Grid container xs={9} item sx={styles.content} spacing={1}>
+        <Grid
+          container
+          md={matchWidth ? 9 : 12}
+          item
+          sx={styles.content}
+          spacing={1}
+        >
           <Grid item xs={6} sx={styles.schema}>
             {method === "get" && (
               <Grid container justifyContent={"center"} alignItems={"center"}>
@@ -78,30 +86,32 @@ function APISettings() {
             )}
           </Grid>
         </Grid>
-        <Grid container xs={3} item sx={styles.summaryFormRoot}>
-          <SummaryForm
-            summaryText={summary}
-            descriptionText={description}
-            ref={summaryRef}
-          />
+        {matchWidth && (
+          <Grid container md={3} item sx={styles.summaryFormRoot}>
+            <SummaryForm
+              summaryText={summary}
+              descriptionText={description}
+              ref={summaryRef}
+            />
 
-          <Security
-            onClick={() => console.log(summaryRef.current["Summary"].value)}
-          />
-          <Grid container sx={styles.editIcon}>
-            <Fab
-              size={"small"}
-              onClick={() => {
-                dispatch({
-                  type: "OPEN_API_DIALOG",
-                  payload: { type: "method", action: "edit" },
-                });
-              }}
-            >
-              <EditIcon />
-            </Fab>
+            <Security
+              onClick={() => console.log(summaryRef.current["Summary"].value)}
+            />
+            <Grid container sx={styles.editIcon}>
+              <Fab
+                size={"small"}
+                onClick={() => {
+                  dispatch({
+                    type: "OPEN_API_DIALOG",
+                    payload: { type: "method", action: "edit" },
+                  });
+                }}
+              >
+                <EditIcon />
+              </Fab>
+            </Grid>
           </Grid>
-        </Grid>
+        )}
       </Grid>
     </Box>
   );
