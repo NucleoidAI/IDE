@@ -21,7 +21,6 @@ function APISettings() {
   const [description, setDescription] = useState();
 
   const matchWidth = useMediaQuery("(min-width:900px)");
-  console.log(matchWidth);
   const summaryRef = useRef([]);
 
   useEffect(() => {

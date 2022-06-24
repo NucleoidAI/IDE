@@ -10,7 +10,7 @@ const refreshAuthLogic = async (failedRequest) => {
 
   if (!refreshToken && !accessToken) {
     const code = await getCodeFromGithub();
-    console.log(code);
+
     tokenRefreshResponse = await auth({ code: code });
   } else {
     tokenRefreshResponse = await auth({ refreshToken: refreshToken });

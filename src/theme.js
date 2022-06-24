@@ -7,6 +7,7 @@ let theme = createTheme({
       fossil: "#747474",
       darkDialogBg: "rgba(0,0,0,0.5)",
       darkDialogPanel: "#424242",
+      apiTreeRightClick: "rgba(0, 0, 0, 0.2)",
     },
   },
   props: {
