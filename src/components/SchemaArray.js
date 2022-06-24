@@ -19,8 +19,17 @@ function SchemaArray({
   // TODO  if in object show textfield and typemenu, if in array show only typemenu
   const item = map.items[Object.keys(map.items)[0]];
 
+  const readOnly = !edit
+    ? {
+        hovercolor: "white",
+        selectedcolor: "white",
+        nocursor: true,
+      }
+    : {};
+
   return (
     <NonExtandableTreeItem
+      {...readOnly}
       onClick={(event) => event.preventDefault()}
       label={
         <>

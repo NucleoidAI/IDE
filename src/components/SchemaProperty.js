@@ -1,5 +1,5 @@
+import StyledTreeItem from "./StyledTreeItem";
 import TextField from "@mui/material/TextField";
-import TreeItem from "@mui/lab/TreeItem";
 import TypeMenu from "./TypeMenu";
 import React, { useRef, useState } from "react";
 
@@ -16,8 +16,17 @@ function SchemaProperty({
   const [value, setValue] = useState(name);
   const textField = useRef();
 
+  const readOnly = !edit
+    ? {
+        hovercolor: "white",
+        selectedcolor: "white",
+        nocursor: true,
+      }
+    : {};
+
   return (
-    <TreeItem
+    <StyledTreeItem
+      {...readOnly}
       label={
         <>
           {edit && (

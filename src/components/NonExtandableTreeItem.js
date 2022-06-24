@@ -1,7 +1,8 @@
 import React from "react";
+import StyledTreeItem from "../components/StyledTreeItem";
 import Typography from "@mui/material/Typography";
 import clsx from "clsx";
-import { TreeItem, useTreeItem } from "@mui/lab";
+import { useTreeItem } from "@mui/lab";
 
 const NonExpandableTreeContent = React.forwardRef(function CustomContent(
   props,
@@ -59,8 +60,10 @@ const NonExpandableTreeContent = React.forwardRef(function CustomContent(
   );
 });
 
-const NonExpandableTreeItem = (props) => (
-  <TreeItem ContentComponent={NonExpandableTreeContent} {...props} />
-);
+const NonExpandableTreeItem = (props) => {
+  return (
+    <StyledTreeItem ContentComponent={NonExpandableTreeContent} {...props} />
+  );
+};
 
 export default NonExpandableTreeItem;
