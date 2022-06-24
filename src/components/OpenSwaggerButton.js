@@ -1,8 +1,9 @@
 import React from "react";
 import Swagger from "../icons/Swagger";
+import theme from "../theme";
 import { Box, Button, Typography } from "@mui/material";
 
-const OpenSwaggerButton = ({ clickEvent }) => {
+const OpenSwaggerButton = ({ clickEvent, small }) => {
   return (
     <Button
       onClick={clickEvent}
@@ -11,18 +12,22 @@ const OpenSwaggerButton = ({ clickEvent }) => {
     >
       <Box
         sx={{
-          pt: 1,
-          pb: 2,
           display: "flex",
           cursor: "pointer",
           alignItems: "center",
         }}
       >
-        <Swagger />
-        <Typography sx={{ pl: 3 / 2 }} fontFamily={"Trebuchet MS"}>
-          Open Swagger
-        </Typography>
-        <Box />
+        {!small && (
+          <>
+            <Swagger fill={theme.palette.custom.grey} />
+            <Typography sx={{ pl: 3 / 2 }} fontFamily={"Trebuchet MS"}>
+              Open Swagger
+            </Typography>
+            <Box />
+          </>
+        )}
+
+        {small && <Swagger fill={theme.palette.custom.grey} />}
       </Box>
     </Button>
   );

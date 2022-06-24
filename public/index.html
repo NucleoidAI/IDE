@@ -1,239 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title>Nucleoid IDE</title>
 
-<head>
-  <title>Nucleoid IDE</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+    <link rel="icon" type="image/png" href="https://cdn.nucleoid.com/media/icon.png" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
 
-  <meta charset="utf-8" />
-  <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-  <link rel="icon" type="image/png" href="https://cdn.nucleoid.com/media/icon.png" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-L9H12K94J4"></script>
+    <script src="https://cdn.nucleoid.com/dist/eslint.bundle-8.16.0.js"></script>
+    <script src="https://cdn.nucleoid.com/dist/standalone-2.6.2.js"></script>
+    <script src="https://cdn.nucleoid.com/dist/parser-babel-2.6.2.js"></script>
 
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-L9H12K94J4"></script>
-  <script src="https://cdn.nucleoid.com/dist/eslint.bundle-8.16.0.js"></script>
-  <script src="https://cdn.nucleoid.com/dist/standalone-2.6.2.js"></script>
-  <script src="https://cdn.nucleoid.com/dist/parser-babel-2.6.2.js"></script>
-
-  <style type="text/css">
-    body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      width: 100%;
-
-    }
-
-    body {
-      background-color: "#323a40";
-      font-family: Roboto, sans-serif;
-      font-size: 13px;
-      -webkit-font-smoothing: antialiased
-    }
-
-    .ipl-progress-indicator.available {
-      opacity: 0
-    }
-
-    .ipl-progress-indicator {
-      width: 100%;
-      height: 100%;
-      position: fixed;
-      opacity: 1;
-      pointer-events: none;
-      -webkit-transition: opacity cubic-bezier(.4, 0, .2, 1) 436ms;
-      -moz-transition: opacity cubic-bezier(.4, 0, .2, 1) 436ms;
-      transition: opacity cubic-bezier(.4, 0, .2, 1) 436ms;
-      z-index: 9999
-    }
-
-    .insp-logo-frame {
-      display: -webkit-flex;
-      display: -moz-flex;
-      display: flex;
-      -webkit-flex-direction: column;
-      -moz-flex-direction: column;
-      flex-direction: column;
-      -webkit-justify-content: center;
-      -moz-justify-content: center;
-      justify-content: center;
-      -webkit-animation: fadein 436ms;
-      -moz-animation: fadein 436ms;
-      animation: fadein 436ms;
-      height: 98%
-    }
-
-    .insp-logo-frame-img {
-      width: 112px;
-      height: 112px;
-      -webkit-align-self: center;
-      -moz-align-self: center;
-      align-self: center;
-      border-radius: 50%
-    }
-
-    .ipl-progress-indicator-head {
-      background-color: #c6dafc;
-      height: 4px;
-      overflow: hidden;
-      position: relative
-    }
-
-    .ipl-progress-indicator .first-indicator,
-    .ipl-progress-indicator .second-indicator {
-      background-color: #056d8b;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      top: 0;
-      position: absolute;
-      -webkit-transform-origin: left center;
-      -moz-transform-origin: left center;
-      transform-origin: left center;
-      -webkit-transform: scaleX(0);
-      -moz-transform: scaleX(0);
-      transform: scaleX(0)
-    }
-
-    .ipl-progress-indicator .first-indicator {
-      -webkit-animation: first-indicator 2s linear infinite;
-      -moz-animation: first-indicator 2s linear infinite;
-      animation: first-indicator 2s linear infinite
-    }
-
-    .ipl-progress-indicator .second-indicator {
-      -webkit-animation: second-indicator 2s linear infinite;
-      -moz-animation: second-indicator 2s linear infinite;
-      animation: second-indicator 2s linear infinite
-    }
-
-    .ipl-progress-indicator .insp-logo {
-      animation: App-logo-spin infinite 20s linear;
-      border-radius: 50%;
-      -webkit-align-self: center;
-      -moz-align-self: center;
-      align-self: center
-    }
-
-    @keyframes App-logo-spin {
-      from {
-        transform: rotate(0)
+    <style type="text/css">
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        width: 100%;
       }
 
-      to {
-        transform: rotate(360deg)
-      }
-    }
-
-    @-webkit-keyframes fadein {
-      from {
-        opacity: 0
+      body {
+        background-color: "#323a40";
+        font-family: Roboto, sans-serif;
+        font-size: 13px;
+        -webkit-font-smoothing: antialiased;
       }
 
-      to {
-        opacity: 1
-      }
-    }
-
-    @-moz-keyframes fadein {
-      from {
-        opacity: 0
+      .ipl-progress-indicator.available {
+        opacity: 0;
       }
 
-      to {
-        opacity: 1
-      }
-    }
-
-    @keyframes fadein {
-      from {
-        opacity: 0
-      }
-
-      to {
-        opacity: 1
-      }
-    }
-
-    @keyframes first-indicator {
-      0% {
-        transform: translate(0) scaleX(0)
+      .ipl-progress-indicator {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        opacity: 1;
+        pointer-events: none;
+        -webkit-transition: opacity cubic-bezier(0.4, 0, 0.2, 1) 436ms;
+        -moz-transition: opacity cubic-bezier(0.4, 0, 0.2, 1) 436ms;
+        transition: opacity cubic-bezier(0.4, 0, 0.2, 1) 436ms;
+        z-index: 9999;
       }
 
-      25% {
-        transform: translate(0) scaleX(.5)
+      .insp-logo-frame {
+        display: -webkit-flex;
+        display: -moz-flex;
+        display: flex;
+        -webkit-flex-direction: column;
+        -moz-flex-direction: column;
+        flex-direction: column;
+        -webkit-justify-content: center;
+        -moz-justify-content: center;
+        justify-content: center;
+        -webkit-animation: fadein 436ms;
+        -moz-animation: fadein 436ms;
+        animation: fadein 436ms;
+        height: 98%;
       }
 
-      50% {
-        transform: translate(25%) scaleX(.75)
+      .insp-logo-frame-img {
+        width: 112px;
+        height: 112px;
+        -webkit-align-self: center;
+        -moz-align-self: center;
+        align-self: center;
+        border-radius: 50%;
       }
 
-      75% {
-        transform: translate(100%) scaleX(0)
+      .ipl-progress-indicator-head {
+        background-color: #c6dafc;
+        height: 4px;
+        overflow: hidden;
+        position: relative;
       }
 
-      100% {
-        transform: translate(100%) scaleX(0)
-      }
-    }
-
-    @keyframes second-indicator {
-      0% {
-        transform: translate(0) scaleX(0)
-      }
-
-      60% {
-        transform: translate(0) scaleX(0)
-      }
-
-      80% {
-        transform: translate(0) scaleX(.6)
+      .ipl-progress-indicator .first-indicator,
+      .ipl-progress-indicator .second-indicator {
+        background-color: #056d8b;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+        position: absolute;
+        -webkit-transform-origin: left center;
+        -moz-transform-origin: left center;
+        transform-origin: left center;
+        -webkit-transform: scaleX(0);
+        -moz-transform: scaleX(0);
+        transform: scaleX(0);
       }
 
-      100% {
-        transform: translate(100%) scaleX(.1)
+      .ipl-progress-indicator .first-indicator {
+        -webkit-animation: first-indicator 2s linear infinite;
+        -moz-animation: first-indicator 2s linear infinite;
+        animation: first-indicator 2s linear infinite;
       }
-    }
-  </style>
 
-  <script>
-    window.dataLayer = window.dataLayer || [];
+      .ipl-progress-indicator .second-indicator {
+        -webkit-animation: second-indicator 2s linear infinite;
+        -moz-animation: second-indicator 2s linear infinite;
+        animation: second-indicator 2s linear infinite;
+      }
 
-    function gtag() {
-      dataLayer.push(arguments);
-    }
+      .ipl-progress-indicator .insp-logo {
+        animation: App-logo-spin infinite 20s linear;
+        border-radius: 50%;
+        -webkit-align-self: center;
+        -moz-align-self: center;
+        align-self: center;
+      }
 
-    gtag("js", new Date());
+      @keyframes App-logo-spin {
+        from {
+          transform: rotate(0);
+        }
 
-    if (window.location.hostname === "nucleoid.com") {
-      gtag("config", "G-L9H12K94J4", {
-        send_page_view: false,
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @-webkit-keyframes fadein {
+        from {
+          opacity: 0;
+        }
+
+        to {
+          opacity: 1;
+        }
+      }
+
+      @-moz-keyframes fadein {
+        from {
+          opacity: 0;
+        }
+
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadein {
+        from {
+          opacity: 0;
+        }
+
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes first-indicator {
+        0% {
+          transform: translate(0) scaleX(0);
+        }
+
+        25% {
+          transform: translate(0) scaleX(0.5);
+        }
+
+        50% {
+          transform: translate(25%) scaleX(0.75);
+        }
+
+        75% {
+          transform: translate(100%) scaleX(0);
+        }
+
+        100% {
+          transform: translate(100%) scaleX(0);
+        }
+      }
+
+      @keyframes second-indicator {
+        0% {
+          transform: translate(0) scaleX(0);
+        }
+
+        60% {
+          transform: translate(0) scaleX(0);
+        }
+
+        80% {
+          transform: translate(0) scaleX(0.6);
+        }
+
+        100% {
+          transform: translate(100%) scaleX(0.1);
+        }
+      }
+    </style>
+
+    <script>
+      window.dataLayer = window.dataLayer || [];
+
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+
+      gtag("js", new Date());
+
+      if (window.location.hostname === "nucleoid.com") {
+        gtag("config", "G-L9H12K94J4", {
+          send_page_view: false,
+        });
+      }
+
+      gtag("event", "page_view", {
+        page_title: "IDE",
+        page_location: window.location.href,
+        page_path: window.location.pathname,
       });
-    }
 
-    gtag("event", "page_view", {
-      page_title: "IDE",
-      page_location: window.location.href,
-      page_path: window.location.pathname,
-    });
+      window.gtag = gtag;
+      window.linter = new ESLint.Linter();
+      window.prettier = prettier;
+      window.prettierPlugins = prettierPlugins;
+    </script>
+  </head>
 
-    window.gtag = gtag;
-    window.linter = new ESLint.Linter();
-    window.prettier = prettier;
-    window.prettierPlugins = prettierPlugins;
-  </script>
-</head>
-
-<body>
-  <div class="ipl-progress-indicator" id="ipl-progress-indicator">
-    <div class="ipl-progress-indicator-head">
-      <div class="first-indicator"></div>
-      <div class="second-indicator"></div>
+  <body>
+    <div class="ipl-progress-indicator" id="ipl-progress-indicator">
+      <div class="ipl-progress-indicator-head">
+        <div class="first-indicator"></div>
+        <div class="second-indicator"></div>
+      </div>
+      <div class="insp-logo-frame"></div>
     </div>
-    <div class="insp-logo-frame">
-    </div>
-  </div>
-  <div id="root"></div>
-</body>
-
+    <div id="root"></div>
+  </body>
 </html>

@@ -18,7 +18,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 
-
 function App() {
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
