@@ -8,7 +8,7 @@ const Defaults = {
           [objPropID]: {
             id: objPropID,
             name: "id",
-            type: "string",
+            type: "integer",
           },
         },
       },
@@ -19,7 +19,7 @@ const Defaults = {
       [id]: {
         id: id,
         name: "id",
-        type: "string",
+        type: "integer",
       },
     };
   },
@@ -27,7 +27,7 @@ const Defaults = {
     type: "object",
     properties: {
       id: {
-        type: "string",
+        type: "integer",
       },
     },
   },
@@ -35,7 +35,7 @@ const Defaults = {
     type: "array",
     items: {
       id: {
-        type: "string",
+        type: "integer",
       },
     },
   },
