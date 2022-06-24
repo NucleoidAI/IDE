@@ -20,7 +20,7 @@ function SchemaProperty({
     ? {
         hovercolor: "white",
         selectedcolor: "white",
-        nocursor: true,
+        nocursor: "true",
       }
     : {};
 

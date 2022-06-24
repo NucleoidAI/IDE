@@ -23,7 +23,7 @@ function SchemaArray({
     ? {
         hovercolor: "white",
         selectedcolor: "white",
-        nocursor: true,
+        nocursor: "true",
       }
     : {};
 

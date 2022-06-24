@@ -11,7 +11,7 @@ function SchemaObject(props) {
     ? {
         hovercolor: "white",
         selectedcolor: "white",
-        nocursor: true,
+        nocursor: "true",
       }
     : {};
 
