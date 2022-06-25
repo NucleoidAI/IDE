@@ -16,6 +16,10 @@ function SchemaProperty({
   const [value, setValue] = useState(name);
   const textField = useRef();
 
+  React.useEffect(() => {
+    map.name = name || "";
+  }, [map, name]);
+
   const readOnly = !edit
     ? {
         hovercolor: "white",

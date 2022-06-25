@@ -32,7 +32,7 @@ function SchemaObject(props) {
                     setValue((map.name = event.target.value))
                   }
                   inputRef={textField}
-                  onClick={() => setImmediate(() => textField.current.focus())}
+                  onClick={() => setTimeout(() => textField.current.focus(), 0)}
                 />
               )}
               {!edit && <>"{value}"</>}
