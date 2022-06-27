@@ -96,10 +96,10 @@ const ProcessDrawer = () => {
   };
 
   const handleSaveProject = () => {
-    setBackdrop(true);
+    // setBackdrop(true);
 
     saveProject(() => {
-      setBackdrop(false);
+      //setBackdrop(false);
     });
   };
 
@@ -232,13 +232,20 @@ const ProcessDrawer = () => {
             </ListItem>
           </DialogTooltip>
         </Box>
-        <Tooltip placement="left" title="Save project">
-          <ListItem button onClick={handleSaveProject}>
-            <SaveIcon
-              sx={matchDownMD ? styles.listItemSmall : styles.listItem}
-            />
+        {state.pages.save === false && (
+          <Tooltip placement="left" title="Save project">
+            <ListItem button onClick={handleSaveProject}>
+              <SaveIcon
+                sx={matchDownMD ? styles.listItemSmall : styles.listItem}
+              />
+            </ListItem>
+          </Tooltip>
+        )}
+        {state.pages.save === true && (
+          <ListItem button>
+            <CircularProgress color="inherit" size={25} />
           </ListItem>
-        </Tooltip>
+        )}
       </Drawer>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
