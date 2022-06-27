@@ -5,7 +5,6 @@ import clsx from "clsx";
 import theme from "../theme";
 import { TreeItem, useTreeItem } from "@mui/lab";
 
-
 const NonExpandableTreeContent = React.forwardRef(function CustomContent(
   props,
   ref
