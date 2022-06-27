@@ -10,11 +10,6 @@ const StyledTreeItemRoot = styled(TreeItem)(
 
     [`& .${treeItemClasses.content}`]: {
       color: "black",
-      paddingRight: theme.spacing(1),
-      fontWeight: theme.typography.fontWeightMedium,
-      "&.Mui-expanded": {
-        fontWeight: theme.typography.fontWeightRegular,
-      },
       "&:hover": {
         backgroundColor: hovercolor || theme.palette.action.hover,
       },
@@ -25,12 +20,6 @@ const StyledTreeItemRoot = styled(TreeItem)(
       },
       [`& .${treeItemClasses.label}`]: {
         cursor: nocursor && "auto",
-      },
-    },
-    [`& .${treeItemClasses.group}`]: {
-      marginLeft: 0,
-      [`& .${treeItemClasses.content}`]: {
-        paddingLeft: theme.spacing(2),
       },
     },
   })

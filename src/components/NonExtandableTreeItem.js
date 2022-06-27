@@ -1,6 +1,5 @@
 import React from "react";
 import StyledTreeItem from "../components/StyledTreeItem";
-import Typography from "@mui/material/Typography";
 import clsx from "clsx";
 import { useTreeItem } from "@mui/lab";
 
@@ -53,9 +52,7 @@ const NonExpandableTreeContent = React.forwardRef(function CustomContent(
       <div onClick={handleExpansionClick} className={classes.iconContainer}>
         {icon}
       </div>
-      <Typography component="div" className={classes.label}>
-        {label}
-      </Typography>
+      <div className={classes.label}>{label}</div>
     </div>
   );
 });
