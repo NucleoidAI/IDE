@@ -22,11 +22,11 @@ function App() {
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   React.useEffect(() => {
-    const ele = document.getElementById("ipl-progress-indicator");
-    if (ele) {
-      ele.classList.add("available");
+    const progressElement = document.getElementById("nuc-progress-indicator");
+    if (progressElement) {
+      progressElement.classList.add("available");
       setTimeout(() => {
-        ele.outerHTML = "";
+        progressElement.outerHTML = "";
       }, 1000);
     }
   }, []);
