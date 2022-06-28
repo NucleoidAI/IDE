@@ -7,8 +7,17 @@ function SchemaObject(props) {
   const [value, setValue] = useState(name);
   const textField = useRef();
 
+  const readOnly = !edit
+    ? {
+        hovercolor: "white",
+        selectedcolor: "white",
+        nocursor: "true",
+      }
+    : {};
+
   return (
     <NonExtandableTreeItem
+      {...readOnly}
       onClick={(event) => event.preventDefault()}
       label={
         <>
@@ -23,7 +32,7 @@ function SchemaObject(props) {
                     setValue((map.name = event.target.value))
                   }
                   inputRef={textField}
-                  onClick={() => setImmediate(() => textField.current.focus())}
+                  onClick={() => setTimeout(() => textField.current.focus(), 0)}
                 />
               )}
               {!edit && <>"{value}"</>}

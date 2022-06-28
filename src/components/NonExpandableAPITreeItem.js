@@ -2,6 +2,7 @@ import React from "react";
 import ResourceMenu from "../widgets/ResourceMenu";
 import Typography from "@mui/material/Typography";
 import clsx from "clsx";
+import theme from "../theme";
 import { TreeItem, useTreeItem } from "@mui/lab";
 
 const NonExpandableTreeContent = React.forwardRef(function CustomContent(
@@ -69,7 +70,7 @@ const NonExpandableTreeContent = React.forwardRef(function CustomContent(
       </div>
       <Typography
         component="div"
-        sx={{ bgcolor: open && "rgba(0, 0, 0, 0.2)" }}
+        sx={{ bgcolor: open && theme.palette.custom.apiTreeRightClick }}
         className={classes.label}
       >
         {label}

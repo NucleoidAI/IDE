@@ -1,8 +1,9 @@
 import CodeSandbox from "../icons/CodeSandbox";
 import React from "react";
+import theme from "../theme";
 import { Box, Button, Typography } from "@mui/material";
 
-const OpenSandboxButton = ({ clickEvent, fill }) => {
+const OpenSandboxButton = ({ clickEvent, small }) => {
   return (
     <Button
       onClick={clickEvent}
@@ -11,18 +12,22 @@ const OpenSandboxButton = ({ clickEvent, fill }) => {
     >
       <Box
         sx={{
-          pt: 1,
-          pb: 2,
           display: "flex",
           cursor: "pointer",
           alignItems: "center",
         }}
       >
-        <CodeSandbox fill={fill} />
-        <Typography sx={{ pl: 3 / 2 }} fontFamily={"Trebuchet MS"}>
-          Open CodeSandbox
-        </Typography>
-        <Box />
+        {!small && (
+          <>
+            <CodeSandbox fill={theme.palette.custom.grey} />
+            <Typography sx={{ pl: 3 / 2 }} fontFamily={"Trebuchet MS"}>
+              Open CodeSandbox
+            </Typography>
+            <Box />
+          </>
+        )}
+
+        {small && <CodeSandbox fill={theme.palette.custom.grey} />}
       </Box>
     </Button>
   );

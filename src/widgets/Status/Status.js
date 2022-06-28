@@ -11,7 +11,6 @@ import OpenSwaggerButton from "../../components/OpenSwaggerButton";
 import Settings from "../../settings";
 
 function Status() {
-  //const [state, dispatch] = useLayoutContext();
   const [state, dispatch, getStatus] = useLayout();
   const metrics = state.metrics;
 
@@ -78,7 +77,6 @@ const StatusText = ({ state, dispatch, getStatus }) => {
             getStatus();
           }}
           create
-          fill={"#c3c5c8"}
         />
       )}
       {Settings.runtime() === "npx" && (
@@ -90,7 +88,6 @@ const StatusText = ({ state, dispatch, getStatus }) => {
             })
           }
           create
-          fill={"#c3c5c8"}
         />
       )}
     </Grid>

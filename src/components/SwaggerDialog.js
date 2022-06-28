@@ -1,6 +1,8 @@
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
+import React from "react";
 import Settings from "../settings";
 import Swagger from "../icons/Swagger";
+import theme from "../theme";
 import {
   AppBar,
   Box,
@@ -11,7 +13,6 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import * as React from "react";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -74,7 +75,7 @@ export default function SwaggerDialog({ open, handleClose }) {
                   justifyContent: "center",
                 }}
               >
-                <Swagger />
+                <Swagger fill={theme.palette.custom.grey} />
                 <Typography sx={{ pl: 3 / 2 }} variant="h6" component="div">
                   Swagger
                 </Typography>

@@ -26,10 +26,10 @@ const Mobile = () => {
       <Box
         sx={{
           display: "flex",
+          alignItems: "center",
           justifyContent: "center",
           width: "100%",
           height: "100vh",
-          pt: 5,
           bgcolor: "#323a40",
         }}
       >

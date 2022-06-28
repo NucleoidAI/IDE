@@ -7,6 +7,7 @@ import React from "react";
 import Settings from "../Settings";
 import SmallLogo from "../SmallLogo";
 import Status from "../../widgets/Status";
+import StatusSmall from "../../widgets/StatusSmall";
 import { drawerWidth } from "../../config";
 import styles from "./styles";
 import { useLayoutContext } from "../../Context/providers/layoutContextProvider";
@@ -58,7 +59,8 @@ function Menu(props) {
                 <SmallMenuLinks {...props} />
               </List>
               <ProjectSelectSmall />
-              <Box sx={{ height: "100%" }}></Box>
+              <Box sx={{ height: "100%" }} />
+              <StatusSmall />
               <Settings size={"medium"} />
               <Button sx={{ pb: 3 }} onClick={() => setOpenMd(true)}>
                 <ArrowForwardIos
@@ -125,7 +127,8 @@ function Menu(props) {
                 <SmallMenuLinks {...props} />
               </List>
               <ProjectSelectSmall />
-              <Box sx={{ height: "100%" }}></Box>
+              <Box sx={{ height: "100%" }} />
+              <StatusSmall />
               <Settings size="medium" />
               <Button sx={{ pb: 3 }} onClick={() => setOpenLg(true)}>
                 <ArrowForwardIos

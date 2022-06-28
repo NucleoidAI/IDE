@@ -7,6 +7,7 @@ import Fade from "@mui/material/Fade";
 import NonExpandableAPITreeItem from "../../components/NonExpandableAPITreeItem";
 import ResourceMenu from "../ResourceMenu";
 import styles from "./styles";
+import theme from "../../theme";
 import { useContext } from "../../Context/providers/contextProvider";
 import {
   Box,
@@ -26,6 +27,7 @@ const map = {};
 function APITree() {
   const [selected, setSelected] = React.useState(null);
   const [contextMenu, setContextMenu] = React.useState(null);
+  const [rightClickMethod, setRightClickMethod] = React.useState();
   const [methodDisabled, setMethodDisabled] = useState();
   const [open, setOpen] = useState(false);
   const [resourceMenu, setResourceMenu] = React.useState(false);
@@ -60,6 +62,9 @@ function APITree() {
     event.preventDefault();
 
     if (hash) select(hash);
+
+    setRightClickMethod(hash);
+
     setContextMenu(
       !contextMenu
         ? {
@@ -82,6 +87,7 @@ function APITree() {
   };
 
   const handleClose = () => {
+    setRightClickMethod(null);
     setContextMenu(null);
   };
 
@@ -154,7 +160,12 @@ function APITree() {
           onNodeSelect={(event, value) => select(value)}
           selected={selected}
         >
-          {compile([graph["/"]], handleContextMenu, expandList)}
+          {compile(
+            [graph["/"]],
+            handleContextMenu,
+            expandList,
+            rightClickMethod
+          )}
         </TreeView>
         <Menu
           open={contextMenu !== null}
@@ -195,13 +206,18 @@ function APITree() {
   );
 }
 
-const compile = (list, handleContextMenu, expandList) =>
+const compile = (list, handleContextMenu, expandList, rightClickMethod) =>
   list.map((api) => {
     let children = undefined;
     let resourceHash;
 
     if (api.resources && api.resources.length > 0) {
-      children = compile(api.resources, handleContextMenu, expandList);
+      children = compile(
+        api.resources,
+        handleContextMenu,
+        expandList,
+        rightClickMethod
+      );
     }
 
     children = api.methods
@@ -215,6 +231,11 @@ const compile = (list, handleContextMenu, expandList) =>
             key={hash}
             nodeId={hash}
             onContextMenu={(event) => handleContextMenu(event, hash)}
+            sx={{
+              bgcolor:
+                hash === rightClickMethod &&
+                theme.palette.custom.apiTreeRightClick,
+            }}
             label={
               <Box sx={styles.apiTreeItem}>
                 <center>{method.toUpperCase()}</center>
