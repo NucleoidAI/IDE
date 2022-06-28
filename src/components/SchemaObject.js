@@ -1,6 +1,6 @@
 import NonExtandableTreeItem from "../components/NonExtandableTreeItem";
-import TextField from "@mui/material/TextField";
 import React, { useRef, useState } from "react";
+import { TextField, Typography } from "@mui/material";
 
 function SchemaObject(props) {
   const { name, edit, map, children, ...other } = props;
@@ -45,7 +45,7 @@ function SchemaObject(props) {
       {...other}
     >
       {children}
-      &nbsp;&nbsp;&#125;
+      <Typography sx={{ fontSize: "1rem" }}>&nbsp;&nbsp;&#125;</Typography>
     </NonExtandableTreeItem>
   );
 }

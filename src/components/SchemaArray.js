@@ -1,6 +1,6 @@
 import NonExtandableTreeItem from "../components/NonExtandableTreeItem";
-import TextField from "@mui/material/TextField";
 import TypeMenu from "./TypeMenu";
+import { Box, TextField, Typography } from "@mui/material/";
 import React, { useRef, useState } from "react";
 
 function SchemaArray({
@@ -60,32 +60,39 @@ function SchemaArray({
       }
       {...other}
     >
-      {edit && (
-        <>
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          <TypeMenu
-            objAndArr
-            globalTypes
-            id={id}
-            type={item.type}
-            types={types}
-            map={item}
-            edit={edit}
-            setKey={setKey}
-          />
-          <br />
-        </>
-      )}
-      {!edit && (
-        <>
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          {type}
-        </>
-      )}
-      &nbsp;&nbsp;&nbsp;&nbsp;
-      {children}
-      <br />
-      &nbsp;&nbsp;&#93;
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "flex-start",
+        }}
+      >
+        {edit && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+            }}
+          >
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <TypeMenu
+              objAndArr
+              globalTypes
+              id={id}
+              type={item.type}
+              types={types}
+              map={item}
+              edit={edit}
+              setKey={setKey}
+            />
+            <Typography>:</Typography>
+          </Box>
+        )}
+        {!edit && <>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</>}
+        <Box sx={{ mt: 10 / 14 }}>{children}</Box>
+      </Box>
+      <Typography>&nbsp;&nbsp;&#93;</Typography>
     </NonExtandableTreeItem>
   );
 }
