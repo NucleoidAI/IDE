@@ -25,9 +25,6 @@ function App() {
     const progressElement = document.getElementById("nuc-progress-indicator");
     if (progressElement) {
       progressElement.classList.add("available");
-      setTimeout(() => {
-        progressElement.outerHTML = "";
-      }, 1000);
     }
   }, []);
 
