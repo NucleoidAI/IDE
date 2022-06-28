@@ -15,7 +15,6 @@ import { addCompleter } from "ace-builds/src-noconflict/ext-language_tools";
 import { parser } from "react-nucleoid";
 import { Backdrop, CircularProgress } from "@mui/material";
 
-
 function Editor({ name, api, functions, log, editorRef, ...other }) {
   const [state, , , saveProject] = useService();
   const [backdrop, setBackdrop] = React.useState(false);
