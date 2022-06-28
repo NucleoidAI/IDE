@@ -52,6 +52,16 @@ theme = {
         },
       },
     },
+    MuiDataGrid: {
+      styleOverrides: {
+        root: {
+          "& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-cell:focus-within":
+            {
+              outline: "none",
+            },
+        },
+      },
+    },
     MuiDrawer: {
       styleOverrides: {
         paper: {
