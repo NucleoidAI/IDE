@@ -223,12 +223,6 @@ function contextReducer(state, { type, payload }) {
       break;
     }
 
-    case "SAVE_STATUS": {
-      const { status } = payload;
-      pages.save = status;
-      break;
-    }
-
     default:
   }
 

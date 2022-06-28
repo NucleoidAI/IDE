@@ -37,6 +37,22 @@ function layoutReducer(state, { type, payload }) {
       return { ...tmpState };
     }
 
+    case "SAVE_STATUS": {
+      const { status } = payload;
+      const tmpState = state;
+
+      tmpState.save = status;
+      break;
+    }
+
+    case "BACKDROP": {
+      const { status } = payload;
+      const tmpState = state;
+
+      tmpState.backdrop = status;
+      break;
+    }
+
     default:
   }
 
