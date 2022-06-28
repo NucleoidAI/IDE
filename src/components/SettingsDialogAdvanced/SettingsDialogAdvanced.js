@@ -19,13 +19,6 @@ const SettingsDialogAdvanced = () => {
       <Switch
         color="default"
         checked={checked}
-        sx={{
-          "& + .MuiSwitch-track": {
-            backgroundColor: "red",
-            opacity: 1,
-            border: 0,
-          },
-        }}
         onChange={(e) => {
           setChecked(e.target.checked);
           Settings.beta(e.target.checked);
