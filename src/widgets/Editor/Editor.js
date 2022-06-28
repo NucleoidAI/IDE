@@ -131,7 +131,6 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
         } catch (err) {
           console.log(err);
         }
-
         setCode((api[selected.path][selected.method].action = prettyText));
 
         lint(prettyText);
@@ -197,7 +196,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
           action = fn.slice(1, -1);
         }
 
-        action = `function action(${args[0] || ""}){\n\t${action}\n}`;
+        action = `function action(${args[0] || ""}) {\n  ${action}\n}\n`;
 
         lint(action);
       }
