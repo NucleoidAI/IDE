@@ -2,6 +2,12 @@ import { createTheme } from "@mui/material";
 
 let theme = createTheme({
   palette: {
+    primary: {
+      main: "#747474",
+    },
+    secondary: {
+      main: "#f4f4f4",
+    },
     custom: {
       grey: "rgba(255, 255, 255, 0.7)",
       fossil: "#747474",
