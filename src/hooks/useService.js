@@ -2,19 +2,16 @@ import Project from "../project";
 import Settings from "../settings";
 import service from "../service";
 import { useContext } from "../Context/providers/contextProvider";
-import { useLayoutContext } from "../Context/providers/layoutContextProvider";
 
 function useService() {
   const [state, dispatch] = useContext();
-  const [, layoutDispatch] = useLayoutContext();
 
   const handleGetProjects = async (callback) => {
-    layoutDispatch({ type: "BACKDROP", payload: { status: true } });
-
     const projects = await service.getProjects().catch((err) => err);
 
     if (!projects.data) {
       console.log("Network error");
+      callback(false);
     }
 
     if (projects.data.length > 0) {
@@ -26,6 +23,7 @@ function useService() {
 
       if (!project.data) {
         console.log("project not found");
+        callback(false);
       }
 
       dispatch({
@@ -37,6 +35,7 @@ function useService() {
         project.data.name,
         project.data.context
       );
+      callback(true);
     } else {
       const { name, context } = Project.getStringify();
       service.addProject(name, context).then(({ data }) => {
@@ -46,29 +45,28 @@ function useService() {
           payload: { project: JSON.parse(data.context) },
         });
         Project.setWithoutStringify(data.project, data.name, data.context);
+        callback(true);
       });
     }
-
-    layoutDispatch({ type: "BACKDROP", payload: { status: false } });
   };
 
   const handleSaveProject = (callback) => {
     const { project, name } = Project.getStringify();
     const context = JSON.stringify(state);
-    layoutDispatch({ type: "SAVE_STATUS", payload: { status: true } });
+    dispatch({ type: "SAVE_STATUS", payload: { status: true } });
 
     if (!project) {
       return handleGetProjects(() => {
-        layoutDispatch({ type: "SAVE_STATUS", payload: { status: false } });
+        dispatch({ type: "SAVE_STATUS", payload: { status: false } });
       });
     } else {
       service
         .updateProject(project, name, context)
         .then((data) => {
-          layoutDispatch({ type: "SAVE_STATUS", payload: { status: false } });
+          dispatch({ type: "SAVE_STATUS", payload: { status: false } });
         })
         .catch(() => {
-          layoutDispatch({ type: "SAVE_STATUS", payload: { status: false } });
+          dispatch({ type: "SAVE_STATUS", payload: { status: false } });
         });
     }
   };

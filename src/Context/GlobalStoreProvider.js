@@ -13,8 +13,6 @@ const initStatus = {
   status: "unreachable",
   sandbox: Settings.codesandbox.sandboxID() ? true : false,
   sandboxDialog: false,
-  save: false,
-  backdrop: false,
   metrics: {
     free: 50,
     total: 100,

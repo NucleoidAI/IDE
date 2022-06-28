@@ -1,3 +1,4 @@
+import Backdrop from "@mui/material/Backdrop";
 import CodeSandbox from "../../codesandbox";
 import CodeSandboxDialog from "../../components/CodeSandboxDialog";
 import DialogTooltip from "../../components/DialogTootip/";
@@ -36,12 +37,14 @@ const ProcessDrawer = () => {
 
   const [vercel, setVercel] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [backdrop, setBackdrop] = useState(false);
   const [link, setLink] = useState("");
 
   const getStatusTask = useRef();
 
   const auth = () => {
-    handleGetProject();
+    setBackdrop(true);
+    handleGetProject((result) => setBackdrop(false));
   };
 
   useEffect(() => {
@@ -93,7 +96,11 @@ const ProcessDrawer = () => {
   };
 
   const handleSaveProject = () => {
-    saveProject();
+    // setBackdrop(true);
+
+    saveProject(() => {
+      //setBackdrop(false);
+    });
   };
 
   const handleCloseSandboxDialog = () => {
@@ -225,7 +232,7 @@ const ProcessDrawer = () => {
             </ListItem>
           </DialogTooltip>
         </Box>
-        {status.save === false && (
+        {state.pages.save === false && (
           <Tooltip placement="left" title="Save project">
             <ListItem button onClick={handleSaveProject}>
               <SaveIcon
@@ -234,13 +241,18 @@ const ProcessDrawer = () => {
             </ListItem>
           </Tooltip>
         )}
-        {status.save === true && (
+        {state.pages.save === true && (
           <ListItem button>
             <CircularProgress color="inherit" size={25} />
           </ListItem>
         )}
       </Drawer>
-
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={backdrop}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <CodeSandboxDialog
         open={status.sandboxDialog}
         handleCloseSandboxDialog={handleCloseSandboxDialog}
@@ -249,6 +261,7 @@ const ProcessDrawer = () => {
         open={status.swagger}
         handleClose={handleCloseSwaggerDialog}
       />
+
       {status.name}
     </>
   );
