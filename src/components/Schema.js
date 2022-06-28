@@ -110,6 +110,7 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
           sx={
             edit && {
               width: "100%",
+              maxWidth: 405,
               height: 310,
               overflowY: "auto",
             }
