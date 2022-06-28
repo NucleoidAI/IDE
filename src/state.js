@@ -10,7 +10,6 @@ function init() {
     pages: {
       started: false,
       opened: false,
-      save: false,
       api: {
         dialog: {
           view: "BODY",
@@ -30,6 +29,10 @@ function init() {
       query: {},
       branches: {},
     },
+    /*
+    settings: {
+      dialog: {},
+    },*/
     get: (prop) => resolve(state, prop),
   };
 

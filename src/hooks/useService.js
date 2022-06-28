@@ -53,20 +53,17 @@ function useService() {
   const handleSaveProject = (callback) => {
     const { project, name } = Project.getStringify();
     const context = JSON.stringify(state);
-    dispatch({ type: "SAVE_STATUS", payload: { status: true } });
 
     if (!project) {
-      return handleGetProjects(() => {
-        dispatch({ type: "SAVE_STATUS", payload: { status: false } });
-      });
+      return handleGetProjects(() => callback(false));
     } else {
       service
         .updateProject(project, name, context)
         .then((data) => {
-          dispatch({ type: "SAVE_STATUS", payload: { status: false } });
+          callback(data);
         })
         .catch(() => {
-          dispatch({ type: "SAVE_STATUS", payload: { status: false } });
+          callback(false);
         });
     }
   };

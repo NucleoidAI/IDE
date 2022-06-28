@@ -13,9 +13,12 @@ import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-chrome";
 import { addCompleter } from "ace-builds/src-noconflict/ext-language_tools";
 import { parser } from "react-nucleoid";
+import { Backdrop, CircularProgress } from "@mui/material";
+
 
 function Editor({ name, api, functions, log, editorRef, ...other }) {
   const [state, , , saveProject] = useService();
+  const [backdrop, setBackdrop] = React.useState(false);
   const [annotations, setAnnotations] = useState([]);
   const [code, setCode] = useState(null);
   const ace = useRef();
@@ -104,7 +107,11 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
     clearTimeout(timer.current);
 
     const handleSaveProject = () => {
-      saveProject();
+      setBackdrop(true);
+
+      saveProject(() => {
+        setBackdrop(false);
+      });
     };
 
     const prettyCode = () => {
@@ -238,6 +245,12 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
           }
         }}
       />
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={backdrop}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </>
   );
 }
