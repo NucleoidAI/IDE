@@ -131,6 +131,7 @@ const APIPath = forwardRef(
         </Grid>
         <Button
           variant={view === "TYPES" ? "contained" : "outlined"}
+          color={view === "TYPES" ? "secondary" : "primary"}
           onClick={() => setApiDialogView("TYPES")}
         >
           <LanguageIcon sx={styles.icon} />
