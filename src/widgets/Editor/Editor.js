@@ -118,22 +118,20 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
         const selected = state.get("pages.api.selected");
         const api = state.get("nucleoid.api");
         const action = api[selected.path][selected.method].action;
-
         const result = linter.verifyAndFix(action, options);
 
-        let prettyText = result.output;
-
         try {
-          prettyText = prettier.format(action, {
+          const prettyText = prettier.format(result.output, {
             parser: "babel",
             plugins: prettierPlugins,
           });
+
+          setCode((api[selected.path][selected.method].action = prettyText));
+
+          lint(prettyText);
         } catch (err) {
           console.log(err);
         }
-        setCode((api[selected.path][selected.method].action = prettyText));
-
-        lint(prettyText);
       }
 
       if (functions) {
@@ -142,26 +140,23 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
         const definition = functions.find(
           (item) => item.path === selected
         ).definition;
-
         const result = linter.verifyAndFix(definition, options);
 
-        let prettyText = result.output;
-
         try {
-          prettyText = prettier.format(definition, {
+          const prettyText = prettier.format(result.output, {
             parser: "babel",
             plugins: prettierPlugins,
           });
+
+          setCode(
+            (functions.find((item) => item.path === selected).definition =
+              prettyText)
+          );
+
+          lint(prettyText);
         } catch (err) {
           console.log(err);
         }
-
-        setCode(
-          (functions.find((item) => item.path === selected).definition =
-            prettyText)
-        );
-
-        lint(prettyText);
       }
     };
 
