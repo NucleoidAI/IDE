@@ -30,7 +30,7 @@ function API() {
         sx={styles.content}
       >
         <Grid item xs={12} sx={styles.editorGrid}>
-          <Paper sx={styles.editorPaper}>
+          <Paper nuc="editor" sx={styles.editorPaper}>
             <Editor name={"api"} api />
           </Paper>
         </Grid>

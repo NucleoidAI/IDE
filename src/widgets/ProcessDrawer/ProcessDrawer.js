@@ -15,6 +15,7 @@ import ViewListIcon from "@mui/icons-material/ViewList";
 import service from "../../service";
 import styles from "./styles";
 import theme from "../../theme";
+import tourEvent from "../../tour";
 import useLayout from "../../hooks/useLayout";
 import { useLocation } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -181,7 +182,7 @@ const ProcessDrawer = () => {
             )
           )}
           <Tooltip placement="left" title="Open swagger dialog">
-            <ListItem button onClick={handleOpenDialog}>
+            <ListItem nuc="list" button onClick={handleOpenDialog}>
               <ViewListIcon
                 sx={matchDownMD ? styles.listItemSmall : styles.listItem}
               />
@@ -225,7 +226,21 @@ const ProcessDrawer = () => {
             }
             handleTooltipClose={handleCloseVercel}
           >
-            <ListItem button onClick={() => setVercel(true)}>
+            <ListItem
+              button
+              onClick={() => {
+                tourEvent("editor", "message", "editor", "this is editör");
+
+                setTimeout(() => {
+                  tourEvent("editor", "message_close");
+                }, 4999);
+
+                setTimeout(() => {
+                  tourEvent("run", "message", "run", "this is run");
+                }, 5000);
+                //setVercel(true);
+              }}
+            >
               <RocketLaunchIcon
                 sx={matchDownMD ? styles.listItemSmall : styles.listItem}
               />
@@ -273,7 +288,7 @@ const ApiButton = (
     return (
       <>
         <Tooltip title="Reload project sandbox" placement="left">
-          <ListItem button onClick={() => handleRunSandbox()}>
+          <ListItem nuc="run" button onClick={() => handleRunSandbox()}>
             <PlayCircleFilledIcon
               sx={matchDownMD ? styles.listItemSmall : styles.listItem}
             />
@@ -288,7 +303,7 @@ const ApiButton = (
       return (
         <>
           <Tooltip title="Reload project npx" placement="left">
-            <ListItem button onClick={() => handleRunApi(true)}>
+            <ListItem nuc="run" button onClick={() => handleRunApi(true)}>
               <PlayCircleFilledIcon
                 sx={matchDownMD ? styles.listItemSmall : styles.listItem}
               />
@@ -300,7 +315,7 @@ const ApiButton = (
     case "unreachable":
       return (
         <Tooltip title="Run project" placement="left">
-          <ListItem button onClick={handleRun}>
+          <ListItem nuc="run" button onClick={handleRun}>
             <PlayCircleFilledIcon
               sx={matchDownMD ? styles.listItemSmall : styles.listItem}
             />
