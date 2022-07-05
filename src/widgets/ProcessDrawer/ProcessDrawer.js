@@ -15,7 +15,7 @@ import ViewListIcon from "@mui/icons-material/ViewList";
 import service from "../../service";
 import styles from "./styles";
 import theme from "../../theme";
-import tourEvent from "../../tour";
+import tour from "../../tour";
 import useLayout from "../../hooks/useLayout";
 import { useLocation } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -229,14 +229,14 @@ const ProcessDrawer = () => {
             <ListItem
               button
               onClick={() => {
-                tourEvent("editor", "message", "editor", "this is editör");
+                tour.tourEvent("editor", "message", "editor", "this is editör");
 
                 setTimeout(() => {
-                  tourEvent("editor", "message_close");
+                  tour.tourEvent("editor", "message_close");
                 }, 4999);
 
                 setTimeout(() => {
-                  tourEvent("run", "message", "run", "this is run");
+                  tour.tourEvent("run", "message", "run", "this is run");
                 }, 5000);
                 //setVercel(true);
               }}

@@ -3,6 +3,7 @@ import Settings from "../settings";
 import State from "../state";
 import project from "../project";
 import service from "../service";
+import tour from "../tour";
 
 import { ContextProvider } from "./providers/contextProvider"; // eslint-disable-line
 import { LayoutContextProvider } from "./providers/layoutContextProvider";
@@ -21,7 +22,15 @@ const initStatus = {
 };
 
 const InitContext = () => {
-  Settings.beta(false);
+  if (!Settings.beta()) {
+    Settings.beta(false);
+  }
+
+  if (!tour.tour()) {
+    tour.initTour();
+  } else {
+    tour.cache = tour.tour();
+  }
 
   if (!Settings.url.app()) {
     Settings.url.app("http://localhost:3000/");

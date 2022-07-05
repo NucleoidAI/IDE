@@ -1,6 +1,6 @@
 const tourRoot = document.getElementById("tour");
 
-const boxContent = (selector, title, message) => {
+const messageBox = (selector, title, message) => {
   return `
 <div style="
 position: absolute;
@@ -89,7 +89,7 @@ const message = function (selector, status, title, body) {
     div = document.createElement("div");
     div.id = "nuc-msgbox-" + selector;
     div.style = `width: 250px;    position: absolute;    text-align: left;    z-index: 999999;;`;
-    div.innerHTML = boxContent(selector, title, body);
+    div.innerHTML = messageBox(selector, title, body);
     changeSize = () => {
       div.style.top = element.getBoundingClientRect().y + "px";
       div.style.left = element.getBoundingClientRect().x - 270 + "px";
