@@ -15,7 +15,6 @@ import ViewListIcon from "@mui/icons-material/ViewList";
 import service from "../../service";
 import styles from "./styles";
 import theme from "../../theme";
-import tour from "../../tour";
 import useLayout from "../../hooks/useLayout";
 import { useLocation } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -229,16 +228,7 @@ const ProcessDrawer = () => {
             <ListItem
               button
               onClick={() => {
-                tour.tourEvent("editor", "message", "editor", "this is editör");
-
-                setTimeout(() => {
-                  tour.tourEvent("editor", "message_close");
-                }, 4999);
-
-                setTimeout(() => {
-                  tour.tourEvent("run", "message", "run", "this is run");
-                }, 5000);
-                //setVercel(true);
+                setVercel(true);
               }}
             >
               <RocketLaunchIcon

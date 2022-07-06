@@ -10,6 +10,7 @@ import Status from "../../widgets/Status";
 import StatusSmall from "../../widgets/StatusSmall";
 import { drawerWidth } from "../../config";
 import styles from "./styles";
+import tourStep from "../../tourStep";
 import { useLayoutContext } from "../../Context/providers/layoutContextProvider";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
@@ -169,7 +170,7 @@ function Menu(props) {
 const MenuLinks = (props) => {
   const [layoutContext] = useLayoutContext();
   const navigate = useNavigate();
-
+  tourStep();
   return (
     <>
       {props.list.map(({ title, link, anchor, icon }) => (

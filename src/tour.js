@@ -17,9 +17,10 @@ const tour = {
       "tour",
       JSON.stringify({
         disable: false,
-        api: { level: 1 },
-        functions: { level: 1 },
-        query: { level: 1 },
+        global: { level: 1, timer: null },
+        api: { level: 1, timer: null },
+        functions: { level: 1, timer: null },
+        query: { level: 1, timer: null },
       })
     );
   },
@@ -28,6 +29,7 @@ const tour = {
       localStorage.setItem(
         "tour",
         JSON.stringify({
+          global: content.global,
           disable: content.disable,
           api: content.api,
           functions: content.functions,
@@ -35,6 +37,7 @@ const tour = {
         })
       );
       tour.cache = {
+        global: content.global,
         disable: content.disable,
         api: content.api,
         functions: content.functions,

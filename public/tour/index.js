@@ -1,6 +1,6 @@
 const tourRoot = document.getElementById("tour");
 
-const messageBox = (selector, title, message) => {
+const messageBoxRight = (selector, title, message) => {
   return `
 <div style="
 position: absolute;
@@ -41,7 +41,44 @@ transform: rotate(45deg);
 font-size: 24px;
 cursor: pointer;
 "
-onclick='closeMessageBox("${selector}")'>+</span>
+onclick='closeMessageBoxRight("${selector}")'>+</span>
+</div>
+${message}
+</div>
+</div>
+`;
+};
+
+const messageBox = (title, message) => {
+  return `
+<div style="
+position: absolute;
+width: 100%;
+padding: 10px;
+color: #c3c5c8;
+background-color: #353e48;
+font-weight: normal;
+font-size: 13px;
+border-radius: 8px;
+position: absolute;
+box-sizing: border-box;
+box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+">
+<div>
+<div style="
+padding-bottom: 15px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+"><strong>
+${title}
+</strong>
+<span style="
+transform: rotate(45deg);
+font-size: 24px;
+cursor: pointer;
+"
+onclick='closeMessageBox()'>+</span>
 </div>
 ${message}
 </div>
@@ -66,15 +103,34 @@ const eventManager = (event) => {
       break;
     }
 
+    case "global_message": {
+      globalMessage("start", title, body);
+
+      break;
+    }
+    case "global_message_close": {
+      globalMessage("stop");
+
+      break;
+    }
+
     default:
       break;
   }
 };
 
-const closeMessageBox = (selector) => {
+const closeMessageBoxRight = (selector) => {
   window.dispatchEvent(
     new CustomEvent("tourEvent", {
       detail: { selector: selector, eventType: "message_close" },
+    })
+  );
+};
+
+const closeMessageBox = () => {
+  window.dispatchEvent(
+    new CustomEvent("tourEvent", {
+      detail: { eventType: "global_message_close" },
     })
   );
 };
@@ -89,12 +145,40 @@ const message = function (selector, status, title, body) {
     div = document.createElement("div");
     div.id = "nuc-msgbox-" + selector;
     div.style = `width: 250px;    position: absolute;    text-align: left;    z-index: 999999;;`;
-    div.innerHTML = messageBox(selector, title, body);
+    div.innerHTML = messageBoxRight(selector, title, body);
     changeSize = () => {
       div.style.top = element.getBoundingClientRect().y + "px";
       div.style.left = element.getBoundingClientRect().x - 270 + "px";
     };
     changeSize();
+    tourRoot.appendChild(div);
+  }
+
+  if (status === "start") {
+    resizeListener("start", changeSize);
+  } else {
+    resizeListener("stop", changeSize);
+    div.remove();
+  }
+};
+
+const globalMessage = function (status, title, body) {
+  let div;
+
+  if (document.getElementById("nuc-global-message")) {
+    div = document.getElementById("nuc-global-message");
+  } else {
+    div = document.createElement("div");
+    div.id = "nuc-global-message";
+    div.style = `width: 250px;    position: absolute;    text-align: left;    z-index: 999999;;`;
+    div.innerHTML = messageBox(title, body);
+
+    changeSize = () => {
+      div.style.top = window.innerHeight - 120 + "px";
+      div.style.left = window.innerWidth / 2 - 50 + "px";
+    };
+    changeSize();
+
     tourRoot.appendChild(div);
   }
 

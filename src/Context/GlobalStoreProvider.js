@@ -28,6 +28,7 @@ const InitContext = () => {
 
   if (!tour.tour()) {
     tour.initTour();
+    tour.cache = tour.tour();
   } else {
     tour.cache = tour.tour();
   }

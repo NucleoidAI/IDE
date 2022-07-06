@@ -1,6 +1,5 @@
 import State from "../../state";
 import project from "../../project";
-import tourStep from "../../tourStep";
 import { v4 as uuid } from "uuid";
 
 function contextReducer(state, { type, payload }) {
@@ -227,7 +226,7 @@ function contextReducer(state, { type, payload }) {
     default:
   }
 
-  tourStep();
+ // tourStep();
 
   project.updateCurrent(state);
 
