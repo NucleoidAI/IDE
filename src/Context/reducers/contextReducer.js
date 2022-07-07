@@ -223,6 +223,12 @@ function contextReducer(state, { type, payload }) {
       break;
     }
 
+    case "QUERY_RESULTS": {
+      const query = state.get("pages.query");
+      query.results = payload.results;
+      break;
+    }
+
     default:
   }
 

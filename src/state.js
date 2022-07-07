@@ -26,7 +26,10 @@ function init() {
           open: false,
         },
       },
-      query: {},
+      query: {
+        results: [],
+        text: "Item",
+      },
       branches: {},
     },
     /*

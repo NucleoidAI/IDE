@@ -6,6 +6,7 @@ import RatioIconButtons from "../../../components/RatioIconButtons/RatioIconButt
 import config from "../../../config";
 import service from "../../../service";
 import styles from "./styles";
+import { useContext } from "../../../Context/providers/contextProvider";
 import {
   Box,
   Card,
@@ -21,7 +22,8 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 
 function Query() {
-  const [result, setResult] = useState();
+  const [state, distpach] = useContext();
+  const result = state.get("pages.query.results");
   const editor = useRef();
   const [checked, setChecked] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -38,6 +40,13 @@ function Query() {
   );
 
   useEffect(() => {
+    const query = state.get("pages.query");
+    editor.current.on("change", () => {
+      query.text = editor.current.getValue();
+    });
+
+    editor.current.setValue(state.get("pages.query.text"));
+
     editor.current.commands.addCommand({
       name: "query",
       bindKey: { win: "Ctrl-Enter", mac: "Ctrl-Enter" },
@@ -45,6 +54,8 @@ function Query() {
         handleQuery();
       },
     });
+
+    //eslint-disable-next-line
   }, []);
 
   const handleQuery = () => {
@@ -53,16 +64,25 @@ function Query() {
       .query(editor ? editor.current.getValue() : null)
       .then((data) => {
         try {
-          setResult(JSON.parse(data));
+          distpach({
+            type: "QUERY_RESULTS",
+            payload: { results: data },
+          });
           setLoading(false);
         } catch (error) {
           setLoading(false);
-          setResult(data);
+          distpach({
+            type: "QUERY_RESULTS",
+            payload: { results: data },
+          });
         }
       })
       .catch((error) => {
         setLoading(false);
-        setResult(error.message);
+        distpach({
+          type: "QUERY_RESULTS",
+          payload: { results: error.message },
+        });
       });
   };
 
