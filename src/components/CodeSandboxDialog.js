@@ -17,14 +17,14 @@ import {
 } from "@mui/material";
 import * as React from "react";
 
-
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function CodeSandboxDialog({ open, handleCloseSandboxDialog }) {
+export default function CodeSandboxDialog({ handleCloseSandboxDialog }) {
   const [npx, setNpx] = React.useState(false);
   const [alert, setAlert] = React.useState(false);
+  console.log(npx, alert);
 
   const switchSandboxToNpx = () => {
     Settings.url.app(`http://localhost:3000/`);
@@ -33,10 +33,18 @@ export default function CodeSandboxDialog({ open, handleCloseSandboxDialog }) {
     Settings.runtime("npx");
   };
 
+  const handleClose = () => {
+    if (npx) {
+      switchSandboxToNpx();
+    }
+
+    handleCloseSandboxDialog();
+  };
+
   return (
     <Dialog
       fullScreen
-      open={open === undefined ? false : open}
+      open={true}
       onClose={handleCloseSandboxDialog}
       TransitionComponent={Transition}
       aria-describedby="alert-dialog-slide-description"
@@ -65,16 +73,7 @@ export default function CodeSandboxDialog({ open, handleCloseSandboxDialog }) {
                 justifyContent: "center",
               }}
             >
-              <IconButton
-                edge="start"
-                onClick={() => {
-                  if (npx) {
-                    switchSandboxToNpx();
-                  }
-                  handleCloseSandboxDialog();
-                }}
-                aria-label="close"
-              >
+              <IconButton edge="start" onClick={handleClose} aria-label="close">
                 <KeyboardArrowDown sx={{ color: "#e0e0e0" }} fontSize="large" />
               </IconButton>
               <Box
@@ -114,7 +113,7 @@ export default function CodeSandboxDialog({ open, handleCloseSandboxDialog }) {
                 handleTooltipClose={() => setAlert(false)}
               >
                 <Switch
-                  value={alert}
+                  value={npx}
                   color="default"
                   onChange={(e) => {
                     setNpx(e.target.checked);

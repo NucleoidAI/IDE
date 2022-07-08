@@ -246,14 +246,14 @@ const ProcessDrawer = () => {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-      <CodeSandboxDialog
-        open={status.sandboxDialog}
-        handleCloseSandboxDialog={handleCloseSandboxDialog}
-      />
-      <SwaggerDialog
-        open={status.swagger}
-        handleClose={handleCloseSwaggerDialog}
-      />
+      {status.sandboxDialog && (
+        <CodeSandboxDialog
+          handleCloseSandboxDialog={handleCloseSandboxDialog}
+        />
+      )}
+      {status.swagger && (
+        <SwaggerDialog handleClose={handleCloseSwaggerDialog} />
+      )}
 
       {status.name}
     </>
