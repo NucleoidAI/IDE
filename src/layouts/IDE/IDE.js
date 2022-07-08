@@ -7,6 +7,8 @@ import StorageIcon from "@mui/icons-material/Storage";
 import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import styles from "./styles";
 
+import LandingDialog from "../../components/LandingDialog";
+
 import { Outlet } from "react-router-dom"; // eslint-disable-line
 
 const list = [
@@ -32,6 +34,7 @@ function IDE() {
       <Box sx={styles.content}>
         <Outlet />
       </Box>
+      {!localStorage.getItem("landing") && <LandingDialog />}
       <ProcessDrawer />
     </Box>
   );
