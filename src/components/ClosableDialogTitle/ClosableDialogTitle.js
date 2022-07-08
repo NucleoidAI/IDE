@@ -3,7 +3,6 @@ import styles from "./styles";
 import theme from "../../theme";
 import { DialogTitle, Grid, IconButton, Typography } from "@mui/material";
 
-
 function ClosableDialogTitle({ handleClose, label, grey }) {
   return (
     <DialogTitle sx={styles.dialogTitle}>
