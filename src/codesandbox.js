@@ -1,7 +1,7 @@
 import Settings from "./settings";
 import prettier from "./prettier";
 import prettierPlugins from "./prettierPlugins";
-//import project from "./project";
+import project from "./project";
 import { v4 as uuid } from "uuid";
 
 const CodeSandbox = {
@@ -33,7 +33,7 @@ const CodeSandbox = {
         },
         "package.json": {
           content: {
-            name: `Nucleoid - Low-code Framework for Node.js`,
+            name: project.get().name,
             description: `Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore`,
             version: "1.0.0",
             main: "index.js",
