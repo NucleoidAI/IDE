@@ -1,8 +1,7 @@
 import Settings from "./settings";
-import packageLock from "./sandboxPackageLock.json";
 import prettier from "./prettier";
 import prettierPlugins from "./prettierPlugins";
-import project from "./project";
+//import project from "./project";
 import { v4 as uuid } from "uuid";
 
 const CodeSandbox = {
@@ -34,7 +33,8 @@ const CodeSandbox = {
         },
         "package.json": {
           content: {
-            name: project.get().name,
+            name: `Nucleoid - Low-code Framework for Node.js`,
+            description: `Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore`,
             version: "1.0.0",
             main: "index.js",
             license: "MIT",
@@ -58,9 +58,6 @@ const CodeSandbox = {
               plugins: prettierPlugins,
             }
           ),
-        },
-        "package-lock.json": {
-          content: packageLock,
         },
       },
       template: "node",
