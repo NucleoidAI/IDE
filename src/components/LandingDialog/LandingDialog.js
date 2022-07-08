@@ -3,6 +3,7 @@ import NumberOne from "../../images/number-one.png";
 import NumberThree from "../../images/number-three.png";
 import NumberTwo from "../../images/number-two.png";
 import React from "react";
+import styles from "./styles";
 import theme from "../../theme";
 import {
   Avatar,
@@ -29,7 +30,7 @@ const LandingDialog = () => {
       fullWidth
       maxWidth={"sm"}
       onClose={(event) => (event.key === "Escape" ? handleClose() : null)}
-      sx={{ bgcolor: "custom.darkDialogBg" }}
+      sx={styles.dialog}
       PaperProps={{
         style: {
           backgroundColor: theme.palette.custom.darkDialogPanel,
@@ -39,54 +40,19 @@ const LandingDialog = () => {
     >
       <ClosableDialogTitle grey handleClose={handleClose} />
       <DialogContent>
-        <Box
-          sx={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            pb: 3,
-          }}
-        >
+        <Box sx={styles.welcome}>
           <h2> Welcome to Nucleoid Project </h2>
         </Box>
         <Box>
-          Nucleoid framework lets you build your APIs with the help of AI and
-          built-in datastore.
+          Nucleoid low-code framework lets you build your APIs with the help of
+          AI and built-in datastore.
         </Box>
-        <Box
-          sx={{
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              width: "100%",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+        <Box sx={styles.content}>
+          <Box sx={styles.howItWorks}>
             <h2>How it works</h2>
           </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              width: "100%",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <List
-              sx={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
+          <Box sx={styles.listRoot}>
+            <List sx={styles.list}>
               <ListItem>
                 <ListItemAvatar>
                   <Avatar src={NumberOne}></Avatar>
