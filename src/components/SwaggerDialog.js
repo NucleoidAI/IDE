@@ -26,10 +26,14 @@ export default function SwaggerDialog({ open, handleClose }) {
     Settings.runtime("sandbox");
   };
 
+  React.useEffect(() => {
+    setSandbox(false);
+  }, [open]);
+
   return (
     <Dialog
       fullScreen
-      open={true}
+      open={open === undefined ? false : open}
       onClose={handleClose}
       TransitionComponent={Transition}
     >

@@ -21,10 +21,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function CodeSandboxDialog({ handleCloseSandboxDialog }) {
+export default function CodeSandboxDialog({ open, handleCloseSandboxDialog }) {
   const [npx, setNpx] = React.useState(false);
   const [alert, setAlert] = React.useState(false);
-  console.log(npx, alert);
 
   const switchSandboxToNpx = () => {
     Settings.url.app(`http://localhost:3000/`);
@@ -33,18 +32,22 @@ export default function CodeSandboxDialog({ handleCloseSandboxDialog }) {
     Settings.runtime("npx");
   };
 
+  React.useEffect(() => {
+    setNpx(false);
+    setAlert(false);
+  }, [open]);
+
   const handleClose = () => {
     if (npx) {
       switchSandboxToNpx();
     }
-
     handleCloseSandboxDialog();
   };
 
   return (
     <Dialog
       fullScreen
-      open={true}
+      open={open === undefined ? false : open}
       onClose={handleCloseSandboxDialog}
       TransitionComponent={Transition}
       aria-describedby="alert-dialog-slide-description"
