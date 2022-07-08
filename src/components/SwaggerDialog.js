@@ -1,6 +1,7 @@
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import React from "react";
 import Settings from "../settings";
+import StarUsOnGithub from "./StarUsOnGithub";
 import Swagger from "../icons/Swagger";
 import theme from "../theme";
 import {
@@ -36,7 +37,7 @@ export default function SwaggerDialog({ open, handleClose }) {
         sx={{
           position: "relative",
           backgroundColor: "#323a40",
-          color: "#e0e0e0",
+          color: theme.palette.custom.grey,
         }}
       >
         <Toolbar>
@@ -97,6 +98,7 @@ export default function SwaggerDialog({ open, handleClose }) {
                   setSandbox(e.target.checked);
                 }}
               />
+              <StarUsOnGithub />
             </Box>
           </Box>
         </Toolbar>

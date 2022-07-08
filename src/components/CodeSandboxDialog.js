@@ -3,6 +3,8 @@ import CopyClipboard from "./CopyClipboard";
 import DialogTooltip from "./DialogTootip";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import Settings from "../settings";
+import StarUsOnGithub from "./StarUsOnGithub";
+import theme from "../theme";
 import {
   AppBar,
   Box,
@@ -13,8 +15,8 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-
 import * as React from "react";
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -43,7 +45,7 @@ export default function CodeSandboxDialog({ open, handleCloseSandboxDialog }) {
         sx={{
           position: "relative",
           backgroundColor: "#323a40",
-          color: "#e0e0e0",
+          color: theme.palette.custom.grey,
         }}
         color={"default"}
       >
@@ -120,6 +122,7 @@ export default function CodeSandboxDialog({ open, handleCloseSandboxDialog }) {
                   }}
                 />
               </DialogTooltip>
+              <StarUsOnGithub />
             </Box>
           </Box>
         </Toolbar>
