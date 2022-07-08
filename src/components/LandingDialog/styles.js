@@ -31,6 +31,9 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
   },
+  footer: {
+    textAlign: "center",
+  },
 };
 
 export default styles;

@@ -3,6 +3,7 @@ import NumberOne from "../../images/number-one.png";
 import NumberThree from "../../images/number-three.png";
 import NumberTwo from "../../images/number-two.png";
 import React from "react";
+import aiImage from "../../images/ai.png";
 import styles from "./styles";
 import theme from "../../theme";
 import {
@@ -72,6 +73,12 @@ const LandingDialog = () => {
                 <ListItemText primary="Creates APIs with built-in datastore" />
               </ListItem>
             </List>
+          </Box>
+          <br />
+          <Box sx={styles.footer}>
+            <img src={aiImage} alt={"AI"} width={100} />
+            <br />
+            Happy coding!
           </Box>
         </Box>
       </DialogContent>
