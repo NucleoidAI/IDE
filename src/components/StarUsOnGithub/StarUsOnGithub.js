@@ -11,7 +11,7 @@ const StarUsOnGithub = () => {
       sx={{
         textTransform: "none",
         fontSize: "1rem",
-        color: theme.palette.custom.grey,
+        color: "white",
       }}
       onClick={() =>
         window.open("https://github.com/NucleoidJS/Nucleoid", "_blank")
