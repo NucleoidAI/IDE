@@ -48,7 +48,8 @@ function FunctionTree() {
     if (!selected) {
       select(functions[0].path);
     }
-  });
+    //eslint-disable-next-line
+  }, []);
 
   const list = functions;
 
@@ -83,7 +84,7 @@ function FunctionTree() {
       <TreeView
         defaultCollapseIcon={<Arrow down />}
         defaultExpandIcon={<Arrow right />}
-        defaultExpanded={["/", "/users/", "/utils/"]}
+        defaultExpanded={["/", "/classes/"]}
         onNodeSelect={(event, value) => select(value)}
         selected={selected}
       >

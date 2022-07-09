@@ -26,13 +26,12 @@ function init() {
           open: false,
         },
       },
-      query: {},
+      query: {
+        results: [],
+        text: 'Order.filter((order) => order.item == "ITEM-123");',
+      },
       branches: {},
     },
-    /*
-    settings: {
-      dialog: {},
-    },*/
     get: (prop) => resolve(state, prop),
   };
 

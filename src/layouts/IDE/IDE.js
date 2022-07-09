@@ -1,12 +1,12 @@
 import Box from "@mui/material/Box";
 import FolderIcon from "@mui/icons-material/Folder";
+import LandingDialog from "../../components/LandingDialog";
 import Menu from "../../components/Menu";
 import ProcessDrawer from "../../widgets/ProcessDrawer/ProcessDrawer";
 import SendIcon from "@mui/icons-material/Send";
 import StorageIcon from "@mui/icons-material/Storage";
 import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import styles from "./styles";
-
 import { Outlet } from "react-router-dom"; // eslint-disable-line
 
 const list = [
@@ -32,6 +32,7 @@ function IDE() {
       <Box sx={styles.content}>
         <Outlet />
       </Box>
+      {!localStorage.getItem("landing") && <LandingDialog />}
       <ProcessDrawer />
     </Box>
   );
