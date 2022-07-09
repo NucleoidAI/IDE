@@ -1,7 +1,6 @@
 import Button from "@mui/material/Button";
 import React from "react";
 import StarBorder from "@mui/icons-material/StarBorder";
-import theme from "../../theme";
 
 const StarUsOnGithub = () => {
   return (
