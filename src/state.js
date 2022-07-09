@@ -28,14 +28,10 @@ function init() {
       },
       query: {
         results: [],
-        text: "Item",
+        text: 'Order.filter((order) => order.item == "ITEM-123");',
       },
       branches: {},
     },
-    /*
-    settings: {
-      dialog: {},
-    },*/
     get: (prop) => resolve(state, prop),
   };
 

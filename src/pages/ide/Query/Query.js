@@ -47,6 +47,14 @@ function Query() {
 
     editor.current.setValue(state.get("pages.query.text"));
 
+    const markers = editor.current.session.getMarkers();
+
+    if (markers) {
+      Object.keys(markers).forEach((key) =>
+        editor.current.session.removeMarker(markers[key].id)
+      );
+    }
+
     editor.current.commands.addCommand({
       name: "query",
       bindKey: { win: "Ctrl-Enter", mac: "Ctrl-Enter" },

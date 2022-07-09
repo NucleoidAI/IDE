@@ -6,7 +6,7 @@ const styles = {
     width: "100%",
     display: "flex",
     justifyContent: "center",
-    pb: 2,
+    pb: 1,
   },
   content: {
     width: "100%",
