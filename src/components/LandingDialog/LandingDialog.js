@@ -3,7 +3,7 @@ import NumberOne from "../../images/number-one.png";
 import NumberThree from "../../images/number-three.png";
 import NumberTwo from "../../images/number-two.png";
 import React from "react";
-import aiImage from "../../images/ai.png";
+import codeImage from "../../images/code.png";
 import styles from "./styles";
 import theme from "../../theme";
 import {
@@ -76,7 +76,7 @@ const LandingDialog = () => {
           </Box>
           <br />
           <Box sx={styles.footer}>
-            <img src={aiImage} alt={"AI"} width={100} />
+            <img src={codeImage} alt={"Code"} width={100} />
             <br />
             Happy coding!
           </Box>
