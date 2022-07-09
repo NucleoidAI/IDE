@@ -5,3 +5,28 @@ body {
 a {
   text-decoration: none;
 }
+
+.neon {
+  display: inline;
+  color: #fff;
+  text-shadow: 0 0 3px #fff, 0 0 6px #fff, 0 0 9px #fff, 0 0 12px #0fa;
+  animation: flicker 60s infinite alternate;
+  font-size: 15px;
+}
+
+@keyframes flicker {
+  0%,
+  50%,
+  50.2%,
+  50.4%,
+  53.2%,
+  53.4%,
+  100% {
+    text-shadow: 0 0 3px #fff, 0 0 6px #fff, 0 0 9px #fff, 0 0 12px #0fa;
+  }
+  50.1%,
+  50.3%,
+  53.3% {
+    text-shadow: none;
+  }
+}
