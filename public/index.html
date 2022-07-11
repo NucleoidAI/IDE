@@ -27,6 +27,10 @@
     <script>
       const params = new URLSearchParams(window.location.search);
 
+      if (params.get("clear") === "true") {
+        localStorage.clear();
+      }
+
       if (window.location.hostname !== "nucleoid.com" || params.get("gtag") === "false") {
         window["ga-disable-G-L9H12K94J4"] = true;
       }
