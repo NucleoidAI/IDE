@@ -5,7 +5,18 @@ import { forwardRef, useState } from "react";
 
 const TypeMenu = forwardRef(
   (
-    { id, type, types, map, edit, setKey, primitive, objAndArr, globalTypes },
+    {
+      id,
+      type,
+      types,
+      map,
+      edit,
+      setKey,
+      primitive,
+      objAndArr,
+      globalTypes,
+      disabled,
+    },
     ref
   ) => {
     const [selectedType, setSelectedType] = useState(type);
@@ -43,6 +54,7 @@ const TypeMenu = forwardRef(
       <>
         {edit && (
           <Select
+            disabled={disabled}
             value={selectedType}
             onChange={(event) => {
               updateType(id, event.target.value);

@@ -33,6 +33,7 @@ const ParamTable = React.forwardRef(({ types }, { paramsRef, addParams }) => {
         const { id } = param.row;
         return (
           <TextField
+            disabled={param.row.in === "path"}
             defaultValue={param.value}
             onChange={(event) => (params[id].name = event.target.value)}
           />
@@ -47,6 +48,7 @@ const ParamTable = React.forwardRef(({ types }, { paramsRef, addParams }) => {
         const { id } = param.row;
         return (
           <TypeMenu
+            disabled={param.row.in === "path"}
             primitive
             types={types}
             ref={params}
@@ -71,6 +73,7 @@ const ParamTable = React.forwardRef(({ types }, { paramsRef, addParams }) => {
         const { id } = param.row;
         return (
           <Checkbox
+            disabled={param.row.in === "path"}
             defaultChecked={param.value}
             onChange={(event) => (params[id].required = event.target.checked)}
           />
@@ -85,6 +88,7 @@ const ParamTable = React.forwardRef(({ types }, { paramsRef, addParams }) => {
         const { id } = param.row;
         return (
           <TextField
+            disabled={param.row.in === "path"}
             defaultValue={param.value}
             onChange={(event) => (params[id].description = event.target.value)}
             fullWidth
@@ -100,7 +104,11 @@ const ParamTable = React.forwardRef(({ types }, { paramsRef, addParams }) => {
       renderCell: (param) => {
         const { id } = param.row;
         return (
-          <IconButton onClick={() => removeParam(id)} size="large">
+          <IconButton
+            disabled={param.row.in === "path"}
+            onClick={() => removeParam(id)}
+            size="large"
+          >
             <HighlightOffIcon />
           </IconButton>
         );
