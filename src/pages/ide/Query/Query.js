@@ -25,6 +25,7 @@ function Query() {
   const [state, distpach] = useContext();
   const result = state.get("pages.query.results");
   const editor = useRef();
+  
   const [checked, setChecked] = useState(true);
   const [loading, setLoading] = useState(false);
 
