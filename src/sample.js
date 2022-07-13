@@ -1,28 +1,36 @@
 const api = {
   "/": {
     get: {
-      summary: "Hello",
-      description: "Hello",
-      params: [],
+      summary: "Hello World",
+      description: "Hello World",
+      params: [
+        {
+          name: "example",
+          in: "query",
+          type: "string",
+          required: false,
+          description: "example",
+        },
+      ],
       request: { type: "object", properties: {} },
       response: {
         type: "object",
         properties: {
-          id: {
-            type: "string",
-          },
           name: {
             type: "string",
           },
         },
       },
-      action: `function action(req){\n\treturn "Hello World";\n}`,
+      action: `function action(req) {
+  return { message: "Hello World" };
+}
+`,
     },
   },
   "/items": {
     get: {
-      summary: "Read items",
-      description: "Read item list",
+      summary: "Get item list",
+      description: "Get item list",
       params: [],
       request: { type: "object", properties: {} },
       response: {
@@ -31,7 +39,10 @@ const api = {
           $ref: "#/components/schemas/Item",
         },
       },
-      action: `function action(req) {\n\treturn Item;\n}\n`,
+      action: `function action(req) {
+  return Item;
+}
+`,
     },
     post: {
       summary: "Add item",
@@ -50,36 +61,46 @@ const api = {
       response: {
         $ref: "#/components/schemas/Item",
       },
-      action: `function action(req){\n\tconst name=req.body.name;\n\tconst barcode=req.body.barcode;\n\n\treturn new Item(name,barcode);\n}\n`,
+      action: `function action(req) {
+  const name = req.body.name;
+  const barcode = req.body.barcode;
+
+  return new Item(name, barcode);
+}
+`,
     },
   },
   "/items/{item}": {
     get: {
-      summary: "Read item",
-      description: "Read item by item id",
+      summary: "Get item by id",
+      description: "Get item by id",
       params: [
         {
-          name: "id",
+          name: "item",
           in: "param",
           type: "string",
           required: true,
-          description: "Item id",
+          description: "item",
         },
       ],
       request: { type: "object", properties: {} },
       response: { $ref: "#/components/schemas/Item" },
-      action: `function action(req) {\n\treturn Item[req.params.item];\n}\n`,
+      action: `function action(req) {
+  const item = req.params.item;
+  return Item[item];
+}
+`,
     },
     post: {
       summary: "Update item",
       description: "Update item",
       params: [
         {
-          name: "id",
+          name: "item",
           in: "param",
           type: "string",
           required: true,
-          description: "Item id",
+          description: "item",
         },
       ],
       request: {
@@ -94,18 +115,28 @@ const api = {
         },
       },
       response: { $ref: "#/components/schemas/Item" },
-      action: `function action(req) {\n\tconst name = req.body.name;\n\tconst barcode = req.body.barcode;\n\tconst item = Item[req.params.item];\n\titem.name = name;\n\titem.barcode = barcode;\n\n\treturn item;\n}\n`,
+      action: `function action(req) {
+  const name = req.body.name;
+  const barcode = req.body.barcode;
+  
+  const item = Item[req.params.item];
+  item.name = name;
+  item.barcode = barcode;
+
+  return item;
+}
+`,
     },
     del: {
       summary: "Delete item",
       description: "Delete item",
       params: [
         {
-          name: "id",
+          name: "item",
           in: "param",
           type: "string",
           required: true,
-          description: "Item id",
+          description: "item",
         },
       ],
       request: {
@@ -124,13 +155,17 @@ const api = {
           },
         },
       },
-      action: `function action(req) {\n\tdelete Item[req.params.item];\n}\n`,
+      action: `function action(req) {
+  const item = req.params.item;
+  delete Item[item];
+}
+`,
     },
   },
   "/orders": {
     get: {
-      summary: "Read orders",
-      description: "Read order list",
+      summary: "Get order list",
+      description: "Get order list",
       params: [],
       request: {
         type: "object",
@@ -146,7 +181,10 @@ const api = {
           $ref: "#/components/schemas/Order",
         },
       },
-      action: `function action(req) {\n\treturn Order;\n}\n`,
+      action: `function action(req) {
+  return Order;
+}
+`,
     },
     post: {
       summary: "Create order",
@@ -166,25 +204,35 @@ const api = {
       response: {
         $ref: "#/components/schemas/Order",
       },
-      action: `function action(req) {\n\tconst item = Item[req.body.item];\n\tconst qty = req.body.qty;\n\n\treturn new Order(item, qty);\n}\n`,
+      action: `function action(req) {
+  const item = Item[req.body.item];
+  const qty = req.body.qty;
+
+  return new Order(item, qty);
+}
+`,
     },
   },
   "/orders/{order}": {
     get: {
-      summary: "Read order",
-      description: "Read order",
+      summary: "Get order by id",
+      description: "Get order by id",
       params: [
         {
-          name: "id",
+          name: "order",
           in: "param",
           type: "string",
           required: true,
-          description: "Order id",
+          description: "order",
         },
       ],
       request: { type: "object", properties: {} },
       response: { $ref: "#/components/schemas/Order" },
-      action: `function action(req) {\n\treturn Order[req.params.order];\n}\n`,
+      action: `function action(req) {
+  const order = req.params.order;
+  return Order[order];
+}
+`,
     },
     post: {
       summary: "Update order",
@@ -210,7 +258,17 @@ const api = {
         },
       },
       response: { $ref: "#/components/schemas/Order" },
-      action: `function action(req) {\n\tconst item = Item[req.body.item];\n\tconst qty = req.body.qty;\n\tconst order = Order[req.params.order];\n\torder.item = item;\n\torder.qty = qty;\n\n\treturn order;\n}\n`,
+      action: `function action(req) {
+  const item = Item[req.body.item];
+  const qty = req.body.qty;
+  
+  const order = Order[req.params.order];
+  order.item = item;
+  order.qty = qty;
+
+  return order;
+}
+`,
     },
     del: {
       summary: "Delete order",
@@ -240,7 +298,11 @@ const api = {
           },
         },
       },
-      action: `function action(req) {\n\tdelete Order[req.params.order];\n}\n`,
+      action: `function action(req) {
+  const order = req.params.order;
+  delete Order[order];
+}
+`,
     },
   },
 };
@@ -282,13 +344,26 @@ const functions = [
     path: "/classes/Order",
     params: [],
     type: "CLASS",
-    definition: `class Order {\n\tconstructor(qty,item){\n\t\tthis.item = item;\n\t\tthis.qty = qty;\n\t\tthis.date = Date.now();\n\t}\n}`,
+    definition: `class Order {
+  constructor(qty, item) {
+    this.item = item;
+    this.qty = qty;
+    this.date = Date.now();
+  }
+}
+`,
   },
   {
     path: "/classes/Item",
     params: [],
     type: "CLASS",
-    definition: `class Item {\n\tconstructor(name, barcode) {\n\t\tthis.name = name;\n\t\tthis.barcode = barcode;\n\t}\n}`,
+    definition: `class Item {
+  constructor(name, barcode) {
+    this.name = name;
+    this.barcode = barcode;
+  }
+}
+`,
   },
 ];
 
