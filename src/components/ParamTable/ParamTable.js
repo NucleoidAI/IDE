@@ -71,7 +71,7 @@ const ParamTable = React.forwardRef(({ types }, { paramsRef, addParams }) => {
         const { id } = param.row;
         return (
           <Checkbox
-            checked={param.value}
+            defaultChecked={param.value}
             onChange={(event) => (params[id].required = event.target.checked)}
           />
         );

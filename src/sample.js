@@ -77,7 +77,7 @@ const api = {
       params: [
         {
           name: "item",
-          in: "param",
+          in: "path",
           type: "string",
           required: true,
           description: "item",
@@ -97,7 +97,7 @@ const api = {
       params: [
         {
           name: "item",
-          in: "param",
+          in: "path",
           type: "string",
           required: true,
           description: "item",
@@ -133,7 +133,7 @@ const api = {
       params: [
         {
           name: "item",
-          in: "param",
+          in: "path",
           type: "string",
           required: true,
           description: "item",
@@ -220,7 +220,7 @@ const api = {
       params: [
         {
           name: "order",
-          in: "param",
+          in: "path",
           type: "string",
           required: true,
           description: "order",
@@ -240,7 +240,7 @@ const api = {
       params: [
         {
           name: "id",
-          in: "param",
+          in: "path",
           type: "string",
           required: true,
           description: "Order id",
@@ -276,7 +276,7 @@ const api = {
       params: [
         {
           name: "id",
-          in: "param",
+          in: "path",
           type: "string",
           required: true,
           description: "Order id",
