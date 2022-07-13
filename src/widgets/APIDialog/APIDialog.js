@@ -58,6 +58,7 @@ function APIDialog() {
 
     const initMethod = () => {
       setMethod(null);
+      setParams(apiRef.current[path][method].params);
       paramsRef.current = index([]);
       requestRef.current = compile(Defaults.object);
       responseRef.current = compile(Defaults.object);
@@ -72,6 +73,7 @@ function APIDialog() {
 
     const initResource = () => {
       setMethod("get");
+      setParams(apiRef.current[path][method].params);
       pathRef.current = pathRef.current + "/";
       paramsRef.current = index([]);
       requestRef.current = compile(Defaults.object);
