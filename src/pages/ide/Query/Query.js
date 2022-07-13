@@ -3,7 +3,6 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import QueryArrayTable from "../../../components/QueryArrayTable";
 import QueryResult from "../../../components/QueryResult";
 import RatioIconButtons from "../../../components/RatioIconButtons/RatioIconButtons";
-import config from "../../../config";
 import service from "../../../service";
 import styles from "./styles";
 import { useContext } from "../../../Context/providers/contextProvider";
@@ -24,21 +23,13 @@ import React, { useEffect, useRef, useState } from "react";
 function Query() {
   const [state, distpach] = useContext();
   const result = state.get("pages.query.results");
+  const [outputRatio, setOutputRatio] = React.useState(
+    state.get("pages.query.outputRatio")
+  );
   const editor = useRef();
-  
+
   const [checked, setChecked] = useState(true);
   const [loading, setLoading] = useState(false);
-
-  if (
-    config.layout.query.outputRatio() === undefined ||
-    config.layout.query.outputRatio() === null
-  ) {
-    config.layout.query.outputRatio(0.5);
-  }
-
-  const [outputRatio, setOutputRatio] = React.useState(
-    config.layout.query.outputRatio()
-  );
 
   useEffect(() => {
     const query = state.get("pages.query");
@@ -94,10 +85,11 @@ function Query() {
         });
       });
   };
-
+  
   const handleSetOutputRatio = (ratio) => {
-    config.layout.query.outputRatio(ratio);
-    setOutputRatio(config.layout.query.outputRatio());
+    const query = state.get("pages.query");
+    query.outputRatio = ratio;
+    setOutputRatio(ratio);
   };
 
   return (
