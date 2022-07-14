@@ -13,6 +13,7 @@ const ParamTable = React.forwardRef(({ types }, { paramsRef, addParams }) => {
     const id = uuid();
     paramsRef.current[id] = {
       id: id,
+      in: "query",
       type: "string",
       required: true,
     };

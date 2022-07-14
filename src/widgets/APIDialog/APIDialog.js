@@ -8,6 +8,7 @@ import Defaults from "../../defaults";
 import actions from "../../actions";
 import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
+import { v4 as uuid } from "uuid";
 import { Dialog, DialogActions, DialogContent, Grid } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { compile, decompile, deindex, index, updatePath } from "./Context";
@@ -36,10 +37,15 @@ function APIDialog() {
 
     if (!selectedRef.current) return;
     const { method, path } = selectedRef.current;
-
     setPath(path);
     apiRef.current = context.get("nucleoid.api");
     pathRef.current = path;
+
+    const findPaths = (url) => {
+      return url.match(/{\w*}/g) === null
+        ? []
+        : url.match(/{\w*}/g).map((item) => item.substring(1, item.length - 1));
+    };
 
     const initEdit = (method, path) => {
       setMethod(method);
@@ -57,9 +63,20 @@ function APIDialog() {
     };
 
     const initMethod = () => {
+      const paths = findPaths(pathRef.current).map((item) => {
+        return {
+          id: uuid(),
+          in: "path",
+          name: item,
+          description: item + " path",
+          type: "string",
+          required: true,
+        };
+      });
+
       setMethod(null);
-      setParams([]);
-      paramsRef.current = index([]);
+      setParams(paths);
+      paramsRef.current = index(paths);
       requestRef.current = compile(Defaults.object);
       responseRef.current = compile(Defaults.object);
       typesRef.current = Object.entries(context.get("nucleoid.types"))
@@ -72,10 +89,22 @@ function APIDialog() {
     };
 
     const initResource = () => {
+      const paths = findPaths(pathRef.current).map((item) => {
+        return {
+          id: uuid(),
+          in: "path",
+          name: item,
+          description: item + " path",
+          type: "string",
+          required: true,
+        };
+      });
+
+      setParams(paths);
       setMethod("get");
-      setParams([]);
+
       pathRef.current = pathRef.current + "/";
-      paramsRef.current = index([]);
+      paramsRef.current = index(paths);
       requestRef.current = compile(Defaults.object);
       responseRef.current = compile(Defaults.object);
       typesRef.current = Object.entries(context.get("nucleoid.types"))
