@@ -2,6 +2,7 @@ import Constants from "../../constants";
 import LanguageIcon from "@mui/icons-material/Language";
 import Path from "../../utils/Path";
 import styles from "./styles";
+import { v4 as uuid } from "uuid";
 import {
   Box,
   Button,
@@ -21,10 +22,11 @@ const APIPath = forwardRef(
       view,
       path,
       method,
+      handleSetParams,
       handleSaveButtonStatus,
       handleChangeMethod,
     },
-    { apiRef, pathRef }
+    { apiRef, pathRef, paramsRef }
   ) => {
     const api = apiRef.current;
     const [alertPath, setAlertPath] = useState();
@@ -35,6 +37,8 @@ const APIPath = forwardRef(
     const originalMethod = useRef();
 
     const textFieldRef = useRef();
+
+    const addedParam = useRef();
 
     useEffect(() => {
       originalMethod.current = method;
@@ -63,6 +67,38 @@ const APIPath = forwardRef(
       setSaveButtonStatus(null, false);
     };
 
+    const checkNotAllowedChars = (value) => {
+      if (!value.match(/[^a-z {}]/g)) {
+        return false;
+      } else {
+        return true;
+      }
+    };
+
+    const checkPath = (value) => {
+      const path = value.match(/{\w*}/s);
+      if (path) {
+        const id = uuid();
+        const name = path[0].substring(1, path[0].length - 1);
+
+        paramsRef.current[id] = {
+          id,
+          in: "path",
+          name,
+          required: true,
+          type: "string",
+          description: name + " path",
+        };
+
+        addedParam.current = id;
+      } else {
+        delete paramsRef.current[addedParam.current];
+        addedParam.current = null;
+      }
+
+      handleSetParams();
+    };
+
     const usedMethods = api[path]
       ? Object.keys(api[path]).filter(
           (item) => item !== method && item !== originalMethod.current
@@ -72,11 +108,14 @@ const APIPath = forwardRef(
     const handleCheck = (value) => {
       const slashMark = prefix === "/" ? "" : "/";
       pathRef.current = prefix + slashMark + value;
-
       const pathStatus = Path.isUsed(paths, prefix, suffix, value);
 
-      setAlertPath(pathStatus);
-      setSaveButtonStatus(pathStatus, null);
+      const charStatus = checkNotAllowedChars(value);
+
+      checkPath(value);
+
+      setAlertPath(pathStatus || charStatus);
+      setSaveButtonStatus(pathStatus || charStatus, null);
     };
 
     const setSaveButtonStatus = (path, method) => {

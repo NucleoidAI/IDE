@@ -176,11 +176,7 @@ function APIDialog() {
 
   const setApiDialogView = (view) => {
     setView((pages.api.dialog.view = view));
-    const params = Object.keys(paramsRef.current).map(
-      (item) => paramsRef.current[item]
-    );
-
-    setParams(params);
+    handleSetParams();
   };
 
   const deleteMethod = () => {
@@ -197,6 +193,14 @@ function APIDialog() {
     if (pages.api) {
       return Object.keys(api[path]).length <= 1 ? true : false;
     }
+  };
+
+  const handleSetParams = () => {
+    const params = Object.keys(paramsRef.current).map(
+      (item) => paramsRef.current[item]
+    );
+
+    setParams(params);
   };
 
   if (context.get("pages.api.dialog.open")) {
@@ -216,7 +220,8 @@ function APIDialog() {
             method={method}
             handleSaveButtonStatus={handleSaveButtonStatus}
             handleChangeMethod={handleChangeMethod}
-            ref={{ apiRef, pathRef }}
+            handleSetParams={handleSetParams}
+            ref={{ apiRef, pathRef, paramsRef }}
           />
           <Grid sx={styles.content}>
             {view === "BODY" && (
