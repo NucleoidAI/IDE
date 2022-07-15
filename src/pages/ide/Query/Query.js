@@ -85,7 +85,7 @@ function Query() {
         });
       });
   };
-  
+
   const handleSetOutputRatio = (ratio) => {
     const query = state.get("pages.query");
     query.outputRatio = ratio;
