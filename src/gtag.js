@@ -1,1 +1,1 @@
-export default gtag = window.gtag;
+export default window.gtag;
