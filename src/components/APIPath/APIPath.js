@@ -2,7 +2,6 @@ import Constants from "../../constants";
 import LanguageIcon from "@mui/icons-material/Language";
 import Path from "../../utils/Path";
 import styles from "./styles";
-import { v4 as uuid } from "uuid";
 import {
   Box,
   Button,
@@ -22,11 +21,10 @@ const APIPath = forwardRef(
       view,
       path,
       method,
-      handleSetParams,
       handleSaveButtonStatus,
       handleChangeMethod,
     },
-    { apiRef, pathRef, paramsRef }
+    { apiRef, pathRef }
   ) => {
     const api = apiRef.current;
     const [alertPath, setAlertPath] = useState();
@@ -37,8 +35,6 @@ const APIPath = forwardRef(
     const originalMethod = useRef();
 
     const textFieldRef = useRef();
-
-    const addedParam = useRef();
 
     useEffect(() => {
       originalMethod.current = method;
@@ -68,7 +64,7 @@ const APIPath = forwardRef(
     };
 
     const checkNotAllowedChars = (value) => {
-      if (!value.match(/[^a-z {}]/g)) {
+      if (!value.match(/[^a-z{}]/g)) {
         return false;
       } else {
         return true;
@@ -76,27 +72,13 @@ const APIPath = forwardRef(
     };
 
     const checkPath = (value) => {
-      const path = value.match(/{\w*}/s);
-      if (path) {
-        const id = uuid();
-        const name = path[0].substring(1, path[0].length - 1);
-
-        paramsRef.current[id] = {
-          id,
-          in: "path",
-          name,
-          required: true,
-          type: "string",
-          description: name + " path",
-        };
-
-        addedParam.current = id;
-      } else {
-        delete paramsRef.current[addedParam.current];
-        addedParam.current = null;
+      const paths = pathRef.current.split("/");
+      for (let i = 0; i < paths.length - 1; i++) {
+        if (paths[i] === value) {
+          return true;
+        }
       }
-
-      handleSetParams();
+      return false;
     };
 
     const usedMethods = api[path]
@@ -112,10 +94,10 @@ const APIPath = forwardRef(
 
       const charStatus = checkNotAllowedChars(value);
 
-      checkPath(value);
+      const path = checkPath(value);
 
-      setAlertPath(pathStatus || charStatus);
-      setSaveButtonStatus(pathStatus || charStatus, null);
+      setAlertPath(pathStatus || charStatus || path);
+      setSaveButtonStatus(pathStatus || charStatus || path, null);
     };
 
     const setSaveButtonStatus = (path, method) => {

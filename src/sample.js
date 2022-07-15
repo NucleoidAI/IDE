@@ -239,7 +239,7 @@ const api = {
       description: "Update order",
       params: [
         {
-          name: "id",
+          name: "order",
           in: "path",
           type: "string",
           required: true,
@@ -275,7 +275,7 @@ const api = {
       description: "Delete order",
       params: [
         {
-          name: "id",
+          name: "order",
           in: "path",
           type: "string",
           required: true,

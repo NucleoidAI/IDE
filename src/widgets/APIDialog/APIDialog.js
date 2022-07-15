@@ -11,7 +11,15 @@ import { useContext } from "../../Context/providers/contextProvider";
 import { v4 as uuid } from "uuid";
 import { Dialog, DialogActions, DialogContent, Grid } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-import { compile, decompile, deindex, index, updatePath } from "./Context";
+import {
+  checkPath,
+  compile,
+  decompile,
+  deindex,
+  index,
+  updateParams,
+  updatePath,
+} from "./Context";
 
 function APIDialog() {
   const [context, dispatch] = useContext();
@@ -31,6 +39,8 @@ function APIDialog() {
   const pathRef = useRef();
   const apiRef = useRef();
   const selectedRef = useRef();
+
+  const paramsPathRef = useRef();
 
   useEffect(() => {
     selectedRef.current = context.get("pages.api.selected");
@@ -141,6 +151,18 @@ function APIDialog() {
 
       if (type === "method") {
         updatePath(apiRef.current, path, pathRef.current);
+        updateParams(apiRef.current, path, pathRef.current, paramsRef);
+      } else {
+        // create new path res
+        const id = uuid();
+        paramsRef.current[id] = {
+          id,
+          in: "path",
+          name: checkPath(pathRef.current.split("/").pop()),
+          required: true,
+          type: "string",
+          description: checkPath(pathRef.current.split("/").pop()) + " path",
+        };
       }
     }
 
@@ -220,8 +242,7 @@ function APIDialog() {
             method={method}
             handleSaveButtonStatus={handleSaveButtonStatus}
             handleChangeMethod={handleChangeMethod}
-            handleSetParams={handleSetParams}
-            ref={{ apiRef, pathRef, paramsRef }}
+            ref={{ apiRef, pathRef, paramsRef, paramsPathRef }}
           />
           <Grid sx={styles.content}>
             {view === "BODY" && (
