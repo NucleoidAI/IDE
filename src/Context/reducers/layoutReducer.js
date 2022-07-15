@@ -1,3 +1,5 @@
+import gtag from "../../gtag";
+
 function layoutReducer(state, { type, payload }) {
   switch (type) {
     case "SET_STATUS": {
@@ -16,6 +18,13 @@ function layoutReducer(state, { type, payload }) {
       const { status, dialogStatus } = payload;
       const tmpState = state;
 
+      if (dialogStatus === true) {
+        gtag("event", "sandbox_dialog_open", {
+          event_label: "Sandbox dialog open",
+          event_category: "sandbox_dialog",
+        });
+      }
+
       if (status !== undefined && status !== null) {
         tmpState.sandbox = status;
       }
@@ -29,6 +38,13 @@ function layoutReducer(state, { type, payload }) {
     case "SWAGGER_DIALOG": {
       const { dialogStatus } = payload;
       const tmpState = state;
+
+      if (dialogStatus === true) {
+        gtag("event", "swagger_dialog_open", {
+          event_label: "Swagger dialog",
+          event_category: "swagger_dialog",
+        });
+      }
 
       if (dialogStatus !== undefined && dialogStatus !== null) {
         tmpState.swagger = dialogStatus;
