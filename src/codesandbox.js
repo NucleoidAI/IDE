@@ -24,7 +24,7 @@ const CodeSandbox = {
               .map(
                 (item) =>
                   item.definition +
-                  "\nnucleoid.register(" +
+                  "nucleoid.register(" +
                   item.path.split("/")[item.path.split("/").length - 1] +
                   ");\n\n"
               )

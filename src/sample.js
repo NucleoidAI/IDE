@@ -45,8 +45,8 @@ const api = {
 `,
     },
     post: {
-      summary: "Add item",
-      description: "Add item",
+      summary: "Create item",
+      description: "Create item",
       request: {
         type: "object",
         properties: {
@@ -208,6 +208,10 @@ const api = {
   const item = Item[req.body.item];
   const qty = req.body.qty;
 
+  if (!item) {
+    throw "INVALID_ITEM";
+  }
+
   return new Order(item, qty);
 }
 `,
@@ -261,7 +265,11 @@ const api = {
       action: `function action(req) {
   const item = Item[req.body.item];
   const qty = req.body.qty;
-  
+
+  if (!item) {
+    throw "INVALID_ITEM";
+  }
+
   const order = Order[req.params.order];
   order.item = item;
   order.qty = qty;
@@ -345,7 +353,7 @@ const functions = [
     params: [],
     type: "CLASS",
     definition: `class Order {
-  constructor(qty, item) {
+  constructor(item, qty) {
     this.item = item;
     this.qty = qty;
     this.date = Date.now();
