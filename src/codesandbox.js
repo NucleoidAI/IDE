@@ -19,17 +19,17 @@ const CodeSandbox = {
         },
         "index.js": {
           content:
-            `const nucleoid = require("nucleoidjs");\nconst app = nucleoid();\n\n` +
+            `const nuc = require("nucleoidjs");\nconst app = nuc();\n\n` +
             context.nucleoid.functions
               .map(
                 (item) =>
                   item.definition +
-                  "nucleoid.register(" +
+                  "nuc.register(" +
                   item.path.split("/")[item.path.split("/").length - 1] +
                   ");\n\n"
               )
               .join("") +
-            `app.openapi("./openapi.json");\napp.listen(3000);`,
+            `app.openapi("./openapi.json");\napp.listen(3000);\n\n//👆 comes with Built-in Datastore🎈🎉`,
         },
         "package.json": {
           content: {
