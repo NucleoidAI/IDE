@@ -12,6 +12,100 @@ const updatePath = (object, oldPath, newPath) => {
   });
 };
 
+const checkPath = (value) => {
+  const path = value.match(/{\w*}/s);
+  if (path) {
+    return path[0].substring(1, path[0].length - 1);
+  } else {
+    return null;
+  }
+};
+
+const updateParams = (api, oldPath, newPath, paramsRef) => {
+  const oldResourceName = checkPath(oldPath.split("/").pop());
+  const newResourceName = checkPath(newPath.split("/").pop());
+
+  if (!oldResourceName && newResourceName) {
+    const id = uuid();
+    paramsRef.current[id] = {
+      id,
+      in: "path",
+      name: newResourceName,
+      required: true,
+      type: "string",
+      description: newResourceName + " path",
+    };
+
+    Object.keys(api)
+      .filter((url) => url.includes(newPath))
+      .map((url) => api[url])
+      .forEach((item) => {
+        Object.keys(item)
+          .map((method) => item[method])
+          .forEach((item) => {
+            item.params.push({
+              in: "path",
+              name: newResourceName,
+              required: true,
+              type: "string",
+              description: newResourceName + " path",
+            });
+          });
+      });
+
+    return; //res to path res
+  }
+
+  if (oldResourceName && !newResourceName) {
+    Object.keys(paramsRef.current).forEach((id) => {
+      if (paramsRef.current[id].name === oldResourceName) {
+        delete paramsRef.current[id];
+      }
+    });
+
+    Object.keys(api)
+      .filter((url) => url.includes(newPath))
+      .map((url) => api[url])
+      .forEach((item) => {
+        Object.keys(item)
+          .map((method) => item[method])
+          .forEach((item) => {
+            item.params = item.params.filter(
+              (param) => param.name !== oldResourceName
+            );
+          });
+      });
+
+    return; //path res to res
+  }
+
+  if (oldResourceName && newResourceName) {
+    Object.keys(paramsRef.current).forEach((id) => {
+      if (paramsRef.current[id].name === oldResourceName) {
+        paramsRef.current[id].name = newResourceName;
+        paramsRef.current[id].description = newResourceName + " path";
+      }
+    });
+
+    Object.keys(api)
+      .filter((url) => url.includes(newPath))
+      .map((url) => api[url])
+      .forEach((item) => {
+        Object.keys(item)
+          .map((method) => item[method])
+          .forEach((item) => {
+            const pathParam = item.params.find(
+              (param) => param.name === oldResourceName
+            );
+            pathParam.name = newResourceName;
+            pathParam.description = newResourceName + " path";
+          });
+      });
+
+    return; //path res rename
+  }
+};
+
 const compile = (schema) => {
   const { properties, items, $ref, type, ...other } = schema || {};
   const ref = $ref && $ref.split("/")[$ref.split("/").length - 1];
@@ -180,4 +274,12 @@ const deindex = (list) =>
       return item;
     });
 
-export { updatePath, compile, decompile, index, deindex };
+export {
+  updatePath,
+  updateParams,
+  checkPath,
+  compile,
+  decompile,
+  index,
+  deindex,
+};

@@ -27,8 +27,9 @@ function init() {
         },
       },
       query: {
-        results: [],
+        results: "",
         text: 'Order.filter((order) => order.item == "ITEM-123");',
+        outputRatio: 0.5,
       },
       branches: {},
     },

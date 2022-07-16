@@ -63,6 +63,24 @@ const APIPath = forwardRef(
       setSaveButtonStatus(null, false);
     };
 
+    const checkNotAllowedChars = (value) => {
+      if (!value.match(/[^a-z{}]/g)) {
+        return false;
+      } else {
+        return true;
+      }
+    };
+
+    const checkPath = (value) => {
+      const paths = pathRef.current.split("/");
+      for (let i = 0; i < paths.length - 1; i++) {
+        if (paths[i] === value) {
+          return true;
+        }
+      }
+      return false;
+    };
+
     const usedMethods = api[path]
       ? Object.keys(api[path]).filter(
           (item) => item !== method && item !== originalMethod.current
@@ -72,11 +90,14 @@ const APIPath = forwardRef(
     const handleCheck = (value) => {
       const slashMark = prefix === "/" ? "" : "/";
       pathRef.current = prefix + slashMark + value;
-
       const pathStatus = Path.isUsed(paths, prefix, suffix, value);
 
-      setAlertPath(pathStatus);
-      setSaveButtonStatus(pathStatus, null);
+      const charStatus = checkNotAllowedChars(value);
+
+      const path = checkPath(value);
+
+      setAlertPath(pathStatus || charStatus || path);
+      setSaveButtonStatus(pathStatus || charStatus || path, null);
     };
 
     const setSaveButtonStatus = (path, method) => {

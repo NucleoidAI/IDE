@@ -45,8 +45,8 @@ const api = {
 `,
     },
     post: {
-      summary: "Add item",
-      description: "Add item",
+      summary: "Create item",
+      description: "Create item",
       request: {
         type: "object",
         properties: {
@@ -77,7 +77,7 @@ const api = {
       params: [
         {
           name: "item",
-          in: "param",
+          in: "path",
           type: "string",
           required: true,
           description: "item",
@@ -97,7 +97,7 @@ const api = {
       params: [
         {
           name: "item",
-          in: "param",
+          in: "path",
           type: "string",
           required: true,
           description: "item",
@@ -133,7 +133,7 @@ const api = {
       params: [
         {
           name: "item",
-          in: "param",
+          in: "path",
           type: "string",
           required: true,
           description: "item",
@@ -208,6 +208,10 @@ const api = {
   const item = Item[req.body.item];
   const qty = req.body.qty;
 
+  if (!item) {
+    throw "INVALID_ITEM";
+  }
+
   return new Order(item, qty);
 }
 `,
@@ -220,7 +224,7 @@ const api = {
       params: [
         {
           name: "order",
-          in: "param",
+          in: "path",
           type: "string",
           required: true,
           description: "order",
@@ -239,8 +243,8 @@ const api = {
       description: "Update order",
       params: [
         {
-          name: "id",
-          in: "param",
+          name: "order",
+          in: "path",
           type: "string",
           required: true,
           description: "Order id",
@@ -261,7 +265,11 @@ const api = {
       action: `function action(req) {
   const item = Item[req.body.item];
   const qty = req.body.qty;
-  
+
+  if (!item) {
+    throw "INVALID_ITEM";
+  }
+
   const order = Order[req.params.order];
   order.item = item;
   order.qty = qty;
@@ -275,8 +283,8 @@ const api = {
       description: "Delete order",
       params: [
         {
-          name: "id",
-          in: "param",
+          name: "order",
+          in: "path",
           type: "string",
           required: true,
           description: "Order id",
@@ -345,7 +353,7 @@ const functions = [
     params: [],
     type: "CLASS",
     definition: `class Order {
-  constructor(qty, item) {
+  constructor(item, qty) {
     this.item = item;
     this.qty = qty;
     this.date = Date.now();

@@ -41,7 +41,7 @@ const Settings = {
     if (status !== undefined && status !== null) {
       localStorage.setItem("beta", status);
     } else {
-      return localStorage.getItem("beta");
+      return localStorage.getItem("beta") === "true";
     }
   },
   runtime: (data) => {

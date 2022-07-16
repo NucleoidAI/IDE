@@ -8,9 +8,18 @@ import Defaults from "../../defaults";
 import actions from "../../actions";
 import styles from "./styles";
 import { useContext } from "../../Context/providers/contextProvider";
+import { v4 as uuid } from "uuid";
 import { Dialog, DialogActions, DialogContent, Grid } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-import { compile, decompile, deindex, index, updatePath } from "./Context";
+import {
+  checkPath,
+  compile,
+  decompile,
+  deindex,
+  index,
+  updateParams,
+  updatePath,
+} from "./Context";
 
 function APIDialog() {
   const [context, dispatch] = useContext();
@@ -31,15 +40,22 @@ function APIDialog() {
   const apiRef = useRef();
   const selectedRef = useRef();
 
+  const paramsPathRef = useRef();
+
   useEffect(() => {
     selectedRef.current = context.get("pages.api.selected");
 
     if (!selectedRef.current) return;
     const { method, path } = selectedRef.current;
-
     setPath(path);
     apiRef.current = context.get("nucleoid.api");
     pathRef.current = path;
+
+    const findPaths = (url) => {
+      return url.match(/{\w*}/g) === null
+        ? []
+        : url.match(/{\w*}/g).map((item) => item.substring(1, item.length - 1));
+    };
 
     const initEdit = (method, path) => {
       setMethod(method);
@@ -57,8 +73,20 @@ function APIDialog() {
     };
 
     const initMethod = () => {
+      const paths = findPaths(pathRef.current).map((item) => {
+        return {
+          id: uuid(),
+          in: "path",
+          name: item,
+          description: item + " path",
+          type: "string",
+          required: true,
+        };
+      });
+
       setMethod(null);
-      paramsRef.current = index([]);
+      setParams(paths);
+      paramsRef.current = index(paths);
       requestRef.current = compile(Defaults.object);
       responseRef.current = compile(Defaults.object);
       typesRef.current = Object.entries(context.get("nucleoid.types"))
@@ -71,9 +99,22 @@ function APIDialog() {
     };
 
     const initResource = () => {
+      const paths = findPaths(pathRef.current).map((item) => {
+        return {
+          id: uuid(),
+          in: "path",
+          name: item,
+          description: item + " path",
+          type: "string",
+          required: true,
+        };
+      });
+
+      setParams(paths);
       setMethod("get");
+
       pathRef.current = pathRef.current + "/";
-      paramsRef.current = index([]);
+      paramsRef.current = index(paths);
       requestRef.current = compile(Defaults.object);
       responseRef.current = compile(Defaults.object);
       typesRef.current = Object.entries(context.get("nucleoid.types"))
@@ -110,6 +151,18 @@ function APIDialog() {
 
       if (type === "method") {
         updatePath(apiRef.current, path, pathRef.current);
+        updateParams(apiRef.current, path, pathRef.current, paramsRef);
+      } else {
+        // create new path res
+        const id = uuid();
+        paramsRef.current[id] = {
+          id,
+          in: "path",
+          name: checkPath(pathRef.current.split("/").pop()),
+          required: true,
+          type: "string",
+          description: checkPath(pathRef.current.split("/").pop()) + " path",
+        };
       }
     }
 
@@ -145,11 +198,7 @@ function APIDialog() {
 
   const setApiDialogView = (view) => {
     setView((pages.api.dialog.view = view));
-    const params = Object.keys(paramsRef.current).map(
-      (item) => paramsRef.current[item]
-    );
-
-    setParams(params);
+    handleSetParams();
   };
 
   const deleteMethod = () => {
@@ -166,6 +215,14 @@ function APIDialog() {
     if (pages.api) {
       return Object.keys(api[path]).length <= 1 ? true : false;
     }
+  };
+
+  const handleSetParams = () => {
+    const params = Object.keys(paramsRef.current).map(
+      (item) => paramsRef.current[item]
+    );
+
+    setParams(params);
   };
 
   if (context.get("pages.api.dialog.open")) {
@@ -185,7 +242,7 @@ function APIDialog() {
             method={method}
             handleSaveButtonStatus={handleSaveButtonStatus}
             handleChangeMethod={handleChangeMethod}
-            ref={{ apiRef, pathRef }}
+            ref={{ apiRef, pathRef, paramsRef, paramsPathRef }}
           />
           <Grid sx={styles.content}>
             {view === "BODY" && (

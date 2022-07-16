@@ -13,30 +13,30 @@ const RatioIconButtons = ({ outputRatio, handleSetOutputRatio }) => {
     <Box sx={styles.root}>
       <IconButton
         xs={styles.iconButton}
-        disabled={outputRatio === (0.25).toString()}
+        disabled={outputRatio === 0.25}
         onClick={() => {
           handleSetOutputRatio(0.25);
         }}
       >
-        <WindowIconSmall disabled={outputRatio === (0.25).toString()} />
+        <WindowIconSmall disabled={outputRatio === 0.25} />
       </IconButton>
       <IconButton
         xs={styles.iconButton}
-        disabled={outputRatio === (0.5).toString()}
+        disabled={outputRatio === 0.5}
         onClick={() => {
           handleSetOutputRatio(0.5);
         }}
       >
-        <WindowIconMedium disabled={outputRatio === (0.5).toString()} />
+        <WindowIconMedium disabled={outputRatio === 0.5} />
       </IconButton>
       <IconButton
         xs={styles.iconButton}
-        disabled={outputRatio === (0.75).toString()}
+        disabled={outputRatio === 0.75}
         onClick={() => {
           handleSetOutputRatio(0.75);
         }}
       >
-        <WindowIconLarge disabled={outputRatio === (0.75).toString()} />
+        <WindowIconLarge disabled={outputRatio === 0.75} />
       </IconButton>
     </Box>
   );

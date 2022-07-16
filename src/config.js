@@ -15,15 +15,6 @@ const config = {
         sm: 8,
       },
     },
-    query: {
-      outputRatio: (ratio) => {
-        if (ratio !== undefined) {
-          localStorage.setItem("outputRatio", ratio);
-        } else {
-          return localStorage.getItem("outputRatio");
-        }
-      },
-    },
   },
 };
 export const drawerWidth = 300;
