@@ -4,9 +4,11 @@ import CodeSandboxDialog from "../../components/CodeSandboxDialog";
 import DialogTooltip from "../../components/DialogTootip/";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
+import MessageDialog from "../../components/MessageDialog";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import PostmanIcon from "../../icons/Postman";
 import Project from "../../project";
+import ReactCanvasConfetti from "react-canvas-confetti";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
@@ -19,6 +21,7 @@ import useLayout from "../../hooks/useLayout";
 import { useLocation } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import useService from "../../hooks/useService";
+
 import {
   Box,
   CircularProgress,
@@ -26,7 +29,17 @@ import {
   ListItem,
   Tooltip,
 } from "@mui/material";
+
 import React, { useEffect, useRef, useState } from "react";
+
+const canvasStyles = {
+  position: "fixed",
+  pointerEvents: "none",
+  width: "100%",
+  height: "100%",
+  top: 0,
+  left: 0,
+};
 
 const ProcessDrawer = () => {
   const [state, , handleGetProject, saveProject] = useService();
@@ -40,7 +53,56 @@ const ProcessDrawer = () => {
   const [backdrop, setBackdrop] = useState(false);
   const [link, setLink] = useState("");
 
+  const [message, setMessage] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+  });
+
   const getStatusTask = useRef();
+
+  const refAnimationInstance = React.useRef(null);
+  const getInstance = React.useCallback((instance) => {
+    refAnimationInstance.current = instance;
+  }, []);
+
+  const makeShot = React.useCallback((particleRatio, opts) => {
+    refAnimationInstance.current &&
+      refAnimationInstance.current({
+        ...opts,
+        origin: { y: 0.9 },
+        particleCount: Math.floor(200 * particleRatio),
+      });
+  }, []);
+
+  const fire = React.useCallback(() => {
+    makeShot(0.25, {
+      spread: 26,
+      startVelocity: 55,
+    });
+
+    makeShot(0.2, {
+      spread: 60,
+    });
+
+    makeShot(0.35, {
+      spread: 100,
+      decay: 0.91,
+      scalar: 0.8,
+    });
+
+    makeShot(0.1, {
+      spread: 120,
+      startVelocity: 25,
+      decay: 0.92,
+      scalar: 1.2,
+    });
+
+    makeShot(0.1, {
+      spread: 120,
+      startVelocity: 45,
+    });
+  }, [makeShot]);
 
   const auth = () => {
     setBackdrop(true);
@@ -106,6 +168,28 @@ const ProcessDrawer = () => {
   const handleCloseSandboxDialog = () => {
     dispatch({ type: "SANDBOX", payload: { dialogStatus: false } });
     getStatus();
+
+    //if (Settings.onboarding().sandbox) {
+    setTimeout(() => {
+      setMessage({
+        open: true,
+        vertical: "bottom",
+        horizontal: "center",
+        msg: "success",
+      });
+      fire();
+
+      setTimeout(() => {
+        setMessage({
+          open: true,
+          vertical: "bottom",
+          horizontal: "right",
+          msg: "info",
+        });
+      }, 10000);
+    }, 1000);
+    // }
+    Settings.onboarding({ sandbox: false });
   };
 
   const handleRunSandbox = async () => {
@@ -154,6 +238,10 @@ const ProcessDrawer = () => {
         payload: { status: true, dialogStatus: true },
       });
     }
+  };
+
+  const handleCloseMessage = () => {
+    setMessage({ ...message, open: false });
   };
 
   return (
@@ -254,7 +342,11 @@ const ProcessDrawer = () => {
         open={status.swagger}
         handleClose={handleCloseSwaggerDialog}
       />
-
+      <ReactCanvasConfetti refConfetti={getInstance} style={canvasStyles} />
+      <MessageDialog
+        message={message}
+        handleCloseMessage={handleCloseMessage}
+      />
       {status.name}
     </>
   );

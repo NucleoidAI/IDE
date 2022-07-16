@@ -51,6 +51,13 @@ const Settings = {
       return localStorage.getItem("runtime");
     }
   },
+  onboarding: (data) => {
+    if (data) {
+      localStorage.setItem("onboarding", JSON.stringify(data));
+    } else {
+      return JSON.parse(localStorage.getItem("onboarding"));
+    }
+  },
   /*
   token:{
     refreshToken:(data)=>{

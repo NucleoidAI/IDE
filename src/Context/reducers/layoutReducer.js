@@ -40,10 +40,12 @@ function layoutReducer(state, { type, payload }) {
       const tmpState = state;
 
       if (dialogStatus === true) {
-        gtag("event", "swagger_dialog_open", {
-          event_label: "Swagger dialog",
-          event_category: "swagger_dialog",
-        });
+        setTimeout(() => {
+          gtag("event", "swagger_dialog_open", {
+            event_label: "Swagger dialog",
+            event_category: "swagger_dialog",
+          });
+        }, 0);
       }
 
       if (dialogStatus !== undefined && dialogStatus !== null) {

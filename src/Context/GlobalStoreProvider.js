@@ -31,6 +31,12 @@ const InitContext = () => {
     Settings.url.terminal("http://localhost:8448/");
   }
 
+  if (!Settings.onboarding()) {
+    Settings.onboarding({
+      sandbox: true,
+    });
+  }
+
   if (project.isAuth()) {
     service.getProjects().then(({ data }) => {
       Settings.projects = [...data];
