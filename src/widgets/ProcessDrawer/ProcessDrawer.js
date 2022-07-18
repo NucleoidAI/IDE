@@ -8,7 +8,7 @@ import MessageDialog from "../../components/MessageDialog";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import PostmanIcon from "../../icons/Postman";
 import Project from "../../project";
-import ReactCanvasConfetti from "react-canvas-confetti";
+
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
@@ -23,27 +23,29 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import useService from "../../hooks/useService";
 
 import {
+  Alert,
   Box,
   CircularProgress,
   Drawer,
   ListItem,
   Tooltip,
+  Popover,
+  Popper,
+  ClickAwayListener,
+  Typography,
 } from "@mui/material";
 
 import React, { useEffect, useRef, useState } from "react";
-
-const canvasStyles = {
-  position: "fixed",
-  pointerEvents: "none",
-  width: "100%",
-  height: "100%",
-  top: 0,
-  left: 0,
-};
+import Confetti from "../../components/Confetti";
+import { MessageContent } from "../../components/MessageContent";
 
 const ProcessDrawer = () => {
   const [state, , handleGetProject, saveProject] = useService();
   const [status, dispatch, getStatus] = useLayout();
+
+  const runRef = useRef();
+  const handleFire = useRef();
+  const [openPopover, setOpenPopover] = useState(false);
 
   const matchDownMD = useMediaQuery(theme.breakpoints.down("lg"));
   const location = useLocation();
@@ -61,49 +63,6 @@ const ProcessDrawer = () => {
 
   const getStatusTask = useRef();
 
-  const refAnimationInstance = React.useRef(null);
-  const getInstance = React.useCallback((instance) => {
-    refAnimationInstance.current = instance;
-  }, []);
-
-  const makeShot = React.useCallback((particleRatio, opts) => {
-    refAnimationInstance.current &&
-      refAnimationInstance.current({
-        ...opts,
-        origin: { y: 0.9 },
-        particleCount: Math.floor(200 * particleRatio),
-      });
-  }, []);
-
-  const fire = React.useCallback(() => {
-    makeShot(0.25, {
-      spread: 26,
-      startVelocity: 55,
-    });
-
-    makeShot(0.2, {
-      spread: 60,
-    });
-
-    makeShot(0.35, {
-      spread: 100,
-      decay: 0.91,
-      scalar: 0.8,
-    });
-
-    makeShot(0.1, {
-      spread: 120,
-      startVelocity: 25,
-      decay: 0.92,
-      scalar: 1.2,
-    });
-
-    makeShot(0.1, {
-      spread: 120,
-      startVelocity: 45,
-    });
-  }, [makeShot]);
-
   const auth = () => {
     setBackdrop(true);
     handleGetProject((result) => setBackdrop(false));
@@ -118,6 +77,8 @@ const ProcessDrawer = () => {
         getStatus();
       }
     }, 1000 * 60);
+
+    setOpenPopover(true);
 
     if (location.state?.anchor === false) {
       setVercel(false);
@@ -177,7 +138,7 @@ const ProcessDrawer = () => {
         horizontal: "center",
         msg: "success",
       });
-      fire();
+      handleFire.current();
 
       setTimeout(() => {
         setMessage({
@@ -255,19 +216,24 @@ const ProcessDrawer = () => {
         sx={matchDownMD ? styles.drawerSmall : styles.drawer}
       >
         <Box>
-          {loading ? (
-            <ListItem sx={matchDownMD ? styles.listItemSmall : styles.listItem}>
-              <CircularProgress color="inherit" size={23} />
-            </ListItem>
-          ) : (
-            ApiButton(
-              status,
-              handleRun,
-              handleRunApi,
-              handleRunSandbox,
-              matchDownMD
-            )
-          )}
+          <DialogTooltip>
+            {loading ? (
+              <ListItem
+                sx={matchDownMD ? styles.listItemSmall : styles.listItem}
+              >
+                <CircularProgress color="inherit" size={23} />
+              </ListItem>
+            ) : (
+              ApiButton(
+                status,
+                handleRun,
+                handleRunApi,
+                handleRunSandbox,
+                matchDownMD,
+                runRef
+              )
+            )}
+          </DialogTooltip>
           <Tooltip placement="left" title="Open swagger dialog">
             <ListItem button onClick={handleOpenDialog}>
               <ViewListIcon
@@ -342,12 +308,57 @@ const ProcessDrawer = () => {
         open={status.swagger}
         handleClose={handleCloseSwaggerDialog}
       />
-      <ReactCanvasConfetti refConfetti={getInstance} style={canvasStyles} />
+
       <MessageDialog
         message={message}
         handleCloseMessage={handleCloseMessage}
       />
-      {status.name}
+      <ClickAwayListener onClickAway={() => setOpenPopover(false)}>
+        <Popper
+          placement="left-end"
+          disablePortal={false}
+          open={openPopover}
+          anchorEl={runRef.current}
+          sx={{ zIndex: 999999, pr: "5px" }}
+          modifiers={[
+            {
+              name: "flip",
+              enabled: false,
+              options: {
+                altBoundary: false,
+                rootBoundary: "viewport",
+                padding: 8,
+              },
+            },
+            {
+              name: "preventOverflow",
+              enabled: false,
+              options: {
+                altAxis: false,
+                altBoundary: false,
+                tether: false,
+                rootBoundary: "viewport",
+                padding: 8,
+              },
+            },
+          ]}
+        >
+          <MessageContent
+            sx={{ width: "100%" }}
+            icon={false}
+            severity="info"
+            variant="filled"
+          >
+            <Typography sx={{ color: "#c3c5c8" }}>
+              Run project in sandbox
+            </Typography>
+            <span style={{ fontSize: 30, marginLeft: 15 }}>
+              &#128073;&#127996;
+            </span>
+          </MessageContent>
+        </Popper>
+      </ClickAwayListener>
+      <Confetti handleFire={handleFire} />
     </>
   );
 };
@@ -357,7 +368,8 @@ const ApiButton = (
   handleRun,
   handleRunApi,
   handleRunSandbox,
-  matchDownMD
+  matchDownMD,
+  runRef
 ) => {
   const { status } = layoutStatus;
 
@@ -365,7 +377,7 @@ const ApiButton = (
     return (
       <>
         <Tooltip title="Reload project sandbox" placement="left">
-          <ListItem button onClick={() => handleRunSandbox()}>
+          <ListItem ref={runRef} button onClick={() => handleRunSandbox()}>
             <PlayCircleFilledIcon
               sx={matchDownMD ? styles.listItemSmall : styles.listItem}
             />

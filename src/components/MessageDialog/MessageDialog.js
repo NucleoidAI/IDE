@@ -27,8 +27,8 @@ const MessageDialog = ({ message, handleCloseMessage }) => {
       >
         {msg === "success" && (
           <>
-            <AlertTitle>Congratulations!</AlertTitle>
-            success
+            <AlertTitle>Congrats!</AlertTitle>
+            You've created your APIs with the help of AI
           </>
         )}
         {msg !== "success" && (

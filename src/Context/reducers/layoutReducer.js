@@ -19,10 +19,12 @@ function layoutReducer(state, { type, payload }) {
       const tmpState = state;
 
       if (dialogStatus === true) {
-        gtag("event", "sandbox_dialog_open", {
-          event_label: "Sandbox dialog open",
-          event_category: "sandbox_dialog",
-        });
+        setTimeout(() => {
+          gtag("event", "sandbox_dialog_open", {
+            event_label: "Sandbox dialog open",
+            event_category: "sandbox_dialog",
+          });
+        }, 0);
       }
 
       if (status !== undefined && status !== null) {
