@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 
-const MessageContent = ({ children, handleClose }) => {
+const MessageContent = ({ children, title, handleClose }) => {
   return (
     <Paper
       sx={{
@@ -26,7 +26,7 @@ const MessageContent = ({ children, handleClose }) => {
           color: "#c3c5c8",
         }}
       >
-        <Typography sx={{ pl: 1 }}>test</Typography>
+        <Typography sx={{ pl: 1 }}>{title}</Typography>
         <IconButton onClick={handleClose}>
           <Close
             sx={{ fill: theme.palette.custom.textGray }}

@@ -314,6 +314,7 @@ const ProcessDrawer = () => {
       />
       <DrawerPopper
         openPopover={openPopover}
+        title={""}
         anchorEl={runRef.current}
         handleClosePoper={handleClosePoper}
       />
