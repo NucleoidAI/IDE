@@ -1,17 +1,15 @@
+import Close from "@mui/icons-material/Close";
 import React from "react";
 import Snackbar from "@mui/material/Snackbar";
 import StarUsOnGithub from "../StarUsOnGithub";
-
+import theme from "../../theme";
 import {
   Box,
+  IconButton,
   LinearProgress,
   Paper,
-  IconButton,
   Typography,
 } from "@mui/material";
-import { Close } from "@mui/icons-material";
-
-import theme from "../../theme";
 
 const MessageDialog = ({ message, handleCloseMessage }) => {
   const { vertical, horizontal, open, msg } = message;
@@ -26,8 +24,10 @@ const MessageDialog = ({ message, handleCloseMessage }) => {
     >
       <Paper
         sx={{
-          bgcolor: theme.palette.custom.drawerBG,
-          width: "100%",
+          backgroundColor: theme.palette.custom.messageBG,
+          color: "rgba(0, 0, 0, 0.87)",
+          fontSize: theme.typography.pxToRem(12),
+          border: "1px solid #dadde9",
         }}
         elevation={3}
       >
@@ -36,20 +36,17 @@ const MessageDialog = ({ message, handleCloseMessage }) => {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            color: "#c3c5c8",
+            // color: "#c3c5c8",
           }}
         >
-          <Typography sx={{ pl: 2 }}>
+          <Typography sx={{ pl: 2, fontSize: "1rem", fontWeight: "bold" }}>
             {msg === "success" ? "Congrats!" : "Star"}
           </Typography>
           <IconButton onClick={handleCloseMessage}>
-            <Close
-              sx={{ fill: theme.palette.custom.textGray }}
-              fontSize="small"
-            />
+            <Close fontSize="small" />
           </IconButton>
         </Box>
-        <Box sx={{ p: 2 }}>
+        <Box sx={{ p: 1 }}>
           <Box
             sx={{
               display: "flex",
@@ -69,8 +66,7 @@ const MessageDialog = ({ message, handleCloseMessage }) => {
 const Star = () => {
   return (
     <>
-      <StarUsOnGithub />
-      <span style={{ fontSize: 25, marginLeft: 15 }}>🥳 🎉</span>
+      <StarUsOnGithub color={"black"} />
     </>
   );
 };
@@ -78,15 +74,13 @@ const Star = () => {
 const Congrats = () => {
   return (
     <>
-      <Typography sx={{ color: "#c3c5c8" }}>
-        You've created your APIs with the help of AI
-      </Typography>
-      <span style={{ fontSize: 25, marginLeft: 15 }}>🥳 🎉</span>
+      <Typography>You've created your APIs with the help of AI</Typography>
+      <span style={{ fontSize: 20, marginLeft: 15 }}>🥳 🎉</span>
     </>
   );
 };
 
-const ProgressWithTime = ({}) => {
+const ProgressWithTime = () => {
   return <LinearProgress color="inherit" />;
 };
 

@@ -2,7 +2,7 @@ import Button from "@mui/material/Button";
 import React from "react";
 import StarBorder from "@mui/icons-material/StarBorder";
 
-const StarUsOnGithub = () => {
+const StarUsOnGithub = ({ color }) => {
   return (
     <Button
       size="large"
@@ -10,7 +10,7 @@ const StarUsOnGithub = () => {
       sx={{
         textTransform: "none",
         fontSize: "1rem",
-        color: "white",
+        color: color || "white",
       }}
       onClick={() =>
         window.open("https://github.com/NucleoidJS/Nucleoid", "_blank")

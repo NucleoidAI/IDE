@@ -28,6 +28,7 @@ import {
   Drawer,
   ListItem,
   Tooltip,
+  Typography,
 } from "@mui/material";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -271,10 +272,10 @@ const ProcessDrawer = () => {
             placement="left"
             title={<b>Deploy</b>}
             message={
-              <>
+              <Typography>
                 Vercel deployment will be here soon
                 <br />
-              </>
+              </Typography>
             }
             handleTooltipClose={handleCloseVercel}
           >

@@ -13,8 +13,10 @@ const MessageContent = ({ children, title, handleClose }) => {
   return (
     <Paper
       sx={{
-        bgcolor: theme.palette.custom.drawerBG,
-        width: "100%",
+        backgroundColor: theme.palette.custom.messageBG,
+        color: "rgba(0, 0, 0, 0.87)",
+        fontSize: theme.typography.pxToRem(12),
+        border: "1px solid #dadde9",
       }}
       elevation={3}
     >
@@ -23,18 +25,16 @@ const MessageContent = ({ children, title, handleClose }) => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          color: "#c3c5c8",
         }}
       >
-        <Typography sx={{ pl: 1 }}>{title}</Typography>
+        <Typography sx={{ pl: 1, fontSize: "1rem", fontWeight: "bold" }}>
+          {title}
+        </Typography>
         <IconButton onClick={handleClose}>
-          <Close
-            sx={{ fill: theme.palette.custom.textGray }}
-            fontSize="small"
-          />
+          <Close fontSize="small" />
         </IconButton>
       </Box>
-      <Box sx={{ p: 1 }}>{children}</Box>
+      <Box sx={{ pb: 1, pr: 1, pl: 1 }}>{children}</Box>
       <ProgressWithTime />
     </Paper>
   );

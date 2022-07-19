@@ -24,7 +24,6 @@ const DrawerPopper = ({
             options: {
               altBoundary: false,
               rootBoundary: "viewport",
-              padding: 8,
             },
           },
           {
@@ -35,7 +34,6 @@ const DrawerPopper = ({
               altBoundary: false,
               tether: false,
               rootBoundary: "viewport",
-              padding: 8,
             },
           },
         ]}
@@ -48,7 +46,7 @@ const DrawerPopper = ({
               alignItems: "center",
             }}
           >
-            <Typography sx={{ color: "#c3c5c8" }}>Run project in sandbox</Typography>
+            <Typography sx={{ pl: 2 }}>Run project in sandbox</Typography>
             <span style={{ fontSize: 30, marginLeft: 15 }}>
               &#128073;&#127996;
             </span>

@@ -16,6 +16,7 @@ let theme = createTheme({
       apiTreeRightClick: "rgba(0, 0, 0, 0.2)",
       drawerBG: "#353e48",
       textGray: "#c3c5c8",
+      messageBG: "#f5f5f9",
     },
   },
   props: {
