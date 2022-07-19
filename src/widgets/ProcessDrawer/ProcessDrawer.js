@@ -26,6 +26,7 @@ import {
   Box,
   CircularProgress,
   Drawer,
+  IconButton,
   ListItem,
   Tooltip,
   Typography,
@@ -72,9 +73,12 @@ const ProcessDrawer = () => {
       }
     }, 1000 * 60);
 
-    setTimeout(() => {
-      setOpenPopover(true);
-    }, 8000);
+    if (Settings.landing() === 1) {
+      setTimeout(() => {
+        Settings.landing(2);
+        handleOpenPopper();
+      }, 6000);
+    }
 
     if (location.state?.anchor === false) {
       setVercel(false);
@@ -87,14 +91,15 @@ const ProcessDrawer = () => {
 
   const handleRun = () => {
     if (!Settings.runtime()) {
-      handleRunSandbox();
-    } else {
-      if (Settings.runtime() === "npx") {
-        handleRunApi();
-      } else {
-        handleRunSandbox();
-      }
+      Settings.runtime("sandbox");
     }
+
+    if (Settings.runtime() === "npx") {
+      handleRunApi();
+    } else {
+      handleRunSandbox();
+    }
+
     service.metrics().then((data) => {});
   };
 
@@ -122,7 +127,11 @@ const ProcessDrawer = () => {
     });
   };
 
-  const handleClosePoper = () => {
+  const handleOpenPopper = () => {
+    setOpenPopover(true);
+  };
+
+  const handleClosePopper = () => {
     setOpenPopover(false);
   };
 
@@ -130,27 +139,27 @@ const ProcessDrawer = () => {
     dispatch({ type: "SANDBOX", payload: { dialogStatus: false } });
     getStatus();
 
-    //if (Settings.onboarding().sandbox) {
-    setTimeout(() => {
-      setMessage({
-        open: true,
-        vertical: "bottom",
-        horizontal: "center",
-        msg: "success",
-      });
-      handleFire.current();
-
+    if (Settings.landing() === 2) {
+      Settings.landing(3);
       setTimeout(() => {
         setMessage({
           open: true,
           vertical: "bottom",
-          horizontal: "right",
-          msg: "info",
+          horizontal: "center",
+          msg: "success",
         });
-      }, 10000);
-    }, 1000);
-    // }
-    Settings.onboarding({ sandbox: false });
+        handleFire.current();
+
+        setTimeout(() => {
+          setMessage({
+            open: true,
+            vertical: "bottom",
+            horizontal: "right",
+            msg: "info",
+          });
+        }, 10000);
+      }, 1000);
+    }
   };
 
   const handleRunSandbox = async () => {
@@ -216,24 +225,20 @@ const ProcessDrawer = () => {
         sx={matchDownMD ? styles.drawerSmall : styles.drawer}
       >
         <Box>
-          <DialogTooltip>
-            {loading ? (
-              <ListItem
-                sx={matchDownMD ? styles.listItemSmall : styles.listItem}
-              >
-                <CircularProgress color="inherit" size={23} />
-              </ListItem>
-            ) : (
-              ApiButton(
-                status,
-                handleRun,
-                handleRunApi,
-                handleRunSandbox,
-                matchDownMD,
-                runRef
-              )
-            )}
-          </DialogTooltip>
+          {loading ? (
+            <ListItem sx={matchDownMD ? styles.listItemSmall : styles.listItem}>
+              <CircularProgress color="inherit" size={23} />
+            </ListItem>
+          ) : (
+            ApiButton(
+              status,
+              handleRun,
+              handleRunApi,
+              handleRunSandbox,
+              matchDownMD,
+              runRef
+            )
+          )}
           <Tooltip placement="left" title="Open swagger dialog">
             <ListItem button onClick={handleOpenDialog}>
               <ViewListIcon
@@ -317,8 +322,27 @@ const ProcessDrawer = () => {
         openPopover={openPopover}
         title={""}
         anchorEl={runRef.current}
-        handleClosePoper={handleClosePoper}
-      />
+        handleClosePoper={handleClosePopper}
+      >
+        <IconButton
+          onClick={() => {
+            handleRunSandbox();
+            handleClosePopper();
+          }}
+        >
+          <PlayCircleFilledIcon sx={{ width: 35, height: 35 }} />
+        </IconButton>
+        <Box
+          sx={{
+            flexDirection: "row",
+            alignItems: "flex-start",
+            justifyContent: "flex-start",
+          }}
+        >
+          <Typography>Run sample project on</Typography>
+          <Typography>CodeSandbox</Typography>
+        </Box>
+      </DrawerPopper>
 
       <Confetti handleFire={handleFire} />
     </>
@@ -339,7 +363,7 @@ const ApiButton = (
     return (
       <>
         <Tooltip title="Reload project sandbox" placement="left">
-          <ListItem ref={runRef} button onClick={() => handleRunSandbox()}>
+          <ListItem button onClick={() => handleRunSandbox()}>
             <PlayCircleFilledIcon
               sx={matchDownMD ? styles.listItemSmall : styles.listItem}
             />
@@ -366,7 +390,7 @@ const ApiButton = (
     case "unreachable":
       return (
         <Tooltip title="Run project" placement="left">
-          <ListItem button onClick={handleRun}>
+          <ListItem ref={runRef} button onClick={handleRun}>
             <PlayCircleFilledIcon
               sx={matchDownMD ? styles.listItemSmall : styles.listItem}
             />

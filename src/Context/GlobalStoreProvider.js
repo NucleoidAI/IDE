@@ -21,8 +21,15 @@ const initStatus = {
 };
 
 const InitContext = () => {
-  Settings.beta(false);
+  if (!Settings.beta()) {
+    Settings.beta(false);
+  }
 
+  /*
+  if (!Settings.runtime()) {
+    Settings.runtime("sandbox");
+  }
+*/
   if (!Settings.url.app()) {
     Settings.url.app("http://localhost:3000/");
   }
@@ -31,10 +38,8 @@ const InitContext = () => {
     Settings.url.terminal("http://localhost:8448/");
   }
 
-  if (!Settings.onboarding()) {
-    Settings.onboarding({
-      sandbox: true,
-    });
+  if (!Settings.landing()) {
+    Settings.landing(0);
   }
 
   if (project.isAuth()) {

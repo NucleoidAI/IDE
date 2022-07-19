@@ -19,46 +19,87 @@ const MessageDialog = ({ message, handleCloseMessage }) => {
       open={open}
       onClose={handleCloseMessage}
       anchorOrigin={{ vertical, horizontal }}
-      autoHideDuration={msg === "success" ? 6000 : 10000}
+      autoHideDuration={msg === "success" ? 10000 : 100000}
       key={vertical + horizontal}
     >
-      <Paper
-        sx={{
-          backgroundColor: theme.palette.custom.messageBG,
-          color: "rgba(0, 0, 0, 0.87)",
-          fontSize: theme.typography.pxToRem(12),
-          border: "1px solid #dadde9",
-        }}
-        elevation={3}
-      >
-        <Box
+      {msg === "success" ? (
+        <Paper
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            // color: "#c3c5c8",
+            backgroundColor: theme.palette.custom.messageBG,
+            color: "rgba(0, 0, 0, 0.87)",
+            fontSize: theme.typography.pxToRem(12),
+            border: "1px solid #dadde9",
           }}
+          elevation={3}
         >
-          <Typography sx={{ pl: 2, fontSize: "1rem", fontWeight: "bold" }}>
-            {msg === "success" ? "Congrats!" : "Star"}
-          </Typography>
-          <IconButton onClick={handleCloseMessage}>
-            <Close fontSize="small" />
-          </IconButton>
-        </Box>
-        <Box sx={{ p: 1 }}>
           <Box
             sx={{
               display: "flex",
-              justifyContent: "center",
+              justifyContent: "space-between",
               alignItems: "center",
+              // color: "#c3c5c8",
             }}
           >
-            {msg === "success" ? <Congrats /> : <Star />}
+            <Typography sx={{ pl: 2, fontSize: "1rem", fontWeight: "bold" }}>
+              {msg === "success" ? "Congrats!" : "Star"}
+            </Typography>
+            <IconButton onClick={handleCloseMessage}>
+              <Close fontSize="small" />
+            </IconButton>
           </Box>
-        </Box>
-        <ProgressWithTime />
-      </Paper>
+          <Box sx={{ p: 1 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Congrats />
+            </Box>
+          </Box>
+          <ProgressWithTime />
+        </Paper>
+      ) : (
+        <Paper
+          sx={{
+            backgroundColor: "#0288d1",
+            color: "rgba(0, 0, 0, 0.87)",
+            fontSize: theme.typography.pxToRem(12),
+            border: "1px solid #dadde9",
+          }}
+          elevation={3}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: 250,
+              // color: "#c3c5c8",
+            }}
+          >
+            <Typography
+              sx={{ pl: 2, fontSize: "1rem", fontWeight: "bold" }}
+            ></Typography>
+            <IconButton onClick={handleCloseMessage}>
+              <Close sx={{ fill: "white" }} fontSize="small" />
+            </IconButton>
+          </Box>
+          <Box sx={{ pr: 1, pl: 1, pb: 3 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Star />
+            </Box>
+          </Box>
+          <ProgressWithTime color={"secondary"} />
+        </Paper>
+      )}
     </Snackbar>
   );
 };
@@ -66,7 +107,7 @@ const MessageDialog = ({ message, handleCloseMessage }) => {
 const Star = () => {
   return (
     <>
-      <StarUsOnGithub color={"black"} />
+      <StarUsOnGithub color={"white"} />
     </>
   );
 };
@@ -80,8 +121,8 @@ const Congrats = () => {
   );
 };
 
-const ProgressWithTime = () => {
-  return <LinearProgress color="inherit" />;
+const ProgressWithTime = ({ color }) => {
+  return <LinearProgress color={color || "inherit"} />;
 };
 
 export default MessageDialog;

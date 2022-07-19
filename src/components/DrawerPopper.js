@@ -1,18 +1,18 @@
 import MessageContent from "../components/MessageContent";
 import React from "react";
-import { Box, ClickAwayListener, Popper, Typography } from "@mui/material";
+import { Box, ClickAwayListener, Popper } from "@mui/material";
 
 const DrawerPopper = ({
   children,
   openPopover,
   anchorEl,
   title,
-  handleClosePoper,
+  handleClosePopper,
 }) => {
   return (
-    <ClickAwayListener onClickAway={handleClosePoper}>
+    <ClickAwayListener onClickAway={handleClosePopper}>
       <Popper
-        placement="left-end"
+        placement="left"
         disablePortal={false}
         open={openPopover}
         anchorEl={anchorEl}
@@ -38,18 +38,16 @@ const DrawerPopper = ({
           },
         ]}
       >
-        <MessageContent title={title} handleClose={handleClosePoper}>
+        <MessageContent title={title} handleClose={handleClosePopper}>
           <Box
             sx={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              pb: 1,
             }}
           >
-            <Typography sx={{ pl: 2 }}>Run project in sandbox</Typography>
-            <span style={{ fontSize: 30, marginLeft: 15 }}>
-              &#128073;&#127996;
-            </span>
+            {children}
           </Box>
         </MessageContent>
       </Popper>
