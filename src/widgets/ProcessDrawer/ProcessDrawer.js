@@ -1,14 +1,15 @@
 import Backdrop from "@mui/material/Backdrop";
 import CodeSandbox from "../../codesandbox";
 import CodeSandboxDialog from "../../components/CodeSandboxDialog";
+import Confetti from "../../components/Confetti";
 import DialogTooltip from "../../components/DialogTootip/";
+import DrawerPopper from "../../components/DrawerPopper";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import MessageDialog from "../../components/MessageDialog";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import PostmanIcon from "../../icons/Postman";
 import Project from "../../project";
-
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
@@ -21,23 +22,15 @@ import useLayout from "../../hooks/useLayout";
 import { useLocation } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import useService from "../../hooks/useService";
-
 import {
-  Alert,
   Box,
   CircularProgress,
   Drawer,
   ListItem,
   Tooltip,
-  Popover,
-  Popper,
-  ClickAwayListener,
-  Typography,
 } from "@mui/material";
 
 import React, { useEffect, useRef, useState } from "react";
-import Confetti from "../../components/Confetti";
-import { MessageContent } from "../../components/MessageContent";
 
 const ProcessDrawer = () => {
   const [state, , handleGetProject, saveProject] = useService();
@@ -78,7 +71,9 @@ const ProcessDrawer = () => {
       }
     }, 1000 * 60);
 
-    setOpenPopover(true);
+    setTimeout(() => {
+      setOpenPopover(true);
+    }, 8000);
 
     if (location.state?.anchor === false) {
       setVercel(false);
@@ -124,6 +119,10 @@ const ProcessDrawer = () => {
     saveProject(() => {
       setBackdrop(false);
     });
+  };
+
+  const handleClosePoper = () => {
+    setOpenPopover(false);
   };
 
   const handleCloseSandboxDialog = () => {
@@ -313,51 +312,12 @@ const ProcessDrawer = () => {
         message={message}
         handleCloseMessage={handleCloseMessage}
       />
-      <ClickAwayListener onClickAway={() => setOpenPopover(false)}>
-        <Popper
-          placement="left-end"
-          disablePortal={false}
-          open={openPopover}
-          anchorEl={runRef.current}
-          sx={{ zIndex: 999999, pr: "5px" }}
-          modifiers={[
-            {
-              name: "flip",
-              enabled: false,
-              options: {
-                altBoundary: false,
-                rootBoundary: "viewport",
-                padding: 8,
-              },
-            },
-            {
-              name: "preventOverflow",
-              enabled: false,
-              options: {
-                altAxis: false,
-                altBoundary: false,
-                tether: false,
-                rootBoundary: "viewport",
-                padding: 8,
-              },
-            },
-          ]}
-        >
-          <MessageContent
-            sx={{ width: "100%" }}
-            icon={false}
-            severity="info"
-            variant="filled"
-          >
-            <Typography sx={{ color: "#c3c5c8" }}>
-              Run project in sandbox
-            </Typography>
-            <span style={{ fontSize: 30, marginLeft: 15 }}>
-              &#128073;&#127996;
-            </span>
-          </MessageContent>
-        </Popper>
-      </ClickAwayListener>
+      <DrawerPopper
+        openPopover={openPopover}
+        anchorEl={runRef.current}
+        handleClosePoper={handleClosePoper}
+      />
+
       <Confetti handleFire={handleFire} />
     </>
   );

@@ -1,33 +1,47 @@
-import { Box, CircularProgress, Paper, IconButton } from "@mui/material";
-import { Close } from "@mui/icons-material";
+import Close from "@mui/icons-material/Close";
 import React from "react";
-
 import theme from "../theme";
+import {
+  Box,
+  IconButton,
+  LinearProgress,
+  Paper,
+  Typography,
+} from "@mui/material";
 
-export const MessageContent = ({ children }) => {
+const MessageContent = ({ children, handleClose }) => {
   return (
     <Paper
       sx={{
-        bgcolor: "#353e48",
+        bgcolor: theme.palette.custom.drawerBG,
+        width: "100%",
       }}
       elevation={3}
     >
       <Box
         sx={{
           display: "flex",
-          justifyContent: "flex-end",
+          justifyContent: "space-between",
           alignItems: "center",
           color: "#c3c5c8",
         }}
       >
-        <IconButton>
-          <Close fontSize="small" />
+        <Typography sx={{ pl: 1 }}>test</Typography>
+        <IconButton onClick={handleClose}>
+          <Close
+            sx={{ fill: theme.palette.custom.textGray }}
+            fontSize="small"
+          />
         </IconButton>
       </Box>
-      <Box>
-        <CircularProgress size={15} />
-        {children}
-      </Box>
+      <Box sx={{ p: 1 }}>{children}</Box>
+      <ProgressWithTime />
     </Paper>
   );
 };
+
+const ProgressWithTime = ({ time }) => {
+  return <LinearProgress color="inherit" />;
+};
+
+export default MessageContent;

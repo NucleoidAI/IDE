@@ -1,12 +1,17 @@
-import AlertTitle from "@mui/material/AlertTitle";
-import MuiAlert from "@mui/material/Alert";
 import React from "react";
 import Snackbar from "@mui/material/Snackbar";
 import StarUsOnGithub from "../StarUsOnGithub";
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import {
+  Box,
+  LinearProgress,
+  Paper,
+  IconButton,
+  Typography,
+} from "@mui/material";
+import { Close } from "@mui/icons-material";
+
+import theme from "../../theme";
 
 const MessageDialog = ({ message, handleCloseMessage }) => {
   const { vertical, horizontal, open, msg } = message;
@@ -19,27 +24,70 @@ const MessageDialog = ({ message, handleCloseMessage }) => {
       autoHideDuration={msg === "success" ? 6000 : 10000}
       key={vertical + horizontal}
     >
-      <Alert
-        onClose={handleCloseMessage}
-        variant="filled"
-        severity={msg === "success" ? "success" : "info"}
-        sx={{ width: "100%" }}
+      <Paper
+        sx={{
+          bgcolor: theme.palette.custom.drawerBG,
+          width: "100%",
+        }}
+        elevation={3}
       >
-        {msg === "success" && (
-          <>
-            <AlertTitle>Congrats!</AlertTitle>
-            You've created your APIs with the help of AI
-          </>
-        )}
-        {msg !== "success" && (
-          <>
-            <AlertTitle>Congratulations!</AlertTitle>
-            <StarUsOnGithub />
-          </>
-        )}
-      </Alert>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            color: "#c3c5c8",
+          }}
+        >
+          <Typography sx={{ pl: 2 }}>
+            {msg === "success" ? "Congrats!" : "Star"}
+          </Typography>
+          <IconButton onClick={handleCloseMessage}>
+            <Close
+              sx={{ fill: theme.palette.custom.textGray }}
+              fontSize="small"
+            />
+          </IconButton>
+        </Box>
+        <Box sx={{ p: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {msg === "success" ? <Congrats /> : <Star />}
+          </Box>
+        </Box>
+        <ProgressWithTime />
+      </Paper>
     </Snackbar>
   );
+};
+
+const Star = () => {
+  return (
+    <>
+      <StarUsOnGithub />
+      <span style={{ fontSize: 25, marginLeft: 15 }}>🥳 🎉</span>
+    </>
+  );
+};
+
+const Congrats = () => {
+  return (
+    <>
+      <Typography sx={{ color: "#c3c5c8" }}>
+        You've created your APIs with the help of AI
+      </Typography>
+      <span style={{ fontSize: 25, marginLeft: 15 }}>🥳 🎉</span>
+    </>
+  );
+};
+
+const ProgressWithTime = ({}) => {
+  return <LinearProgress color="inherit" />;
 };
 
 export default MessageDialog;
