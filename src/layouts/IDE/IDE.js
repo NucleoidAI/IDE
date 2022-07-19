@@ -10,7 +10,6 @@ import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import styles from "./styles";
 import { Outlet } from "react-router-dom"; // eslint-disable-line
 
-
 const list = [
   { title: "API", link: "/", icon: <SendIcon /> },
   {
