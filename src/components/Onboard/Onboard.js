@@ -1,7 +1,7 @@
 import Confetti from "../Confetti";
-import DrawerPopper from "../DrawerPopper";
 import LandingDialog from "../LandingDialog";
 import MessageDialog from "../MessageDialog";
+import MessagePopper from "../MessagePopper";
 import React from "react";
 import Settings from "../../settings";
 import { v4 as uuid } from "uuid";
@@ -24,7 +24,7 @@ const Onboard = () => {
       return <LandingDialog />;
 
     case 1:
-      return <DrawerPopper title={""} />;
+      return <MessagePopper title={""} />;
 
     case 2: {
       setTimeout(() => {

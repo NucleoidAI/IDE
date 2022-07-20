@@ -276,7 +276,7 @@ const ApiButton = (
     return (
       <>
         <Tooltip title="Reload project sandbox" placement="left">
-          <ListItem button onClick={() => handleRunSandbox()}>
+          <ListItem name="onboardRun" button onClick={() => handleRunSandbox()}>
             <PlayCircleFilledIcon
               sx={matchDownMD ? styles.listItemSmall : styles.listItem}
             />
@@ -302,8 +302,8 @@ const ApiButton = (
 
     case "unreachable":
       return (
-        <Tooltip title="Run project" placement="left">
-          <ListItem nuc="onboardRun" button onClick={handleRun}>
+        <Tooltip name="onboardRun" title="Run project" placement="left">
+          <ListItem button onClick={handleRun}>
             <PlayCircleFilledIcon
               sx={matchDownMD ? styles.listItemSmall : styles.listItem}
             />

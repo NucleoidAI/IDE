@@ -1,18 +1,23 @@
-import MessageContent from "../components/MessageContent";
+import MessageContent from "./MessageContent";
+import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import React from "react";
 import {
   Box,
   ClickAwayListener,
-  Popper,
   IconButton,
+  Popper,
   Typography,
 } from "@mui/material";
 
-import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
-
-const DrawerPopper = ({ title }) => {
+const MessagePopper = ({ title }) => {
   const [open, setOpen] = React.useState(true);
-  console.log(document.getElementsByClassName("nuc"));
+
+  const [pos, setPos] = React.useState([]);
+
+  React.useEffect(() => {
+    setPos(document.getElementsByName("onboardRun"));
+  }, [pos]);
+
   const handleClosePopper = () => {
     setOpen(false);
   };
@@ -21,8 +26,8 @@ const DrawerPopper = ({ title }) => {
       <Popper
         placement="left"
         disablePortal={false}
-        open={open}
-        // anchorEl={anchorEl}
+        open={open && pos.length > 0}
+        anchorEl={pos[0]}
         sx={{ zIndex: 999999, pr: "5px" }}
         modifiers={[
           {
@@ -74,4 +79,4 @@ const DrawerPopper = ({ title }) => {
   );
 };
 
-export default DrawerPopper;
+export default MessagePopper;
