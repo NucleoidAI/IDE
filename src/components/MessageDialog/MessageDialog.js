@@ -31,7 +31,6 @@ const MessageDialog = ({ message, time }) => {
   return (
     <Snackbar
       open={open}
-      onClose={handleClose}
       anchorOrigin={{ vertical, horizontal }}
       autoHideDuration={msg === "success" ? 10000 : 100000}
       key={vertical + horizontal}
@@ -51,7 +50,6 @@ const MessageDialog = ({ message, time }) => {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              // color: "#c3c5c8",
             }}
           >
             <Typography sx={{ pl: 2, fontSize: "1rem", fontWeight: "bold" }}>
@@ -90,7 +88,6 @@ const MessageDialog = ({ message, time }) => {
               justifyContent: "space-between",
               alignItems: "center",
               width: 250,
-              // color: "#c3c5c8",
             }}
           >
             <Typography
