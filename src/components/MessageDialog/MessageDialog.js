@@ -32,7 +32,7 @@ const MessageDialog = ({ message, time }) => {
     <Snackbar
       open={open}
       anchorOrigin={{ vertical, horizontal }}
-      autoHideDuration={msg === "success" ? 10000 : 12000}
+      //autoHideDuration={msg === "success" ? 10000 : 12000}
       key={vertical + horizontal}
     >
       {msg === "success" ? (
@@ -67,7 +67,10 @@ const MessageDialog = ({ message, time }) => {
                 alignItems: "center",
               }}
             >
-              <Congrats />
+              <Typography>
+                You've created your APIs with the help of AI
+              </Typography>
+              <span style={{ fontSize: 20, marginLeft: 15 }}>🥳 🎉</span>
             </Box>
           </Box>
           <ProgressWithTime />
@@ -105,30 +108,13 @@ const MessageDialog = ({ message, time }) => {
                 alignItems: "center",
               }}
             >
-              <Star />
+              <StarUsOnGithub source={"popper message"} color={"white"} />
             </Box>
           </Box>
           <ProgressWithTime color={"secondary"} />
         </Paper>
       )}
     </Snackbar>
-  );
-};
-
-const Star = () => {
-  return (
-    <>
-      <StarUsOnGithub source={"popper message"} color={"white"} />
-    </>
-  );
-};
-
-const Congrats = () => {
-  return (
-    <>
-      <Typography>You've created your APIs with the help of AI</Typography>
-      <span style={{ fontSize: 20, marginLeft: 15 }}>🥳 🎉</span>
-    </>
   );
 };
 

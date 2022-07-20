@@ -28,7 +28,7 @@ const MessagePopper = ({ title }) => {
 
   return (
     <Popper
-      placement="left"
+      placement="left-start"
       disablePortal={false}
       open={open}
       anchorEl={pos[0]}

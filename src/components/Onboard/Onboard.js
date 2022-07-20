@@ -43,7 +43,7 @@ const Onboard = () => {
               horizontal: "center",
               msg: "success",
             }}
-            time={5000}
+            time={7000}
           />
           <Confetti />
         </>
@@ -60,7 +60,7 @@ const Onboard = () => {
             horizontal: "right",
             msg: "info",
           }}
-          time={10000}
+          time={12000}
         />
       );
     }

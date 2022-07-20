@@ -124,7 +124,11 @@ const ProcessDrawer = () => {
       Settings.url.terminal(
         `https://${data.sandbox_id}-8448.sse.codesandbox.io/`
       );
-      onboardDispatcher({ level: 2 });
+
+      if (Settings.runtime().level < 2) {
+        onboardDispatcher({ level: 2 });
+      }
+
       dispatch({
         type: "SANDBOX",
         payload: { status: true, dialogStatus: true },
