@@ -118,7 +118,7 @@ const MessageDialog = ({ message, time }) => {
 const Star = () => {
   return (
     <>
-      <StarUsOnGithub color={"white"} />
+      <StarUsOnGithub source={"popper message"} color={"white"} />
     </>
   );
 };

@@ -125,7 +125,7 @@ export default function CodeSandboxDialog({ open, handleCloseSandboxDialog }) {
                   }}
                 />
               </DialogTooltip>
-              <StarUsOnGithub />
+              <StarUsOnGithub source={"Sandbox Dialog"} />
             </Box>
           </Box>
         </Toolbar>
