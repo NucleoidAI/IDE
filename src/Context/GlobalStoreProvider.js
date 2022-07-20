@@ -39,7 +39,7 @@ const InitContext = () => {
   }
 
   if (!Settings.landing()) {
-    Settings.landing(0);
+    Settings.landing({ level: 0 });
   }
 
   if (project.isAuth()) {

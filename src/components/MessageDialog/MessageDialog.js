@@ -2,6 +2,7 @@ import Close from "@mui/icons-material/Close";
 import React from "react";
 import Snackbar from "@mui/material/Snackbar";
 import StarUsOnGithub from "../StarUsOnGithub";
+import onboardDispatcher from "../Onboard/onboardDispatcher";
 import theme from "../../theme";
 import {
   Box,
@@ -11,13 +12,26 @@ import {
   Typography,
 } from "@mui/material";
 
-const MessageDialog = ({ message, handleCloseMessage }) => {
-  const { vertical, horizontal, open, msg } = message;
+const MessageDialog = ({ message, time }) => {
+  const { vertical, horizontal, msg, status } = message;
+  const [open, setOpen] = React.useState(status);
+
+  const handleClose = () => {
+    onboardDispatcher({ level: 4 });
+    setOpen(false);
+  };
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      handleClose();
+    }, time);
+    return () => clearTimeout(timer);
+  }, [time]);
 
   return (
     <Snackbar
       open={open}
-      onClose={handleCloseMessage}
+      onClose={handleClose}
       anchorOrigin={{ vertical, horizontal }}
       autoHideDuration={msg === "success" ? 10000 : 100000}
       key={vertical + horizontal}
@@ -43,7 +57,7 @@ const MessageDialog = ({ message, handleCloseMessage }) => {
             <Typography sx={{ pl: 2, fontSize: "1rem", fontWeight: "bold" }}>
               {msg === "success" ? "Congrats!" : "Star"}
             </Typography>
-            <IconButton onClick={handleCloseMessage}>
+            <IconButton onClick={handleClose}>
               <Close fontSize="small" />
             </IconButton>
           </Box>
@@ -82,7 +96,7 @@ const MessageDialog = ({ message, handleCloseMessage }) => {
             <Typography
               sx={{ pl: 2, fontSize: "1rem", fontWeight: "bold" }}
             ></Typography>
-            <IconButton onClick={handleCloseMessage}>
+            <IconButton onClick={handleClose}>
               <Close sx={{ fill: "white" }} fontSize="small" />
             </IconButton>
           </Box>

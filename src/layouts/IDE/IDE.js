@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import FolderIcon from "@mui/icons-material/Folder";
-import LandingDialog from "../../components/LandingDialog";
 import Menu from "../../components/Menu";
+import Onboard from "../../components/Onboard";
 import ProcessDrawer from "../../widgets/ProcessDrawer/ProcessDrawer";
 import SendIcon from "@mui/icons-material/Send";
 import Settings from "../../settings";
@@ -33,7 +33,7 @@ function IDE() {
       <Box sx={styles.content}>
         <Outlet />
       </Box>
-      {Settings.landing() === 0 && <LandingDialog />}
+      {Settings.landing().level < 4 && <Onboard />}
       <ProcessDrawer />
     </Box>
   );

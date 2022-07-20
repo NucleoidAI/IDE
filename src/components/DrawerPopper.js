@@ -1,21 +1,28 @@
 import MessageContent from "../components/MessageContent";
 import React from "react";
-import { Box, ClickAwayListener, Popper } from "@mui/material";
+import {
+  Box,
+  ClickAwayListener,
+  Popper,
+  IconButton,
+  Typography,
+} from "@mui/material";
 
-const DrawerPopper = ({
-  children,
-  openPopover,
-  anchorEl,
-  title,
-  handleClosePopper,
-}) => {
+import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
+
+const DrawerPopper = ({ title }) => {
+  const [open, setOpen] = React.useState(true);
+  console.log(document.getElementsByClassName("nuc"));
+  const handleClosePopper = () => {
+    setOpen(false);
+  };
   return (
     <ClickAwayListener onClickAway={handleClosePopper}>
       <Popper
         placement="left"
         disablePortal={false}
-        open={openPopover}
-        anchorEl={anchorEl}
+        open={open}
+        // anchorEl={anchorEl}
         sx={{ zIndex: 999999, pr: "5px" }}
         modifiers={[
           {
@@ -47,7 +54,19 @@ const DrawerPopper = ({
               pb: 1,
             }}
           >
-            {children}
+            <IconButton>
+              <PlayCircleFilledIcon sx={{ width: 35, height: 35 }} />
+            </IconButton>
+            <Box
+              sx={{
+                flexDirection: "row",
+                alignItems: "flex-start",
+                justifyContent: "flex-start",
+              }}
+            >
+              <Typography>Run sample project on</Typography>
+              <Typography>CodeSandbox</Typography>
+            </Box>
           </Box>
         </MessageContent>
       </Popper>

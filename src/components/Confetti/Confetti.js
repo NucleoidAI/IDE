@@ -16,7 +16,7 @@ const Confetti = ({ handleFire }) => {
       });
   }, []);
 
-  handleFire.current = React.useCallback(() => {
+  const fire = React.useCallback(() => {
     makeShot(0.25, {
       spread: 26,
       startVelocity: 55,
@@ -52,7 +52,12 @@ const Confetti = ({ handleFire }) => {
     height: "100%",
     top: 0,
     left: 0,
+    zIndex: 9999999999,
   };
+
+  React.useEffect(() => {
+    fire();
+  }, [fire]);
 
   return <ReactCanvasConfetti refConfetti={getInstance} style={canvasStyles} />;
 };

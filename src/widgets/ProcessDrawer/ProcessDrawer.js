@@ -1,12 +1,9 @@
 import Backdrop from "@mui/material/Backdrop";
 import CodeSandbox from "../../codesandbox";
 import CodeSandboxDialog from "../../components/CodeSandboxDialog";
-import Confetti from "../../components/Confetti";
 import DialogTooltip from "../../components/DialogTootip/";
-import DrawerPopper from "../../components/DrawerPopper";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
-import MessageDialog from "../../components/MessageDialog";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import PostmanIcon from "../../icons/Postman";
 import Project from "../../project";
@@ -15,6 +12,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
 import SwaggerDialog from "../../components/SwaggerDialog";
 import ViewListIcon from "@mui/icons-material/ViewList";
+import onboardDispatcher from "../../components/Onboard/onboardDispatcher";
 import service from "../../service";
 import styles from "./styles";
 import theme from "../../theme";
@@ -26,7 +24,6 @@ import {
   Box,
   CircularProgress,
   Drawer,
-  IconButton,
   ListItem,
   Tooltip,
   Typography,
@@ -38,10 +35,6 @@ const ProcessDrawer = () => {
   const [state, , handleGetProject, saveProject] = useService();
   const [status, dispatch, getStatus] = useLayout();
 
-  const runRef = useRef();
-  const handleFire = useRef();
-  const [openPopover, setOpenPopover] = useState(false);
-
   const matchDownMD = useMediaQuery(theme.breakpoints.down("lg"));
   const location = useLocation();
 
@@ -49,12 +42,6 @@ const ProcessDrawer = () => {
   const [loading, setLoading] = useState(false);
   const [backdrop, setBackdrop] = useState(false);
   const [link, setLink] = useState("");
-
-  const [message, setMessage] = useState({
-    open: false,
-    vertical: "top",
-    horizontal: "center",
-  });
 
   const getStatusTask = useRef();
 
@@ -72,13 +59,6 @@ const ProcessDrawer = () => {
         getStatus();
       }
     }, 1000 * 60);
-
-    if (Settings.landing() === 1) {
-      setTimeout(() => {
-        Settings.landing(2);
-        handleOpenPopper();
-      }, 6000);
-    }
 
     if (location.state?.anchor === false) {
       setVercel(false);
@@ -127,39 +107,10 @@ const ProcessDrawer = () => {
     });
   };
 
-  const handleOpenPopper = () => {
-    setOpenPopover(true);
-  };
-
-  const handleClosePopper = () => {
-    setOpenPopover(false);
-  };
-
   const handleCloseSandboxDialog = () => {
     dispatch({ type: "SANDBOX", payload: { dialogStatus: false } });
+    if (Settings.landing().level < 2) onboardDispatcher({ level: 2 });
     getStatus();
-
-    if (Settings.landing() === 2) {
-      Settings.landing(3);
-      setTimeout(() => {
-        setMessage({
-          open: true,
-          vertical: "bottom",
-          horizontal: "center",
-          msg: "success",
-        });
-        handleFire.current();
-
-        setTimeout(() => {
-          setMessage({
-            open: true,
-            vertical: "bottom",
-            horizontal: "right",
-            msg: "info",
-          });
-        }, 10000);
-      }, 1000);
-    }
   };
 
   const handleRunSandbox = async () => {
@@ -210,10 +161,6 @@ const ProcessDrawer = () => {
     }
   };
 
-  const handleCloseMessage = () => {
-    setMessage({ ...message, open: false });
-  };
-
   return (
     <>
       <Drawer
@@ -235,8 +182,7 @@ const ProcessDrawer = () => {
               handleRun,
               handleRunApi,
               handleRunSandbox,
-              matchDownMD,
-              runRef
+              matchDownMD
             )
           )}
           <Tooltip placement="left" title="Open swagger dialog">
@@ -313,38 +259,6 @@ const ProcessDrawer = () => {
         open={status.swagger}
         handleClose={handleCloseSwaggerDialog}
       />
-
-      <MessageDialog
-        message={message}
-        handleCloseMessage={handleCloseMessage}
-      />
-      <DrawerPopper
-        openPopover={openPopover}
-        title={""}
-        anchorEl={runRef.current}
-        handleClosePoper={handleClosePopper}
-      >
-        <IconButton
-          onClick={() => {
-            handleRunSandbox();
-            handleClosePopper();
-          }}
-        >
-          <PlayCircleFilledIcon sx={{ width: 35, height: 35 }} />
-        </IconButton>
-        <Box
-          sx={{
-            flexDirection: "row",
-            alignItems: "flex-start",
-            justifyContent: "flex-start",
-          }}
-        >
-          <Typography>Run sample project on</Typography>
-          <Typography>CodeSandbox</Typography>
-        </Box>
-      </DrawerPopper>
-
-      <Confetti handleFire={handleFire} />
     </>
   );
 };
@@ -354,8 +268,7 @@ const ApiButton = (
   handleRun,
   handleRunApi,
   handleRunSandbox,
-  matchDownMD,
-  runRef
+  matchDownMD
 ) => {
   const { status } = layoutStatus;
 
@@ -390,7 +303,7 @@ const ApiButton = (
     case "unreachable":
       return (
         <Tooltip title="Run project" placement="left">
-          <ListItem ref={runRef} button onClick={handleRun}>
+          <ListItem nuc="onboardRun" button onClick={handleRun}>
             <PlayCircleFilledIcon
               sx={matchDownMD ? styles.listItemSmall : styles.listItem}
             />
