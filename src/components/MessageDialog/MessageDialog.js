@@ -32,7 +32,7 @@ const MessageDialog = ({ message, time }) => {
     <Snackbar
       open={open}
       anchorOrigin={{ vertical, horizontal }}
-      autoHideDuration={msg === "success" ? 10000 : 100000}
+      autoHideDuration={msg === "success" ? 10000 : 12000}
       key={vertical + horizontal}
     >
       {msg === "success" ? (

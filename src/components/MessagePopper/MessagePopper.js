@@ -11,10 +11,12 @@ const MessagePopper = ({ title }) => {
 
   React.useEffect(() => {
     setTimeout(() => {
-      console.log(Settings.landing());
       if (Settings.landing().level === 1) {
         setPos(document.getElementsByName("onboardRun"));
         setOpen(true);
+        setTimeout(() => {
+          setOpen(false);
+        }, 7000);
       }
     }, 5000);
   }, [pos]);
