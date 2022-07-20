@@ -17,7 +17,7 @@ const MessageDialog = ({ message, time }) => {
   const [open, setOpen] = React.useState(status);
 
   const handleClose = () => {
-    onboardDispatcher({ level: 4 });
+    onboardDispatcher({ level: 5 });
     setOpen(false);
   };
 

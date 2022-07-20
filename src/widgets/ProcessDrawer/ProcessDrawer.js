@@ -109,7 +109,7 @@ const ProcessDrawer = () => {
 
   const handleCloseSandboxDialog = () => {
     dispatch({ type: "SANDBOX", payload: { dialogStatus: false } });
-    if (Settings.landing().level < 2) onboardDispatcher({ level: 2 });
+    if (Settings.landing().level < 3) onboardDispatcher({ level: 3 });
     getStatus();
   };
 
@@ -124,6 +124,7 @@ const ProcessDrawer = () => {
       Settings.url.terminal(
         `https://${data.sandbox_id}-8448.sse.codesandbox.io/`
       );
+      onboardDispatcher({ level: 2 });
       dispatch({
         type: "SANDBOX",
         payload: { status: true, dialogStatus: true },

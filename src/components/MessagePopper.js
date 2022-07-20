@@ -1,6 +1,8 @@
 import MessageContent from "./MessageContent";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import React from "react";
+import Settings from "../settings";
+import onboardDispatcher from "./Onboard/onboardDispatcher";
 import {
   Box,
   ClickAwayListener,
@@ -10,23 +12,30 @@ import {
 } from "@mui/material";
 
 const MessagePopper = ({ title }) => {
-  const [open, setOpen] = React.useState(true);
-
+  const [open, setOpen] = React.useState(false);
   const [pos, setPos] = React.useState([]);
 
   React.useEffect(() => {
-    setPos(document.getElementsByName("onboardRun"));
+    setTimeout(() => {
+      console.log(Settings.landing());
+      if (Settings.landing().level === 1) {
+        setPos(document.getElementsByName("onboardRun"));
+        setOpen(true);
+      }
+    }, 5000);
   }, [pos]);
 
   const handleClosePopper = () => {
     setOpen(false);
+    onboardDispatcher({ level: 2 });
   };
+
   return (
     <ClickAwayListener onClickAway={handleClosePopper}>
       <Popper
         placement="left"
         disablePortal={false}
-        open={open && pos.length > 0}
+        open={open}
         anchorEl={pos[0]}
         sx={{ zIndex: 999999, pr: "5px" }}
         modifiers={[

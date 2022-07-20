@@ -26,9 +26,12 @@ const Onboard = () => {
     case 1:
       return <MessagePopper title={""} />;
 
-    case 2: {
+    case 2:
+      return null;
+
+    case 3: {
       setTimeout(() => {
-        event({ detail: { level: 3 } });
+        event({ detail: { level: 4 } });
       }, 10000);
       return (
         <>
@@ -47,7 +50,7 @@ const Onboard = () => {
       );
     }
 
-    case 3: {
+    case 4: {
       return (
         <MessageDialog
           key={uuid()}
@@ -57,7 +60,7 @@ const Onboard = () => {
             horizontal: "right",
             msg: "info",
           }}
-          time={5000}
+          time={10000}
         />
       );
     }
