@@ -1,6 +1,6 @@
 import Close from "@mui/icons-material/Close";
 import React from "react";
-import theme from "../theme";
+import theme from "../../theme";
 import {
   Box,
   IconButton,
@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 
-const MessageContent = ({ children, title, handleClose }) => {
+const GlobalMessageBox = ({ children, title, handleClose }) => {
   return (
     <Paper
       sx={{
@@ -17,6 +17,7 @@ const MessageContent = ({ children, title, handleClose }) => {
         color: "rgba(0, 0, 0, 0.87)",
         fontSize: theme.typography.pxToRem(12),
         border: "1px solid #dadde9",
+        minWidth: "250px",
       }}
       elevation={3}
     >
@@ -25,6 +26,7 @@ const MessageContent = ({ children, title, handleClose }) => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          maxHeight: "25px",
         }}
       >
         <Typography sx={{ pl: 1, fontSize: "1rem", fontWeight: "bold" }}>
@@ -34,14 +36,23 @@ const MessageContent = ({ children, title, handleClose }) => {
           <Close fontSize="small" />
         </IconButton>
       </Box>
-      <Box sx={{ pb: 1, pr: 1, pl: 1 }}>{children}</Box>
-      <ProgressWithTime />
+      <Box sx={{ ml: 1.5, mr: 1.5 }}>{children}</Box>
+      <Box
+        sx={{
+          maxHeight: "25px",
+          minHeight: "25px",
+          display: "flex",
+          flexDirection: "column-reverse",
+        }}
+      >
+        <ProgressWithTime />
+      </Box>
     </Paper>
   );
 };
 
 const ProgressWithTime = ({ time }) => {
-  return <LinearProgress color="inherit" />;
+  return <LinearProgress sx={{ width: "100%" }} color="inherit" />;
 };
 
-export default MessageContent;
+export default GlobalMessageBox;
