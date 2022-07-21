@@ -29,7 +29,7 @@ const GlobalMessageBox = ({ children, title, handleClose }) => {
           maxHeight: "25px",
         }}
       >
-        <Typography sx={{ pl: 1, fontSize: "1rem", fontWeight: "bold" }}>
+        <Typography sx={{ pl: 1.5, fontSize: "1rem", fontWeight: "bold" }}>
           {title}
         </Typography>
         <IconButton onClick={handleClose}>

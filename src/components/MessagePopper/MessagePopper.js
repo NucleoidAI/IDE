@@ -10,12 +10,13 @@ const MessagePopper = ({ title, openTime }) => {
   const [pos, setPos] = React.useState([]);
 
   React.useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       if (Settings.landing().level === 1) {
         setPos(document.getElementsByName("onboardRun"));
         setOpen(true);
       }
     }, openTime);
+    return () => clearTimeout(timer);
   }, [pos, openTime]);
 
   const handleClosePopper = () => {
