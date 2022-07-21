@@ -43,7 +43,7 @@ const MessageDialog = ({ message, lifeTime }) => {
         </Box>
         <Box sx={styles.content}>
           <Typography>You've created your APIs with the help of AI</Typography>
-          <span style={{ fontSize: 20, marginLeft: 15 }}>🥳 🎉</span>
+          <span style={{ fontSize: 20, marginLeft: 8 }}>🥳🎉</span>
         </Box>
         <Box sx={styles.footer}>
           <ProgressWithTime />

@@ -20,9 +20,9 @@ function layoutReducer(state, { type, payload }) {
 
       if (dialogStatus === true) {
         setTimeout(() => {
-          gtag("event", "sandbox_dialog_open", {
-            event_label: "Sandbox dialog open",
-            event_category: "sandbox_dialog",
+          gtag("event", "start_codesandbox", {
+            page_location: window.location.href,
+            page_path: window.location.pathname,
           });
         }, 0);
       }
