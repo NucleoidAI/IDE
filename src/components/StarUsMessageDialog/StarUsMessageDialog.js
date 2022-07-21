@@ -50,6 +50,12 @@ const StarUsMessageDialog = ({ message, openTime }) => {
               can do with this powerful programming model, please join us with
               any types of contribution!
             </Typography>
+            <img
+              src={"https://cdn.nucleoid.com/media/nobel.png"}
+              alt={"Nobel"}
+              width={65}
+              height={65}
+            />
           </Box>
         </Box>
         <Box sx={styles.footer}></Box>
