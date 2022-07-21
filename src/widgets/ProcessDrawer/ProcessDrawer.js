@@ -12,6 +12,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
 import SwaggerDialog from "../../components/SwaggerDialog";
 import ViewListIcon from "@mui/icons-material/ViewList";
+import onboardDispatcher from "../../components/Onboard/onboardDispatcher";
 import service from "../../service";
 import styles from "./styles";
 import theme from "../../theme";
@@ -25,7 +26,9 @@ import {
   Drawer,
   ListItem,
   Tooltip,
+  Typography,
 } from "@mui/material";
+
 import React, { useEffect, useRef, useState } from "react";
 
 const ProcessDrawer = () => {
@@ -68,14 +71,15 @@ const ProcessDrawer = () => {
 
   const handleRun = () => {
     if (!Settings.runtime()) {
-      handleRunSandbox();
-    } else {
-      if (Settings.runtime() === "npx") {
-        handleRunApi();
-      } else {
-        handleRunSandbox();
-      }
+      Settings.runtime("sandbox");
     }
+
+    if (Settings.runtime() === "npx") {
+      handleRunApi();
+    } else {
+      handleRunSandbox();
+    }
+
     service.metrics().then((data) => {});
   };
 
@@ -105,6 +109,11 @@ const ProcessDrawer = () => {
 
   const handleCloseSandboxDialog = () => {
     dispatch({ type: "SANDBOX", payload: { dialogStatus: false } });
+    if (Settings.landing().level < 3) {
+      setTimeout(() => {
+        onboardDispatcher({ level: 3 });
+      }, 1000);
+    }
     getStatus();
   };
 
@@ -113,18 +122,24 @@ const ProcessDrawer = () => {
       CodeSandbox.generateContent(state)
     );
 
+    setTimeout(() => {
+      if (Settings.landing().level < 2) {
+        onboardDispatcher({ level: 2 });
+      }
+      Settings.runtime("sandbox");
+    }, 0);
+
     if (data.sandbox_id) {
       Settings.codesandbox.sandboxID(data.sandbox_id);
       Settings.url.app(`https://${data.sandbox_id}-3000.sse.codesandbox.io/`);
       Settings.url.terminal(
         `https://${data.sandbox_id}-8448.sse.codesandbox.io/`
       );
+
       dispatch({
         type: "SANDBOX",
         payload: { status: true, dialogStatus: true },
       });
-
-      Settings.runtime("sandbox");
     }
   };
 
@@ -218,10 +233,10 @@ const ProcessDrawer = () => {
             placement="left"
             title={<b>Deploy</b>}
             message={
-              <>
+              <Typography>
                 Vercel deployment will be here soon
                 <br />
-              </>
+              </Typography>
             }
             handleTooltipClose={handleCloseVercel}
           >
@@ -254,8 +269,6 @@ const ProcessDrawer = () => {
         open={status.swagger}
         handleClose={handleCloseSwaggerDialog}
       />
-
-      {status.name}
     </>
   );
 };
@@ -273,7 +286,7 @@ const ApiButton = (
     return (
       <>
         <Tooltip title="Reload project sandbox" placement="left">
-          <ListItem button onClick={() => handleRunSandbox()}>
+          <ListItem name="onboardRun" button onClick={() => handleRunSandbox()}>
             <PlayCircleFilledIcon
               sx={matchDownMD ? styles.listItemSmall : styles.listItem}
             />
@@ -299,7 +312,7 @@ const ApiButton = (
 
     case "unreachable":
       return (
-        <Tooltip title="Run project" placement="left">
+        <Tooltip name="onboardRun" title="Run project" placement="left">
           <ListItem button onClick={handleRun}>
             <PlayCircleFilledIcon
               sx={matchDownMD ? styles.listItemSmall : styles.listItem}

@@ -1,8 +1,9 @@
 import CloseIcon from "@mui/icons-material/Close";
-import Grid from "@mui/material/Grid";
+
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import styles from "./styles";
+import { Grid, Typography } from "@mui/material";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 
 const DialogTooltip = styled(
@@ -24,7 +25,11 @@ const DialogTooltip = styled(
       title={
         <>
           <Grid container sx={styles.header}>
-            {title}
+            <Typography
+              sx={{ color: "black", fontSize: "1rem", fontWeight: "bold" }}
+            >
+              {title}
+            </Typography>
             <IconButton onClick={handleTooltipClose} size="small">
               <CloseIcon fontSize="inherit" />
             </IconButton>

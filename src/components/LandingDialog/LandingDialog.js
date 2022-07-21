@@ -4,6 +4,7 @@ import NumberThree from "../../images/number-three.png";
 import NumberTwo from "../../images/number-two.png";
 import React from "react";
 import codeImage from "../../images/code.png";
+import onboardDispatcher from "../Onboard/onboardDispatcher";
 import styles from "./styles";
 import theme from "../../theme";
 import {
@@ -20,14 +21,12 @@ import {
 } from "@mui/material";
 
 const LandingDialog = () => {
-  const [open, setOpen] = React.useState(true);
   const handleClose = () => {
-    setOpen(false);
-    localStorage.setItem("landing", true);
+    onboardDispatcher({ level: 1 });
   };
   return (
     <Dialog
-      open={open}
+      open={true}
       fullWidth
       maxWidth={"sm"}
       onClose={(event) => (event.key === "Escape" ? handleClose() : null)}

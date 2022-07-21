@@ -1,3 +1,5 @@
+import gtag from "../../gtag";
+
 function layoutReducer(state, { type, payload }) {
   switch (type) {
     case "SET_STATUS": {
@@ -16,6 +18,15 @@ function layoutReducer(state, { type, payload }) {
       const { status, dialogStatus } = payload;
       const tmpState = state;
 
+      if (dialogStatus === true) {
+        setTimeout(() => {
+          gtag("event", "start_codesandbox", {
+            page_location: window.location.href,
+            page_path: window.location.pathname,
+          });
+        }, 0);
+      }
+
       if (status !== undefined && status !== null) {
         tmpState.sandbox = status;
       }
@@ -29,6 +40,15 @@ function layoutReducer(state, { type, payload }) {
     case "SWAGGER_DIALOG": {
       const { dialogStatus } = payload;
       const tmpState = state;
+
+      if (dialogStatus === true) {
+        setTimeout(() => {
+          gtag("event", "swagger_dialog_open", {
+            event_label: "Swagger dialog",
+            event_category: "swagger_dialog",
+          });
+        }, 0);
+      }
 
       if (dialogStatus !== undefined && dialogStatus !== null) {
         tmpState.swagger = dialogStatus;

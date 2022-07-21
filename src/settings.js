@@ -45,21 +45,19 @@ const Settings = {
     }
   },
   runtime: (data) => {
-    if (data) {
+    if (data !== undefined && data !== null) {
       localStorage.setItem("runtime", data);
     } else {
       return localStorage.getItem("runtime");
     }
   },
-  /*
-  token:{
-    refreshToken:(data)=>{
-
-    },
-    accessToken:(data)=>{
-
+  landing: (data) => {
+    if (data !== undefined && data !== null) {
+      localStorage.setItem("landing", JSON.stringify(data));
+    } else {
+      return JSON.parse(localStorage.getItem("landing"));
     }
-  }*/
+  },
 };
 
 export default Settings;

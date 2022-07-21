@@ -1,9 +1,10 @@
 import Box from "@mui/material/Box";
 import FolderIcon from "@mui/icons-material/Folder";
-import LandingDialog from "../../components/LandingDialog";
 import Menu from "../../components/Menu";
+import Onboard from "../../components/Onboard";
 import ProcessDrawer from "../../widgets/ProcessDrawer/ProcessDrawer";
 import SendIcon from "@mui/icons-material/Send";
+import Settings from "../../settings";
 import StorageIcon from "@mui/icons-material/Storage";
 import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import styles from "./styles";
@@ -32,7 +33,7 @@ function IDE() {
       <Box sx={styles.content}>
         <Outlet />
       </Box>
-      {!localStorage.getItem("landing") && <LandingDialog />}
+      {Settings.landing().level < 5 && <Onboard />}
       <ProcessDrawer />
     </Box>
   );

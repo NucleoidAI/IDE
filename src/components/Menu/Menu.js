@@ -176,7 +176,8 @@ const MenuLinks = (props) => {
         <React.Fragment key={title}>
           <ListItem
             disabled={
-              title === "Logs" && layoutContext.status === "unreachable"
+              (title === "Logs" && layoutContext.status === "unreachable") ||
+              (title === "Query" && layoutContext.status === "unreachable")
             }
             sx={styles.listItem}
             onClick={() => navigate(link, { state: { anchor } })}
@@ -200,7 +201,10 @@ const SmallMenuLinks = (props) => {
       {props.list.map(({ title, link, anchor, icon }) => (
         <ListItem
           key={title}
-          disabled={title === "Logs" && layoutContext.status === "unreachable"}
+          disabled={
+            (title === "Logs" && layoutContext.status === "unreachable") ||
+            (title === "Query" && layoutContext.status === "unreachable")
+          }
           onClick={() => navigate(link, { state: { anchor } })}
           button
         >
