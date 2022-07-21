@@ -3,7 +3,7 @@ import React from "react";
 import Settings from "../../settings";
 import Snackbar from "@mui/material/Snackbar";
 import StarUsOnGithub from "../StarUsOnGithub";
-import theme from "../../theme";
+import styles from "./styles";
 import { Box, IconButton, Paper, Typography } from "@mui/material";
 
 const StarUsMessageDialog = ({ message, openTime }) => {
@@ -28,39 +28,15 @@ const StarUsMessageDialog = ({ message, openTime }) => {
       anchorOrigin={{ vertical, horizontal }}
       key={vertical + horizontal}
     >
-      <Paper
-        sx={{
-          backgroundColor: theme.palette.custom.messageBG,
-          color: "rgba(0, 0, 0, 0.87)",
-          fontSize: theme.typography.pxToRem(12),
-          border: "1px solid #dadde9",
-          maxWidth: 450,
-        }}
-        elevation={3}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Typography
-            sx={{
-              pl: 2,
-              fontSize: "1rem",
-              fontWeight: "bold",
-              minWidth: "36px",
-            }}
-          >
-            {" "}
-          </Typography>
+      <Paper sx={styles.root} elevation={3}>
+        <Box sx={styles.title}>
+          <Typography sx={styles.titleText}> </Typography>
           <StarUsOnGithub source={"popper message"} color={"black"} />
           <IconButton onClick={handleClose}>
             <Close sx={{ fill: "black" }} fontSize="small" />
           </IconButton>
         </Box>
-        <Box sx={{ pr: 1.5, pl: 1.5 }}>
+        <Box sx={styles.content}>
           <Box
             sx={{
               display: "flex",
@@ -76,7 +52,7 @@ const StarUsMessageDialog = ({ message, openTime }) => {
             </Typography>
           </Box>
         </Box>
-        <Box sx={{ minHeight: "25px" }}></Box>
+        <Box sx={styles.footer}></Box>
       </Paper>
     </Snackbar>
   );
