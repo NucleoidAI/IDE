@@ -24,7 +24,7 @@ const Onboard = () => {
       return <LandingDialog />;
 
     case 1:
-      return <MessagePopper title={""} />;
+      return <MessagePopper title={""} openTime={6000} />;
 
     case 2:
       return null;
