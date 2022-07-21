@@ -109,7 +109,11 @@ const ProcessDrawer = () => {
 
   const handleCloseSandboxDialog = () => {
     dispatch({ type: "SANDBOX", payload: { dialogStatus: false } });
-    if (Settings.landing().level < 3) onboardDispatcher({ level: 3 });
+    if (Settings.landing().level < 3) {
+      setTimeout(() => {
+        onboardDispatcher({ level: 3 });
+      }, 1000);
+    }
     getStatus();
   };
 
