@@ -3,7 +3,7 @@ import React from "react";
 import StarBorder from "@mui/icons-material/StarBorder";
 import gtag from "../../gtag";
 
-const StarUsOnGithub = ({ color, source }) => {
+const StarUsOnGithub = ({ color, clickEvent, source }) => {
   return (
     <Button
       size="large"
@@ -14,6 +14,7 @@ const StarUsOnGithub = ({ color, source }) => {
         color: color || "white",
       }}
       onClick={() => {
+        clickEvent();
         window.open("https://github.com/NucleoidJS/Nucleoid", "_blank");
         gtag("event", "click_github", {
           page_location: window.location.href,
