@@ -10,7 +10,7 @@
 import { ExpirationPlugin } from "workbox-expiration";
 import { StaleWhileRevalidate } from "workbox-strategies";
 import { clientsClaim } from "workbox-core";
-import { precacheAndRoute, createHandlerBoundToURL } from "workbox-precaching";
+import { createHandlerBoundToURL, precacheAndRoute } from "workbox-precaching";
 import { registerRoute } from "workbox-routing";
 
 clientsClaim();
