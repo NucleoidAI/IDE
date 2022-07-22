@@ -1,3 +1,4 @@
+/*eslint-disable*/
 var CACHE_NAME = "task-manager-pwa";
 var urlsToCache = ["/ide", "/completed"];
 
@@ -41,3 +42,4 @@ self.addEventListener("activate", (event) => {
     })
   );
 });
+/*eslint-enable*/

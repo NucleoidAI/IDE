@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-globals */
+/*eslint-disable*/
 
 // This service worker can be customized!
 // See https://developers.google.com/web/tools/workbox/modules
@@ -71,3 +71,4 @@ self.addEventListener("message", (event) => {
 });
 
 // Any other custom service worker logic can go here.
+/*eslint-enable*/
