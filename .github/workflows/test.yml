@@ -8,7 +8,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
       - run: npm ci
       - run: npm test
       - run: npm run lint
       - run: npm run format
+      - run: npm run build
+      - run: docker build . -t 533052815932.dkr.ecr.us-east-1.amazonaws.com/nuc:ide-test
+      - run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 533052815932.dkr.ecr.us-east-1.amazonaws.com
+      - run: docker push 533052815932.dkr.ecr.us-east-1.amazonaws.com/nuc:ide-test
+      - run: aws ecs update-service --cluster nuc-cluster --service ide-test-service-2 --force-new-deployment

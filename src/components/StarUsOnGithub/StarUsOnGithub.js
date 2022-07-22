@@ -15,9 +15,9 @@ const StarUsOnGithub = ({ color, source }) => {
       }}
       onClick={() => {
         window.open("https://github.com/NucleoidJS/Nucleoid", "_blank");
-        gtag("event", "click_star_button", {
-          event_label: "click_star_button at " + source,
-          event_category: "click_star",
+        gtag("event", "click_github", {
+          page_location: window.location.href,
+          page_path: window.location.pathname,
         });
       }}
     >

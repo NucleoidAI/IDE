@@ -109,7 +109,11 @@ const ProcessDrawer = () => {
 
   const handleCloseSandboxDialog = () => {
     dispatch({ type: "SANDBOX", payload: { dialogStatus: false } });
-    if (Settings.landing().level < 3) onboardDispatcher({ level: 3 });
+    if (Settings.landing().level < 3) {
+      setTimeout(() => {
+        onboardDispatcher({ level: 3 });
+      }, 1000);
+    }
     getStatus();
   };
 
@@ -118,6 +122,13 @@ const ProcessDrawer = () => {
       CodeSandbox.generateContent(state)
     );
 
+    setTimeout(() => {
+      if (Settings.landing().level < 2) {
+        onboardDispatcher({ level: 2 });
+      }
+      Settings.runtime("sandbox");
+    }, 0);
+
     if (data.sandbox_id) {
       Settings.codesandbox.sandboxID(data.sandbox_id);
       Settings.url.app(`https://${data.sandbox_id}-3000.sse.codesandbox.io/`);
@@ -125,16 +136,10 @@ const ProcessDrawer = () => {
         `https://${data.sandbox_id}-8448.sse.codesandbox.io/`
       );
 
-      if (Settings.runtime().level < 2) {
-        onboardDispatcher({ level: 2 });
-      }
-
       dispatch({
         type: "SANDBOX",
         payload: { status: true, dialogStatus: true },
       });
-
-      Settings.runtime("sandbox");
     }
   };
 

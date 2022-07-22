@@ -4,6 +4,8 @@ import MessageDialog from "../MessageDialog";
 import MessagePopper from "../MessagePopper";
 import React from "react";
 import Settings from "../../settings";
+import StarUsMessageDialog from "../StarUsMessageDialog/StarUsMessageDialog";
+
 import { v4 as uuid } from "uuid";
 
 const Onboard = () => {
@@ -24,15 +26,14 @@ const Onboard = () => {
       return <LandingDialog />;
 
     case 1:
-      return <MessagePopper title={""} />;
+      return <MessagePopper title={""} openTime={6000} />;
 
     case 2:
       return null;
 
     case 3: {
-      setTimeout(() => {
-        event({ detail: { level: 4 } });
-      }, 10000);
+      Settings.landing({ level: 4 });
+
       return (
         <>
           <MessageDialog
@@ -43,7 +44,7 @@ const Onboard = () => {
               horizontal: "center",
               msg: "success",
             }}
-            time={7000}
+            lifeTime={10000}
           />
           <Confetti />
         </>
@@ -52,15 +53,14 @@ const Onboard = () => {
 
     case 4: {
       return (
-        <MessageDialog
+        <StarUsMessageDialog
           key={uuid()}
           message={{
             status: true,
             vertical: "bottom",
             horizontal: "right",
-            msg: "info",
           }}
-          time={12000}
+          openTime={6000}
         />
       );
     }

@@ -1,25 +1,23 @@
-import MessageContent from "../MessageContent";
+import GlobalMessageBox from "../GlobalMessageBox";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import React from "react";
 import Settings from "../../settings";
 import onboardDispatcher from "../Onboard/onboardDispatcher";
-import { Box, IconButton, Popper, Typography } from "@mui/material";
+import { Box, Popper, Typography } from "@mui/material";
 
-const MessagePopper = ({ title }) => {
+const MessagePopper = ({ title, openTime }) => {
   const [open, setOpen] = React.useState(false);
   const [pos, setPos] = React.useState([]);
 
   React.useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       if (Settings.landing().level === 1) {
         setPos(document.getElementsByName("onboardRun"));
         setOpen(true);
-        setTimeout(() => {
-          setOpen(false);
-        }, 7000);
       }
-    }, 5000);
-  }, [pos]);
+    }, openTime);
+    return () => clearTimeout(timer);
+  }, [pos, openTime]);
 
   const handleClosePopper = () => {
     setOpen(false);
@@ -54,30 +52,18 @@ const MessagePopper = ({ title }) => {
         },
       ]}
     >
-      <MessageContent title={title} handleClose={handleClosePopper}>
+      <GlobalMessageBox title={title} handleClose={handleClosePopper}>
         <Box
           sx={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            pb: 1,
           }}
         >
-          <IconButton>
-            <PlayCircleFilledIcon sx={{ width: 35, height: 35 }} />
-          </IconButton>
-          <Box
-            sx={{
-              flexDirection: "row",
-              alignItems: "flex-start",
-              justifyContent: "flex-start",
-            }}
-          >
-            <Typography>Run sample project on</Typography>
-            <Typography>CodeSandbox</Typography>
-          </Box>
+          <PlayCircleFilledIcon sx={{ width: 35, height: 35, mr: 1 }} />
+          <Typography>Run sample project on CodeSandbox</Typography>
         </Box>
-      </MessageContent>
+      </GlobalMessageBox>
     </Popper>
   );
 };

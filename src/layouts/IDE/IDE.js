@@ -33,7 +33,7 @@ function IDE() {
       <Box sx={styles.content}>
         <Outlet />
       </Box>
-      {Settings.landing().level < 4 && <Onboard />}
+      {Settings.landing().level < 5 && <Onboard />}
       <ProcessDrawer />
     </Box>
   );
