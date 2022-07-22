@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-globals */
+/* eslint-disable */
 
 // This service worker can be customized!
 // See https://developers.google.com/web/tools/workbox/modules
@@ -11,7 +11,7 @@ import { ExpirationPlugin } from "workbox-expiration";
 import { StaleWhileRevalidate } from "workbox-strategies";
 import { clientsClaim } from "workbox-core";
 import { createHandlerBoundToURL, precacheAndRoute } from "workbox-precaching";
-import { registerRoute } from "workbox-routing";
+import { registerRoute } from "workbox-routing"; //eslint-disable-line
 
 clientsClaim();
 
@@ -71,3 +71,4 @@ self.addEventListener("message", (event) => {
 });
 
 // Any other custom service worker logic can go here.
+/* eslint-enable */
