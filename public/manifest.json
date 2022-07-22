@@ -1,3 +1,9 @@
 {
-  "name": "Nucleoid IDE"
+  "name": "Nucleoid IDE",
+  "short_name": "Nucleoid IDE",
+  "theme_color": "#000",
+  "background_color": "#000",
+  "display": "standalone",
+  "scobe": "/ide",
+  "start_url": "/ide"
 }
