@@ -39,7 +39,7 @@ function contextReducer(state, { type, payload }) {
         api[path][payload.method].request = payload.request;
         api[path][payload.method].response = payload.response;
         api[path][payload.method].params = payload.params;
-        api[path][payload.method].action = payload.action;
+        api[path][payload.method]["x-nuc-action"] = payload.action;
         api[path][payload.method].summary = payload.summary;
         api[path][payload.method].description = payload.description;
 
@@ -60,7 +60,7 @@ function contextReducer(state, { type, payload }) {
         api[path][method].request = payload.request;
         api[path][method].response = payload.response;
         api[path][method].params = payload.params;
-        api[path][payload.method].action = payload.action;
+        api[path][payload.method]["x-nuc-action"] = payload.action;
         api[path][payload.method].summary = payload.summary;
         api[path][payload.method].description = payload.description;
 
