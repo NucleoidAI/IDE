@@ -1,70 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title>Nucleoid IDE</title>
 
-<head>
-  <title>Nucleoid IDE</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+    <link rel="icon" type="image/png" href="https://cdn.nucleoid.com/media/icon.png" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="stylesheet" href="%PUBLIC_URL%/loading.css" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  </head>
 
-  <meta charset="utf-8" />
-  <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-  <link rel="icon" type="image/png" href="https://cdn.nucleoid.com/media/icon.png" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-  <link rel="stylesheet" href="%PUBLIC_URL%/loading.css" />
-  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-</head>
-
-<body>
-  <div class="nuc-progress-indicator" id="nuc-progress-indicator">
-    <div class="nuc-progress-indicator-head">
-      <div class="first-indicator"></div>
-      <div class="second-indicator"></div>
+  <body>
+    <div class="nuc-progress-indicator" id="nuc-progress-indicator">
+      <div class="nuc-progress-indicator-head">
+        <div class="first-indicator"></div>
+        <div class="second-indicator"></div>
+      </div>
+      <div class="insp-logo-frame">Nucleoid</div>
     </div>
-    <div class="insp-logo-frame">Nucleoid</div>
-  </div>
-  <div id="root"></div>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-L9H12K94J4"></script>
-  <script src="https://cdn.nucleoid.com/dist/eslint.bundle-8.16.0.js"></script>
-  <script src="https://cdn.nucleoid.com/dist/standalone-2.6.2.js"></script>
-  <script src="https://cdn.nucleoid.com/dist/parser-babel-2.6.2.js"></script>
-  <script>
-    const params = new URLSearchParams(window.location.search);
+    <div id="root"></div>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-L9H12K94J4"></script>
+    <script src="https://cdn.nucleoid.com/dist/eslint.bundle-8.16.0.js"></script>
+    <script src="https://cdn.nucleoid.com/dist/standalone-2.6.2.js"></script>
+    <script src="https://cdn.nucleoid.com/dist/parser-babel-2.6.2.js"></script>
+    <script>
+      const params = new URLSearchParams(window.location.search);
 
-    if (params.get("clear") === "true") {
-      localStorage.clear();
-    }
+      if (params.get("clear") === "true") {
+        localStorage.clear();
+      }
 
-    if (window.location.hostname !== "nucleoid.com" || params.get("gtag") === "false") {
-      window["ga-disable-G-L9H12K94J4"] = true;
-    }
+      if (window.location.hostname !== "nucleoid.com" || params.get("gtag") === "false") {
+        window["ga-disable-G-L9H12K94J4"] = true;
+      }
 
-    window.dataLayer = window.dataLayer || [];
+      window.dataLayer = window.dataLayer || [];
 
-    function gtag() {
-      dataLayer.push(arguments);
-    }
+      function gtag() {
+        dataLayer.push(arguments);
+      }
 
-    gtag("js", new Date());
-    gtag("config", "G-L9H12K94J4", {
-      send_page_view: false,
-    });
-    gtag("event", "page_view", {
-      page_title: "IDE",
-      page_location: window.location.href,
-      page_path: window.location.pathname,
-    });
-
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker.register('%PUBLIC_URL%/sw.js?v=3');
+      gtag("js", new Date());
+      gtag("config", "G-L9H12K94J4", {
+        send_page_view: false,
       });
-    }
+      gtag("event", "page_view", {
+        page_title: "IDE",
+        page_location: window.location.href,
+        page_path: window.location.pathname,
+      });
 
-    window.start = Date.now();
-    window.gtag = gtag;
-    window.linter = new ESLint.Linter();
-    window.prettier = prettier;
-    window.prettierPlugins = prettierPlugins;
-  </script>
-</body>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker.register("%PUBLIC_URL%/sw.js?v=3");
+        });
+      }
 
+      window.start = Date.now();
+      window.gtag = gtag;
+      window.linter = new ESLint.Linter();
+      window.prettier = prettier;
+      window.prettierPlugins = prettierPlugins;
+    </script>
+  </body>
 </html>
