@@ -61,7 +61,7 @@ const api = {
       response: {
         $ref: "#/components/schemas/Item",
       },
-      action: `function action(req) {
+      "x-nuc-action": `function action(req) {
   const name = req.body.name;
   const barcode = req.body.barcode;
 
