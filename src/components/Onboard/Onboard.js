@@ -5,7 +5,7 @@ import MessagePopper from "../MessagePopper";
 import React from "react";
 import Settings from "../../settings";
 import StarUsMessageDialog from "../StarUsMessageDialog/StarUsMessageDialog";
-
+import gtag from "../../gtag";
 import { v4 as uuid } from "uuid";
 
 const Onboard = () => {
@@ -33,6 +33,13 @@ const Onboard = () => {
 
     case 3: {
       Settings.landing({ level: 4 });
+
+      setTimeout(() => {
+        gtag("event", "confetti", {
+          page_location: window.location.href,
+          page_path: window.location.pathname,
+        });
+      }, 0);
 
       return (
         <>

@@ -21,7 +21,7 @@ const api = {
           },
         },
       },
-      action: `function action(req) {
+      "x-nuc-action": `function action(req) {
   return { message: "Hello World" };
 }
 `,
@@ -39,7 +39,7 @@ const api = {
           $ref: "#/components/schemas/Item",
         },
       },
-      action: `function action(req) {
+      "x-nuc-action": `function action(req) {
   return Item;
 }
 `,
@@ -61,7 +61,7 @@ const api = {
       response: {
         $ref: "#/components/schemas/Item",
       },
-      action: `function action(req) {
+      "x-nuc-action": `function action(req) {
   const name = req.body.name;
   const barcode = req.body.barcode;
 
@@ -85,7 +85,7 @@ const api = {
       ],
       request: { type: "object", properties: {} },
       response: { $ref: "#/components/schemas/Item" },
-      action: `function action(req) {
+      "x-nuc-action": `function action(req) {
   const item = req.params.item;
   return Item[item];
 }
@@ -115,7 +115,7 @@ const api = {
         },
       },
       response: { $ref: "#/components/schemas/Item" },
-      action: `function action(req) {
+      "x-nuc-action": `function action(req) {
   const name = req.body.name;
   const barcode = req.body.barcode;
   
@@ -155,7 +155,7 @@ const api = {
           },
         },
       },
-      action: `function action(req) {
+      "x-nuc-action": `function action(req) {
   const item = req.params.item;
   delete Item[item];
 }
@@ -181,7 +181,7 @@ const api = {
           $ref: "#/components/schemas/Order",
         },
       },
-      action: `function action(req) {
+      "x-nuc-action": `function action(req) {
   return Order;
 }
 `,
@@ -204,7 +204,7 @@ const api = {
       response: {
         $ref: "#/components/schemas/Order",
       },
-      action: `function action(req) {
+      "x-nuc-action": `function action(req) {
   const item = Item[req.body.item];
   const qty = req.body.qty;
 
@@ -232,7 +232,7 @@ const api = {
       ],
       request: { type: "object", properties: {} },
       response: { $ref: "#/components/schemas/Order" },
-      action: `function action(req) {
+      "x-nuc-action": `function action(req) {
   const order = req.params.order;
   return Order[order];
 }
@@ -262,7 +262,7 @@ const api = {
         },
       },
       response: { $ref: "#/components/schemas/Order" },
-      action: `function action(req) {
+      "x-nuc-action": `function action(req) {
   const item = Item[req.body.item];
   const qty = req.body.qty;
 
@@ -306,7 +306,7 @@ const api = {
           },
         },
       },
-      action: `function action(req) {
+      "x-nuc-action": `function action(req) {
   const order = req.params.order;
   delete Order[order];
 }

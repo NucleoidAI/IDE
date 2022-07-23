@@ -117,7 +117,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
       if (api) {
         const selected = state.get("pages.api.selected");
         const api = state.get("nucleoid.api");
-        const action = api[selected.path][selected.method].action;
+        const action = api[selected.path][selected.method]["x-nuc-action"];
         const result = linter.verifyAndFix(action, options);
 
         try {
@@ -126,7 +126,9 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
             plugins: prettierPlugins,
           });
 
-          setCode((api[selected.path][selected.method].action = prettyText));
+          setCode(
+            (api[selected.path][selected.method]["x-nuc-action"] = prettyText)
+          );
 
           lint(prettyText);
         } catch (err) {
@@ -182,7 +184,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
     if (api) {
       const selected = state.get("pages.api.selected");
       const api = state.get("nucleoid.api");
-      let action = api[selected.path][selected.method].action;
+      let action = api[selected.path][selected.method]["x-nuc-action"];
 
       if (checkFunction(action)) {
         const { args, fn } = parser.fn(action);
@@ -242,7 +244,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
             const selected = state.get("pages.api.selected");
             const api = state.get("nucleoid.api");
 
-            api[selected.path][selected.method].action = e;
+            api[selected.path][selected.method]["x-nuc-action"] = e;
           }
 
           if (functions) {

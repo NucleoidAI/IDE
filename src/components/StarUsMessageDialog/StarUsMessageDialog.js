@@ -31,7 +31,11 @@ const StarUsMessageDialog = ({ message, openTime }) => {
       <Paper sx={styles.root} elevation={3}>
         <Box sx={styles.title}>
           <Typography sx={styles.titleText}> </Typography>
-          <StarUsOnGithub source={"popper message"} color={"black"} />
+          <StarUsOnGithub
+            clickEvent={handleClose}
+            source={"popper message"}
+            color={"black"}
+          />
           <IconButton onClick={handleClose}>
             <Close sx={{ fill: "black" }} fontSize="small" />
           </IconButton>
