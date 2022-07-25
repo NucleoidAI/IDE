@@ -49,12 +49,20 @@ const SettingsDialog = ({ handleClose }) => {
         },
       }}
     >
-      <ClosableDialogTitle label="Settings" handleClose={() => handleClose()} />
+      <ClosableDialogTitle
+        grey
+        label="Settings"
+        handleClose={() => handleClose()}
+      />
       <DialogContent>
         <SettingsDialogTabs ref={urlRef} />
       </DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={() => saveSettingDialog()}>
+        <Button
+          sx={{ color: theme.palette.custom.grey }}
+          autoFocus
+          onClick={() => saveSettingDialog()}
+        >
           Save
         </Button>
       </DialogActions>

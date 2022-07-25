@@ -2,7 +2,7 @@ import React from "react";
 import Settings from "../../settings";
 import { Box, Switch, Typography } from "@mui/material";
 
-const SettingsDialogAdvanced = () => {
+const SettingsDialogDev = () => {
   const [checked, setChecked] = React.useState(Settings.beta());
 
   return (
@@ -26,4 +26,4 @@ const SettingsDialogAdvanced = () => {
   );
 };
 
-export default SettingsDialogAdvanced;
+export default SettingsDialogDev;

@@ -1,4 +1,4 @@
-import SettingsDialogAdvanced from "../SettingsDialogAdvanced";
+import SettingsDialogDev from "../SettingsDialogDev";
 import SettingsDialogUrl from "../SettingsDialogUrl";
 
 import TabPanel from "../TabPanel";
@@ -30,13 +30,13 @@ const SettingsDialogTabs = forwardRef((props, urlRef) => {
         sx={styles.tabs}
       >
         <Tab sx={styles.tab} label="Runtime" {...tabProps(0)} />
-        <Tab sx={styles.tab} label="Advanced" {...tabProps(1)} />
+        <Tab sx={styles.tab} label="Dev" {...tabProps(1)} />
       </Tabs>
       <TabPanel value={value} index={0}>
         <SettingsDialogUrl ref={urlRef} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <SettingsDialogAdvanced />
+        <SettingsDialogDev />
       </TabPanel>
     </Grid>
   );
