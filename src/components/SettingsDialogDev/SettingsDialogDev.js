@@ -4,7 +4,8 @@ import styles from "./styles";
 import { Box, Switch, Typography } from "@mui/material";
 
 const SettingsDialogDev = () => {
-  const [checked, setChecked] = React.useState(Settings.beta());
+  const [beta, setBeta] = React.useState(Settings.beta());
+  const [debug, setDebug] = React.useState(Settings.debug());
 
   return (
     <Box sx={styles.root}>
@@ -12,9 +13,9 @@ const SettingsDialogDev = () => {
         <Typography>Beta</Typography>
         <Switch
           color="secondary"
-          checked={checked}
+          checked={beta}
           onChange={(e) => {
-            setChecked(e.target.checked);
+            setBeta(e.target.checked);
             Settings.beta(e.target.checked);
           }}
         />
@@ -23,10 +24,10 @@ const SettingsDialogDev = () => {
         <Typography>Debug</Typography>
         <Switch
           color="secondary"
-          checked={checked}
+          checked={debug}
           onChange={(e) => {
-            setChecked(e.target.checked);
-            Settings.beta(e.target.checked);
+            setDebug(e.target.checked);
+            Settings.debug(e.target.checked);
           }}
         />
       </Box>
