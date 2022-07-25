@@ -5,6 +5,9 @@ const styles = {
     height: 400,
   },
   tabs: {
+    width: 120,
+    display: "flex",
+    flexDirection: "flex-end",
     borderRight: 1,
     borderColor: "divider",
     "& .MuiTabs-indicator": {
