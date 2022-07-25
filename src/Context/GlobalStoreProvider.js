@@ -25,11 +25,10 @@ const InitContext = () => {
     Settings.beta(false);
   }
 
-  /*
-  if (!Settings.runtime()) {
-    Settings.runtime("sandbox");
+  if (!Settings.debug()) {
+    Settings.debug(false);
   }
-*/
+
   if (!Settings.url.app()) {
     Settings.url.app("http://localhost:3000/");
   }
