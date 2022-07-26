@@ -44,7 +44,7 @@ const SettingsDialog = ({ handleClose }) => {
     <Dialog
       open={true}
       fullWidth
-      maxWidth={"sm"}
+      maxWidth={"md"}
       onClose={(event) => (event.key === "Escape" ? handleClose() : null)}
       sx={{ bgcolor: "custom.darkDialogBg", zIndex: 999999999 }}
       PaperProps={{
