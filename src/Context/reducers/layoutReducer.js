@@ -37,7 +37,7 @@ function layoutReducer(state, { type, payload }) {
       const tmpState = state;
 
       if (dialogStatus === true) {
-        gtag("event", "swagger_dialog_open");
+        gtag("event", "start_npx");
       }
 
       if (dialogStatus !== undefined && dialogStatus !== null) {
