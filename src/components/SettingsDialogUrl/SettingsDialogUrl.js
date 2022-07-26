@@ -31,13 +31,12 @@ const SettingsDialogUrl = React.forwardRef((props, urlRef) => {
 
   return (
     <Box sx={styles.root}>
-      <DarkSection title={"Project"}>
+      <Sectipon title={"Project"}>
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            mb: 1,
             mb: 2,
           }}
         >
@@ -56,38 +55,62 @@ const SettingsDialogUrl = React.forwardRef((props, urlRef) => {
             onChange={(e) => handleSetUrl(e.target.value)}
           />
         </Box>
-      </DarkSection>
-      <DarkSection title={"Runtime"}>
+      </Sectipon>
+      <Sectipon title={"Runtime"}>
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "flex-start",
+            justifyContent: "space-between",
             height: 35,
             mb: 2,
           }}
         >
-          <Typography
-            fontWeight={!npx ? "bold" : null}
+          <Box
             sx={{
-              pl: 1,
-              fontSize: !npx ? "16px" : "15px",
-              width: 108,
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
             }}
           >
-            CodeSandbox
-          </Typography>
-          <Switch
-            checked={npx}
-            color="default"
-            onChange={(e) => handleSetRuntime(e.target.checked)}
-          />
-          <Typography
-            fontWeight={npx ? "bold" : null}
-            sx={{ pr: 1, fontSize: npx ? "16px" : "15px" }}
+            <Typography
+              fontWeight={!npx ? "bold" : null}
+              sx={{
+                pl: 1,
+                fontSize: !npx ? "16px" : "15px",
+                width: 108,
+              }}
+            >
+              CodeSandbox
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              width: "30%",
+              display: "flex",
+              justifyContent: "center",
+            }}
           >
-            npx
-          </Typography>
+            <Switch
+              checked={npx}
+              color="default"
+              onChange={(e) => handleSetRuntime(e.target.checked)}
+            />
+          </Box>
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-start",
+            }}
+          >
+            <Typography
+              fontWeight={npx ? "bold" : null}
+              sx={{ pr: 1, fontSize: npx ? "16px" : "15px" }}
+            >
+              npx
+            </Typography>
+          </Box>
         </Box>
         <TextField
           label="Runtime Url"
@@ -98,12 +121,12 @@ const SettingsDialogUrl = React.forwardRef((props, urlRef) => {
           sx={styles.textField}
           onChange={(e) => handleSetUrl(e.target.value)}
         />
-      </DarkSection>
+      </Sectipon>
     </Box>
   );
 });
 
-const DarkSection = ({ children, title }) => {
+const Sectipon = ({ children, title }) => {
   return (
     <Box
       sx={{
