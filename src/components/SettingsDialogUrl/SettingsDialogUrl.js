@@ -8,12 +8,20 @@ const SettingsDialogUrl = React.forwardRef((props, urlRef) => {
   const [npx, setNpx] = React.useState(
     urlRef.current.runtime === "npx" ? true : false
   );
+  const [description, setDesciption] = React.useState(
+    urlRef.current.description
+  );
 
   const context = urlRef.current;
 
   const handleSetUrl = (value) => {
     context["url"] = value;
     setUrl(value);
+  };
+
+  const handleSetDescription = (value) => {
+    context["description"] = value;
+    setDesciption(value);
   };
 
   const handleSetRuntime = (value) => {
@@ -47,12 +55,12 @@ const SettingsDialogUrl = React.forwardRef((props, urlRef) => {
         </Box>
         <Box sx={{ mb: 1 }}>
           <TextField
-            value={"test"}
+            value={description}
             variant={"outlined"}
             size={"small"}
             label={"Description"}
             sx={styles.textField}
-            onChange={(e) => handleSetUrl(e.target.value)}
+            onChange={(e) => handleSetDescription(e.target.value)}
           />
         </Box>
       </Sectipon>

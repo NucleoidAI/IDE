@@ -34,7 +34,7 @@ const CodeSandbox = {
         "package.json": {
           content: {
             name: project.get().name,
-            description: `Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore`,
+            description: Settings.description(),
             version: "1.0.0",
             main: "index.js",
             license: "MIT",

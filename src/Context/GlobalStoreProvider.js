@@ -37,6 +37,12 @@ const InitContext = () => {
     Settings.url.terminal("http://localhost:8448/");
   }
 
+  if (!Settings.description()) {
+    Settings.description(
+      "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore"
+    );
+  }
+
   if (!Settings.landing()) {
     Settings.landing({ level: 0 });
   }

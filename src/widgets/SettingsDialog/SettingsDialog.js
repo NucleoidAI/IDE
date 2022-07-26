@@ -17,7 +17,9 @@ const SettingsDialog = ({ handleClose }) => {
     const parse = new URL(terminal);
 
     const url = parse.protocol + "//" + parse.hostname + ":8448/";
-    urlRef.current = { runtime, url };
+
+    const description = Settings.description();
+    urlRef.current = { runtime, url, description };
   }, []);
 
   function saveSettingDialog() {
@@ -31,6 +33,9 @@ const SettingsDialog = ({ handleClose }) => {
       Settings.url.app(app);
     }
     Settings.runtime(urlRef.current.runtime);
+
+    Settings.description(urlRef.current.description);
+
     dispatch({ type: "SWAGGER_DIALOG", payload: { dialogStatus: false } });
     handleClose();
   }
@@ -41,7 +46,7 @@ const SettingsDialog = ({ handleClose }) => {
       fullWidth
       maxWidth={"sm"}
       onClose={(event) => (event.key === "Escape" ? handleClose() : null)}
-      sx={{ bgcolor: "custom.darkDialogBg" }}
+      sx={{ bgcolor: "custom.darkDialogBg", zIndex: 999999999 }}
       PaperProps={{
         style: {
           backgroundColor: theme.palette.custom.darkDialogPanel,
