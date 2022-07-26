@@ -6,7 +6,9 @@ const TabPanel = (props) => {
   return (
     <>
       {value === index && (
-        <Box sx={{ pl: 2, height: "100%", bgcolor: "#424242d1" }}>{children}</Box>
+        <Box sx={{ pl: 2, height: "100%", bgcolor: "#424242d1" }}>
+          {children}
+        </Box>
       )}
     </>
   );
