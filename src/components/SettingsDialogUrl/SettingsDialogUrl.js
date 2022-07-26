@@ -39,32 +39,32 @@ const SettingsDialogUrl = React.forwardRef((props, urlRef) => {
 
   return (
     <Box sx={styles.root}>
-      <Sectipon title={"Project"}>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            mb: 2,
-          }}
-        >
-          <Typography sx={{ fontWeight: "bold" }}>Project name</Typography>
-          <Typography sx={{ color: "#F5F5F5" }}>
-            {project.get().name}
-          </Typography>
-        </Box>
-        <Box sx={{ mb: 1 }}>
+      <Section title={"Project"}>
+        <BetweenComponents title={"Name"}>
           <TextField
-            value={description}
+            value={project.get().name}
             variant={"outlined"}
             size={"small"}
-            label={"Description"}
+            disabled={"true"}
             sx={styles.textField}
+          />
+        </BetweenComponents>
+        <Padding />
+        <BetweenComponents title={"Description"}>
+          <TextField
+            InputProps={{ classes: { underline: "red" } }}
+            sx={styles.textField}
+            value={description}
+            multiline
+            row={2}
+            variant={"outlined"}
+            size={"small"}
             onChange={(e) => handleSetDescription(e.target.value)}
           />
-        </Box>
-      </Sectipon>
-      <Sectipon title={"Runtime"}>
+        </BetweenComponents>
+      </Section>
+      <Padding />
+      <Section title={"Runtime"}>
         <Box
           sx={{
             display: "flex",
@@ -120,28 +120,57 @@ const SettingsDialogUrl = React.forwardRef((props, urlRef) => {
             </Typography>
           </Box>
         </Box>
-        <TextField
-          label="Runtime Url"
-          variant={"outlined"}
-          size={"small"}
-          disabled={npx ? false : true}
-          value={url}
-          sx={styles.textField}
-          onChange={(e) => handleSetUrl(e.target.value)}
-        />
-      </Sectipon>
+        <BetweenComponents title={"Description"}>
+          <TextField
+            size={"small"}
+            variant={"outlined"}
+            disabled={npx ? false : true}
+            value={url}
+            sx={styles.textField}
+            onChange={(e) => handleSetUrl(e.target.value)}
+          />
+        </BetweenComponents>
+      </Section>
     </Box>
   );
 });
 
-const Sectipon = ({ children, title }) => {
+const Padding = () => {
+  return <Box sx={{ mb: 1 }}></Box>;
+};
+
+const Section = ({ children, title, description }) => {
   return (
     <Box
       sx={{
-        mb: 4,
+        // bgcolor: "#232323",
+        // border: 2,
+        // borderColor: "#282828",
+        borderRadius: 2,
       }}
     >
-      <Divider sx={{ mb: 1 }}>{title}</Divider>
+      <Box>
+        <Box sx={{ p: 2 }}>
+          <Typography variant="h6">{title}</Typography>
+          <Typography>{description}</Typography>
+        </Box>
+        <Divider sx={{ borderColor: "#282828" }} />
+      </Box>
+      <Box sx={{ p: 2 }}>{children}</Box>
+    </Box>
+  );
+};
+
+const BetweenComponents = ({ children, title }) => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+      <Typography variant={"subtitle2"}>{title}</Typography>
       {children}
     </Box>
   );

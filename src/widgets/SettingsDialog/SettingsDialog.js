@@ -51,6 +51,7 @@ const SettingsDialog = ({ handleClose }) => {
         style: {
           backgroundColor: theme.palette.custom.darkDialogPanel,
           color: theme.palette.custom.grey,
+          minHeight: 600,
         },
       }}
     >

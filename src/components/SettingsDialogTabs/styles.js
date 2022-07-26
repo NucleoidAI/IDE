@@ -16,6 +16,12 @@ const styles = {
     },
     "& .MuiTab-root.Mui-selected": {
       color: "custom.grey",
+      bgcolor: "rgba(0,0,0,0.1)",
+      borderTopLeftRadius: 8,
+      borderBottomLeftRadius: 8,
+    },
+    "& .MuiTab-root": {
+      color: "custom.grey",
     },
   },
   tab: {

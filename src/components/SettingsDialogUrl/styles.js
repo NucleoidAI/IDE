@@ -7,21 +7,27 @@ const styles = {
     height: 35,
   },
   textField: {
-    width: "100%",
+    width: 400,
     "& label.Mui-focused": {
-      color: "custom.fossil",
+      color: "#747474",
     },
-    "& .MuiInput-underline:before": {
-      borderBottomColor: "custom.grey",
-    },
-    "& .MuiInput-underline:after": {
-      borderBottomColor: "custom.fossil",
-    },
-    "& .MuiInputBase-input": {
-      color: "custom.grey",
-    },
-    label: {
-      color: "custom.grey",
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "#282828",
+      },
+      "&:hover fieldset": {
+        borderColor: "#282828",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#bdbdbd",
+      },
+      "& .MuiInputBase-input": {
+        color: "custom.grey",
+      },
+      ".MuiInputBase-input.Mui-disabled": {
+        WebkitTextFillColor: "#454545",
+        color: "#454545",
+      },
     },
   },
 };
