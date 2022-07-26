@@ -19,12 +19,7 @@ function layoutReducer(state, { type, payload }) {
       const tmpState = state;
 
       if (dialogStatus === true) {
-        setTimeout(() => {
-          gtag("event", "start_codesandbox", {
-            page_location: window.location.href,
-            page_path: window.location.pathname,
-          });
-        }, 0);
+        gtag("event", "start_codesandbox");
       }
 
       if (status !== undefined && status !== null) {
@@ -42,12 +37,7 @@ function layoutReducer(state, { type, payload }) {
       const tmpState = state;
 
       if (dialogStatus === true) {
-        setTimeout(() => {
-          gtag("event", "swagger_dialog_open", {
-            event_label: "Swagger dialog",
-            event_category: "swagger_dialog",
-          });
-        }, 0);
+        gtag("event", "swagger_dialog_open");
       }
 
       if (dialogStatus !== undefined && dialogStatus !== null) {
