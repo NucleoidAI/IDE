@@ -13,6 +13,7 @@ let theme = createTheme({
       fossil: "#747474",
       darkDialogBg: "rgba(0,0,0,0.5)",
       darkDialogPanel: "#1c1c1c",
+      darkDialog: "#424242",
       apiTreeRightClick: "rgba(0, 0, 0, 0.2)",
       drawerBG: "#353e48",
       textGray: "#c3c5c8",
