@@ -120,7 +120,7 @@ const SettingsDialogUrl = React.forwardRef((props, urlRef) => {
             </Typography>
           </Box>
         </Box>
-        <BetweenComponents title={"Description"}>
+        <BetweenComponents title={"Url"}>
           <TextField
             size={"small"}
             variant={"outlined"}
