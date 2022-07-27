@@ -3,7 +3,7 @@ const styles = {
     width: "100%",
   },
   itemContainer: {
-    width: "100%",
+    width: "50%",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",

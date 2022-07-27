@@ -49,7 +49,7 @@ const SettingsDialog = ({ handleClose }) => {
       sx={{ bgcolor: "custom.darkDialogBg", zIndex: 999999999 }}
       PaperProps={{
         style: {
-          backgroundColor: theme.palette.custom.darkDialogPanel,
+          backgroundColor: theme.palette.custom.darkDialog,
           color: theme.palette.custom.grey,
           minHeight: 600,
         },

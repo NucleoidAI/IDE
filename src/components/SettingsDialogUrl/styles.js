@@ -25,8 +25,8 @@ const styles = {
         color: "custom.grey",
       },
       ".MuiInputBase-input.Mui-disabled": {
-        WebkitTextFillColor: "#454545",
-        color: "#454545",
+        WebkitTextFillColor: "gray",
+        color: "gray",
       },
     },
   },
