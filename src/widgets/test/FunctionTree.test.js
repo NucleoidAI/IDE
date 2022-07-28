@@ -1,13 +1,9 @@
-import Adapter from "enzyme-adapter-react-16";
 import FunctionTree from "../FunctionTree";
-import NonExpandableFunctionTreeItem from "../../components/NonExpandableFunctionTreeItem";
 import React from "react";
 import State from "../../state";
-import { useContext } from "../../Context/providers/contextProvider";
-import Enzyme, { shallow } from "enzyme";
-
-Enzyme.configure({ adapter: new Adapter() });
-jest.mock("../../Context/providers/contextProvider");
+import { render, screen } from "@testing-library/react";
+import { ContextProvider } from "../../Context/providers/contextProvider";
+import { contextReducer } from "Context/reducers/contextReducer";
 
 test("List nested functions", () => {
   const state = State.init();
@@ -23,16 +19,16 @@ test("List nested functions", () => {
     params: ["user"],
     type: "FUNCTION",
   });
-  useContext.mockReturnValue([state]);
 
-  const wrapper = shallow(<FunctionTree functions={functions} />);
-  const root = wrapper.find(NonExpandableFunctionTreeItem).first();
-  const child1 = root.children().first();
-  const child2 = root.children().at(1);
-  const child3 = child1.children().first();
+  const wrapper = ({ children }) => (
+    <ContextProvider state={state} reducer={contextReducer}>
+      {children}
+    </ContextProvider>
+  );
 
-  expect(root.prop("nodeId")).toEqual("/");
-  expect(child1.prop("nodeId")).toEqual("/users/");
-  expect(child2.prop("nodeId")).toEqual("/getInfo");
-  expect(child3.prop("nodeId")).toEqual("/users/getUser");
+  render(<FunctionTree />, { wrapper });
+
+  screen.getByRole("treeitem", {
+    name: "users fn getInfo ()",
+  });
 });
