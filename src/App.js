@@ -22,8 +22,8 @@ import {
 function App() {
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
-  if (Settings.debug()) {
-    console.debug = {};
+  if (!Settings.debug()) {
+    console.debug = () => {};
   }
 
   React.useEffect(() => {
