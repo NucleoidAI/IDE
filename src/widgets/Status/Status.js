@@ -1,14 +1,15 @@
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import LoopIcon from "@mui/icons-material/Loop";
-import WarningAmberIcon from "@mui/icons-material/WarningAmber";
-import styles from "./styles";
-import useLayout from "../../hooks/useLayout";
-import { Grid, Tooltip, Typography } from "@mui/material";
-import { Doughnut } from "react-chartjs-2"; // eslint-disable-line
 import OpenSandboxButton from "../../components/OpenSandboxButton";
 import OpenSwaggerButton from "../../components/OpenSwaggerButton";
 import Settings from "../../settings";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import styles from "./styles";
+import useLayout from "../../hooks/useLayout";
+import { Doughnut } from "react-chartjs-2/"; // eslint-disable-line
+import { Grid, Tooltip, Typography } from "@mui/material";
+import "chart.js/auto"; // eslint-disable-line
 
 function Status() {
   const [state, dispatch, getStatus] = useLayout();
