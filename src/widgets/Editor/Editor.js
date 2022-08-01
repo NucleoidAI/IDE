@@ -180,11 +180,10 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
     });
 
     setAnnotations([]);
-
-    if (api) {
-      const selected = state.get("pages.api.selected");
+    const selectedApi = state.get("pages.api.selected");
+    if (api && selectedApi) {
       const api = state.get("nucleoid.api");
-      let action = api[selected.path][selected.method]["x-nuc-action"];
+      let action = api[selectedApi.path][selectedApi.method]["x-nuc-action"];
 
       if (checkFunction(action)) {
         const { args, fn } = parser.fn(action);
@@ -201,14 +200,13 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
 
       return;
     }
-
-    if (functions) {
-      const selected = state.get("pages.functions.selected");
+    const selectedFunction = state.get("pages.functions.selected");
+    if (functions && selectedFunction) {
       const functions = state.get("nucleoid.functions");
 
-      lint(functions.find((item) => item.path === selected).definition);
+      lint(functions.find((item) => item.path === selectedFunction).definition);
 
-      setCode(functions.find((item) => item.path === selected).definition);
+      setCode(functions.find((item) => item.path === selectedFunction).definition);
       return;
     }
 
