@@ -206,7 +206,9 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
 
       lint(functions.find((item) => item.path === selectedFunction).definition);
 
-      setCode(functions.find((item) => item.path === selectedFunction).definition);
+      setCode(
+        functions.find((item) => item.path === selectedFunction).definition
+      );
       return;
     }
 
