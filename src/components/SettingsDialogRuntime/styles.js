@@ -29,6 +29,24 @@ const styles = {
         color: "gray",
       },
     },
+    "& .MuiInput-root": {
+      "& fieldset": {
+        borderColor: "#282828",
+      },
+      "&:hover fieldset": {
+        borderColor: "#282828",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#bdbdbd",
+      },
+      "& .MuiInputBase-input": {
+        color: "custom.grey",
+      },
+      ".MuiInputBase-input.Mui-disabled": {
+        WebkitTextFillColor: "gray",
+        color: "gray",
+      },
+    },
   },
 };
 

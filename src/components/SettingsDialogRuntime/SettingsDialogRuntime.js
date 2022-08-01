@@ -43,7 +43,7 @@ const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
         <BetweenComponents title={"Name"}>
           <TextField
             value={project.get().name}
-            variant={"outlined"}
+            variant={"standard"}
             size={"small"}
             disabled={true}
             sx={styles.textField}
@@ -57,7 +57,7 @@ const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
             value={description}
             multiline
             row={2}
-            variant={"outlined"}
+            variant={"standard"}
             size={"small"}
             onChange={(e) => handleSetDescription(e.target.value)}
           />
@@ -123,7 +123,7 @@ const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
         <BetweenComponents title={"Url"}>
           <TextField
             size={"small"}
-            variant={"outlined"}
+            variant={"standard"}
             disabled={npx ? false : true}
             value={url}
             sx={styles.textField}
