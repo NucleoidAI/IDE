@@ -180,9 +180,10 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
     });
 
     setAnnotations([]);
-    const selected = state.get("pages.api.selected");
-    const api = state.get("nucleoid.api");
-    if (api && selected) {
+
+    if (api) {
+      const selected = state.get("pages.api.selected");
+      const api = state.get("nucleoid.api");
       let action = api[selected.path][selected.method]["x-nuc-action"];
 
       if (checkFunction(action)) {

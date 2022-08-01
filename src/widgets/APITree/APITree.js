@@ -109,9 +109,8 @@ function APITree() {
   const checkMethodDeletable = () => {
     const { pages, nucleoid } = state;
     const { api } = nucleoid;
-
-    if (pages.api.selected) {
-      const path = pages.api.selected.path;
+    const path = pages.api.selected.path;
+    if (pages.api) {
       return Object.keys(api[path]).length <= 1 ? true : false;
     }
   };
