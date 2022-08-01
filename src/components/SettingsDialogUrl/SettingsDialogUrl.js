@@ -154,7 +154,6 @@ const Section = ({ children, title, description }) => {
           <Typography variant="h6">{title}</Typography>
           <Typography>{description}</Typography>
         </Box>
-        <Divider sx={{ borderColor: "#282828" }} />
       </Box>
       <Box sx={{ p: 2 }}>{children}</Box>
     </Box>
