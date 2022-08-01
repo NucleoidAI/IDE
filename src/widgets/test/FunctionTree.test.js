@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import FunctionTree from "../FunctionTree";
 import React from "react";
 import State from "../../state";
@@ -32,3 +33,4 @@ test("List nested functions", () => {
     name: "users fn getInfo ()",
   });
 });
+/*eslint-enable*/

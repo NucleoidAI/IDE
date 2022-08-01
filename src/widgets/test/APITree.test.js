@@ -1,7 +1,8 @@
+/*eslint-disable*/
 import APITree from "widgets/APITree";
-import { compile, graph } from "widgets/APITree/APITree";
 import React from "react";
 import State from "state";
+import { compile, graph } from "widgets/APITree/APITree";
 import { render, screen } from "@testing-library/react";
 import { ContextProvider } from "Context/providers/contextProvider";
 import { contextReducer } from "Context/reducers/contextReducer";
@@ -46,3 +47,4 @@ test("List nested APIs with ui", () => {
   screen.getByRole("treeitem", { name: "/questions GET" });
   screen.getByRole("treeitem", { name: "/locations GET POST" });
 });
+/*eslint-enable*/
