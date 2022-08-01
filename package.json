@@ -41,17 +41,17 @@
     "react-scripts": "^5.0.1",
     "uuid": "^8.3.2"
   },
-  "overrides": {
-    "react-json-view": {
-      "react": "18.2.0",
-      "react-dom": "^18.2.0"
-    }
-  },
   "devDependencies": {
     "eslint": "^8.17.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-react-app": "^7.0.1",
     "prettier": "^2.6.2"
+  },
+  "overrides": {
+    "react-json-view": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    }
   },
   "jest": {
     "resetMocks": false
