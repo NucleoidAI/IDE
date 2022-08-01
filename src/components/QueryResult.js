@@ -1,9 +1,7 @@
 import "./QueryResult.css";
-//import ReactJsonView from "react-json-view";
+import ReactJsonView from "react-json-view";
 
 function QueryResult({ json }) {
-  return "hello";
-  /*
   return (
     <ReactJsonView
       src={json}
@@ -16,7 +14,6 @@ function QueryResult({ json }) {
       iconStyle={"circle"}
     />
   );
-  */
 }
 
 export default QueryResult;
