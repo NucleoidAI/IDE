@@ -51,6 +51,9 @@
     "react-json-view": {
       "react": "$react",
       "react-dom": "$react-dom"
+    },
+    "flux": {
+      "react": "$react"
     }
   },
   "jest": {
