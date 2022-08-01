@@ -1,5 +1,5 @@
 import SettingsDialogDev from "../SettingsDialogDev";
-import SettingsDialogUrl from "../SettingsDialogUrl";
+import SettingsDialogUrl from "../SettingsDialogRuntime";
 
 import TabPanel from "../TabPanel";
 import styles from "./styles";

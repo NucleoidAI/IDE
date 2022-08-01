@@ -3,7 +3,7 @@ import project from "../../project";
 import styles from "./styles";
 import { Box, Switch, TextField, Typography } from "@mui/material";
 
-const SettingsDialogUrl = React.forwardRef((props, urlRef) => {
+const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
   const [url, setUrl] = React.useState(urlRef.current.url);
   const [npx, setNpx] = React.useState(
     urlRef.current.runtime === "npx" ? true : false
@@ -175,4 +175,4 @@ const BetweenComponents = ({ children, title }) => {
   );
 };
 
-export default SettingsDialogUrl;
+export default SettingsDialogRuntime;
