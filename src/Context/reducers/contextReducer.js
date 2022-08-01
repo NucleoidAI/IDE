@@ -232,8 +232,8 @@ function contextReducer(state, { type, payload }) {
     default:
   }
 
+  console.debug("contextReducer", state);
   project.updateCurrent(state);
-
   return state;
 }
 

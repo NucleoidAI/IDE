@@ -14,7 +14,7 @@ const StarUsOnGithub = ({ color, clickEvent, source }) => {
         color: color || "white",
       }}
       onClick={() => {
-        clickEvent();
+        clickEvent && clickEvent();
         window.open("https://github.com/NucleoidJS/Nucleoid", "_blank");
         gtag("event", "click_github");
       }}

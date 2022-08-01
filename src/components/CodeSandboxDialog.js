@@ -50,7 +50,6 @@ export default function CodeSandboxDialog({ open, handleCloseSandboxDialog }) {
       open={open === undefined ? false : open}
       onClose={handleCloseSandboxDialog}
       TransitionComponent={Transition}
-      sx={{ zIndex: 9999999999999 }}
       aria-describedby="alert-dialog-slide-description"
     >
       <AppBar
@@ -118,7 +117,7 @@ export default function CodeSandboxDialog({ open, handleCloseSandboxDialog }) {
               >
                 <Switch
                   value={npx}
-                  color="default"
+                  color="secondary"
                   onChange={(e) => {
                     setNpx(e.target.checked);
                     setAlert(e.target.checked);
