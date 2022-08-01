@@ -1,7 +1,7 @@
 import React from "react";
 import project from "../../project";
 import styles from "./styles";
-import { Box, Divider, Switch, TextField, Typography } from "@mui/material";
+import { Box, Switch, TextField, Typography } from "@mui/material";
 
 const SettingsDialogUrl = React.forwardRef((props, urlRef) => {
   const [url, setUrl] = React.useState(urlRef.current.url);
