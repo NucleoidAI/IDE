@@ -45,7 +45,7 @@ const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
             value={project.get().name}
             variant={"outlined"}
             size={"small"}
-            disabled={"true"}
+            disabled={true}
             sx={styles.textField}
           />
         </BetweenComponents>
