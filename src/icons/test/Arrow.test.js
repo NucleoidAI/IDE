@@ -1,20 +1,17 @@
-import Adapter from "enzyme-adapter-react-16";
 import ArrowIcon from "../Arrow";
 import React from "react";
-import Enzyme, { shallow } from "enzyme";
-
-Enzyme.configure({ adapter: new Adapter() });
+import { render, screen } from "@testing-library/react";
 
 test("Create arrows with direction", () => {
-  const up = shallow(<ArrowIcon up />);
-  expect(up.name()).toEqual("Memo(ForwardRef(KeyboardArrowUpIcon))");
+  render(<ArrowIcon up />);
+  screen.getByTestId(/KeyboardArrowUpIcon/i);
 
-  const down = shallow(<ArrowIcon down />);
-  expect(down.name()).toEqual("Memo(ForwardRef(KeyboardArrowDownIcon))");
+  render(<ArrowIcon down />);
+  screen.getByTestId(/KeyboardArrowDownIcon/i);
 
-  const right = shallow(<ArrowIcon right />);
-  expect(right.name()).toEqual("Memo(ForwardRef(KeyboardArrowRightIcon))");
+  render(<ArrowIcon left />);
+  screen.getByTestId(/KeyboardArrowLeftIcon/i);
 
-  const left = shallow(<ArrowIcon left />);
-  expect(left.name()).toEqual("Memo(ForwardRef(KeyboardArrowLeftIcon))");
+  render(<ArrowIcon right />);
+  screen.getByTestId(/KeyboardArrowRightIcon/i);
 });

@@ -1,40 +1,37 @@
-import Adapter from "enzyme-adapter-react-16";
 import SchemaArray from "../SchemaArray";
 import SchemaObject from "../SchemaObject";
 import SchemaProperty from "../SchemaProperty";
 import { compile } from "../Schema";
 import { compile as compileSchema } from "../../widgets/APIDialog/Context";
 import { compile as mapSchema } from "../../utils/Map";
-import Enzyme, { shallow } from "enzyme";
-
-Enzyme.configure({ adapter: new Adapter() });
 
 test("List properties of schema", () => {
   const schema = {
     type: "object",
     properties: {
       id: {
-        type: "integer",
-      },
-      text: {
         type: "string",
+      },
+      age: {
+        type: "integer",
       },
     },
   };
 
   const compiledSchema = compileSchema(schema);
   const map = mapSchema(compiledSchema);
-  const root = shallow(compile(true, map, compiledSchema, null, []));
+  const root = compile(true, map, compiledSchema, null, ["/"], null);
 
-  const child1 = root.children().first();
-  expect(child1.type()).toEqual(SchemaProperty);
-  expect(child1.prop("name")).toEqual("id");
-  expect(child1.prop("type")).toEqual("integer");
+  expect(root.type).toEqual(SchemaObject);
 
-  const child2 = root.children().at(1);
-  expect(child2.type()).toEqual(SchemaProperty);
-  expect(child2.prop("name")).toEqual("text");
-  expect(child2.prop("type")).toEqual("string");
+  const firstChild = root.props.children;
+  expect(firstChild[0].type).toEqual(SchemaProperty);
+  expect(firstChild[0].props["name"]).toEqual("id");
+  expect(firstChild[0].props["type"]).toEqual("string");
+
+  expect(firstChild[1].type).toEqual(SchemaProperty);
+  expect(firstChild[1].props["name"]).toEqual("age");
+  expect(firstChild[1].props["type"]).toEqual("integer");
 });
 
 test("List array as property of schema", () => {
@@ -52,12 +49,18 @@ test("List array as property of schema", () => {
 
   const compiledSchema = compileSchema(schema);
   const map = mapSchema(compiledSchema);
-  const root = shallow(compile(true, map, compiledSchema, null, []));
+  const root = compile(true, map, compiledSchema, null, ["/"], null);
 
-  const child = root.children().first();
-  expect(child.type()).toEqual(SchemaArray);
-  expect(child.prop("name")).toEqual("list");
-  expect(child.prop("type")).toEqual("array");
+  expect(root.type).toEqual(SchemaObject);
+
+  const firstChild = root.props.children[0];
+  expect(firstChild.type).toEqual(SchemaArray);
+  expect(firstChild.props["name"]).toEqual("list");
+  expect(firstChild.props["type"]).toEqual("array");
+
+  const secondChild = firstChild.props.children[0];
+  expect(secondChild.type).toEqual(SchemaProperty);
+  expect(secondChild.props["type"]).toEqual("integer");
 });
 
 test("List nested object in schema", () => {
@@ -77,13 +80,16 @@ test("List nested object in schema", () => {
 
   const compiledSchema = compileSchema(schema);
   const map = mapSchema(compiledSchema);
-  const root = shallow(compile(true, map, compiledSchema, null, []));
+  const root = compile(true, map, compiledSchema, null, ["/"], null);
 
-  const child = root.children().first();
-  expect(child.type()).toEqual(SchemaObject);
-  //expect(child.prop("name")).toEqual("user");
-  // TODO refactor test
-  const nested = child.children().first();
-  expect(nested.prop("name")).toEqual("id");
-  expect(nested.prop("type")).toEqual("integer");
+  expect(root.type).toEqual(SchemaObject);
+
+  const firstChild = root.props.children[0];
+  expect(firstChild.type).toEqual(SchemaObject);
+  expect(firstChild.props["name"]).toEqual("user");
+
+  const secondChild = firstChild.props.children[0];
+  expect(secondChild.type).toEqual(SchemaProperty);
+  expect(secondChild.props["name"]).toEqual("id");
+  expect(secondChild.props["type"]).toEqual("integer");
 });

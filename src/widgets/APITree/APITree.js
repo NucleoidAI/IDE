@@ -36,10 +36,7 @@ function APITree() {
 
   const [state, dispatch] = useContext();
   const api = state.get("nucleoid.api");
-  const list = Object.keys(api).map((key) => ({
-    path: key,
-    methods: Object.keys(api[key]),
-  }));
+  const grph = graph(api);
 
   const expandList = [];
 
@@ -112,8 +109,10 @@ function APITree() {
   const checkMethodDeletable = () => {
     const { pages, nucleoid } = state;
     const { api } = nucleoid;
-    const path = pages.api.selected.path;
-    if (pages.api) {
+
+    if (pages.api.selected) {
+      const path = pages.api.selected.path;
+      console.log(path);
       return Object.keys(api[path]).length <= 1 ? true : false;
     }
   };
@@ -126,25 +125,6 @@ function APITree() {
     handleExpandClick();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected, state]);
-
-  const graph = {};
-
-  list.forEach((each) => {
-    const parts = each.path.substring(1).split("/");
-    const label = "/" + parts.pop();
-    const parent = "/" + parts.join("/");
-
-    const node = {
-      label,
-      path: each.path,
-      resources: [],
-      methods: each.methods,
-    };
-
-    if (graph[parent]) graph[parent].resources.push(node);
-
-    graph[each.path] = node;
-  });
 
   return (
     <Card sx={styles.apiTree}>
@@ -161,7 +141,7 @@ function APITree() {
           selected={selected}
         >
           {compile(
-            [graph["/"]],
+            [grph["/"]],
             handleContextMenu,
             expandList,
             rightClickMethod
@@ -206,7 +186,40 @@ function APITree() {
   );
 }
 
-const compile = (list, handleContextMenu, expandList, rightClickMethod) =>
+export const graph = (api) => {
+  const list = Object.keys(api).map((key) => ({
+    path: key,
+    methods: Object.keys(api[key]),
+  }));
+
+  const graph = {};
+
+  list.forEach((each) => {
+    const parts = each.path.substring(1).split("/");
+    const label = "/" + parts.pop();
+    const parent = "/" + parts.join("/");
+
+    const node = {
+      label,
+      path: each.path,
+      resources: [],
+      methods: each.methods,
+    };
+
+    if (graph[parent]) graph[parent].resources.push(node);
+
+    graph[each.path] = node;
+  });
+
+  return graph;
+};
+
+export const compile = (
+  list,
+  handleContextMenu,
+  expandList,
+  rightClickMethod
+) =>
   list.map((api) => {
     let children = undefined;
     let resourceHash;
