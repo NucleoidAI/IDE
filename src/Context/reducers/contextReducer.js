@@ -1,3 +1,4 @@
+import Event from "Event";
 import State from "../../state";
 import project from "../../project";
 import { v4 as uuid } from "uuid";
@@ -231,6 +232,8 @@ function contextReducer(state, { type, payload }) {
 
     default:
   }
+
+  Event.publish("stateChanged", { type: "PUSH_ERROR" });
 
   console.debug("contextReducer", state);
   project.updateCurrent(state);

@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import ContextMap from "ContextMap.js";
 import FolderIcon from "@mui/icons-material/Folder";
 import Menu from "../../components/Menu";
 import Onboard from "../../components/Onboard";
@@ -35,6 +36,7 @@ function IDE() {
       </Box>
       {Settings.landing().level < 5 && <Onboard />}
       <ProcessDrawer />
+      <ContextMap />
     </Box>
   );
 }

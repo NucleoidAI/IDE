@@ -47,6 +47,11 @@ function layoutReducer(state, { type, payload }) {
       return { ...tmpState };
     }
 
+    case "ERROR_MESSAGE": {
+      console.debug("error message");
+      break;
+    }
+
     default:
   }
 
