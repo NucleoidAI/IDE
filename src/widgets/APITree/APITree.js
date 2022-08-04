@@ -112,7 +112,6 @@ function APITree() {
 
     if (pages.api.selected) {
       const path = pages.api.selected.path;
-      console.log(path);
       return Object.keys(api[path]).length <= 1 ? true : false;
     }
   };
