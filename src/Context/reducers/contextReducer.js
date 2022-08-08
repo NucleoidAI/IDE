@@ -234,6 +234,7 @@ function contextReducer(state, { type, payload }) {
   }
 
   Event.publish("stateChanged", { type: "PUSH_ERROR" });
+  Event.publish("stateChanged", { type: "COMPILE_CONTEXT" });
 
   console.debug("contextReducer", state);
   project.updateCurrent(state);

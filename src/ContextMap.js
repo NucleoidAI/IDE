@@ -1,3 +1,4 @@
+import Compile from "compile";
 import Event from "Event";
 import React from "react";
 
@@ -6,22 +7,18 @@ import { useLayoutContext } from "Context/providers/layoutContextProvider";
 
 const ContextMap = () => {
   const [, dispatchLayout] = useLayoutContext();
-  const [, dispatchContext] = useContext();
+  const [context] = useContext();
 
   React.useEffect(() => {
     Event.subscribe("stateChanged", (payload) => {
       switch (payload.type) {
         case "PUSH_ERROR": {
-          setTimeout(() => {
-            dispatchLayout({ type: "ERROR_MESSAGE" });
-          }, 0);
+          dispatchLayout({ type: "ERROR_MESSAGE" });
           break;
         }
 
-        case "TEST_CONTEXT": {
-          setTimeout(() => {
-            dispatchContext({ type: "dispatchContext" });
-          }, 0);
+        case "COMPILE_CONTEXT": {
+          Compile(context);
           break;
         }
 
@@ -29,7 +26,9 @@ const ContextMap = () => {
           break;
       }
     });
-  }, [dispatchLayout, dispatchContext]);
+
+    //eslint-disable-next-line
+  }, []);
 
   return null;
 };

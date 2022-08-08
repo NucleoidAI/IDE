@@ -20,10 +20,11 @@ const subscribe = (eventType, callback) => {
 
 const publish = (eventType, arg) => {
   if (!subscriptions[eventType]) return;
-
-  Object.keys(subscriptions[eventType]).forEach((key) =>
-    subscriptions[eventType][key](arg)
-  );
+  Promise.resolve().then(() => {
+    Object.keys(subscriptions[eventType]).forEach((key) =>
+      subscriptions[eventType][key](arg)
+    );
+  });
 };
 
 const Event = {
