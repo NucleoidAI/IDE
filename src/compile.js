@@ -1,5 +1,6 @@
 import linter from "linter";
 import rules from "widgets/Editor/rules";
+import * as ts from "typescript";
 
 const lint = (code) => {
   const options = {
@@ -21,13 +22,35 @@ const Compile = (context) => {
   //let file = "";
   const nuc = context.get("nucleoid");
 
+  const option = {
+    compilerOptions: {
+      strict: true,
+      noImplicitAny: true,
+      strictNullChecks: true,
+      strictFunctionTypes: true,
+      strictPropertyInitialization: true,
+      strictBindCallApply: true,
+      noImplicitThis: true,
+      noImplicitReturns: true,
+      alwaysStrict: true,
+      esModuleInterop: true,
+      declaration: true,
+      experimentalDecorators: true,
+      emitDecoratorMetadata: true,
+      target: "ES2017",
+      jsx: "react",
+      module: "ESNext",
+      moduleResolution: "node",
+    },
+  };
+
   Object.keys(nuc.api).forEach((item) => {
     Object.keys(nuc.api[item]).forEach((method) => {
-      console.log(nuc.api[item][method]["x-nuc-action"]);
+      console.log(
+        ts.transpileModule(nuc.api[item][method]["x-nuc-action"], option)
+      );
     });
   });
-
-  console.debug(context);
 };
 
 export default Compile;
