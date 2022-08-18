@@ -26,15 +26,11 @@ let lastCall;
 const Compile = (context) => {
   const nuc = context.get("nucleoid");
 
-  if (lastCall !== null) {
-    clearInterval(lastCall);
+  if (tsCompiler.isInit()) {
+    console.log(tsCompiler.compile(nuc));
+  } else {
+    tsCompiler.init(nuc).then((item) => {});
   }
-
-//  lastCall = setTimeout(() => {
-    tsCompiler.compile(nuc).then((item) => {
-      console.log(item);
-    });
- // }, 1000);
 };
 
 export default Compile;

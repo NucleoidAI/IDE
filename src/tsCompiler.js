@@ -17,11 +17,69 @@ const config = {
   allowJs: true,
 };
 
-const shouldCache = true;
+const tsCompiler = {
+  fsMap: null,
+  program: null,
+  isInit() {
+    if (!this.fsMap || !this.program) {
+      return false;
+    } else {
+      return true;
+    }
+  },
+  async init(files) {
+    if (!files) {
+      throw new Error("files is required");
+    }
 
-//let fsMap = null;
+    if (this.isInit()) {
+      throw new Error("tsCompiler is already initialized");
+    }
 
-const map = (files) => {
+    const shouldCache = true;
+
+    const fsMap = await createDefaultMapFromCDN(
+      config,
+      typescript.version,
+      shouldCache,
+      typescript
+    );
+
+    contextToMap(files).forEach((item) => fsMap.set(item.key, item.value));
+
+    const system = createSystem(fsMap);
+    const host = createVirtualCompilerHost(system, config, typescript);
+
+    const program = typescript.createProgram({
+      rootNames: [...fsMap.keys()].filter((item) => !item.includes("lib")),
+      options: config,
+      host: host.compilerHost,
+    });
+
+    program.emit();
+    this.fsMap = fsMap;
+    this.program = program;
+
+    return true;
+  },
+
+  compile(files) {
+    contextToMap(files).forEach((item) => this.fsMap.set(item.key, item.value));
+
+    const emitResult = this.program.emit();
+
+    const allDiagnostics = typescript
+      .getPreEmitDiagnostics(this.program)
+      .concat(emitResult.diagnostics);
+
+    return {
+      fsMap: this.fsMap,
+      errors: allDiagnostics,
+    };
+  },
+};
+
+export const contextToMap = (files) => {
   const arr = [];
   const fileNames = [];
   fileNames.push("//@nuc-imports\n");
@@ -46,7 +104,6 @@ const map = (files) => {
 
   Object.keys(files.api).forEach((item) => {
     Object.keys(files.api[item]).forEach((method) => {
-      //console.log(files.api[item][method]["x-nuc-action"]);
       arr.push({
         key: item + "." + method + ".ts",
         value:
@@ -56,41 +113,6 @@ const map = (files) => {
   });
 
   return arr;
-};
-
-const tsCompiler = {
-  compile: async (files) => {
-    // if (!fsMap) {
-    const fsMap = await createDefaultMapFromCDN(
-      config,
-      typescript.version,
-      shouldCache,
-      typescript
-    );
-    // }
-
-    map(files).forEach((item) => fsMap.set(item.key, item.value));
-
-    const system = createSystem(fsMap);
-    const host = createVirtualCompilerHost(system, config, typescript);
-
-    const program = typescript.createProgram({
-      rootNames: [...fsMap.keys()].filter((item) => !item.includes("lib")),
-      options: config,
-      host: host.compilerHost,
-    });
-
-    const emitResult = program.emit();
-
-    const allDiagnostics = typescript
-      .getPreEmitDiagnostics(program)
-      .concat(emitResult.diagnostics);
-
-    return {
-      fsMap: fsMap,
-      errors: allDiagnostics,
-    };
-  },
 };
 
 export const parser = {
