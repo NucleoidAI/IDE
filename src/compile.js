@@ -1,13 +1,15 @@
+import tsCompiler, { parser } from "tsCompiler";
+
+/*
 import linter from "linter";
 import rules from "widgets/Editor/rules";
-import * as ts from "typescript";
-
 const lint = (code) => {
   const options = {
     env: {
       es6: true,
       node: true,
     },
+    parser: "@typescript-eslint/parser",
     parserOptions: {
       ecmaVersion: 2018,
       sourceType: "module",
@@ -17,40 +19,22 @@ const lint = (code) => {
 
   return linter.verify(code, options);
 };
+*/
+
+let lastCall;
 
 const Compile = (context) => {
-  //let file = "";
   const nuc = context.get("nucleoid");
 
-  const option = {
-    compilerOptions: {
-      strict: true,
-      noImplicitAny: true,
-      strictNullChecks: true,
-      strictFunctionTypes: true,
-      strictPropertyInitialization: true,
-      strictBindCallApply: true,
-      noImplicitThis: true,
-      noImplicitReturns: true,
-      alwaysStrict: true,
-      esModuleInterop: true,
-      declaration: true,
-      experimentalDecorators: true,
-      emitDecoratorMetadata: true,
-      target: "ES2017",
-      jsx: "react",
-      module: "ESNext",
-      moduleResolution: "node",
-    },
-  };
+  if (lastCall !== null) {
+    clearInterval(lastCall);
+  }
 
-  Object.keys(nuc.api).forEach((item) => {
-    Object.keys(nuc.api[item]).forEach((method) => {
-      console.log(
-        ts.transpileModule(nuc.api[item][method]["x-nuc-action"], option)
-      );
+//  lastCall = setTimeout(() => {
+    tsCompiler.compile(nuc).then((item) => {
+      console.log(item);
     });
-  });
+ // }, 1000);
 };
 
 export default Compile;
