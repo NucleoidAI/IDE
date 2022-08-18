@@ -27,9 +27,13 @@ const Compile = (context) => {
   const nuc = context.get("nucleoid");
 
   if (tsCompiler.isInit()) {
-    console.log(tsCompiler.compile(nuc));
+    tsCompiler.compile(nuc);
+    console.log([...tsCompiler.fsMap]);
+    console.log(tsCompiler.errors);
   } else {
-    tsCompiler.init(nuc).then((item) => {});
+    tsCompiler.init(nuc).then((item) => {
+      console.log("inited");
+    });
   }
 };
 

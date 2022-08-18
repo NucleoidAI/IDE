@@ -20,8 +20,11 @@ const config = {
 const tsCompiler = {
   fsMap: null,
   program: null,
+  system: null,
+  host: null,
+  errors: null,
   isInit() {
-    if (!this.fsMap || !this.program) {
+    if (!this.fsMap) {
       return false;
     } else {
       return true;
@@ -50,32 +53,41 @@ const tsCompiler = {
     const system = createSystem(fsMap);
     const host = createVirtualCompilerHost(system, config, typescript);
 
-    const program = typescript.createProgram({
-      rootNames: [...fsMap.keys()].filter((item) => !item.includes("lib")),
-      options: config,
-      host: host.compilerHost,
-    });
-
-    program.emit();
+    this.host = host;
     this.fsMap = fsMap;
-    this.program = program;
 
     return true;
   },
 
   compile(files) {
+    let filteredMap = [...this.fsMap.keys()].filter(
+      (item) => !item.includes("lib")
+    );
+
+    filteredMap.forEach((item) => {
+      console.log(item);
+      this.fsMap.delete(item);
+    });
+
     contextToMap(files).forEach((item) => this.fsMap.set(item.key, item.value));
 
-    const emitResult = this.program.emit();
+    filteredMap = [...this.fsMap.keys()].filter(
+      (item) => !item.includes("lib")
+    );
+
+    const program = typescript.createProgram({
+      rootNames: filteredMap,
+      options: config,
+      host: this.host.compilerHost,
+    });
+
+    const emitResult = program.emit();
 
     const allDiagnostics = typescript
-      .getPreEmitDiagnostics(this.program)
+      .getPreEmitDiagnostics(program)
       .concat(emitResult.diagnostics);
 
-    return {
-      fsMap: this.fsMap,
-      errors: allDiagnostics,
-    };
+    this.errors = allDiagnostics;
   },
 };
 
