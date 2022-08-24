@@ -5,8 +5,6 @@ import {
   createVirtualCompilerHost,
 } from "@typescript/vfs";
 
-import { parser as nucParser } from "react-nucleoid";
-
 const config = {
   target: typescript.ScriptTarget.ES2015,
   module: typescript.ModuleKind.ESNext,
@@ -18,18 +16,15 @@ const config = {
   alwaysAddExport: false,
   preserveValueImports: false,
   removeComments: false,
-
   allowJs: true,
 };
 
+let fsMap;
+let program;
+
 const tsCompiler = {
-  fsMap: null,
-  program: null,
-  system: null,
-  host: null,
-  errors: null,
   isInit() {
-    if (!this.fsMap) {
+    if (!fsMap) {
       return false;
     } else {
       return true;
@@ -46,7 +41,7 @@ const tsCompiler = {
 
     const shouldCache = true;
 
-    const fsMap = await createDefaultMapFromCDN(
+    fsMap = await createDefaultMapFromCDN(
       config,
       typescript.version,
       shouldCache,
@@ -57,41 +52,31 @@ const tsCompiler = {
 
     const system = createSystem(fsMap);
     const host = createVirtualCompilerHost(system, config, typescript);
+    const filteredMap = [...fsMap.keys()].filter(
+      (item) => !item.includes("lib")
+    );
 
-    this.host = host;
-    this.fsMap = fsMap;
+    program = typescript.createProgram({
+      rootNames: filteredMap,
+      options: config,
+      host: host.compilerHost,
+    });
 
     return true;
   },
 
   compile(files) {
-    let filteredMap = [...this.fsMap.keys()].filter(
+    contextToMap(files).forEach((item) => fsMap.set(item.key, item.value));
+    const filteredMap = [...fsMap.keys()].filter(
       (item) => !item.includes("lib")
     );
-
-    filteredMap.forEach((item) => {
-      this.fsMap.delete(item);
-    });
-
-    contextToMap(files).forEach((item) => this.fsMap.set(item.key, item.value));
-
-    filteredMap = [...this.fsMap.keys()].filter(
-      (item) => !item.includes("lib")
-    );
-
-    const program = typescript.createProgram({
-      rootNames: filteredMap,
-      options: config,
-      host: this.host.compilerHost,
-    });
-
     const emitResult = program.emit();
 
     const allDiagnostics = typescript
       .getPreEmitDiagnostics(program)
       .concat(emitResult.diagnostics);
 
-    this.errors = allDiagnostics;
+    return [allDiagnostics, [...fsMap.keys()]];
   },
 };
 
