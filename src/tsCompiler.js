@@ -56,7 +56,7 @@ const tsCompiler = {
       (item) => !item.includes("lib")
     );
 
-    program = typescript.createProgram({
+    program = typescript.createIncrementalProgram({
       rootNames: filteredMap,
       options: config,
       host: host.compilerHost,
@@ -76,7 +76,7 @@ const tsCompiler = {
       .getPreEmitDiagnostics(program)
       .concat(emitResult.diagnostics);
 
-    return [allDiagnostics, [...fsMap.keys()]];
+    return [allDiagnostics, fsMap];
   },
 };
 
