@@ -48,8 +48,8 @@ function App() {
                 <Route path={"/functions"} element={<Functions />} />
                 <Route path={"/query"} element={<Query />} />
                 <Route path={"/logs"} element={<Logs />} />
-                <Route path={"/dev"} element={<Dev />} />
               </Route>
+              <Route path={"/dev"} element={<Dev />} />
               <Route path={"/login"} element={<Login />} />
             </Routes>
           </BrowserRouter>
