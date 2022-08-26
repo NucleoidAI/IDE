@@ -5,7 +5,6 @@ import GlobalStoreProvider from "./Context/GlobalStoreProvider";
 import IDE from "./layouts/IDE";
 import Login from "./pages/ide/login";
 import Logs from "./pages/ide/Logs";
-import Mobile from "./pages/ide/Mobile";
 import Query from "./pages/ide/Query";
 import React from "react";
 import Settings from "./settings";
@@ -16,12 +15,9 @@ import {
   CssBaseline,
   StyledEngineProvider,
   ThemeProvider,
-  useMediaQuery,
 } from "@mui/material";
 
 function App() {
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
-
   if (!Settings.debug()) {
     console.debug = () => {};
   }
@@ -39,8 +35,6 @@ function App() {
     }, delay);
   }, []);
 
-  if (matchDownSM) return <Mobile />;
-
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
@@ -54,9 +48,9 @@ function App() {
                 <Route path={"/functions"} element={<Functions />} />
                 <Route path={"/query"} element={<Query />} />
                 <Route path={"/logs"} element={<Logs />} />
-                <Route path={"/dev"} element={<Dev />} />
-                <Route path={"/login"} element={<Login />} />
               </Route>
+              <Route path={"/dev"} element={<Dev />} />
+              <Route path={"/login"} element={<Login />} />
             </Routes>
           </BrowserRouter>
         </GlobalStoreProvider>
