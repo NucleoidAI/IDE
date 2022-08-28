@@ -25,16 +25,8 @@ let lastCall;
 
 const Compile = (context) => {
   const nuc = context.get("nucleoid");
-
-  if (tsCompiler.isInit()) {
-    tsCompiler.compile(nuc);
-    console.log([...tsCompiler.fsMap]);
-    console.log(tsCompiler.errors);
-  } else {
-    tsCompiler.init(nuc).then((item) => {
-      console.log("inited");
-    });
-  }
+  const result = tsCompiler.compile(nuc);
+  console.log(result);
 };
 
 export default Compile;

@@ -1,13 +1,8 @@
 import typescript from "typescript";
-import {
-  createDefaultMapFromCDN,
-  createSystem,
-  createVirtualCompilerHost,
-} from "@typescript/vfs";
+import vfs from "./vfs";
 
-import { parser as nucParser } from "react-nucleoid";
-
-const config = {
+const options = {
+  incremental: true,
   target: typescript.ScriptTarget.ES2015,
   module: typescript.ModuleKind.ESNext,
   strict: false,
@@ -18,80 +13,31 @@ const config = {
   alwaysAddExport: false,
   preserveValueImports: false,
   removeComments: false,
-
   allowJs: true,
+  outDir: "/build",
+  tsBuildInfoFile: "/tsbuildinfo",
 };
 
 const tsCompiler = {
-  fsMap: null,
-  program: null,
-  system: null,
-  host: null,
-  errors: null,
-  isInit() {
-    if (!this.fsMap) {
-      return false;
-    } else {
-      return true;
-    }
-  },
-  async init(files) {
-    if (!files) {
-      throw new Error("files is required");
-    }
-
-    if (this.isInit()) {
-      throw new Error("tsCompiler is already initialized");
-    }
-
-    const shouldCache = true;
-
-    const fsMap = await createDefaultMapFromCDN(
-      config,
-      typescript.version,
-      shouldCache,
-      typescript
-    );
-
-    contextToMap(files).forEach((item) => fsMap.set(item.key, item.value));
-
-    const system = createSystem(fsMap);
-    const host = createVirtualCompilerHost(system, config, typescript);
-
-    this.host = host;
-    this.fsMap = fsMap;
-
-    return true;
-  },
-
   compile(files) {
-    let filteredMap = [...this.fsMap.keys()].filter(
-      (item) => !item.includes("lib")
-    );
+    const fs = contextToMap(files);
 
-    filteredMap.forEach((item) => {
-      this.fsMap.delete(item);
+    fs.forEach((item) => {
+      vfs.add(item.key, item.value);
     });
 
-    contextToMap(files).forEach((item) => this.fsMap.set(item.key, item.value));
+    const host = vfs.host();
 
-    filteredMap = [...this.fsMap.keys()].filter(
-      (item) => !item.includes("lib")
-    );
-
-    const program = typescript.createProgram({
-      rootNames: filteredMap,
-      options: config,
-      host: this.host.compilerHost,
+    const program = typescript.createIncrementalProgram({
+      rootNames: fs.map((file) => file.key),
+      options,
+      host,
     });
 
     const emitResult = program.emit();
-
-    const allDiagnostics = typescript
+    return typescript
       .getPreEmitDiagnostics(program)
       .concat(emitResult.diagnostics);
-
-    this.errors = allDiagnostics;
   },
 };
 

@@ -18,8 +18,10 @@ import {
   ThemeProvider,
   useMediaQuery,
 } from "@mui/material";
+import vfs from "./vfs";
 
 function App() {
+  vfs.init();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   if (!Settings.debug()) {
