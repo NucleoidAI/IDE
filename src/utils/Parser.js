@@ -1,47 +1,18 @@
-import typescript from "typescript";
-import vfs from "./vfs";
+const parser = {
+  result: null,
+  parse(code) {
+    this.result = code.split(/\/\/ @nuc-.*/g).filter((item) => item !== "");
 
-const options = {
-  incremental: true,
-  target: typescript.ScriptTarget.ES2015,
-  module: typescript.ModuleKind.ESNext,
-  strict: false,
-  alwaysStrict: false,
-  allowSyntheticDefaultImports: false,
-  noImplicitAny: false,
-  isBrowserCode: true,
-  alwaysAddExport: false,
-  preserveValueImports: false,
-  removeComments: false,
-  allowJs: true,
-  outDir: "/build",
-  tsBuildInfoFile: "/tsbuildinfo",
-};
+    return this;
+  },
+  action() {
+    this.result = this.result.find((item) => item.includes("function action"));
 
-const tsCompiler = {
-  compile(files) {
-    const fs = contextToMap(files);
-
-    fs.forEach((item) => {
-      vfs.add(item.key, item.value);
-    });
-
-    const host = vfs.host();
-
-    const program = typescript.createIncrementalProgram({
-      rootNames: fs.map((file) => file.key),
-      options,
-      host,
-    });
-
-    const emitResult = program.emit();
-    return typescript
-      .getPreEmitDiagnostics(program)
-      .concat(emitResult.diagnostics);
+    return this.result;
   },
 };
 
-export const contextToMap = (files) => {
+const contextToMap = (files) => {
   const arr = [];
   const fileNames = [];
   fileNames.push("// @nuc-imports\n");
@@ -84,24 +55,10 @@ export const contextToMap = (files) => {
   return arr;
 };
 
-export const parser = {
-  result: null,
-  parse(code) {
-    this.result = code.split(/\/\/ @nuc-.*/g).filter((item) => item !== "");
-
-    return this;
-  },
-  action() {
-    this.result = this.result.find((item) => item.includes("function action"));
-
-    return this.result;
-  },
-};
-
-export const mapToContext = (fsMap, context) => {
+const mapToContext = (fsMap, context) => {
   const stringifyContext = JSON.stringify(context);
   const tmpContext = JSON.parse(stringifyContext);
-  const map = [...tsCompiler.fsMap].filter((item) => item[0].includes(".js"));
+  const map = [...fsMap].filter((item) => item[0].includes(".js"));
 
   map.forEach((item) => {
     if (item[0].includes("nuc-classes")) {
@@ -124,4 +81,4 @@ export const mapToContext = (fsMap, context) => {
   return tmpContext;
 };
 
-export default tsCompiler;
+export { parser, mapToContext, contextToMap };
