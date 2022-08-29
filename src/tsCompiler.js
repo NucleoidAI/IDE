@@ -1,11 +1,8 @@
 import typescript from "typescript";
-import {
-  createDefaultMapFromCDN,
-  createSystem,
-  createVirtualCompilerHost,
-} from "@typescript/vfs";
+import vfs from "./vfs";
 
-const config = {
+const options = {
+  incremental: true,
   target: typescript.ScriptTarget.ES2015,
   module: typescript.ModuleKind.ESNext,
   strict: false,
@@ -17,66 +14,30 @@ const config = {
   preserveValueImports: false,
   removeComments: false,
   allowJs: true,
+  outDir: "/build",
+  tsBuildInfoFile: "/tsbuildinfo",
 };
 
-let fsMap;
-let program;
-
 const tsCompiler = {
-  isInit() {
-    if (!fsMap) {
-      return false;
-    } else {
-      return true;
-    }
-  },
-  async init(files) {
-    if (!files) {
-      throw new Error("files is required");
-    }
+  compile(files) {
+    const fs = contextToMap(files);
 
-    if (this.isInit()) {
-      throw new Error("tsCompiler is already initialized");
-    }
-
-    const shouldCache = true;
-
-    fsMap = await createDefaultMapFromCDN(
-      config,
-      typescript.version,
-      shouldCache,
-      typescript
-    );
-
-    contextToMap(files).forEach((item) => fsMap.set(item.key, item.value));
-
-    const system = createSystem(fsMap);
-    const host = createVirtualCompilerHost(system, config, typescript);
-    const filteredMap = [...fsMap.keys()].filter(
-      (item) => !item.includes("lib")
-    );
-
-    program = typescript.createIncrementalProgram({
-      rootNames: filteredMap,
-      options: config,
-      host: host.compilerHost,
+    fs.forEach((item) => {
+      vfs.add(item.key, item.value);
     });
 
-    return true;
-  },
+    const host = vfs.host();
 
-  compile(files) {
-    contextToMap(files).forEach((item) => fsMap.set(item.key, item.value));
-    const filteredMap = [...fsMap.keys()].filter(
-      (item) => !item.includes("lib")
-    );
+    const program = typescript.createIncrementalProgram({
+      rootNames: fs.map((file) => file.key),
+      options,
+      host,
+    });
+
     const emitResult = program.emit();
-
-    const allDiagnostics = typescript
+    return typescript
       .getPreEmitDiagnostics(program)
       .concat(emitResult.diagnostics);
-
-    return [allDiagnostics, fsMap];
   },
 };
 
