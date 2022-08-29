@@ -18,7 +18,7 @@ fsMap.forEach((key, value) => {
     .replace(/\./g, "_")
     .substring(
       1
-    )} from "!!raw-loader!./dist/typescript/lib.d.ts"; // eslint-disable-line import/no-webpack-loader-syntax\n`;
+    )} from "!!raw-loader!./dist/typescript${value}"; // eslint-disable-line import/no-webpack-loader-syntax\n`;
 });
 
 output += "\nconst fsMap = new Map();\n";
