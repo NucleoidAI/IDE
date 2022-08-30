@@ -97,9 +97,11 @@ function contextReducer(state, { type, payload }) {
 
     case "SET_SELECTED_API":
       {
+        const previousSelection = pages.api.selected;
+
         Event.publish("stateChanged", {
           type: "COMPILE_CONTEXT",
-          files: pages.api.selected,
+          files: previousSelection,
         });
 
         if (payload.method === null) {
