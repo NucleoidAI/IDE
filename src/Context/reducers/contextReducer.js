@@ -87,7 +87,6 @@ function contextReducer(state, { type, payload }) {
       nucleoid.types = types;
     }
 
-    // eslint-disable-next-line no-fallthrough
     case "CLOSE_API_DIALOG":
       pages.api.dialog.open = false;
       break;
@@ -97,14 +96,17 @@ function contextReducer(state, { type, payload }) {
       break;
 
     case "SET_SELECTED_API":
-      if (payload.method === null) {
-        const method = Object.keys(nucleoid.api[payload.path])[0];
-        payload.method = method;
+      {
+        console.log("this");
+        if (payload.method === null) {
+          const method = Object.keys(nucleoid.api[payload.path])[0];
+          payload.method = method;
+        }
+        pages.api.selected = {
+          path: payload.path,
+          method: payload.method,
+        };
       }
-      pages.api.selected = {
-        path: payload.path,
-        method: payload.method,
-      };
       break;
 
     case "SET_SELECTED_FUNCTION":
@@ -118,6 +120,7 @@ function contextReducer(state, { type, payload }) {
       break;
 
     case "DELETE_RESOURCE": {
+      console.log("delete resource");
       const newObj = {};
       // TODO functional programming
       Object.keys(state.nucleoid.api)
