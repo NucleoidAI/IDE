@@ -29,7 +29,10 @@ const add = (path, data) => {
   _host.getSourceFile(path).version = version(path);
 };
 
-const update = () => {};
+const update = ({ key, value }) => {
+  _system.writeFile(key, value);
+  _host.getSourceFile(key).version = version(key);
+};
 
 const remove = () => {};
 

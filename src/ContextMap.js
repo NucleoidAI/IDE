@@ -18,7 +18,7 @@ const ContextMap = () => {
         }
 
         case "COMPILE_CONTEXT": {
-          Compile(context);
+          Compile(context, payload.files);
           break;
         }
 

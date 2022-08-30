@@ -20,14 +20,23 @@ const options = {
   tsBuildInfoFile: "/tsbuildinfo",
 };
 
-const Compile = (context) => {
+const Compile = (context, files) => {
   const nuc = context.get("nucleoid");
 
-  const fs = contextToMap(nuc);
+  let fs = contextToMap(nuc);
 
-  fs.forEach((item) => {
-    vfs.add(item.key, item.value);
-  });
+  if (vfs.fsMap().size <= 18) {
+    fs.forEach((item) => {
+      vfs.add(item.key, item.value);
+    });
+  } else {
+    fs = fs.filter(
+      (item) => item.key === files.path + "." + files.method + ".ts"
+    );
+
+    vfs.update(...fs);
+    //console.log(vfs.fsMap());
+  }
 
   const host = vfs.host();
 

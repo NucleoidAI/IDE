@@ -97,7 +97,11 @@ function contextReducer(state, { type, payload }) {
 
     case "SET_SELECTED_API":
       {
-        console.log("this");
+        Event.publish("stateChanged", {
+          type: "COMPILE_CONTEXT",
+          files: pages.api.selected,
+        });
+
         if (payload.method === null) {
           const method = Object.keys(nucleoid.api[payload.path])[0];
           payload.method = method;
@@ -120,7 +124,6 @@ function contextReducer(state, { type, payload }) {
       break;
 
     case "DELETE_RESOURCE": {
-      console.log("delete resource");
       const newObj = {};
       // TODO functional programming
       Object.keys(state.nucleoid.api)
@@ -167,10 +170,10 @@ function contextReducer(state, { type, payload }) {
       });
     }
 
-    // eslint-disable-next-line no-fallthrough
-    case "CLOSE_FUNCTION_DIALOG":
+    case "CLOSE_FUNCTION_DIALOG": {
       pages.functions.dialog.open = false;
       break;
+    }
 
     case "UPDATE_TYPE": {
       const { id, name, type } = payload;
@@ -235,9 +238,6 @@ function contextReducer(state, { type, payload }) {
 
     default:
   }
-
-  Event.publish("stateChanged", { type: "PUSH_ERROR" });
-  Event.publish("stateChanged", { type: "COMPILE_CONTEXT" });
 
   console.debug("contextReducer", state);
   project.updateCurrent(state);

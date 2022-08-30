@@ -23,7 +23,6 @@ import Event from "Event";
 
 function App() {
   vfs.init();
-  Event.publish("stateChanged", { type: "COMPILE_CONTEXT" });
 
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
