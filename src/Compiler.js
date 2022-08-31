@@ -1,7 +1,7 @@
 import typescript from "typescript";
 import vfs from "vfs";
 
-import { parser, contextToMap, mapToContext } from "utils/Parser";
+import { contextToMap, mapToContext, parser } from "utils/Parser";
 
 const options = {
   incremental: true,
@@ -20,7 +20,7 @@ const options = {
   tsBuildInfoFile: "/tsbuildinfo",
 };
 
-const Compile = (context, files) => {
+const compile = (context, files) => {
   const nuc = context.get("nucleoid");
 
   let fs = contextToMap(nuc);
@@ -55,4 +55,4 @@ const Compile = (context, files) => {
   console.log(errors);
 };
 
-export default Compile;
+export { compile };

@@ -1,5 +1,6 @@
 import API from "./pages/ide/API";
 import Dev from "./pages/Dev";
+import EventProvider from "./EventProvider";
 import Functions from "./pages/ide/Functions";
 import GlobalStoreProvider from "./Context/GlobalStoreProvider";
 import IDE from "./layouts/IDE";
@@ -10,7 +11,7 @@ import Query from "./pages/ide/Query";
 import React from "react";
 import Settings from "./settings";
 import theme from "./theme";
-
+import vfs from "./vfs";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import {
   CssBaseline,
@@ -18,12 +19,9 @@ import {
   ThemeProvider,
   useMediaQuery,
 } from "@mui/material";
-import vfs from "./vfs";
-import Event from "Event";
 
 function App() {
   vfs.init();
-
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   if (!Settings.debug()) {
@@ -51,6 +49,7 @@ function App() {
         <CssBaseline />
         <GlobalStoreProvider>
           <BrowserRouter basename="ide">
+            <EventProvider />
             <Routes>
               <Route path="/" element={<IDE />}>
                 <Route index element={<Navigate to="/api" />} />
