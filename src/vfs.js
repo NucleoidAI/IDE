@@ -20,18 +20,9 @@ const init = () => {
   });
 };
 
-const add = (path, data) => {
-  if (_versionMap.get(path)) {
-    throw `"${path}" already exists`;
-  }
-
+const upsert = (path, data) => {
   _system.writeFile(path, data);
   _host.getSourceFile(path).version = version(path);
-};
-
-const update = ({ key, value }) => {
-  _system.writeFile(key, value);
-  _host.getSourceFile(key).version = version(key);
 };
 
 const remove = () => {};
@@ -50,4 +41,6 @@ const version = (path) => {
 const host = () => _host;
 const fsMap = () => _fsMap;
 
-export default { init, add, update, remove, host, fsMap };
+const vfs = { init, upsert, remove, host, fsMap };
+
+export default vfs;

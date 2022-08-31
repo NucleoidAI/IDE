@@ -1,8 +1,24 @@
 import Event from "Event";
 import Settings from "../../settings";
 import State from "../../state";
-import project from "../../project";
+import { contextToMap } from "utils/Parser";
 import { v4 as uuid } from "uuid";
+import project from "../../project";//eslint-disable-line
+import vfs from "vfs";
+
+function generateFs(nucleoid, selected) {
+  let fs = contextToMap(nucleoid);
+
+  if (vfs.fsMap().size <= 18) {
+    return fs;
+  } else {
+    fs = fs.filter(
+      (item) => item.key === selected.path + "." + selected.method + ".ts"
+    );
+
+    return fs;
+  }
+}
 
 function contextReducer(state, { type, payload }) {
   state = State.copy(state);
@@ -86,36 +102,37 @@ function contextReducer(state, { type, payload }) {
       //api[path][method].summary = payload.summary;
       //api[path][method].description = payload.description;
       nucleoid.types = types;
+      break;
     }
 
-    case "CLOSE_API_DIALOG":
+    case "CLOSE_API_DIALOG": {
       pages.api.dialog.open = false;
       break;
+    }
 
     case "SET_API_DIALOG_VIEW":
       pages.api.dialog.view = payload.view;
       break;
 
-    case "SET_SELECTED_API":
-      {
+    case "SET_SELECTED_API": {
+      if (Settings.beta()) {
         const previousSelection = pages.api.selected;
 
-        if (Settings.beta()) {
-          Event.publish("COMPILE_CONTEXT", {
-            files: previousSelection,
-          }).then();
-        }
-
-        if (payload.method === null) {
-          const method = Object.keys(nucleoid.api[payload.path])[0];
-          payload.method = method;
-        }
-        pages.api.selected = {
-          path: payload.path,
-          method: payload.method,
-        };
+        Event.publish("COMPILE_CONTEXT", {
+          files: generateFs(state.nucleoid, previousSelection),
+        }).then();
       }
+
+      if (payload.method === null) {
+        const method = Object.keys(nucleoid.api[payload.path])[0];
+        payload.method = method;
+      }
+      pages.api.selected = {
+        path: payload.path,
+        method: payload.method,
+      };
       break;
+    }
 
     case "SET_SELECTED_FUNCTION":
       pages.functions.selected = payload.function;
@@ -172,6 +189,7 @@ function contextReducer(state, { type, payload }) {
         code,
         params,
       });
+      break;
     }
 
     case "CLOSE_FUNCTION_DIALOG": {

@@ -9,4 +9,6 @@ const run = () => {
   vfs.init();
 };
 
-export default { run };
+const boot = { run };
+
+export default boot;

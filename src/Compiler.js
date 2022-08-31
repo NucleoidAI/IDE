@@ -1,8 +1,6 @@
 import typescript from "typescript";
 import vfs from "vfs";
 
-import { contextToMap, mapToContext, parser } from "utils/Parser";
-
 const options = {
   incremental: true,
   target: typescript.ScriptTarget.ES2015,
@@ -20,28 +18,15 @@ const options = {
   tsBuildInfoFile: "/tsbuildinfo",
 };
 
-const compile = (context, files) => {
-  const nuc = context.get("nucleoid");
-
-  let fs = contextToMap(nuc);
-
-  if (vfs.fsMap().size <= 18) {
-    fs.forEach((item) => {
-      vfs.add(item.key, item.value);
-    });
-  } else {
-    fs = fs.filter(
-      (item) => item.key === files.path + "." + files.method + ".ts"
-    );
-
-    vfs.update(...fs);
-    //console.log(vfs.fsMap());
-  }
+const compile = ({ files }) => {
+  files.forEach((item) => {
+    vfs.upsert(item.key, item.value);
+  });
 
   const host = vfs.host();
 
   const program = typescript.createIncrementalProgram({
-    rootNames: fs.map((file) => file.key),
+    rootNames: files.map((file) => file.key),
     options,
     host,
   });

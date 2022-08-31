@@ -1,7 +1,8 @@
 import "./index.css";
 import App from "./App";
-import boot from "./boot";
 import React from "react";
+import boot from "./boot";
+
 import { createRoot } from "react-dom/client";
 
 boot.run();

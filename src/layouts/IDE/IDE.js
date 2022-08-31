@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import EventProvider from "EventProvider.js";
 import FolderIcon from "@mui/icons-material/Folder";
 import Menu from "../../components/Menu";
 import Onboard from "../../components/Onboard";

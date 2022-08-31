@@ -14,6 +14,7 @@ module.exports = {
     "/public/dist",
     "/src/dist",
     "/public/service-worker.js",
+    "/src/defaultMap.js",
   ],
   rules: {
     eqeqeq: ["error", "always"],
