@@ -1,8 +1,10 @@
 import React from "react";
+import Event from "../Event";
 import Settings from "../settings";
 import State from "../state";
 import project from "../project";
 import service from "../service";
+import { contextToMap } from "../utils/Parser";
 
 import { ContextProvider } from "./providers/contextProvider"; // eslint-disable-line
 import { LayoutContextProvider } from "./providers/layoutContextProvider";
@@ -53,18 +55,21 @@ const InitContext = () => {
     });
   }
 
-  if (project.check()) {
-    const { context } = project.get();
+  let context;
 
+  if (project.check()) {
+    context = project.get().context;
     context.get = (prop) => State.resolve(context, prop);
-    return context;
   } else {
     project.setDemo();
-    const { context } = project.get();
-
+    context = project.get().context;
     context.get = (prop) => State.resolve(context, prop);
-    return context;
   }
+
+  Event.publish("COMPILE_CONTEXT", {
+    files: contextToMap(context.nucleoid),
+  }).then();
+  return context;
 };
 
 const GlobalStoreProvider = ({ children }) => {

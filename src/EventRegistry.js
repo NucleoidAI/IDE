@@ -4,7 +4,7 @@ import { compile } from "Compiler";
 //import { useContext } from "Context/providers/contextProvider";
 //import { useLayoutContext } from "Context/providers/layoutContextProvider";
 
-const EventProvider = () => {
+const EventRegistry = () => {
   // const [, dispatchLayout] = useLayoutContext();
   // const [context] = useContext();
 
@@ -20,4 +20,4 @@ const EventProvider = () => {
   return null;
 };
 
-export default EventProvider;
+export default EventRegistry;

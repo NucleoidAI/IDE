@@ -24,7 +24,6 @@ const compile = ({ files }) => {
   });
 
   const host = vfs.host();
-
   const program = typescript.createIncrementalProgram({
     rootNames: files.map((file) => file.key),
     options,
@@ -32,12 +31,11 @@ const compile = ({ files }) => {
   });
 
   const emitResult = program.emit();
-
   const errors = typescript
     .getPreEmitDiagnostics(program)
     .concat(emitResult.diagnostics);
 
-  console.log(errors);
+  console.debug(errors);
 };
 
 export { compile };

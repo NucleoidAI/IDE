@@ -1,6 +1,6 @@
 import API from "./pages/ide/API";
 import Dev from "./pages/Dev";
-import EventProvider from "./EventProvider";
+import EventRegistry from "./EventRegistry";
 import Functions from "./pages/ide/Functions";
 import GlobalStoreProvider from "./Context/GlobalStoreProvider";
 import IDE from "./layouts/IDE";
@@ -36,7 +36,7 @@ function App() {
         <CssBaseline />
         <GlobalStoreProvider>
           <BrowserRouter basename="ide">
-            <EventProvider />
+            <EventRegistry />
             <Routes>
               <Route path="/" element={<IDE />}>
                 <Route index element={<Navigate to="/api" />} />

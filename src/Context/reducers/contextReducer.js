@@ -3,22 +3,7 @@ import Settings from "../../settings";
 import State from "../../state";
 import { contextToMap } from "utils/Parser";
 import { v4 as uuid } from "uuid";
-import project from "../../project";//eslint-disable-line
-import vfs from "vfs";
-
-function generateFs(nucleoid, selected) {
-  let fs = contextToMap(nucleoid);
-
-  if (vfs.fsMap().size <= 18) {
-    return fs;
-  } else {
-    fs = fs.filter(
-      (item) => item.key === selected.path + "." + selected.method + ".ts"
-    );
-
-    return fs;
-  }
-}
+import project from "../../project"; //eslint-disable-line
 
 function contextReducer(state, { type, payload }) {
   state = State.copy(state);
@@ -116,10 +101,13 @@ function contextReducer(state, { type, payload }) {
 
     case "SET_SELECTED_API": {
       if (Settings.beta()) {
-        const previousSelection = pages.api.selected;
+        const prevSelect = pages.api.selected;
 
         Event.publish("COMPILE_CONTEXT", {
-          files: generateFs(state.nucleoid, previousSelection),
+          files: contextToMap(state.nucleoid).filter(
+            (item) =>
+              item.key === prevSelect.path + "." + prevSelect.method + ".ts"
+          ),
         }).then();
       }
 
