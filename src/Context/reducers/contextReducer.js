@@ -1,4 +1,5 @@
 import Event from "Event";
+import Settings from "../../settings";
 import State from "../../state";
 import project from "../../project";
 import { v4 as uuid } from "uuid";
@@ -98,9 +99,12 @@ function contextReducer(state, { type, payload }) {
     case "SET_SELECTED_API":
       {
         const previousSelection = pages.api.selected;
-        Event.publish("COMPILE_CONTEXT", {
-          files: previousSelection,
-        });
+
+        if (Settings.beta()) {
+          Event.publish("COMPILE_CONTEXT", {
+            files: previousSelection,
+          }).then();
+        }
 
         if (payload.method === null) {
           const method = Object.keys(nucleoid.api[payload.path])[0];
