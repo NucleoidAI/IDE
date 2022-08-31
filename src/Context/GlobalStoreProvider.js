@@ -1,14 +1,14 @@
-import React from "react";
 import Event from "../Event";
+import React from "react";
 import Settings from "../settings";
 import State from "../state";
 import project from "../project";
 import service from "../service";
-import { contextToMap } from "../utils/Parser";
 
 import { ContextProvider } from "./providers/contextProvider"; // eslint-disable-line
 import { LayoutContextProvider } from "./providers/layoutContextProvider";
 import { contextReducer } from "./reducers/contextReducer";
+import { contextToMap } from "../utils/Parser";
 import { layoutReducer } from "./reducers/layoutReducer";
 
 const initStatus = {
