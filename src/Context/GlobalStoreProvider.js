@@ -66,9 +66,11 @@ const InitContext = () => {
     context.get = (prop) => State.resolve(context, prop);
   }
 
-  Event.publish("COMPILE_CONTEXT", {
-    files: contextToMap(context.nucleoid),
-  }).then();
+  if (Settings.beta()) {
+    Event.publish("COMPILE_CONTEXT", {
+      files: contextToMap(context.nucleoid),
+    }).then();
+  }
   return context;
 };
 
