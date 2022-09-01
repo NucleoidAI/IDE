@@ -1,7 +1,9 @@
 import Event from "Event";
+import Settings from "../../settings";
 import State from "../../state";
-import project from "../../project";
+import { contextToMap } from "utils/Parser";
 import { v4 as uuid } from "uuid";
+import project from "../../project"; //eslint-disable-line
 
 function contextReducer(state, { type, payload }) {
   state = State.copy(state);
@@ -85,18 +87,30 @@ function contextReducer(state, { type, payload }) {
       //api[path][method].summary = payload.summary;
       //api[path][method].description = payload.description;
       nucleoid.types = types;
+      break;
     }
 
-    // eslint-disable-next-line no-fallthrough
-    case "CLOSE_API_DIALOG":
+    case "CLOSE_API_DIALOG": {
       pages.api.dialog.open = false;
       break;
+    }
 
     case "SET_API_DIALOG_VIEW":
       pages.api.dialog.view = payload.view;
       break;
 
-    case "SET_SELECTED_API":
+    case "SET_SELECTED_API": {
+      if (Settings.beta()) {
+        const prevSelect = pages.api.selected;
+
+        Event.publish("COMPILE_CONTEXT", {
+          files: contextToMap(state.nucleoid).filter(
+            (item) =>
+              item.key === prevSelect.path + "." + prevSelect.method + ".ts"
+          ),
+        }).then();
+      }
+
       if (payload.method === null) {
         const method = Object.keys(nucleoid.api[payload.path])[0];
         payload.method = method;
@@ -106,6 +120,7 @@ function contextReducer(state, { type, payload }) {
         method: payload.method,
       };
       break;
+    }
 
     case "SET_SELECTED_FUNCTION":
       pages.functions.selected = payload.function;
@@ -162,12 +177,13 @@ function contextReducer(state, { type, payload }) {
         code,
         params,
       });
+      break;
     }
 
-    // eslint-disable-next-line no-fallthrough
-    case "CLOSE_FUNCTION_DIALOG":
+    case "CLOSE_FUNCTION_DIALOG": {
       pages.functions.dialog.open = false;
       break;
+    }
 
     case "UPDATE_TYPE": {
       const { id, name, type } = payload;
@@ -232,8 +248,6 @@ function contextReducer(state, { type, payload }) {
 
     default:
   }
-
-  Event.publish("stateChanged", { type: "PUSH_ERROR" });
 
   console.debug("contextReducer", state);
   project.updateCurrent(state);

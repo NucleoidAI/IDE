@@ -9,7 +9,13 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: "module",
   },
-  ignorePatterns: ["/node_modules", "/public/dist"],
+  ignorePatterns: [
+    "/node_modules",
+    "/public/dist",
+    "/src/dist",
+    "/public/service-worker.js",
+    "/src/defaultMap.js",
+  ],
   rules: {
     eqeqeq: ["error", "always"],
     "no-console": "off",

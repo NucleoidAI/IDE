@@ -2,28 +2,22 @@ import { v4 as uuid } from "uuid";
 
 const subscriptions = {};
 
-const subscribe = (eventType, callback) => {
+const subscribe = (type, callback) => {
   const id = uuid();
-
-  if (!subscriptions[eventType]) subscriptions[eventType] = {};
-
-  subscriptions[eventType][id] = callback;
-
-  return {
-    unsubscribe: () => {
-      delete subscriptions[eventType][id];
-      if (Object.keys(subscriptions[eventType]).length === 0)
-        delete subscriptions[eventType];
-    },
-  };
+  if (!subscriptions[type]) subscriptions[type] = {};
+  subscriptions[type][id] = callback;
 };
 
-const publish = (eventType, arg) => {
-  if (!subscriptions[eventType]) return;
-
-  Object.keys(subscriptions[eventType]).forEach((key) =>
-    subscriptions[eventType][key](arg)
-  );
+const publish = (type, payload) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      if (!subscriptions[type]) resolve();
+      Object.keys(subscriptions[type]).forEach((key) => {
+        subscriptions[type][key](payload);
+      });
+      resolve();
+    }, 0);
+  });
 };
 
 const Event = {
