@@ -7,7 +7,7 @@
   "homepage": "/ide",
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build || exit 0",
+    "build": "CI=false && react-scripts build",
     "test": "react-scripts test",
     "lint": "eslint --max-warnings 0 --ext .js .",
     "format": "prettier --check {**/*,*}.{js,json,yml,html,css}"
