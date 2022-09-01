@@ -16,9 +16,7 @@ let output = "";
 fsMap.forEach((key, value) => {
   output += `import ${value
     .replace(/\./g, "_")
-    .substring(
-      1
-    )} from "!!raw-loader!./dist/typescript${value}"; // eslint-disable-line import/no-webpack-loader-syntax\n`;
+    .substring(1)} from "!!raw-loader!.${value}";\n`;
 });
 
 output += "\nconst fsMap = new Map();\n";
@@ -29,5 +27,6 @@ fsMap.forEach((key, value) => {
     .substring(1)});\n`;
 });
 
-output += "\nexport default fsMap";
-console.log(output);
+output += "\nconst createDefaultMap = () => new Map(fsMap);";
+output += "\nexport { createDefaultMap };\n";
+fs.writeFileSync("./defaultMap.js", output);

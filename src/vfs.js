@@ -1,4 +1,4 @@
-import defaultMap from "./defaultMap";
+import { createDefaultMap } from "./dist/typescript/defaultMap";
 import typescript from "typescript";
 import { createSystem, createVirtualCompilerHost } from "@typescript/vfs";
 
@@ -12,7 +12,7 @@ const options = {
 
 const init = () => {
   console.debug("Initializing VFS");
-  _fsMap = defaultMap;
+  _fsMap = createDefaultMap();
   _system = createSystem(_fsMap);
   _host = createVirtualCompilerHost(_system, options, typescript).compilerHost;
   [..._fsMap.keys()].forEach((key) => {
