@@ -2,7 +2,7 @@
   "name": "ide",
   "version": "1.0.0",
   "description": "Nucleoid IDE",
-  "author": "Can Mingir",
+  "author": "Nuc Team",
   "license": "Apache-2.0",
   "homepage": "/ide",
   "scripts": {
