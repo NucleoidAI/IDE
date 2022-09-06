@@ -7,7 +7,22 @@ let host, program, timeout;
 const watchMap = new Map();
 const fsMap = createDefaultMap();
 
-const vfs = {
+const options = {
+  target: typescript.ScriptTarget.ES2015,
+  module: typescript.ModuleKind.ES2015,
+  strict: false,
+  alwaysStrict: false,
+  allowSyntheticDefaultImports: false,
+  noImplicitAny: false,
+  isBrowserCode: true,
+  alwaysAddExport: false,
+  preserveValueImports: false,
+  removeComments: false,
+  allowJs: true,
+  outDir: "/build",
+};
+
+const system = {
   args: [],
   newLine: " ",
   useCaseSensitiveFileNames: true,
@@ -61,27 +76,12 @@ const vfs = {
   base64encode: () => console.error("Unimplemented function: base64encode"),
 };
 
-const options = {
-  target: typescript.ScriptTarget.ES2015,
-  module: typescript.ModuleKind.ES2015,
-  strict: false,
-  alwaysStrict: false,
-  allowSyntheticDefaultImports: false,
-  noImplicitAny: false,
-  isBrowserCode: true,
-  alwaysAddExport: false,
-  preserveValueImports: false,
-  removeComments: false,
-  allowJs: true,
-  outDir: "/build",
-};
-
 const init = () => {
   console.debug("Initializing VFS");
   host = typescript.createWatchCompilerHost(
     [],
     options,
-    vfs,
+    system,
     // TODO Test createSemanticDiagnosticsBuilderProgram,
     typescript.createEmitAndSemanticDiagnosticsBuilderProgram,
     (diagnostic) => {
@@ -101,4 +101,5 @@ const upsert = (path, data) => {
 
 const remove = () => {};
 
-export default { init, upsert, remove };
+const vfs = { init, upsert, remove };
+export default vfs;
