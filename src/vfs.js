@@ -2,16 +2,20 @@ import { FileWatcherEventKind } from "typescript/lib/tsserverlibrary";
 import { createDefaultMap } from "./dist/typescript/defaultMap";
 import typescript from "typescript";
 
-let host, program;
+let host, program, timeout;
 
 const watchMap = new Map();
 const fsMap = createDefaultMap();
 
 const vfs = {
+  args: [],
   newLine: " ",
   useCaseSensitiveFileNames: true,
-  getCurrentDirectory: () => "/",
+  write: () => console.error("Unimplemented function"),
+  writeOutputIsTTY: () => console.error("Unimplemented function"),
+  getWidthOfTerminal: () => console.error("Unimplemented function"),
   readFile: (path) => fsMap.get(path),
+  getFileSize: () => console.error("Unimplemented function"),
   writeFile: (path, data) => {
     fsMap.set(path, data);
 
@@ -30,11 +34,31 @@ const vfs = {
     watchMap.set(path, callback);
   },
   watchDirectory: () => {},
-  getExecutingFilePath: () => "/",
-  directoryExists: () => true,
-  getDirectories: () => [],
+  resolvePath: () => {},
   fileExists: (path) => !!fsMap.get(path),
-  setTimeout: (callback, ms) => setTimeout(callback, ms),
+  directoryExists: () => true, // TODO incomplete implementation
+  getExecutingFilePath: () => "/",
+  getCurrentDirectory: () => "/",
+  createDirectory: () =>
+    console.error("Unimplemented function: createDirectory"),
+  getDirectories: () => [],
+  readDirectory: () => console.error("Unimplemented function: readDirectory"),
+  getModifiedTime: () =>
+    console.error("Unimplemented function: getModifiedTime"),
+  setModifiedTime: () =>
+    console.error("Unimplemented function: setModifiedTime"),
+  deleteFile: () => console.error("Unimplemented function: deleteFile"),
+  // createHash: Using default function in TypeScript
+  createSHA256Hash: () =>
+    console.error("Unimplemented function: createSHA256Hash"),
+  getMemoryUsage: () => console.error("Unimplemented function: getMemoryUsage"),
+  exit: () => console.error("Unimplemented function: exit"),
+  realpath: () => console.error("Unimplemented function: realpath"),
+  setTimeout: (callback, ms) => (timeout = setTimeout(callback, ms)),
+  clearTimeout: () => clearTimeout(timeout),
+  clearScreen: () => console.error("Unimplemented function: clearScreen"),
+  base64decode: () => console.error("Unimplemented function: base64decode"),
+  base64encode: () => console.error("Unimplemented function: base64encode"),
 };
 
 const options = {
