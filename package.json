@@ -19,9 +19,6 @@
     "@mui/lab": "^5.0.0-alpha.92",
     "@mui/material": "^5.9.2",
     "@mui/x-data-grid": "^5.5.0",
-    "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^13.3.0",
-    "@testing-library/user-event": "^14.3.0",
     "@types/react": "^17.0.2",
     "ace-builds": "^1.4.12",
     "axios": "^0.27.2",
@@ -44,6 +41,9 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
     "eslint": "^8.17.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-react-app": "^7.0.1",
