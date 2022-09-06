@@ -5,8 +5,6 @@ const run = () => {
   if (!Settings.debug()) {
     console.debug = () => {};
   }
-
-  vfs.init();
 };
 
 const boot = { run };

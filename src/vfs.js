@@ -76,10 +76,12 @@ const system = {
   base64encode: () => console.error("Unimplemented function: base64encode"),
 };
 
-const init = () => {
+const init = (files) => {
   console.debug("Initializing VFS");
+  files.forEach(({ key, value }) => fsMap.set(key, value));
+
   host = typescript.createWatchCompilerHost(
-    [],
+    files.map((file) => file.key),
     options,
     system,
     // TODO Test createSemanticDiagnosticsBuilderProgram,
