@@ -1,6 +1,6 @@
 import Event from "Event";
 import React from "react";
-import { compile } from "Compiler";
+import vfs from "./vfs";
 //import { useContext } from "Context/providers/contextProvider";
 //import { useLayoutContext } from "Context/providers/layoutContextProvider";
 
@@ -9,9 +9,11 @@ const EventRegistry = () => {
   // const [context] = useContext();
 
   React.useEffect(() => {
-    Event.subscribe("COMPILE_CONTEXT", (payload) => {
+    Event.subscribe("COMPILE_CONTEXT", ({ files }) => {
       const before = Date.now();
-      compile(payload);
+      files.forEach((item) => {
+        vfs.upsert(item.key, item.value);
+      });
       const after = Date.now();
       console.debug(`Compiler took ${after - before}ms`);
     });
