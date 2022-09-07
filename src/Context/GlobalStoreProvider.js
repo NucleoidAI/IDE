@@ -1,4 +1,3 @@
-import Event from "../Event";
 import React from "react";
 import Settings from "../settings";
 import State from "../state";

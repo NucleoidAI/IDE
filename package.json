@@ -6,6 +6,7 @@
   "license": "Apache-2.0",
   "homepage": "/ide",
   "scripts": {
+    "prepare": "node prepare.js",
     "start": "react-scripts start",
     "build": "CI=false && react-scripts build",
     "test": "react-scripts test",

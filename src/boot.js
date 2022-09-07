@@ -1,5 +1,4 @@
 import Settings from "./settings";
-import vfs from "./vfs";
 
 const run = () => {
   if (!Settings.debug()) {
