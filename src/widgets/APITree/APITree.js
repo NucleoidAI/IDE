@@ -125,6 +125,8 @@ function APITree() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected, state]);
 
+  console.log(grph)
+
   return (
     <Card sx={styles.apiTree}>
       <Grid sx={styles.apiTreeGrid}>

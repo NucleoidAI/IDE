@@ -14,8 +14,44 @@ function FunctionTree() {
   const [contextMenu, setContextMenu] = React.useState(null);
   const [state, dispatch] = useContext();
   const functions = state.get("nucleoid.functions");
-  const graph = { "": { name: "", subs: [], path: "", functions: [] } };
 
+  const generateGraph = (data) => {
+    const base = { label: "/", children: [] };
+
+    for (const node of data) {
+      const path = node.path.match(/\/[^\/]+/g);
+      let curr = base;
+
+      path.forEach((e, i) => {
+        const currPath = path.slice(0, i + 1).join("");
+        const child = curr.children.find((e) => e.path === currPath);
+
+        if (child) {
+          curr = child;
+        } else {
+          let others;
+          if (node.path.split("/").pop() === currPath.split("/").pop()) {
+            //others = { ...node };
+          } else {
+            others = {
+              expanded: true,
+            };
+          }
+          curr.children.push({
+            label: "/" + currPath.split("/").pop(),
+            path: currPath,
+            children: [],
+            ...others,
+          });
+          curr = curr.children[curr.children.length - 1];
+        }
+      });
+    }
+
+    return base;
+  };
+
+  const graph = generateGraph(functions);
   const select = (value) => {
     if (functions.find((item) => item.path === value)) {
       setSelected(value);
@@ -45,39 +81,14 @@ function FunctionTree() {
   };
 
   useEffect(() => {
+    generateGraph();
     if (!selected) {
       select(functions[0].path);
     }
     //eslint-disable-next-line
   }, []);
 
-  const list = functions;
-
-  for (let i = 0; i < list.length; i++) {
-    const each = list[i];
-
-    const parts = each.path.substring(1).split("/");
-    const name = parts.pop();
-    const path = parts.join("/");
-    const folder = parts.pop() || "";
-    const parent = parts.join("/");
-
-    if (!graph[path]) {
-      graph[folder] = {
-        name: folder,
-        subs: [],
-        path,
-        functions: [],
-      };
-
-      if (graph[parent]) {
-        graph[parent].subs.push(graph[path]);
-      }
-    }
-
-    const { params, type } = functions.find((item) => item.path === each.path);
-    graph[path].functions.push({ name, params, type });
-  }
+  console.log(graph);
 
   return (
     <>

@@ -373,6 +373,42 @@ const functions = [
 }
 `,
   },
+  {
+    path: "/nucleoid/Test1",
+    params: [],
+    type: "CLASS",
+    definition: `class Test1 {
+  constructor(name, barcode) {
+    this.name = name;
+    this.barcode = barcode;
+  }
+}
+`,
+  },
+  {
+    path: "/nucleoid/Test2",
+    params: [],
+    type: "CLASS",
+    definition: `class Test2 {
+  constructor(name, barcode) {
+    this.name = name;
+    this.barcode = barcode;
+  }
+}
+`,
+  },
+  {
+    path: "/nucleoid/a/Test2",
+    params: [],
+    type: "CLASS",
+    definition: `class Test2 {
+  constructor(name, barcode) {
+    this.name = name;
+    this.barcode = barcode;
+  }
+}
+`,
+  },
 ];
 
 export { api, types, functions };
