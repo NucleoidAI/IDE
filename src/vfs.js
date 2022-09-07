@@ -103,5 +103,5 @@ const upsert = (path, data) => {
 
 const remove = () => {};
 
-const vfs = { init, upsert, remove };
+const vfs = { init, upsert, remove, fsMap };
 export default vfs;

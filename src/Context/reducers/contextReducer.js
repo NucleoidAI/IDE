@@ -1,7 +1,4 @@
-import Event from "Event";
-import Settings from "../../settings";
 import State from "../../state";
-import { contextToMap } from "utils/Parser";
 import { v4 as uuid } from "uuid";
 import project from "../../project"; //eslint-disable-line
 
@@ -100,17 +97,6 @@ function contextReducer(state, { type, payload }) {
       break;
 
     case "SET_SELECTED_API": {
-      if (Settings.beta()) {
-        const prevSelect = pages.api.selected;
-
-        Event.publish("COMPILE_CONTEXT", {
-          files: contextToMap(state.nucleoid).filter(
-            (item) =>
-              item.key === prevSelect.path + "." + prevSelect.method + ".ts"
-          ),
-        }).then();
-      }
-
       if (payload.method === null) {
         const method = Object.keys(nucleoid.api[payload.path])[0];
         payload.method = method;
@@ -122,9 +108,10 @@ function contextReducer(state, { type, payload }) {
       break;
     }
 
-    case "SET_SELECTED_FUNCTION":
+    case "SET_SELECTED_FUNCTION": {
       pages.functions.selected = payload.function;
       break;
+    }
 
     case "OPEN_RESOURCE_MENU":
       pages.api.resourceMenu.open = true;

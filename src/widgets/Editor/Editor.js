@@ -1,4 +1,6 @@
 import AceEditor from "react-ace";
+import Event from "Event";
+import Settings from "../../settings";
 import linter from "../../linter";
 import prettier from "../../prettier";
 import prettierPlugins from "../../prettierPlugins";
@@ -12,6 +14,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-chrome";
 import { addCompleter } from "ace-builds/src-noconflict/ext-language_tools";
+import { contextToMap } from "utils/Parser";
 import { parser } from "react-nucleoid";
 import { Backdrop, CircularProgress } from "@mui/material";
 
@@ -235,6 +238,24 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
           enableBasicAutocompletion: true,
         }}
         value={code}
+        onBlur={() => {
+          if (Settings.beta()) {
+            console.log(name, name);
+            let key;
+            if (name === "api") {
+              const { path, method } = state.get("pages.api.selected");
+              key = path + "." + method + ".ts";
+            } else {
+              key = state.get("pages.functions.selected") + ".js";
+            }
+
+            Event.publish("COMPILE_CONTEXT", {
+              files: contextToMap(state.nucleoid).filter(
+                (item) => item.key === key
+              ),
+            }).then();
+          }
+        }}
         onChange={(e) => {
           setCode(e);
 

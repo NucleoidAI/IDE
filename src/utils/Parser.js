@@ -20,15 +20,11 @@ const contextToMap = (files) => {
   Object.keys(files.functions).forEach((item) => {
     const func = files.functions[item];
     fileNames.push(
-      "import " +
-        func.path.split("/").pop() +
-        ` from "nuc-classes/` +
-        func.path.split("/").pop() +
-        `.js"\n`
+      "import " + func.path.split("/").pop() + ` from "` + func.path + `.js"\n`
     );
 
     arr.push({
-      key: "/nuc-classes/" + func.path.split("/").pop() + ".js",
+      key: func.path + ".js",
       value:
         func.definition +
         "// @nuc-exports\n" +
