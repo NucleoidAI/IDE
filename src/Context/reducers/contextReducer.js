@@ -129,7 +129,6 @@ function contextReducer(state, { type, payload }) {
       state.nucleoid.api = newObj;
       state.pages.api.selected.path = "/";
       state.pages.api.selected.method = "get";
-
       break;
     }
 

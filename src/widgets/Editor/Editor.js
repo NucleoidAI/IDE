@@ -240,7 +240,6 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
         value={code}
         onBlur={() => {
           if (Settings.beta()) {
-            console.log(name, name);
             let key;
             if (name === "api") {
               const { path, method } = state.get("pages.api.selected");

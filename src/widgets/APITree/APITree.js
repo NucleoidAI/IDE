@@ -22,6 +22,8 @@ import {
 import React, { useEffect, useState } from "react";
 import { TreeItem, TreeView } from "@mui/lab";
 
+import Event from "Event";
+
 const map = {};
 
 function APITree() {
@@ -33,6 +35,7 @@ function APITree() {
   const [resourceMenu, setResourceMenu] = React.useState(false);
   const [anchor, setAnchor] = React.useState();
   const [expanded, setExpanded] = useState([]);
+  const [errors, setErrors] = useState([]);
 
   const [state, dispatch] = useContext();
   const api = state.get("nucleoid.api");
@@ -116,12 +119,49 @@ function APITree() {
     }
   };
 
+  const analizeErrors = () => {
+    let isStreamStarted = false;
+    let errors = [];
+
+    return (file) => {
+      if (file.category === 3 && !isStreamStarted) {
+        errors = [];
+        isStreamStarted = true;
+
+        return false;
+      }
+
+      if (file.category !== 3) {
+        errors.push({ file: file.file.fileName, message: file.messageText });
+
+        return false;
+      }
+
+      if (file.category === 3 && isStreamStarted) {
+        isStreamStarted = false;
+
+        return errors;
+      }
+      return false;
+    };
+  };
+
   useEffect(() => {
+    const err = analizeErrors();
+
+    const event = Event.subscribe("TS_DIAGNOSTIC", (data) => {
+      const errList = err(data) || [];
+
+      errList.length > 0 ? setErrors([...errList]) : setErrors([]);
+    });
+
     if (!selected) {
       select(Object.keys(map).pop());
     }
     setMethodDisabled(checkMethodDeletable());
     handleExpandClick();
+
+    return () => event.unsubscribe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected, state]);
 
@@ -138,6 +178,7 @@ function APITree() {
           expanded={expanded}
           onNodeSelect={(event, value) => select(value)}
           selected={selected}
+          sx={{ bgcolor: errors.length > 0 && "#f7afafab" }}
         >
           {compile(
             [grph["/"]],

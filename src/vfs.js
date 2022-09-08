@@ -1,6 +1,7 @@
 import { FileWatcherEventKind } from "typescript/lib/tsserverlibrary";
 import { createDefaultMap } from "./dist/typescript/defaultMap";
 import typescript from "typescript";
+import Event from "Event";
 
 let host, program, timeout;
 
@@ -87,10 +88,12 @@ const init = (files) => {
     // TODO Test createSemanticDiagnosticsBuilderProgram,
     typescript.createEmitAndSemanticDiagnosticsBuilderProgram,
     (diagnostic) => {
-      console.debug("Diagnostic", diagnostic);
+      //console.debug("Diagnostic", diagnostic);
+      Event.publish("TS_DIAGNOSTIC", diagnostic);
     },
     (report) => {
-      console.debug("Report", report);
+      Event.publish("TS_DIAGNOSTIC", report);
+      //console.debug("Report", report);
     }
   );
 
