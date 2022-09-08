@@ -155,12 +155,13 @@ function contextReducer(state, { type, payload }) {
     }
 
     case "SAVE_FUNCTION_DIALOG": {
-      const { path, type, definition, params } = payload;
+      const { path, type, definition, params, ext } = payload;
       const functions = nucleoid.functions;
 
       functions.push({
         path,
         type,
+        ext,
         definition,
         params,
       });
