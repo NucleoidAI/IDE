@@ -88,12 +88,12 @@ const init = (files) => {
     // TODO Test createSemanticDiagnosticsBuilderProgram,
     typescript.createEmitAndSemanticDiagnosticsBuilderProgram,
     (diagnostic) => {
-      //console.debug("Diagnostic", diagnostic);
+      console.debug("Diagnostic", diagnostic);
       Event.publish("TS_DIAGNOSTIC", diagnostic);
     },
     (report) => {
       Event.publish("TS_DIAGNOSTIC", report);
-      //console.debug("Report", report);
+      console.debug("Report", report);
     }
   );
 
