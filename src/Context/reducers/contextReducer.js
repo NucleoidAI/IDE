@@ -149,20 +149,35 @@ function contextReducer(state, { type, payload }) {
       break;
 
     case "OPEN_FUNCTION_DIALOG": {
+      pages.functions.dialog.type = payload.type;
       pages.functions.dialog.open = true;
       break;
     }
 
     case "SAVE_FUNCTION_DIALOG": {
-      const { path, type, code, params } = payload;
+      const { path, type, definition, params } = payload;
       const functions = nucleoid.functions;
 
       functions.push({
         path,
         type,
-        code,
+        definition,
         params,
       });
+      break;
+    }
+
+    case "DELETE_FUNCTION": {
+      const { path } = payload;
+      if (nucleoid.functions.length > 1) {
+        const index = nucleoid.functions.findIndex(
+          (data) => data.path === path
+        );
+
+        nucleoid.functions.splice(index, 1);
+        state.pages.functions.selected = nucleoid.functions[0].path;
+      }
+
       break;
     }
 
