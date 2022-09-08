@@ -19,7 +19,7 @@ const contextToMap = (files) => {
 
   Object.keys(files.functions).forEach((item) => {
     const func = files.functions[item];
-    
+
     fileNames.push(
       "import " +
         func.path.split("/").pop() +
