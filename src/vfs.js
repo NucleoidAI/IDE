@@ -1,7 +1,7 @@
+import Event from "Event";
 import { FileWatcherEventKind } from "typescript/lib/tsserverlibrary";
 import { createDefaultMap } from "./dist/typescript/defaultMap";
 import typescript from "typescript";
-import Event from "Event";
 
 let host, program, timeout;
 

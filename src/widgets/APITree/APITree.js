@@ -3,6 +3,7 @@ import ArrowIcon from "../../icons/Arrow";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteMethodDialog from "../../components/DeleteMethodDialog";
 import EditIcon from "@mui/icons-material/Edit";
+import Event from "Event";
 import Fade from "@mui/material/Fade";
 import NonExpandableAPITreeItem from "../../components/NonExpandableAPITreeItem";
 import ResourceMenu from "../ResourceMenu";
@@ -22,7 +23,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { TreeItem, TreeView } from "@mui/lab";
 
-import Event from "Event";
+
 
 const map = {};
 
