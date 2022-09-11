@@ -14,7 +14,7 @@ import { useMediaQuery } from "@mui/material";
 import { Outlet } from "react-router-dom"; // eslint-disable-line
 
 const list = [
-  { title: "API", link: "/", icon: <SendIcon /> },
+  { title: "API", link: "/api", icon: <SendIcon /> },
   {
     title: "Functions",
     link: "/functions",
