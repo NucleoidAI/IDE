@@ -118,41 +118,10 @@ function APITree() {
     }
   };
 
-  const analizeErrors = () => {
-    let isStreamStarted = false;
-    let errors = [];
-
-    return (file) => {
-      if (file.category === 3 && !isStreamStarted) {
-        errors = [];
-        isStreamStarted = true;
-
-        return false;
-      }
-
-      if (file.category !== 3) {
-        errors.push({ file: file.file.fileName, message: file.messageText });
-
-        return false;
-      }
-
-      if (file.category === 3 && isStreamStarted) {
-        isStreamStarted = false;
-
-        return errors;
-      }
-      return false;
-    };
-  };
-
   useEffect(() => {
-    const err = analizeErrors();
-
-    const event = Event.subscribe("TS_DIAGNOSTIC", (data) => {
-      const errList = err(data) || [];
-
-      errList.length > 0 ? setErrors([...errList]) : setErrors([]);
-    });
+    const event = Event.subscribe("DIAGNOSTICS_COMPLETED", (diagnostics) =>
+      setErrors(diagnostics)
+    );
 
     if (!selected) {
       select(Object.keys(map).pop());

@@ -5,6 +5,8 @@ import typescript from "typescript";
 
 let host, program, timeout;
 
+let diagnostics = [];
+
 const watchMap = new Map();
 const fsMap = createDefaultMap();
 
@@ -88,12 +90,17 @@ const init = (files) => {
     // TODO Test createSemanticDiagnosticsBuilderProgram,
     typescript.createEmitAndSemanticDiagnosticsBuilderProgram,
     (diagnostic) => {
-      console.debug("Diagnostic", diagnostic);
-      Event.publish("TS_DIAGNOSTIC", diagnostic);
+      diagnostics.push(diagnostic);
     },
-    (report) => {
-      Event.publish("TS_DIAGNOSTIC", report);
-      console.debug("Report", report);
+    ({ code }) => {
+      if ([6031, 6032].includes(code)) {
+        diagnostics = [];
+      }
+
+      if ([6193, 6194].includes(code)) {
+        console.debug("Diagnostics", diagnostics);
+        Event.publish("DIAGNOSTICS_COMPLETED", diagnostics);
+      }
     }
   );
 
