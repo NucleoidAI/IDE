@@ -65,6 +65,13 @@ const Settings = {
       return localStorage.getItem("description");
     }
   },
+  plugin: (data) => {
+    if (data !== undefined && data !== null) {
+      localStorage.setItem("plugin", data);
+    } else {
+      return localStorage.getItem("plugin");
+    }
+  },
   landing: (data) => {
     if (data !== undefined && data !== null) {
       localStorage.setItem("landing", JSON.stringify(data));
