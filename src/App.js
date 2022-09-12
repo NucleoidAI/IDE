@@ -9,6 +9,7 @@ import Login from "./pages/ide/login";
 import Logs from "./pages/ide/Logs";
 import Query from "./pages/ide/Query";
 import React from "react";
+import Settings from "./settings";
 import theme from "./theme";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import {
@@ -40,7 +41,11 @@ function App() {
             <EventRegistry />
             <Routes>
               <Route path="/" element={<IDE />}>
-                <Route index element={<Navigate to="/dashboard" />} />
+                {Settings.plugin() ? (
+                  <Route index element={<Navigate to="/dashboard" />} />
+                ) : (
+                  <Route index element={<Navigate to="/api" />} />
+                )}
                 <Route path={"/dashboard"} element={<Dashboard />} />
                 <Route path={"/api"} element={<API />} />
                 <Route path={"/functions"} element={<Functions />} />
