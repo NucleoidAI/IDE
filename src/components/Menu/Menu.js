@@ -27,8 +27,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 
-
-
 const withFilter = (Component) => {
   const Wrapped = (props) => {
     const updatedProps = { title: "IDE", list: [] };
