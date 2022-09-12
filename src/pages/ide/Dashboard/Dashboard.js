@@ -1,8 +1,7 @@
-import Box from "@mui/material/Box";
 import QueryArrayTable from "components/QueryArrayTable";
 import React from "react";
-
-import { Doughnut, Line } from "react-chartjs-2";
+import { Box, Card } from "@mui/material";
+import { Line, PolarArea } from "react-chartjs-2";
 
 const Dashboard = () => {
   //generate random list of strings with id
@@ -21,25 +20,38 @@ const Dashboard = () => {
     return list;
   };
 
-  const options = {
-    legend: {
-      position: true,
-    },
-    animation: {
-      duration: 1000,
-    },
-  };
-
   const data = {
-    labels: ["Used", "Free"],
+    labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
     datasets: [
       {
-        backgroundColor: ["rgba(64, 188, 216, 0.5)", "rgba(22, 219, 147, 0.5)"],
-        data: [75, 25],
-        borderWidth: 0,
+        label: "# of Votes",
+        data: [12, 19, 3, 5, 2, 3],
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.5)",
+          "rgba(54, 162, 235, 0.5)",
+          "rgba(255, 206, 86, 0.5)",
+          "rgba(75, 192, 192, 0.5)",
+          "rgba(153, 102, 255, 0.5)",
+          "rgba(255, 159, 64, 0.5)",
+        ],
+        borderWidth: 1,
       },
     ],
   };
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: true,
+        text: "Chart.js Line Chart",
+      },
+    },
+  };
+
   const labels = [
     "January",
     "February",
@@ -50,79 +62,63 @@ const Dashboard = () => {
     "July",
   ];
 
-  const dataLine = {
+  const dataAreaChart = {
     labels,
     datasets: [
       {
-        label: "Dataset 1",
-        data: labels.map(() => Math.random() * 1000),
-        borderColor: "rgb(255, 99, 132)",
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
-        yAxisID: "y",
-      },
-      {
+        fill: true,
         label: "Dataset 2",
-        data: labels.map(() => Math.random() * 1000),
+        data: labels.map(() => Math.random() * 100),
         borderColor: "rgb(53, 162, 235)",
         backgroundColor: "rgba(53, 162, 235, 0.5)",
-        yAxisID: "y1",
       },
     ],
   };
 
   return (
     <Box sx={{ height: "100%" }}>
-      <Box sx={{ height: "50%", width: "100%", display: "flex" }}>
-        <Box
+      <Box
+        sx={{
+          height: "40%",
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 1,
+        }}
+      >
+        <Card
           sx={{
-            width: "50%",
+            width: "40%",
             display: "flex",
-            alignItems: "center",
             justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          <Box sx={{ width: 300, height: 300 }}>
-            <Doughnut data={data} options={options} />
+          <Box sx={{ width: 350 }}>
+            <PolarArea data={data} />
           </Box>
-        </Box>
-        <Box sx={{ width: "50%", display: "flex", alignItems: "center" }}>
-          <Line
-            datasetIdKey="id"
-            options={{
-              responsive: true,
-              interaction: {
-                mode: "index",
-                intersect: false,
-              },
-              stacked: false,
-              plugins: {
-                title: {
-                  display: true,
-                  text: "",
-                },
-              },
-              scales: {
-                y: {
-                  type: "linear",
-                  display: true,
-                  position: "left",
-                },
-                y1: {
-                  type: "linear",
-                  display: true,
-                  position: "right",
-                  grid: {
-                    drawOnChartArea: false,
-                  },
-                },
-              },
+        </Card>
+        <Card
+          sx={{
+            width: "60%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            sx={{
+              width: 700,
+              maxHeight: 350,
             }}
-            data={dataLine}
-          />
-        </Box>
+          >
+            <Line options={options} data={dataAreaChart} />
+          </Box>{" "}
+        </Card>
       </Box>
-      <Box sx={{ height: "50%" }}>
-        <QueryArrayTable json={generateRandomList(25)} />
+      <Box sx={{ height: "60%" }}>
+        <QueryArrayTable json={generateRandomList(25)} pageSize={9} />
       </Box>
     </Box>
   );
