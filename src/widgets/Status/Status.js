@@ -44,18 +44,20 @@ function Status() {
       sx={styles.root}
     >
       <Grid />
-      <Grid sx={styles.chart}>
-        <Doughnut data={data} options={options} />
-        <Grid
-          container
-          justifyContent={"center"}
-          alignItems={"center"}
-          sx={{ pt: 1 }}
-        >
-          {StatusContent(state)}&nbsp;
-          {StatusContent(state, true)}
+      {!Settings.plugin() && (
+        <Grid sx={styles.chart}>
+          <Doughnut data={data} options={options} />
+          <Grid
+            container
+            justifyContent={"center"}
+            alignItems={"center"}
+            sx={{ pt: 1 }}
+          >
+            {StatusContent(state)}&nbsp;
+            {StatusContent(state, true)}
+          </Grid>
         </Grid>
-      </Grid>
+      )}
       <StatusText
         warn
         state={state}
