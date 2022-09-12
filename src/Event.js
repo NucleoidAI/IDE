@@ -18,12 +18,14 @@ const subscribe = (type, callback) => {
 
 const publish = (type, payload) => {
   return new Promise((resolve) => {
-    if (!subscriptions[type]) resolve();
+    setTimeout(() => {
+      if (!subscriptions[type]) resolve();
 
-    Object.keys(subscriptions[type]).forEach((key) => {
-      subscriptions[type][key](payload);
-    });
-    resolve();
+      Object.keys(subscriptions[type]).forEach((key) => {
+        subscriptions[type][key](payload);
+      });
+      resolve();
+    }, 0);
   });
 };
 
