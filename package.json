@@ -9,7 +9,7 @@
     "prepare": "node prepare.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --watchAll=false",
     "lint": "eslint --max-warnings 0 --ext .js .",
     "format": "prettier --check {**/*,*}.{js,json,yml,html,css}"
   },
