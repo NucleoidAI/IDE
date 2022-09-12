@@ -1,6 +1,4 @@
-import Event from "../../Event";
 import State from "../../state";
-import { contextToMap } from "../../utils/Parser";
 import project from "../../project";
 import { v4 as uuid } from "uuid";
 
@@ -99,15 +97,6 @@ function contextReducer(state, { type, payload }) {
       break;
 
     case "SET_SELECTED_API": {
-      const prevSelect = pages.api.selected;
-
-      Event.publish("CONTEXT_CHANGED", {
-        files: contextToMap(state.nucleoid).filter(
-          (item) =>
-            item.key === prevSelect.path + "." + prevSelect.method + ".ts"
-        ),
-      }).then();
-
       if (payload.method === null) {
         const method = Object.keys(nucleoid.api[payload.path])[0];
         payload.method = method;

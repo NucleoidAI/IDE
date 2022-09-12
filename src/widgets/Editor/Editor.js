@@ -248,7 +248,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
               key = state.get("pages.functions.selected") + ".js";
             }
 
-            Event.publish("COMPILE_CONTEXT", {
+            Event.publish("CONTEXT_CHANGED", {
               files: contextToMap(state.nucleoid).filter(
                 (item) => item.key === key
               ),
