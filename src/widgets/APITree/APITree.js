@@ -3,6 +3,7 @@ import ArrowIcon from "../../icons/Arrow";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteMethodDialog from "../../components/DeleteMethodDialog";
 import EditIcon from "@mui/icons-material/Edit";
+import Event from "Event";
 import Fade from "@mui/material/Fade";
 import NonExpandableAPITreeItem from "../../components/NonExpandableAPITreeItem";
 import ResourceMenu from "../ResourceMenu";
@@ -33,6 +34,7 @@ function APITree() {
   const [resourceMenu, setResourceMenu] = React.useState(false);
   const [anchor, setAnchor] = React.useState();
   const [expanded, setExpanded] = useState([]);
+  const [errors, setErrors] = useState([]);
 
   const [state, dispatch] = useContext();
   const api = state.get("nucleoid.api");
@@ -117,11 +119,17 @@ function APITree() {
   };
 
   useEffect(() => {
+    const event = Event.subscribe("DIAGNOSTICS_COMPLETED", (diagnostics) =>
+      setErrors(diagnostics)
+    );
+
     if (!selected) {
       select(Object.keys(map).pop());
     }
     setMethodDisabled(checkMethodDeletable());
     handleExpandClick();
+
+    return () => event.unsubscribe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected, state]);
 
@@ -138,6 +146,7 @@ function APITree() {
           expanded={expanded}
           onNodeSelect={(event, value) => select(value)}
           selected={selected}
+          sx={{ bgcolor: errors.length > 0 && "#f7afafab" }}
         >
           {compile(
             [grph["/"]],

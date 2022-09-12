@@ -349,9 +349,10 @@ const types = {
 
 const functions = [
   {
-    path: "/classes/Order",
+    path: "/Order",
     params: [],
     type: "CLASS",
+    ext: "js",
     definition: `class Order {
   constructor(item, qty) {
     this.item = item;
@@ -362,9 +363,10 @@ const functions = [
 `,
   },
   {
-    path: "/classes/Item",
+    path: "/Item",
     params: [],
     type: "CLASS",
+    ext: "js",
     definition: `class Item {
   constructor(name, barcode) {
     this.name = name;
