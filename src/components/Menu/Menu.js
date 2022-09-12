@@ -9,6 +9,7 @@ import SmallLogo from "../SmallLogo";
 import Status from "../../widgets/Status";
 import StatusSmall from "../../widgets/StatusSmall";
 import { drawerWidth } from "../../config";
+import settings from "../../settings";
 import styles from "./styles";
 import { useLayoutContext } from "../../Context/providers/layoutContextProvider";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +26,25 @@ import {
   Tooltip,
   useMediaQuery,
 } from "@mui/material";
+
+
+
+const withFilter = (Component) => {
+  const Wrapped = (props) => {
+    const updatedProps = { title: "IDE", list: [] };
+    if (!settings.plugin()) {
+      updatedProps.list = props.list.filter(
+        (item) => item.title !== "Dashboard"
+      );
+    } else {
+      updatedProps.list = [...props.list];
+    }
+    console.log(updatedProps);
+    return <Component {...updatedProps} />;
+  };
+
+  return Wrapped;
+};
 
 //TODO Split this page as components and styles
 function Menu(props) {
@@ -166,28 +186,31 @@ function Menu(props) {
     </Box>
   );
 }
+
 const MenuLinks = (props) => {
   const [layoutContext] = useLayoutContext();
   const navigate = useNavigate();
 
   return (
     <>
-      {props.list.map(({ title, link, anchor, icon }) => (
-        <React.Fragment key={title}>
-          <ListItem
-            disabled={
-              (title === "Logs" && layoutContext.status === "unreachable") ||
-              (title === "Query" && layoutContext.status === "unreachable")
-            }
-            sx={styles.listItem}
-            onClick={() => navigate(link, { state: { anchor } })}
-            button
-          >
-            <ListItemIcon sx={styles.listItemIcon}>{icon}</ListItemIcon>
-            <ListItemText primary={title} />
-          </ListItem>
-        </React.Fragment>
-      ))}
+      {props.list.map(({ title, link, anchor, icon }) => {
+        return (
+          <React.Fragment key={title}>
+            <ListItem
+              disabled={
+                (title === "Logs" && layoutContext.status === "unreachable") ||
+                (title === "Query" && layoutContext.status === "unreachable")
+              }
+              sx={styles.listItem}
+              onClick={() => navigate(link, { state: { anchor } })}
+              button
+            >
+              <ListItemIcon sx={styles.listItemIcon}>{icon}</ListItemIcon>
+              <ListItemText primary={title} />
+            </ListItem>
+          </React.Fragment>
+        );
+      })}
     </>
   );
 };
@@ -217,4 +240,4 @@ const SmallMenuLinks = (props) => {
   );
 };
 
-export default Menu;
+export default withFilter(Menu);

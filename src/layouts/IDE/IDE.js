@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import FolderIcon from "@mui/icons-material/Folder";
 import Menu from "../../components/Menu";
 import Mobile from "pages/ide/Mobile";
@@ -14,6 +15,13 @@ import { useMediaQuery } from "@mui/material";
 import { Outlet } from "react-router-dom"; // eslint-disable-line
 
 const list = [
+  {
+    title: "Dashboard",
+    link: "/dashboard",
+    icon: <DashboardIcon />,
+    anchor: false,
+  },
+
   { title: "API", link: "/api", icon: <SendIcon /> },
   {
     title: "Functions",

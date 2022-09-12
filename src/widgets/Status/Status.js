@@ -46,7 +46,6 @@ function Status() {
       <Grid />
       <Grid sx={styles.chart}>
         <Doughnut data={data} options={options} />
-
         <Grid
           container
           justifyContent={"center"}

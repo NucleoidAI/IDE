@@ -1,4 +1,5 @@
 import API from "./pages/ide/API";
+import Dashboard from "./pages/ide/Dashboard";
 import Dev from "./pages/Dev";
 import EventRegistry from "./EventRegistry";
 import Functions from "./pages/ide/Functions";
@@ -39,8 +40,9 @@ function App() {
             <EventRegistry />
             <Routes>
               <Route path="/" element={<IDE />}>
-                <Route index element={<Navigate to="/api" />} />
-                <Route path="/api" element={<API />} />
+                <Route index element={<Navigate to="/dashboard" />} />
+                <Route path={"/dashboard"} element={<Dashboard />} />
+                <Route path={"/api"} element={<API />} />
                 <Route path={"/functions"} element={<Functions />} />
                 <Route path={"/query"} element={<Query />} />
                 <Route path={"/logs"} element={<Logs />} />
