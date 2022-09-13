@@ -1,5 +1,5 @@
 import typescript from "typescript";
-import vfs from "vfs";
+import vfs from "./vfs";
 
 const options = {
   incremental: true,

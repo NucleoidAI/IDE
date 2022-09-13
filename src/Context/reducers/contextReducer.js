@@ -1,7 +1,7 @@
-import Event from "Event";
+import Event from "../../Event";
 import Settings from "../../settings";
 import State from "../../state";
-import { contextToMap } from "utils/Parser";
+import { contextToMap } from "../../utils/Parser";
 import { v4 as uuid } from "uuid";
 import project from "../../project"; //eslint-disable-line
 

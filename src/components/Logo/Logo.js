@@ -1,5 +1,5 @@
 import React from "react";
-import Settings from "settings";
+import Settings from "../../settings";
 import styles from "./styles";
 import { Box, Typography } from "@mui/material";
 
