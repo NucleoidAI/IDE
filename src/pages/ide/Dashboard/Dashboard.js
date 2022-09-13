@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Button, Card } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";//eslint-disable-line
+import { DataGrid } from "@mui/x-data-grid"; //eslint-disable-line
 import { Line, PolarArea } from "react-chartjs-2";
 
 const NucDataGrid = ({ rows }) => {
