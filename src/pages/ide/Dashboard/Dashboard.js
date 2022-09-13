@@ -1,7 +1,68 @@
-import QueryArrayTable from "components/QueryArrayTable";
 import React from "react";
-import { Box, Card } from "@mui/material";
+import { Box, Button, Card } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";//eslint-disable-line
 import { Line, PolarArea } from "react-chartjs-2";
+
+const NucDataGrid = ({ rows }) => {
+  const columns = [
+    { field: "id", headerName: "ID", flex: 1 },
+    {
+      field: "name",
+      headerName: "name",
+      flex: 1,
+      editable: true,
+    },
+    {
+      field: "item",
+      headerName: "item",
+      flex: 1,
+      editable: true,
+    },
+    {
+      field: "order",
+      headerName: "order",
+      flex: 1,
+      editable: true,
+    },
+    {
+      field: "date",
+      headerName: "date",
+      flex: 1,
+      editable: true,
+    },
+    {
+      field: "status",
+      headerName: "status",
+      flex: 1,
+      editable: true,
+    },
+    {
+      field: "cancel",
+      headerName: "cancel",
+      sortable: false,
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <Button variant="outlined" disabled={params.row.cancel}>
+            Cancel
+          </Button>
+        );
+      },
+    },
+  ];
+
+  return (
+    <DataGrid
+      rows={rows}
+      columns={columns}
+      pageSize={8}
+      rowsPerPageOptions={[8]}
+      checkboxSelection
+      disableSelectionOnClick
+      experimentalFeatures={{ newEditingApi: true }}
+    />
+  );
+};
 
 const Dashboard = () => {
   //generate random list of strings with id
@@ -15,6 +76,7 @@ const Dashboard = () => {
         order: Math.random().toString(36).substring(7),
         date: new Date(),
         status: !Math.floor(Math.random() * 2),
+        cancel: !Math.floor(Math.random() * 2),
       });
     }
     return list;
@@ -118,7 +180,7 @@ const Dashboard = () => {
         </Card>
       </Box>
       <Box sx={{ height: "60%" }}>
-        <QueryArrayTable json={generateRandomList(25)} pageSize={9} />
+        <NucDataGrid rows={generateRandomList(30)} />
       </Box>
     </Box>
   );
