@@ -102,7 +102,7 @@ const Dashboard = () => {
   };
 
   const options = {
-    responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "top",
@@ -152,27 +152,30 @@ const Dashboard = () => {
         <Card
           sx={{
             width: "40%",
+            height: "95%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <Box sx={{ width: 350 }}>
+          <Box sx={{ width: 300, height: 300 }}>
             <PolarArea data={data} />
           </Box>
         </Card>
         <Card
           sx={{
             width: "60%",
+            height: "95%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            gap: 1,
           }}
         >
           <Box
             sx={{
               width: 700,
-              maxHeight: 350,
+              height: 300,
             }}
           >
             <Line options={options} data={dataAreaChart} />
