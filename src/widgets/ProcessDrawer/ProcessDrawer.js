@@ -1,5 +1,4 @@
 import Backdrop from "@mui/material/Backdrop";
-import CodeSandbox from "../../codesandbox";
 import CodeSandboxDialog from "../../components/CodeSandboxDialog";
 import DialogTooltip from "../../components/DialogTootip/";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -118,23 +117,19 @@ const ProcessDrawer = () => {
   };
 
   const handleRunSandbox = async () => {
-    const { data } = await service.openCodeSandBox(
-      CodeSandbox.generateContent(state)
-    );
-
+    setLoading(true);
+    const { data } = await service.createSandbox(state);
     setTimeout(() => {
       if (Settings.landing().level < 2) {
         onboardDispatcher({ level: 2 });
       }
       Settings.runtime("sandbox");
     }, 0);
-
-    if (data.sandbox_id) {
-      Settings.codesandbox.sandboxID(data.sandbox_id);
-      Settings.url.app(`https://${data.sandbox_id}-3000.sse.codesandbox.io/`);
-      Settings.url.terminal(
-        `https://${data.sandbox_id}-8448.sse.codesandbox.io/`
-      );
+    setLoading(false);
+    if (data.id) {
+      Settings.codesandbox.sandboxID(data.id);
+      Settings.url.app(`https://nucleoid.com/sandbox/${data.id}`);
+      Settings.url.terminal(`https://nucleoid.com/sandbox/terminal/${data.id}`);
 
       dispatch({
         type: "SANDBOX",

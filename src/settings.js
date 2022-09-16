@@ -18,7 +18,7 @@ const Settings = {
     },
   },
   codesandbox: {
-    url: "https://codesandbox.io/api/v1/sandboxes/define?json=1",
+    url: "https://nucleoid.com/sandbox/",
     sandboxID: (id) => {
       if (id) {
         localStorage.setItem("sandbox_id", id);

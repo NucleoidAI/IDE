@@ -131,7 +131,7 @@ export default function CodeSandboxDialog({ open, handleCloseSandboxDialog }) {
       </AppBar>
       <iframe
         title="CodeSandbox"
-        src={`https://codesandbox.io/embed/${Settings.codesandbox.sandboxID()}?fontsize=14&hidenavigation=1&theme=dark&editorsize=35`}
+        src={Settings.url.app()}
         style={{
           width: "100%",
           height: "100%",
