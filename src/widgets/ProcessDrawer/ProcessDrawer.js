@@ -128,7 +128,7 @@ const ProcessDrawer = () => {
     setLoading(false);
     if (data.id) {
       Settings.codesandbox.sandboxID(data.id);
-      Settings.url.app(`https://nucleoid.com/sandbox/${data.id}`);
+      Settings.url.app(`https://nucleoid.com/sandbox/${data.id}/`);
       Settings.url.terminal(`https://nucleoid.com/sandbox/terminal/${data.id}`);
 
       dispatch({
