@@ -16,7 +16,6 @@ import onboardDispatcher from "../../components/Onboard/onboardDispatcher";
 import service from "../../service";
 import styles from "./styles";
 import theme from "../../theme";
-import useLayout from "../../hooks/useLayout";
 import { useLocation } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import useService from "../../hooks/useService";
@@ -29,11 +28,14 @@ import {
   Typography,
 } from "@mui/material";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const ProcessDrawer = () => {
   const [state, , handleGetProject, saveProject] = useService();
-  const [status, dispatch, getStatus] = useLayout();
+
+  const status = {
+    connected: "connected",
+  };
 
   const matchDownMD = useMediaQuery(theme.breakpoints.down("lg"));
   const location = useLocation();
@@ -43,23 +45,12 @@ const ProcessDrawer = () => {
   const [backdrop, setBackdrop] = useState(false);
   const [link, setLink] = useState("");
 
-  const getStatusTask = useRef();
-
   const auth = () => {
     setBackdrop(true);
     handleGetProject((result) => setBackdrop(false));
   };
 
   useEffect(() => {
-    getStatus();
-    clearInterval(getStatusTask.current);
-
-    getStatusTask.current = setInterval(() => {
-      if (Settings.connection) {
-        getStatus();
-      }
-    }, 1000 * 60);
-
     if (location.state?.anchor === false) {
       setVercel(false);
     }
@@ -89,12 +80,10 @@ const ProcessDrawer = () => {
     service
       .openapi("start", state.get("nucleoid"))
       .then(() => {
-        dispatch({ type: "SWAGGER_DIALOG", payload: { dialogStatus: true } });
-        getStatus();
+        // TODO OPEN SWAGGER_DIALOG
         setLoading(false);
       })
       .catch(() => {
-        getStatus();
         setLoading(false);
       });
   };
@@ -108,13 +97,13 @@ const ProcessDrawer = () => {
   };
 
   const handleCloseSandboxDialog = () => {
-    dispatch({ type: "SANDBOX", payload: { dialogStatus: false } });
+    // TODO CLOSE SWAGGER_DIALOG
     if (Settings.landing().level < 3) {
       setTimeout(() => {
         onboardDispatcher({ level: 3 });
       }, 1000);
     }
-    getStatus();
+    //getStatus();
   };
 
   const handleRunSandbox = async () => {
@@ -136,16 +125,12 @@ const ProcessDrawer = () => {
         `https://${data.sandbox_id}-8448.sse.codesandbox.io/`
       );
 
-      dispatch({
-        type: "SANDBOX",
-        payload: { status: true, dialogStatus: true },
-      });
+      // TODO OPEN SWAGGER_DIALOG
     }
   };
 
   const handleCloseSwaggerDialog = () => {
-    dispatch({ type: "SWAGGER_DIALOG", payload: { dialogStatus: false } });
-    getStatus();
+    // TODO CLOSE SWAGGER_DIALOG
   };
 
   const handleDownloadContext = () => {
@@ -158,16 +143,10 @@ const ProcessDrawer = () => {
 
   const handleOpenDialog = () => {
     if (Settings.runtime() === "npx") {
-      dispatch({
-        type: "SWAGGER_DIALOG",
-        payload: { dialogStatus: true },
-      });
+      // TODO OPEN SWAGGER_DIALOG
     }
     if (Settings.runtime() === "sandbox") {
-      dispatch({
-        type: "SANDBOX",
-        payload: { status: true, dialogStatus: true },
-      });
+      // TODO OPEN SANDBOX_DIALOG
     }
   };
 
@@ -274,14 +253,12 @@ const ProcessDrawer = () => {
 };
 
 const ApiButton = (
-  layoutStatus,
+  status,
   handleRun,
   handleRunApi,
   handleRunSandbox,
   matchDownMD
 ) => {
-  const { status } = layoutStatus;
-
   if (Settings.runtime() === "sandbox") {
     return (
       <>

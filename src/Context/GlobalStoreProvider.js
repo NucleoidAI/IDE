@@ -6,7 +6,7 @@ import project from "../project";
 import service from "../service";
 
 import { ContextProvider } from "./providers/contextProvider"; // eslint-disable-line
-import { LayoutContextProvider } from "./providers/layoutContextProvider";
+
 import { contextReducer } from "./reducers/contextReducer";
 import { contextToMap } from "../utils/Parser";
 import { layoutReducer } from "./reducers/layoutReducer";
@@ -77,9 +77,7 @@ const InitContext = () => {
 const GlobalStoreProvider = ({ children }) => {
   return (
     <ContextProvider state={InitContext()} reducer={contextReducer}>
-      <LayoutContextProvider state={initStatus} reducer={layoutReducer}>
-        {children}
-      </LayoutContextProvider>
+      {children}
     </ContextProvider>
   );
 };

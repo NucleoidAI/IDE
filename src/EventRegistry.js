@@ -2,10 +2,8 @@ import Event from "./Event";
 import React from "react";
 import { compile } from "./Compiler";
 //import { useContext } from "Context/providers/contextProvider";
-//import { useLayoutContext } from "Context/providers/layoutContextProvider";
 
 const EventRegistry = () => {
-  // const [, dispatchLayout] = useLayoutContext();
   // const [context] = useContext();
 
   React.useEffect(() => {

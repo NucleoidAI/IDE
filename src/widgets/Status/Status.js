@@ -1,26 +1,29 @@
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import LoopIcon from "@mui/icons-material/Loop";
-import OpenSandboxButton from "../../components/OpenSandboxButton";
-import OpenSwaggerButton from "../../components/OpenSwaggerButton";
 import Settings from "../../settings";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import styles from "./styles";
-import useLayout from "../../hooks/useLayout";
 import { Doughnut } from "react-chartjs-2/"; // eslint-disable-line
 import { Grid, Tooltip, Typography } from "@mui/material";
 import "chart.js/auto"; // eslint-disable-line
 
 function Status() {
-  const [state, dispatch, getStatus] = useLayout();
-  const metrics = state.metrics;
+  const state = {
+    status: "connected",
+    sandbox: true,
+    metrics: {
+      total: 100,
+      free: 50,
+    },
+  };
 
   const options = {
     legend: {
       position: true,
     },
     animation: {
-      duration: metrics.animation,
+      duration: state.metrics.animation,
     },
   };
 
@@ -29,7 +32,7 @@ function Status() {
     datasets: [
       {
         backgroundColor: ["rgba(64, 188, 216, 0.5)", "rgba(22, 219, 147, 0.5)"],
-        data: [metrics.total - metrics.free, metrics.free],
+        data: [state.metrics.total - state.metrics.free, state.metrics.free],
         borderWidth: 0,
       },
     ],
@@ -40,10 +43,9 @@ function Status() {
       container
       flexDirection={"column"}
       alignItems={"center"}
-      justifyContent={"space-between"}
+      justifyContent={"center"}
       sx={styles.root}
     >
-      <Grid />
       {!Settings.plugin() && (
         <Grid sx={styles.chart}>
           <Doughnut data={data} options={options} />
@@ -58,43 +60,9 @@ function Status() {
           </Grid>
         </Grid>
       )}
-      <StatusText
-        warn
-        state={state}
-        dispatch={dispatch}
-        getStatus={getStatus}
-      />
     </Grid>
   );
 }
-
-const StatusText = ({ state, dispatch, getStatus }) => {
-  return (
-    <Grid sx={{ width: "100%", pt: 4 }}>
-      {!Settings.runtime() && ""}
-      {Settings.runtime() === "sandbox" && (
-        <OpenSandboxButton
-          clickEvent={() => {
-            dispatch({ type: "SANDBOX", payload: { dialogStatus: true } });
-            getStatus();
-          }}
-          create
-        />
-      )}
-      {Settings.runtime() === "npx" && (
-        <OpenSwaggerButton
-          clickEvent={() =>
-            dispatch({
-              type: "SWAGGER_DIALOG",
-              payload: { dialogStatus: true },
-            })
-          }
-          create
-        />
-      )}
-    </Grid>
-  );
-};
 
 const StatusContent = (state, isText) => {
   const { status, sandbox } = state;

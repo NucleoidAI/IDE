@@ -7,11 +7,10 @@ import React from "react";
 import Settings from "../Settings";
 import SmallLogo from "../SmallLogo";
 import Status from "../../widgets/Status";
-import StatusSmall from "../../widgets/StatusSmall";
+import OpenSwaggerDialog from "../OpenSwaggerDialog";
 import { drawerWidth } from "../../config";
 import settings from "../../settings";
 import styles from "./styles";
-import { useLayoutContext } from "../../Context/providers/layoutContextProvider";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { ArrowForwardIos, DensityMedium } from "@mui/icons-material/";
@@ -37,7 +36,6 @@ const withFilter = (Component) => {
     } else {
       updatedProps.list = [...props.list];
     }
-    console.log(updatedProps);
     return <Component {...updatedProps} />;
   };
 
@@ -78,7 +76,7 @@ function Menu(props) {
               </List>
               <ProjectSelectSmall />
               <Box sx={{ height: "100%" }} />
-              <StatusSmall />
+              <OpenSwaggerDialog small />
               <Settings size={"large"} />
               <Button sx={{ pb: 3 }} onClick={() => setOpenMd(true)}>
                 <ArrowForwardIos
@@ -122,6 +120,7 @@ function Menu(props) {
             </List>
             <ProjectSelect />
             <Status />
+            <OpenSwaggerDialog />
             <Settings size={"large"} />
           </Drawer>
         </>
@@ -146,7 +145,7 @@ function Menu(props) {
               </List>
               <ProjectSelectSmall />
               <Box sx={{ height: "100%" }} />
-              <StatusSmall />
+              <OpenSwaggerDialog small />
               <Settings size={"large"} />
               <Button sx={{ pb: 3 }} onClick={() => setOpenLg(true)}>
                 <ArrowForwardIos
@@ -177,6 +176,7 @@ function Menu(props) {
             </List>
             <ProjectSelect />
             <Status />
+            <OpenSwaggerDialog />
             <Settings size={"large"} />
           </LgDrawerStyled>
         </>
@@ -186,7 +186,6 @@ function Menu(props) {
 }
 
 const MenuLinks = (props) => {
-  const [layoutContext] = useLayoutContext();
   const navigate = useNavigate();
 
   return (
@@ -195,10 +194,6 @@ const MenuLinks = (props) => {
         return (
           <React.Fragment key={title}>
             <ListItem
-              disabled={
-                (title === "Logs" && layoutContext.status === "unreachable") ||
-                (title === "Query" && layoutContext.status === "unreachable")
-              }
               sx={styles.listItem}
               onClick={() => navigate(link, { state: { anchor } })}
               button
@@ -214,7 +209,6 @@ const MenuLinks = (props) => {
 };
 
 const SmallMenuLinks = (props) => {
-  const [layoutContext] = useLayoutContext();
   const navigate = useNavigate();
 
   return (
@@ -222,10 +216,6 @@ const SmallMenuLinks = (props) => {
       {props.list.map(({ title, link, anchor, icon }) => (
         <ListItem
           key={title}
-          disabled={
-            (title === "Logs" && layoutContext.status === "unreachable") ||
-            (title === "Query" && layoutContext.status === "unreachable")
-          }
           onClick={() => navigate(link, { state: { anchor } })}
           button
         >
