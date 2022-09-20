@@ -79,6 +79,14 @@ function FunctionTree() {
     graph[path].functions.push({ name, params, type });
   }
 
+  const deleteFunction = (e) => {
+    dispatch({
+      type: "DELETE_FUNCTION",
+      payload: { path: selected },
+    });
+    handleClose();
+  };
+
   return (
     <>
       <TreeView
@@ -102,8 +110,7 @@ function FunctionTree() {
         }
         TransitionComponent={Fade}
       >
-        <MenuItem onClick={handleClose}>Move</MenuItem>
-        <MenuItem onClick={handleClose}>Delete</MenuItem>
+        <MenuItem onClick={deleteFunction}>Delete</MenuItem>
       </Menu>
     </>
   );

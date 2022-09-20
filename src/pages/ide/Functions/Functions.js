@@ -13,7 +13,7 @@ function Functions() {
   function openFunctionDialog(item) {
     dispatch({
       type: "OPEN_FUNCTION_DIALOG",
-      payload: item.toUpperCase(),
+      payload: { type: item.toUpperCase() },
     });
   }
 
@@ -34,7 +34,7 @@ function Functions() {
           <CardActions>
             <AddList
               clickEvent={openFunctionDialog}
-              list={["Folder", "|", "Class", "Function"]}
+              list={["Class", "Function"]}
             />
           </CardActions>
         </Card>

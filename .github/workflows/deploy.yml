@@ -6,6 +6,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-20.04
+    env:
+      NODE_OPTIONS: "--max_old_space_size=4096"
+      CI: false
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -21,4 +24,3 @@ jobs:
       - run: docker build . -t 533052815932.dkr.ecr.us-east-1.amazonaws.com/nuc:ide
       - run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 533052815932.dkr.ecr.us-east-1.amazonaws.com
       - run: docker push 533052815932.dkr.ecr.us-east-1.amazonaws.com/nuc:ide
-      - run: aws ecs update-service --cluster nuc-cluster --service ide-service-2 --force-new-deployment

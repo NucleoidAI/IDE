@@ -1,9 +1,6 @@
-import Event from "Event";
-import Settings from "../../settings";
 import State from "../../state";
-import { contextToMap } from "utils/Parser";
+import project from "../../project";
 import { v4 as uuid } from "uuid";
-import project from "../../project"; //eslint-disable-line
 
 function contextReducer(state, { type, payload }) {
   state = State.copy(state);
@@ -100,17 +97,6 @@ function contextReducer(state, { type, payload }) {
       break;
 
     case "SET_SELECTED_API": {
-      if (Settings.beta()) {
-        const prevSelect = pages.api.selected;
-
-        Event.publish("COMPILE_CONTEXT", {
-          files: contextToMap(state.nucleoid).filter(
-            (item) =>
-              item.key === prevSelect.path + "." + prevSelect.method + ".ts"
-          ),
-        }).then();
-      }
-
       if (payload.method === null) {
         const method = Object.keys(nucleoid.api[payload.path])[0];
         payload.method = method;
@@ -122,9 +108,10 @@ function contextReducer(state, { type, payload }) {
       break;
     }
 
-    case "SET_SELECTED_FUNCTION":
+    case "SET_SELECTED_FUNCTION": {
       pages.functions.selected = payload.function;
       break;
+    }
 
     case "OPEN_RESOURCE_MENU":
       pages.api.resourceMenu.open = true;
@@ -142,7 +129,6 @@ function contextReducer(state, { type, payload }) {
       state.nucleoid.api = newObj;
       state.pages.api.selected.path = "/";
       state.pages.api.selected.method = "get";
-
       break;
     }
 
@@ -163,20 +149,36 @@ function contextReducer(state, { type, payload }) {
       break;
 
     case "OPEN_FUNCTION_DIALOG": {
+      pages.functions.dialog.type = payload.type;
       pages.functions.dialog.open = true;
       break;
     }
 
     case "SAVE_FUNCTION_DIALOG": {
-      const { path, type, code, params } = payload;
+      const { path, type, definition, params, ext } = payload;
       const functions = nucleoid.functions;
 
       functions.push({
         path,
         type,
-        code,
+        ext,
+        definition,
         params,
       });
+      break;
+    }
+
+    case "DELETE_FUNCTION": {
+      const { path } = payload;
+      if (nucleoid.functions.length > 1) {
+        const index = nucleoid.functions.findIndex(
+          (data) => data.path === path
+        );
+
+        nucleoid.functions.splice(index, 1);
+        state.pages.functions.selected = nucleoid.functions[0].path;
+      }
+
       break;
     }
 
