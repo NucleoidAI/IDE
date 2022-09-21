@@ -1,4 +1,3 @@
-import Event from "../Event";
 import React from "react";
 import Settings from "../settings";
 import State from "../state";
@@ -9,7 +8,7 @@ import { ContextProvider } from "./providers/contextProvider"; // eslint-disable
 
 import { contextReducer } from "./reducers/contextReducer";
 import { contextToMap } from "../utils/Parser";
-import { layoutReducer } from "./reducers/layoutReducer";
+import { publish } from "../Event";
 
 const initStatus = {
   status: "unreachable",
@@ -37,6 +36,10 @@ const InitContext = () => {
 
   if (!Settings.url.terminal()) {
     Settings.url.terminal("http://localhost:8448/");
+  }
+
+  if (!Settings.runtime()) {
+    Settings.runtime("sandbox");
   }
 
   if (!Settings.description()) {
@@ -67,7 +70,7 @@ const InitContext = () => {
   }
 
   if (Settings.beta()) {
-    Event.publish("COMPILE_CONTEXT", {
+    publish("COMPILE_CONTEXT", {
       files: contextToMap(context.nucleoid),
     }).then();
   }

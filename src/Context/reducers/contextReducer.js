@@ -1,8 +1,8 @@
-import Event from "../../Event";
 import Settings from "../../settings";
 import State from "../../state";
 import { contextToMap } from "../../utils/Parser";
 import { v4 as uuid } from "uuid";
+import { publish } from "../../Event";
 import project from "../../project"; //eslint-disable-line
 
 function contextReducer(state, { type, payload }) {
@@ -103,7 +103,7 @@ function contextReducer(state, { type, payload }) {
       if (Settings.beta()) {
         const prevSelect = pages.api.selected;
 
-        Event.publish("COMPILE_CONTEXT", {
+        publish("COMPILE_CONTEXT", {
           files: contextToMap(state.nucleoid).filter(
             (item) =>
               item.key === prevSelect.path + "." + prevSelect.method + ".ts"
