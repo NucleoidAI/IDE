@@ -1,13 +1,13 @@
 import Drawer from "@mui/material/Drawer";
 import LgDrawerStyled from "../LgDrawerStyled";
 import Logo from "../Logo";
+import OpenSwaggerDialog from "../OpenSwaggerDialog";
 import ProjectSelect from "../../components/ProjectSelect";
 import ProjectSelectSmall from "../ProjectSelectSmall/ProjectSelectSmall";
 import React from "react";
 import Settings from "../Settings";
 import SmallLogo from "../SmallLogo";
 import Status from "../../widgets/Status";
-import OpenSwaggerDialog from "../OpenSwaggerDialog";
 import { drawerWidth } from "../../config";
 import settings from "../../settings";
 import styles from "./styles";
