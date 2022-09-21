@@ -6,9 +6,8 @@ import { publish, useEvent } from "../../hooks/useEvent";
 
 function OpenSwaggerDialog(props) {
   const { small } = props;
-
   const event = useEvent("SWAGGER_DIALOG");
-  console.log(event, "from openswgaerdialog");
+  console.debug(event);
 
   const openSwaggerDialog = () => {
     publish("SWAGGER_DIALOG", { open: true });
