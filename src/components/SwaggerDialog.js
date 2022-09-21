@@ -1,3 +1,5 @@
+import CopyClipboard from "./CopyClipboard";
+import DialogTooltip from "./DialogTootip";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import React from "react";
 import Settings from "../settings";
@@ -123,15 +125,19 @@ function RuntimeSwitch() {
   const [sandbox, setSandbox] = React.useState(
     Settings.runtime() === "sandbox" ? true : false
   );
+  const [alert, setAlert] = React.useState(false);
 
   function handleSwitch() {
-    setSandbox(!sandbox);
     if (sandbox) {
       Settings.runtime("npx");
+      setAlert(true);
     }
     if (!sandbox) {
       Settings.runtime("sandbox");
+      setAlert(false);
     }
+
+    setSandbox(!sandbox);
   }
 
   return (
@@ -149,12 +155,27 @@ function RuntimeSwitch() {
           justifyContent: "flex-start",
         }}
       >
-        <Typography
-          fontWeight={!sandbox ? "bold" : null}
-          sx={{ pr: 1, fontSize: !sandbox ? "16px" : "15px" }}
+        <DialogTooltip
+          open={alert}
+          placement="bottom-start"
+          title={<b>Runtime</b>}
+          message={
+            <>
+              Run the following code in your terminal
+              <br />
+              <CopyClipboard />
+              <br />
+            </>
+          }
+          handleTooltipClose={() => setAlert(false)}
         >
-          npx
-        </Typography>
+          <Typography
+            fontWeight={!sandbox ? "bold" : null}
+            sx={{ pr: 1, fontSize: !sandbox ? "16px" : "15px" }}
+          >
+            npx
+          </Typography>
+        </DialogTooltip>
       </Box>
       <Box
         sx={{
@@ -180,7 +201,7 @@ function RuntimeSwitch() {
             width: 108,
           }}
         >
-          CodeSandbox
+          nuc sandbox
         </Typography>
       </Box>
     </Box>
