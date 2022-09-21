@@ -4,6 +4,7 @@ import Settings from "../../settings";
 import SettingsDialogTabs from "../../components/SettingsDialogTabs";
 import theme from "../../theme";
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
+import { publish } from "../../Event";
 
 const SettingsDialog = ({ handleClose }) => {
   const urlRef = React.useRef();
@@ -32,7 +33,7 @@ const SettingsDialog = ({ handleClose }) => {
     Settings.runtime(urlRef.current.runtime);
 
     Settings.description(urlRef.current.description);
-
+    publish("SWAGGER_DIALOG", { open: false });
     handleClose();
   }
 
