@@ -1,8 +1,8 @@
 import React from "react";
 import { publish, subscribe } from "../Event";
 
-const useEvent = (subject = "") => {
-  const [event, setEvent] = React.useState({});
+const useEvent = (subject = "", initialState = {}) => {
+  const [event, setEvent] = React.useState(initialState);
 
   React.useEffect(() => {
     const subs = subscribe(subject, (event) => {
