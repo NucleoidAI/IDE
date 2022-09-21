@@ -1,4 +1,4 @@
-import State from "state";
+import State from "../state";
 import { contextReducer } from "Context/reducers/contextReducer";
 
 test("Resolve context with property", () => {
