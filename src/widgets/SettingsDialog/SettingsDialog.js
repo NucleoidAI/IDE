@@ -4,7 +4,7 @@ import Settings from "../../settings";
 import SettingsDialogTabs from "../../components/SettingsDialogTabs";
 import theme from "../../theme";
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
-import { publish } from "../../Event";
+import { publish } from "../../Event"; //eslint-disable-line
 
 const SettingsDialog = ({ handleClose }) => {
   const urlRef = React.useRef();

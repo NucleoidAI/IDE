@@ -10,17 +10,6 @@ import { contextReducer } from "./reducers/contextReducer";
 import { contextToMap } from "../utils/Parser";
 import { publish } from "../Event";
 
-const initStatus = {
-  status: "unreachable",
-  sandbox: Settings.codesandbox.sandboxID() ? true : false,
-  sandboxDialog: false,
-  metrics: {
-    free: 50,
-    total: 100,
-    animation: 800,
-  },
-};
-
 const InitContext = () => {
   if (!Settings.beta()) {
     Settings.beta(false);

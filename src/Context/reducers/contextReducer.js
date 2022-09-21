@@ -1,9 +1,9 @@
 import Settings from "../../settings";
 import State from "../../state";
-import { contextToMap } from "../../utils/Parser";
-import { v4 as uuid } from "uuid";
+import project from "../../project";
+import { contextToMap } from "../../utils/Parser"; //eslint-disable-line
 import { publish } from "../../Event";
-import project from "../../project"; //eslint-disable-line
+import { v4 as uuid } from "uuid";
 
 function contextReducer(state, { type, payload }) {
   state = State.copy(state);

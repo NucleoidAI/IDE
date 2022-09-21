@@ -3,6 +3,7 @@ import React from "react";
 import Settings from "../settings";
 import StarUsOnGithub from "./StarUsOnGithub";
 import Swagger from "../icons/Swagger";
+import onboardDispatcher from "./Onboard/onboardDispatcher";
 import theme from "../theme";
 import {
   AppBar,
@@ -14,8 +15,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { useEvent, publish } from "../hooks/useEvent";
-import onboardDispatcher from "./Onboard/onboardDispatcher";
+import { publish, useEvent } from "../hooks/useEvent";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;

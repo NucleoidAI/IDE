@@ -25,9 +25,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-
-import { publish } from "../../hooks/useEvent";
-
+import { publish } from "../../hooks/useEvent"; //eslint-disable-line
 import React, { useEffect, useState } from "react";
 
 const ProcessDrawer = () => {
