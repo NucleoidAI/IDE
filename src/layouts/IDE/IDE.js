@@ -8,6 +8,7 @@ import ProcessDrawer from "../../widgets/ProcessDrawer/ProcessDrawer";
 import SendIcon from "@mui/icons-material/Send";
 import Settings from "../../settings";
 import StorageIcon from "@mui/icons-material/Storage";
+import SwaggerDialog from "../../components/SwaggerDialog";
 import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import styles from "./styles";
 import theme from "../../theme";
@@ -50,6 +51,7 @@ function IDE() {
       </Box>
       {Settings.landing().level < 5 && <Onboard />}
       <ProcessDrawer />
+      <SwaggerDialog />
     </Box>
   );
 }

@@ -1,6 +1,5 @@
 import Backdrop from "@mui/material/Backdrop";
 import CodeSandbox from "../../codesandbox";
-import CodeSandboxDialog from "../../components/CodeSandboxDialog";
 import DialogTooltip from "../../components/DialogTootip/";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
@@ -10,7 +9,6 @@ import Project from "../../project";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
-import SwaggerDialog from "../../components/SwaggerDialog";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import onboardDispatcher from "../../components/Onboard/onboardDispatcher";
 import service from "../../service";
@@ -27,6 +25,8 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+
+import { publish } from "../../hooks/useEvent";
 
 import React, { useEffect, useState } from "react";
 
@@ -96,16 +96,6 @@ const ProcessDrawer = () => {
     });
   };
 
-  const handleCloseSandboxDialog = () => {
-    // TODO CLOSE SWAGGER_DIALOG
-    if (Settings.landing().level < 3) {
-      setTimeout(() => {
-        onboardDispatcher({ level: 3 });
-      }, 1000);
-    }
-    //getStatus();
-  };
-
   const handleRunSandbox = async () => {
     const { data } = await service.openCodeSandBox(
       CodeSandbox.generateContent(state)
@@ -125,12 +115,8 @@ const ProcessDrawer = () => {
         `https://${data.sandbox_id}-8448.sse.codesandbox.io/`
       );
 
-      // TODO OPEN SWAGGER_DIALOG
+      publish("SWAGGER_DIALOG", { open: true });
     }
-  };
-
-  const handleCloseSwaggerDialog = () => {
-    // TODO CLOSE SWAGGER_DIALOG
   };
 
   const handleDownloadContext = () => {
@@ -141,13 +127,8 @@ const ProcessDrawer = () => {
     setLink(myURL.createObjectURL(file));
   };
 
-  const handleOpenDialog = () => {
-    if (Settings.runtime() === "npx") {
-      // TODO OPEN SWAGGER_DIALOG
-    }
-    if (Settings.runtime() === "sandbox") {
-      // TODO OPEN SANDBOX_DIALOG
-    }
+  const handleOpenSwaggerDialog = () => {
+    publish("SWAGGER_DIALOG", { open: true });
   };
 
   return (
@@ -175,7 +156,7 @@ const ProcessDrawer = () => {
             )
           )}
           <Tooltip placement="left" title="Open swagger dialog">
-            <ListItem button onClick={handleOpenDialog}>
+            <ListItem button onClick={handleOpenSwaggerDialog}>
               <ViewListIcon
                 sx={matchDownMD ? styles.listItemSmall : styles.listItem}
               />
@@ -240,14 +221,6 @@ const ProcessDrawer = () => {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-      <CodeSandboxDialog
-        open={status.sandboxDialog}
-        handleCloseSandboxDialog={handleCloseSandboxDialog}
-      />
-      <SwaggerDialog
-        open={status.swagger}
-        handleClose={handleCloseSwaggerDialog}
-      />
     </>
   );
 };
