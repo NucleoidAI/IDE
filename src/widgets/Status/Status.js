@@ -1,22 +1,17 @@
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import LoopIcon from "@mui/icons-material/Loop";
 import Settings from "../../settings";
-import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import styles from "./styles";
 import { Doughnut } from "react-chartjs-2/"; // eslint-disable-line
-import { Grid, Tooltip, Typography } from "@mui/material";
+import { Box, Grid, Tooltip, Typography } from "@mui/material";
 import "chart.js/auto"; // eslint-disable-line
+import { useEvent } from "../../hooks/useEvent";
 
 function Status() {
-  const state = {
-    status: "connected",
-    sandbox: true,
-    metrics: {
-      total: 100,
-      free: 50,
-    },
-  };
+  const [state] = useEvent("RUNTIME_CONNECTION", {
+    status: false,
+    metrics: { free: 50, total: 100 },
+  });
 
   const options = {
     legend: {
@@ -55,8 +50,7 @@ function Status() {
             alignItems={"center"}
             sx={{ pt: 1 }}
           >
-            {StatusContent(state)}&nbsp;
-            {StatusContent(state, true)}
+            <StatusContent state={state} />
           </Grid>
         </Grid>
       )}
@@ -64,45 +58,38 @@ function Status() {
   );
 }
 
-const StatusContent = (state, isText) => {
-  const { status, sandbox } = state;
+const StatusContent = ({ state }) => {
+  const { status } = state;
 
   switch (status) {
-    case "connected":
-      return isText ? (
-        <Typography sx={styles.statusText}>Connected</Typography>
-      ) : (
-        <CheckCircleOutlineIcon sx={styles.icon} />
+    case true:
+      return (
+        <>
+          <CheckCircleOutlineIcon sx={styles.icon} /> &nbsp;
+          <Typography sx={styles.statusText}>Connected</Typography>
+        </>
       );
-    case "connecting":
-      return isText ? (
-        <Typography sx={styles.statusText}>Connecting</Typography>
-      ) : (
-        <LoopIcon sx={styles.icon} />
-      );
-    case "disconnected":
-      return isText ? (
-        <Typography sx={styles.statusText}>Disconnecting</Typography>
-      ) : (
-        <WarningAmberIcon sx={styles.icon} />
-      );
-    case "unreachable":
-      return isText ? (
+
+    case false:
+      return (
         <Tooltip
           title={
-            !sandbox
-              ? "The nucleoid runtime is not started. Run the `npx nucleoidjs start` in terminal."
-              : "Codesandbox is hibernated. Click re-run button or Open sandbox."
+            "The nucleoid runtime is not started. Run the `npx nucleoidjs start` in terminal."
           }
           placement="top-start"
         >
-          <Typography sx={styles.statusText}>Not Connected</Typography>
+          <Box
+            sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+          >
+            <ErrorOutlineIcon sx={styles.icon} />
+            &nbsp;
+            <Typography sx={styles.statusText}>Not Connected</Typography>
+          </Box>
         </Tooltip>
-      ) : (
-        <ErrorOutlineIcon sx={styles.icon} />
       );
 
     default:
+      return null;
   }
 };
 
