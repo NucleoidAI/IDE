@@ -25,21 +25,16 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { publish } from "../../hooks/useEvent"; //eslint-disable-line
-import React, { useEffect, useState } from "react";
+import { publish, useEvent } from "../../hooks/useEvent";
+import React, { useEffect, useState } from "react"; //eslint-disable-line
 
 const ProcessDrawer = () => {
   const [state, , handleGetProject, saveProject] = useService();
-
-  const status = {
-    connected: "connected",
-  };
 
   const matchDownMD = useMediaQuery(theme.breakpoints.down("lg"));
   const location = useLocation();
 
   const [vercel, setVercel] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [backdrop, setBackdrop] = useState(false);
   const [link, setLink] = useState("");
 
@@ -58,34 +53,6 @@ const ProcessDrawer = () => {
     setVercel(false);
   };
 
-  const handleRun = () => {
-    if (!Settings.runtime()) {
-      Settings.runtime("sandbox");
-    }
-
-    if (Settings.runtime() === "npx") {
-      handleRunApi();
-    } else {
-      handleRunSandbox();
-    }
-
-    service.metrics().then((data) => {});
-  };
-
-  const handleRunApi = () => {
-    setLoading(true);
-    Settings.runtime("npx");
-    service
-      .openapi("start", state.get("nucleoid"))
-      .then(() => {
-        // TODO OPEN SWAGGER_DIALOG
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
-  };
-
   const handleSaveProject = () => {
     setBackdrop(true);
 
@@ -93,6 +60,111 @@ const ProcessDrawer = () => {
       setBackdrop(false);
     });
   };
+
+  const handleDownloadContext = () => {
+    const myURL = window.URL || window.webkitURL;
+    const file = new Blob([JSON.stringify(state.nucleoid)], {
+      type: "text/plain",
+    });
+    setLink(myURL.createObjectURL(file));
+  };
+
+  return (
+    <>
+      <Drawer
+        variant="persistent"
+        anchor={"right"}
+        open={
+          location.state?.anchor === undefined ? true : location.state?.anchor
+        }
+        sx={matchDownMD ? styles.drawerSmall : styles.drawer}
+      >
+        <Box>
+          <ApiButton />
+          <SwaggerButton />
+          <Tooltip placement="left" title="Login with GitHub">
+            <ListItem button onClick={auth}>
+              <GitHubIcon sx={styles.listItem} />
+            </ListItem>
+          </Tooltip>
+          <Tooltip placement="left" title="Download project">
+            <ListItem
+              component={"a"}
+              onClick={handleDownloadContext}
+              href={link}
+              download={Project.get().name + ".nuc.json"}
+              target="_blank"
+            >
+              <ImportExportIcon sx={styles.listItem} />
+            </ListItem>
+          </Tooltip>
+          <Tooltip placement="left" title="Open postman">
+            <ListItem button>
+              <PostmanIcon sx={styles.listItem} />
+            </ListItem>
+          </Tooltip>
+
+          <DialogTooltip
+            open={vercel}
+            placement="left"
+            title={<b>Deploy</b>}
+            message={
+              <Typography>
+                Vercel deployment will be here soon
+                <br />
+              </Typography>
+            }
+            handleTooltipClose={handleCloseVercel}
+          >
+            <ListItem button onClick={() => setVercel(true)}>
+              <RocketLaunchIcon sx={styles.listItem} />
+            </ListItem>
+          </DialogTooltip>
+        </Box>
+        <Tooltip placement="left" title="Save project">
+          <ListItem button onClick={handleSaveProject}>
+            <SaveIcon sx={styles.listItem} />
+          </ListItem>
+        </Tooltip>
+      </Drawer>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={backdrop}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </>
+  );
+};
+
+function SwaggerButton() {
+  const [runtimeConnection] = useEvent("RUNTIME_CONNECTION", {
+    status: false,
+    metrics: { free: 50, total: 100 },
+  });
+
+  const handleOpenSwaggerDialog = () => {
+    publish("SWAGGER_DIALOG", { open: true });
+  };
+
+  return (
+    <Tooltip placement="left" title="Open swagger dialog">
+      <ListItem
+        disabled={!runtimeConnection.status}
+        button
+        onClick={handleOpenSwaggerDialog}
+      >
+        <ViewListIcon sx={styles.listItem} />
+      </ListItem>
+    </Tooltip>
+  );
+}
+
+function ApiButton() {
+  const [state] = useService();
+  // const swaggerEvent = useEvent("SWAGGER_DIALOG");
+  const [loading, setLoading] = useState(false);
+  const runtime = Settings.runtime();
 
   const handleRunSandbox = async () => {
     const { data } = await service.openCodeSandBox(
@@ -112,164 +184,49 @@ const ProcessDrawer = () => {
       Settings.url.terminal(
         `https://${data.sandbox_id}-8448.sse.codesandbox.io/`
       );
-
+      publish("RUNTIME_CONNECTION", {
+        status: true,
+        metrics: { total: 50, free: 50 },
+      });
       publish("SWAGGER_DIALOG", { open: true });
     }
   };
 
-  const handleDownloadContext = () => {
-    const myURL = window.URL || window.webkitURL;
-    const file = new Blob([JSON.stringify(state.nucleoid)], {
-      type: "text/plain",
-    });
-    setLink(myURL.createObjectURL(file));
+  const handleRunApi = () => {
+    setLoading(true);
+    Settings.runtime("npx");
+    service
+      .openapi("start", state.get("nucleoid"))
+      .then(() => {
+        // TODO OPEN SWAGGER_DIALOG
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   };
 
-  const handleOpenSwaggerDialog = () => {
-    publish("SWAGGER_DIALOG", { open: true });
+  const handleRun = () => {
+    if (!Settings.runtime()) {
+      Settings.runtime("sandbox");
+    }
+
+    if (Settings.runtime() === "npx") {
+      handleRunApi();
+    } else {
+      handleRunSandbox();
+    }
+
+    service.metrics().then((data) => {});
   };
 
   return (
-    <>
-      <Drawer
-        variant="persistent"
-        anchor={"right"}
-        open={
-          location.state?.anchor === undefined ? true : location.state?.anchor
-        }
-        sx={matchDownMD ? styles.drawerSmall : styles.drawer}
-      >
-        <Box>
-          {loading ? (
-            <ListItem sx={matchDownMD ? styles.listItemSmall : styles.listItem}>
-              <CircularProgress color="inherit" size={23} />
-            </ListItem>
-          ) : (
-            ApiButton(
-              status,
-              handleRun,
-              handleRunApi,
-              handleRunSandbox,
-              matchDownMD
-            )
-          )}
-          <Tooltip placement="left" title="Open swagger dialog">
-            <ListItem button onClick={handleOpenSwaggerDialog}>
-              <ViewListIcon
-                sx={matchDownMD ? styles.listItemSmall : styles.listItem}
-              />
-            </ListItem>
-          </Tooltip>
-          <Tooltip placement="left" title="Login with GitHub">
-            <ListItem button onClick={auth}>
-              <GitHubIcon
-                sx={matchDownMD ? styles.listItemSmall : styles.listItem}
-              />
-            </ListItem>
-          </Tooltip>
-          <Tooltip placement="left" title="Download project">
-            <ListItem
-              component={"a"}
-              onClick={handleDownloadContext}
-              href={link}
-              download={Project.get().name + ".nuc.json"}
-              target="_blank"
-            >
-              <ImportExportIcon
-                sx={matchDownMD ? styles.listItemSmall : styles.listItem}
-              />
-            </ListItem>
-          </Tooltip>
-          <Tooltip placement="left" title="Open postman">
-            <ListItem button>
-              <PostmanIcon />
-            </ListItem>
-          </Tooltip>
-
-          <DialogTooltip
-            open={vercel}
-            placement="left"
-            title={<b>Deploy</b>}
-            message={
-              <Typography>
-                Vercel deployment will be here soon
-                <br />
-              </Typography>
-            }
-            handleTooltipClose={handleCloseVercel}
-          >
-            <ListItem button onClick={() => setVercel(true)}>
-              <RocketLaunchIcon
-                sx={matchDownMD ? styles.listItemSmall : styles.listItem}
-              />
-            </ListItem>
-          </DialogTooltip>
-        </Box>
-        <Tooltip placement="left" title="Save project">
-          <ListItem button onClick={handleSaveProject}>
-            <SaveIcon
-              sx={matchDownMD ? styles.listItemSmall : styles.listItem}
-            />
-          </ListItem>
-        </Tooltip>
-      </Drawer>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={backdrop}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </>
+    <Tooltip title={`Load project ${runtime}`} placement="left">
+      <ListItem name="onboardRun" button onClick={handleRun}>
+        <PlayCircleFilledIcon sx={styles.listItem} />
+      </ListItem>
+    </Tooltip>
   );
-};
-
-const ApiButton = (
-  status,
-  handleRun,
-  handleRunApi,
-  handleRunSandbox,
-  matchDownMD
-) => {
-  if (Settings.runtime() === "sandbox") {
-    return (
-      <>
-        <Tooltip title="Reload project sandbox" placement="left">
-          <ListItem name="onboardRun" button onClick={() => handleRunSandbox()}>
-            <PlayCircleFilledIcon
-              sx={matchDownMD ? styles.listItemSmall : styles.listItem}
-            />
-          </ListItem>
-        </Tooltip>
-      </>
-    );
-  }
-
-  switch (status) {
-    case "connected":
-      return (
-        <>
-          <Tooltip title="Reload project npx" placement="left">
-            <ListItem button onClick={() => handleRunApi(true)}>
-              <PlayCircleFilledIcon
-                sx={matchDownMD ? styles.listItemSmall : styles.listItem}
-              />
-            </ListItem>
-          </Tooltip>
-        </>
-      );
-
-    case "unreachable":
-      return (
-        <Tooltip name="onboardRun" title="Run project" placement="left">
-          <ListItem button onClick={handleRun}>
-            <PlayCircleFilledIcon
-              sx={matchDownMD ? styles.listItemSmall : styles.listItem}
-            />
-          </ListItem>
-        </Tooltip>
-      );
-    default:
-  }
-};
+}
 
 export default ProcessDrawer;
