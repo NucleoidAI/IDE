@@ -32,13 +32,6 @@ const styles = {
   listItem(theme) {
     return {
       fill: theme.palette.custom.grey,
-      marginTop: 1 / 2,
-      marginBottom: 1 / 2,
-    };
-  },
-  listItemSmall(theme) {
-    return {
-      fill: theme.palette.custom.grey,
     };
   },
 };
