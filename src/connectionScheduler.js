@@ -1,5 +1,5 @@
+import { publish } from "./hooks/useEvent";
 import service from "./service";
-import { publish } from "./hooks/useEvent"; //eslint-disable-line
 
 const scheduler = {
   timer: null,
