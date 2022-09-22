@@ -166,16 +166,16 @@ function ApiButton() {
   const [loading, setLoading] = useState(false);
   const runtime = Settings.runtime();
 
-  const handleRunSandbox = async () => {
+  const runSandbox = async () => {
+    setLoading(true);
     const { data } = await service.openCodeSandBox(
       CodeSandbox.generateContent(state)
     );
-
+    setLoading(false);
     setTimeout(() => {
       if (Settings.landing().level < 2) {
         onboardDispatcher({ level: 2 });
       }
-      Settings.runtime("sandbox");
     }, 0);
 
     if (data.sandbox_id) {
@@ -184,21 +184,18 @@ function ApiButton() {
       Settings.url.terminal(
         `https://${data.sandbox_id}-8448.sse.codesandbox.io/`
       );
-      publish("RUNTIME_CONNECTION", {
-        status: true,
-        metrics: { total: 50, free: 50 },
-      });
+
       publish("SWAGGER_DIALOG", { open: true });
     }
   };
 
-  const handleRunApi = () => {
+  const runNpx = () => {
     setLoading(true);
-    Settings.runtime("npx");
+
     service
       .openapi("start", state.get("nucleoid"))
       .then(() => {
-        // TODO OPEN SWAGGER_DIALOG
+        publish("SWAGGER_DIALOG", { open: true });
         setLoading(false);
       })
       .catch(() => {
@@ -207,25 +204,27 @@ function ApiButton() {
   };
 
   const handleRun = () => {
-    if (!Settings.runtime()) {
-      Settings.runtime("sandbox");
-    }
-
     if (Settings.runtime() === "npx") {
-      handleRunApi();
+      runNpx();
     } else {
-      handleRunSandbox();
+      runSandbox();
     }
-
-    service.metrics().then((data) => {});
   };
 
   return (
-    <Tooltip title={`Load project ${runtime}`} placement="left">
-      <ListItem name="onboardRun" button onClick={handleRun}>
-        <PlayCircleFilledIcon sx={styles.listItem} />
-      </ListItem>
-    </Tooltip>
+    <>
+      {loading ? (
+        <ListItem name="onboardRun">
+          <CircularProgress size={25} color={"secondary"} />
+        </ListItem>
+      ) : (
+        <Tooltip title={`Load project ${runtime}`} placement="left">
+          <ListItem name="onboardRun" button onClick={handleRun}>
+            <PlayCircleFilledIcon sx={styles.listItem} />
+          </ListItem>
+        </Tooltip>
+      )}
+    </>
   );
 }
 
