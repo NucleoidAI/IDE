@@ -6,7 +6,7 @@ import { publish, useEvent } from "../../hooks/useEvent";
 
 function OpenSwaggerDialog(props) {
   const { small } = props;
-  const event = useEvent("SWAGGER_DIALOG");
+  const [event] = useEvent("SWAGGER_DIALOG");
   const [runtimeConnection] = useEvent("RUNTIME_CONNECTION", {
     status: false,
     metrics: { free: 50, total: 100 },
