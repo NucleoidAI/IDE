@@ -11,6 +11,7 @@ import Status from "../../widgets/Status";
 import { drawerWidth } from "../../config";
 import settings from "../../settings";
 import styles from "./styles";
+import { useEvent } from "../../hooks/useEvent";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { ArrowForwardIos, DensityMedium } from "@mui/icons-material/";
@@ -53,6 +54,9 @@ function Menu(props) {
     setOpenMd(false);
   };
 
+  const MenuLinkWithFilter = () => withFilter(MenuLinks)(props);
+  const SmallMenuLinkWithFilter = () => withFilter(SmallMenuLinks)(props);
+
   return (
     <Box component="nav" sx={{ flexShrink: { md: 0 }, zIndex: 1300 }}>
       {matchDownMD ? (
@@ -72,7 +76,7 @@ function Menu(props) {
                   <SmallLogo />
                 </ListItem>
                 <br />
-                <SmallMenuLinks {...props} />
+                <SmallMenuLinkWithFilter />
               </List>
               <ProjectSelectSmall />
               <Box sx={{ height: "100%" }} />
@@ -116,7 +120,7 @@ function Menu(props) {
                 </IconButton>
               </ListItem>
               <br />
-              <MenuLinks {...props} />
+              <MenuLinkWithFilter />
             </List>
             <ProjectSelect />
             <Status />
@@ -141,7 +145,7 @@ function Menu(props) {
                   <SmallLogo />
                 </ListItem>
                 <br />
-                <SmallMenuLinks {...props} />
+                <SmallMenuLinkWithFilter />
               </List>
               <ProjectSelectSmall />
               <Box sx={{ height: "100%" }} />
@@ -172,7 +176,7 @@ function Menu(props) {
                 </IconButton>
               </ListItem>
               <br />
-              <MenuLinks {...props} />
+              <MenuLinkWithFilter />
             </List>
             <ProjectSelect />
             <Status />
@@ -187,6 +191,9 @@ function Menu(props) {
 
 const MenuLinks = (props) => {
   const navigate = useNavigate();
+  const [runtimeConnection] = useEvent("RUNTIME_CONNECTION", {
+    status: false,
+  });
 
   return (
     <>
@@ -194,6 +201,10 @@ const MenuLinks = (props) => {
         return (
           <React.Fragment key={title}>
             <ListItem
+              disabled={
+                runtimeConnection.status === false &&
+                (title === "Query" || title === "Logs")
+              }
               sx={styles.listItem}
               onClick={() => navigate(link, { state: { anchor } })}
               button
@@ -209,23 +220,36 @@ const MenuLinks = (props) => {
 };
 
 const SmallMenuLinks = (props) => {
-  const navigate = useNavigate();
-
   return (
     <>
-      {props.list.map(({ title, link, anchor, icon }) => (
-        <ListItem
-          key={title}
-          onClick={() => navigate(link, { state: { anchor } })}
-          button
-        >
-          <Tooltip placement="right" title={title}>
-            <Box sx={styles.listItemIconSmall}>{icon}</Box>
-          </Tooltip>
-        </ListItem>
+      {props.list.map((item) => (
+        <MenuItem {...item} />
       ))}
     </>
   );
 };
 
-export default withFilter(Menu);
+const MenuItem = ({ title, link, anchor, icon }) => {
+  const navigate = useNavigate();
+  const [runtimeConnection] = useEvent("RUNTIME_CONNECTION", {
+    status: false,
+  });
+
+  return (
+    <ListItem
+      disabled={
+        runtimeConnection.status === false &&
+        (title === "Query" || title === "Logs")
+      }
+      key={title}
+      onClick={() => navigate(link, { state: { anchor } })}
+      button
+    >
+      <Tooltip placement="right" title={title}>
+        <Box sx={styles.listItemIconSmall}>{icon}</Box>
+      </Tooltip>
+    </ListItem>
+  );
+};
+
+export default Menu;

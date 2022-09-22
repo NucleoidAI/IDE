@@ -12,6 +12,7 @@ function OpenSwaggerDialog(props) {
     metrics: { free: 50, total: 100 },
   });
   console.debug(event);
+  console.log(runtimeConnection);
 
   const openSwaggerDialog = () => {
     publish("SWAGGER_DIALOG", { open: true });

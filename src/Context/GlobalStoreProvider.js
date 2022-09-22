@@ -3,9 +3,7 @@ import Settings from "../settings";
 import State from "../state";
 import project from "../project";
 import service from "../service";
-
 import { ContextProvider } from "./providers/contextProvider"; // eslint-disable-line
-
 import { contextReducer } from "./reducers/contextReducer";
 import { contextToMap } from "../utils/Parser";
 import { publish } from "../Event";
