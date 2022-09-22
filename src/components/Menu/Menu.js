@@ -222,8 +222,8 @@ const MenuLinks = (props) => {
 const SmallMenuLinks = (props) => {
   return (
     <>
-      {props.list.map((item) => (
-        <MenuItem {...item} />
+      {props.list.map((item, key) => (
+        <MenuItem {...item} key={key} />
       ))}
     </>
   );
