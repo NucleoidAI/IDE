@@ -6,6 +6,7 @@ import Settings from "../settings";
 import StarUsOnGithub from "./StarUsOnGithub";
 import Swagger from "../icons/Swagger";
 import onboardDispatcher from "./Onboard/onboardDispatcher";
+import scheduler from "../connectionScheduler";
 import theme from "../theme";
 import {
   AppBar,
@@ -34,8 +35,7 @@ export default function SwaggerDialog() {
         onboardDispatcher({ level: 3 });
       }, 1000);
     }
-
-    // TODO ping runtime
+    scheduler.start();
   }
 
   React.useEffect(() => {}, [swagger.open]);
