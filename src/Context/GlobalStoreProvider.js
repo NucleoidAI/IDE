@@ -3,6 +3,8 @@ import Settings from "../settings";
 import State from "../state";
 import project from "../project";
 import service from "../service";
+import vfs from "../vfs";
+
 import { ContextProvider } from "./providers/contextProvider"; // eslint-disable-line
 import { contextReducer } from "./reducers/contextReducer";
 import { contextToMap } from "../utils/Parser";
@@ -57,9 +59,8 @@ const InitContext = () => {
   }
 
   if (Settings.beta()) {
-    publish("COMPILE_CONTEXT", {
-      files: contextToMap(context.nucleoid),
-    }).then();
+    const files = contextToMap(context.nucleoid);
+    vfs.init(files);
   }
   return context;
 };

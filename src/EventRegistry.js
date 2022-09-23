@@ -1,17 +1,18 @@
 import React from "react";
-import { compile } from "./Compiler";
-import { subscribe } from "./Event";
+import Settings from "./settings";
+import vfs from "./vfs";
 //import { useContext } from "Context/providers/contextProvider";
 
 const EventRegistry = () => {
   // const [context] = useContext();
 
   React.useEffect(() => {
-    subscribe("COMPILE_CONTEXT", (payload) => {
-      const before = Date.now();
-      compile(payload);
-      const after = Date.now();
-      console.debug(`Compiler took ${after - before}ms`);
+    Event.subscribe("CONTEXT_CHANGED", ({ files }) => {
+      if (Settings.beta()) {
+        files.forEach((item) => {
+          vfs.upsert(item.key, item.value);
+        });
+      }
     });
   }, []);
 

@@ -3,7 +3,6 @@ import ClosableDialogTitle from "../../components/ClosableDialogTitle/ClosableDi
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import FolderIcon from "@mui/icons-material/FolderRounded";
 import Path from "../../utils/Path";
 import actions from "../../actions";
 import styles from "./styles";
@@ -14,24 +13,26 @@ import { Grid, MenuItem, Select, TextField, Typography } from "@mui/material";
 export default function FunctionDialog() {
   const [context, dispatch] = useContext();
   const { pages } = context;
-  let type = "FOLDER";
+  let type = context.pages.functions.dialog.type;
   let path;
   const selectedFunction = pages.functions.selected;
   const { prefix } = selectedFunction ? Path.split(selectedFunction) : {};
 
   const handleSaveFunction = () => {
+    console.log(context.pages.functions.dialog.type, path);
+    //console.log(prefix);
+
     dispatch({
       type: actions.saveFunctionDialog,
       payload: {
-        type: type === "FOLDER" ? "FUNCTION" : type,
-        path:
-          type === "FOLDER"
-            ? prefix + Path.addSlashMark(prefix) + path + "/A"
-            : prefix + Path.addSlashMark(prefix) + path,
-        code: "",
+        path: "/" + path,
+        type: type.toUpperCase(),
+        definition: `${type.toLowerCase()} ${path} { }`,
         params: [],
+        ext: "js",
       },
     });
+    handleClose();
   };
 
   const handleClose = () => {
@@ -48,7 +49,7 @@ export default function FunctionDialog() {
       <DialogContent>
         <Grid sx={styles.dialogContent}>
           <Select
-            defaultValue={"FOLDER"}
+            defaultValue={type}
             sx={styles.select}
             onChange={(e) => (type = e.target.value)}
           >
@@ -62,12 +63,6 @@ export default function FunctionDialog() {
               <Grid sx={styles.optionContainer}>
                 <Typography sx={styles.optionFunction}>class</Typography>
                 <Typography>Class</Typography>
-              </Grid>
-            </MenuItem>
-            <MenuItem value={"FOLDER"}>
-              <Grid sx={styles.optionContainer}>
-                <FolderIcon sx={styles.icon} />
-                <Typography>Folder</Typography>
               </Grid>
             </MenuItem>
           </Select>
