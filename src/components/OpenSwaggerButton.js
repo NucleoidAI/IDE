@@ -4,6 +4,7 @@ import theme from "../theme";
 import { Box, Button, Typography } from "@mui/material";
 
 const OpenSwaggerButton = ({ clickEvent, small, disabled }) => {
+  console.log(disabled);
   return (
     <Button
       disabled={disabled}
@@ -35,7 +36,7 @@ const OpenSwaggerButton = ({ clickEvent, small, disabled }) => {
           </>
         )}
 
-        {small && <Swagger fill={theme.palette.custom.grey} />}
+        {small && <Swagger fill={theme.palette.custom.grey}  disabled={disabled} />}
       </Box>
     </Button>
   );
