@@ -1,5 +1,5 @@
-import CodeSandbox from "../icons/CodeSandbox";
 import React from "react";
+import Swagger from "../icons/Swagger";
 import theme from "../theme";
 import { Box, Button, Typography } from "@mui/material";
 
@@ -27,16 +27,16 @@ const OpenSandboxButton = ({ clickEvent, small, disabled }) => {
       >
         {!small && (
           <>
-            <CodeSandbox fill={theme.palette.custom.grey} disabled={disabled} />
+            <Swagger fill={theme.palette.custom.grey} disabled={disabled} />
             <Typography sx={{ pl: 3 / 2 }} fontFamily={"Trebuchet MS"}>
-              Open CodeSandbox
+              Open nuc sandbox
             </Typography>
             <Box />
           </>
         )}
 
         {small && (
-          <CodeSandbox fill={theme.palette.custom.grey} disabled={disabled} />
+          <Swagger fill={theme.palette.custom.grey} disabled={disabled} />
         )}
       </Box>
     </Button>
