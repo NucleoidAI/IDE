@@ -253,7 +253,7 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
               files: contextToMap(state.nucleoid).filter(
                 (item) => item.key === key
               ),
-            }).then();
+            });
           }
         }}
         onChange={(e) => {
