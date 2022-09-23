@@ -3,11 +3,11 @@ import ArrowIcon from "../../icons/Arrow";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteMethodDialog from "../../components/DeleteMethodDialog";
 import EditIcon from "@mui/icons-material/Edit";
-import Event from "Event";
 import Fade from "@mui/material/Fade";
 import NonExpandableAPITreeItem from "../../components/NonExpandableAPITreeItem";
 import ResourceMenu from "../ResourceMenu";
 import styles from "./styles";
+import { subscribe } from "../../Event";
 import theme from "../../theme";
 import { useContext } from "../../Context/providers/contextProvider";
 import {
@@ -119,7 +119,7 @@ function APITree() {
   };
 
   useEffect(() => {
-    const event = Event.subscribe("DIAGNOSTICS_COMPLETED", (diagnostics) =>
+    const event = subscribe("DIAGNOSTICS_COMPLETED", (diagnostics) =>
       setErrors(diagnostics)
     );
 
