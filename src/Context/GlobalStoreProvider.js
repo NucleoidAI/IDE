@@ -8,7 +8,6 @@ import vfs from "../vfs";
 import { ContextProvider } from "./providers/contextProvider"; // eslint-disable-line
 import { contextReducer } from "./reducers/contextReducer";
 import { contextToMap } from "../utils/Parser";
-import { publish } from "../Event";
 
 const InitContext = () => {
   if (!Settings.beta()) {
