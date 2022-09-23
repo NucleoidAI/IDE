@@ -194,6 +194,7 @@ function ApiButton() {
       .openapi("start", state.get("nucleoid"))
       .then(() => {
         publish("SWAGGER_DIALOG", { open: true });
+        scheduler.start();
         setLoading(false);
       })
       .catch(() => {
