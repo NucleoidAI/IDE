@@ -26,7 +26,7 @@ const scheduler = {
         service
           .metrics()
           .then((data) => {
-            console.log(data);
+            console.debug(data);
             publish("RUNTIME_CONNECTION", {
               status: true,
               metrics: data,

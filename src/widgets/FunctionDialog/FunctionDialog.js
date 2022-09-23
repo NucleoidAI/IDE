@@ -19,9 +19,6 @@ export default function FunctionDialog() {
   const { prefix } = selectedFunction ? Path.split(selectedFunction) : {};
 
   const handleSaveFunction = () => {
-    console.log(context.pages.functions.dialog.type, path);
-    //console.log(prefix);
-
     dispatch({
       type: actions.saveFunctionDialog,
       payload: {

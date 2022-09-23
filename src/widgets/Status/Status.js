@@ -13,8 +13,6 @@ function Status() {
     metrics: { free: 50, total: 100 },
   });
 
-  console.log(state, "from status");
-
   const options = {
     legend: {
       position: true,
