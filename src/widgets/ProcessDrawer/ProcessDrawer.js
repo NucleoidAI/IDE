@@ -10,6 +10,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import onboardDispatcher from "../../components/Onboard/onboardDispatcher";
+import scheduler from "../../connectionScheduler";
 import service from "../../service";
 import styles from "./styles";
 import theme from "../../theme";
@@ -181,7 +182,7 @@ function ApiButton() {
       Settings.url.terminal(
         `https://nucleoid.com/sandbox/terminal/${data.id}/`
       );
-
+      scheduler.start();
       publish("SWAGGER_DIALOG", { open: true });
     }
   };
