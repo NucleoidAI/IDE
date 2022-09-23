@@ -1,6 +1,6 @@
 import { publish } from "./hooks/useEvent";
 import service from "./service";
-
+// TODO refactor this file
 const scheduler = {
   timer: null,
   start() {
@@ -19,6 +19,7 @@ const scheduler = {
             status: false,
             metrics: { total: 100, free: 50 },
           });
+          publish("SWAGGER_DIALOG", { state: false });
         });
 
       this.timer = setInterval(() => {
@@ -37,6 +38,7 @@ const scheduler = {
               status: false,
               metrics: { total: 100, free: 50 },
             });
+            publish("SWAGGER_DIALOG", { state: false });
           });
       }, 60 * 1000);
     }
