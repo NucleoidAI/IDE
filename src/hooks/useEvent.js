@@ -2,17 +2,17 @@ import React from "react";
 
 import { eventMap, publish, subscribe } from "../Event";
 
-const useEvent = (subject = "", initialState = {}) => {
-  function updateMap() {
-    if (eventMap.has(subject)) {
-      return eventMap.get(subject);
-    } else {
-      eventMap.set(subject, initialState);
-      return eventMap.get(subject);
-    }
+function updateMap(subject, initialState) {
+  if (eventMap.has(subject)) {
+    return eventMap.get(subject);
+  } else {
+    eventMap.set(subject, initialState);
+    return eventMap.get(subject);
   }
+}
 
-  const [event, setEvent] = React.useState(updateMap());
+const useEvent = (subject = "", initialState) => {
+  const [event, setEvent] = React.useState(updateMap(subject, initialState));
 
   React.useEffect(() => {
     const subs = subscribe(subject, (event) => {
