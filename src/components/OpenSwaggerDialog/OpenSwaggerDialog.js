@@ -1,7 +1,7 @@
 import OpenSandboxButton from "../../components/OpenSandboxButton";
 import OpenSwaggerButton from "../../components/OpenSwaggerButton";
-import React, { useEffect } from "react";
 import Settings from "../../settings";
+import React, { useEffect } from "react";
 import { publish, useEvent } from "../../hooks/useEvent";
 
 function OpenSwaggerDialog(props) {
