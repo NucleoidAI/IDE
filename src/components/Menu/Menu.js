@@ -193,6 +193,10 @@ const MenuLinks = (props) => {
   const navigate = useNavigate();
   const [runtimeConnection] = useEvent("RUNTIME_CONNECTION", {
     status: false,
+    metrics: {
+      total: 100,
+      free: 50,
+    },
   });
 
   return (
