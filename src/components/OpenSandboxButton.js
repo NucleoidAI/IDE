@@ -29,7 +29,7 @@ const OpenSandboxButton = ({ clickEvent, small, disabled }) => {
           <>
             <Swagger fill={theme.palette.custom.grey} disabled={disabled} />
             <Typography sx={{ pl: 3 / 2 }} fontFamily={"Trebuchet MS"}>
-              Open nuc sandbox
+              Open Sandbox
             </Typography>
             <Box />
           </>

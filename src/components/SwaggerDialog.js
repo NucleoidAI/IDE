@@ -90,8 +90,9 @@ export default function SwaggerDialog() {
                   </>
                 ) : (
                   <>
+                    <Swagger fill={theme.palette.custom.grey} />
                     <Typography sx={{ pl: 3 / 2 }} variant="h6">
-                      nuc sandbox
+                      Sandbox
                     </Typography>
                   </>
                 )}
@@ -201,7 +202,7 @@ function RuntimeSwitch() {
             width: 108,
           }}
         >
-          nuc sandbox
+          sandbox
         </Typography>
       </Box>
     </Box>
