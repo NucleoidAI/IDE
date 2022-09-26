@@ -1,5 +1,5 @@
 import State from "../state";
-import { contextReducer } from "../Context/reducers/contextReducer";
+import { contextReducer } from "../Context/reducer";
 
 test("Resolve context with property", () => {
   const state = contextReducer(State.init(), {
