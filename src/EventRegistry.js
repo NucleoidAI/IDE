@@ -3,7 +3,7 @@ import Settings from "./settings";
 import { subscribe } from "./Event";
 import vfs from "./vfs";
 
-//import { useContext } from "Context/providers/contextProvider";
+//import { useContext } from "Context/context";
 
 const EventRegistry = () => {
   // const [context] = useContext();

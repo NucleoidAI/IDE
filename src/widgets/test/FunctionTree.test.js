@@ -3,7 +3,7 @@ import FunctionTree from "../../widgets/FunctionTree";
 import React from "react";
 import State from "../../state";
 import { render, screen } from "@testing-library/react";
-import { ContextProvider } from "../../Context/providers/contextProvider";
+import { ContextProvider } from "../../Context/context";
 import { contextReducer } from "../../Context/reducers/contextReducer";
 
 test("List nested functions", () => {

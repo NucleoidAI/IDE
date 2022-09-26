@@ -9,7 +9,7 @@ import ResourceMenu from "../ResourceMenu";
 import styles from "./styles";
 import { subscribe } from "../../Event";
 import theme from "../../theme";
-import { useContext } from "../../Context/providers/contextProvider";
+import { useContext } from "../../Context/context";
 import {
   Box,
   Card,

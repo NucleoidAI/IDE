@@ -2,7 +2,7 @@ import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
 import ProjectDialog from "../../widgets/ProjectDialog";
 import React from "react";
 import project from "../../project";
-import { useContext } from "../../Context/providers/contextProvider";
+import { useContext } from "../../Context/context";
 
 import { Box, Button } from "@mui/material/";
 

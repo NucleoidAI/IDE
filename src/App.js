@@ -1,9 +1,9 @@
 import API from "./pages/ide/API";
+import ContextProvider from "./Context/context";
 import Dashboard from "./pages/ide/Dashboard";
 import Dev from "./pages/Dev";
 import EventRegistry from "./EventRegistry";
 import Functions from "./pages/ide/Functions";
-import GlobalStoreProvider from "./Context/GlobalStoreProvider";
 import IDE from "./layouts/IDE";
 import Login from "./pages/ide/login";
 import Logs from "./pages/ide/Logs";
@@ -36,7 +36,7 @@ function App() {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <GlobalStoreProvider>
+        <ContextProvider>
           <BrowserRouter basename="ide">
             <EventRegistry />
             <Routes>
@@ -56,7 +56,7 @@ function App() {
               <Route path={"/login"} element={<Login />} />
             </Routes>
           </BrowserRouter>
-        </GlobalStoreProvider>
+        </ContextProvider>
       </ThemeProvider>
     </StyledEngineProvider>
   );

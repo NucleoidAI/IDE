@@ -1,7 +1,7 @@
 import Project from "../project";
 import Settings from "../settings";
 import service from "../service";
-import { useContext } from "../Context/providers/contextProvider";
+import { useContext } from "../Context/context";
 
 function useService() {
   const [state, dispatch] = useContext();

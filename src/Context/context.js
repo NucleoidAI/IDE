@@ -1,13 +1,16 @@
 import React from "react";
 import Settings from "../settings";
 import State from "../state";
+import { contextReducer } from "./reducers/contextReducer";
+import { contextToMap } from "../utils/Parser";
 import project from "../project";
 import service from "../service";
 import vfs from "../vfs";
 
-import { ContextProvider } from "./providers/contextProvider"; // eslint-disable-line
-import { contextReducer } from "./reducers/contextReducer";
-import { contextToMap } from "../utils/Parser";
+const ContextStore = React.createContext();
+ContextStore.displayName = "ContextStore";
+
+const useContext = () => React.useContext(ContextStore);
 
 const InitContext = () => {
   if (!Settings.beta()) {
@@ -64,12 +67,18 @@ const InitContext = () => {
   return context;
 };
 
-const GlobalStoreProvider = ({ children }) => {
+const ContextProvider = ({ children }) => {
+  const [contextState, contextDispatch] = React.useReducer(
+    contextReducer,
+    InitContext()
+  );
+
   return (
-    <ContextProvider state={InitContext()} reducer={contextReducer}>
+    <ContextStore.Provider value={[contextState, contextDispatch]}>
       {children}
-    </ContextProvider>
+    </ContextStore.Provider>
   );
 };
 
-export default GlobalStoreProvider;
+export { useContext };
+export default ContextProvider;

@@ -4,7 +4,7 @@ import React from "react";
 import State from "../../state";
 import { compile, graph } from "../../widgets/APITree/APITree";
 import { render, screen } from "@testing-library/react";
-import { ContextProvider } from "../../Context/providers/contextProvider";
+import { ContextProvider } from "../../Context/context";
 import { contextReducer } from "../../Context/reducers/contextReducer";
 
 test("List nested APIs", () => {
