@@ -1,5 +1,5 @@
-import State from "../../state";
-import project from "../../project";
+import State from "../state";
+import project from "../project";
 import { v4 as uuid } from "uuid";
 
 function contextReducer(state, { type, payload }) {

@@ -1,7 +1,7 @@
 import React from "react";
 import Settings from "../settings";
 import State from "../state";
-import { contextReducer } from "./reducers/contextReducer";
+import { contextReducer } from "./reducer";
 import { contextToMap } from "../utils/Parser";
 import project from "../project";
 import service from "../service";
