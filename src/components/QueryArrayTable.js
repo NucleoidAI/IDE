@@ -2,7 +2,7 @@ import React from "react";
 import { v4 as uuid } from "uuid";
 import { DataGrid } from "@mui/x-data-grid"; //eslint-disable-line
 
-export default function QueryArrayTable({ json }) {
+export default function QueryArrayTable({ json, pageSize }) {
   const generateRowsandColumns = (json, isRow) => {
     const columns = [];
     if (typeof json[0] === "object") {
@@ -22,8 +22,8 @@ export default function QueryArrayTable({ json }) {
           columns.push({
             field: key,
             headerName: key,
-            width: 150,
             editable: true,
+            flex: 1,
           });
         });
       }
@@ -33,13 +33,12 @@ export default function QueryArrayTable({ json }) {
           return {
             id: uuid(),
             item,
-            width: 150,
           };
         });
       } else {
         columns.push(
           { field: "id", headerName: "ID", width: 150 },
-          { field: "item", headerName: "item", width: 150 }
+          { field: "item", headerName: "item", flex: 1 }
         );
       }
     }
@@ -52,9 +51,9 @@ export default function QueryArrayTable({ json }) {
       <DataGrid
         columns={generateRowsandColumns(json)}
         rows={generateRowsandColumns(json, true)}
-        pageSize={6}
+        pageSize={pageSize || 6}
         visibleColumns={"id"}
-        rowsPerPageOptions={[6]}
+        rowsPerPageOptions={[pageSize || 6]}
         disableSelectionOnClick
       />
     </div>

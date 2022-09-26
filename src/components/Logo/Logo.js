@@ -1,4 +1,5 @@
 import React from "react";
+import Settings from "../../settings";
 import styles from "./styles";
 import { Box, Typography } from "@mui/material";
 
@@ -13,11 +14,11 @@ function Logo(props) {
         </Typography>
         &nbsp;
         <Typography display={"inline"} fontSize={"18px"} color={"#dfdfdf"}>
-          {title}
+          {Settings.plugin() || title}
         </Typography>
         &nbsp;
         <Typography className={"neon"}>
-          <sub>Beta</sub>
+          <sub>{Settings.plugin() ? "" : "Beta"}</sub>
         </Typography>
       </Box>
     </Box>

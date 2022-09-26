@@ -17,8 +17,8 @@ const Settings = {
       }
     },
   },
-  codesandbox: {
-    url: "https://codesandbox.io/api/v1/sandboxes/define?json=1",
+  sandbox: {
+    url: "https://nucleoid.com/sandbox/",
     sandboxID: (id) => {
       if (id) {
         localStorage.setItem("sandbox_id", id);
@@ -63,6 +63,13 @@ const Settings = {
       localStorage.setItem("description", data);
     } else {
       return localStorage.getItem("description");
+    }
+  },
+  plugin: (data) => {
+    if (data !== undefined && data !== null) {
+      localStorage.setItem("plugin", data);
+    } else {
+      return localStorage.getItem("plugin");
     }
   },
   landing: (data) => {

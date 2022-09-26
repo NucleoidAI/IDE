@@ -139,8 +139,14 @@ const deleteProject = (project) => {
   });
 };
 
-const openCodeSandBox = (data) => {
-  return axios(Settings.codesandbox.url, {
+const createSandbox = (context) => {
+  const data = {
+    functions: context.nucleoid.functions,
+    api: context.nucleoid.api,
+    types: context.nucleoid.types,
+  };
+
+  return axios(Settings.sandbox.url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -162,7 +168,7 @@ const service = {
   addProject,
   updateProject,
   deleteProject,
-  openCodeSandBox,
+  createSandbox,
   getCodeFromGithub,
 };
 

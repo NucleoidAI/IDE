@@ -1,6 +1,7 @@
 import { v4 as uuid } from "uuid";
 
 const subscriptions = {};
+const eventMap = new Map();
 
 const subscribe = (type, callback) => {
   const id = uuid();
@@ -17,21 +18,14 @@ const subscribe = (type, callback) => {
 };
 
 const publish = (type, payload) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      if (!subscriptions[type]) resolve();
-
-      Object.keys(subscriptions[type]).forEach((key) => {
-        subscriptions[type][key](payload);
-      });
-      resolve();
-    }, 0);
-  });
+  setTimeout(() => {
+    if (!subscriptions[type]) return;
+    Object.keys(subscriptions[type]).forEach((key) => {
+      subscriptions[type][key](payload);
+    });
+  }, 0);
 };
 
-const Event = {
-  subscribe,
-  publish,
-};
+//const Event = { subscribe, publish };
 
-export default Event;
+export { subscribe, publish, eventMap };

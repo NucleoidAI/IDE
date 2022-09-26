@@ -89,7 +89,7 @@ const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
                 width: 108,
               }}
             >
-              CodeSandbox
+              nuc sandbox
             </Typography>
           </Box>
           <Box

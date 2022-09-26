@@ -3,12 +3,10 @@ import React from "react";
 import Settings from "../../settings";
 import SettingsDialogTabs from "../../components/SettingsDialogTabs";
 import theme from "../../theme";
-import useLayout from "../../hooks/useLayout";
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
+import { publish } from "../../Event"; //eslint-disable-line
 
 const SettingsDialog = ({ handleClose }) => {
-  const [, dispatch] = useLayout();
-
   const urlRef = React.useRef();
 
   React.useEffect(() => {
@@ -35,8 +33,7 @@ const SettingsDialog = ({ handleClose }) => {
     Settings.runtime(urlRef.current.runtime);
 
     Settings.description(urlRef.current.description);
-
-    dispatch({ type: "SWAGGER_DIALOG", payload: { dialogStatus: false } });
+    publish("SWAGGER_DIALOG", { open: false });
     handleClose();
   }
 

@@ -1,13 +1,15 @@
 import API from "./pages/ide/API";
+import ContextProvider from "./Context/context";
+import Dashboard from "./pages/ide/Dashboard";
 import Dev from "./pages/Dev";
 import EventRegistry from "./EventRegistry";
 import Functions from "./pages/ide/Functions";
-import GlobalStoreProvider from "./Context/GlobalStoreProvider";
 import IDE from "./layouts/IDE";
 import Login from "./pages/ide/login";
 import Logs from "./pages/ide/Logs";
 import Query from "./pages/ide/Query";
 import React from "react";
+import Settings from "./settings";
 import theme from "./theme";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import {
@@ -34,13 +36,18 @@ function App() {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <GlobalStoreProvider>
+        <ContextProvider>
           <BrowserRouter basename="ide">
             <EventRegistry />
             <Routes>
               <Route path="/" element={<IDE />}>
-                <Route index element={<Navigate to="/api" />} />
-                <Route path="/api" element={<API />} />
+                {Settings.plugin() ? (
+                  <Route index element={<Navigate to="/dashboard" />} />
+                ) : (
+                  <Route index element={<Navigate to="/api" />} />
+                )}
+                <Route path={"/dashboard"} element={<Dashboard />} />
+                <Route path={"/api"} element={<API />} />
                 <Route path={"/functions"} element={<Functions />} />
                 <Route path={"/query"} element={<Query />} />
                 <Route path={"/logs"} element={<Logs />} />
@@ -49,7 +56,7 @@ function App() {
               <Route path={"/login"} element={<Login />} />
             </Routes>
           </BrowserRouter>
-        </GlobalStoreProvider>
+        </ContextProvider>
       </ThemeProvider>
     </StyledEngineProvider>
   );

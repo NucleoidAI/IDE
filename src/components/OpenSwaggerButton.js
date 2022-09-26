@@ -3,12 +3,20 @@ import Swagger from "../icons/Swagger";
 import theme from "../theme";
 import { Box, Button, Typography } from "@mui/material";
 
-const OpenSwaggerButton = ({ clickEvent, small }) => {
+const OpenSwaggerButton = ({ clickEvent, small, disabled }) => {
   return (
     <Button
+      disabled={disabled}
       onClick={clickEvent}
       size={"large"}
-      sx={{ width: "100%", color: "#A5A7AB", textTransform: "none" }}
+      sx={{
+        width: "100%",
+        color: "#A5A7AB",
+        textTransform: "none",
+        "&:disabled": {
+          color: "#6a7178",
+        },
+      }}
     >
       <Box
         sx={{
@@ -19,7 +27,7 @@ const OpenSwaggerButton = ({ clickEvent, small }) => {
       >
         {!small && (
           <>
-            <Swagger fill={theme.palette.custom.grey} />
+            <Swagger fill={theme.palette.custom.grey} disabled={disabled} />
             <Typography sx={{ pl: 3 / 2 }} fontFamily={"Trebuchet MS"}>
               Open Swagger
             </Typography>
@@ -27,7 +35,9 @@ const OpenSwaggerButton = ({ clickEvent, small }) => {
           </>
         )}
 
-        {small && <Swagger fill={theme.palette.custom.grey} />}
+        {small && (
+          <Swagger fill={theme.palette.custom.grey} disabled={disabled} />
+        )}
       </Box>
     </Button>
   );

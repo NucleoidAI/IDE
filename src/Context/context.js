@@ -1,26 +1,16 @@
 import React from "react";
 import Settings from "../settings";
 import State from "../state";
+import { contextReducer } from "./reducer";
+import { contextToMap } from "../utils/Parser";
 import project from "../project";
 import service from "../service";
 import vfs from "../vfs";
 
-import { ContextProvider } from "./providers/contextProvider"; // eslint-disable-line
-import { LayoutContextProvider } from "./providers/layoutContextProvider";
-import { contextReducer } from "./reducers/contextReducer";
-import { contextToMap } from "../utils/Parser";
-import { layoutReducer } from "./reducers/layoutReducer";
+const ContextStore = React.createContext();
+ContextStore.displayName = "ContextStore";
 
-const initStatus = {
-  status: "unreachable",
-  sandbox: Settings.codesandbox.sandboxID() ? true : false,
-  sandboxDialog: false,
-  metrics: {
-    free: 50,
-    total: 100,
-    animation: 800,
-  },
-};
+const useContext = () => React.useContext(ContextStore);
 
 const InitContext = () => {
   if (!Settings.beta()) {
@@ -37,6 +27,10 @@ const InitContext = () => {
 
   if (!Settings.url.terminal()) {
     Settings.url.terminal("http://localhost:8448/");
+  }
+
+  if (!Settings.runtime()) {
+    Settings.runtime("sandbox");
   }
 
   if (!Settings.description()) {
@@ -73,14 +67,18 @@ const InitContext = () => {
   return context;
 };
 
-const GlobalStoreProvider = ({ children }) => {
+const ContextProvider = ({ children }) => {
+  const [contextState, contextDispatch] = React.useReducer(
+    contextReducer,
+    InitContext()
+  );
+
   return (
-    <ContextProvider state={InitContext()} reducer={contextReducer}>
-      <LayoutContextProvider state={initStatus} reducer={layoutReducer}>
-        {children}
-      </LayoutContextProvider>
-    </ContextProvider>
+    <ContextStore.Provider value={[contextState, contextDispatch]}>
+      {children}
+    </ContextStore.Provider>
   );
 };
 
-export default GlobalStoreProvider;
+export { useContext };
+export default ContextProvider;

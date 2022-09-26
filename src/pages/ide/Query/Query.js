@@ -5,7 +5,7 @@ import QueryResult from "../../../components/QueryResult";
 import RatioIconButtons from "../../../components/RatioIconButtons/RatioIconButtons";
 import service from "../../../service";
 import styles from "./styles";
-import { useContext } from "../../../Context/providers/contextProvider";
+import { useContext } from "../../../Context/context";
 import {
   Box,
   Card,

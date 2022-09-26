@@ -1,5 +1,4 @@
 import AceEditor from "react-ace";
-import Event from "Event";
 import Settings from "../../settings";
 import linter from "../../linter";
 import prettier from "../../prettier";
@@ -14,8 +13,9 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-chrome";
 import { addCompleter } from "ace-builds/src-noconflict/ext-language_tools";
-import { contextToMap } from "utils/Parser";
+import { contextToMap } from "../../utils/Parser";
 import { parser } from "react-nucleoid";
+import { publish } from "../../Event";
 import { Backdrop, CircularProgress } from "@mui/material";
 
 function Editor({ name, api, functions, log, editorRef, ...other }) {
@@ -248,12 +248,12 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
               key = state.get("pages.functions.selected") + ".js";
             }
 
-            Event.publish("CONTEXT_CHANGED", {
+            publish("CONTEXT_CHANGED", {
               // TODO Optimize preparing files
               files: contextToMap(state.nucleoid).filter(
                 (item) => item.key === key
               ),
-            }).then();
+            });
           }
         }}
         onChange={(e) => {

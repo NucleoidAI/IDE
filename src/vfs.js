@@ -1,6 +1,6 @@
-import Event from "Event";
 import { FileWatcherEventKind } from "typescript/lib/tsserverlibrary";
 import { createDefaultMap } from "./dist/typescript/defaultMap";
+import { publish } from "./Event";
 import typescript from "typescript";
 
 let host, program, timeout;
@@ -99,7 +99,7 @@ const init = (files) => {
 
       if ([6193, 6194].includes(code)) {
         console.debug("Diagnostics", diagnostics);
-        Event.publish("DIAGNOSTICS_COMPLETED", diagnostics);
+        publish("DIAGNOSTICS_COMPLETED", diagnostics);
       }
     }
   );
