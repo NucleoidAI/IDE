@@ -162,12 +162,13 @@ function SwaggerButton() {
 
 function ApiButton() {
   const [state] = useService();
-  // const swaggerEvent = useEvent("SWAGGER_DIALOG");
+  const [errors] = useEvent("DIAGNOSTICS_COMPLETED", []);
   const [loading, setLoading] = useState(false);
   const runtime = Settings.runtime();
 
   const runSandbox = async () => {
     setLoading(true);
+
     const { data } = await service.createSandbox(state);
     setLoading(false);
     setTimeout(() => {
@@ -218,7 +219,15 @@ function ApiButton() {
         </ListItem>
       ) : (
         <Tooltip title={`Load project ${runtime}`} placement="left">
-          <ListItem name="onboardRun" button onClick={handleRun}>
+          <ListItem
+            name="onboardRun"
+            button
+            onClick={handleRun}
+            onMouseEnter={(e) => {
+              e.currentTarget.focus();
+            }}
+            disabled={errors.length > 0}
+          >
             <PlayCircleFilledIcon sx={styles.listItem} />
           </ListItem>
         </Tooltip>

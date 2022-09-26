@@ -17,7 +17,7 @@ const useEvent = (subject = "", initialState) => {
   React.useEffect(() => {
     const subs = subscribe(subject, (event) => {
       eventMap.set(subject, event);
-      setEvent({ ...event });
+      setEvent(event);
     });
 
     return () => {
@@ -29,3 +29,4 @@ const useEvent = (subject = "", initialState) => {
 };
 
 export { useEvent, publish };
+export default useEvent;

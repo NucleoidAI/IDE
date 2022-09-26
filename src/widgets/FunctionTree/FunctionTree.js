@@ -1,11 +1,13 @@
 import Arrow from "../../icons/Arrow";
+import Error from "@mui/icons-material/Error";
 import Fade from "@mui/material/Fade";
 import FolderIcon from "@mui/icons-material/FolderRounded";
 import NonExpandableFunctionTreeItem from "../../components/NonExpandableFunctionTreeItem";
 import actions from "../../actions";
 import styles from "./styles";
 import { useContext } from "../../Context/context";
-import { Grid, Menu, MenuItem, Typography } from "@mui/material";
+import useEvent from "../../hooks/useEvent";
+import { Box, Grid, Menu, MenuItem, Tooltip, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { TreeItem, TreeView } from "@mui/lab";
 
@@ -15,6 +17,7 @@ function FunctionTree() {
   const [state, dispatch] = useContext();
   const functions = state.get("nucleoid.functions");
   const graph = { "": { name: "", subs: [], path: "", functions: [] } };
+  const [errors] = useEvent("DIAGNOSTICS_COMPLETED", []);
 
   const select = (value) => {
     if (functions.find((item) => item.path === value)) {
@@ -96,7 +99,7 @@ function FunctionTree() {
         onNodeSelect={(event, value) => select(value)}
         selected={selected}
       >
-        {compile([graph[""]], handleContextMenu)}
+        {compile([graph[""]], handleContextMenu, errors)}
       </TreeView>
       <Menu
         open={contextMenu !== null}
@@ -116,37 +119,62 @@ function FunctionTree() {
   );
 }
 
-const compile = (folders, handleContextMenu) =>
+const compile = (folders, handleContextMenu, errors) =>
   folders.map((folder) => {
     let children = [];
 
     if (folder.subs && folder.subs.length > 0) {
-      children = compile(folder.subs, handleContextMenu);
+      children = compile(folder.subs, handleContextMenu, errors);
     }
 
     children = children.concat(
-      folder.functions.map((fn) => (
-        <TreeItem
-          key={`${root(folder.path)}${fn.name}`}
-          nodeId={`${root(folder.path)}${fn.name}`}
-          onContextMenu={(event) =>
-            handleContextMenu(event, `${root(folder.path)}${fn.name}`)
+      folder.functions.map((fn) => {
+        const error = errors.find((item) => {
+          const [errName] = item.file.fileName.split(".");
+          if (errName.includes(fn.name)) {
+            return item;
+          } else {
+            return null;
           }
-          label={
-            <Grid sx={styles.treeItem}>
-              <Typography style={{ font: "9px sans-serif" }}>
-                {fn.type === "FUNCTION" ? (
-                  <span>&nbsp;&nbsp;&nbsp;&nbsp;fn</span>
-                ) : (
-                  "class"
+        });
+
+        return (
+          <TreeItem
+            key={`${root(folder.path)}${fn.name}`}
+            nodeId={`${root(folder.path)}${fn.name}`}
+            onContextMenu={(event) =>
+              handleContextMenu(event, `${root(folder.path)}${fn.name}`)
+            }
+            label={
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Grid sx={styles.treeItem}>
+                  <Typography style={{ font: "9px sans-serif" }}>
+                    {fn.type === "FUNCTION" ? (
+                      <span>&nbsp;&nbsp;&nbsp;&nbsp;fn</span>
+                    ) : (
+                      "class"
+                    )}
+                  </Typography>
+                  &nbsp;
+                  {`${fn.name} (${fn.params.join(", ")})`}
+                </Grid>
+                {error && (
+                  <Tooltip title={error.messageText} placement={"right"}>
+                    <Error sx={{ color: "#8f8f91" }} />
+                  </Tooltip>
                 )}
-              </Typography>
-              &nbsp;
-              {`${fn.name} (${fn.params.join(", ")})`}
-            </Grid>
-          }
-        />
-      ))
+              </Box>
+            }
+          />
+        );
+      })
     );
 
     return (
