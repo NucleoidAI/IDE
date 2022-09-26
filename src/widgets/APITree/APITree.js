@@ -3,13 +3,14 @@ import ArrowIcon from "../../icons/Arrow";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteMethodDialog from "../../components/DeleteMethodDialog";
 import EditIcon from "@mui/icons-material/Edit";
+import Error from "@mui/icons-material/Error";
 import Fade from "@mui/material/Fade";
 import NonExpandableAPITreeItem from "../../components/NonExpandableAPITreeItem";
 import ResourceMenu from "../ResourceMenu";
 import styles from "./styles";
-import { subscribe } from "../../Event";
 import theme from "../../theme";
 import { useContext } from "../../Context/context";
+import { useEvent } from "../../hooks/useEvent";
 import {
   Box,
   Card,
@@ -18,6 +19,7 @@ import {
   Grid,
   Menu,
   MenuItem,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -34,8 +36,7 @@ function APITree() {
   const [resourceMenu, setResourceMenu] = React.useState(false);
   const [anchor, setAnchor] = React.useState();
   const [expanded, setExpanded] = useState([]);
-  const [errors, setErrors] = useState([]);
-
+  const [errors] = useEvent("DIAGNOSTICS_COMPLETED", []);
   const [state, dispatch] = useContext();
   const api = state.get("nucleoid.api");
   const grph = graph(api);
@@ -119,17 +120,12 @@ function APITree() {
   };
 
   useEffect(() => {
-    const event = subscribe("DIAGNOSTICS_COMPLETED", (diagnostics) =>
-      setErrors(diagnostics)
-    );
-
     if (!selected) {
       select(Object.keys(map).pop());
     }
     setMethodDisabled(checkMethodDeletable());
     handleExpandClick();
 
-    return () => event.unsubscribe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected, state]);
 
@@ -146,13 +142,13 @@ function APITree() {
           expanded={expanded}
           onNodeSelect={(event, value) => select(value)}
           selected={selected}
-          sx={{ bgcolor: errors.length > 0 && "#f7afafab" }}
         >
           {compile(
             [grph["/"]],
             handleContextMenu,
             expandList,
-            rightClickMethod
+            rightClickMethod,
+            errors
           )}
         </TreeView>
         <Menu
@@ -226,7 +222,8 @@ export const compile = (
   list,
   handleContextMenu,
   expandList,
-  rightClickMethod
+  rightClickMethod,
+  err
 ) =>
   list.map((api) => {
     let children = undefined;
@@ -237,7 +234,8 @@ export const compile = (
         api.resources,
         handleContextMenu,
         expandList,
-        rightClickMethod
+        rightClickMethod,
+        err
       );
     }
 
@@ -246,6 +244,14 @@ export const compile = (
         const payload = { path: api.path, method };
         const hash = (resourceHash = window.btoa(JSON.stringify(payload)));
         map[hash] = payload;
+        const error = err.find((item) => {
+          const [errPath, errMethod] = item.file.fileName.split(".");
+          if (errPath === api.path && errMethod === method) {
+            return item;
+          } else {
+            return null;
+          }
+        });
 
         return (
           <TreeItem
@@ -258,8 +264,31 @@ export const compile = (
                 theme.palette.custom.apiTreeRightClick,
             }}
             label={
-              <Box sx={styles.apiTreeItem}>
-                <center>{method.toUpperCase()}</center>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Box sx={styles.apiTreeItem}>
+                  <span
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {method.toUpperCase()}
+                  </span>
+                </Box>
+                {error && (
+                  <Tooltip title={error.messageText} placement={"right"}>
+                    <Error sx={{ color: "#8f8f91" }} />
+                  </Tooltip>
+                )}
               </Box>
             }
           />
