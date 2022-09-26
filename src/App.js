@@ -10,7 +10,13 @@ import Logs from "./pages/ide/Logs";
 import Query from "./pages/ide/Query";
 import React from "react";
 import Settings from "./settings";
+import State from "./state";
+import { contextReducer } from "./Context/reducer";
+import { contextToMap } from "./utils/Parser";
+import project from "./project";
+import service from "./service";
 import theme from "./theme";
+import vfs from "./vfs";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import {
   CssBaseline,
@@ -32,11 +38,67 @@ function App() {
     }, delay);
   }, []);
 
+  const InitContext = () => {
+    if (!Settings.beta()) {
+      Settings.beta(false);
+    }
+
+    if (!Settings.debug()) {
+      Settings.debug(false);
+    }
+
+    if (!Settings.url.app()) {
+      Settings.url.app("http://localhost:3000/");
+    }
+
+    if (!Settings.url.terminal()) {
+      Settings.url.terminal("http://localhost:8448/");
+    }
+
+    if (!Settings.runtime()) {
+      Settings.runtime("sandbox");
+    }
+
+    if (!Settings.description()) {
+      Settings.description(
+        "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore"
+      );
+    }
+
+    if (!Settings.landing()) {
+      Settings.landing({ level: 0 });
+    }
+
+    if (project.isAuth()) {
+      service.getProjects().then(({ data }) => {
+        Settings.projects = [...data];
+      });
+    }
+
+    let context;
+
+    if (project.check()) {
+      context = project.get().context;
+      context.get = (prop) => State.resolve(context, prop);
+    } else {
+      project.setDemo();
+      context = project.get().context;
+      context.get = (prop) => State.resolve(context, prop);
+    }
+
+    if (Settings.beta()) {
+      const files = contextToMap(context.nucleoid);
+      console.log("here in context");
+      vfs.init(files);
+    }
+    return context;
+  };
+
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <ContextProvider>
+        <ContextProvider state={InitContext()} reducer={contextReducer}>
           <BrowserRouter basename="ide">
             <EventRegistry />
             <Routes>
