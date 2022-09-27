@@ -141,9 +141,9 @@ const deleteProject = (project) => {
 
 const createSandbox = (context) => {
   const data = {
-    functions: context.nucleoid.functions,
-    api: context.nucleoid.api,
-    types: context.nucleoid.types,
+    functions: context.functions,
+    api: context.api,
+    types: context.types,
   };
 
   return axios(Settings.sandbox.url, {
