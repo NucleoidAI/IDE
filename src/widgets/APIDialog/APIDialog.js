@@ -7,7 +7,7 @@ import ClosableDialogTitle from "../../components/ClosableDialogTitle";
 import Defaults from "../../defaults";
 import actions from "../../actions";
 import styles from "./styles";
-import { useContext } from "../../Context/context";
+import { useContext } from "../../context/context";
 import { v4 as uuid } from "uuid";
 import { Dialog, DialogActions, DialogContent, Grid } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";

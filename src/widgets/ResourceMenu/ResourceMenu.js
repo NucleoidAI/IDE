@@ -6,7 +6,7 @@ import HttpIcon from "@mui/icons-material/Http";
 import React from "react";
 import SourceIcon from "@mui/icons-material/Source";
 import styles from "./styles";
-import { useContext } from "../../Context/context";
+import { useContext } from "../../context/context";
 import { useRef } from "react";
 import { Divider, Menu, MenuItem, Typography } from "@mui/material";
 

@@ -6,7 +6,7 @@ import Security from "../../components/Security";
 import SummaryForm from "../../components/SummaryForm";
 import { compile } from "../../widgets/APIDialog/Context";
 import styles from "./styles";
-import { useContext } from "../../Context/context";
+import { useContext } from "../../context/context";
 import { Box, Fab, Grid, Typography, useMediaQuery } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 
