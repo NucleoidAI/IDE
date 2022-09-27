@@ -3,7 +3,7 @@ import { deepCopy } from "../DeepCopy";
 test("Copy nested object", () => {
   const nestedObject = {
     name: "Oğuz",
-    adress: { title: "home", info: { city: "Ankara", code: 06000 } },
+    adress: { title: "home", info: { city: "Ankara", code: 6000 } },
   };
 
   const copiedObject = deepCopy(nestedObject);
