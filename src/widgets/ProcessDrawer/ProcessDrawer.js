@@ -9,6 +9,7 @@ import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
 import ViewListIcon from "@mui/icons-material/ViewList";
+import { mapToContext } from "../../utils/Parser";
 import onboardDispatcher from "../../components/Onboard/onboardDispatcher";
 import scheduler from "../../connectionScheduler";
 import service from "../../service";
@@ -17,6 +18,7 @@ import theme from "../../theme";
 import { useLocation } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import useService from "../../hooks/useService";
+import vfs from "../../vfs";
 import {
   Box,
   CircularProgress,
@@ -166,10 +168,10 @@ function ApiButton() {
   const [loading, setLoading] = useState(false);
   const runtime = Settings.runtime();
 
-  const runSandbox = async () => {
+  const runSandbox = async (context) => {
     setLoading(true);
 
-    const { data } = await service.createSandbox(state);
+    const { data } = await service.createSandbox(context);
     setLoading(false);
     setTimeout(() => {
       if (Settings.landing().level < 2) {
@@ -188,11 +190,11 @@ function ApiButton() {
     }
   };
 
-  const runNpx = () => {
+  const runNpx = (context) => {
     setLoading(true);
 
     service
-      .openapi("start", state.get("nucleoid"))
+      .openapi("start", context)
       .then(() => {
         publish("SWAGGER_DIALOG", { open: true });
         scheduler.start();
@@ -204,10 +206,12 @@ function ApiButton() {
   };
 
   const handleRun = () => {
+    const context = mapToContext(vfs.fsMap, state.get("nucleoid"));
+
     if (Settings.runtime() === "npx") {
-      runNpx();
+      runNpx(context);
     } else {
-      runSandbox();
+      runSandbox(context);
     }
   };
 
