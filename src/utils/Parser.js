@@ -85,7 +85,7 @@ const mapToContext = (fsMap, context) => {
       tmpContext.api[api][method]["x-nuc-action"] = parser
         .parse(item[1])
         .action()
-        .replace("export {}; ", "");
+        .replace("export {};\n", "");
     }
   });
 

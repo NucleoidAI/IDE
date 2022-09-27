@@ -27,7 +27,7 @@ const options = {
 
 const system = {
   args: [],
-  newLine: " ",
+  newLine: "\n",
   useCaseSensitiveFileNames: true,
   write: () => console.error("Unimplemented function"),
   writeOutputIsTTY: () => console.error("Unimplemented function"),
