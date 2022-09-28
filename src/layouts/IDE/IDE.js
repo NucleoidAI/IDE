@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import FolderIcon from "@mui/icons-material/Folder";
+import GlobalSnackMessage from "../../components/GlobalSnackMessage";
 import Menu from "../../components/Menu";
 import Mobile from "../../pages/ide/Mobile";
 import Onboard from "../../components/Onboard";
@@ -52,6 +53,7 @@ function IDE() {
       {Settings.landing().level < 5 && <Onboard />}
       <ProcessDrawer />
       <SwaggerDialog />
+      <GlobalSnackMessage />
     </Box>
   );
 }

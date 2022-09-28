@@ -86,11 +86,9 @@ function App() {
       context.get = (prop) => State.resolve(context, prop);
     }
 
-    if (Settings.beta()) {
-      const files = contextToMap(context.nucleoid);
-      console.log("here in context");
-      vfs.init(files);
-    }
+    const files = contextToMap(context.nucleoid);
+    vfs.init(files);
+
     return context;
   };
 

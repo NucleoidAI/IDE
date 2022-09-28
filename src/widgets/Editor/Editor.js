@@ -1,5 +1,4 @@
 import AceEditor from "react-ace";
-import Settings from "../../settings";
 import linter from "../../linter";
 import prettier from "../../prettier";
 import prettierPlugins from "../../prettierPlugins";
@@ -239,22 +238,22 @@ function Editor({ name, api, functions, log, editorRef, ...other }) {
         }}
         value={code}
         onBlur={() => {
-          if (Settings.beta()) {
-            let key;
-            if (name === "api") {
-              const { path, method } = state.get("pages.api.selected");
-              key = path + "." + method + ".ts";
-            } else {
-              key = state.get("pages.functions.selected") + ".js";
-            }
-
-            publish("CONTEXT_CHANGED", {
-              // TODO Optimize preparing files
-              files: contextToMap(state.nucleoid).filter(
-                (item) => item.key === key
-              ),
-            });
+          // if (Settings.beta()) {
+          let key;
+          if (name === "api") {
+            const { path, method } = state.get("pages.api.selected");
+            key = path + "." + method + ".ts";
+          } else {
+            key = state.get("pages.functions.selected") + ".js";
           }
+
+          publish("CONTEXT_CHANGED", {
+            // TODO Optimize preparing files
+            files: contextToMap(state.nucleoid).filter(
+              (item) => item.key === key
+            ),
+          });
+          //}
         }}
         onChange={(e) => {
           setCode(e);

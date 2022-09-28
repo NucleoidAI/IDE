@@ -142,7 +142,6 @@ const ProcessDrawer = () => {
 function SwaggerButton() {
   const [runtimeConnection] = useEvent("RUNTIME_CONNECTION", {
     status: false,
-    metrics: { free: 50, total: 100 },
   });
 
   const handleOpenSwaggerDialog = () => {
@@ -207,6 +206,7 @@ function ApiButton() {
 
   const handleRun = () => {
     const context = mapToContext(vfs.fsMap, state.get("nucleoid"));
+    console.debug(context, "handleRun");
 
     if (Settings.runtime() === "npx") {
       runNpx(context);
