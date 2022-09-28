@@ -9,7 +9,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 export default function GlobalSnackMessage() {
   const [globalMessage] = useEvent("GLOBAL_MESSAGE", {
-    status: true,
+    status: false,
     message: "",
     severity: "success",
   });

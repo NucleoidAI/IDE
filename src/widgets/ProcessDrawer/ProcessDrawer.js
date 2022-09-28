@@ -164,28 +164,44 @@ function SwaggerButton() {
 function ApiButton() {
   const [state] = useService();
   const [errors] = useEvent("DIAGNOSTICS_COMPLETED", []);
+  const [run] = useEvent("RUN_BUTTON_CLICKED", { status: false });
   const [loading, setLoading] = useState(false);
   const runtime = Settings.runtime();
 
+  React.useEffect(() => {
+    if (run.status) {
+      publish("RUN_BUTTON_CLICKED", { status: false });
+      handleRun();
+    }
+  }, [run.status]); //eslint-disable-line
+
   const runSandbox = async (context) => {
     setLoading(true);
+    try {
+      const { data } = await service.createSandbox(context);
+      setLoading(false);
+      setTimeout(() => {
+        if (Settings.landing().level < 2) {
+          onboardDispatcher({ level: 2 });
+        }
+      }, 0);
 
-    const { data } = await service.createSandbox(context);
-    setLoading(false);
-    setTimeout(() => {
-      if (Settings.landing().level < 2) {
-        onboardDispatcher({ level: 2 });
+      if (data.id) {
+        Settings.sandbox.sandboxID(data.id);
+        Settings.url.app(`https://nucleoid.com/sandbox/${data.id}/`);
+        Settings.url.terminal(
+          `https://nucleoid.com/sandbox/terminal/${data.id}/`
+        );
+        scheduler.start();
+        publish("SWAGGER_DIALOG", { open: true });
       }
-    }, 0);
-
-    if (data.id) {
-      Settings.sandbox.sandboxID(data.id);
-      Settings.url.app(`https://nucleoid.com/sandbox/${data.id}/`);
-      Settings.url.terminal(
-        `https://nucleoid.com/sandbox/terminal/${data.id}/`
-      );
-      scheduler.start();
-      publish("SWAGGER_DIALOG", { open: true });
+    } catch {
+      setLoading(false);
+      publish("GLOBAL_MESSAGE", {
+        status: true,
+        message: "There is a problem communicating the sandbox",
+        severity: "info",
+      });
     }
   };
 
@@ -201,6 +217,11 @@ function ApiButton() {
       })
       .catch(() => {
         setLoading(false);
+        publish("GLOBAL_MESSAGE", {
+          status: true,
+          message: "Network error",
+          severity: "info",
+        });
       });
   };
 

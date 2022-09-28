@@ -3,10 +3,12 @@ import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import React from "react";
 import Settings from "../../settings";
 import onboardDispatcher from "../Onboard/onboardDispatcher";
-import { Box, Popper, Typography } from "@mui/material";
+import { publish } from "../../hooks/useEvent";
+import { Box, IconButton, Popper, Typography } from "@mui/material";
 
 const MessagePopper = ({ title, openTime }) => {
   const [open, setOpen] = React.useState(false);
+  const [disable, setDisable] = React.useState(false);
   const [pos, setPos] = React.useState([]);
 
   React.useEffect(() => {
@@ -60,8 +62,17 @@ const MessagePopper = ({ title, openTime }) => {
             alignItems: "center",
           }}
         >
-          <PlayCircleFilledIcon sx={{ width: 35, height: 35, mr: 1 }} />
-          <Typography>Run sample project on CodeSandbox</Typography>
+          <IconButton
+            disabled={disable}
+            sx={{ mr: 1 }}
+            onClick={() => {
+              setDisable(true);
+              publish("RUN_BUTTON_CLICKED", { status: true });
+            }}
+          >
+            <PlayCircleFilledIcon sx={{ width: 35, height: 35 }} />
+          </IconButton>
+          <Typography>Run sample project on sandbox</Typography>
         </Box>
       </GlobalMessageBox>
     </Popper>
