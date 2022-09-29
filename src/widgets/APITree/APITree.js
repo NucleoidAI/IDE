@@ -9,7 +9,7 @@ import NonExpandableAPITreeItem from "../../components/NonExpandableAPITreeItem"
 import ResourceMenu from "../ResourceMenu";
 import styles from "./styles";
 import theme from "../../theme";
-import { useContext } from "../../Context/context";
+import { useContext } from "../../context/context";
 import { useEvent } from "../../hooks/useEvent";
 import {
   Box,

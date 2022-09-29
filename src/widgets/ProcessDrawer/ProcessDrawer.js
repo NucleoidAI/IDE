@@ -9,6 +9,7 @@ import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
 import ViewListIcon from "@mui/icons-material/ViewList";
+import { mapToContext } from "../../utils/Parser";
 import onboardDispatcher from "../../components/Onboard/onboardDispatcher";
 import scheduler from "../../connectionScheduler";
 import service from "../../service";
@@ -17,6 +18,7 @@ import theme from "../../theme";
 import { useLocation } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import useService from "../../hooks/useService";
+import vfs from "../../vfs";
 import {
   Box,
   CircularProgress,
@@ -140,7 +142,6 @@ const ProcessDrawer = () => {
 function SwaggerButton() {
   const [runtimeConnection] = useEvent("RUNTIME_CONNECTION", {
     status: false,
-    metrics: { free: 50, total: 100 },
   });
 
   const handleOpenSwaggerDialog = () => {
@@ -163,36 +164,52 @@ function SwaggerButton() {
 function ApiButton() {
   const [state] = useService();
   const [errors] = useEvent("DIAGNOSTICS_COMPLETED", []);
+  const [run] = useEvent("RUN_BUTTON_CLICKED", { status: false });
   const [loading, setLoading] = useState(false);
   const runtime = Settings.runtime();
 
-  const runSandbox = async () => {
+  React.useEffect(() => {
+    if (run.status) {
+      publish("RUN_BUTTON_CLICKED", { status: false });
+      handleRun();
+    }
+  }, [run.status]); //eslint-disable-line
+
+  const runSandbox = async (context) => {
     setLoading(true);
+    try {
+      const { data } = await service.createSandbox(context);
+      setLoading(false);
+      setTimeout(() => {
+        if (Settings.landing().level < 2) {
+          onboardDispatcher({ level: 2 });
+        }
+      }, 0);
 
-    const { data } = await service.createSandbox(state);
-    setLoading(false);
-    setTimeout(() => {
-      if (Settings.landing().level < 2) {
-        onboardDispatcher({ level: 2 });
+      if (data.id) {
+        Settings.sandbox.sandboxID(data.id);
+        Settings.url.app(`https://nucleoid.com/sandbox/${data.id}/`);
+        Settings.url.terminal(
+          `https://nucleoid.com/sandbox/terminal/${data.id}/`
+        );
+        scheduler.start();
+        publish("SWAGGER_DIALOG", { open: true });
       }
-    }, 0);
-
-    if (data.id) {
-      Settings.sandbox.sandboxID(data.id);
-      Settings.url.app(`https://nucleoid.com/sandbox/${data.id}/`);
-      Settings.url.terminal(
-        `https://nucleoid.com/sandbox/terminal/${data.id}/`
-      );
-      scheduler.start();
-      publish("SWAGGER_DIALOG", { open: true });
+    } catch {
+      setLoading(false);
+      publish("GLOBAL_MESSAGE", {
+        status: true,
+        message: "There is a problem communicating the sandbox",
+        severity: "info",
+      });
     }
   };
 
-  const runNpx = () => {
+  const runNpx = (context) => {
     setLoading(true);
 
     service
-      .openapi("start", state.get("nucleoid"))
+      .openapi("start", context)
       .then(() => {
         publish("SWAGGER_DIALOG", { open: true });
         scheduler.start();
@@ -200,14 +217,22 @@ function ApiButton() {
       })
       .catch(() => {
         setLoading(false);
+        publish("GLOBAL_MESSAGE", {
+          status: true,
+          message: "Network error",
+          severity: "info",
+        });
       });
   };
 
   const handleRun = () => {
+    const context = mapToContext(vfs.fsMap, state.get("nucleoid"));
+    console.debug(context, "handleRun");
+
     if (Settings.runtime() === "npx") {
-      runNpx();
+      runNpx(context);
     } else {
-      runSandbox();
+      runSandbox(context);
     }
   };
 

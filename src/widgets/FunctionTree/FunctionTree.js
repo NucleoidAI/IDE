@@ -5,7 +5,7 @@ import FolderIcon from "@mui/icons-material/FolderRounded";
 import NonExpandableFunctionTreeItem from "../../components/NonExpandableFunctionTreeItem";
 import actions from "../../actions";
 import styles from "./styles";
-import { useContext } from "../../Context/context";
+import { useContext } from "../../context/context";
 import useEvent from "../../hooks/useEvent";
 import { Box, Grid, Menu, MenuItem, Tooltip, Typography } from "@mui/material";
 import React, { useEffect } from "react";

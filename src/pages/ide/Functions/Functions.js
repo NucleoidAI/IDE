@@ -4,7 +4,7 @@ import FunctionDialog from "../../../widgets/FunctionDialog/FunctionDialog";
 import FunctionTree from "../../../widgets/FunctionTree";
 import config from "../../../config";
 import styles from "./styles";
-import { useContext } from "../../../Context/context";
+import { useContext } from "../../../context/context";
 import { Card, CardActions, Grid, Paper } from "@mui/material";
 
 function Functions() {

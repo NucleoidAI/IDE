@@ -7,7 +7,7 @@ import Path from "../../utils/Path";
 import actions from "../../actions";
 import styles from "./styles";
 // eslint-disable-next-line react-hooks/exhaustive-deps
-import { useContext } from "../../Context/context";
+import { useContext } from "../../context/context";
 import { Grid, MenuItem, Select, TextField, Typography } from "@mui/material";
 
 export default function FunctionDialog() {

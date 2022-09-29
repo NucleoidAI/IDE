@@ -1,5 +1,5 @@
 import API from "./pages/ide/API";
-import ContextProvider from "./Context/context";
+import ContextProvider from "./context/context";
 import Dashboard from "./pages/ide/Dashboard";
 import Dev from "./pages/Dev";
 import EventRegistry from "./EventRegistry";
@@ -11,7 +11,7 @@ import Query from "./pages/ide/Query";
 import React from "react";
 import Settings from "./settings";
 import State from "./state";
-import { contextReducer } from "./Context/reducer";
+import { contextReducer } from "./context/reducer";
 import { contextToMap } from "./utils/Parser";
 import project from "./project";
 import service from "./service";
@@ -86,11 +86,9 @@ function App() {
       context.get = (prop) => State.resolve(context, prop);
     }
 
-    if (Settings.beta()) {
-      const files = contextToMap(context.nucleoid);
-      console.log("here in context");
-      vfs.init(files);
-    }
+    const files = contextToMap(context.nucleoid);
+    vfs.init(files);
+
     return context;
   };
 

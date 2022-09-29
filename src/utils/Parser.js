@@ -1,7 +1,9 @@
+import { deepCopy } from "./DeepCopy";
+
 const parser = {
   result: null,
   parse(code) {
-    this.result = code.split(/\/\/ @nuc-.*/g).filter((item) => item !== "");
+    this.result = code.split(/\/\/ @nuc-....../g).filter((item) => item !== "");
 
     return this;
   },
@@ -59,25 +61,31 @@ const contextToMap = (files) => {
 };
 
 const mapToContext = (fsMap, context) => {
-  const stringifyContext = JSON.stringify(context);
-  const tmpContext = JSON.parse(stringifyContext);
-  const map = [...fsMap].filter((item) => item[0].includes(".js"));
+  const tmpContext = deepCopy(context);
+
+  const map = [...fsMap].filter(
+    (item) => item[0].includes(".js") && item[0].includes("/build")
+  );
+
+  map.forEach((each) => {
+    each[0] = each[0].slice(6);
+  });
 
   map.forEach((item) => {
-    if (item[0].includes("nuc-classes")) {
-      const nucClassName = item[0].split("/").pop().split(".")[0];
-      tmpContext.functions.forEach((funct) => {
-        if (funct.path.includes(nucClassName)) {
-          funct.definition = item[1];
-        }
-      });
+    const key = item[0].split(".");
+
+    if (key.length < 3) {
+      const path = key[0];
+      const fnc = tmpContext.functions.find((a) => a.path === path);
+
+      fnc.definition = parser.parse(item[1]).result[0];
     } else {
       const [api, method] = item[0].split(".");
 
       tmpContext.api[api][method]["x-nuc-action"] = parser
         .parse(item[1])
         .action()
-        .trim();
+        .replace("export {};\n", "");
     }
   });
 
