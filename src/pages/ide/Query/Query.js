@@ -104,7 +104,7 @@ function Query() {
           }}
         >
           <Paper sx={styles.editorPaper}>
-            <Editor name={"query"} ref={editor} />
+            <Editor query ref={editor} />
             <Grid container item sx={styles.runButton}>
               <Fab size={"small"} onClick={() => handleQuery()}>
                 <PlayArrowIcon style={styles.playArrowIcon} />
