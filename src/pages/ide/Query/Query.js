@@ -31,7 +31,7 @@ function Query() {
   const [checked, setChecked] = useState(true);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-   // const query = state.get("pages.query");
+    // const query = state.get("pages.query");
 
     const editor = editorRef.current;
     console.log(editor);
