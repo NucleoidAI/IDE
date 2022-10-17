@@ -26,14 +26,24 @@ function Query() {
   const [outputRatio, setOutputRatio] = React.useState(
     state.get("pages.query.outputRatio")
   );
-  const editor = useRef();
+  const editorRef = useRef(null);
 
   const [checked, setChecked] = useState(true);
   const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     const query = state.get("pages.query");
-    editor.current.on("change", () => {
+
+    const editor = editorRef.current;
+    console.log(editor);
+    /*
+    editor.addAction({
+      id: "lintEvent",
+      label: "lintEvent",
+
+      run: (e) => console.log("helo"),
+    });
+
+    /*  editor.current.on("change", () => {
       query.text = editor.current.getValue();
     });
 
@@ -47,21 +57,15 @@ function Query() {
       );
     }
 
-    editor.current.commands.addCommand({
-      name: "query",
-      bindKey: { win: "Ctrl-Enter", mac: "Ctrl-Enter" },
-      exec: () => {
-        handleQuery();
-      },
-    });
 
+*/
     //eslint-disable-next-line
   }, []);
 
   const handleQuery = () => {
     setLoading(true);
     service
-      .query(editor ? editor.current.getValue() : null)
+      .query(editorRef ? editorRef.current.getValue() : null)
       .then((data) => {
         try {
           distpach({
@@ -104,7 +108,7 @@ function Query() {
           }}
         >
           <Paper sx={styles.editorPaper}>
-            <Editor query ref={editor} />
+            <Editor query ref={editorRef} />
             <Grid container item sx={styles.runButton}>
               <Fab size={"small"} onClick={() => handleQuery()}>
                 <PlayArrowIcon style={styles.playArrowIcon} />
