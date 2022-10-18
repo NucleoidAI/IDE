@@ -37,19 +37,22 @@ const Editor = React.forwardRef((props, ref) => {
       const editor = editorRef?.current?.editor;
       const monaco = editorRef?.current?.monaco;
       const value = editor?.getValue();
+      if (!api) return true;
 
       try {
         parser.fn(value);
 
+        monaco.editor.setModelMarkers(editor?.getModel(), "action", []);
         return true;
       } catch (err) {
+        console.log(err);
         monaco.editor.setModelMarkers(editor?.getModel(), "action", [
           {
             startLineNumber: 1,
-            startColumn: 1000,
-            endLineNumber: 1000,
+            startColumn: 1,
+            endLineNumber: 1,
             endColumn: 1000,
-            message: api ? "Need action method" : "Need function or class.",
+            message: "Need action method",
             severity: 1,
           },
         ]);
