@@ -2,7 +2,7 @@ import MonacoEditor from "@monaco-editor/react";
 import React from "react";
 import { contextToMap } from "../../utils/Parser";
 import linter from "../../linter";
-//import { parser } from "react-nucleoid";
+import { parser } from "react-nucleoid";
 import prettier from "../../prettier";
 import prettierPlugins from "../../prettierPlugins";
 import { publish } from "../../Event";
@@ -26,11 +26,39 @@ const Editor = React.forwardRef((props, ref) => {
   const { api, functions, query } = props;
   const editorRef = React.useRef(null);
   const timer = React.useRef();
+  const fnTimer = React.useRef();
   const [context] = useContext();
   const file = getFile(context, props);
 
+  function checkFunction() {
+    clearTimeout(fnTimer.current);
+
+    fnTimer.current = setTimeout(() => {
+      const editor = editorRef?.current?.editor;
+      const monaco = editorRef?.current?.monaco;
+      const value = editor?.getValue();
+
+      try {
+        parser.fn(value);
+        return true;
+      } catch (err) {
+        monaco.editor.setModelMarkers(editor?.getModel(), "action", [
+          {
+            startLineNumber: 1,
+            startColumn: 1000,
+            endLineNumber: 1000,
+            endColumn: 1000,
+            message: "Need action function",
+            severity: 1,
+          },
+        ]);
+        return false;
+      }
+    }, 1000);
+  }
+
   function handleChange(e) {
-    lint();
+    checkFunction() && lint();
 
     if (api) {
       const selected = context.pages.api.selected;
@@ -74,14 +102,13 @@ const Editor = React.forwardRef((props, ref) => {
           };
         })
       );
-
-      console.log([...result]);
     }, 1000);
   };
 
   React.useEffect(() => {
     editorRef.current?.editor.focus();
     lint();
+    checkFunction();
   });
 
   function handleEditorDidMount(editor, monaco) {
