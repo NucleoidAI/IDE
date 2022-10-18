@@ -183,7 +183,7 @@ function getFile(context, props) {
   if (api) {
     const selected = context.pages.api.selected;
 
-    if(!selected) return file;
+    if (!selected) return file;
 
     file.path = selected?.path + selected?.method;
     file.code =
@@ -192,8 +192,8 @@ function getFile(context, props) {
 
   if (functions) {
     const selected = context.get("pages.functions.selected");
-    
-    if(!selected) return file;
+
+    if (!selected) return file;
 
     file.path = selected;
     file.code = context.nucleoid.functions.find(
