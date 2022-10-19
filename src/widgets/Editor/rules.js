@@ -52,13 +52,13 @@ const lint = {
   "no-unsafe-negation": "error",
   "no-unsafe-optional-chaining": "error",
   "no-unused-labels": "error",
-  "no-unused-vars": [
+  /*"no-unused-vars": [
     "error",
     {
       varsIgnorePattern: "action",
       args: "none",
     },
-  ],
+  ],*/
   "no-useless-backreference": "error",
   "no-useless-catch": "error",
   "no-useless-escape": "error",
