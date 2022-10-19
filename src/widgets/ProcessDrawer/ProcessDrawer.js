@@ -9,6 +9,7 @@ import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
 import ViewListIcon from "@mui/icons-material/ViewList";
+import gtag from "../../gtag";
 import { mapToContext } from "../../utils/Parser";
 import onboardDispatcher from "../../components/Onboard/onboardDispatcher";
 import scheduler from "../../connectionScheduler";
@@ -185,6 +186,8 @@ function ApiButton() {
           onboardDispatcher({ level: 2 });
         }
       }, 0);
+
+      gtag("event", "run_sandbox");
 
       if (data.id) {
         Settings.sandbox.sandboxID(data.id);
