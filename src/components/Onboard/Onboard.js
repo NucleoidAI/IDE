@@ -33,13 +33,7 @@ const Onboard = () => {
 
     case 3: {
       Settings.landing({ level: 4 });
-
-      setTimeout(() => {
-        gtag("event", "confetti", {
-          page_location: window.location.href,
-          page_path: window.location.pathname,
-        });
-      }, 0);
+      gtag("event", "confetti");
 
       return (
         <>
