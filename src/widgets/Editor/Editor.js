@@ -110,7 +110,10 @@ const Editor = React.forwardRef((props, ref) => {
   };
 
   React.useEffect(() => {
-    editorRef.current?.editor.focus();
+    setTimeout(() => {
+      editorRef.current?.editor.focus();
+    }, 1);
+
     lint();
     checkFunction();
   });

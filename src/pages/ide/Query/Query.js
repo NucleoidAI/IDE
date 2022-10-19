@@ -1,11 +1,12 @@
-import Editor from "../../../widgets/Editor";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import QueryArrayTable from "../../../components/QueryArrayTable";
+import QueryEditor from "../../../widgets/QueryEditor";
 import QueryResult from "../../../components/QueryResult";
 import RatioIconButtons from "../../../components/RatioIconButtons/RatioIconButtons";
 import service from "../../../service";
 import styles from "./styles";
 import { useContext } from "../../../context/context";
+import { useMonaco } from "@monaco-editor/react";
 import {
   Box,
   Card,
@@ -30,35 +31,30 @@ function Query() {
 
   const [checked, setChecked] = useState(true);
   const [loading, setLoading] = useState(false);
+
+  const monaco = useMonaco();
+
   useEffect(() => {
-    // const query = state.get("pages.query");
+    setTimeout(() => {
+      editorRef?.current?.focus();
+      editorRef?.current?.setValue(state.get("pages.query.text"));
+      editorRef?.current?.setPosition({ lineNumber: 1, column: 1000 });
+      editorRef?.current?.addAction({
+        id: "lintEvent",
+        label: "lintEvent",
+        keybindings: [
+          monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
+          monaco.KeyMod.chord(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter),
+        ],
 
-    const editor = editorRef.current;
-    console.log(editor);
-    /*
-    editor.addAction({
-      id: "lintEvent",
-      label: "lintEvent",
-
-      run: (e) => console.log("helo"),
-    });
+        run: (e) => handleQuery(),
+      });
+    }, 1);
 
     /*  editor.current.on("change", () => {
       query.text = editor.current.getValue();
     });
-
-    editor.current.setValue(state.get("pages.query.text"));
-
-    const markers = editor.current.session.getMarkers();
-
-    if (markers) {
-      Object.keys(markers).forEach((key) =>
-        editor.current.session.removeMarker(markers[key].id)
-      );
-    }
-
-
-*/
+     */
     //eslint-disable-next-line
   }, []);
 
@@ -108,7 +104,7 @@ function Query() {
           }}
         >
           <Paper sx={styles.editorPaper}>
-            <Editor query ref={editorRef} />
+            <QueryEditor ref={editorRef} />
             <Grid container item sx={styles.runButton}>
               <Fab size={"small"} onClick={() => handleQuery()}>
                 <PlayArrowIcon style={styles.playArrowIcon} />
