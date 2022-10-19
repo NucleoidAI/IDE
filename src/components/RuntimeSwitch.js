@@ -1,5 +1,8 @@
 import CopyClipboard from "./CopyClipboard";
 import DialogTooltip from "./DialogTootip";
+import React from "react";
+import Settings from "../settings";
+import { Box, Switch, Typography } from "@mui/material";
 
 function RuntimeSwitch() {
   const [sandbox, setSandbox] = React.useState(
@@ -87,3 +90,5 @@ function RuntimeSwitch() {
     </Box>
   );
 }
+
+export default RuntimeSwitch;
