@@ -1,6 +1,6 @@
-import CopyClipboard from "./CopyClipboard";
-import DialogTooltip from "./DialogTootip";
+import Button from "@mui/material/Button";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
+import NewTab from "../icons/NewTab";
 import React from "react";
 import Settings from "../settings";
 import StarUsOnGithub from "./StarUsOnGithub";
@@ -13,7 +13,6 @@ import {
   Dialog,
   IconButton,
   Slide,
-  Switch,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -103,7 +102,7 @@ export default function SwaggerDialog() {
                 justifyContent: "center",
               }}
             >
-              <RuntimeSwitch />
+              <OpenSwaggerNewTabButton url={Settings.url.app()} />
               <StarUsOnGithub />
             </Box>
           </Box>
@@ -120,89 +119,28 @@ export default function SwaggerDialog() {
   );
 }
 
-function RuntimeSwitch() {
-  const [sandbox, setSandbox] = React.useState(
-    Settings.runtime() === "sandbox" ? true : false
-  );
-  const [alert, setAlert] = React.useState(false);
+function OpenSwaggerNewTabButton(props) {
+  const { url } = props;
 
-  function handleSwitch() {
-    if (sandbox) {
-      Settings.runtime("npx");
-      setAlert(true);
-    }
-    if (!sandbox) {
-      Settings.runtime("sandbox");
-      setAlert(false);
-    }
-
-    setSandbox(!sandbox);
+  function handleClick() {
+    publish("SWAGGER_DIALOG", { open: false });
+    setTimeout(() => {
+      window.open(url, "_blank");
+    }, 300);
   }
 
   return (
-    <Box
+    <Button
+      size="large"
+      startIcon={<NewTab fill={"white"} />}
       sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
+        textTransform: "none",
+        fontSize: "1rem",
+        color: "white",
       }}
+      onClick={handleClick}
     >
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "flex-start",
-        }}
-      >
-        <DialogTooltip
-          open={alert}
-          placement="bottom-start"
-          title={<b>Runtime</b>}
-          message={
-            <>
-              Run the following code in your terminal
-              <br />
-              <CopyClipboard />
-              <br />
-            </>
-          }
-          handleTooltipClose={() => setAlert(false)}
-        >
-          <Typography
-            fontWeight={!sandbox ? "bold" : null}
-            sx={{ pr: 1, fontSize: !sandbox ? "16px" : "15px" }}
-          >
-            npx
-          </Typography>
-        </DialogTooltip>
-      </Box>
-      <Box
-        sx={{
-          width: "30%",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <Switch checked={sandbox} color="default" onChange={handleSwitch} />
-      </Box>
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "flex-end",
-        }}
-      >
-        <Typography
-          fontWeight={sandbox ? "bold" : null}
-          sx={{
-            pl: 1,
-            fontSize: sandbox ? "16px" : "15px",
-            width: 108,
-          }}
-        >
-          sandbox
-        </Typography>
-      </Box>
-    </Box>
+      Open Swagger
+    </Button>
   );
 }
