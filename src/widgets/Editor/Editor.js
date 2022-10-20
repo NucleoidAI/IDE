@@ -205,6 +205,10 @@ const Editor = React.forwardRef((props, ref) => {
         minimap: {
           enabled: false,
         },
+        scrollbar: {
+          vertical: "hidden",
+          horizontal: "hidden",
+        },
       }}
     />
   );
