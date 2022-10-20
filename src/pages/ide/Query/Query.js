@@ -46,15 +46,15 @@ function Query() {
           monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
           monaco.KeyMod.chord(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter),
         ],
+        run: () => handleQuery(),
+      });
 
-        run: (e) => handleQuery(),
+      const query = state.get("pages.query");
+      editorRef.current.onKeyUp(() => {
+        query.text = editorRef?.current?.getValue();
       });
     }, 1);
 
-    /*  editor.current.on("change", () => {
-      query.text = editor.current.getValue();
-    });
-     */
     //eslint-disable-next-line
   }, []);
 
