@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import BusinessIcon from "@mui/icons-material/Business";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import FolderIcon from "@mui/icons-material/Folder";
 import GlobalSnackMessage from "../../components/GlobalSnackMessage";
@@ -23,7 +24,12 @@ const list = [
     icon: <DashboardIcon />,
     anchor: false,
   },
-
+  {
+    title: "Business Flow",
+    link: "/businessflow",
+    icon: <BusinessIcon />,
+    anchor: false,
+  },
   { title: "API", link: "/api", icon: <SendIcon /> },
   {
     title: "Functions",

@@ -1,4 +1,5 @@
 import API from "./pages/ide/API";
+import BusinessFlow from "./pages/ide/BusinessFlow";
 import ContextProvider from "./context/context";
 import Dashboard from "./pages/ide/Dashboard";
 import Dev from "./pages/Dev";
@@ -107,6 +108,7 @@ function App() {
                   <Route index element={<Navigate to="/api" />} />
                 )}
                 <Route path={"/dashboard"} element={<Dashboard />} />
+                <Route path={"/businessflow"} element={<BusinessFlow />} />
                 <Route path={"/api"} element={<API />} />
                 <Route path={"/functions"} element={<Functions />} />
                 <Route path={"/query"} element={<Query />} />
