@@ -1,14 +1,6 @@
 import { useCallback } from "react";
-import ReactFlow, {
-  MiniMap,
-  Controls,
-  Background,
-  useNodesState,
-  useEdgesState,
-  addEdge,
-} from "reactflow";
-
-import "reactflow/dist/style.css";
+import ReactFlow, { addEdge, useEdgesState, useNodesState } from "reactflow";
+import "reactflow/dist/style.css"; //eslint-disable-line
 
 const initialNodes = [
   { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
@@ -18,7 +10,7 @@ const initialNodes = [
 const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
 
 function Flow() {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const onConnect = useCallback(
@@ -33,10 +25,7 @@ function Flow() {
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
-    >
-     
-   
-    </ReactFlow>
+    ></ReactFlow>
   );
 }
 
