@@ -48,7 +48,7 @@ function Functions() {
         sx={styles.editorGrid}
       >
         <Paper sx={styles.editorPaper}>
-          <Editor name={"functions"} functions />
+          <Editor functions />
         </Paper>
       </Grid>
     </Grid>

@@ -1,11 +1,12 @@
-import Editor from "../../../widgets/Editor";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import QueryArrayTable from "../../../components/QueryArrayTable";
+import QueryEditor from "../../../widgets/QueryEditor";
 import QueryResult from "../../../components/QueryResult";
 import RatioIconButtons from "../../../components/RatioIconButtons/RatioIconButtons";
 import service from "../../../service";
 import styles from "./styles";
 import { useContext } from "../../../context/context";
+import { useMonaco } from "@monaco-editor/react";
 import {
   Box,
   Card,
@@ -26,34 +27,33 @@ function Query() {
   const [outputRatio, setOutputRatio] = React.useState(
     state.get("pages.query.outputRatio")
   );
-  const editor = useRef();
+  const editorRef = useRef(null);
 
   const [checked, setChecked] = useState(true);
   const [loading, setLoading] = useState(false);
 
+  const monaco = useMonaco();
+
   useEffect(() => {
-    const query = state.get("pages.query");
-    editor.current.on("change", () => {
-      query.text = editor.current.getValue();
-    });
+    setTimeout(() => {
+      editorRef?.current?.focus();
+      editorRef?.current?.setValue(state.get("pages.query.text"));
+      editorRef?.current?.setPosition({ lineNumber: 1, column: 1000 });
+      editorRef?.current?.addAction({
+        id: "lintEvent",
+        label: "lintEvent",
+        keybindings: [
+          monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
+          monaco.KeyMod.chord(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter),
+        ],
+        run: () => handleQuery(),
+      });
 
-    editor.current.setValue(state.get("pages.query.text"));
-
-    const markers = editor.current.session.getMarkers();
-
-    if (markers) {
-      Object.keys(markers).forEach((key) =>
-        editor.current.session.removeMarker(markers[key].id)
-      );
-    }
-
-    editor.current.commands.addCommand({
-      name: "query",
-      bindKey: { win: "Ctrl-Enter", mac: "Ctrl-Enter" },
-      exec: () => {
-        handleQuery();
-      },
-    });
+      const query = state.get("pages.query");
+      editorRef.current.onKeyUp(() => {
+        query.text = editorRef?.current?.getValue();
+      });
+    }, 1);
 
     //eslint-disable-next-line
   }, []);
@@ -61,7 +61,7 @@ function Query() {
   const handleQuery = () => {
     setLoading(true);
     service
-      .query(editor ? editor.current.getValue() : null)
+      .query(editorRef ? editorRef.current.getValue() : null)
       .then((data) => {
         try {
           distpach({
@@ -104,7 +104,7 @@ function Query() {
           }}
         >
           <Paper sx={styles.editorPaper}>
-            <Editor name={"query"} ref={editor} />
+            <QueryEditor ref={editorRef} />
             <Grid container item sx={styles.runButton}>
               <Fab size={"small"} onClick={() => handleQuery()}>
                 <PlayArrowIcon style={styles.playArrowIcon} />

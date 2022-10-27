@@ -1,292 +1,249 @@
-import AceEditor from "react-ace";
+import MonacoEditor from "@monaco-editor/react";
+import React from "react";
+import { contextToMap } from "../../utils/Parser";
 import linter from "../../linter";
+import { parser } from "react-nucleoid";
 import prettier from "../../prettier";
 import prettierPlugins from "../../prettierPlugins";
-import rules from "./rules";
-import shortcut from "./shortcuts";
-import styles from "./styles";
-import useService from "../../hooks/useService";
-import { v4 as uuid } from "uuid";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-// eslint-disable-next-line sort-imports
-import "ace-builds/src-noconflict/mode-javascript";
-import "ace-builds/src-noconflict/theme-chrome";
-import { addCompleter } from "ace-builds/src-noconflict/ext-language_tools";
-import { contextToMap } from "../../utils/Parser";
-import { parser } from "react-nucleoid";
 import { publish } from "../../Event";
-import { Backdrop, CircularProgress } from "@mui/material";
+import rules from "./rules";
+import { useContext } from "../../context/context";
 
-function Editor({ name, api, functions, log, editorRef, ...other }) {
-  const [state, , , saveProject] = useService();
-  const [backdrop, setBackdrop] = React.useState(false);
-  const [annotations, setAnnotations] = useState([]);
-  const [code, setCode] = useState(null);
-  const ace = useRef();
-  const timer = useRef();
+const options = {
+  env: {
+    es6: true,
+    node: true,
+  },
 
-  const nucFuncs = state.nucleoid.functions;
+  parserOptions: {
+    ecmaVersion: 2018,
+    sourceType: "module",
+  },
+  rules,
+};
 
-  const options = {
-    env: {
-      es6: true,
-      node: true,
-    },
-    parserOptions: {
-      ecmaVersion: 2018,
-      sourceType: "module",
-    },
-    rules,
-  };
+const Editor = React.forwardRef((props, ref) => {
+  const { api, functions, query } = props;
+  const editorRef = React.useRef(null);
+  const timer = React.useRef();
+  const fnTimer = React.useRef();
+  const [context] = useContext();
+  const file = getFile(context, props);
 
-  const checkFunction = (value) => {
-    try {
-      parser.fn(value);
-      setAnnotations([]);
+  function checkFunction() {
+    clearTimeout(fnTimer.current);
 
-      return true;
-    } catch (err) {
-      setAnnotations([
-        {
-          key: uuid(),
-          row: 0,
-          column: 1,
-          text: err,
-          type: "error",
-        },
-      ]);
+    fnTimer.current = setTimeout(() => {
+      const editor = editorRef?.current?.editor;
+      const monaco = editorRef?.current?.monaco;
+      const value = editor?.getValue();
+      if (!api) return true;
 
-      return false;
-    }
-  };
+      try {
+        parser.fn(value);
 
-  addCompleter({
-    getCompletions: function (editor, session, pos, prefix, callback) {
-      callback(
-        null,
-        nucFuncs.map((item) => ({
-          name: item.path.split("/").pop(),
-          value: item.path.split("/").pop(),
-          caption: item.path.split("/").pop(),
-          meta: "Nucleoid",
-          score: 1,
-        }))
-      );
-    },
-  });
-
-  const lint = useCallback(
-    (value) => {
-      clearTimeout(timer.current);
-
-      timer.current = setTimeout(() => {
-        const result = linter.verify(value, options);
-
-        setAnnotations([
-          annotations,
-          ...result.map((item) => {
-            return {
-              row: item.line - 1,
-              column: item.column,
-              text: item.message,
-              type: item.severity === 1 ? "error" : "warning",
-            };
-          }),
+        monaco.editor.setModelMarkers(editor?.getModel(), "action", []);
+        return true;
+      } catch (err) {
+        console.log(err);
+        monaco.editor.setModelMarkers(editor?.getModel(), "action", [
+          {
+            startLineNumber: 1,
+            startColumn: 1,
+            endLineNumber: 1,
+            endColumn: 1000,
+            message: "Need action method",
+            severity: 1,
+          },
         ]);
-      }, 1000);
-    },
-    //eslint-disable-next-line
-    []
-  );
+        return false;
+      }
+    }, 1000);
+  }
 
-  useEffect(() => {
-    const { editor } = ace.current;
-    if (editorRef) editorRef.current = editor;
+  function handleChange(e) {
+    checkFunction() && lint();
 
+    if (api) {
+      const selected = context.pages.api.selected;
+      context.nucleoid.api[selected.path][selected.method]["x-nuc-action"] = e;
+    }
+
+    if (functions) {
+      const selected = context.get("pages.functions.selected");
+      context.nucleoid.functions.find(
+        (item) => item.path === selected
+      ).definition = e;
+    }
+
+    if (query) {
+      console.log("query");
+    }
+  }
+
+  const lint = () => {
     clearTimeout(timer.current);
 
-    const handleSaveProject = () => {
-      setBackdrop(true);
+    timer.current = setTimeout(() => {
+      const editor = editorRef?.current?.editor;
+      const monaco = editorRef?.current?.monaco;
+      const result = linter.verify(editor.getValue(), options);
 
-      saveProject(() => {
-        setBackdrop(false);
-      });
-    };
-
-    const prettyCode = () => {
-      clearTimeout(timer.current);
-      setAnnotations([]);
-      if (api) {
-        const selected = state.get("pages.api.selected");
-        const api = state.get("nucleoid.api");
-        const action = api[selected.path][selected.method]["x-nuc-action"];
-        const result = linter.verifyAndFix(action, options);
-
-        try {
-          const prettyText = prettier.format(result.output, {
-            parser: "babel",
-            plugins: prettierPlugins,
-          });
-
-          setCode(
-            (api[selected.path][selected.method]["x-nuc-action"] = prettyText)
-          );
-
-          lint(prettyText);
-        } catch (err) {
-          console.log(err);
-        }
-      }
-
-      if (functions) {
-        const selected = state.get("pages.functions.selected");
-        const functions = state.get("nucleoid.functions");
-        const definition = functions.find(
-          (item) => item.path === selected
-        ).definition;
-        const result = linter.verifyAndFix(definition, options);
-
-        try {
-          const prettyText = prettier.format(result.output, {
-            parser: "babel",
-            plugins: prettierPlugins,
-          });
-
-          setCode(
-            (functions.find((item) => item.path === selected).definition =
-              prettyText)
-          );
-
-          lint(prettyText);
-        } catch (err) {
-          console.log(err);
-        }
-      }
-    };
-
-    editor.commands.addCommand({
-      name: "save",
-      bindKey: shortcut.save,
-      exec: () => {
-        prettyCode();
-        handleSaveProject();
-      },
-    });
-
-    editor.commands.addCommand({
-      name: "pretty",
-      bindKey: shortcut.pretty,
-      exec: () => {
-        prettyCode();
-      },
-    });
-
-    setAnnotations([]);
-    const selectedApi = state.get("pages.api.selected");
-    if (api && selectedApi) {
-      const api = state.get("nucleoid.api");
-      let action = api[selectedApi.path][selectedApi.method]["x-nuc-action"];
-
-      if (checkFunction(action)) {
-        const { args, fn } = parser.fn(action);
-
-        if (fn[0] === "{" && fn[fn.length - 1] === "}") {
-          action = fn.slice(1, -1);
-        }
-
-        action = `function action(${args[0] || ""}) {\n  ${action}\n}\n`;
-
-        lint(action);
-      }
-      setCode(action);
-
-      return;
-    }
-    const selectedFunction = state.get("pages.functions.selected");
-    if (functions && selectedFunction) {
-      const functions = state.get("nucleoid.functions");
-
-      lint(functions.find((item) => item.path === selectedFunction).definition);
-
-      setCode(
-        functions.find((item) => item.path === selectedFunction).definition
+      monaco.editor.setModelMarkers(
+        editor.getModel(),
+        "action",
+        result.map((item) => {
+          return {
+            startLineNumber: item.line,
+            startColumn: item.column,
+            endLineNumber: item.endLine,
+            endColumn: item.endColumn,
+            message: item.message,
+            severity:
+              item.severity === 1
+                ? monaco.MarkerSeverity.Warning
+                : monaco.MarkerSeverity.Error,
+          };
+        })
       );
-      return;
-    }
+    }, 1000);
+  };
 
-    setCode(log);
-    //eslint-disable-next-line
-  }, [state, api, functions, editorRef, log, lint]);
+  React.useEffect(() => {
+    setTimeout(() => {
+      editorRef.current?.editor.focus();
+    }, 1);
+
+    lint();
+    checkFunction();
+  });
+
+  function handleEditorDidMount(editor, monaco) {
+    const nucFuncs = context.nucleoid.functions;
+
+    monaco.editor.getModels().forEach((item) => {
+      if (
+        nucFuncs.find(
+          (a) => item._associatedResource.path === a.path + "_MODEL"
+        )
+      ) {
+        item.dispose();
+      }
+    });
+
+    nucFuncs.forEach((item) => {
+      const pth = monaco.Uri.from({ path: item.path + "_MODEL" });
+
+      monaco.editor.createModel(
+        item.definition,
+        item.ext === "js" ? "javascript" : "typescript",
+        pth
+      );
+    });
+
+    editor.onDidBlurEditorWidget(() => {
+      let key;
+      if (api) {
+        const { path, method } = context.get("pages.api.selected");
+        key = path + "." + method + ".ts";
+      } else {
+        key = context.get("pages.functions.selected") + ".js";
+      }
+
+      publish("CONTEXT_CHANGED", {
+        // TODO Optimize preparing files
+        files: contextToMap(context.nucleoid).filter(
+          (item) => item.key === key
+        ),
+      });
+    });
+
+    editor.addAction({
+      id: "lintEvent",
+      label: "lintEvent",
+      keybindings: [
+        monaco.KeyMod.Shift | monaco.KeyMod.Alt | monaco.KeyCode.KeyF,
+        monaco.KeyMod.chord(
+          monaco.KeyMod.Shift | monaco.KeyMod.Alt | monaco.KeyCode.KeyF
+        ),
+      ],
+
+      run: (e) => lintEvent(e),
+    });
+
+    editorRef.current = { editor: editor, monaco: monaco };
+
+    if (ref) ref.current = editor;
+  }
+
+  const lintEvent = (e) => {
+    try {
+      const result = linter.verifyAndFix(getFile(context, props).code, options);
+      const prettyText = prettier.format(result.output, {
+        parser: "babel",
+        plugins: prettierPlugins,
+      });
+
+      const pos = e.getPosition();
+      handleChange(prettyText);
+      editorRef.current.editor.getModel().setValue(prettyText);
+      e.setPosition(pos);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
-    <>
-      <AceEditor
-        ref={ace}
-        style={styles.editor}
-        name={name}
-        mode={"javascript"}
-        theme={"chrome"}
-        annotations={annotations}
-        fontSize={14}
-        {...other}
-        setOptions={{
-          useWorker: false,
-          tabSize: 2,
-          useSoftTabs: true,
-          enableLiveAutocompletion: true,
-          enableBasicAutocompletion: true,
-        }}
-        value={code}
-        onBlur={() => {
-          // if (Settings.beta()) {
-          let key;
-          if (name === "api") {
-            const { path, method } = state.get("pages.api.selected");
-            key = path + "." + method + ".ts";
-          } else {
-            key = state.get("pages.functions.selected") + ".js";
-          }
-
-          publish("CONTEXT_CHANGED", {
-            // TODO Optimize preparing files
-            files: contextToMap(state.nucleoid).filter(
-              (item) => item.key === key
-            ),
-          });
-          //}
-        }}
-        onChange={(e) => {
-          setCode(e);
-
-          if (api) {
-            checkFunction(e) && lint(e);
-
-            const selected = state.get("pages.api.selected");
-            const api = state.get("nucleoid.api");
-
-            api[selected.path][selected.method]["x-nuc-action"] = e;
-          }
-
-          if (functions) {
-            lint(e);
-
-            const selected = state.get("pages.functions.selected");
-            const functions = state.get("nucleoid.functions");
-
-            functions.find((item) => item.path === selected).definition = e;
-          }
-        }}
-      />
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={backdrop}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </>
+    <MonacoEditor
+      height={"100%"}
+      defaultLanguage="javascript"
+      defaultValue={file.code}
+      onChange={handleChange}
+      onMount={handleEditorDidMount}
+      path={file.path}
+      options={{
+        minimap: {
+          enabled: false,
+        },
+        scrollbar: {
+          vertical: "hidden",
+          horizontal: "hidden",
+        },
+      }}
+    />
   );
+});
+
+function getFile(context, props) {
+  const { api, functions, query } = props;
+  const file = { path: "", code: "" };
+
+  if (api) {
+    const selected = context.pages.api.selected;
+
+    if (!selected) return file;
+
+    file.path = selected?.path + selected?.method;
+    file.code =
+      context.nucleoid.api[selected?.path][selected?.method]["x-nuc-action"];
+  }
+
+  if (functions) {
+    const selected = context.get("pages.functions.selected");
+
+    if (!selected) return file;
+
+    file.path = selected;
+    file.code = context.nucleoid.functions.find(
+      (item) => item.path === selected
+    ).definition;
+  }
+
+  if (query) {
+    console.log("query");
+  }
+
+  return file;
 }
 
-export default React.forwardRef((props, ref) => (
-  <Editor {...props} editorRef={ref} />
-));
+export default Editor;

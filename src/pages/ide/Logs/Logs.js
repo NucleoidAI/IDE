@@ -1,17 +1,25 @@
-import Editor from "../../../widgets/Editor";
 import Moment from "react-moment";
 import service from "../../../service";
 import styles from "./styles";
 import { v4 as uuid } from "uuid";
-import { Grid, Paper, Typography } from "@mui/material";
+import {
+  CircularProgress,
+  Grid,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 function Logs() {
   const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     service.logs().then((logs) => {
       setLogs([...logs.slice(0, 25)]);
+      setLoading(false);
     });
   }, []);
 
@@ -30,9 +38,15 @@ function Logs() {
           justifyContent={"flex-start"}
           alignContent={"center"}
         >
+          {loading && <CircularProgress />}
           {logs.map((log) => (
             <Paper key={uuid()} sx={styles.logitem}>
-              <Editor name={"log"} log={log.s} readOnly />
+              <TextField
+                fullWidth
+                inputProps={{ style: { fontFamily: "monospace" } }}
+                multiline
+                value={log.s}
+              />
               <Grid container justifyContent={"center"}>
                 <Moment date={log.d} format="MM/DD hh:mm:ss" />{" "}
                 &nbsp;&nbsp;-&nbsp;&nbsp;
