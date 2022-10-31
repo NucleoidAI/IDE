@@ -32,7 +32,7 @@ const withFilter = (Component) => {
     const updatedProps = { title: "IDE", list: [] };
     if (!settings.plugin()) {
       updatedProps.list = props.list.filter(
-        (item) => item.title !== "Dashboard"
+        (item) => item.link !== "/dashboard" && item.link !== "/businessflow"
       );
     } else {
       updatedProps.list = [...props.list];

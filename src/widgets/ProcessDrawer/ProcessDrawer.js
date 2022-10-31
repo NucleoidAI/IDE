@@ -47,10 +47,10 @@ const ProcessDrawer = () => {
   };
 
   useEffect(() => {
-    if (location.state?.anchor === false) {
+    if (visible(location.pathname) === false) {
       setVercel(false);
     }
-  }, [location.state]); //eslint-disable-line
+  }, [location]);
 
   const handleCloseVercel = () => {
     setVercel(false);
@@ -72,14 +72,31 @@ const ProcessDrawer = () => {
     setLink(myURL.createObjectURL(file));
   };
 
+  function visible(path) {
+    switch (path) {
+      case "/dashboard":
+        return false;
+      case "/businessflow":
+        return false;
+      case "/api":
+        return true;
+      case "/functions":
+        return true;
+      case "/query":
+        return false;
+      case "/logs":
+        return false;
+      default:
+        return false;
+    }
+  }
+
   return (
     <>
       <Drawer
         variant="persistent"
         anchor={"right"}
-        open={
-          location.state?.anchor === undefined ? true : location.state?.anchor
-        }
+        open={visible(location.pathname)}
         sx={matchDownMD ? styles.drawerSmall : styles.drawer}
       >
         <Box>
