@@ -1,6 +1,6 @@
 import BasicFlow from "./BasicFlow";
 import React from "react";
-import { Box, Button, Card } from "@mui/material";
+import { Box, Card } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid"; //eslint-disable-line
 
 const NucDataGrid = ({ rows }) => {
@@ -36,19 +36,6 @@ const NucDataGrid = ({ rows }) => {
       flex: 1,
       editable: true,
     },
-    {
-      field: "cancel",
-      headerName: "cancel",
-      sortable: false,
-      flex: 1,
-      renderCell: (params) => {
-        return (
-          <Button variant="outlined" disabled={params.row.cancel}>
-            Cancel
-          </Button>
-        );
-      },
-    },
   ];
 
   return (
@@ -65,7 +52,6 @@ const NucDataGrid = ({ rows }) => {
 };
 
 const BusinessFlow = () => {
-  //generate random list of strings with id
   const generateRandomList = (length) => {
     const list = [];
     for (let i = 0; i < length; i++) {
@@ -76,7 +62,6 @@ const BusinessFlow = () => {
         order: Math.random().toString(36).substring(7),
         date: new Date(),
         status: !Math.floor(Math.random() * 2),
-        cancel: !Math.floor(Math.random() * 2),
       });
     }
     return list;
