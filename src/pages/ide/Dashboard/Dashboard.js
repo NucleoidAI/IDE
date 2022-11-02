@@ -1,5 +1,6 @@
 import React from "react";
-import { Box, Button, Card } from "@mui/material";
+import theme from "../../../theme";
+import { Box, Button, Card, Grid, useMediaQuery } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid"; //eslint-disable-line
 import { Line, PolarArea } from "react-chartjs-2";
 
@@ -65,7 +66,8 @@ const NucDataGrid = ({ rows }) => {
 };
 
 const Dashboard = () => {
-  //generate random list of strings with id
+  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+
   const generateRandomList = (length) => {
     const list = [];
     for (let i = 0; i < length; i++) {
@@ -138,7 +140,7 @@ const Dashboard = () => {
   };
 
   return (
-    <Box sx={{ height: "100%" }}>
+    <Box sx={{ height: matchDownSM ? 1600 : "100%" }}>
       <Box
         sx={{
           height: "40%",
@@ -146,41 +148,52 @@ const Dashboard = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          gap: 1,
         }}
       >
-        <Card
+        <Grid
+          container
           sx={{
-            width: "40%",
-            height: "95%",
+            height: "100%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <Box sx={{ width: 300, height: 300 }}>
-            <PolarArea data={data} />
-          </Box>
-        </Card>
-        <Card
-          sx={{
-            width: "60%",
-            height: "95%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 1,
-          }}
-        >
-          <Box
-            sx={{
-              width: 700,
-              height: 300,
-            }}
-          >
-            <Line options={options} data={dataAreaChart} />
-          </Box>{" "}
-        </Card>
+          <Grid item sx={{ width: "100%" }} sm={12} md={4} lg={4}>
+            <Card
+              sx={{
+                width: "99%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Box sx={{ width: 300, height: 300 }}>
+                <PolarArea data={data} />
+              </Box>
+            </Card>
+          </Grid>
+          <Grid item sx={{ width: "100%" }} sm={12} md={8} lg={8}>
+            <Card
+              sx={{
+                width: "99%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 1,
+              }}
+            >
+              <Box
+                sx={{
+                  height: 300,
+                  width: matchDownSM ? null : 700,
+                }}
+              >
+                <Line options={options} data={dataAreaChart} />
+              </Box>
+            </Card>
+          </Grid>
+        </Grid>
       </Box>
       <Box sx={{ height: "60%" }}>
         <NucDataGrid rows={generateRandomList(30)} />
