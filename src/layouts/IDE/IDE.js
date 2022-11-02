@@ -4,9 +4,10 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import FolderIcon from "@mui/icons-material/Folder";
 import GlobalSnackMessage from "../../components/GlobalSnackMessage";
 import Menu from "../../components/Menu";
-import Mobile from "../../pages/ide/Mobile";
+//import Mobile from "../../pages/ide/Mobile";
 import Onboard from "../../components/Onboard";
 import ProcessDrawer from "../../widgets/ProcessDrawer/ProcessDrawer";
+import React from "react";
 import SendIcon from "@mui/icons-material/Send";
 import Settings from "../../settings";
 import StorageIcon from "@mui/icons-material/Storage";
@@ -16,6 +17,7 @@ import styles from "./styles";
 import theme from "../../theme";
 import { useMediaQuery } from "@mui/material";
 import { Outlet } from "react-router-dom"; // eslint-disable-line
+import { useNavigate } from "react-router-dom";
 
 const list = [
   {
@@ -45,14 +47,35 @@ const list = [
   },
 ];
 
+const listMobile = [
+  {
+    title: "Dashboard",
+    link: "/dashboard",
+    icon: <DashboardIcon />,
+    anchor: false,
+  },
+  {
+    title: "Business Flow",
+    link: "/businessflow",
+    icon: <BusinessIcon />,
+    anchor: false,
+  },
+];
+
 function IDE() {
+  const navigate = useNavigate();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
-  if (matchDownSM) return <Mobile />;
+  if (matchDownSM) {
+    if (!Settings.plugin()) {
+      navigate("/dashboard");
+      Settings.plugin(" ");
+    }
+  }
 
   return (
     <Box sx={styles.root}>
-      <Menu list={list} title="IDE" />
+      <Menu list={matchDownSM ? listMobile : list} title="IDE" />
       <Box sx={styles.content}>
         <Outlet />
       </Box>
