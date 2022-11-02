@@ -44,7 +44,6 @@ const NucDataGrid = ({ rows }) => {
       columns={columns}
       pageSize={8}
       rowsPerPageOptions={[8]}
-      checkboxSelection
       disableSelectionOnClick
       experimentalFeatures={{ newEditingApi: true }}
     />
