@@ -66,12 +66,12 @@ function IDE() {
   const navigate = useNavigate();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
-  if (matchDownSM) {
+  React.useEffect(() => {
+    navigate("/dashboard");
     if (!Settings.plugin()) {
-      navigate("/dashboard");
       Settings.plugin(" ");
     }
-  }
+  }, [matchDownSM]); //eslint-disable-line
 
   return (
     <Box sx={styles.root}>
