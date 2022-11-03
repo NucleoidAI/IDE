@@ -23,9 +23,12 @@ import {
   CssBaseline,
   StyledEngineProvider,
   ThemeProvider,
+  useMediaQuery,
 } from "@mui/material";
 
 function App() {
+  const matchSmall = useMediaQuery(theme.breakpoints.between("xs", "sm"));
+
   React.useEffect(() => {
     const elapsed = Date.now() - window.start;
     const delay =
@@ -102,7 +105,7 @@ function App() {
             <EventRegistry />
             <Routes>
               <Route path="/" element={<IDE />}>
-                {Settings.plugin() ? (
+                {Settings.plugin() || matchSmall ? (
                   <Route index element={<Navigate to="/dashboard" />} />
                 ) : (
                   <Route index element={<Navigate to="/api" />} />
