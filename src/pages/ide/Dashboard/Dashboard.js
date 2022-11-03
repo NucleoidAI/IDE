@@ -56,7 +56,7 @@ const NucDataGrid = ({ rows }) => {
     <DataGrid
       rows={rows}
       columns={columns}
-      pageSize={8}
+      pageSize={17}
       rowsPerPageOptions={[8]}
       disableSelectionOnClick
       experimentalFeatures={{ newEditingApi: true }}
@@ -65,7 +65,7 @@ const NucDataGrid = ({ rows }) => {
 };
 
 const Dashboard = () => {
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuery(theme.breakpoints.down("md"));
 
   const generateRandomList = (length) => {
     const list = [];
@@ -139,7 +139,7 @@ const Dashboard = () => {
   };
 
   return (
-    <Box sx={{ height: matchDownSM ? 1600 : "100%" }}>
+    <Box sx={{ height: matchDownSM ? 1700 : "100%" }}>
       <Box
         sx={{
           height: "40%",
@@ -195,7 +195,7 @@ const Dashboard = () => {
         </Grid>
       </Box>
       <Box sx={{ height: "60%" }}>
-        <NucDataGrid rows={generateRandomList(30)} />
+        <NucDataGrid rows={generateRandomList(150)} />
       </Box>
     </Box>
   );
