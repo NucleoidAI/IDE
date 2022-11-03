@@ -26,6 +26,10 @@ import {
 } from "@mui/material";
 
 function App() {
+  function checkMobileSize() {
+    return window.innerWidth < 600 ? true : false;
+  }
+
   React.useEffect(() => {
     const elapsed = Date.now() - window.start;
     const delay =
@@ -69,6 +73,9 @@ function App() {
     if (!Settings.landing()) {
       Settings.landing({ level: 0 });
     }
+    if (checkMobileSize()) {
+      Settings.landing({ level: 4 });
+    }
 
     if (project.isAuth()) {
       service.getProjects().then(({ data }) => {
@@ -102,7 +109,7 @@ function App() {
             <EventRegistry />
             <Routes>
               <Route path="/" element={<IDE />}>
-                {Settings.plugin() ? (
+                {Settings.plugin() || checkMobileSize() ? (
                   <Route index element={<Navigate to="/dashboard" />} />
                 ) : (
                   <Route index element={<Navigate to="/api" />} />
