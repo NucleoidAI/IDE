@@ -21,6 +21,7 @@ function Functions() {
     <Grid container sx={styles.root} columns={config.layout.ide.total}>
       <Grid
         item
+        xs={config.layout.ide.tree.xs}
         sm={config.layout.ide.tree.sm}
         md={config.layout.ide.tree.md}
         lg={config.layout.ide.tree.lg}
@@ -41,6 +42,7 @@ function Functions() {
       </Grid>
       <Grid
         item
+        xs={config.layout.ide.tree.xs}
         sm={config.layout.ide.content.sm}
         md={config.layout.ide.content.md}
         lg={config.layout.ide.content.lg}
