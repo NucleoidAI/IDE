@@ -185,7 +185,7 @@ const Dashboard = () => {
               <Box
                 sx={{
                   height: 300,
-                  width: matchDownSM ? null : 700,
+                  width: matchDownSM ? 350 : 700,
                 }}
               >
                 <Line options={options} data={dataAreaChart} />
