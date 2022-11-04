@@ -109,7 +109,7 @@ function App() {
             <EventRegistry />
             <Routes>
               <Route path="/" element={<IDE />}>
-                {Settings.plugin() ? (
+                {Settings.plugin() || checkMobileSize() ? (
                   <Route index element={<Navigate to="/dashboard" />} />
                 ) : (
                   <Route index element={<Navigate to="/api" />} />

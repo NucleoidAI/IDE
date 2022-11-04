@@ -67,9 +67,11 @@ function IDE() {
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   React.useEffect(() => {
-    navigate("/dashboard");
-    if (!Settings.plugin()) {
-      Settings.plugin(" ");
+    if (matchDownSM) {
+      navigate("/dashboard");
+      if (!Settings.plugin()) {
+        Settings.plugin(" ");
+      }
     }
   }, [matchDownSM]); //eslint-disable-line
 
