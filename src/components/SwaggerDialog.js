@@ -1,6 +1,5 @@
-import Button from "@mui/material/Button";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
-import NewTab from "../icons/NewTab";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import React from "react";
 import Settings from "../settings";
 import StarUsOnGithub from "./StarUsOnGithub";
@@ -91,6 +90,7 @@ export default function SwaggerDialog() {
                     <Typography sx={{ pl: 3 / 2 }} variant="h6">
                       Sandbox
                     </Typography>
+                    <OpenSwaggerNewTabButton url={Settings.url.app()} />
                   </>
                 )}
               </Box>
@@ -102,7 +102,6 @@ export default function SwaggerDialog() {
                 justifyContent: "center",
               }}
             >
-              <OpenSwaggerNewTabButton url={Settings.url.app()} />
               <StarUsOnGithub />
             </Box>
           </Box>
@@ -130,17 +129,8 @@ function OpenSwaggerNewTabButton(props) {
   }
 
   return (
-    <Button
-      size="large"
-      startIcon={<NewTab fill={"white"} />}
-      sx={{
-        textTransform: "none",
-        fontSize: "1rem",
-        color: "white",
-      }}
-      onClick={handleClick}
-    >
-      Open Swagger
-    </Button>
+    <IconButton onClick={handleClick}>
+      <OpenInNewIcon sx={{ color: theme.palette.custom.grey }} />
+    </IconButton>
   );
 }
