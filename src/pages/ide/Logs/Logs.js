@@ -42,12 +42,13 @@ function Logs() {
           {logs.map((log) => (
             <Paper key={uuid()} sx={styles.logitem}>
               <TextField
+                variant={"outlined"}
                 fullWidth
                 inputProps={{ style: { fontFamily: "monospace" } }}
                 multiline
-                value={log.s}
+                value={log.s.trim()}
               />
-              <Grid container justifyContent={"center"}>
+              <Grid container justifyContent={"center"} sx={{ mt: 1 }}>
                 <Moment date={log.d} format="MM/DD hh:mm:ss" />{" "}
                 &nbsp;&nbsp;-&nbsp;&nbsp;
                 {log.t}ms
