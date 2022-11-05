@@ -17,7 +17,6 @@ import styles from "./styles";
 import theme from "../../theme";
 import { useMediaQuery } from "@mui/material";
 import { Outlet } from "react-router-dom"; // eslint-disable-line
-import { useNavigate } from "react-router-dom";
 
 const list = [
   {
@@ -63,19 +62,14 @@ const listMobile = [
 ];
 
 function IDE() {
-  const navigate = useNavigate();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
-
-  React.useEffect(() => {
-    navigate("/dashboard");
-    if (!Settings.plugin()) {
-      Settings.plugin(" ");
-    }
-  }, [matchDownSM]); //eslint-disable-line
+  const matchDownSM = useMediaQuery(theme.breakpoints.between("xs", "md"));
 
   return (
     <Box sx={styles.root}>
-      <Menu list={matchDownSM ? listMobile : list} title="IDE" />
+      <Menu
+        list={matchDownSM && Settings.plugin() ? listMobile : list}
+        title="IDE"
+      />
       <Box sx={styles.content}>
         <Outlet />
       </Box>

@@ -74,6 +74,7 @@ function App() {
       Settings.landing({ level: 0 });
     }
     if (checkMobileSize()) {
+      Settings.plugin(" ");
       Settings.landing({ level: 4 });
     }
 
@@ -109,7 +110,7 @@ function App() {
             <EventRegistry />
             <Routes>
               <Route path="/" element={<IDE />}>
-                {Settings.plugin() ? (
+                {Settings.plugin() || checkMobileSize() ? (
                   <Route index element={<Navigate to="/dashboard" />} />
                 ) : (
                   <Route index element={<Navigate to="/api" />} />

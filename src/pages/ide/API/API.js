@@ -13,6 +13,7 @@ function API() {
       <APIDialog />
       <Grid
         item
+        xs={config.layout.ide.tree.xs}
         sm={config.layout.ide.tree.sm}
         md={config.layout.ide.tree.md}
         lg={config.layout.ide.tree.lg}
@@ -23,6 +24,7 @@ function API() {
       <Grid
         container
         item
+        xs={config.layout.ide.tree.xs}
         sm={config.layout.ide.content.sm}
         md={config.layout.ide.content.md}
         lg={config.layout.ide.content.lg}
