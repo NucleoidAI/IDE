@@ -28,19 +28,19 @@ import {
 } from "@mui/material";
 
 const withFilter = (Component) => {
-  const Wrapped = (props) => {
-    const updatedProps = { title: "IDE", list: [] };
+  return (props) => {
+    let list;
+
     if (!settings.plugin()) {
-      updatedProps.list = props.list.filter(
+      list = props.list.filter(
         (item) => item.link !== "/dashboard" && item.link !== "/businessflow"
       );
     } else {
-      updatedProps.list = [...props.list];
+      list = [...props.list];
     }
-    return <Component {...updatedProps} />;
-  };
 
-  return Wrapped;
+    return <Component {...{ title: "IDE", list }} />;
+  };
 };
 
 //TODO Split this page as components and styles
