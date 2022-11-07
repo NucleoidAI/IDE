@@ -6,7 +6,7 @@ import NonExpandableFunctionTreeItem from "../../components/NonExpandableFunctio
 import actions from "../../actions";
 import styles from "./styles";
 import { useContext } from "../../context/context";
-import useEvent from "../../hooks/useEvent";
+import { useEvent } from "@nucleoidjs/synapses";
 import { Box, Grid, Menu, MenuItem, Tooltip, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { TreeItem, TreeView } from "@mui/lab";

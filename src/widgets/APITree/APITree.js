@@ -10,7 +10,7 @@ import ResourceMenu from "../ResourceMenu";
 import styles from "./styles";
 import theme from "../../theme";
 import { useContext } from "../../context/context";
-import { useEvent } from "../../hooks/useEvent";
+import { useEvent } from "@nucleoidjs/synapses";
 import {
   Box,
   Card,

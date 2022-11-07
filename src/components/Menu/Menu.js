@@ -11,7 +11,7 @@ import Status from "../../widgets/Status";
 import { drawerWidth } from "../../config";
 import settings from "../../settings";
 import styles from "./styles";
-import { useEvent } from "../../hooks/useEvent";
+import { useEvent } from "@nucleoidjs/synapses";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { ArrowForwardIos, DensityMedium } from "@mui/icons-material/";

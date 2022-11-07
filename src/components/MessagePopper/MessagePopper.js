@@ -3,7 +3,7 @@ import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import React from "react";
 import Settings from "../../settings";
 import onboardDispatcher from "../Onboard/onboardDispatcher";
-import { publish } from "../../hooks/useEvent";
+import { publish } from "@nucleoidjs/synapses";
 import { Box, IconButton, Popper, Typography } from "@mui/material";
 
 const MessagePopper = ({ title, openTime }) => {

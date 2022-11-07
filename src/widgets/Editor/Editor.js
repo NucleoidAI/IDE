@@ -5,7 +5,7 @@ import linter from "../../linter";
 import { parser } from "react-nucleoid";
 import prettier from "../../prettier";
 import prettierPlugins from "../../prettierPlugins";
-import { publish } from "../../Event";
+import { publish } from "@nucleoidjs/synapses";
 import rules from "./rules";
 import { useContext } from "../../context/context";
 

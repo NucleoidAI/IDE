@@ -5,7 +5,7 @@ import styles from "./styles";
 import { Doughnut } from "react-chartjs-2/"; // eslint-disable-line
 import { Box, Grid, Tooltip, Typography } from "@mui/material";
 import "chart.js/auto"; // eslint-disable-line
-import { useEvent } from "../../hooks/useEvent";
+import { useEvent } from "@nucleoidjs/synapses";
 
 function Status() {
   const [state] = useEvent("RUNTIME_CONNECTION", {

@@ -1,5 +1,5 @@
 import React from "react";
-import { subscribe } from "./Event";
+import { subscribe } from "@nucleoidjs/synapses";
 import vfs from "./vfs";
 //import { useContext } from "Context/context";
 
