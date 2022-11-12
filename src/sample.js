@@ -29,9 +29,16 @@ const api = {
   },
   "/items": {
     get: {
-      summary: "Get item list",
-      description: "Get item list",
-      params: [],
+      summary: "Get item list by name",
+      description: "Get item by name",
+      params: [
+        {
+          in: "query",
+          type: "string",
+          required: true,
+          name: "name",
+        },
+      ],
       request: { type: "object", properties: {} },
       response: {
         type: "array",
@@ -40,7 +47,8 @@ const api = {
         },
       },
       "x-nuc-action": `function action(req) {
-  return Item;
+  const name = req.query.name
+  return Item.filter(item => item.name === name);
 }
 `,
     },
