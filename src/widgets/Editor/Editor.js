@@ -169,6 +169,8 @@ const Editor = React.forwardRef((props, ref) => {
 
     editorRef.current = { editor: editor, monaco: monaco };
 
+    publish("loading", true);
+
     if (ref) ref.current = editor;
   }
 
