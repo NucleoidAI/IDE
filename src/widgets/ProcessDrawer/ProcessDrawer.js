@@ -9,6 +9,7 @@ import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
 import ViewListIcon from "@mui/icons-material/ViewList";
+import { deepCopy } from "../../utils/DeepCopy";
 import gtag from "../../gtag";
 import { mapToContext } from "../../utils/Parser";
 import onboardDispatcher from "../../components/Onboard/onboardDispatcher";
@@ -64,9 +65,65 @@ const ProcessDrawer = () => {
     });
   };
 
+  const mapOpenApiPaths = (api) => {
+    const tmpApi = deepCopy(api);
+    Object.keys(api).forEach((resource) => {
+      Object.keys(api[resource]).forEach((method) => {
+        tmpApi[resource][method].responses = {
+          200: {
+            content: {
+              "application/json": { schema: api[resource][method].response },
+            },
+          },
+          400: {
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+        };
+
+        tmpApi[resource][method].requestBody = {
+          content: {
+            "application/json": { schema: api[resource][method].request },
+            "application/xml": { schema: api[resource][method].request },
+          },
+        };
+
+        delete tmpApi[resource][method].response;
+        delete tmpApi[resource][method].request;
+      });
+    });
+
+    return tmpApi;
+  };
+
+  const mapContextToOpenApi = (context) => {
+    const openApi = {
+      openapi: "3.0.1",
+      info: {
+        title: localStorage.getItem("name"),
+        description: Settings.description(),
+      },
+      paths: mapOpenApiPaths(context.api),
+      "x-nuc-functions": context.functions,
+      components: {
+        schemas: context.types,
+      },
+    };
+
+    return JSON.stringify(openApi);
+  };
+
   const handleDownloadContext = () => {
     const myURL = window.URL || window.webkitURL;
-    const file = new Blob([JSON.stringify(state.nucleoid)], {
+    const file = new Blob([mapContextToOpenApi(state.nucleoid)], {
       type: "text/plain",
     });
     setLink(myURL.createObjectURL(file));
@@ -112,7 +169,7 @@ const ProcessDrawer = () => {
               component={"a"}
               onClick={handleDownloadContext}
               href={link}
-              download={Project.get().name + ".nuc.json"}
+              download={Project.get().name + ".openapi.json"}
               target="_blank"
             >
               <ImportExportIcon sx={styles.listItem} />
