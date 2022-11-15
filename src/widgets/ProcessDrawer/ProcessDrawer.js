@@ -92,7 +92,6 @@ const ProcessDrawer = () => {
         tmpApi[resource][method].requestBody = {
           content: {
             "application/json": { schema: api[resource][method].request },
-            "application/xml": { schema: api[resource][method].request },
           },
         };
 
