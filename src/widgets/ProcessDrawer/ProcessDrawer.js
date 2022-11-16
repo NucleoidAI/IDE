@@ -1,7 +1,6 @@
 import Backdrop from "@mui/material/Backdrop";
-import DialogTooltip from "../../components/DialogTootip/";
+import DownloadIcon from "@mui/icons-material/Download";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import ImportExportIcon from "@mui/icons-material/ImportExport";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import PostmanIcon from "../../icons/Postman";
 import Project from "../../project";
@@ -9,6 +8,7 @@ import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import SaveIcon from "@mui/icons-material/Save";
 import Settings from "../../settings";
 import ViewListIcon from "@mui/icons-material/ViewList";
+import { deepCopy } from "../../utils/DeepCopy";
 import gtag from "../../gtag";
 import { mapToContext } from "../../utils/Parser";
 import onboardDispatcher from "../../components/Onboard/onboardDispatcher";
@@ -26,7 +26,6 @@ import {
   Drawer,
   ListItem,
   Tooltip,
-  Typography,
 } from "@mui/material";
 import { publish, useEvent } from "@nucleoidjs/synapses";
 import React, { useEffect, useState } from "react"; //eslint-disable-line
@@ -37,23 +36,12 @@ const ProcessDrawer = () => {
   const matchDownMD = useMediaQuery(theme.breakpoints.down("lg"));
   const location = useLocation();
 
-  const [vercel, setVercel] = useState(false);
   const [backdrop, setBackdrop] = useState(false);
   const [link, setLink] = useState("");
 
   const auth = () => {
     setBackdrop(true);
     handleGetProject((result) => setBackdrop(false));
-  };
-
-  useEffect(() => {
-    if (visible(location.pathname) === false) {
-      setVercel(false);
-    }
-  }, [location]);
-
-  const handleCloseVercel = () => {
-    setVercel(false);
   };
 
   const handleSaveProject = () => {
@@ -64,9 +52,64 @@ const ProcessDrawer = () => {
     });
   };
 
+  const mapOpenApiPaths = (api) => {
+    const tmpApi = deepCopy(api);
+    Object.keys(api).forEach((resource) => {
+      Object.keys(api[resource]).forEach((method) => {
+        tmpApi[resource][method].responses = {
+          200: {
+            content: {
+              "application/json": { schema: api[resource][method].response },
+            },
+          },
+          400: {
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+        };
+
+        tmpApi[resource][method].requestBody = {
+          content: {
+            "application/json": { schema: api[resource][method].request },
+          },
+        };
+
+        delete tmpApi[resource][method].response;
+        delete tmpApi[resource][method].request;
+      });
+    });
+
+    return tmpApi;
+  };
+
+  const mapContextToOpenApi = (context) => {
+    const openApi = {
+      openapi: "3.0.1",
+      info: {
+        title: localStorage.getItem("name"),
+        description: Settings.description(),
+      },
+      paths: mapOpenApiPaths(context.api),
+      "x-nuc-functions": context.functions,
+      components: {
+        schemas: context.types,
+      },
+    };
+
+    return JSON.stringify(openApi);
+  };
+
   const handleDownloadContext = () => {
     const myURL = window.URL || window.webkitURL;
-    const file = new Blob([JSON.stringify(state.nucleoid)], {
+    const file = new Blob([mapContextToOpenApi(state.nucleoid)], {
       type: "text/plain",
     });
     setLink(myURL.createObjectURL(file));
@@ -107,39 +150,27 @@ const ProcessDrawer = () => {
               <GitHubIcon sx={styles.listItem} />
             </ListItem>
           </Tooltip>
+          <Tooltip placement="left" title="Open Postman (Coming soon)">
+            <ListItem button>
+              <PostmanIcon sx={styles.listItem} />
+            </ListItem>
+          </Tooltip>
+          <Tooltip placement="left" title="Deploy (Coming soon)">
+            <ListItem button>
+              <RocketLaunchIcon sx={styles.listItem} />
+            </ListItem>
+          </Tooltip>
           <Tooltip placement="left" title="Download project">
             <ListItem
               component={"a"}
               onClick={handleDownloadContext}
               href={link}
-              download={Project.get().name + ".nuc.json"}
+              download={Project.get().name + ".openapi.json"}
               target="_blank"
             >
-              <ImportExportIcon sx={styles.listItem} />
+              <DownloadIcon sx={styles.listItem} />
             </ListItem>
           </Tooltip>
-          <Tooltip placement="left" title="Open postman">
-            <ListItem button>
-              <PostmanIcon sx={styles.listItem} />
-            </ListItem>
-          </Tooltip>
-
-          <DialogTooltip
-            open={vercel}
-            placement="left"
-            title={<b>Deploy</b>}
-            message={
-              <Typography>
-                Vercel deployment will be here soon
-                <br />
-              </Typography>
-            }
-            handleTooltipClose={handleCloseVercel}
-          >
-            <ListItem button onClick={() => setVercel(true)}>
-              <RocketLaunchIcon sx={styles.listItem} />
-            </ListItem>
-          </DialogTooltip>
         </Box>
         <Tooltip placement="left" title="Save project">
           <ListItem button onClick={handleSaveProject}>
@@ -167,7 +198,7 @@ function SwaggerButton() {
   };
 
   return (
-    <Tooltip placement="left" title="Open swagger dialog">
+    <Tooltip placement="left" title="Open Swagger">
       <ListItem
         disabled={!runtimeConnection.status}
         button
@@ -263,7 +294,7 @@ function ApiButton() {
           <CircularProgress size={25} color={"secondary"} />
         </ListItem>
       ) : (
-        <Tooltip title={`Load project ${runtime}`} placement="left">
+        <Tooltip title={`Start ${runtime}`} placement="left">
           <ListItem
             name="onboardRun"
             button
