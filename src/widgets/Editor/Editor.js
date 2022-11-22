@@ -109,11 +109,6 @@ const Editor = React.forwardRef((props, ref) => {
     }, 1000);
   };
 
-  React.useEffect(() => {
-    lint();
-    checkFunction();
-  });
-
   function handleEditorDidMount(editor, monaco) {
     const nucFuncs = context.nucleoid.functions;
 
@@ -168,6 +163,8 @@ const Editor = React.forwardRef((props, ref) => {
     });
 
     editorRef.current = { editor: editor, monaco: monaco };
+
+    checkFunction() && lint();
 
     publish("loading", true);
 
