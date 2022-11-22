@@ -34,7 +34,7 @@ const getCodeFromGithub = () => {
   const popup = window.open(
     `https://github.com/login/oauth/authorize?scope=user&client_id=${Settings.github.client_id}`,
     "target_blank",
-    "toolbar=yes,scrollbars=yes,resizable=yes,top=50,left=50,width=500,height=800"
+    "toolbar=yes,scrollbars=yes,resizable=yes,top=50,left=50,width=650,height=750"
   );
 
   return new Promise((resolve, reject) => {
