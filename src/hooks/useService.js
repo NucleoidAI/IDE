@@ -9,9 +9,8 @@ function useService() {
   const handleGetProjects = async (callback) => {
     const projects = await service.getProjects().catch((err) => err);
 
-    if (!projects.data) {
-      console.log("Network error");
-      callback(false);
+    if (!projects?.data) {
+      return callback(false);
     }
 
     if (projects.data.length > 0) {
@@ -21,9 +20,8 @@ function useService() {
         .getProject(projects.data[0].project)
         .catch((err) => err);
 
-      if (!project.data) {
-        console.log("project not found");
-        callback(false);
+      if (!project?.data) {
+        return callback(false);
       }
 
       dispatch({
@@ -35,7 +33,8 @@ function useService() {
         project.data.name,
         project.data.context
       );
-      callback(true);
+
+      return callback(true);
     } else {
       const { name, context } = Project.getStringify();
       service.addProject(name, context).then(({ data }) => {
@@ -45,7 +44,8 @@ function useService() {
           payload: { project: JSON.parse(data.context) },
         });
         Project.setWithoutStringify(data.project, data.name, data.context);
-        callback(true);
+
+        return callback(true);
       });
     }
   };

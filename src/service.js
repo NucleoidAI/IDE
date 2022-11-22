@@ -36,20 +36,18 @@ const getCodeFromGithub = () => {
     "target_blank",
     "toolbar=yes,scrollbars=yes,resizable=yes,top=50,left=50,width=500,height=800"
   );
-  return new Promise((resolve, reject) => {
-    const interval = setInterval(() => {
-      if (popup?.window?.closed === undefined || popup?.window?.closed) {
-        const code = popup?.location?.href?.split("?code=")[1];
 
-        if (code) {
-          resolve(code);
+  return new Promise((resolve, reject) => {
+    const timer = setInterval(function () {
+      if (popup.closed) {
+        clearInterval(timer);
+        if (popup.location.href) {
+          resolve(popup.location.href.split("?code=")[1]);
         } else {
           reject({ error: "USER_CLOSED_PAGE" });
         }
-
-        clearInterval(interval);
       }
-    }, 600);
+    }, 700);
   });
 };
 
