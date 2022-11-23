@@ -71,13 +71,13 @@ const Dashboard = () => {
     const list = [];
     for (let i = 0; i < length; i++) {
       list.push({
-        id: i,
-        name: Math.random().toString(36).substring(7),
-        item: Math.random().toString(36).substring(7),
-        order: Math.random().toString(36).substring(7),
+        id: i + 1,
+        name: `order${i + 129}`,
+        item: Math.random().toString(36).substring(5),
+        order: Math.random().toString().substring(5),
         date: new Date(),
-        status: !Math.floor(Math.random() * 2),
-        cancel: !Math.floor(Math.random() * 2),
+        status: Math.floor(Math.random() * 2) ? "IN_PROGRESS" : "COMPLETED",
+        cancel: !!Math.floor(Math.random() * 2),
       });
     }
     return list;
@@ -110,7 +110,7 @@ const Dashboard = () => {
       },
       title: {
         display: true,
-        text: "Chart.js Line Chart",
+        text: "Line Chart",
       },
     },
   };
@@ -130,7 +130,7 @@ const Dashboard = () => {
     datasets: [
       {
         fill: true,
-        label: "Dataset 2",
+        label: "Dataset",
         data: labels.map(() => Math.random() * 100),
         borderColor: "rgba(64, 188, 216, 0.5)",
         backgroundColor: "rgba(64, 188, 216, 0.5)",

@@ -12,13 +12,13 @@ export const initialNodes = [
     id: "1",
     type: "input",
     data: {
-      label: "Input Node",
+      label: "Order Placed",
     },
     position: { x: 150, y: 150 },
     sourcePosition: Position.Right,
     style: {
-      background: "#63B3ED",
-      color: "white",
+      background: "rgba(64, 188, 216, 0.5)",
+      color: "black",
       width: 80,
       height: 80,
       padding: "20px",
@@ -28,7 +28,7 @@ export const initialNodes = [
   {
     id: "2",
     data: {
-      label: "Receive call",
+      label: "Intake Calculation",
     },
 
     position: { x: 400, y: 170 },
@@ -38,7 +38,7 @@ export const initialNodes = [
   {
     id: "3",
     data: {
-      label: "Query call",
+      label: "Inventory Allocation",
     },
 
     position: { x: 600, y: 80 },
@@ -48,7 +48,7 @@ export const initialNodes = [
   {
     id: "4",
     data: {
-      label: "Product call",
+      label: "Labelling",
     },
 
     position: { x: 600, y: 250 },
@@ -58,7 +58,7 @@ export const initialNodes = [
   {
     id: "5",
     data: {
-      label: "Service call",
+      label: "Order Processing",
     },
 
     position: { x: 600, y: 170 },
@@ -68,7 +68,7 @@ export const initialNodes = [
   {
     id: "6",
     data: {
-      label: "Document call output",
+      label: "Shipment",
     },
 
     position: { x: 800, y: 170 },
@@ -79,16 +79,17 @@ export const initialNodes = [
     id: "7",
     type: "output",
     data: {
-      label: "output Node",
+      label: "Compeleted",
     },
     position: { x: 1050, y: 150 },
     targetPosition: Position.Left,
     style: {
-      background: "#880808",
-      color: "white",
+      background: "rgba(22, 219, 147, 0.5)",
+      color: "black",
       width: 80,
       height: 80,
-      padding: "20px",
+      paddingTop: "30px",
+      paddingLeft: "8px",
       borderRadius: "50%",
     },
   },
