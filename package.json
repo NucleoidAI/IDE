@@ -21,7 +21,7 @@
     "@mui/lab": "^5.0.0-alpha.92",
     "@mui/material": "^5.9.2",
     "@mui/x-data-grid": "^5.5.0",
-    "@nucleoidjs/synapses": "^1.0.3",
+    "@nucleoidjs/synapses": "^1.0.5",
     "@types/react": "^17.0.2",
     "axios": "^0.27.2",
     "axios-auth-refresh": "^3.3.1",
