@@ -20,8 +20,6 @@
 
 <br/>
 
-## OpenAPI Integration
-
 Nucleoid IDE is a web interface that helps to run Nucleoid's [npm](https://www.npmjs.com/package/nucleoidjs) package with OpenAPI.
 
 [Go to Nucleoid IDE](https://nucleoid.com/ide/)
