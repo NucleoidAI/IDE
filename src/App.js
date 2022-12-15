@@ -57,7 +57,7 @@ function App() {
     }
 
     if (!Settings.url.terminal()) {
-      Settings.url.terminal("http://localhost:8448/");
+      Settings.url.terminal("http://localhost:8448");
     }
 
     if (!Settings.runtime()) {

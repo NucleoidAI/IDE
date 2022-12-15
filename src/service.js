@@ -67,11 +67,11 @@ const query = async (body) => {
 
 const openapi = async (action, nuc) => {
   if (action === undefined) {
-    return fetch(Settings.url.terminal() + "openapi", {
+    return fetch(`${Settings.url.terminal()}/openapi`, {
       method: "GET",
     }).then((response) => response.json());
   } else {
-    return fetch(Settings.url.terminal() + "openapi", {
+    return fetch(`${Settings.url.terminal()}/openapi`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -85,12 +85,12 @@ const openapi = async (action, nuc) => {
 };
 
 const metrics = () =>
-  fetch(Settings.url.terminal() + "metrics", {
+  fetch(`${Settings.url.terminal()}/metrics`, {
     method: "GET",
   }).then((response) => response.json());
 
 const logs = () =>
-  fetch(Settings.url.terminal() + "logs", {
+  fetch(`${Settings.url.terminal()}/logs`, {
     method: "GET",
   }).then((response) => response.json());
 

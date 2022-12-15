@@ -29,9 +29,9 @@ const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
 
     if (
       context["runtime"] === "npx" &&
-      context["url"] !== "http://localhost:8448/"
+      context["url"] !== "http://localhost:8448"
     ) {
-      context["url"] = "http://localhost:8448/";
+      context["url"] = "http://localhost:8448";
       setUrl(context["url"]);
     }
     setNpx(value);

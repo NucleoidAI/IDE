@@ -14,7 +14,7 @@ const SettingsDialog = ({ handleClose }) => {
     const runtime = Settings.runtime();
     const parse = new URL(terminal);
 
-    const url = parse.protocol + "//" + parse.hostname + ":8448/";
+    const url = parse.protocol + "//" + parse.hostname + ":8448";
 
     const description = Settings.description();
     urlRef.current = { runtime, url, description };
@@ -24,8 +24,8 @@ const SettingsDialog = ({ handleClose }) => {
     if (urlRef.current.runtime === "npx") {
       const url = new URL(urlRef.current.url);
 
-      const terminal = url.protocol + "//" + url.hostname + ":8448/";
-      const app = url.protocol + "//" + url.hostname + ":3000/";
+      const terminal = url.protocol + "//" + url.hostname + ":8448";
+      const app = url.protocol + "//" + url.hostname + ":3000";
 
       Settings.url.terminal(terminal);
       Settings.url.app(app);
