@@ -1,6 +1,7 @@
 import Backdrop from "@mui/material/Backdrop";
 import DownloadIcon from "@mui/icons-material/Download";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import LoginIcon from "@mui/icons-material/Login";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import PostmanIcon from "../../icons/Postman";
 import Project from "../../project";
@@ -147,7 +148,7 @@ const ProcessDrawer = () => {
           <SwaggerButton />
           <Tooltip placement="left" title="Login with GitHub">
             <ListItem button onClick={auth}>
-              <GitHubIcon sx={styles.listItem} />
+              <LoginIcon sx={styles.listItem} />
             </ListItem>
           </Tooltip>
           <Tooltip placement="left" title="Open Postman (Coming soon)">
@@ -171,12 +172,24 @@ const ProcessDrawer = () => {
               <DownloadIcon sx={styles.listItem} />
             </ListItem>
           </Tooltip>
+          <Tooltip placement="left" title="Save project">
+            <ListItem button onClick={handleSaveProject}>
+              <SaveIcon sx={styles.listItem} />
+            </ListItem>
+          </Tooltip>
         </Box>
-        <Tooltip placement="left" title="Save project">
-          <ListItem button onClick={handleSaveProject}>
-            <SaveIcon sx={styles.listItem} />
-          </ListItem>
-        </Tooltip>
+        <Box>
+          <Tooltip placement="left" title="Go to GitHub">
+            <ListItem
+              button
+              onClick={() =>
+                window.open("https://github.com/NucleoidJS/Nucleoid", "_blank")
+              }
+            >
+              <GitHubIcon sx={styles.listItem} />
+            </ListItem>
+          </Tooltip>
+        </Box>
       </Drawer>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -241,7 +254,7 @@ function ApiButton() {
         Settings.sandbox.sandboxID(data.id);
         Settings.url.app(`https://nucleoid.com/sandbox/${data.id}/`);
         Settings.url.terminal(
-          `https://nucleoid.com/sandbox/terminal/${data.id}/`
+          `https://nucleoid.com/sandbox/terminal/${data.id}`
         );
         scheduler.start();
         publish("SWAGGER_DIALOG", { open: true });

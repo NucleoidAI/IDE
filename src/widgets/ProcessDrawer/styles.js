@@ -18,7 +18,7 @@ const styles = {
   drawerSmall: {
     "& .MuiDrawer-paper": {
       top: "10%",
-      height: 300,
+      height: 337,
       borderTopLeftRadius: "5px",
       borderBottomLeftRadius: "5px",
       background: "#353e48",
