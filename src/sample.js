@@ -73,6 +73,12 @@ const api = {
   const name = req.body.name;
   const barcode = req.body.barcode;
 
+  const check = Item.find(i => i.barcode === barcode);
+
+  if(check) {
+    throw "DUPLICATE_BARCODE"
+  }
+
   return new Item(name, barcode);
 }
 `,
@@ -125,8 +131,14 @@ const api = {
       response: { $ref: "#/components/schemas/Item" },
       "x-nuc-action": `function action(req) {
   const name = req.body.name;
-  const barcode = req.body.barcode;
-  
+  const barcode = req.body.barcode;  
+
+  const check = Item.find(i => i.barcode === barcode);
+
+  if(check) {
+    throw "DUPLICATE_BARCODE"
+  }
+
   const item = Item[req.params.item];
   item.name = name;
   item.barcode = barcode;

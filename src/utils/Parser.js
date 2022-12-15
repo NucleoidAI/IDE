@@ -32,8 +32,8 @@ const contextToMap = (files) => {
       value:
         func.definition +
         "// @nuc-exports\n" +
-        `${className}.filter = (fn) => {};\n` +
-        `${className}.find = (fn) => {};\n` +
+        `${className}.filter = (fn) => ([]);\n` +
+        `${className}.find = (fn) =>  ({});\n` +
         `export default ${className};`,
     });
   });
