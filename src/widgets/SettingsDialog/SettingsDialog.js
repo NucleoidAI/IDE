@@ -14,14 +14,23 @@ const SettingsDialog = ({ handleClose }) => {
     const runtime = Settings.runtime();
     const parse = new URL(terminal);
 
-    const url = parse.protocol + "//" + parse.hostname + ":8448";
+    let url;
+
+    if (runtime === "sandbox") {
+      url = "https://nucleoid.com/sandbox/";
+    } else {
+      url = parse.protocol + "//" + parse.hostname + ":8448";
+    }
 
     const description = Settings.description();
     urlRef.current = { runtime, url, description };
   }, []);
 
   function saveSettingDialog() {
-    if (urlRef.current.runtime === "npx") {
+    Settings.description(urlRef.current.description);
+    Settings.runtime(urlRef.current.runtime);
+
+    if (urlRef.current.runtime === "custom") {
       const url = new URL(urlRef.current.url);
 
       const terminal = url.protocol + "//" + url.hostname + ":8448";
@@ -30,9 +39,7 @@ const SettingsDialog = ({ handleClose }) => {
       Settings.url.terminal(terminal);
       Settings.url.app(app);
     }
-    Settings.runtime(urlRef.current.runtime);
 
-    Settings.description(urlRef.current.description);
     publish("SWAGGER_DIALOG", { open: false });
     handleClose();
   }

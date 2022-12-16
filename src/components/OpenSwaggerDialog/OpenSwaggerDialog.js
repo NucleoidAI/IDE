@@ -22,7 +22,7 @@ function OpenSwaggerDialog(props) {
 
   return (
     <>
-      {Settings.runtime() === "npx" && (
+      {Settings.runtime() === "custom" && (
         <OpenSwaggerButton
           disabled={!runtimeConnection.status}
           clickEvent={openSwaggerDialog}

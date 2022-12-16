@@ -12,7 +12,7 @@ function RuntimeSwitch() {
 
   function handleSwitch() {
     if (sandbox) {
-      Settings.runtime("npx");
+      Settings.runtime("custom");
       setAlert(true);
     }
     if (!sandbox) {
@@ -56,7 +56,7 @@ function RuntimeSwitch() {
             fontWeight={!sandbox ? "bold" : null}
             sx={{ pr: 1, fontSize: !sandbox ? "16px" : "15px" }}
           >
-            npx
+            Custom
           </Typography>
         </DialogTooltip>
       </Box>

@@ -269,7 +269,7 @@ function ApiButton() {
     }
   };
 
-  const runNpx = (context) => {
+  const runCustom = (context) => {
     setLoading(true);
 
     service
@@ -293,8 +293,8 @@ function ApiButton() {
     const context = mapToContext(vfs.fsMap, state.get("nucleoid"));
     console.debug(context, "handleRun");
 
-    if (Settings.runtime() === "npx") {
-      runNpx(context);
+    if (Settings.runtime() === "custom") {
+      runCustom(context);
     } else {
       runSandbox(context);
     }

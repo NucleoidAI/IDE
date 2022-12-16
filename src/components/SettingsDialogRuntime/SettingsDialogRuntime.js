@@ -5,8 +5,8 @@ import { Box, Switch, TextField, Typography } from "@mui/material";
 
 const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
   const [url, setUrl] = React.useState(urlRef.current.url);
-  const [npx, setNpx] = React.useState(
-    urlRef.current.runtime === "npx" ? true : false
+  const [custom, setCustom] = React.useState(
+    urlRef.current.runtime === "custom" ? true : false
   );
   const [description, setDesciption] = React.useState(
     urlRef.current.description
@@ -15,26 +15,28 @@ const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
   const context = urlRef.current;
 
   const handleSetUrl = (value) => {
-    context["url"] = value;
+    context.url = value;
     setUrl(value);
   };
 
   const handleSetDescription = (value) => {
-    context["description"] = value;
+    context.description = value;
     setDesciption(value);
   };
 
   const handleSetRuntime = (value) => {
-    context["runtime"] = value ? "npx" : "sandbox";
+    context.runtime = value ? "custom" : "sandbox";
 
-    if (
-      context["runtime"] === "npx" &&
-      context["url"] !== "http://localhost:8448"
-    ) {
-      context["url"] = "http://localhost:8448";
-      setUrl(context["url"]);
+    if (context.runtime === "sandbox") {
+      setUrl("https://nucleoid.com/sandbox/");
     }
-    setNpx(value);
+
+    if (context.runtime === "custom") {
+      context.url = "http://localhost:8448";
+      setUrl(context.url);
+    }
+
+    setCustom(value);
   };
 
   return (
@@ -82,14 +84,14 @@ const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
             }}
           >
             <Typography
-              fontWeight={!npx ? "bold" : null}
+              fontWeight={!custom ? "bold" : null}
               sx={{
                 pl: 1,
-                fontSize: !npx ? "16px" : "15px",
-                width: 108,
+                fontSize: !custom ? "16px" : "15px",
+                width: 141,
               }}
             >
-              nuc sandbox
+              Nucleoid Sandbox
             </Typography>
           </Box>
           <Box
@@ -100,7 +102,7 @@ const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
             }}
           >
             <Switch
-              checked={npx}
+              checked={custom}
               color="default"
               onChange={(e) => handleSetRuntime(e.target.checked)}
             />
@@ -113,10 +115,10 @@ const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
             }}
           >
             <Typography
-              fontWeight={npx ? "bold" : null}
-              sx={{ pr: 1, fontSize: npx ? "16px" : "15px" }}
+              fontWeight={custom ? "bold" : null}
+              sx={{ pr: 1, fontSize: custom ? "16px" : "15px" }}
             >
-              npx
+              Custom
             </Typography>
           </Box>
         </Box>
@@ -124,7 +126,7 @@ const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
           <TextField
             size={"small"}
             variant={"standard"}
-            disabled={npx ? false : true}
+            disabled={custom ? false : true}
             value={url}
             sx={styles.textField}
             onChange={(e) => handleSetUrl(e.target.value)}

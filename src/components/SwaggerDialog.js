@@ -77,7 +77,7 @@ export default function SwaggerDialog() {
                   justifyContent: "center",
                 }}
               >
-                {Settings.runtime() === "npx" ? (
+                {Settings.runtime() === "custom" ? (
                   <>
                     <Swagger fill={theme.palette.custom.grey} />
                     <Typography sx={{ pl: 3 / 2 }} variant="h6" component="div">
