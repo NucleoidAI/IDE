@@ -31,30 +31,23 @@ axios.interceptors.request.use((request) => {
 });
 
 const getCodeFromGithub = () => {
-  const gitHubWindow = window.open(
+  const popup = window.open(
     `https://github.com/login/oauth/authorize?scope=user&client_id=${Settings.github.client_id}`,
-    "_blank",
-    "toolbar=yes,scrollbars=yes,resizable=yes,top=50,left=50,width=500,height=800"
+    "target_blank",
+    "toolbar=yes,scrollbars=yes,resizable=yes,top=50,left=50,width=650,height=750"
   );
 
   return new Promise((resolve, reject) => {
-    gitHubWindow.addEventListener("beforeunload", () => {
-      const code = gitHubWindow.location.href.split("?code=")[1];
-      if (code) {
-        resolve(code);
-      } else {
-        reject({ error: "ERROR_GIT_CODE" });
+    const timer = setInterval(function () {
+      if (popup.closed) {
+        clearInterval(timer);
+        if (popup.location.href) {
+          resolve(popup.location.href.split("?code=")[1]);
+        } else {
+          reject({ error: "USER_CLOSED_PAGE" });
+        }
       }
-    });
-
-    /*
-    const myInterval = setInterval(() => {
-      if (gitHubWindow.closed) {
-        clearInterval(myInterval);
-        reject({ error: "USER_CLOSED_PAGE" });
-      }
-    }, 400);
-    */
+    }, 700);
   });
 };
 

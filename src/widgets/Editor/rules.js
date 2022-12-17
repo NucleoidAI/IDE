@@ -45,7 +45,6 @@ const lint = {
   "no-shadow-restricted-names": "error",
   "no-sparse-arrays": "error",
   "no-this-before-super": "error",
-  "no-undef": "error",
   "no-unexpected-multiline": "error",
   "no-unreachable": "error",
   "no-unsafe-finally": "error",
@@ -59,6 +58,8 @@ const lint = {
       args: "none",
     },
   ],*/
+  "no-undef": "error",
+  "no-use-before-define": "null",
   "no-useless-backreference": "error",
   "no-useless-catch": "error",
   "no-useless-escape": "error",

@@ -16,6 +16,7 @@ import { contextReducer } from "./context/reducer";
 import { contextToMap } from "./utils/Parser";
 import project from "./project";
 import service from "./service";
+import { subscribe } from "@nucleoidjs/synapses";
 import theme from "./theme";
 import vfs from "./vfs";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
@@ -31,16 +32,13 @@ function App() {
   }
 
   React.useEffect(() => {
-    const elapsed = Date.now() - window.start;
-    const delay =
-      window.location.hostname === "nucleoid.com" ? 2000 - elapsed : 0;
+    const progressElement = document.getElementById("nuc-progress-indicator");
 
-    setTimeout(() => {
-      const progressElement = document.getElementById("nuc-progress-indicator");
+    subscribe("loading", () => {
       if (progressElement) {
         progressElement.classList.add("available");
       }
-    }, delay);
+    });
   }, []);
 
   const InitContext = () => {

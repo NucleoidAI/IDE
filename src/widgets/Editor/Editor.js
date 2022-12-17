@@ -1,3 +1,4 @@
+import { Backdrop } from "@mui/material";
 import MonacoEditor from "@monaco-editor/react";
 import React from "react";
 import { contextToMap } from "../../utils/Parser";
@@ -8,6 +9,7 @@ import prettierPlugins from "../../prettierPlugins";
 import { publish } from "@nucleoidjs/synapses";
 import rules from "./rules";
 import { useContext } from "../../context/context";
+import useService from "../../hooks/useService";
 
 const options = {
   env: {
@@ -20,46 +22,44 @@ const options = {
     sourceType: "module",
   },
   rules,
+  globals: {},
 };
 
 const Editor = React.forwardRef((props, ref) => {
   const { api, functions, query } = props;
   const editorRef = React.useRef(null);
   const timer = React.useRef();
-  const fnTimer = React.useRef();
+  const [open, setOpen] = React.useState(false);
   const [context] = useContext();
+  const [, , , handleSaveProject] = useService();
   const file = getFile(context, props);
 
-  function checkFunction() {
-    clearTimeout(fnTimer.current);
+  const checkFunction = React.useCallback(() => {
+    const editor = editorRef?.current?.editor;
+    const monaco = editorRef?.current?.monaco;
+    const value = editor?.getValue();
+    if (!api) return true;
 
-    fnTimer.current = setTimeout(() => {
-      const editor = editorRef?.current?.editor;
-      const monaco = editorRef?.current?.monaco;
-      const value = editor?.getValue();
-      if (!api) return true;
+    try {
+      parser.fn(value);
 
-      try {
-        parser.fn(value);
-
-        monaco.editor.setModelMarkers(editor?.getModel(), "action", []);
-        return true;
-      } catch (err) {
-        console.log(err);
-        monaco.editor.setModelMarkers(editor?.getModel(), "action", [
-          {
-            startLineNumber: 1,
-            startColumn: 1,
-            endLineNumber: 1,
-            endColumn: 1000,
-            message: "Need action method",
-            severity: 1,
-          },
-        ]);
-        return false;
-      }
-    }, 1000);
-  }
+      monaco.editor.setModelMarkers(editor?.getModel(), "action", []);
+      return true;
+    } catch (err) {
+      console.log(err);
+      monaco.editor.setModelMarkers(editor?.getModel(), "action", [
+        {
+          startLineNumber: 1,
+          startColumn: 1,
+          endLineNumber: 1,
+          endColumn: 1000,
+          message: "Need action method",
+          severity: 1,
+        },
+      ]);
+      return false;
+    }
+  }, [api]);
 
   function handleChange(e) {
     checkFunction() && lint();
@@ -81,10 +81,27 @@ const Editor = React.forwardRef((props, ref) => {
     }
   }
 
-  const lint = () => {
+  const compile = React.useCallback(() => {
+    let key;
+    if (api) {
+      const { path, method } = context.get("pages.api.selected");
+      key = path + "." + method + ".ts";
+    } else {
+      key = context.get("pages.functions.selected") + ".js";
+    }
+
+    publish("CONTEXT_CHANGED", {
+      // TODO Optimize preparing files
+      files: contextToMap(context.nucleoid).filter((item) => item.key === key),
+    });
+  }, [api, context]);
+
+  const lint = React.useCallback(() => {
     clearTimeout(timer.current);
 
     timer.current = setTimeout(() => {
+      compile();
+
       const editor = editorRef?.current?.editor;
       const monaco = editorRef?.current?.monaco;
       const result = linter.verify(editor.getValue(), options);
@@ -106,13 +123,8 @@ const Editor = React.forwardRef((props, ref) => {
           };
         })
       );
-    }, 1000);
-  };
-
-  React.useEffect(() => {
-    lint();
-    checkFunction();
-  });
+    }, 400);
+  }, [compile]);
 
   function handleEditorDidMount(editor, monaco) {
     const nucFuncs = context.nucleoid.functions;
@@ -126,10 +138,10 @@ const Editor = React.forwardRef((props, ref) => {
         item.dispose();
       }
     });
-
+    options.globals = {};
     nucFuncs.forEach((item) => {
       const pth = monaco.Uri.from({ path: item.path + "_MODEL" });
-
+      options.globals[item.path.split("/")[1]] = "writable";
       monaco.editor.createModel(
         item.definition,
         item.ext === "js" ? "javascript" : "typescript",
@@ -138,20 +150,23 @@ const Editor = React.forwardRef((props, ref) => {
     });
 
     editor.onDidBlurEditorWidget(() => {
-      let key;
-      if (api) {
-        const { path, method } = context.get("pages.api.selected");
-        key = path + "." + method + ".ts";
-      } else {
-        key = context.get("pages.functions.selected") + ".js";
-      }
+      compile();
+    });
 
-      publish("CONTEXT_CHANGED", {
-        // TODO Optimize preparing files
-        files: contextToMap(context.nucleoid).filter(
-          (item) => item.key === key
-        ),
-      });
+    editor.addAction({
+      id: "saveEvent",
+      label: "saveEvent",
+      keybindings: [
+        monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS,
+        monaco.KeyMod.chord(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS),
+      ],
+
+      run: (e) => {
+        setOpen(true);
+        handleSaveProject((evnt) => {
+          setOpen(evnt);
+        });
+      },
     });
 
     editor.addAction({
@@ -169,8 +184,18 @@ const Editor = React.forwardRef((props, ref) => {
 
     editorRef.current = { editor: editor, monaco: monaco };
 
+    checkFunction() && lint();
+
+    publish("loading", true);
+
     if (ref) ref.current = editor;
   }
+
+  React.useEffect(() => {
+    if (editorRef.current) {
+      checkFunction() && lint();
+    }
+  }, [context, checkFunction, api, lint]);
 
   const lintEvent = (e) => {
     try {
@@ -190,23 +215,26 @@ const Editor = React.forwardRef((props, ref) => {
   };
 
   return (
-    <MonacoEditor
-      height={"100%"}
-      defaultLanguage="javascript"
-      defaultValue={file.code}
-      onChange={handleChange}
-      onMount={handleEditorDidMount}
-      path={file.path}
-      options={{
-        minimap: {
-          enabled: false,
-        },
-        scrollbar: {
-          vertical: "hidden",
-          horizontal: "hidden",
-        },
-      }}
-    />
+    <>
+      <MonacoEditor
+        height={"100%"}
+        defaultLanguage="javascript"
+        defaultValue={file.code}
+        onChange={handleChange}
+        onMount={handleEditorDidMount}
+        path={file.path}
+        options={{
+          minimap: {
+            enabled: false,
+          },
+          scrollbar: {
+            vertical: "hidden",
+            horizontal: "hidden",
+          },
+        }}
+      />
+      <Backdrop open={open} />
+    </>
   );
 });
 
