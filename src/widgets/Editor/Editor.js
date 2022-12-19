@@ -231,6 +231,7 @@ const Editor = React.forwardRef((props, ref) => {
             vertical: "hidden",
             horizontal: "hidden",
           },
+          renderLineHighlightOnlyWhenFocus: true,
         }}
       />
       <Backdrop open={open} />

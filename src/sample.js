@@ -76,7 +76,7 @@ const api = {
   const check = Item.find(i => i.barcode === barcode);
 
   if(check) {
-    throw "DUPLICATE_BARCODE"
+    throw "DUPLICATE_BARCODE";
   }
 
   return new Item(name, barcode);
@@ -136,7 +136,7 @@ const api = {
   const check = Item.find(i => i.barcode === barcode);
 
   if(check) {
-    throw "DUPLICATE_BARCODE"
+    throw "DUPLICATE_BARCODE";
   }
 
   const item = Item[req.params.item];

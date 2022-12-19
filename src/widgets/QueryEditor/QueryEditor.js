@@ -11,6 +11,7 @@ const QueryEditor = React.forwardRef((props, ref) => {
         minimap: {
           enabled: false,
         },
+        renderLineHighlightOnlyWhenFocus: true,
       }}
     />
   );

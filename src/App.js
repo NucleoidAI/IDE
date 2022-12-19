@@ -51,7 +51,7 @@ function App() {
     }
 
     if (!Settings.url.app()) {
-      Settings.url.app("http://localhost:3000/");
+      Settings.url.app("http://localhost:3000");
     }
 
     if (!Settings.url.terminal()) {
