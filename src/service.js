@@ -77,6 +77,13 @@ const openapi = async (action, nuc) => {
   }
 };
 
+const openai = async (request) => {
+  return axios(Settings.service.openai, {
+    method: "POST",
+    data: { prompt: request },
+  });
+};
+
 const metrics = () =>
   fetch(`${Settings.url.terminal()}/metrics`, {
     method: "GET",
@@ -152,6 +159,7 @@ const createSandbox = (context) => {
 const service = {
   query,
   openapi,
+  openai,
   metrics,
   logs,
   auth,

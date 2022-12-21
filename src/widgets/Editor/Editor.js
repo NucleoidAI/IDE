@@ -1,5 +1,6 @@
 import { Backdrop } from "@mui/material";
 import MonacoEditor from "@monaco-editor/react";
+import OpenAI from "../OpenAI";
 import React from "react";
 import { contextToMap } from "../../utils/Parser";
 import linter from "../../linter";
@@ -233,6 +234,7 @@ const Editor = React.forwardRef((props, ref) => {
           },
         }}
       />
+      <OpenAI functions={context?.nucleoid?.functions} code={file.code} />
       <Backdrop open={open} />
     </>
   );

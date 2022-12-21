@@ -35,6 +35,7 @@ const Settings = {
   service: {
     auth: "https://nucleoid.com/oauth",
     projects: "https://nucleoid.com/projects",
+    openai: "https://nucleoid.com/openai",
   },
   connection: true,
   beta: (status) => {
