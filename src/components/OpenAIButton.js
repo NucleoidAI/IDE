@@ -1,19 +1,21 @@
+import Button from "@mui/material/Button";
+import OpenAI from "../icons/OpenAI";
 import React from "react";
 
 const OpenAIButton = ({ clickEvent }) => {
   return (
-    <div
+    <Button
       onClick={clickEvent}
-      style={{
+      startIcon={<OpenAI />}
+      sx={{
         position: "relative",
-        width: 65,
-        height: 25,
+        textTransform: "none",
         bottom: 40,
-        left: 15,
+        left: 10,
       }}
     >
-      OPEN AI
-    </div>
+      OpenAI
+    </Button>
   );
 };
 

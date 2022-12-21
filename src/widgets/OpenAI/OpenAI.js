@@ -1,3 +1,5 @@
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 import ClosableDialogTitle from "../../components/ClosableDialogTitle";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -6,6 +8,7 @@ import Draggable from "react-draggable";
 import Editor from "@monaco-editor/react";
 import IconButton from "@mui/material/IconButton";
 import OpenAIButton from "../../components/OpenAIButton";
+import OpenAIIcon from "../../icons/OpenAI";
 import Paper from "@mui/material/Paper";
 import React from "react";
 import SendIcon from "@mui/icons-material/Send";
@@ -67,6 +70,7 @@ export default function OpenAI({ functions, code }) {
       <Dialog
         open={open}
         //onClose={handleClose}
+        maxWidth={"lg"}
         disableEnforceFocus
         hideBackdrop={true}
         style={{ pointerEvents: "none" }}
@@ -76,10 +80,23 @@ export default function OpenAI({ functions, code }) {
       >
         <ClosableDialogTitle
           handleClose={handleClose}
-          label={"nucleoid openai"}
+          content={
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "center",
+                alignItems: "center",
+                gap: 1,
+              }}
+            >
+              <OpenAIIcon width={20} height={20} />{" "}
+              <span style={{ fontSize: 18 }}>OpenAI</span>
+            </Box>
+          }
         />
-        <DialogContent sx={{ width: 600 }}>
+        <DialogContent sx={{ width: 800 }}>
           <Editor
+            id={"openai"}
             height="350px"
             defaultLanguage="javascript"
             value={response?.data?.text}
@@ -97,7 +114,9 @@ export default function OpenAI({ functions, code }) {
         </DialogContent>
         <DialogActions>
           <TextField
+            id={"openai"}
             sx={{ width: "100%", ml: 2 }}
+            inputProps={{ style: { fontFamily: "monospace" } }}
             autoFocus
             onChange={(e) => (data.current.request = e.target.value)}
           />
@@ -107,7 +126,7 @@ export default function OpenAI({ functions, code }) {
             component="label"
             onClick={handleSend}
           >
-            <SendIcon />
+            {loading ? <CircularProgress size={25} /> : <SendIcon />}
           </IconButton>
         </DialogActions>
       </Dialog>
