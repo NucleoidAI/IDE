@@ -186,7 +186,7 @@ const Editor = React.forwardRef((props, ref) => {
 
     checkFunction() && lint();
 
-    publish("loading", true);
+    publish("EDITOR_LOADING_COMPLETED", true);
 
     if (ref) ref.current = editor;
   }

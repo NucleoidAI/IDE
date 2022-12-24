@@ -5,7 +5,7 @@ body {
   padding: 0;
 }
 
-.nuc-progress-indicator.available {
+.nuc-progress-indicator.hidden {
   opacity: 0;
 }
 

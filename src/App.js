@@ -31,15 +31,19 @@ function App() {
     return window.innerWidth < 600 ? true : false;
   }
 
+  const elapsed = Date.now() - window.start;
+  const delay =
+    window.location.hostname === "nucleoid.com" ? 2000 - elapsed : 0;
+
   React.useEffect(() => {
     const progressElement = document.getElementById("nuc-progress-indicator");
 
-    subscribe("loading", () => {
-      if (progressElement) {
-        progressElement.classList.add("available");
-      }
+    subscribe("EDITOR_LOADING_COMPLETED", () => {
+      setTimeout(() => {
+        progressElement.classList.add("hidden");
+      }, delay);
     });
-  }, []);
+  }, [delay]);
 
   const InitContext = () => {
     if (!Settings.beta()) {

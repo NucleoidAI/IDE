@@ -47,7 +47,7 @@ const api = {
         },
       },
       "x-nuc-action": `function action(req) {
-  const name = req.query.name
+  const name = req.query.name;
   return Item.filter(item => item.name === name);
 }
 `,
