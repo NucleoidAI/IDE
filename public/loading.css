@@ -1,8 +1,8 @@
 body {
   height: 100%;
+  width: 100%;
   margin: 0;
   padding: 0;
-  width: 100%;
 }
 
 .nuc-progress-indicator.available {
@@ -21,35 +21,23 @@ body {
   z-index: 9999;
 }
 
-.insp-logo-frame {
-  display: -webkit-flex;
-  display: -moz-flex;
-  display: flex;
-  -webkit-flex-direction: column;
-  -moz-flex-direction: column;
-  flex-direction: column;
-  -webkit-justify-content: center;
-  -moz-justify-content: center;
-  justify-content: center;
-  align-items: center;
+.nuc-logo-frame {
   color: #209958;
-  font-size: 2rem;
-  -webkit-animation: fadein 436ms;
-  -moz-animation: fadein 436ms;
   font-family: Roboto, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  animation: fadein 436ms;
+  font-size: 2rem;
   height: 100%;
   background-color: #323a40;
-}
-
-.insp-logo-frame-img {
-  width: 112px;
-  height: 112px;
-  -webkit-align-self: center;
-  -moz-align-self: center;
-  align-self: center;
-  border-radius: 50%;
+  align-items: center;
+  display: flex;
+  display: -webkit-flex;
+  display: -moz-flex;
+  flex-direction: column;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  justify-content: center;
+  -webkit-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-font-smoothing: antialiased;
 }
 
 .nuc-progress-indicator-head {
@@ -59,8 +47,8 @@ body {
   position: relative;
 }
 
-.nuc-progress-indicator .first-indicator,
-.nuc-progress-indicator .second-indicator {
+.nuc-progress-indicator .nuc-progress-first-indicator,
+.nuc-progress-indicator .nuc-progress-second-indicator {
   background-color: #209958;
   bottom: 0;
   left: 0;
@@ -75,16 +63,16 @@ body {
   transform: scaleX(0);
 }
 
-.nuc-progress-indicator .first-indicator {
-  -webkit-animation: first-indicator 2s linear infinite;
-  -moz-animation: first-indicator 2s linear infinite;
-  animation: first-indicator 2s linear infinite;
+.nuc-progress-indicator .nuc-progress-first-indicator {
+  animation: nuc-progress-first-indicator 2s linear infinite;
+  -webkit-animation: nuc-progress-first-indicator 2s linear infinite;
+  -moz-animation: nuc-progress-first-indicator 2s linear infinite;
 }
 
-.nuc-progress-indicator .second-indicator {
-  -webkit-animation: second-indicator 2s linear infinite;
-  -moz-animation: second-indicator 2s linear infinite;
-  animation: second-indicator 2s linear infinite;
+.nuc-progress-indicator .nuc-progress-second-indicator {
+  animation: nuc-progress-second-indicator 2s linear infinite;
+  -webkit-animation: nuc-progress-second-indicator 2s linear infinite;
+  -moz-animation: nuc-progress-second-indicator 2s linear infinite;
 }
 
 .nuc-progress-indicator .insp-logo {
@@ -135,7 +123,7 @@ body {
   }
 }
 
-@keyframes first-indicator {
+@keyframes nuc-progress-first-indicator {
   0% {
     transform: translate(0) scaleX(0);
   }
@@ -157,7 +145,7 @@ body {
   }
 }
 
-@keyframes second-indicator {
+@keyframes nuc-progress-second-indicator {
   0% {
     transform: translate(0) scaleX(0);
   }
