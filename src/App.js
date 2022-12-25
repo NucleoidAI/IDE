@@ -33,7 +33,7 @@ function App() {
 
   const elapsed = Date.now() - window.start;
   const delay =
-    window.location.hostname === "nucleoid.com" ? 2000 - elapsed : 0;
+    window.location.hostname === "nucleoid.com" ? 1000 - elapsed : 0;
 
   React.useEffect(() => {
     const progressElement = document.getElementById("nuc-progress-indicator");
