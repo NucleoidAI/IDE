@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
-import ClosableDialogTitle from "../../components/ClosableDialogTitle";
+import CloseIcon from "@mui/icons-material/Close";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -12,8 +12,9 @@ import OpenAIIcon from "../../icons/OpenAI";
 import Paper from "@mui/material/Paper";
 import React from "react";
 import SendIcon from "@mui/icons-material/Send";
-import { TextField } from "@mui/material";
 import service from "../../service";
+import { Button, DialogTitle, TextField } from "@mui/material";
+import { deepCopy } from "../../utils/DeepCopy"; //eslint-disable-line
 
 function PaperComponent(props) {
   return (
@@ -26,7 +27,8 @@ function PaperComponent(props) {
   );
 }
 
-export default function OpenAI({ functions, code }) {
+export default function OpenAI({ functions, code, editor }) {
+  const nucFunctions = deepCopy(functions);
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [response, setResponse] = React.useState();
@@ -35,21 +37,28 @@ export default function OpenAI({ functions, code }) {
   });
 
   const generateContent = ({ functions, request, code }) => {
+    const mEditor = editor.current.editor;
     const functs = functions.map((item) => item.definition + "\n").join("");
-    console.log(code);
+    const selected = mEditor.getModel().getValueInRange(mEditor.getSelection());
 
-    return functs + "//" + request;
+    return functs + selected + "\n\n//" + request;
   };
 
   const handleSend = async () => {
     if (data.current.request) {
       setLoading(true);
       const content = generateContent({
-        functions: functions,
+        functions: nucFunctions,
         request: data.current.request,
         code: code,
       });
-      setResponse(await service.openai(content));
+
+      console.log(content);
+
+      const res = await service.openai(content);
+      //console.log(content);
+
+      setResponse(res);
       setLoading(false);
     } else {
       alert("need text");
@@ -57,11 +66,23 @@ export default function OpenAI({ functions, code }) {
   };
 
   const handleClickOpen = () => {
+    setResponse("");
+    data.current.request = "";
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleGenerate = () => {
+    /* const mEditor = editor.current.editor;
+    const lineNumber = mEditor.getSelection().endLineNumber;
+    console.log(mEditor.getModel().getValue());
+    mEditor.getModel().setValue("hello");
+
+    console.log(response.data.text);
+    */
   };
 
   return (
@@ -78,9 +99,8 @@ export default function OpenAI({ functions, code }) {
         PaperComponent={PaperComponent}
         aria-labelledby="draggable-dialog-title"
       >
-        <ClosableDialogTitle
-          handleClose={handleClose}
-          content={
+        <DialogTitle>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Box
               sx={{
                 display: "flex",
@@ -89,11 +109,25 @@ export default function OpenAI({ functions, code }) {
                 gap: 1,
               }}
             >
-              <OpenAIIcon width={20} height={20} />{" "}
+              <OpenAIIcon width={20} height={20} />
               <span style={{ fontSize: 18 }}>OpenAI</span>
             </Box>
-          }
-        />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <Button size="small" onClick={handleGenerate}>
+                GENERATE
+              </Button>
+              <IconButton onClick={handleClose} size="small">
+                <CloseIcon />
+              </IconButton>
+            </Box>
+          </Box>
+        </DialogTitle>
+
         <DialogContent sx={{ width: 800 }}>
           <Editor
             id={"openai"}
@@ -114,9 +148,14 @@ export default function OpenAI({ functions, code }) {
         </DialogContent>
         <DialogActions>
           <TextField
-            id={"openai"}
             sx={{ width: "100%", ml: 2 }}
             inputProps={{ style: { fontFamily: "monospace" } }}
+            //placeholder={"input some text"}
+            onKeyPress={(e) => {
+              if (e.ctrlKey && e.key === "\n") {
+                handleSend();
+              }
+            }}
             autoFocus
             onChange={(e) => (data.current.request = e.target.value)}
           />

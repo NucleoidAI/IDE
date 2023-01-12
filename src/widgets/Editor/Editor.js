@@ -234,7 +234,13 @@ const Editor = React.forwardRef((props, ref) => {
           },
         }}
       />
-      <OpenAI functions={context?.nucleoid?.functions} code={file.code} />
+      {api && (
+        <OpenAI
+          functions={context?.nucleoid?.functions}
+          editor={editorRef}
+          code={parser.fn(file.code)}
+        />
+      )}
       <Backdrop open={open} />
     </>
   );
