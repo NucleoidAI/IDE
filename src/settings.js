@@ -80,6 +80,16 @@ const Settings = {
       return JSON.parse(localStorage.getItem("landing"));
     }
   },
+  token: () => {
+    if (
+      localStorage.getItem("refreshToken") &&
+      localStorage.getItem("accessToken")
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  },
 };
 
 export default Settings;
