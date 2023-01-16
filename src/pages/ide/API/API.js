@@ -1,14 +1,11 @@
-import "react-chat-widget/lib/styles.css";
 import APIDialog from "../../../widgets/APIDialog";
 import APISettings from "../../../widgets/APISettings";
 import APITree from "../../../widgets/APITree";
 import Editor from "../../../widgets/Editor";
 import React from "react";
-import Settings from "../../../settings";
 import config from "../../../config";
 import styles from "./styles";
 import { Card, Grid, Paper } from "@mui/material";
-import { Widget as ChatWidget, addResponseMessage } from "react-chat-widget";
 
 function API() {
   return (
@@ -45,22 +42,6 @@ function API() {
           </Card>
         </Grid>
       </Grid>
-      {Settings.beta() && (
-        <ChatWidget
-          title={"OpenAI"}
-          subtitle={"AI-managed Low-code Framewok"}
-          showTimeStamp={false}
-          resizable={true}
-          emojis={false}
-          showCloseButton={true}
-          handleNewUserMessage={(message) => {
-            setTimeout(() => {
-              addResponseMessage(message);
-            }, 1000);
-            console.log(message);
-          }}
-        />
-      )}
     </Grid>
   );
 }
