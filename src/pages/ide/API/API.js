@@ -54,7 +54,17 @@ function API() {
         emojis={false}
         showCloseButton={true}
         handleNewUserMessage={(message) => {
-          const resource = message.split('"')[1];
+          const parts = message.split('"');
+
+          if (parts.length === 1) {
+            setTimeout(() => {
+              addResponseMessage("Not able to understand your message");
+            }, 500);
+
+            return;
+          }
+
+          const resource = parts[1];
 
           setTimeout(() => {
             dispatch({ type: "CREATE_SAMPLE_CRUD", payload: { resource } });
