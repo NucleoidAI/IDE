@@ -4,13 +4,14 @@ import APISettings from "../../../widgets/APISettings";
 import APITree from "../../../widgets/APITree";
 import Editor from "../../../widgets/Editor";
 import React from "react";
-import Settings from "../../../settings";
 import config from "../../../config";
 import styles from "./styles";
+import { useContext } from "../../../context/context";
 import { Card, Grid, Paper } from "@mui/material";
 import { Widget as ChatWidget, addResponseMessage } from "react-chat-widget";
 
 function API() {
+  const [, dispatch] = useContext();
   return (
     <Grid container sx={styles.root} columns={config.layout.ide.total}>
       <APIDialog />
@@ -45,22 +46,22 @@ function API() {
           </Card>
         </Grid>
       </Grid>
-      {Settings.beta() && (
-        <ChatWidget
-          title={"OpenAI"}
-          subtitle={"AI-managed Low-code Framewok"}
-          showTimeStamp={false}
-          resizable={true}
-          emojis={false}
-          showCloseButton={true}
-          handleNewUserMessage={(message) => {
-            setTimeout(() => {
-              addResponseMessage(message);
-            }, 1000);
-            console.log(message);
-          }}
-        />
-      )}
+      <ChatWidget
+        title={"OpenAI"}
+        subtitle={"AI-managed Low-code Framewok"}
+        showTimeStamp={false}
+        resizable={true}
+        emojis={false}
+        showCloseButton={true}
+        handleNewUserMessage={(message) => {
+          const resource = message.split('"')[1];
+
+          setTimeout(() => {
+            dispatch({ type: "CREATE_SAMPLE_CRUD", payload: { resource } });
+            addResponseMessage(`"${resource}" resource is created.`);
+          }, 1000);
+        }}
+      />
     </Grid>
   );
 }
