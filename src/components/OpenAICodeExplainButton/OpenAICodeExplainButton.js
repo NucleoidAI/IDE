@@ -1,5 +1,5 @@
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import React from "react";
-import TranslateIcon from "@mui/icons-material/Translate";
 import { CircularProgress, IconButton } from "@mui/material";
 
 const OpenAICodeExplainButton = ({ clickEvent, progress }) => {
@@ -12,7 +12,7 @@ const OpenAICodeExplainButton = ({ clickEvent, progress }) => {
       {progress ? (
         <CircularProgress size={25} />
       ) : (
-        <TranslateIcon htmlColor="black" />
+        <HelpOutlineIcon htmlColor="black" />
       )}
     </IconButton>
   );
