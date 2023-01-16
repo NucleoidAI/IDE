@@ -35,6 +35,7 @@ const Settings = {
   service: {
     auth: "https://nucleoid.com/oauth",
     projects: "https://nucleoid.com/projects",
+    openai: "https://nucleoid.com/openai",
   },
   connection: true,
   beta: (status) => {
@@ -77,6 +78,16 @@ const Settings = {
       localStorage.setItem("landing", JSON.stringify(data));
     } else {
       return JSON.parse(localStorage.getItem("landing"));
+    }
+  },
+  token: () => {
+    if (
+      localStorage.getItem("refreshToken") &&
+      localStorage.getItem("accessToken")
+    ) {
+      return true;
+    } else {
+      return false;
     }
   },
 };

@@ -1,5 +1,6 @@
 import { Backdrop } from "@mui/material";
 import MonacoEditor from "@monaco-editor/react";
+import OpenAI from "../OpenAI";
 import React from "react";
 import { contextToMap } from "../../utils/Parser";
 import linter from "../../linter";
@@ -234,6 +235,9 @@ const Editor = React.forwardRef((props, ref) => {
           renderLineHighlightOnlyWhenFocus: true,
         }}
       />
+      {api && (
+        <OpenAI functions={context?.nucleoid?.functions} editor={editorRef} />
+      )}
       <Backdrop open={open} />
     </>
   );
