@@ -52,15 +52,21 @@ export default function OpenAI({ functions, editor }) {
     ({ functions }) => {
       const mEditor = editor.current.editor;
       const functs = functions.map((item) => item.definition + "\n").join("");
+      const nucDefinitions = functions
+        .map(
+          (item) =>
+            item.path.split("/")[1] +
+            `.find = function(${item.path.split("/")[1]}) { return {}}\n` +
+            item.path.split("/")[1] +
+            `.filter = function(${item.path.split("/")[1]}) { return []}\n`
+        )
+        .join("\n");
+
       const selected = mEditor
         .getModel()
         .getValueInRange(mEditor.getSelection());
 
-      return (
-        functs +
-        selected +
-        `\n\n  Order.find = function(order) { return {}}\n  Order.filter = function(order) { return []}\n`
-      );
+      return functs + nucDefinitions + "\n" + selected;
     },
     [editor]
   );
@@ -114,7 +120,6 @@ export default function OpenAI({ functions, editor }) {
     const mEditor = editor.current.editor;
     const lineNumber = mEditor.getSelection().endLineNumber;
 
-    console.log(lineNumber);
     if (lineNumber > 1) {
       const withLine = mEditor.getModel().getValue().split("\n");
 
