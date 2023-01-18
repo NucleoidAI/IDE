@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import CloseIcon from "@mui/icons-material/Close";
+import { DescriptionPopover } from "../../components/DescriptionPopover/DescriptionPopover";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -11,7 +12,6 @@ import OpenAIButton from "../../components/OpenAIButton";
 import OpenAICodeExplainButton from "../../components/OpenAICodeExplainButton";
 import OpenAIIcon from "../../icons/OpenAI";
 import Paper from "@mui/material/Paper";
-import Popover from "@mui/material/Popover";
 import React from "react";
 import SendIcon from "@mui/icons-material/Send";
 import Settings from "../../settings";
@@ -167,9 +167,6 @@ export default function OpenAI({ functions, editor }) {
       .finally(() => setProgress(false));
   };
 
-  const questionPopover = Boolean(anchorEl);
-  const explainPopover = Boolean(anchorEl2);
-
   return (
     <div>
       {!login ? (
@@ -181,30 +178,17 @@ export default function OpenAI({ functions, editor }) {
             progress={progress}
           />
           <OpenAIButton clickEvent={handleClickOpen} />
-          <Popover
+          <DescriptionPopover
             anchorEl={anchorEl2}
-            open={explainPopover}
+            open={Boolean(anchorEl2)}
+            setAnchorEl={setAnchorEl2}
             onClose={() => setAnchorEl2(null)}
-            anchorOrigin={{
+            anchorPos={{
               vertical: "bottom",
               horizontal: "left",
             }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-          >
-            <TextField
-              inputProps={{
-                style: { fontFamily: "monospace", fontSize: 14 },
-              }}
-              sx={{ p: 1, width: 450 }}
-              multiline
-              rows={15}
-              variant={"outlined"}
-              value={explainResponse}
-            />
-          </Popover>
+            value={explainResponse}
+          />
         </>
       ) : (
         <CircularProgress
@@ -260,37 +244,23 @@ export default function OpenAI({ functions, editor }) {
               >
                 <MarkQuestionIcon />
               </IconButton>
-              <Popover
+              <DescriptionPopover
                 anchorEl={anchorEl}
-                open={questionPopover}
+                open={Boolean(anchorEl)}
                 onClose={() => setAnchorEl(null)}
-                anchorOrigin={{
+                setAnchorEl={setAnchorEl}
+                anchorPos={{
                   vertical: "bottom",
                   horizontal: "left",
                 }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-              >
-                <TextField
-                  inputProps={{
-                    style: { fontFamily: "monospace", fontSize: 14 },
-                  }}
-                  sx={{ p: 1, width: 450 }}
-                  multiline
-                  rows={15}
-                  variant={"outlined"}
-                  value={data.content + data.current.request}
-                />
-              </Popover>
+                value={data.content + data.current.request}
+              />
               <IconButton onClick={handleClose} size="small">
                 <CloseIcon />
               </IconButton>
             </Box>
           </Box>
         </DialogTitle>
-
         <DialogContent sx={{ width: 800 }}>
           <Editor
             id={"openai"}

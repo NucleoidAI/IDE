@@ -6,6 +6,7 @@ export const DescriptionPopover = ({
   open,
   setAnchorEl,
   anchorPos,
+  value,
 }) => {
   return (
     <Popover
@@ -29,7 +30,7 @@ export const DescriptionPopover = ({
         multiline
         rows={15}
         variant={"outlined"}
-        value={explainResponse}
+        value={value}
       />
     </Popover>
   );
