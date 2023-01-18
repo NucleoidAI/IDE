@@ -83,17 +83,18 @@ export default function OpenAI({ functions, editor }) {
   const handleSend = async () => {
     if (data.current.request) {
       setLoading(true);
-
-      const res = await service.openai(data.content + data.current.request);
-
-      setResponse(res);
-      setLoading(false);
+      service
+        .openai(data.content + data.current.request)
+        .then((res) => {
+          setResponse(res);
+        })
+        .finally(() => setLoading(false));
     } else {
       alert("need text");
     }
   };
 
-  const handleClickOpen = async () => {
+  const handleClickOpen = () => {
     if (Settings.token()) {
       setResponse("");
       data.current.request = "";
@@ -103,12 +104,16 @@ export default function OpenAI({ functions, editor }) {
       setLogin(true);
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("accessToken");
-      await service.getProjects();
-      setLogin(false);
-      setResponse("");
-      data.current.request = "";
-      data.current.content = "";
-      setOpen(true);
+
+      service
+        .getProjects()
+        .then(() => {
+          setResponse("");
+          data.current.request = "";
+          data.current.content = "";
+          setOpen(true);
+        })
+        .finally(() => setLogin(false));
     }
   };
 
@@ -149,14 +154,17 @@ export default function OpenAI({ functions, editor }) {
     handleClose();
   };
 
-  const handleSendCodeExplain = async (e) => {
+  const handleSendCodeExplain = (e) => {
     const mEditor = editor.current.editor;
     const value = mEditor.getModel().getValue();
     setProgress(true);
-    const res = await service.openai(value + "\nexplain this code");
-    setExplainResponse(res?.data?.text);
-    setAnchorEl2(e);
-    setProgress(false);
+    service
+      .openai(value + "\nexplain this code")
+      .then((res) => {
+        setExplainResponse(res?.data?.text);
+        setAnchorEl2(e);
+      })
+      .finally(() => setProgress(false));
   };
 
   const questionPopover = Boolean(anchorEl);
