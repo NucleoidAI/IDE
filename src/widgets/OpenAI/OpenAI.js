@@ -76,7 +76,7 @@ export default function OpenAI({ functions, editor }) {
 
       const res = await service.openai(data.content + data.current.request);
 
-      setResponse(res);
+      setResponse(res.data.text?.trim());
       setLoading(false);
     } else {
       alert("need text");
@@ -113,7 +113,7 @@ export default function OpenAI({ functions, editor }) {
     if (lineNumber > 1) {
       const withLine = mEditor.getModel().getValue().split("\n");
 
-      withLine.splice(lineNumber, 0, response.data.text);
+      withLine.splice(lineNumber, 0, response);
       const res = withLine.join("\n");
       const prettyText = prettier.format(res, {
         parser: "babel",
@@ -125,7 +125,7 @@ export default function OpenAI({ functions, editor }) {
       const action = prettier.format(
         `
       function action(req) {
-        ${response.data.text}
+        ${response}
       }
       `,
         {
@@ -143,8 +143,10 @@ export default function OpenAI({ functions, editor }) {
     const mEditor = editor.current.editor;
     const value = mEditor.getModel().getValue();
     setProgress(true);
+
     const res = await service.openai(value + "\nexplain this code");
-    setExplainResponse(res?.data?.text);
+
+    setExplainResponse(res.data.text?.trim());
     setAnchorEl2(e);
     setProgress(false);
   };
@@ -278,8 +280,9 @@ export default function OpenAI({ functions, editor }) {
             id={"openai"}
             height="350px"
             defaultLanguage="javascript"
-            value={response?.data?.text}
+            value={response}
             options={{
+              readOnly: "true",
               minimap: {
                 enabled: false,
               },
