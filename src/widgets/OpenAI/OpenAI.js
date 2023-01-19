@@ -51,22 +51,12 @@ export default function OpenAI({ functions, editor }) {
   const generateContent = React.useCallback(
     ({ functions }) => {
       const mEditor = editor.current.editor;
-      const functs = functions.map((item) => item.definition + "\n").join("");
-      const nucDefinitions = functions
-        .map(
-          (item) =>
-            item.path.split("/")[1] +
-            `.find = function(${item.path.split("/")[1]}) { return {}}\n` +
-            item.path.split("/")[1] +
-            `.filter = function(${item.path.split("/")[1]}) { return []}\n`
-        )
-        .join("\n");
 
       const selected = mEditor
         .getModel()
         .getValueInRange(mEditor.getSelection());
 
-      return functs + nucDefinitions + "\n" + selected;
+      return functions.map((item) => item.definition).join("\n") + selected;
     },
     [editor]
   );
