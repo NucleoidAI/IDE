@@ -77,10 +77,10 @@ const openapi = async (action, nuc) => {
   }
 };
 
-const openai = async (request) => {
+const openai = async (context, command) => {
   return axios(Settings.service.openai, {
     method: "POST",
-    data: { prompt: request },
+    data: { context, command },
   });
 };
 

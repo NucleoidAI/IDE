@@ -74,7 +74,10 @@ export default function OpenAI({ functions, editor }) {
     if (data.current.request) {
       setLoading(true);
 
-      const res = await service.openai(data.content + data.current.request);
+      const res = await service.openai(
+        data.content?.trim(),
+        data.current.request?.trim()
+      );
 
       setResponse(res.data.text?.trim());
       setLoading(false);
@@ -144,7 +147,7 @@ export default function OpenAI({ functions, editor }) {
     const value = mEditor.getModel().getValue();
     setProgress(true);
 
-    const res = await service.openai(value + "\nexplain this code");
+    const res = await service.openai(value, "Explain this code");
 
     setExplainResponse(res.data.text?.trim());
     setAnchorEl2(e);
@@ -265,7 +268,7 @@ export default function OpenAI({ functions, editor }) {
                   multiline
                   rows={15}
                   variant={"outlined"}
-                  value={data.content + data.current.request}
+                  value={data.content}
                 />
               </Popover>
               <IconButton onClick={handleClose} size="small">
@@ -298,14 +301,14 @@ export default function OpenAI({ functions, editor }) {
           <TextField
             sx={{ width: "100%", ml: 2 }}
             inputProps={{ style: { fontFamily: "monospace" } }}
-            //placeholder={"input some text"}
-            onKeyPress={(e) => {
-              if (e.ctrlKey && e.key === "\n") {
+            placeholder={'Create item with name "item-1"...'}
+            onKeyUp={(e) => {
+              if (e.key === "Enter") {
                 handleSend();
               }
             }}
             autoFocus
-            onChange={(e) => (data.current.request = "\n//" + e.target.value)}
+            onChange={(e) => (data.current.request = e.target.value)}
           />
           <IconButton
             disabled={loading}
