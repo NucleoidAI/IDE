@@ -5,14 +5,13 @@ import React from "react";
 const OpenAIButton = ({ clickEvent }) => {
   return (
     <Button
-      onClick={clickEvent}
-      startIcon={<OpenAI />}
       sx={{
         position: "relative",
-        textTransform: "none",
-        bottom: 40,
-        left: 10,
+        bottom: 20,
+        left: 15,
       }}
+      onClick={clickEvent}
+      startIcon={<OpenAI />}
     >
       OpenAI
     </Button>

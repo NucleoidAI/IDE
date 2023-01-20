@@ -266,8 +266,9 @@ export default function OpenAI({ functions, editor }) {
             id={"openai"}
             height="350px"
             defaultLanguage="javascript"
-            value={response?.data?.text}
+            defaultValue={response?.data?.text}
             options={{
+              readOnly: "true",
               minimap: {
                 enabled: false,
               },
