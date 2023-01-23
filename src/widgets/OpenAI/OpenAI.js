@@ -76,19 +76,9 @@ export default function OpenAI({ functions, editor }) {
       service
         .openai(data.content?.trim(), data.current.request?.trim())
         .then((res) => {
-          setResponse(res);
+          setResponse(res.data.text?.trim());
         })
         .finally(() => setLoading(false));
-
-      const res = await service.openai(
-        data.content?.trim(),
-        data.current.request?.trim()
-      );
-
-      setResponse(res.data.text?.trim());
-      setLoading(false);
-    } else {
-      alert("need text");
     }
   };
 
@@ -123,7 +113,9 @@ export default function OpenAI({ functions, editor }) {
     const mEditor = editor.current.editor;
     const lineNumber = mEditor.getSelection().endLineNumber;
 
-    if (lineNumber > 1) {
+    const selected = mEditor.getModel().getValueInRange(mEditor.getSelection());
+
+    if (selected) {
       const withLine = mEditor.getModel().getValue().split("\n");
 
       withLine.splice(lineNumber, 0, response);
@@ -159,7 +151,7 @@ export default function OpenAI({ functions, editor }) {
     service
       .openai(value, "Explain this code")
       .then((res) => {
-        setExplainResponse(res.data.text?.trim());
+        setExplainResponse(res?.data?.text);
         setAnchorEl2(e);
       })
       .finally(() => setProgress(false));
@@ -251,26 +243,11 @@ export default function OpenAI({ functions, editor }) {
                   vertical: "bottom",
                   horizontal: "left",
                 }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-              >
-                <TextField
-                  inputProps={{
-                    style: { fontFamily: "monospace", fontSize: 14 },
-                  }}
-                  sx={{ p: 1, width: 450 }}
-                  multiline
-                  rows={15}
-                  variant={"outlined"}
-                  value={data.content}
-                />
-
-                <IconButton onClick={handleClose} size="small">
-                  <CloseIcon />
-                </IconButton>
-              </DescriptionPopover>
+                value={data.content + data.current.request}
+              />
+              <IconButton onClick={handleClose} size="small">
+                <CloseIcon />
+              </IconButton>
             </Box>
           </Box>
         </DialogTitle>
