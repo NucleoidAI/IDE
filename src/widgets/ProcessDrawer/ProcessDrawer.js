@@ -1,4 +1,5 @@
 import Backdrop from "@mui/material/Backdrop";
+import { Chat } from "@mui/icons-material";
 import DownloadIcon from "@mui/icons-material/Download";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LoginIcon from "@mui/icons-material/Login";
@@ -116,6 +117,10 @@ const ProcessDrawer = () => {
     setLink(myURL.createObjectURL(file));
   };
 
+  const handleOpenChat = () => {
+    publish("chatWindow", true);
+  };
+
   function visible(path) {
     switch (path) {
       case "/dashboard":
@@ -177,6 +182,9 @@ const ProcessDrawer = () => {
               <SaveIcon sx={styles.listItem} />
             </ListItem>
           </Tooltip>
+          <ListItem button onClick={handleOpenChat}>
+            <Chat sx={styles.listItem} />
+          </ListItem>
         </Box>
         <Box>
           <Tooltip placement="left" title="Go to GitHub">

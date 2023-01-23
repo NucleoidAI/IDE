@@ -282,6 +282,7 @@ export default function OpenAI({ functions, editor }) {
         </DialogContent>
         <DialogActions>
           <TextField
+            autoComplete="off"
             sx={{ width: "100%", ml: 2 }}
             inputProps={{ style: { fontFamily: "monospace" } }}
             //placeholder={"input some text"}

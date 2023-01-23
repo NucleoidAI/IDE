@@ -98,8 +98,9 @@ const ChatWindow = ({
               flexDirection: "column",
             }}
           >
-            {messages.map((item) => (
+            {messages.map((item, index) => (
               <div
+                key={index}
                 ref={messagesEndRef}
                 style={{
                   backgroundColor: item.user ? "#e6eff6" : "#f4f7f9",

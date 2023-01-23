@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import BusinessIcon from "@mui/icons-material/Business";
+import Chat from "../../widgets/Chat";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import FolderIcon from "@mui/icons-material/Folder";
 import GlobalSnackMessage from "../../components/GlobalSnackMessage";
@@ -76,6 +77,7 @@ function IDE() {
       {Settings.landing().level < 5 && <Onboard />}
       <ProcessDrawer />
       <SwaggerDialog />
+      <Chat />
       <GlobalSnackMessage />
     </Box>
   );
