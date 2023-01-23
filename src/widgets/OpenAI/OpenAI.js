@@ -45,36 +45,26 @@ export default function OpenAI({ functions, editor }) {
 
   const data = React.useRef({
     request: "",
-    content: "",
   });
 
-  const generateContent = React.useCallback(
-    ({ functions }) => {
+  const generateContent = () => {
+    if (editor.current) {
       const mEditor = editor.current.editor;
 
+      const nucFunctions = deepCopy(functions);
       const selected = mEditor
         .getModel()
         .getValueInRange(mEditor.getSelection());
 
-      return functions.map((item) => item.definition).join("\n") + selected;
-    },
-    [editor]
-  );
-
-  React.useEffect(() => {
-    if (editor.current) {
-      const nucFunctions = deepCopy(functions);
-      data.content = generateContent({
-        functions: nucFunctions,
-      });
+      return nucFunctions.map((item) => item.definition).join("\n") + selected;
     }
-  }, [open, functions, editor, generateContent]);
+  };
 
   const handleSend = async () => {
     if (data.current.request) {
       setLoading(true);
       service
-        .openai(data.content?.trim(), data.current.request?.trim())
+        .openai(generateContent().trim(), data.current.request?.trim())
         .then((res) => {
           setResponse(res.data.text?.trim());
         })
@@ -243,7 +233,7 @@ export default function OpenAI({ functions, editor }) {
                   vertical: "bottom",
                   horizontal: "left",
                 }}
-                value={data.content + data.current.request}
+                value={generateContent() + data.current.request}
               />
               <IconButton onClick={handleClose} size="small">
                 <CloseIcon />
