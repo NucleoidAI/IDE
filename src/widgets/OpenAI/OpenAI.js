@@ -51,22 +51,12 @@ export default function OpenAI({ functions, editor }) {
   const generateContent = React.useCallback(
     ({ functions }) => {
       const mEditor = editor.current.editor;
-      const functs = functions.map((item) => item.definition + "\n").join("");
-      const nucDefinitions = functions
-        .map(
-          (item) =>
-            item.path.split("/")[1] +
-            `.find = function(${item.path.split("/")[1]}) { return {}}\n` +
-            item.path.split("/")[1] +
-            `.filter = function(${item.path.split("/")[1]}) { return []}\n`
-        )
-        .join("\n");
 
       const selected = mEditor
         .getModel()
         .getValueInRange(mEditor.getSelection());
 
-      return functs + nucDefinitions + "\n" + selected;
+      return functions.map((item) => item.definition).join("\n") + selected;
     },
     [editor]
   );
@@ -89,6 +79,14 @@ export default function OpenAI({ functions, editor }) {
           setResponse(res);
         })
         .finally(() => setLoading(false));
+
+      const res = await service.openai(
+        data.content?.trim(),
+        data.current.request?.trim()
+      );
+
+      setResponse(res.data.text?.trim());
+      setLoading(false);
     } else {
       alert("need text");
     }
@@ -128,7 +126,7 @@ export default function OpenAI({ functions, editor }) {
     if (lineNumber > 1) {
       const withLine = mEditor.getModel().getValue().split("\n");
 
-      withLine.splice(lineNumber, 0, response.data.text);
+      withLine.splice(lineNumber, 0, response);
       const res = withLine.join("\n");
       const prettyText = prettier.format(res, {
         parser: "babel",
@@ -140,7 +138,7 @@ export default function OpenAI({ functions, editor }) {
       const action = prettier.format(
         `
       function action(req) {
-        ${response.data.text}
+        ${response}
       }
       `,
         {
@@ -253,11 +251,26 @@ export default function OpenAI({ functions, editor }) {
                   vertical: "bottom",
                   horizontal: "left",
                 }}
-                value={data.content + data.current.request}
-              />
-              <IconButton onClick={handleClose} size="small">
-                <CloseIcon />
-              </IconButton>
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+              >
+                <TextField
+                  inputProps={{
+                    style: { fontFamily: "monospace", fontSize: 14 },
+                  }}
+                  sx={{ p: 1, width: 450 }}
+                  multiline
+                  rows={15}
+                  variant={"outlined"}
+                  value={data.content}
+                />
+
+                <IconButton onClick={handleClose} size="small">
+                  <CloseIcon />
+                </IconButton>
+              </DescriptionPopover>
             </Box>
           </Box>
         </DialogTitle>
@@ -266,7 +279,7 @@ export default function OpenAI({ functions, editor }) {
             id={"openai"}
             height="350px"
             defaultLanguage="javascript"
-            defaultValue={response?.data?.text}
+            value={response}
             options={{
               readOnly: "true",
               minimap: {
@@ -285,14 +298,14 @@ export default function OpenAI({ functions, editor }) {
             autoComplete="off"
             sx={{ width: "100%", ml: 2 }}
             inputProps={{ style: { fontFamily: "monospace" } }}
-            //placeholder={"input some text"}
-            onKeyPress={(e) => {
-              if (e.ctrlKey && e.key === "\n") {
+            placeholder={'Create item with name "item-1"...'}
+            onKeyUp={(e) => {
+              if (e.key === "Enter") {
                 handleSend();
               }
             }}
             autoFocus
-            onChange={(e) => (data.current.request = "\n//" + e.target.value)}
+            onChange={(e) => (data.current.request = e.target.value)}
           />
           <IconButton
             disabled={loading}
