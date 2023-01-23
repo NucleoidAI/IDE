@@ -182,9 +182,11 @@ const ProcessDrawer = () => {
               <SaveIcon sx={styles.listItem} />
             </ListItem>
           </Tooltip>
-          <ListItem button onClick={handleOpenChat}>
-            <Chat sx={styles.listItem} />
-          </ListItem>
+          {Settings.beta() && (
+            <ListItem button onClick={handleOpenChat}>
+              <Chat sx={styles.listItem} />
+            </ListItem>
+          )}
         </Box>
         <Box>
           <Tooltip placement="left" title="Go to GitHub">
