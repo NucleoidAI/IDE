@@ -35,7 +35,7 @@ const ChatWindow = ({
 
   React.useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, open]);
 
   const newUserMessage = () => {
     handleNewUserMessage(message);
