@@ -74,7 +74,7 @@ export default function OpenAI({ functions, editor }) {
     if (data.current.request) {
       setLoading(true);
       service
-        .openai(data.content + data.current.request)
+        .openai(data.content?.trim(), data.current.request?.trim())
         .then((res) => {
           setResponse(res);
         })
@@ -157,9 +157,9 @@ export default function OpenAI({ functions, editor }) {
     const value = mEditor.getModel().getValue();
     setProgress(true);
     service
-      .openai(value + "\nexplain this code")
+      .openai(value, "Explain this code")
       .then((res) => {
-        setExplainResponse(res?.data?.text);
+        setExplainResponse(res.data.text?.trim());
         setAnchorEl2(e);
       })
       .finally(() => setProgress(false));
