@@ -191,7 +191,6 @@ const ProcessDrawer = () => {
         <Box>
           <Tooltip placement="left" title="Go to GitHub">
             <ListItemButton
-              button
               onClick={() =>
                 window.open("https://github.com/NucleoidJS/Nucleoid", "_blank")
               }
@@ -224,7 +223,6 @@ function SwaggerButton() {
     <Tooltip placement="left" title="Open Swagger">
       <ListItemButton
         disabled={!runtimeConnection.status}
-        button
         onClick={handleOpenSwaggerDialog}
       >
         <ViewListIcon sx={styles.listItem} />
@@ -320,7 +318,6 @@ function ApiButton() {
         <Tooltip title={`Start ${runtime}`} placement="left">
           <ListItemButton
             name="onboardRun"
-            button
             onClick={handleRun}
             onMouseEnter={(e) => {
               e.currentTarget.focus();
