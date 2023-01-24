@@ -80,6 +80,12 @@
       window.linter = new ESLint.Linter();
       window.prettier = prettier;
       window.prettierPlugins = prettierPlugins;
+
+      const split = window.location.href.split("?");
+
+      if (split.length > 1) {
+        window.history.pushState({}, "", split[0]);
+      }
     </script>
   </body>
 </html>
