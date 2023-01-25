@@ -176,8 +176,8 @@ export default function OpenAI({ functions, editor }) {
           sx={{
             position: "relative",
             textTransform: "none",
-            bottom: 40,
-            left: 10,
+            bottom: 20,
+            left: 50,
           }}
         />
       )}
