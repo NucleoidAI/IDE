@@ -1,4 +1,5 @@
 import React from "react";
+import Settings from "../../settings";
 import { deepCopy } from "../../utils/DeepCopy";
 import service from "../../service";
 import { useContext } from "../../context/context";
@@ -10,7 +11,23 @@ import ChatWindow, {
 
 const Chat = () => {
   const [open, setOpen] = useEvent("chatWindow", false);
+  const [openChat, setOpenChat] = React.useState(false);
   const [context] = useContext();
+
+  React.useEffect(() => {
+    if (open) {
+      if (Settings.token()) {
+        setOpenChat(true);
+      } else {
+        service.getProjects().finally(() => {
+          setOpenChat(false);
+          setOpen("chatWindow", false);
+        });
+      }
+    } else {
+      setOpenChat(false);
+    }
+  }, [open, setOpen]);
 
   const generateContent = () => {
     const nucFunctions = deepCopy(context.nucleoid.functions);
@@ -31,7 +48,7 @@ const Chat = () => {
   return (
     <>
       <ChatWindow
-        open={open}
+        open={openChat}
         handleClose={handleClose}
         history={[{ message: "Welcome to nucleoid chat", user: false }]}
         handleNewUserMessage={handleNewUserMessage}
