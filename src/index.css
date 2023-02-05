@@ -1,5 +1,12 @@
-body {
+html,
+body,
+#root,
+#root > div {
   user-select: none;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 a {

@@ -46,14 +46,12 @@ const Chat = () => {
   };
 
   return (
-    <>
-      <ChatWindow
-        open={openChat}
-        handleClose={handleClose}
-        history={[{ message: "Welcome to nucleoid chat", user: false }]}
-        handleNewUserMessage={handleNewUserMessage}
-      />
-    </>
+    <ChatWindow
+      open={openChat}
+      handleClose={handleClose}
+      history={[{ message: "Welcome to nucleoid chat", user: false }]}
+      handleNewUserMessage={handleNewUserMessage}
+    />
   );
 };
 

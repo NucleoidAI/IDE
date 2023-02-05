@@ -1,8 +1,8 @@
-import Box from "@mui/material/Box";
+import ChatIcon from "@mui/icons-material/Chat";
 import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
-import { Resizable } from "re-resizable";
-import { IconButton, TextField } from "@mui/material";
+import { Rnd } from "react-rnd";
+import { Box, Fab, IconButton, TextField } from "@mui/material";
 
 const sub = { item: null };
 const response = (res) => {
@@ -20,6 +20,11 @@ const ChatWindow = ({
 }) => {
   const [message, setMessage] = React.useState("");
   const [messages, setMessages] = React.useState([...history]);
+  const rndRef = React.useRef();
+  const [defaultPosition, setDefaultPosition] = React.useState({
+    x: 0,
+    y: 0,
+  });
 
   const messagesEndRef = React.useRef(null);
 
@@ -37,6 +42,12 @@ const ChatWindow = ({
     scrollToBottom();
   }, [messages, open]);
 
+  React.useEffect(() => {
+    const posX = window.innerWidth - 530;
+    const posY = window.innerHeight - 660;
+    setDefaultPosition({ x: posX, y: posY });
+  }, [open]);
+
   const newUserMessage = () => {
     handleNewUserMessage(message);
     setMessages([...messages, { message: message, user: true }]);
@@ -45,41 +56,48 @@ const ChatWindow = ({
 
   if (open) {
     return (
-      <Resizable
-        defaultSize={{
-          width: 500,
-          height: 600,
-          minWidth: 320,
-          minHeight: 200,
+      <Rnd
+        ref={rndRef}
+        position={{ x: defaultPosition.x, y: defaultPosition.y }}
+        onDragStop={(e, d) => setDefaultPosition({ x: d.x, y: d.y })}
+        default={{
+          x: defaultPosition.x,
+          y: defaultPosition.y,
+          height: 650,
+          width: 450,
         }}
+        minHeight={650}
+        minWidth={450}
+        bounds={"window"}
+        dragHandleClassName={"handle"}
         style={{
-          position: "absolute",
-          zIndex: 999999,
-          backgroundColor: "white",
-          bottom: 10,
-          right: 10,
-          border: "solid 1px #ddd",
-          margin: 0,
+          zIndex: 999999999,
+        }}
+        resizeHandleStyles={{
+          bottom: { bottom: 65 },
         }}
       >
         <Box
           sx={{
-            height: "100%",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            height: "100%",
+            width: "100%",
           }}
         >
+          {/* header */}
           <Box
+            className="handle"
             sx={{
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
               p: 1,
               width: "100%",
-              height: 60,
               color: "#e0e0e0",
               bgcolor: "#323a40",
+              cursor: "move",
             }}
           >
             Nuc Chat
@@ -87,15 +105,20 @@ const ChatWindow = ({
               <CloseIcon htmlColor="#e0e0e0" />
             </IconButton>
           </Box>
+          {/* content */}
           <Box
             sx={{
               height: "100%",
               width: "100%",
               p: 1,
-              overflowY: "scroll",
-              userSelect: "text",
+              overflowY: "auto",
+              float: "left",
+              clear: "both",
               display: "flex",
               flexDirection: "column",
+              backgroundColor: "white",
+              border: "solid 0.5px #ddd",
+              userSelect: "text",
             }}
           >
             {messages.map((item, index) => (
@@ -114,7 +137,15 @@ const ChatWindow = ({
               </div>
             ))}
           </Box>
-          <Box sx={{ height: 60, width: "100%", p: 1 }}>
+          {/*footer */}
+          <Box
+            sx={{
+              width: "100%",
+              p: 1,
+              bgcolor: "white",
+              border: "solid 0.5px #ddd",
+            }}
+          >
             <TextField
               autoComplete="off"
               autoFocus
@@ -131,11 +162,42 @@ const ChatWindow = ({
               sx={{ width: "100%" }}
             />
           </Box>
+
+          {/*button */}
+          <Box
+            sx={{ width: "100%", p: 1, display: "flex", justifyContent: "end" }}
+          >
+            <Fab className="handle">
+              <ChatIcon />
+            </Fab>
+          </Box>
         </Box>
-      </Resizable>
+      </Rnd>
     );
   } else {
     return null;
+    /* return (
+      <Rnd
+        default={{ x: 600, y: 15 }}
+        maxWidth={70}
+        maxHeight={70}
+        bounds={"window"}
+        dragHandleClassName={"handle"}
+        enableResizing={false}
+        style={{
+          zIndex: 99999,
+        }}
+      >
+        <Box
+          sx={{ width: "100%", p: 1, display: "flex", justifyContent: "end" }}
+        >
+          <Fab className="handle">
+            <ChatIcon />
+          </Fab>
+        </Box>
+      </Rnd>
+    );
+    */
   }
 };
 

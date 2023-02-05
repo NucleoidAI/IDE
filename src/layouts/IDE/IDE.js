@@ -77,8 +77,8 @@ function IDE() {
       {Settings.landing().level < 5 && <Onboard />}
       <ProcessDrawer />
       <SwaggerDialog />
-      <Chat />
       <GlobalSnackMessage />
+      <Chat />
     </Box>
   );
 }
