@@ -1,8 +1,6 @@
-import { Backdrop } from "@mui/material";
 import MonacoEditor from "@monaco-editor/react";
 import OpenAI from "../OpenAI";
 import React from "react";
-import Settings from "../../settings";
 import { contextToMap } from "../../utils/Parser";
 import linter from "../../linter";
 import { parser } from "react-nucleoid";
@@ -12,6 +10,7 @@ import { publish } from "@nucleoidjs/synapses";
 import rules from "./rules";
 import { useContext } from "../../context/context";
 import useService from "../../hooks/useService";
+import { Backdrop, Box } from "@mui/material";
 
 const options = {
   env: {
@@ -217,9 +216,9 @@ const Editor = React.forwardRef((props, ref) => {
   };
 
   return (
-    <>
+    <Box sx={{ height: "100%" }}>
       <MonacoEditor
-        height={"100%"}
+        height={"96%"}
         defaultLanguage="javascript"
         defaultValue={file.code}
         onChange={handleChange}
@@ -236,11 +235,9 @@ const Editor = React.forwardRef((props, ref) => {
           renderLineHighlightOnlyWhenFocus: true,
         }}
       />
-      {api && Settings.beta() && (
-        <OpenAI functions={context?.nucleoid?.functions} editor={editorRef} />
-      )}
+      <OpenAI functions={context?.nucleoid?.functions} editor={editorRef} />
       <Backdrop open={open} />
-    </>
+    </Box>
   );
 });
 

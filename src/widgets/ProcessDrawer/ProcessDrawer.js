@@ -1,4 +1,5 @@
 import Backdrop from "@mui/material/Backdrop";
+import { Chat } from "@mui/icons-material";
 import DownloadIcon from "@mui/icons-material/Download";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LoginIcon from "@mui/icons-material/Login";
@@ -25,7 +26,7 @@ import {
   Box,
   CircularProgress,
   Drawer,
-  ListItem,
+  ListItemButton,
   Tooltip,
 } from "@mui/material";
 import { publish, useEvent } from "@nucleoidjs/synapses";
@@ -116,6 +117,10 @@ const ProcessDrawer = () => {
     setLink(myURL.createObjectURL(file));
   };
 
+  const handleOpenChat = () => {
+    publish("CHAT_WINDOW", true);
+  };
+
   function visible(path) {
     switch (path) {
       case "/dashboard":
@@ -147,22 +152,22 @@ const ProcessDrawer = () => {
           <ApiButton />
           <SwaggerButton />
           <Tooltip placement="left" title="Login with GitHub">
-            <ListItem button onClick={auth}>
+            <ListItemButton onClick={auth}>
               <LoginIcon sx={styles.listItem} />
-            </ListItem>
+            </ListItemButton>
           </Tooltip>
           <Tooltip placement="left" title="Open Postman (Coming soon)">
-            <ListItem button>
+            <ListItemButton>
               <PostmanIcon sx={styles.listItem} />
-            </ListItem>
+            </ListItemButton>
           </Tooltip>
           <Tooltip placement="left" title="Deploy (Coming soon)">
-            <ListItem button>
+            <ListItemButton>
               <RocketLaunchIcon sx={styles.listItem} />
-            </ListItem>
+            </ListItemButton>
           </Tooltip>
           <Tooltip placement="left" title="Download project">
-            <ListItem
+            <ListItemButton
               component={"a"}
               onClick={handleDownloadContext}
               href={link}
@@ -170,24 +175,28 @@ const ProcessDrawer = () => {
               target="_blank"
             >
               <DownloadIcon sx={styles.listItem} />
-            </ListItem>
+            </ListItemButton>
           </Tooltip>
           <Tooltip placement="left" title="Save project">
-            <ListItem button onClick={handleSaveProject}>
+            <ListItemButton onClick={handleSaveProject}>
               <SaveIcon sx={styles.listItem} />
-            </ListItem>
+            </ListItemButton>
           </Tooltip>
+          {Settings.beta() && (
+            <ListItemButton onClick={handleOpenChat}>
+              <Chat sx={styles.listItem} />
+            </ListItemButton>
+          )}
         </Box>
         <Box>
           <Tooltip placement="left" title="Go to GitHub">
-            <ListItem
-              button
+            <ListItemButton
               onClick={() =>
                 window.open("https://github.com/NucleoidJS/Nucleoid", "_blank")
               }
             >
               <GitHubIcon sx={styles.listItem} />
-            </ListItem>
+            </ListItemButton>
           </Tooltip>
         </Box>
       </Drawer>
@@ -212,13 +221,12 @@ function SwaggerButton() {
 
   return (
     <Tooltip placement="left" title="Open Swagger">
-      <ListItem
+      <ListItemButton
         disabled={!runtimeConnection.status}
-        button
         onClick={handleOpenSwaggerDialog}
       >
         <ViewListIcon sx={styles.listItem} />
-      </ListItem>
+      </ListItemButton>
     </Tooltip>
   );
 }
@@ -303,14 +311,13 @@ function ApiButton() {
   return (
     <>
       {loading ? (
-        <ListItem name="onboardRun">
+        <ListItemButton name="onboardRun">
           <CircularProgress size={25} color={"secondary"} />
-        </ListItem>
+        </ListItemButton>
       ) : (
         <Tooltip title={`Start ${runtime}`} placement="left">
-          <ListItem
+          <ListItemButton
             name="onboardRun"
-            button
             onClick={handleRun}
             onMouseEnter={(e) => {
               e.currentTarget.focus();
@@ -318,7 +325,7 @@ function ApiButton() {
             disabled={errors.length > 0}
           >
             <PlayCircleFilledIcon sx={styles.listItem} />
-          </ListItem>
+          </ListItemButton>
         </Tooltip>
       )}
     </>

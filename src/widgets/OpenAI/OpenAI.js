@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import CloseIcon from "@mui/icons-material/Close";
+import { DescriptionPopover } from "../../components/DescriptionPopover/DescriptionPopover";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -11,7 +12,6 @@ import OpenAIButton from "../../components/OpenAIButton";
 import OpenAICodeExplainButton from "../../components/OpenAICodeExplainButton";
 import OpenAIIcon from "../../icons/OpenAI";
 import Paper from "@mui/material/Paper";
-import Popover from "@mui/material/Popover";
 import React from "react";
 import SendIcon from "@mui/icons-material/Send";
 import Settings from "../../settings";
@@ -45,48 +45,34 @@ export default function OpenAI({ functions, editor }) {
 
   const data = React.useRef({
     request: "",
-    content: "",
   });
 
-  const generateContent = React.useCallback(
-    ({ functions }) => {
+  const generateContent = () => {
+    if (editor.current) {
       const mEditor = editor.current.editor;
 
+      const nucFunctions = deepCopy(functions);
       const selected = mEditor
         .getModel()
         .getValueInRange(mEditor.getSelection());
 
-      return functions.map((item) => item.definition).join("\n") + selected;
-    },
-    [editor]
-  );
-
-  React.useEffect(() => {
-    if (editor.current) {
-      const nucFunctions = deepCopy(functions);
-      data.content = generateContent({
-        functions: nucFunctions,
-      });
+      return nucFunctions.map((item) => item.definition).join("\n") + selected;
     }
-  }, [open, functions, editor, generateContent]);
+  };
 
   const handleSend = async () => {
     if (data.current.request) {
       setLoading(true);
-
-      const res = await service.openai(
-        data.content?.trim(),
-        data.current.request?.trim()
-      );
-
-      setResponse(res.data.text?.trim());
-      setLoading(false);
-    } else {
-      alert("need text");
+      service
+        .openai(generateContent().trim(), data.current.request?.trim())
+        .then((res) => {
+          setResponse(res.data.text?.trim());
+        })
+        .finally(() => setLoading(false));
     }
   };
 
-  const handleClickOpen = async () => {
+  const handleClickOpen = () => {
     if (Settings.token()) {
       setResponse("");
       data.current.request = "";
@@ -96,12 +82,16 @@ export default function OpenAI({ functions, editor }) {
       setLogin(true);
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("accessToken");
-      await service.getProjects();
-      setLogin(false);
-      setResponse("");
-      data.current.request = "";
-      data.current.content = "";
-      setOpen(true);
+
+      service
+        .getProjects()
+        .then(() => {
+          setResponse("");
+          data.current.request = "";
+          data.current.content = "";
+          setOpen(true);
+        })
+        .finally(() => setLogin(false));
     }
   };
 
@@ -113,7 +103,9 @@ export default function OpenAI({ functions, editor }) {
     const mEditor = editor.current.editor;
     const lineNumber = mEditor.getSelection().endLineNumber;
 
-    if (lineNumber > 1) {
+    const selected = mEditor.getModel().getValueInRange(mEditor.getSelection());
+
+    if (selected) {
       const withLine = mEditor.getModel().getValue().split("\n");
 
       withLine.splice(lineNumber, 0, response);
@@ -142,20 +134,18 @@ export default function OpenAI({ functions, editor }) {
     handleClose();
   };
 
-  const handleSendCodeExplain = async (e) => {
+  const handleSendCodeExplain = (e) => {
     const mEditor = editor.current.editor;
     const value = mEditor.getModel().getValue();
     setProgress(true);
-
-    const res = await service.openai(value, "Explain this code");
-
-    setExplainResponse(res.data.text?.trim());
-    setAnchorEl2(e);
-    setProgress(false);
+    service
+      .openai(value, "Explain this code")
+      .then((res) => {
+        setExplainResponse(res?.data?.text);
+        setAnchorEl2(e);
+      })
+      .finally(() => setProgress(false));
   };
-
-  const questionPopover = Boolean(anchorEl);
-  const explainPopover = Boolean(anchorEl2);
 
   return (
     <div>
@@ -168,30 +158,17 @@ export default function OpenAI({ functions, editor }) {
             progress={progress}
           />
           <OpenAIButton clickEvent={handleClickOpen} />
-          <Popover
+          <DescriptionPopover
             anchorEl={anchorEl2}
-            open={explainPopover}
+            open={Boolean(anchorEl2)}
+            setAnchorEl={setAnchorEl2}
             onClose={() => setAnchorEl2(null)}
-            anchorOrigin={{
+            anchorPos={{
               vertical: "bottom",
               horizontal: "left",
             }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-          >
-            <TextField
-              inputProps={{
-                style: { fontFamily: "monospace", fontSize: 14 },
-              }}
-              sx={{ p: 1, width: 450 }}
-              multiline
-              rows={15}
-              variant={"outlined"}
-              value={explainResponse}
-            />
-          </Popover>
+            value={explainResponse}
+          />
         </>
       ) : (
         <CircularProgress
@@ -199,8 +176,8 @@ export default function OpenAI({ functions, editor }) {
           sx={{
             position: "relative",
             textTransform: "none",
-            bottom: 40,
-            left: 10,
+            bottom: 20,
+            left: 50,
           }}
         />
       )}
@@ -247,37 +224,23 @@ export default function OpenAI({ functions, editor }) {
               >
                 <MarkQuestionIcon />
               </IconButton>
-              <Popover
+              <DescriptionPopover
                 anchorEl={anchorEl}
-                open={questionPopover}
+                open={Boolean(anchorEl)}
                 onClose={() => setAnchorEl(null)}
-                anchorOrigin={{
+                setAnchorEl={setAnchorEl}
+                anchorPos={{
                   vertical: "bottom",
                   horizontal: "left",
                 }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-              >
-                <TextField
-                  inputProps={{
-                    style: { fontFamily: "monospace", fontSize: 14 },
-                  }}
-                  sx={{ p: 1, width: 450 }}
-                  multiline
-                  rows={15}
-                  variant={"outlined"}
-                  value={data.content}
-                />
-              </Popover>
+                value={generateContent() + data.current.request}
+              />
               <IconButton onClick={handleClose} size="small">
                 <CloseIcon />
               </IconButton>
             </Box>
           </Box>
         </DialogTitle>
-
         <DialogContent sx={{ width: 800 }}>
           <Editor
             id={"openai"}
@@ -299,6 +262,7 @@ export default function OpenAI({ functions, editor }) {
         </DialogContent>
         <DialogActions>
           <TextField
+            autoComplete="off"
             sx={{ width: "100%", ml: 2 }}
             inputProps={{ style: { fontFamily: "monospace" } }}
             placeholder={'Create item with name "item-1"...'}

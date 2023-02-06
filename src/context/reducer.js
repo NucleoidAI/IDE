@@ -248,6 +248,61 @@ function contextReducer(state, { type, payload }) {
       break;
     }
 
+    case "CREATE_SAMPLE_CRUD": {
+      const { api, functions } = nucleoid;
+      const className = payload.resource;
+      const resource = payload.resource.toLowerCase() + "s";
+
+      const template = {
+        request: { type: "object", properties: {} },
+        response: { type: "object", properties: {} },
+      };
+
+      api[`/${resource}`] = {
+        get: {
+          ...template,
+          summary: `Get ${className} list`,
+          description: `Get ${className} list`,
+          "x-nuc-action": `function action(req) {\n  return ${className};\n}\n`,
+        },
+        post: {
+          ...template,
+          summary: `Create ${className}`,
+          description: `Create ${className}`,
+          "x-nuc-action": `function action(req) {\n  return new ${className}();\n}\n`,
+        },
+      };
+      api[`/${resource}/{${resource}}`] = {
+        get: {
+          ...template,
+          summary: `Get ${className}`,
+          description: `Get ${className}`,
+          "x-nuc-action": `function action(req) {\n  const ${resource} = req.params.${resource};\n  return ${className}[${resource}];\n}\n`,
+        },
+        post: {
+          ...template,
+          summary: `Update ${className}`,
+          description: `Update ${className}`,
+          "x-nuc-action": `function action(req) {\n  const ${resource} = req.params.${resource};\n  return ${className}[${resource}];\n}\n`,
+        },
+        del: {
+          ...template,
+          summary: `Delete ${className}`,
+          description: `Delete ${className}`,
+          "x-nuc-action": `function action(req) {\n  const ${resource} = req.params.${resource};\n  delete ${className}[${resource}];\n}\n`,
+        },
+      };
+
+      functions.push({
+        definition: `class ${className} {\n  constructor() {\n  }\n}\n`,
+        ext: "js",
+        params: [],
+        path: `/${className}`,
+        type: "CLASS",
+      });
+      break;
+    }
+
     default:
   }
 
