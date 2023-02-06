@@ -61,7 +61,7 @@ const Chat = () => {
     <ChatWindow
       open={openChat}
       handleClose={handleClose}
-      history={[{ message: "Welcome to nucleoid chat", user: false }]}
+      history={[{ message: "Welcome to NucBot! 🤖", user: false }]}
       handleNewUserMessage={handleNewUserMessage}
     />
   );

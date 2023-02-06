@@ -7,6 +7,7 @@ const OpenAIButton = ({ clickEvent }) => {
     <Button
       sx={{
         position: "relative",
+        textTransform: "none",
         bottom: 20,
         left: 15,
       }}

@@ -16,7 +16,7 @@ const ChatWindow = ({
   open,
   handleClose,
   handleNewUserMessage,
-  history = [{ message: "welcome to nucleoid chat" }],
+  history = [],
 }) => {
   const [message, setMessage] = React.useState("");
   const [messages, setMessages] = React.useState([...history]);
@@ -100,7 +100,10 @@ const ChatWindow = ({
               cursor: "move",
             }}
           >
-            Nuc Chat
+            <Box>
+              NucBot&nbsp;-&nbsp;
+              <small>Powered by OpenAI</small>
+            </Box>
             <IconButton onClick={handleClose}>
               <CloseIcon htmlColor="#e0e0e0" />
             </IconButton>
@@ -162,7 +165,6 @@ const ChatWindow = ({
               sx={{ width: "100%" }}
             />
           </Box>
-
           {/*button */}
           <Box
             sx={{ width: "100%", p: 1, display: "flex", justifyContent: "end" }}
@@ -176,28 +178,6 @@ const ChatWindow = ({
     );
   } else {
     return null;
-    /* return (
-      <Rnd
-        default={{ x: 600, y: 15 }}
-        maxWidth={70}
-        maxHeight={70}
-        bounds={"window"}
-        dragHandleClassName={"handle"}
-        enableResizing={false}
-        style={{
-          zIndex: 99999,
-        }}
-      >
-        <Box
-          sx={{ width: "100%", p: 1, display: "flex", justifyContent: "end" }}
-        >
-          <Fab className="handle">
-            <ChatIcon />
-          </Fab>
-        </Box>
-      </Rnd>
-    );
-    */
   }
 };
 
