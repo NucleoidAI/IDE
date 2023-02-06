@@ -4,15 +4,14 @@ import { deepCopy } from "../../utils/DeepCopy";
 import service from "../../service";
 import { useContext } from "../../context/context";
 import { useEvent } from "@nucleoidjs/synapses";
-
 import ChatWindow, {
   handleAddResponseMessage,
 } from "../../components/ChatWindow";
 
 const Chat = () => {
-  const [open, setOpen] = useEvent("chatWindow", false);
+  const [open, setOpen] = useEvent("CHAT_WINDOW", false);
   const [openChat, setOpenChat] = React.useState(false);
-  const [context] = useContext();
+  const [context, dispatch] = useContext();
 
   React.useEffect(() => {
     if (open) {
@@ -21,7 +20,7 @@ const Chat = () => {
       } else {
         service.getProjects().finally(() => {
           setOpenChat(false);
-          setOpen("chatWindow", false);
+          setOpen("CHAT_WINDOW", false);
         });
       }
     } else {
@@ -36,13 +35,26 @@ const Chat = () => {
   };
 
   const handleNewUserMessage = (message) => {
-    service
-      .openai(generateContent(), message)
-      .then((res) => handleAddResponseMessage(res.data.text));
+    const parts = message.split('"');
+
+    if (parts.length === 1) {
+      setTimeout(() => {
+        handleAddResponseMessage("Not able to understand your message");
+      }, 500);
+
+      return;
+    }
+
+    const resource = parts[1];
+
+    setTimeout(() => {
+      dispatch({ type: "CREATE_SAMPLE_CRUD", payload: { resource } });
+      handleAddResponseMessage(`"${resource}" resource is created.`);
+    }, 1000);
   };
 
   const handleClose = () => {
-    setOpen("chatWindow", false);
+    setOpen("CHAT_WINDOW", false);
   };
 
   return (

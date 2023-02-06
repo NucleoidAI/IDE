@@ -118,7 +118,7 @@ const ProcessDrawer = () => {
   };
 
   const handleOpenChat = () => {
-    publish("chatWindow", true);
+    publish("CHAT_WINDOW", true);
   };
 
   function visible(path) {
