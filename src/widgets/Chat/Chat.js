@@ -1,6 +1,5 @@
 import React from "react";
 import Settings from "../../settings";
-import { deepCopy } from "../../utils/DeepCopy";
 import service from "../../service";
 import { useContext } from "../../context/context";
 import { useEvent } from "@nucleoidjs/synapses";
@@ -11,7 +10,7 @@ import ChatWindow, {
 const Chat = () => {
   const [open, setOpen] = useEvent("CHAT_WINDOW", false);
   const [openChat, setOpenChat] = React.useState(false);
-  const [context, dispatch] = useContext();
+  const [, dispatch] = useContext();
 
   React.useEffect(() => {
     if (open) {
@@ -27,12 +26,6 @@ const Chat = () => {
       setOpenChat(false);
     }
   }, [open, setOpen]);
-
-  const generateContent = () => {
-    const nucFunctions = deepCopy(context.nucleoid.functions);
-
-    return nucFunctions.map((item) => item.definition).join("\n");
-  };
 
   const handleNewUserMessage = (message) => {
     const parts = message.split('"');

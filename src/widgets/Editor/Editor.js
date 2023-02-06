@@ -1,7 +1,6 @@
 import MonacoEditor from "@monaco-editor/react";
 import OpenAI from "../OpenAI";
 import React from "react";
-import Settings from "../../settings";
 import { contextToMap } from "../../utils/Parser";
 import linter from "../../linter";
 import { parser } from "react-nucleoid";
@@ -236,9 +235,7 @@ const Editor = React.forwardRef((props, ref) => {
           renderLineHighlightOnlyWhenFocus: true,
         }}
       />
-      {Settings.beta() && (
-        <OpenAI functions={context?.nucleoid?.functions} editor={editorRef} />
-      )}
+      <OpenAI functions={context?.nucleoid?.functions} editor={editorRef} />
       <Backdrop open={open} />
     </Box>
   );
