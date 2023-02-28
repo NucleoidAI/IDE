@@ -80,7 +80,7 @@ function Menu(props) {
                 <SmallMenuLinkWithFilter />
               </List>
               <ProjectSelectSmall />
-              <GraphButton />
+              {settings.beta() && <GraphButton />}
               <Box sx={{ height: "100%" }} />
               <OpenSwaggerDialog small />
               <Settings size={"large"} />
@@ -125,7 +125,7 @@ function Menu(props) {
               <MenuLinkWithFilter />
             </List>
             <ProjectSelect />
-            <GraphButton />
+            {settings.beta() && <GraphButton />}
             <Status />
             <OpenSwaggerDialog />
             <Settings size={"large"} />
@@ -151,7 +151,7 @@ function Menu(props) {
                 <SmallMenuLinkWithFilter />
               </List>
               <ProjectSelectSmall />
-              <GraphButton />
+              {settings.beta() && <GraphButton />}
               <Box sx={{ height: "100%" }} />
               <OpenSwaggerDialog small />
               <Settings size={"large"} />
@@ -183,7 +183,7 @@ function Menu(props) {
               <MenuLinkWithFilter />
             </List>
             <ProjectSelect />
-            <GraphButton />
+            {settings.beta() && <GraphButton />}
             <Status />
             <OpenSwaggerDialog />
             <Settings size={"large"} />
