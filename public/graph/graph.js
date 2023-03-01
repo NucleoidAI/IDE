@@ -15,14 +15,13 @@ const style = [
       width: "mapData(score, 0, 0.006769776522008331, 20, 60)",
       height: "mapData(score, 0, 0.006769776522008331, 20, 60)",
       content: "data(name)",
-      "font-size": "12px",
-      "text-valign": "center",
+      "font-size": "10px",
+      "font-family": "monospace",
+      "text-valign": "bottom",
       "text-halign": "center",
-      "background-color": "#555",
-      "text-outline-color": "#555",
-      "text-outline-width": "2px",
-      color: "#fff",
-      "overlay-padding": "6px",
+      "background-color": "#2c3a40",
+      color: "#363636",
+      "overlay-padding": "12px",
       "z-index": "10",
     },
   },
@@ -61,8 +60,8 @@ const style = [
       "curve-style": "haystack",
       "haystack-radius": "0.5",
       opacity: "0.4",
-      "line-color": "#bbb",
-      width: "mapData(weight, 0, 1, 1, 8)",
+      "line-color": "#6c6c6c",
+      width: "2px",
       "overlay-padding": "3px",
     },
   },
@@ -268,17 +267,18 @@ Promise.all([
     container: document.getElementById("cy"),
     style: style,
     elements: datas,
-    layout: { name: "random" },
+    wheelSensitivity: 0.1,
   }));
 
   const params = {
     name: "cola",
-    nodeSpacing: 5,
-    edgeLengthVal: 107,
+    nodeSpacing: 10,
+    edgeLengthVal: 150,
+    ready: () => cy.center(),
     flow: { axis: "y", minSeparation: 30 },
     animate: true,
-    randomize: true,
-    maxSimulationTime: 1500,
+    maxSimulationTime: 1000,
+    fit: cy.nodes().length > 10,
   };
 
   let layout = makeLayout();
@@ -335,7 +335,6 @@ Promise.all([
   buttons.forEach(makeButton);
 
   function makeLayout(opts) {
-    params.randomize = false;
     params.edgeLength = function (e) {
       return params.edgeLengthVal / e.data("weight");
     };
