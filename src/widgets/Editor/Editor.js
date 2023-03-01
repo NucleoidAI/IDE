@@ -235,7 +235,9 @@ const Editor = React.forwardRef((props, ref) => {
           renderLineHighlightOnlyWhenFocus: true,
         }}
       />
-      <OpenAI functions={context?.nucleoid?.functions} editor={editorRef} />
+      {!functions && (
+        <OpenAI functions={context?.nucleoid?.functions} editor={editorRef} />
+      )}
       <Backdrop open={open} />
     </Box>
   );
