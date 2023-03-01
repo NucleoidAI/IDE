@@ -168,10 +168,7 @@ const style = [
 ];
 
 Promise.all([
-  fetch(localStorage.getItem("terminal") + "/graph").then(function (res) {
-    return res.json();
-  }),
-  ,
+  fetch(localStorage.getItem("terminal") + "/graph").then((res) => res.json()),
 ]).then(function (dataArray) {
   const datas = [];
   const data = dataArray[0];
@@ -184,7 +181,7 @@ Promise.all([
             datas.push({
               data: {
                 id: data[item].id,
-                name: item,
+                name: "class " + item,
               },
               group: "nodes",
             });
