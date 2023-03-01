@@ -4,6 +4,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Path from "../../utils/Path";
+import React from "react";
 import actions from "../../actions";
 import styles from "./styles";
 // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -17,19 +18,32 @@ export default function FunctionDialog() {
   let path;
   const selectedFunction = pages.functions.selected;
   const { prefix } = selectedFunction ? Path.split(selectedFunction) : {};
+  const [error, setError] = React.useState(false);
+
+  React.useEffect(() => {
+    setError(false);
+    //eslint-disable-next-line
+  }, [Boolean(context.get("pages.functions.dialog.open"))]);
 
   const handleSaveFunction = () => {
-    dispatch({
-      type: actions.saveFunctionDialog,
-      payload: {
-        path: "/" + path,
-        type: type.toUpperCase(),
-        definition: `${type.toLowerCase()} ${path} { }`,
-        params: [],
-        ext: "js",
-      },
-    });
-    handleClose();
+    if (!path) {
+      setError(true);
+    } else {
+      setError(false);
+      dispatch({
+        type: actions.saveFunctionDialog,
+        payload: {
+          path: "/" + path,
+          type: type.toUpperCase(),
+          definition: `${type.toLowerCase()} ${path}${
+            type === "FUNCTION" && "()"
+          } { }`,
+          params: [],
+          ext: "js",
+        },
+      });
+      handleClose();
+    }
   };
 
   const handleClose = () => {
@@ -68,6 +82,7 @@ export default function FunctionDialog() {
             {Path.addSlashMark(prefix)}
           </Typography>
           <TextField
+            error={error}
             defaultValue={""}
             sx={styles.suffixText}
             onChange={(e) => (path = e.target.value)}
