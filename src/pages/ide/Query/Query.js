@@ -1,3 +1,4 @@
+import Page from "../../../components/Page";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import QueryArrayTable from "../../../components/QueryArrayTable";
 import QueryEditor from "../../../widgets/QueryEditor";
@@ -93,7 +94,7 @@ function Query() {
   };
 
   return (
-    <>
+    <Page title={"Query"}>
       <Grid container sx={styles.root}>
         <Grid
           item
@@ -157,7 +158,7 @@ function Query() {
           )}
         </Grid>
       </Grid>
-    </>
+    </Page>
   );
 }
 

@@ -1,4 +1,5 @@
 import Moment from "react-moment";
+import Page from "../../../components/Page";
 import service from "../../../service";
 import styles from "./styles";
 import { v4 as uuid } from "uuid";
@@ -24,7 +25,7 @@ function Logs() {
   }, []);
 
   return (
-    <>
+    <Page title={"Logs"}>
       <Grid container>
         <Grid container item justifyContent={"center"}>
           <Typography variant="h5" gutterBottom component="div">
@@ -57,7 +58,7 @@ function Logs() {
           ))}
         </Grid>
       </Grid>
-    </>
+    </Page>
   );
 }
 
