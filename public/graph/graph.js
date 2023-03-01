@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-var style = [
+const style = [
   {
     selector: "core",
     style: {
@@ -240,11 +240,11 @@ Promise.all([
 
   mapNucGraphToCy(data);
 
-  var h = function (tag, attrs, children) {
-    var el = document.createElement(tag);
+  const h = function (tag, attrs, children) {
+    const el = document.createElement(tag);
 
     Object.keys(attrs).forEach(function (key) {
-      var val = attrs[key];
+      const val = attrs[key];
 
       el.setAttribute(key, val);
     });
@@ -256,22 +256,22 @@ Promise.all([
     return el;
   };
 
-  var t = function (text) {
-    var el = document.createTextNode(text);
+  const t = function (text) {
+    const el = document.createTextNode(text);
 
     return el;
   };
 
-  var $ = document.querySelector.bind(document);
+  const $ = document.querySelector.bind(document);
 
-  var cy = (window.cy = cytoscape({
+  const cy = (window.cy = cytoscape({
     container: document.getElementById("cy"),
     style: style,
     elements: datas,
     layout: { name: "random" },
   }));
 
-  var params = {
+  const params = {
     name: "cola",
     nodeSpacing: 5,
     edgeLengthVal: 107,
@@ -281,11 +281,11 @@ Promise.all([
     maxSimulationTime: 1500,
   };
 
-  var layout = makeLayout();
+  let layout = makeLayout();
 
   layout.run();
 
-  var $btnParam = h(
+  const $btnParam = h(
     "div",
     {
       class: "param",
@@ -293,11 +293,11 @@ Promise.all([
     []
   );
 
-  var $config = $("#config");
+  const $config = $("#config");
 
   $config.appendChild($btnParam);
 
-  var sliders = [
+  const sliders = [
     {
       label: "Edge length",
       param: "edgeLengthVal",
@@ -313,7 +313,7 @@ Promise.all([
     },
   ];
 
-  var buttons = [
+  const buttons = [
     {
       label: h("span", { class: "fa fa-random" }, []),
       layoutOpts: {
@@ -340,7 +340,7 @@ Promise.all([
       return params.edgeLengthVal / e.data("weight");
     };
 
-    for (var i in opts) {
+    for (const i in opts) {
       params[i] = opts[i];
     }
 
@@ -348,7 +348,7 @@ Promise.all([
   }
 
   function makeSlider(opts) {
-    var $input = h(
+    const $input = h(
       "input",
       {
         id: "slider-" + opts.param,
@@ -362,9 +362,9 @@ Promise.all([
       []
     );
 
-    var $param = h("div", { class: "param" }, []);
+    const $param = h("div", { class: "param" }, []);
 
-    var $label = h(
+    const $label = h(
       "label",
       { class: "label label-default", for: "slider-" + opts.param },
       [t(opts.label)]
@@ -375,7 +375,7 @@ Promise.all([
 
     $config.appendChild($param);
 
-    var update = _.throttle(function () {
+    const update = _.throttle(function () {
       params[opts.param] = $input.value;
 
       layout.stop();
@@ -388,7 +388,7 @@ Promise.all([
   }
 
   function makeButton(opts) {
-    var $button = h("button", { class: "btn btn-default" }, [opts.label]);
+    const $button = h("button", { class: "btn btn-default" }, [opts.label]);
 
     $btnParam.appendChild($button);
 
@@ -404,7 +404,7 @@ Promise.all([
     });
   }
 
-  var makeTippy = function (node, html) {
+  const makeTippy = function (node, html) {
     return tippy(node.popperRef(), {
       html: html,
       trigger: "manual",
@@ -415,15 +415,15 @@ Promise.all([
     }).tooltips[0];
   };
 
-  var hideTippy = function (node) {
-    var tippy = node.data("tippy");
+  const hideTippy = function (node) {
+    const tippy = node.data("tippy");
 
     if (tippy != null) {
       tippy.hide();
     }
   };
 
-  var hideAllTippies = function () {
+  const hideAllTippies = function () {
     cy.nodes().forEach(hideTippy);
   };
 
