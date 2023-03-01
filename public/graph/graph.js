@@ -14,7 +14,7 @@ const style = [
     style: {
       width: "mapData(score, 0, 0.006769776522008331, 20, 60)",
       height: "mapData(score, 0, 0.006769776522008331, 20, 60)",
-      content: "data(name)",
+      content: "data(label)",
       "font-size": "10px",
       "font-family": "monospace",
       "text-valign": "bottom",
@@ -23,6 +23,7 @@ const style = [
       color: "#363636",
       "overlay-padding": "12px",
       "z-index": "10",
+      "text-wrap": "wrap",
     },
   },
   {
@@ -170,66 +171,85 @@ const style = [
 Promise.all([
   fetch(localStorage.getItem("terminal") + "/graph").then((res) => res.json()),
 ]).then(function (dataArray) {
-  const datas = [];
+  const graph = [];
   const data = dataArray[0];
 
   const mapNucGraphToCy = (data) => {
-    Object.keys(data).forEach((item) => {
-      switch (data[item].type) {
-        case "CLASS":
-          {
-            datas.push({
-              data: {
-                id: data[item].id,
-                name: "class " + item,
-              },
-              group: "nodes",
-            });
-            data[item]?.instances?.forEach((a) => {
-              datas.push({
+    Object.keys(data).forEach((prop) => {
+      const node = data[prop];
+
+      if (!node.id || node.type === "IF") {
+        return;
+      }
+
+      graph.push({
+        data: {
+          id: node.id,
+          label: `\n${prop}\n[${node.type.toLowerCase()}]`,
+        },
+        group: "nodes",
+      });
+    });
+
+    Object.keys(data).forEach((prop) => {
+      const node = data[prop];
+
+      if (!node.id) {
+        return;
+      }
+
+      for (const property in node) {
+        if (property === "id" && property === "type") {
+          continue;
+        }
+
+        if (Array.isArray(node[property])) {
+          node[property].forEach((item) => {
+            if (
+              graph.find((g) => g.group === "nodes" && g.data.id === item) &&
+              !graph.find(
+                (g) =>
+                  (g.group === "edges" &&
+                    g.data.source === node.id &&
+                    g.data.target === item) ||
+                  (g.data.source === item && g.data.target === node.id)
+              )
+            ) {
+              graph.push({
                 data: {
-                  source: a,
-                  target: data[item].id,
+                  source: node.id,
+                  target: item,
                   weight: 2,
                 },
                 position: {},
                 group: "edges",
               });
-            });
-          }
-          break;
-        case "OBJECT":
-          {
-            datas.push({
+            }
+          });
+        } else {
+          if (
+            graph.find(
+              (g) => g.group === "nodes" && g.data.id === node[property]
+            ) &&
+            !graph.find(
+              (g) =>
+                (g.group === "edges" &&
+                  g.data.source === node.id &&
+                  g.data.target === node[property]) ||
+                (g.data.source === node[property] && g.data.target === node.id)
+            )
+          ) {
+            graph.push({
               data: {
-                id: data[item].id,
-                name: item,
-              },
-              group: "nodes",
-            });
-          }
-          break;
-        case "PROPERTY":
-          {
-            datas.push({
-              data: {
-                id: data[item].id,
-                name: item,
-              },
-              group: "nodes",
-            });
-
-            datas.push({
-              data: {
-                source: data[item].id,
-                target: data[item].object,
+                source: node.id,
+                target: node[property],
                 weight: 2,
               },
               position: {},
               group: "edges",
             });
           }
-          break;
+        }
       }
     });
   };
@@ -263,7 +283,7 @@ Promise.all([
   const cy = (window.cy = cytoscape({
     container: document.getElementById("cy"),
     style: style,
-    elements: datas,
+    elements: graph,
     wheelSensitivity: 0.1,
   }));
 
