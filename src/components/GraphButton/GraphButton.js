@@ -1,5 +1,6 @@
+import { Avatar } from "@mui/material";
+import GraphImage from "../../images/graph.png";
 import React from "react";
-import SchemaIcon from "@mui/icons-material/Schema";
 import { Box, Fab } from "@mui/material/";
 import { publish, useEvent } from "@nucleoidjs/synapses";
 
@@ -11,17 +12,27 @@ const GraphButton = () => {
   if (state.status) {
     return (
       <Box
-        sx={{ width: "100%", pt: 1, display: "flex", justifyContent: "center" }}
+        sx={{
+          width: "100%",
+          mt: 2,
+          display: "flex",
+          justifyContent: "center",
+        }}
       >
         <Fab
-          sx={{ textTransform: "none" }}
-          variant="contained"
-          color={"inherit"}
+          sx={{
+            textTransform: "none",
+            backgroundColor: "#2f383d",
+            "&:hover": {
+              backgroundColor: "#313a40",
+            },
+          }}
+          variant={"contained"}
           onClick={() => {
             publish("GRAPH_DIALOG", { open: true });
           }}
         >
-          <SchemaIcon />
+          <Avatar sx={{ p: 0.5 }} src={GraphImage} />
         </Fab>
       </Box>
     );
