@@ -27,7 +27,7 @@ const GraphDialog = () => {
             width={"100%"}
             height={"100%"}
             style={{ border: "none" }}
-            src={"/ide/graph/index.html"}
+            src={"/ide/graph/graph.html"}
           ></iframe>
         </DialogContent>
       </Dialog>
