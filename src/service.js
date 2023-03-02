@@ -139,6 +139,10 @@ const deleteProject = (project) => {
   });
 };
 
+const getGraph = () => {
+  return axios.get(Settings.url.terminal() + "/graph");
+};
+
 const createSandbox = (context) => {
   const data = {
     functions: context.functions,
@@ -171,6 +175,7 @@ const service = {
   deleteProject,
   createSandbox,
   getCodeFromGithub,
+  getGraph,
 };
 
 export default service;

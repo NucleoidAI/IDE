@@ -1,4 +1,5 @@
 import Drawer from "@mui/material/Drawer";
+import GraphButton from "../GraphButton/GraphButton";
 import LgDrawerStyled from "../LgDrawerStyled";
 import Logo from "../Logo";
 import OpenSwaggerDialog from "../OpenSwaggerDialog";
@@ -79,6 +80,7 @@ function Menu(props) {
                 <SmallMenuLinkWithFilter />
               </List>
               <ProjectSelectSmall />
+              <GraphButton />
               <Box sx={{ height: "100%" }} />
               <OpenSwaggerDialog small />
               <Settings size={"large"} />
@@ -123,6 +125,7 @@ function Menu(props) {
               <MenuLinkWithFilter />
             </List>
             <ProjectSelect />
+            <GraphButton />
             <Status />
             <OpenSwaggerDialog />
             <Settings size={"large"} />
@@ -148,6 +151,7 @@ function Menu(props) {
                 <SmallMenuLinkWithFilter />
               </List>
               <ProjectSelectSmall />
+              <GraphButton />
               <Box sx={{ height: "100%" }} />
               <OpenSwaggerDialog small />
               <Settings size={"large"} />
@@ -179,6 +183,7 @@ function Menu(props) {
               <MenuLinkWithFilter />
             </List>
             <ProjectSelect />
+            <GraphButton />
             <Status />
             <OpenSwaggerDialog />
             <Settings size={"large"} />

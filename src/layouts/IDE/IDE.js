@@ -4,8 +4,8 @@ import Chat from "../../widgets/Chat";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import FolderIcon from "@mui/icons-material/Folder";
 import GlobalSnackMessage from "../../components/GlobalSnackMessage";
+import GraphDialog from "../../components/GraphDialog/GraphDialog";
 import Menu from "../../components/Menu";
-//import Mobile from "../../pages/ide/Mobile";
 import Onboard from "../../components/Onboard";
 import ProcessDrawer from "../../widgets/ProcessDrawer/ProcessDrawer";
 import React from "react";
@@ -79,6 +79,7 @@ function IDE() {
       <SwaggerDialog />
       <GlobalSnackMessage />
       <Chat />
+      <GraphDialog />
     </Box>
   );
 }
