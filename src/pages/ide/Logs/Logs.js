@@ -2,6 +2,8 @@ import Moment from "react-moment";
 import Page from "../../../components/Page";
 import service from "../../../service";
 import styles from "./styles";
+import { useEvent } from "@nucleoidjs/synapses";
+import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import {
   CircularProgress,
@@ -15,6 +17,14 @@ import React, { useEffect, useState } from "react";
 function Logs() {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [runtimeConnection] = useEvent("RUNTIME_CONNECTION");
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (!runtimeConnection) {
+      navigate("/");
+    }
+  }, [runtimeConnection, navigate]);
 
   useEffect(() => {
     setLoading(true);

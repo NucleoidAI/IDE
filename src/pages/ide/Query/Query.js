@@ -7,7 +7,9 @@ import RatioIconButtons from "../../../components/RatioIconButtons/RatioIconButt
 import service from "../../../service";
 import styles from "./styles";
 import { useContext } from "../../../context/context";
+import { useEvent } from "@nucleoidjs/synapses";
 import { useMonaco } from "@monaco-editor/react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Card,
@@ -28,6 +30,16 @@ function Query() {
   const [outputRatio, setOutputRatio] = React.useState(
     state.get("pages.query.outputRatio")
   );
+
+  const [runtimeConnection] = useEvent("RUNTIME_CONNECTION");
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (!runtimeConnection) {
+      navigate("/");
+    }
+  }, [runtimeConnection, navigate]);
+
   const editorRef = useRef(null);
 
   const [checked, setChecked] = useState(true);

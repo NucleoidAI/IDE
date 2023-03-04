@@ -36,7 +36,7 @@ export default function FunctionDialog() {
           path: "/" + path,
           type: type.toUpperCase(),
           definition: `${type.toLowerCase()} ${path}${
-            type === "FUNCTION" && "()"
+            type === "FUNCTION" ? "()" : ""
           } { }`,
           params: [],
           ext: "js",
