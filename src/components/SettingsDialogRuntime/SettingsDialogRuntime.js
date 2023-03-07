@@ -122,7 +122,7 @@ const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
             </Typography>
           </Box>
         </Box>
-        <BetweenComponents title={"Url"}>
+        <BetweenComponents title={"URL"}>
           <TextField
             size={"small"}
             variant={"standard"}

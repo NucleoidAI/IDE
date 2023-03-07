@@ -19,7 +19,7 @@ const SettingsDialog = ({ handleClose }) => {
     if (runtime === "sandbox") {
       url = "https://nucleoid.com/sandbox/";
     } else {
-      url = parse.protocol + "//" + parse.hostname + ":8448";
+      url = parse.protocol + "//" + parse.hostname + ":" + (parse.port || 80);
     }
 
     const description = Settings.description();
@@ -33,8 +33,9 @@ const SettingsDialog = ({ handleClose }) => {
     if (urlRef.current.runtime === "custom") {
       const url = new URL(urlRef.current.url);
 
-      const terminal = url.protocol + "//" + url.hostname + ":8448";
-      const app = url.protocol + "//" + url.hostname + ":3000";
+      const terminal =
+        url.protocol + "//" + url.hostname + ":" + (url.port || 80);
+      const app = url.protocol + "//" + url.hostname + ":" + 3000;
 
       Settings.url.terminal(terminal);
       Settings.url.app(app);
