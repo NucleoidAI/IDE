@@ -105,7 +105,7 @@ const api = {
 }
 `,
     },
-    post: {
+    put: {
       summary: "Update item",
       description: "Update item",
       params: [
@@ -258,7 +258,7 @@ const api = {
 }
 `,
     },
-    post: {
+    put: {
       summary: "Update order",
       description: "Update order",
       params: [
