@@ -279,7 +279,7 @@ function contextReducer(state, { type, payload }) {
           description: `Get ${className}`,
           "x-nuc-action": `function action(req) {\n  const ${resource} = req.params.${resource};\n  return ${className}[${resource}];\n}\n`,
         },
-        post: {
+        put: {
           ...template,
           summary: `Update ${className}`,
           description: `Update ${className}`,

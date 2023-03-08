@@ -130,16 +130,22 @@ const api = {
       },
       response: { $ref: "#/components/schemas/Item" },
       "x-nuc-action": `function action(req) {
+  const item = Item[req.params.item];
   const name = req.body.name;
-  const barcode = req.body.barcode;  
+  const barcode = req.body.barcode;
 
-  const check = Item.find(i => i.barcode === barcode);
+  if (!item) {
+    return;
+  }
 
-  if(check) {
+  const check = Item.find(
+    i => i.barcode === barcode && i.barcode !== item.barcode
+  );
+
+  if (check) {
     throw "DUPLICATE_BARCODE";
   }
 
-  const item = Item[req.params.item];
   item.name = name;
   item.barcode = barcode;
 
@@ -283,14 +289,18 @@ const api = {
       },
       response: { $ref: "#/components/schemas/Order" },
       "x-nuc-action": `function action(req) {
+  const order = Order[req.params.order];
   const item = Item[req.body.item];
   const qty = req.body.qty;
+
+  if (!order) {
+    return;
+  }
 
   if (!item) {
     throw "INVALID_ITEM";
   }
 
-  const order = Order[req.params.order];
   order.item = item;
   order.qty = qty;
 
