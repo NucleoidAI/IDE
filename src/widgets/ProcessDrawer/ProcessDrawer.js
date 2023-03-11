@@ -6,8 +6,8 @@ import LoginIcon from "@mui/icons-material/Login";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import PostmanIcon from "../../icons/Postman";
 import Project from "../../project";
-import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import SaveIcon from "@mui/icons-material/Save";
+import SchoolIcon from "@mui/icons-material/School";
 import Settings from "../../settings";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import { deepCopy } from "../../utils/DeepCopy";
@@ -161,9 +161,11 @@ const ProcessDrawer = () => {
               <PostmanIcon sx={styles.listItem} />
             </ListItemButton>
           </Tooltip>
-          <Tooltip placement="left" title="Deploy (Coming soon)">
-            <ListItemButton>
-              <RocketLaunchIcon sx={styles.listItem} />
+          <Tooltip placement="left" title="Open Nucleoid Edication">
+            <ListItemButton
+              onClick={() => publish("EDICATION_DRAWER_OPENED", true)}
+            >
+              <SchoolIcon sx={styles.listItem} />
             </ListItemButton>
           </Tooltip>
           <Tooltip placement="left" title="Download project">

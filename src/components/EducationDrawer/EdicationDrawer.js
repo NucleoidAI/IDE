@@ -1,0 +1,106 @@
+import React from "react";
+import SchoolIcon from "@mui/icons-material/School";
+import service from "../../service";
+import { useEvent } from "@nucleoidjs/synapses";
+import {
+  Box,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  Typography,
+} from "@mui/material";
+
+const Edications = React.memo(function Edications({ educations }) {
+  return (
+    <Box
+      variant="permanent"
+      sx={{
+        width: 400,
+        "& .MuiDrawer-paper": {
+          width: 400,
+          bgcolor: "red",
+        },
+      }}
+      role="presentation"
+    >
+      <Box
+        sx={{
+          width: "100%",
+          p: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 1,
+          bgcolor: "#c9c9c9",
+        }}
+      >
+        <SchoolIcon fontSize="medium" />
+        <Typography variant="h5" sx={{ color: "#1d894f" }}>
+          Nucleoid
+        </Typography>
+        <Typography variant="h5">education</Typography>
+      </Box>
+      <List>
+        {educations.map((item, index) => (
+          <ListItem key={index} disablePadding>
+            <ListItemButton>
+              {item.type === "twitch" && (
+                <iframe
+                  src={item.url}
+                  height="300"
+                  width="400"
+                  title={index}
+                  allowFullScreen
+                ></iframe>
+              )}
+              {item.type === "youtube" && (
+                <iframe
+                  width="400"
+                  height="300"
+                  src={item.url}
+                  title={index}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                ></iframe>
+              )}
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+});
+
+const EdicationDrawer = () => {
+  const [event, publish] = useEvent("EDICATION_DRAWER_OPENED", false);
+  const [educations, setEducations] = React.useState([]);
+
+  React.useEffect(() => {
+    service.getConfig().then((result) => {
+      setEducations([...result.data.education]);
+    });
+  }, []);
+
+  const handleClose = () => {
+    publish("EDICATION_DRAWER_OPENED", false);
+  };
+
+  return (
+    <Box component="nav">
+      <React.Fragment key={"right"}>
+        <Drawer
+          open={event}
+          variant="temporary"
+          anchor={"right"}
+          onClose={handleClose}
+        >
+          <Edications educations={educations} />
+        </Drawer>
+      </React.Fragment>
+    </Box>
+  );
+};
+
+export default EdicationDrawer;

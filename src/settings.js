@@ -2,6 +2,7 @@ const Settings = {
   projects: [],
   dialog: {},
   url: {
+    base: "https://nucleoid.com",
     terminal: (url) => {
       if (url) {
         localStorage.setItem("terminal", url);

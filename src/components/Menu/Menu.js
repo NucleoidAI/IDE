@@ -59,7 +59,7 @@ function Menu(props) {
   const SmallMenuLinkWithFilter = () => withFilter(SmallMenuLinks)(props);
 
   return (
-    <Box component="nav" sx={{ flexShrink: { md: 0 }, zIndex: 1300 }}>
+    <Box component="nav" sx={{ flexShrink: { md: 0 } }}>
       {matchDownMD ? (
         <>
           {!openMd && (
