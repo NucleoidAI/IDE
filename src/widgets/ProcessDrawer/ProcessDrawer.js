@@ -4,8 +4,8 @@ import DownloadIcon from "@mui/icons-material/Download";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LoginIcon from "@mui/icons-material/Login";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
-import PostmanIcon from "../../icons/Postman";
 import Project from "../../project";
+import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import SaveIcon from "@mui/icons-material/Save";
 import SchoolIcon from "@mui/icons-material/School";
 import Settings from "../../settings";
@@ -156,16 +156,16 @@ const ProcessDrawer = () => {
               <LoginIcon sx={styles.listItem} />
             </ListItemButton>
           </Tooltip>
-          <Tooltip placement="left" title="Open Postman (Coming soon)">
-            <ListItemButton>
-              <PostmanIcon sx={styles.listItem} />
-            </ListItemButton>
-          </Tooltip>
-          <Tooltip placement="left" title="Open Nucleoid Edication">
+          <Tooltip placement="left" title="Open Nucleoid Education">
             <ListItemButton
               onClick={() => publish("EDICATION_DRAWER_OPENED", true)}
             >
               <SchoolIcon sx={styles.listItem} />
+            </ListItemButton>
+          </Tooltip>
+          <Tooltip placement="left" title="Deploy (Coming soon)">
+            <ListItemButton>
+              <RocketLaunchIcon sx={styles.listItem} />
             </ListItemButton>
           </Tooltip>
           <Tooltip placement="left" title="Download project">

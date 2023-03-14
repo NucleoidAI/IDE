@@ -10,6 +10,7 @@ const Educations = React.memo(({ educations }) => {
     <Box
       variant="permanent"
       sx={{
+        mt: 2,
         width: 400,
         "& .MuiDrawer-paper": {
           width: 400,
