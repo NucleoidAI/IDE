@@ -5,7 +5,7 @@ import service from "../../service";
 import { useEvent } from "@nucleoidjs/synapses";
 import { Box, Drawer, List, ListItem, ListItemButton } from "@mui/material";
 
-const Edications = React.memo(function Edications({ educations }) {
+const Educations = React.memo(({ educations }) => {
   return (
     <Box
       variant="permanent"
@@ -66,7 +66,7 @@ const Edications = React.memo(function Edications({ educations }) {
   );
 });
 
-const EdicationDrawer = () => {
+const EducationDrawer = () => {
   const [event, publish] = useEvent("EDICATION_DRAWER_OPENED", false);
   const [educations, setEducations] = React.useState([]);
 
@@ -89,11 +89,11 @@ const EdicationDrawer = () => {
           anchor={"right"}
           onClose={handleClose}
         >
-          <Edications educations={educations} />
+          <Educations educations={educations} />
         </Drawer>
       </React.Fragment>
     </Box>
   );
 };
 
-export default EdicationDrawer;
+export default EducationDrawer;

@@ -1,1 +1,1 @@
-export { default } from "./EdicationDrawer";
+export { default } from "./EducationDrawer";

@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import BusinessIcon from "@mui/icons-material/Business";
 import Chat from "../../widgets/Chat";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import EdicationDrawer from "../../components/EducationDrawer/EdicationDrawer";
+import EducationDrawer from "../../components/EducationDrawer/EducationDrawer";
 import FolderIcon from "@mui/icons-material/Folder";
 import GlobalSnackMessage from "../../components/GlobalSnackMessage";
 import GraphDialog from "../../components/GraphDialog/GraphDialog";
@@ -72,7 +72,7 @@ function IDE() {
         list={matchDownSM && Settings.plugin() ? listMobile : list}
         title="IDE"
       />
-      <EdicationDrawer />
+      <EducationDrawer />
       <Box sx={styles.content}>
         <Outlet />
       </Box>
