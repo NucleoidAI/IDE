@@ -143,6 +143,10 @@ const getGraph = () => {
   return axios.get(Settings.url.terminal() + "/graph");
 };
 
+const getConfig = () => {
+  return axios.get(Settings.url.base + "/config");
+};
+
 const createSandbox = (context) => {
   const data = {
     functions: context.functions,
@@ -176,6 +180,7 @@ const service = {
   createSandbox,
   getCodeFromGithub,
   getGraph,
+  getConfig,
 };
 
 export default service;

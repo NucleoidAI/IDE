@@ -4,7 +4,7 @@ import styles from "./styles";
 import { Box, Typography } from "@mui/material";
 
 function Logo(props) {
-  const { title } = props;
+  const { title, beta = true } = props;
 
   return (
     <Box sx={styles.root}>
@@ -17,9 +17,11 @@ function Logo(props) {
           {Settings.plugin() || title}
         </Typography>
         &nbsp;
-        <Typography className={"neon"}>
-          <sub>{Settings.plugin() ? "" : "Beta"}</sub>
-        </Typography>
+        {beta && (
+          <Typography className={"neon"}>
+            <sub>{Settings.plugin() ? "" : "Beta"}</sub>
+          </Typography>
+        )}
       </Box>
     </Box>
   );
