@@ -1,15 +1,9 @@
+import Logo from "../Logo";
 import React from "react";
 import SchoolIcon from "@mui/icons-material/School";
 import service from "../../service";
 import { useEvent } from "@nucleoidjs/synapses";
-import {
-  Box,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  Typography,
-} from "@mui/material";
+import { Box, Drawer, List, ListItem, ListItemButton } from "@mui/material";
 
 const Edications = React.memo(function Edications({ educations }) {
   return (
@@ -32,14 +26,13 @@ const Edications = React.memo(function Edications({ educations }) {
           alignItems: "center",
           justifyContent: "center",
           gap: 1,
-          bgcolor: "#c9c9c9",
         }}
       >
-        <SchoolIcon fontSize="medium" />
-        <Typography variant="h5" sx={{ color: "#1d894f" }}>
-          Nucleoid
-        </Typography>
-        <Typography variant="h5">education</Typography>
+        <Box display="flex" alignItems="center">
+          <SchoolIcon fontSize="large" color={"primary"} />
+          &nbsp;&nbsp;
+          <Logo title={"Education"} beta={false} />
+        </Box>
       </Box>
       <List>
         {educations.map((item, index) => (
