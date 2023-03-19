@@ -1,6 +1,8 @@
 import State from "../state";
 import { contextReducer } from "../context/reducer";
 
+jest.mock("@nucleoidjs/synapses", () => {});
+
 test("Resolve context with property", () => {
   const state = contextReducer(State.init(), {
     type: "SET_SELECTED_API",

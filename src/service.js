@@ -44,7 +44,7 @@ const getCodeFromGithub = () => {
         if (popup.location.href) {
           resolve(popup.location.href.split("?code=")[1]);
         } else {
-          reject({ error: "USER_CLOSED_PAGE" });
+          reject({ error: "POPUP_FORCE_CLOSED" });
         }
       }
     }, 700);

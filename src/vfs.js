@@ -87,7 +87,6 @@ const init = (files) => {
     files.map((file) => file.key),
     options,
     system,
-    // TODO Test createSemanticDiagnosticsBuilderProgram,
     typescript.createEmitAndSemanticDiagnosticsBuilderProgram,
     (diagnostic) => {
       diagnostics.push(diagnostic);
@@ -111,7 +110,10 @@ const upsert = (path, data) => {
   host.writeFile(path, data);
 };
 
-const remove = () => {};
+const remove = (path) => {
+  fsMap.delete(path);
+  host.writeFile(path, "");
+};
 
 const vfs = { init, upsert, remove, fsMap };
 export default vfs;

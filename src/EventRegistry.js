@@ -8,8 +8,12 @@ const EventRegistry = () => {
 
   React.useEffect(() => {
     subscribe("CONTEXT_CHANGED", ({ files }) => {
-      files.forEach((item) => {
-        vfs.upsert(item.key, item.value);
+      files.forEach(({ key, value }) => {
+        if (value) {
+          vfs.upsert(key, value);
+        } else {
+          vfs.remove(key);
+        }
       });
     });
   }, []);

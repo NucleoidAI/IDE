@@ -1,5 +1,6 @@
 import State from "../state";
 import project from "../project";
+import { publish } from "@nucleoidjs/synapses";
 import { v4 as uuid } from "uuid";
 
 function contextReducer(state, { type, payload }) {
@@ -165,17 +166,28 @@ function contextReducer(state, { type, payload }) {
         definition,
         params,
       });
+
+      publish("CONTEXT_CHANGED", {
+        files: [{ key: `${path}.${ext}`, value: definition }],
+      });
+
       break;
     }
 
     case "DELETE_FUNCTION": {
       const { path } = payload;
+
       if (nucleoid.functions.length > 1) {
         const index = nucleoid.functions.findIndex(
           (data) => data.path === path
         );
 
+        const fn = nucleoid.functions[index];
         nucleoid.functions.splice(index, 1);
+
+        publish("CONTEXT_CHANGED", {
+          files: [{ key: `${fn.path}.${fn.ext}` }],
+        });
         state.pages.functions.selected = nucleoid.functions[0].path;
       }
 
@@ -293,20 +305,29 @@ function contextReducer(state, { type, payload }) {
         },
       };
 
-      functions.push({
+      const sample = {
         definition: `class ${className} {\n  constructor() {\n  }\n}\n`,
         ext: "js",
         params: [],
         path: `/${className}`,
         type: "CLASS",
+      };
+
+      functions.push(sample);
+
+      publish("CONTEXT_CHANGED", {
+        files: [
+          { key: `${sample.path}.${sample.ext}`, value: sample.definition },
+        ],
       });
+
       break;
     }
 
     default:
   }
 
-  console.debug("contextReducer", state);
+  console.debug("contextReducer", type, state);
   project.updateCurrent(state);
   return state;
 }

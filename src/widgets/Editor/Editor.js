@@ -29,7 +29,7 @@ const options = {
 const Editor = React.forwardRef((props, ref) => {
   const { api, functions, query } = props;
   const editorRef = React.useRef(null);
-  const timer = React.useRef();
+  const timerRef = React.useRef();
   const [open, setOpen] = React.useState(false);
   const [context] = useContext();
   const [, , , handleSaveProject] = useService();
@@ -54,7 +54,7 @@ const Editor = React.forwardRef((props, ref) => {
           startColumn: 1,
           endLineNumber: 1,
           endColumn: 1000,
-          message: "Need action method",
+          message: "Need action function",
           severity: 1,
         },
       ]);
@@ -63,7 +63,13 @@ const Editor = React.forwardRef((props, ref) => {
   }, [api]);
 
   function handleChange(e) {
-    checkFunction() && lint();
+    clearTimeout(timerRef.current);
+
+    timerRef.current = setTimeout(() => {
+      compile();
+      checkFunction();
+      lint();
+    }, 400);
 
     if (api) {
       const selected = context.pages.api.selected;
@@ -84,6 +90,7 @@ const Editor = React.forwardRef((props, ref) => {
 
   const compile = React.useCallback(() => {
     let key;
+
     if (api) {
       const { path, method } = context.get("pages.api.selected");
       key = path + "." + method + ".ts";
@@ -98,34 +105,28 @@ const Editor = React.forwardRef((props, ref) => {
   }, [api, context]);
 
   const lint = React.useCallback(() => {
-    clearTimeout(timer.current);
+    const editor = editorRef?.current?.editor;
+    const monaco = editorRef?.current?.monaco;
+    const result = linter.verify(editor.getValue(), options);
 
-    timer.current = setTimeout(() => {
-      compile();
-
-      const editor = editorRef?.current?.editor;
-      const monaco = editorRef?.current?.monaco;
-      const result = linter.verify(editor.getValue(), options);
-
-      monaco.editor.setModelMarkers(
-        editor.getModel(),
-        "action",
-        result.map((item) => {
-          return {
-            startLineNumber: item.line,
-            startColumn: item.column,
-            endLineNumber: item.endLine,
-            endColumn: item.endColumn,
-            message: item.message,
-            severity:
-              item.severity === 1
-                ? monaco.MarkerSeverity.Warning
-                : monaco.MarkerSeverity.Error,
-          };
-        })
-      );
-    }, 400);
-  }, [compile]);
+    monaco.editor.setModelMarkers(
+      editor.getModel(),
+      "action",
+      result.map((item) => {
+        return {
+          startLineNumber: item.line,
+          startColumn: item.column,
+          endLineNumber: item.endLine,
+          endColumn: item.endColumn,
+          message: item.message,
+          severity:
+            item.severity === 1
+              ? monaco.MarkerSeverity.Warning
+              : monaco.MarkerSeverity.Error,
+        };
+      })
+    );
+  }, []);
 
   function handleEditorDidMount(editor, monaco) {
     const nucFuncs = context.nucleoid.functions;
@@ -148,10 +149,6 @@ const Editor = React.forwardRef((props, ref) => {
         item.ext === "js" ? "javascript" : "typescript",
         pth
       );
-    });
-
-    editor.onDidBlurEditorWidget(() => {
-      compile();
     });
 
     editor.addAction({
