@@ -158,7 +158,7 @@ const ProcessDrawer = () => {
           </Tooltip>
           <Tooltip placement="left" title="Open Nucleoid Education">
             <ListItemButton
-              onClick={() => publish("EDICATION_DRAWER_OPENED", true)}
+              onClick={() => publish("EDUCATION_DRAWER_OPENED", true)}
             >
               <SchoolIcon sx={styles.listItem} />
             </ListItemButton>

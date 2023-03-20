@@ -30,7 +30,7 @@ const Educations = React.memo(({ educations }) => {
         }}
       >
         <Box display="flex" alignItems="center">
-          <SchoolIcon fontSize="large" color={"primary"} />
+          <SchoolIcon fontSize="large" sx={{ color: "custom.grey" }} />
           &nbsp;&nbsp;
           <Logo title={"Education"} beta={false} />
         </Box>
@@ -68,7 +68,7 @@ const Educations = React.memo(({ educations }) => {
 });
 
 const EducationDrawer = () => {
-  const [event, publish] = useEvent("EDICATION_DRAWER_OPENED", false);
+  const [event, publish] = useEvent("EDUCATION_DRAWER_OPENED", false);
   const [educations, setEducations] = React.useState([]);
 
   React.useEffect(() => {
@@ -78,7 +78,7 @@ const EducationDrawer = () => {
   }, []);
 
   const handleClose = () => {
-    publish("EDICATION_DRAWER_OPENED", false);
+    publish("EDUCATION_DRAWER_OPENED", false);
   };
 
   return (
