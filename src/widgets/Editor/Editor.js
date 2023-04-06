@@ -4,13 +4,22 @@ import React from "react";
 import { contextToMap } from "../../utils/Parser";
 import linter from "../../linter";
 import { parser } from "react-nucleoid";
-import prettier from "../../prettier";
-import prettierPlugins from "../../prettierPlugins";
 import { publish } from "@nucleoidjs/synapses";
 import rules from "./rules";
 import { useContext } from "../../context/context";
 import useService from "../../hooks/useService";
 import { Backdrop, Box } from "@mui/material";
+
+import * as angularPlugin from "prettier/parser-angular";
+import * as babelPlugin from "prettier/parser-babel";
+import * as glimmerPlugin from "prettier/parser-glimmer";
+import * as graphqlPlugin from "prettier/parser-graphql";
+import * as htmlPlugin from "prettier/parser-html";
+import * as markdownPlugin from "prettier/parser-markdown";
+import * as meriyahPlugin from "prettier/parser-meriyah";
+import * as prettierStandalone from "prettier/standalone";
+import * as typescriptPlugin from "prettier/parser-typescript";
+import * as yamlPlugin from "prettier/parser-yaml";
 
 const options = {
   env: {
@@ -34,6 +43,18 @@ const Editor = React.forwardRef((props, ref) => {
   const [context] = useContext();
   const [, , , handleSaveProject] = useService();
   const file = getFile(context, props);
+
+  const plugins = [
+    angularPlugin,
+    babelPlugin,
+    glimmerPlugin,
+    graphqlPlugin,
+    htmlPlugin,
+    markdownPlugin,
+    meriyahPlugin,
+    typescriptPlugin,
+    yamlPlugin,
+  ];
 
   const checkFunction = React.useCallback(() => {
     const editor = editorRef?.current?.editor;
@@ -174,9 +195,9 @@ const Editor = React.forwardRef((props, ref) => {
           options
         );
 
-        const formatted = prettier.format(result.output, {
+        const formatted = prettierStandalone.format(result.output, {
           parser: "babel",
-          plugins: prettierPlugins,
+          plugins: plugins,
         });
 
         return [
@@ -194,9 +215,9 @@ const Editor = React.forwardRef((props, ref) => {
         provideDocumentRangeFormattingEdits(model, range, options) {
           const text = model.getValue();
 
-          const formatted = prettier.format(text, {
-            parser: "babel",
-            plugins: prettierPlugins,
+          const formatted = prettierStandalone.format(text, {
+            // parser: "babel",
+            plugins: plugins,
           });
 
           return [

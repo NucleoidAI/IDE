@@ -15,11 +15,20 @@ import Paper from "@mui/material/Paper";
 import React from "react";
 import SendIcon from "@mui/icons-material/Send";
 import Settings from "../../settings";
+import { deepCopy } from "../../utils/DeepCopy";
 import service from "../../service";
 import { Button, DialogTitle, IconButton, TextField } from "@mui/material";
-import { deepCopy } from "../../utils/DeepCopy"; //eslint-disable-line
-import prettier from "../../prettier";
-import prettierPlugins from "../../prettierPlugins";
+
+import * as angularPlugin from "prettier/parser-angular";
+import * as babelPlugin from "prettier/parser-babel";
+import * as glimmerPlugin from "prettier/parser-glimmer";
+import * as graphqlPlugin from "prettier/parser-graphql";
+import * as htmlPlugin from "prettier/parser-html";
+import * as markdownPlugin from "prettier/parser-markdown";
+import * as meriyahPlugin from "prettier/parser-meriyah";
+import * as prettierStandalone from "prettier/standalone";
+import * as typescriptPlugin from "prettier/parser-typescript";
+import * as yamlPlugin from "prettier/parser-yaml";
 
 function PaperComponent(props) {
   return (
@@ -42,6 +51,18 @@ export default function OpenAI({ functions, editor }) {
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchorEl2, setAnchorEl2] = React.useState(null);
+
+  const plugins = [
+    angularPlugin,
+    babelPlugin,
+    glimmerPlugin,
+    graphqlPlugin,
+    htmlPlugin,
+    markdownPlugin,
+    meriyahPlugin,
+    typescriptPlugin,
+    yamlPlugin,
+  ];
 
   const data = React.useRef({
     request: "",
@@ -110,22 +131,20 @@ export default function OpenAI({ functions, editor }) {
 
       withLine.splice(lineNumber, 0, response);
       const res = withLine.join("\n");
-      const prettyText = prettier.format(res, {
-        parser: "babel",
-        plugins: prettierPlugins,
+      const prettyText = prettierStandalone.format(res, {
+        plugins,
       });
 
       mEditor.getModel().setValue(prettyText);
     } else {
-      const action = prettier.format(
+      const action = prettierStandalone.format(
         `
       function action(req) {
         ${response}
       }
       `,
         {
-          parser: "babel",
-          plugins: prettierPlugins,
+          plugins,
         }
       );
       mEditor.getModel().setValue(action);
