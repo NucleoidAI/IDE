@@ -153,7 +153,7 @@ const Editor = React.forwardRef((props, ref) => {
 
     editor.addAction({
       id: "saveEvent",
-      label: "saveEvent",
+      label: "Save Project",
       keybindings: [
         monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS,
         monaco.KeyMod.chord(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS),
@@ -167,18 +167,47 @@ const Editor = React.forwardRef((props, ref) => {
       },
     });
 
-    editor.addAction({
-      id: "lintEvent",
-      label: "lintEvent",
-      keybindings: [
-        monaco.KeyMod.Shift | monaco.KeyMod.Alt | monaco.KeyCode.KeyF,
-        monaco.KeyMod.chord(
-          monaco.KeyMod.Shift | monaco.KeyMod.Alt | monaco.KeyCode.KeyF
-        ),
-      ],
+    monaco.languages.registerDocumentFormattingEditProvider("javascript", {
+      provideDocumentFormattingEdits(model, options) {
+        const result = linter.verifyAndFix(
+          getFile(context, props).code,
+          options
+        );
 
-      run: (e) => lintEvent(e),
+        const formatted = prettier.format(result.output, {
+          parser: "babel",
+          plugins: prettierPlugins,
+        });
+
+        return [
+          {
+            range: model.getFullModelRange(),
+            text: formatted,
+          },
+        ];
+      },
     });
+
+    monaco.languages.registerDocumentRangeFormattingEditProvider(
+      { language: "javascript", exclusive: true },
+      {
+        provideDocumentRangeFormattingEdits(model, range, options) {
+          const text = model.getValue();
+
+          const formatted = prettier.format(text, {
+            parser: "babel",
+            plugins: prettierPlugins,
+          });
+
+          return [
+            {
+              range: model.getFullModelRange(),
+              text: formatted,
+            },
+          ];
+        },
+      }
+    );
 
     editorRef.current = { editor: editor, monaco: monaco };
 
@@ -194,23 +223,6 @@ const Editor = React.forwardRef((props, ref) => {
       checkFunction() && lint();
     }
   }, [context, checkFunction, api, lint]);
-
-  const lintEvent = (e) => {
-    try {
-      const result = linter.verifyAndFix(getFile(context, props).code, options);
-      const prettyText = prettier.format(result.output, {
-        parser: "babel",
-        plugins: prettierPlugins,
-      });
-
-      const pos = e.getPosition();
-      handleChange(prettyText);
-      editorRef.current.editor.getModel().setValue(prettyText);
-      e.setPosition(pos);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   return (
     <Box sx={{ height: "100%" }}>
