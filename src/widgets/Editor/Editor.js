@@ -4,13 +4,22 @@ import React from "react";
 import { contextToMap } from "../../utils/Parser";
 import linter from "../../linter";
 import { parser } from "react-nucleoid";
-import prettier from "../../prettier";
-import prettierPlugins from "../../prettierPlugins";
 import { publish } from "@nucleoidjs/synapses";
 import rules from "./rules";
 import { useContext } from "../../context/context";
 import useService from "../../hooks/useService";
 import { Backdrop, Box } from "@mui/material";
+
+import * as angularPlugin from "prettier/parser-angular";
+import * as babelPlugin from "prettier/parser-babel";
+import * as glimmerPlugin from "prettier/parser-glimmer";
+import * as graphqlPlugin from "prettier/parser-graphql";
+import * as htmlPlugin from "prettier/parser-html";
+import * as markdownPlugin from "prettier/parser-markdown";
+import * as meriyahPlugin from "prettier/parser-meriyah";
+import * as prettierStandalone from "prettier/standalone";
+import * as typescriptPlugin from "prettier/parser-typescript";
+import * as yamlPlugin from "prettier/parser-yaml";
 
 const options = {
   env: {
@@ -34,6 +43,18 @@ const Editor = React.forwardRef((props, ref) => {
   const [context] = useContext();
   const [, , , handleSaveProject] = useService();
   const file = getFile(context, props);
+
+  const plugins = [
+    angularPlugin,
+    babelPlugin,
+    glimmerPlugin,
+    graphqlPlugin,
+    htmlPlugin,
+    markdownPlugin,
+    meriyahPlugin,
+    typescriptPlugin,
+    yamlPlugin,
+  ];
 
   const checkFunction = React.useCallback(() => {
     const editor = editorRef?.current?.editor;
@@ -153,7 +174,7 @@ const Editor = React.forwardRef((props, ref) => {
 
     editor.addAction({
       id: "saveEvent",
-      label: "saveEvent",
+      label: "Save Project",
       keybindings: [
         monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS,
         monaco.KeyMod.chord(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS),
@@ -167,18 +188,47 @@ const Editor = React.forwardRef((props, ref) => {
       },
     });
 
-    editor.addAction({
-      id: "lintEvent",
-      label: "lintEvent",
-      keybindings: [
-        monaco.KeyMod.Shift | monaco.KeyMod.Alt | monaco.KeyCode.KeyF,
-        monaco.KeyMod.chord(
-          monaco.KeyMod.Shift | monaco.KeyMod.Alt | monaco.KeyCode.KeyF
-        ),
-      ],
+    monaco.languages.registerDocumentFormattingEditProvider("javascript", {
+      provideDocumentFormattingEdits(model, options) {
+        const result = linter.verifyAndFix(
+          getFile(context, props).code,
+          options
+        );
 
-      run: (e) => lintEvent(e),
+        const formatted = prettierStandalone.format(result.output, {
+          parser: "babel",
+          plugins: plugins,
+        });
+
+        return [
+          {
+            range: model.getFullModelRange(),
+            text: formatted,
+          },
+        ];
+      },
     });
+
+    monaco.languages.registerDocumentRangeFormattingEditProvider(
+      { language: "javascript", exclusive: true },
+      {
+        provideDocumentRangeFormattingEdits(model, range, options) {
+          const text = model.getValue();
+
+          const formatted = prettierStandalone.format(text, {
+            // parser: "babel",
+            plugins: plugins,
+          });
+
+          return [
+            {
+              range: model.getFullModelRange(),
+              text: formatted,
+            },
+          ];
+        },
+      }
+    );
 
     editorRef.current = { editor: editor, monaco: monaco };
 
@@ -194,23 +244,6 @@ const Editor = React.forwardRef((props, ref) => {
       checkFunction() && lint();
     }
   }, [context, checkFunction, api, lint]);
-
-  const lintEvent = (e) => {
-    try {
-      const result = linter.verifyAndFix(getFile(context, props).code, options);
-      const prettyText = prettier.format(result.output, {
-        parser: "babel",
-        plugins: prettierPlugins,
-      });
-
-      const pos = e.getPosition();
-      handleChange(prettyText);
-      editorRef.current.editor.getModel().setValue(prettyText);
-      e.setPosition(pos);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   return (
     <Box sx={{ height: "100%" }}>

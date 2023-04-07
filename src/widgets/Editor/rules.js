@@ -76,7 +76,7 @@ const format = {
   quotes: ["error", "double"],
   "comma-dangle": ["error", "never"],
   "object-curly-spacing": ["error", "always"],
-  "arrow-parens": ["error", "as-needed"],
+  // "arrow-parens": ["error", "as-needed"],
   "linebreak-style": 0,
 };
 
