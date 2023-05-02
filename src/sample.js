@@ -405,6 +405,38 @@ const functions = [
 }
 `,
   },
+  {
+    path: "/message",
+    params: [],
+    type: "FUNCTION",
+    ext: "js",
+    builtin: true,
+    definition: `function message (){ }`,
+  },
+  {
+    path: "/_",
+    params: [],
+    type: "FUNCTION",
+    ext: "js",
+    builtin: true,
+    definition: `function _ (){ }`,
+  },
+  {
+    path: "/event",
+    params: [],
+    type: "FUNCTION",
+    ext: "js",
+    builtin: true,
+    definition: `function event (){ }`,
+  },
+  {
+    path: "/uuid",
+    params: [],
+    type: "FUNCTION",
+    ext: "js",
+    builtin: true,
+    definition: `function uuid (){ }`,
+  },
 ];
 
 export { api, types, functions };

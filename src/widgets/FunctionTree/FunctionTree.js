@@ -78,8 +78,10 @@ function FunctionTree() {
       }
     }
 
-    const { params, type } = functions.find((item) => item.path === each.path);
-    graph[path].functions.push({ name, params, type });
+    const { params, type, builtin } = functions.find(
+      (item) => item.path === each.path
+    );
+    graph[path].functions.push({ name, params, type, builtin });
   }
 
   const deleteFunction = (e) => {
@@ -128,53 +130,55 @@ const compile = (folders, handleContextMenu, errors) =>
     }
 
     children = children.concat(
-      folder.functions.map((fn) => {
-        const error = errors.find((item) => {
-          const [errName] = item.file.fileName.split(".");
-          if (errName.includes(fn.name)) {
-            return item;
-          } else {
-            return null;
-          }
-        });
+      folder.functions
+        .filter((each) => !each?.builtin)
+        .map((fn) => {
+          const error = errors.find((item) => {
+            const [errName] = item.file.fileName.split(".");
+            if (errName.includes(fn.name)) {
+              return item;
+            } else {
+              return null;
+            }
+          });
 
-        return (
-          <TreeItem
-            key={`${root(folder.path)}${fn.name}`}
-            nodeId={`${root(folder.path)}${fn.name}`}
-            onContextMenu={(event) =>
-              handleContextMenu(event, `${root(folder.path)}${fn.name}`)
-            }
-            label={
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Grid sx={styles.treeItem}>
-                  <Typography style={{ font: "9px sans-serif" }}>
-                    {fn.type === "FUNCTION" ? (
-                      <span>&nbsp;&nbsp;&nbsp;&nbsp;fn</span>
-                    ) : (
-                      "class"
-                    )}
-                  </Typography>
-                  &nbsp;
-                  {`${fn.name} (${fn.params.join(", ")})`}
-                </Grid>
-                {error && (
-                  <Tooltip title={error.messageText} placement={"right"}>
-                    <Error sx={{ color: "#8f8f91" }} />
-                  </Tooltip>
-                )}
-              </Box>
-            }
-          />
-        );
-      })
+          return (
+            <TreeItem
+              key={`${root(folder.path)}${fn.name}`}
+              nodeId={`${root(folder.path)}${fn.name}`}
+              onContextMenu={(event) =>
+                handleContextMenu(event, `${root(folder.path)}${fn.name}`)
+              }
+              label={
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Grid sx={styles.treeItem}>
+                    <Typography style={{ font: "9px sans-serif" }}>
+                      {fn.type === "FUNCTION" ? (
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;fn</span>
+                      ) : (
+                        "class"
+                      )}
+                    </Typography>
+                    &nbsp;
+                    {`${fn.name} (${fn.params.join(", ")})`}
+                  </Grid>
+                  {error && (
+                    <Tooltip title={error.messageText} placement={"right"}>
+                      <Error sx={{ color: "#8f8f91" }} />
+                    </Tooltip>
+                  )}
+                </Box>
+              }
+            />
+          );
+        })
     );
 
     return (
