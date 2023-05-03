@@ -411,7 +411,7 @@ const functions = [
     type: "FUNCTION",
     ext: "js",
     builtin: true,
-    definition: `function _ (){ }`,
+    definition: `function _() {}`,
   },
   {
     path: "/event",
@@ -419,7 +419,7 @@ const functions = [
     type: "FUNCTION",
     ext: "js",
     builtin: true,
-    definition: `function event (name, data){ }`,
+    definition: `function event(name, data) {}`,
   },
   {
     path: "/uuid",
@@ -427,7 +427,15 @@ const functions = [
     type: "FUNCTION",
     ext: "js",
     builtin: true,
-    definition: `function uuid (){ }`,
+    definition: `function uuid() {}`,
+  },
+  {
+    path: "/random",
+    params: [],
+    type: "FUNCTION",
+    ext: "js",
+    builtin: true,
+    definition: `function random(length) {}`,
   },
 ];
 
