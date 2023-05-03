@@ -255,6 +255,7 @@ const Editor = React.forwardRef((props, ref) => {
         onMount={handleEditorDidMount}
         path={file.path}
         options={{
+          tabSize: 2,
           minimap: {
             enabled: false,
           },
