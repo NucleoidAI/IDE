@@ -105,12 +105,18 @@ const ProcessDrawer = () => {
         schemas: context.types,
       },
     };
-
-    return JSON.stringify(openApi);
+    return Settings.beta()
+      ? JSON.stringify({
+          functions: context.functions,
+          api: context.api,
+          types: context.types,
+        })
+      : JSON.stringify(openApi);
   };
 
   const handleDownloadContext = () => {
     const myURL = window.URL || window.webkitURL;
+
     const file = new Blob([mapContextToOpenApi(state.nucleoid)], {
       type: "text/plain",
     });
