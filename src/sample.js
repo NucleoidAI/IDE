@@ -406,14 +406,6 @@ const functions = [
 `,
   },
   {
-    path: "/message",
-    params: [],
-    type: "FUNCTION",
-    ext: "js",
-    builtin: true,
-    definition: `function message (){ }`,
-  },
-  {
     path: "/_",
     params: [],
     type: "FUNCTION",
@@ -427,7 +419,7 @@ const functions = [
     type: "FUNCTION",
     ext: "js",
     builtin: true,
-    definition: `function event (){ }`,
+    definition: `function event (name, data){ }`,
   },
   {
     path: "/uuid",
