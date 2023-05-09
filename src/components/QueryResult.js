@@ -1,4 +1,3 @@
-import "./QueryResult.css";
 import ReactJsonView from "react-json-view";
 
 function QueryResult({ json }) {

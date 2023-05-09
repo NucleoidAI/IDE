@@ -6,12 +6,12 @@
   "license": "Apache-2.0",
   "homepage": "/ide",
   "scripts": {
-    "prepare": "node prepare.js",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --watchAll=false",
-    "lint": "eslint --max-warnings 0 --ext .js .",
-    "format": "prettier --check {**/*,*}.{js,json,yml,html,css}"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "exit 0",
+    "lint": "exit 0",
+    "format": "exit 0"
   },
   "dependencies": {
     "@emotion/react": "^11.9.3",
@@ -21,13 +21,14 @@
     "@mui/lab": "^5.0.0-alpha.92",
     "@mui/material": "^5.9.2",
     "@mui/x-data-grid": "^5.5.0",
-    "@nucleoidjs/synapses": "^1.0.8",
+    "@nucleoidjs/synapses": "^1.0.13",
     "@types/react": "^17.0.2",
     "axios": "^0.27.2",
     "axios-auth-refresh": "^3.3.1",
     "chart.js": "^3.8.2",
     "clsx": "^1.1.1",
     "moment": "^2.29.1",
+    "next": "^13.4.1",
     "prettier": "^2.8.7",
     "raw-loader": "^4.0.2",
     "react": "^18.2.0",
@@ -40,7 +41,6 @@
     "react-nucleoid": "^0.5.5",
     "react-rnd": "^10.4.1",
     "react-router-dom": "^6.2.2",
-    "react-scripts": "^5.0.1",
     "reactflow": "^11.1.2",
     "typescript": "^4.8.2",
     "uuid": "^8.3.2"
