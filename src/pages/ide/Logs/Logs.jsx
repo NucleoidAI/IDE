@@ -1,5 +1,5 @@
 import Page from "../../../components/Page";
-import moment from "moment";
+import moment from 'moment';
 import service from "../../../service";
 import styles from "./styles";
 import { useEvent } from "@nucleoidjs/synapses";
