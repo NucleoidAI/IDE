@@ -6,6 +6,7 @@ import SchemaArray from "./SchemaArray";
 import SchemaObject from "./SchemaObject";
 import SchemaProperty from "./SchemaProperty";
 import SchemaView from "./SchemaView";
+import React from "react";
 import TreeView from "@mui/lab/TreeView";
 import TypeMenu from "./TypeMenu";
 
