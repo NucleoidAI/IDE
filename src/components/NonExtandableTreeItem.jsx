@@ -1,5 +1,5 @@
 import React from "react";
-import StyledTreeItem from "../components/StyledTreeItem";
+import StyledTreeItem from "./StyledTreeItem";
 import clsx from "clsx";
 import { useTreeItem } from "@mui/lab";
 

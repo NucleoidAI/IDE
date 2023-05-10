@@ -1,4 +1,4 @@
-import NonExtandableTreeItem from "../components/NonExtandableTreeItem";
+import NonExtandableTreeItem from "./NonExtandableTreeItem";
 import TypeMenu from "./TypeMenu";
 import { Box, TextField, Typography } from "@mui/material/";
 import React, { useRef, useState } from "react";

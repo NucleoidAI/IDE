@@ -25,8 +25,8 @@
     <link rel="icon" type="image/png" href="https://cdn.nucleoid.com/media/icon.png" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-    <link rel="stylesheet" href="%PUBLIC_URL%/loading.css" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="stylesheet" href="/loading.css" />
+    <link rel="manifest" href="/manifest.json" />
   </head>
 
   <body>
@@ -38,6 +38,7 @@
       <div class="nuc-logo-frame">Nucleoid</div>
     </div>
     <div id="root"></div>
+    <script type="module" src="/src/index.jsx"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-L9H12K94J4"></script>
     <script src="https://cdn.nucleoid.com/dist/eslint.bundle-8.16.0.js"></script>
     <script>
@@ -82,7 +83,7 @@
 
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
-          navigator.serviceWorker.register("%PUBLIC_URL%/service-worker.js?v=3");
+          navigator.serviceWorker.register("/ide/service-worker.js?v=3");
         });
       }
 
