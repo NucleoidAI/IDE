@@ -8,6 +8,7 @@
   "scripts": {
     "prepare": "node prepare.js",
     "test": "jest",
+    "format": "prettier --check {**/*,*}.{js,json,yml,html,css}",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint --ext js,jsx --report-unused-disable-directives --max-warnings 0",
