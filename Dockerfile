@@ -1,6 +1,6 @@
-FROM node:16
+FROM node:18
 
-COPY build /app/ide
+COPY dist /app/ide
 COPY serve.json /app
 
 EXPOSE 80
