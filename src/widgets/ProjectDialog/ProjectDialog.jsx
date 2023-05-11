@@ -115,7 +115,7 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
   const handleDelete = () => {
     setOpen(true);
     const id = select.current;
-    service.deleteProject(id).then(({ data }) => {
+    service.deleteProject(id).then(() => {
       Settings.projects = Settings.projects.filter(
         (item) => item.project !== id
       );

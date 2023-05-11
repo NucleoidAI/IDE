@@ -32,7 +32,6 @@ const NonExpandableTreeContent = React.forwardRef(function CustomContent(
   };
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
       className={clsx(className, classes.root, {
         [classes.expanded]: expanded,
@@ -42,7 +41,6 @@ const NonExpandableTreeContent = React.forwardRef(function CustomContent(
       onContextMenu={onClick}
       ref={ref}
     >
-      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
       <div onClick={handleExpansionClick} className={classes.iconContainer}>
         {icon}
       </div>

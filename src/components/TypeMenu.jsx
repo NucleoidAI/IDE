@@ -83,7 +83,7 @@ const TypeMenu = forwardRef(
             ]}
             {globalTypes && <Divider />}
             {globalTypes &&
-              types.map((item, id) => (
+              types.map((item) => (
                 <MenuItem
                   key={uuid()}
                   id={uuid()}

@@ -35,7 +35,7 @@ function SchemaObject(props) {
                   onClick={() => setTimeout(() => textField.current.focus(), 0)}
                 />
               )}
-              {!edit && <>"{value}"</>}
+              {!edit && <>&quot;{value}&quot;</>}
               <>:&nbsp;</>
             </>
           )}

@@ -9,7 +9,6 @@ function SchemaArray({
   children,
   edit,
   map,
-  type,
   types,
   setKey,
   ...other
@@ -51,7 +50,7 @@ function SchemaArray({
                   />
                 </>
               )}
-              {!edit && <>"{name}"</>}
+              {!edit && <>&quot;{name}&quot;</>}
               <>:&nbsp;</>
             </>
           )}

@@ -111,7 +111,7 @@ const getUserFromGit = (token) =>
     },
   }).then((response) => response.json());
 
-const getProjects = (limit) => {
+const getProjects = () => {
   return axios.get(Settings.service.projects);
 };
 

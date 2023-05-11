@@ -1,28 +1,38 @@
 {
   "env": {
-    "es6": true,
+    "es2020": true,
+    "browser": true,
     "node": true,
-    "mocha": true
+    "jest": true
   },
   "extends": [
     "eslint:recommended",
+    "plugin:prettier/recommended",
     "plugin:react/recommended",
-    "plugin:react/jsx-runtime",
-    "plugin:react-hooks/recommended",
-    "prettier"
+    "plugin:react-hooks/recommended"
   ],
   "parserOptions": {
-    "ecmaVersion": 2018,
+    "ecmaVersion": "latest",
     "sourceType": "module"
+  },
+  "settings": {
+    "react": {
+      "version": "18.2"
+    }
   },
   "ignorePatterns": [
     "/node_modules",
-    "/public/dist",
+    "/dist",
     "/src/dist",
+    "/public/dist",
     "/public/service-worker.js",
     "/src/defaultMap.js"
   ],
   "rules": {
+    "react/no-children-prop": "off",
+    "react/display-name": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
     "eqeqeq": ["error", "always"],
     "no-console": "off",
     "no-eval": "error",
