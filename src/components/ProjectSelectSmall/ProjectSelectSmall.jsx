@@ -10,7 +10,7 @@ export default function ProjectSelectSmall() {
   //eslint-disable-next-line
   const [context] = useContext();
   const [open, setOpen] = React.useState(false);
-  const handleClose = (event) => {
+  const handleClose = () => {
     setOpen(!open);
   };
 

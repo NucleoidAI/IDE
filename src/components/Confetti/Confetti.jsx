@@ -1,7 +1,7 @@
 import React from "react";
 import ReactCanvasConfetti from "react-canvas-confetti";
 
-const Confetti = ({ handleFire }) => {
+const Confetti = () => {
   const refAnimationInstance = React.useRef(null);
   const getInstance = React.useCallback((instance) => {
     refAnimationInstance.current = instance;

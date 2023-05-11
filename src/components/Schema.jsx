@@ -1,5 +1,6 @@
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AddIcon from "@mui/icons-material/Add";
+import React from "react";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import RemoveIcon from "@mui/icons-material/Remove";
 import SchemaArray from "./SchemaArray";

@@ -1,4 +1,4 @@
-import NonExtandableTreeItem from "../components/NonExtandableTreeItem";
+import NonExtandableTreeItem from "./NonExtandableTreeItem";
 import TypeMenu from "./TypeMenu";
 import { Box, TextField, Typography } from "@mui/material/";
 import React, { useRef, useState } from "react";
@@ -9,7 +9,6 @@ function SchemaArray({
   children,
   edit,
   map,
-  type,
   types,
   setKey,
   ...other
@@ -51,7 +50,7 @@ function SchemaArray({
                   />
                 </>
               )}
-              {!edit && <>"{name}"</>}
+              {!edit && <>&quot;{name}&quot;</>}
               <>:&nbsp;</>
             </>
           )}

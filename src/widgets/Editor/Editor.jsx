@@ -180,7 +180,7 @@ const Editor = React.forwardRef((props, ref) => {
         monaco.KeyMod.chord(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS),
       ],
 
-      run: (e) => {
+      run: () => {
         setOpen(true);
         handleSaveProject((evnt) => {
           setOpen(evnt);
@@ -212,7 +212,7 @@ const Editor = React.forwardRef((props, ref) => {
     monaco.languages.registerDocumentRangeFormattingEditProvider(
       { language: "javascript", exclusive: true },
       {
-        provideDocumentRangeFormattingEdits(model, range, options) {
+        provideDocumentRangeFormattingEdits(model) {
           const text = model.getValue();
 
           const formatted = prettierStandalone.format(text, {

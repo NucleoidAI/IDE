@@ -3,7 +3,7 @@ import React from "react";
 import StarBorder from "@mui/icons-material/StarBorder";
 import gtag from "../../gtag";
 
-const StarUsOnGithub = ({ color, clickEvent, source }) => {
+const StarUsOnGithub = ({ color, clickEvent }) => {
   return (
     <Button
       size="large"

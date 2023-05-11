@@ -1,4 +1,4 @@
-import NonExtandableTreeItem from "../components/NonExtandableTreeItem";
+import NonExtandableTreeItem from "./NonExtandableTreeItem";
 import React, { useRef, useState } from "react";
 import { TextField, Typography } from "@mui/material";
 
@@ -35,7 +35,7 @@ function SchemaObject(props) {
                   onClick={() => setTimeout(() => textField.current.focus(), 0)}
                 />
               )}
-              {!edit && <>"{value}"</>}
+              {!edit && <>&quot;{value}&quot;</>}
               <>:&nbsp;</>
             </>
           )}

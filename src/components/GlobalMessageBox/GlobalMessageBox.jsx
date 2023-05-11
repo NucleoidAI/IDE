@@ -26,7 +26,7 @@ const GlobalMessageBox = ({ children, title, handleClose }) => {
   );
 };
 
-const ProgressWithTime = ({ time }) => {
+const ProgressWithTime = () => {
   return <LinearProgress sx={{ width: "100%" }} color="inherit" />;
 };
 

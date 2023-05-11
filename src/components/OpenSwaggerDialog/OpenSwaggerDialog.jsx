@@ -1,5 +1,5 @@
-import OpenSandboxButton from "../../components/OpenSandboxButton";
-import OpenSwaggerButton from "../../components/OpenSwaggerButton";
+import OpenSandboxButton from "../OpenSandboxButton";
+import OpenSwaggerButton from "../OpenSwaggerButton";
 import React from "react";
 import Settings from "../../settings";
 import { publish, useEvent } from "@nucleoidjs/synapses";

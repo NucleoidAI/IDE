@@ -43,7 +43,7 @@ const ProcessDrawer = () => {
 
   const auth = () => {
     setBackdrop(true);
-    handleGetProject((result) => setBackdrop(false));
+    handleGetProject(() => setBackdrop(false));
   };
 
   const handleSaveProject = () => {

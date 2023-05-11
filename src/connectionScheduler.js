@@ -12,7 +12,7 @@ const scheduler = {
           metrics: data,
         });
       })
-      .catch((err) => {
+      .catch(() => {
         this.stop();
         publish("RUNTIME_CONNECTION", {
           status: false,
@@ -32,7 +32,7 @@ const scheduler = {
               metrics: data,
             });
           })
-          .catch((err) => {
+          .catch(() => {
             this.stop();
             publish("RUNTIME_CONNECTION", {
               status: false,

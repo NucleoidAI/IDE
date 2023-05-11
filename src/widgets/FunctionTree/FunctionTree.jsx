@@ -84,7 +84,7 @@ function FunctionTree() {
     graph[path].functions.push({ name, params, type, builtin });
   }
 
-  const deleteFunction = (e) => {
+  const deleteFunction = () => {
     dispatch({
       type: "DELETE_FUNCTION",
       payload: { path: selected },

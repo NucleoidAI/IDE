@@ -43,7 +43,7 @@ function SchemaProperty({
               onClick={() => setTimeout(() => textField.current.focus(), 0)}
             />
           )}
-          {!edit && <>"{name}"</>}
+          {!edit && <>&quot;{name}&quot;</>}
           :&nbsp;
           <TypeMenu
             primitive

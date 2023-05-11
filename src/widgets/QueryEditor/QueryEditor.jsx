@@ -6,7 +6,7 @@ const QueryEditor = React.forwardRef((props, ref) => {
     <MonacoEditor
       height={"100%"}
       defaultLanguage="javascript"
-      onMount={(editor, monaco) => (ref.current = editor)}
+      onMount={(editor) => (ref.current = editor)}
       options={{
         minimap: {
           enabled: false,

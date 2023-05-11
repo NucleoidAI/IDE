@@ -2,16 +2,16 @@
   "name": "ide",
   "version": "1.0.0",
   "description": "Nucleoid IDE",
-  "author": "Nuc Team",
+  "author": "NucTeam",
   "license": "Apache-2.0",
   "homepage": "/ide",
   "scripts": {
     "prepare": "node prepare.js",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --watchAll=false",
-    "lint": "eslint --max-warnings 0 --ext .js .",
-    "format": "prettier --check {**/*,*}.{js,json,yml,html,css}"
+    "test": "jest",
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext js,jsx --max-warnings 0",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@emotion/react": "^11.9.3",
@@ -27,7 +27,7 @@
     "axios-auth-refresh": "^3.3.1",
     "chart.js": "^3.8.2",
     "clsx": "^1.1.1",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "prettier": "^2.8.7",
     "raw-loader": "^4.0.2",
     "react": "^18.2.0",
@@ -36,22 +36,31 @@
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
     "react-json-view": "^1.21.3",
-    "react-moment": "^1.1.1",
-    "react-nucleoid": "^0.5.5",
+    "react-nucleoid": "^0.6.13",
     "react-rnd": "^10.4.1",
     "react-router-dom": "^6.2.2",
-    "react-scripts": "^5.0.1",
     "reactflow": "^11.1.2",
     "typescript": "^4.8.2",
-    "uuid": "^8.3.2"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.21.5",
+    "@babel/preset-react": "^7.18.6",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
+    "@vitejs/plugin-react": "^4.0.0",
+    "babel-jest": "^29.5.0",
     "eslint": "^8.17.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-config-react-app": "^7.0.1"
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
+    "react-test-renderer": "^18.2.0",
+    "vite": "^4.3.5",
+    "vite-plugin-svgr": "^3.2.0"
   },
   "overrides": {
     "react-json-view": {
@@ -61,8 +70,5 @@
     "flux": {
       "react": "$react"
     }
-  },
-  "jest": {
-    "resetMocks": false
   }
 }

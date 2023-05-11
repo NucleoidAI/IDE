@@ -1,5 +1,5 @@
-import Moment from "react-moment";
 import Page from "../../../components/Page";
+import moment from "moment";
 import service from "../../../service";
 import styles from "./styles";
 import { useEvent } from "@nucleoidjs/synapses";
@@ -60,7 +60,7 @@ function Logs() {
                 value={log.s.trim()}
               />
               <Grid container justifyContent={"center"} sx={{ mt: 1 }}>
-                <Moment date={log.d} format="MM/DD hh:mm:ss" />{" "}
+                {moment(log.d).format("MM/DD hh:mm:ss")}
                 &nbsp;&nbsp;-&nbsp;&nbsp;
                 {log.t}ms
               </Grid>
