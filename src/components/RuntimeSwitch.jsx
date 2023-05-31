@@ -1,4 +1,4 @@
-import CopyClipboard from "./CopyClipboard";
+import CopyClipboard from "@nucleoidjs/components/CopyClipboard";
 import DialogTooltip from "./DialogTootip";
 import React from "react";
 import Settings from "../settings";

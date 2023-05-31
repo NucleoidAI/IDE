@@ -5,7 +5,7 @@ import { useContext } from "../../context/context";
 import { useEvent } from "@nucleoidjs/synapses";
 import ChatWindow, {
   handleAddResponseMessage,
-} from "../../components/ChatWindow";
+} from "@nucleoidjs/components/ChatWindow";
 
 const Chat = () => {
   const [open, setOpen] = useEvent("CHAT_WINDOW", false);

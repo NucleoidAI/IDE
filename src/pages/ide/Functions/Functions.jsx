@@ -1,4 +1,4 @@
-import AddList from "../../../components/AddList";
+import AddList from "@nucleoidjs/components/AddList";
 import Editor from "../../../widgets/Editor";
 import FunctionDialog from "../../../widgets/FunctionDialog/FunctionDialog";
 import FunctionTree from "../../../widgets/FunctionTree";

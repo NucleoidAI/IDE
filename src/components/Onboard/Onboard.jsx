@@ -1,4 +1,4 @@
-import Confetti from "../Confetti";
+import Confetti from "@nucleoidjs/components/Confetti";
 import LandingDialog from "../LandingDialog";
 import MessageDialog from "../MessageDialog";
 import MessagePopper from "../MessagePopper";
