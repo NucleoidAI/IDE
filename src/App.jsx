@@ -86,16 +86,8 @@ function App() {
       });
     }
 
-    let context;
-
-    if (project.check()) {
-      context = project.get().context;
-      context.get = (prop) => State.resolve(context, prop);
-    } else {
-      project.setDemo();
-      context = project.get().context;
-      context.get = (prop) => State.resolve(context, prop);
-    }
+    let context = State.withSample();
+    context.get = (prop) => State.resolve(context, prop);
 
     const files = contextToMap(context.nucleoid);
     vfs.init(files);
