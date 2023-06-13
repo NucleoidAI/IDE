@@ -1,7 +1,8 @@
 import { FileWatcherEventKind } from "typescript/lib/tsserverlibrary";
-import { createDefaultMap } from "./dist/typescript/defaultMap";
+import { createDefaultMap } from "./dist/defaultMap";
 import { publish } from "@nucleoidjs/synapses";
 import typescript from "typescript";
+import Settings from "./settings"; //eslint-disable-line
 
 let host, program, timeout;
 
@@ -15,7 +16,8 @@ const options = {
   module: typescript.ModuleKind.ES2015,
   strict: false,
   alwaysStrict: false,
-  allowSyntheticDefaultImports: false,
+  allowSyntheticDefaultImports: true,
+  esModuleInterop: true,
   noImplicitAny: false,
   isBrowserCode: true,
   alwaysAddExport: false,
@@ -114,6 +116,12 @@ const remove = (path) => {
   fsMap.delete(path);
   host.writeFile(path, "");
 };
+
+if (Settings.debug()) {
+  fsMap.forEach((value, key) => {
+    console.log({ key: key, value: value });
+  });
+}
 
 const vfs = { init, upsert, remove, fsMap };
 export default vfs;
