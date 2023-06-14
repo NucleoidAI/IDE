@@ -405,14 +405,7 @@ const functions = [
 }
 `,
   },
-  {
-    path: "/_",
-    params: [],
-    type: "FUNCTION",
-    ext: "js",
-    builtin: true,
-    definition: `function _() {}`,
-  },
+
   {
     path: "/event",
     params: [],

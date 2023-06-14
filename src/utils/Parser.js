@@ -37,7 +37,7 @@ const contextToMap = (files) => {
         `export default ${className};`,
     });
   });
-
+  fileNames.push(`import  _ from "lodash/index";\n`);
   const imports = fileNames.join("");
 
   Object.keys(files.api).forEach((item) => {
