@@ -16,7 +16,6 @@ const options = {
   module: typescript.ModuleKind.ES2015,
   strict: false,
   alwaysStrict: false,
-  allowSyntheticDefaultImports: true,
   esModuleInterop: true,
   noImplicitAny: false,
   isBrowserCode: true,
