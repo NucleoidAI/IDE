@@ -1,16 +1,9 @@
-import {
-  ViewCarousel,
-  Folder,
-  Dashboard,
-  Business,
-  Send,
-  Storage,
-} from "@mui/icons-material";
-
 import API from "./pages/ide/API";
+import Functions from "./pages/ide/Functions";
 import Logs from "./pages/ide/Logs";
 import Query from "./pages/ide/Query";
-import Functions from "./pages/ide/Functions";
+
+import { Folder, Send, Storage, ViewCarousel } from "@mui/icons-material";
 
 const routes = [
   {

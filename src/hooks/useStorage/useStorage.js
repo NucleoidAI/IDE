@@ -1,3 +1,4 @@
+/* eslint-enable */
 import { useCallback, useEffect, useState } from "react";
 
 function useLocalStorage(key, initialValue) {
@@ -10,7 +11,7 @@ function useLocalStorage(key, initialValue) {
       const item = window.localStorage.getItem(key);
       return item ? parseJSON(item) : initialValue;
     } catch (error) {
-      console.warn(`Error reading localStorage key ${key}:`, error);
+      console.warn(`Error reading localStorage key “${key}”:`, error);
       return initialValue;
     }
   }, [initialValue, key]);
@@ -28,7 +29,7 @@ function useLocalStorage(key, initialValue) {
 
       setStoredValue(newValue);
     } catch (error) {
-      console.warn(`${key}:`, error);
+      console.warn(`Error setting localStorage key “${key}”:`, error);
     }
   };
 
@@ -43,7 +44,6 @@ function useLocalStorage(key, initialValue) {
           return;
         }
 
-        console.log("render");
         setStoredValue(readValue());
       },
       [key, readValue]);
@@ -66,3 +66,4 @@ function parseJSON(value) {
     return undefined;
   }
 }
+/* eslint-enable */
