@@ -1,6 +1,5 @@
 import ContextProvider from "./context/context";
 import EventRegistry from "./EventRegistry";
-import IDE from "./layouts/IDE";
 import React from "react";
 import Settings from "./settings";
 import State from "./state";
@@ -18,6 +17,8 @@ import {
   StyledEngineProvider,
   ThemeProvider,
 } from "@mui/material";
+
+import IDE from "./layouts/IDE"; // eslint-disable-line
 
 function App() {
   function checkMobileSize() {

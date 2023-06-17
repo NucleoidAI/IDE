@@ -9,8 +9,8 @@ import ProcessDrawer from "../../widgets/ProcessDrawer/ProcessDrawer";
 import React from "react";
 import Settings from "../../settings";
 import SwaggerDialog from "../../components/SwaggerDialog";
-import styles from "./styles";
 import routes from "../../routes";
+import styles from "./styles";
 import { Outlet } from "react-router-dom"; // eslint-disable-line
 
 function IDE() {

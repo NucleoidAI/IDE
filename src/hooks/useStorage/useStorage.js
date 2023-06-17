@@ -1,4 +1,4 @@
-/* eslint-enable */
+/* eslint-disable */
 import { useCallback, useEffect, useState } from "react";
 
 function useLocalStorage(key, initialValue) {
