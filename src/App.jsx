@@ -1,20 +1,13 @@
-import API from "./pages/ide/API";
-import BusinessFlow from "./pages/ide/BusinessFlow";
 import ContextProvider from "./context/context";
-import Dashboard from "./pages/ide/Dashboard";
-import Dev from "./pages/Dev";
 import EventRegistry from "./EventRegistry";
-import Functions from "./pages/ide/Functions";
 import IDE from "./layouts/IDE";
-import Login from "./pages/ide/login";
-import Logs from "./pages/ide/Logs";
-import Query from "./pages/ide/Query";
 import React from "react";
 import Settings from "./settings";
 import State from "./state";
 import { contextReducer } from "./context/reducer";
 import { contextToMap } from "./utils/Parser";
 import project from "./project";
+import routes from "./routes";
 import service from "./service";
 import { subscribe } from "@nucleoidjs/synapses";
 import theme from "./theme";
@@ -86,7 +79,7 @@ function App() {
       });
     }
 
-    let context = State.withSample();
+    const context = State.withSample();
     context.get = (prop) => State.resolve(context, prop);
 
     const files = contextToMap(context.nucleoid);
@@ -104,21 +97,16 @@ function App() {
             <EventRegistry />
             <Routes>
               <Route path="/" element={<IDE />}>
-                {Settings.plugin() || checkMobileSize() ? (
-                  <Route index element={<Navigate to="/dashboard" />} />
-                ) : (
-                  <Route index element={<Navigate to="/api" />} />
-                )}
-                <Route path={"/dashboard"} element={<Dashboard />} />
-                <Route path={"/businessflow"} element={<BusinessFlow />} />
-                <Route path={"/api"} element={<API />} />
-                <Route path={"/functions"} element={<Functions />} />
-                <Route path={"/query"} element={<Query />} />
-                <Route path={"/logs"} element={<Logs />} />
-                <Route path={"/sample"} element={<Navigate to="/" />} />
+                <Route index element={<Navigate to="/sample/api" />} />
+                {routes.map((route) => (
+                  <Route
+                    path={route.path}
+                    element={route.element}
+                    key={route.link}
+                  />
+                ))}
               </Route>
-              <Route path={"/dev"} element={<Dev />} />
-              <Route path={"/login"} element={<Login />} />
+              <Route path={"*"} element={<Navigate to="/" />} />
             </Routes>
           </BrowserRouter>
         </ContextProvider>

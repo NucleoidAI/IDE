@@ -131,31 +131,12 @@ const ProcessDrawer = () => {
     publish("CHAT_WINDOW", true);
   };
 
-  function visible(path) {
-    switch (path) {
-      case "/dashboard":
-        return false;
-      case "/businessflow":
-        return false;
-      case "/api":
-        return true;
-      case "/functions":
-        return true;
-      case "/query":
-        return false;
-      case "/logs":
-        return false;
-      default:
-        return false;
-    }
-  }
-
   return (
     <>
       <Drawer
         variant="persistent"
         anchor={"right"}
-        open={visible(location.pathname)}
+        open={location?.state?.anchor}
         sx={matchDownMD ? styles.drawerSmall : styles.drawer}
       >
         <Box>

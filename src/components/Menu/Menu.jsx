@@ -13,15 +13,16 @@ import { drawerWidth } from "../../config";
 import settings from "../../settings";
 import styles from "./styles";
 import { useEvent } from "@nucleoidjs/synapses";
-import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { ArrowForwardIos, DensityMedium } from "@mui/icons-material/";
+import { Link } from "react-router-dom"; // eslint-disable-line
 import {
   Box,
   Button,
   IconButton,
   List,
   ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   Tooltip,
@@ -73,7 +74,7 @@ function Menu(props) {
               }}
             >
               <List>
-                <ListItem button onClick={() => setOpenMd(true)}>
+                <ListItem onClick={() => setOpenMd(true)}>
                   <SmallLogo />
                 </ListItem>
                 <br />
@@ -144,7 +145,7 @@ function Menu(props) {
               }}
             >
               <List>
-                <ListItem button onClick={() => setOpenLg(true)}>
+                <ListItem onClick={() => setOpenLg(true)}>
                   <SmallLogo />
                 </ListItem>
                 <br />
@@ -195,7 +196,6 @@ function Menu(props) {
 }
 
 const MenuLinks = (props) => {
-  const navigate = useNavigate();
   const [runtimeConnection] = useEvent("RUNTIME_CONNECTION", {
     status: false,
     metrics: {
@@ -209,18 +209,20 @@ const MenuLinks = (props) => {
       {props.list.map(({ title, link, anchor, icon }) => {
         return (
           <React.Fragment key={title}>
-            <ListItem
+            <ListItemButton
               disabled={
                 runtimeConnection.status === false &&
                 (title === "Query" || title === "Logs")
               }
               sx={styles.listItem}
-              onClick={() => navigate(link, { state: { anchor } })}
-              button
+              component={Link}
+              to={`../${link}`}
+              state={{ anchor }}
+              relative="path"
             >
               <ListItemIcon sx={styles.listItemIcon}>{icon}</ListItemIcon>
               <ListItemText primary={title} />
-            </ListItem>
+            </ListItemButton>
           </React.Fragment>
         );
       })}
@@ -239,7 +241,6 @@ const SmallMenuLinks = (props) => {
 };
 
 const MenuItem = ({ title, link, anchor, icon }) => {
-  const navigate = useNavigate();
   const [runtimeConnection] = useEvent("RUNTIME_CONNECTION", {
     status: false,
     metrics: {
@@ -249,19 +250,21 @@ const MenuItem = ({ title, link, anchor, icon }) => {
   });
 
   return (
-    <ListItem
+    <ListItemButton
       disabled={
         runtimeConnection.status === false &&
         (title === "Query" || title === "Logs")
       }
       key={title}
-      onClick={() => navigate(link, { state: { anchor } })}
-      button
+      component={Link}
+      to={`../${link}`}
+      state={{ anchor }}
+      relative="path"
     >
       <Tooltip placement="right" title={title}>
         <Box sx={styles.listItemIconSmall}>{icon}</Box>
       </Tooltip>
-    </ListItem>
+    </ListItemButton>
   );
 };
 
