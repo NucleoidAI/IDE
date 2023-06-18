@@ -5,9 +5,7 @@ import Settings from "./settings";
 import State from "./state";
 import { contextReducer } from "./context/reducer";
 import { contextToMap } from "./utils/Parser";
-import project from "./project";
 import routes from "./routes";
-import service from "./service";
 import { subscribe } from "@nucleoidjs/synapses";
 import theme from "./theme";
 import vfs from "./vfs";
@@ -21,6 +19,8 @@ import {
 import IDE from "./layouts/IDE"; // eslint-disable-line
 
 function App() {
+  const progressElement = document.getElementById("nuc-progress-indicator");
+
   function checkMobileSize() {
     return window.innerWidth < 600 ? true : false;
   }
@@ -30,16 +30,36 @@ function App() {
     window.location.hostname === "nucleoid.com" ? 1000 - elapsed : 0;
 
   React.useEffect(() => {
-    const progressElement = document.getElementById("nuc-progress-indicator");
-
     subscribe("EDITOR_LOADING_COMPLETED", () => {
       setTimeout(() => {
         progressElement.classList.add("hidden");
       }, delay);
     });
-  }, [delay]);
+    const progressElement = document.getElementById("nuc-progress-indicator");
+  }, [delay, progressElement]);
 
-  const InitContext = () => {
+  function project(id) {
+    return new Promise((resolve, reject) => {
+      // TODO : service call
+      setTimeout(() => {
+        if (id === "2643bf5a-b03a-4eee-93f5-68bd5103beb0") {
+          const context = State.withSample();
+          context.get = (prop) => State.resolve(context, prop);
+          context.nucleoid.project = {
+            name: "Test-Project",
+            description:
+              "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore",
+            id: "2643bf5a-b03a-4eee-93f5-68bd5103beb0",
+          };
+          resolve(context);
+        }
+
+        reject("error");
+      }, 3000);
+    });
+  }
+
+  const InitContext = (context) => {
     if (!Settings.beta()) {
       Settings.beta(false);
     }
@@ -61,9 +81,7 @@ function App() {
     }
 
     if (!Settings.description()) {
-      Settings.description(
-        "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore"
-      );
+      Settings.description(context.nucleoid.project.description);
     }
 
     if (!Settings.landing()) {
@@ -74,27 +92,57 @@ function App() {
       Settings.landing({ level: 4 });
     }
 
-    if (project.isAuth()) {
-      service.getProjects().then(({ data }) => {
-        Settings.projects = [...data];
-      });
-    }
-
-    const context = State.withSample();
-    context.get = (prop) => State.resolve(context, prop);
-
     const files = contextToMap(context.nucleoid);
     vfs.init(files);
 
     return context;
   };
 
+  const [context, setContext] = React.useState();
+
+  React.useEffect(() => {
+    async function init() {
+      const id = window.location.pathname.split("/")[2];
+      let context;
+
+      if (id === "sample") {
+        context = State.withSample();
+        context.get = (prop) => State.resolve(context, prop);
+        context.nucleoid.project = {
+          name: "Sample",
+          description:
+            "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore",
+        };
+
+        return setContext(InitContext(context));
+      }
+
+      if (id) {
+        project(id)
+          .then((result) => {
+            return setContext(InitContext(result));
+          })
+          .catch(() => {
+            progressElement.classList.add("hidden");
+
+            return setContext("error");
+          });
+      }
+    }
+
+    init();
+    // eslint-disable-next-line
+  }, [progressElement.classList]);
+
+  if (!context) return null;
+  if (context === "error") return "forbidden";
+
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <ContextProvider state={InitContext()} reducer={contextReducer}>
-          <BrowserRouter basename="ide">
+        <BrowserRouter basename="ide">
+          <ContextProvider state={context} reducer={contextReducer}>
             <EventRegistry />
             <Routes>
               <Route path="/" element={<IDE />}>
@@ -102,15 +150,15 @@ function App() {
                 {routes.map((route) => (
                   <Route
                     path={route.path}
-                    element={route.element}
                     key={route.link}
+                    element={route.element}
                   />
                 ))}
               </Route>
               <Route path={"*"} element={<Navigate to="/" />} />
             </Routes>
-          </BrowserRouter>
-        </ContextProvider>
+          </ContextProvider>
+        </BrowserRouter>
       </ThemeProvider>
     </StyledEngineProvider>
   );
