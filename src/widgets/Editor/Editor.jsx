@@ -116,7 +116,7 @@ const Editor = React.forwardRef((props, ref) => {
       const { path, method } = context.get("pages.api.selected");
       key = path + "." + method + ".ts";
     } else {
-      key = context.get("pages.functions.selected") + ".js";
+      key = context.get("pages.functions.selected") + ".ts";
     }
 
     publish("CONTEXT_CHANGED", {
@@ -196,7 +196,7 @@ const Editor = React.forwardRef((props, ref) => {
         );
 
         const formatted = prettierStandalone.format(result.output, {
-          parser: "babel",
+          parser: "typescript",
           plugins: plugins,
         });
 
@@ -216,7 +216,7 @@ const Editor = React.forwardRef((props, ref) => {
           const text = model.getValue();
 
           const formatted = prettierStandalone.format(text, {
-            // parser: "babel",
+            parser: "typescript",
             plugins: plugins,
           });
 
