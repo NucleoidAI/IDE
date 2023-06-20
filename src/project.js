@@ -1,6 +1,7 @@
 import state from "./state";
 
 const project = {
+  id: "",
   check: () => {
     //const project = localStorage.getItem("project");
     const name = localStorage.getItem("name");

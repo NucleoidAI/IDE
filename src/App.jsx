@@ -40,7 +40,7 @@ function App() {
 
   function project(id) {
     return new Promise((resolve, reject) => {
-      // TODO : service call
+      // TODO : replace service call
       setTimeout(() => {
         if (id === "2643bf5a-b03a-4eee-93f5-68bd5103beb0") {
           const context = State.withSample();
@@ -59,7 +59,7 @@ function App() {
     });
   }
 
-  const InitContext = (context) => {
+  const InitVfs = (context) => {
     if (!Settings.beta()) {
       Settings.beta(false);
     }
@@ -101,7 +101,7 @@ function App() {
   const [context, setContext] = React.useState();
 
   React.useEffect(() => {
-    async function init() {
+    async function initContext() {
       const id = window.location.pathname.split("/")[2];
       let context;
 
@@ -110,27 +110,30 @@ function App() {
         context.get = (prop) => State.resolve(context, prop);
         context.nucleoid.project = {
           name: "Sample",
+          id: "Sample",
           description:
             "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore",
         };
 
-        return setContext(InitContext(context));
+        return setContext(InitVfs(context));
       }
 
       if (id) {
         project(id)
           .then((result) => {
-            return setContext(InitContext(result));
+            return setContext(InitVfs(result));
           })
           .catch(() => {
             progressElement.classList.add("hidden");
 
             return setContext("error");
           });
+      } else {
+        window.location.assign(`${window.location.href}sample/api`);
       }
     }
 
-    init();
+    initContext();
     // eslint-disable-next-line
   }, [progressElement.classList]);
 
