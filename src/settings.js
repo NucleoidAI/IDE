@@ -1,4 +1,4 @@
-import storage from "./hooks/useStorage/storage";
+import { storage } from "nuc-storage";
 
 const Settings = {
   projects: [],
@@ -45,14 +45,14 @@ const Settings = {
     if (status !== undefined && status !== null) {
       storage.set("ide", "beta", status);
     } else {
-      return storage.get("ide", "beta") === "true";
+      return storage.get("ide", "beta") === true;
     }
   },
   debug: (status) => {
     if (status !== undefined && status !== null) {
       storage.set("ide", "debug", status);
     } else {
-      return storage.get("ide", "debug") === "true";
+      return storage.get("ide", "debug") === true;
     }
   },
   runtime: (data) => {
@@ -67,6 +67,13 @@ const Settings = {
       storage.set("ide", "description", data);
     } else {
       return storage.get("ide", "description");
+    }
+  },
+  name: (data) => {
+    if (data !== undefined && data !== null) {
+      storage.set("ide", "name", data);
+    } else {
+      return storage.get("ide", "name");
     }
   },
   plugin: (data) => {
@@ -84,10 +91,7 @@ const Settings = {
     }
   },
   token: () => {
-    if (
-      localStorage.getItem("refreshToken") &&
-      localStorage.getItem("accessToken")
-    ) {
+    if (storage.get("refreshToken") && storage.get("accessToken")) {
       return true;
     } else {
       return false;

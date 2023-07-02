@@ -1,14 +1,10 @@
 import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
 import ProjectDialog from "../../widgets/ProjectDialog";
 import React from "react";
-import project from "../../project";
-import { useContext } from "../../context/context";
 
 import { Box, Button } from "@mui/material/";
 
-export default function ProjectSelect() {
-  //eslint-disable-next-line
-  const [context] = useContext();
+export default function ProjectSelect({ title }) {
   const [open, setOpen] = React.useState(false);
   const handleClose = () => {
     setOpen(!open);
@@ -23,7 +19,7 @@ export default function ProjectSelect() {
         onClick={() => setOpen(true)}
         endIcon={<ArrowDropDown />}
       >
-        {project.get().name}
+        {title}
       </Button>
       {open && <ProjectDialog handleClose={handleClose} />}
     </Box>

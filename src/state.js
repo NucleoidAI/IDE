@@ -6,7 +6,7 @@ function init() {
       api: {},
       types: {},
       functions: [],
-      project: "",
+      project: {},
     },
     pages: {
       started: false,

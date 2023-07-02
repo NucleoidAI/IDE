@@ -2,9 +2,7 @@ import Backdrop from "@mui/material/Backdrop";
 import { Chat } from "@mui/icons-material";
 import DownloadIcon from "@mui/icons-material/Download";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import LoginIcon from "@mui/icons-material/Login";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
-import Project from "../../project";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import SaveIcon from "@mui/icons-material/Save";
 import SchoolIcon from "@mui/icons-material/School";
@@ -18,9 +16,10 @@ import scheduler from "../../connectionScheduler";
 import service from "../../service";
 import styles from "./styles";
 import theme from "../../theme";
+import { useContext } from "../../context/context";
 import { useLocation } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import useService from "../../hooks/useService";
+
 import vfs from "../../vfs";
 import {
   Box,
@@ -30,29 +29,17 @@ import {
   Tooltip,
 } from "@mui/material";
 import { publish, useEvent } from "@nucleoidjs/synapses";
-import React, { useEffect, useState } from "react"; //eslint-disable-line
+import React, { useState } from "react"; //eslint-disable-line
 
 const ProcessDrawer = () => {
-  const [state, , handleGetProject, saveProject] = useService();
-
   const matchDownMD = useMediaQuery(theme.breakpoints.down("lg"));
   const location = useLocation();
+  const [state] = useContext();
 
-  const [backdrop, setBackdrop] = useState(false);
+  const [backdrop] = useState(false);
   const [link, setLink] = useState("");
 
-  const auth = () => {
-    setBackdrop(true);
-    handleGetProject(() => setBackdrop(false));
-  };
-
-  const handleSaveProject = () => {
-    setBackdrop(true);
-
-    saveProject(() => {
-      setBackdrop(false);
-    });
-  };
+  const handleSaveProject = () => {};
 
   const mapOpenApiPaths = (api) => {
     const tmpApi = deepCopy(api);
@@ -96,7 +83,8 @@ const ProcessDrawer = () => {
     const openApi = {
       openapi: "3.0.1",
       info: {
-        title: localStorage.getItem("name"),
+        // TODO : change title with project name
+        title: "",
         description: Settings.description(),
       },
       paths: mapOpenApiPaths(context.api),
@@ -131,22 +119,33 @@ const ProcessDrawer = () => {
     publish("CHAT_WINDOW", true);
   };
 
+  function visible(path) {
+    switch (path.split("/")[2]) {
+      case "api":
+        return true;
+      case "functions":
+        return true;
+      case "query":
+        return false;
+      case "logs":
+        return false;
+      default:
+        return false;
+    }
+  }
+
   return (
     <>
       <Drawer
         variant="persistent"
         anchor={"right"}
-        open={location?.state?.anchor}
+        open={visible(location?.pathname)}
         sx={matchDownMD ? styles.drawerSmall : styles.drawer}
       >
         <Box>
           <ApiButton />
           <SwaggerButton />
-          <Tooltip placement="left" title="Login with GitHub">
-            <ListItemButton onClick={auth}>
-              <LoginIcon sx={styles.listItem} />
-            </ListItemButton>
-          </Tooltip>
+
           <Tooltip placement="left" title="Open Nucleoid Education">
             <ListItemButton
               onClick={() => publish("EDUCATION_DRAWER_OPENED", true)}
@@ -164,7 +163,8 @@ const ProcessDrawer = () => {
               component={"a"}
               onClick={handleDownloadContext}
               href={link}
-              download={Project.get().name + ".openapi.json"}
+              // TODO : change with projectname
+              download={"nuc.openapi.json"}
               target="_blank"
             >
               <DownloadIcon sx={styles.listItem} />
@@ -225,11 +225,11 @@ function SwaggerButton() {
 }
 
 function ApiButton() {
-  const [state] = useService();
   const [errors] = useEvent("DIAGNOSTICS_COMPLETED", []);
   const [run] = useEvent("RUN_BUTTON_CLICKED", { status: false });
   const [loading, setLoading] = useState(false);
   const runtime = Settings.runtime();
+  const [state] = useContext();
 
   React.useEffect(() => {
     if (run.status) {

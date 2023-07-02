@@ -7,7 +7,6 @@ import { parser } from "react-nucleoid";
 import { publish } from "@nucleoidjs/synapses";
 import rules from "./rules";
 import { useContext } from "../../context/context";
-import useService from "../../hooks/useService";
 import { Backdrop, Box } from "@mui/material";
 
 import * as angularPlugin from "prettier/parser-angular";
@@ -41,7 +40,7 @@ const Editor = React.forwardRef((props, ref) => {
   const timerRef = React.useRef();
   const [open, setOpen] = React.useState(false);
   const [context] = useContext();
-  const [, , , handleSaveProject] = useService();
+
   const file = getFile(context, props);
 
   const plugins = [
@@ -182,9 +181,7 @@ const Editor = React.forwardRef((props, ref) => {
 
       run: () => {
         setOpen(true);
-        handleSaveProject((evnt) => {
-          setOpen(evnt);
-        });
+        // TODO SAVE PROJECT
       },
     });
 

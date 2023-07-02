@@ -84,6 +84,10 @@ function App() {
       Settings.description(context.nucleoid.project.description);
     }
 
+    if (!Settings.name()) {
+      Settings.name(context.nucleoid.project.name);
+    }
+
     if (!Settings.landing()) {
       Settings.landing({ level: 0 });
     }
@@ -158,6 +162,7 @@ function App() {
                   />
                 ))}
               </Route>
+              <Route path={"/graph"} />
               <Route path={"*"} element={<Navigate to="/" />} />
             </Routes>
           </ContextProvider>

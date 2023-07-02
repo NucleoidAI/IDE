@@ -1,10 +1,11 @@
 import Settings from "./settings";
 import axios from "axios";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
+import { storage } from "nuc-storage";
 
 const refreshAuthLogic = async (failedRequest) => {
-  const refreshToken = localStorage.getItem("refreshToken");
-  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = storage.get("refreshToken");
+  const accessToken = storage.get("accessToken");
 
   let tokenRefreshResponse;
 
@@ -15,8 +16,8 @@ const refreshAuthLogic = async (failedRequest) => {
   } else {
     tokenRefreshResponse = await auth({ refreshToken: refreshToken });
   }
-  localStorage.setItem("accessToken", tokenRefreshResponse.accessToken);
-  localStorage.setItem("refreshToken", tokenRefreshResponse.refreshToken);
+  storage.set("accessToken", tokenRefreshResponse.accessToken);
+  storage.set("refreshToken", tokenRefreshResponse.refreshToken);
 
   failedRequest.response.config.headers["Authorization"] =
     "Bearer " + tokenRefreshResponse.accessToken;
@@ -25,7 +26,7 @@ const refreshAuthLogic = async (failedRequest) => {
 createAuthRefreshInterceptor(axios, refreshAuthLogic);
 
 axios.interceptors.request.use((request) => {
-  const accessToken = localStorage.getItem("accessToken");
+  const accessToken = storage.get("accessToken");
   request.headers["Authorization"] = `Bearer ${accessToken}`;
   return request;
 });
