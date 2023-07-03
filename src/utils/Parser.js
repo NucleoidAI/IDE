@@ -28,19 +28,19 @@ const contextToMap = (files) => {
     const newDefinition = `${func.definition.slice(
       0,
       lastCurlyBracket
-    )} static ${className}.filter = (fn) => ([]);\n static ${className}.find = (fn) =>  ({});\n}`;
-    //TODO: add @nuc-definitions and remove static before giving to sandbox
+    )} static filter = (fn) => ([]);\n static find = (fn) =>  ({});\n}`;
+    // TODO: add @nuc-definitions and remove static before giving to sandbox
+    // TODO : clear this method
     fileContents.push({
       key: func.path + ".ts",
-      value:
-        newDefinition +
-        "// @nuc-exports\n" +
-        //`${className}.filter = (fn) => ([]);\n` +
-        //`${className}.find = (fn) =>  ({});\n` +
-        `export default ${className};`,
+      value: `${
+        !func.builtin ? newDefinition : func.definition
+      }\n// @nuc-exports\nexport default ${className};`,
     });
   });
+
   fileNames.push(`import  _ from "lodash/index";\n`);
+
   const imports = fileNames.join("");
 
   Object.keys(files.api).forEach((item) => {

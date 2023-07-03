@@ -394,14 +394,14 @@ const functions = [
     params: [],
     type: "FUNCTION",
     builtin: true,
-    definition: `function uuid(): string {}`,
+    definition: `function uuid(): void {}`,
   },
   {
     path: "/random",
     params: [],
     type: "FUNCTION",
     builtin: true,
-    definition: `function random(length: number): string {}`,
+    definition: `function random(length: number): void {}`,
   },
 ];
 
