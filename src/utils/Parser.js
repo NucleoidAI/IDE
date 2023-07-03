@@ -31,7 +31,7 @@ const contextToMap = (files) => {
     )} static ${className}.filter = (fn) => ([]);\n static ${className}.find = (fn) =>  ({});\n}`;
     //TODO: add @nuc-definitions and remove static before giving to sandbox
     fileContents.push({
-      key: func.path + "." + func.ext,
+      key: func.path + ".ts",
       value:
         newDefinition +
         "// @nuc-exports\n" +

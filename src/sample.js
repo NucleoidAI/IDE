@@ -357,7 +357,6 @@ const functions = [
     path: "/Order",
     params: [],
     type: "CLASS",
-    ext: "ts",
     definition: `class Order {
       item: string;
       qty: number;
@@ -373,7 +372,6 @@ const functions = [
     path: "/Item",
     params: [],
     type: "CLASS",
-    ext: "ts",
     definition: `class Item {
       name: string;
       barcode: string;
@@ -388,7 +386,6 @@ const functions = [
     path: "/event",
     params: [],
     type: "FUNCTION",
-    ext: "ts",
     builtin: true,
     definition: `function event(name: string, data: any): void {}`,
   },
@@ -396,7 +393,6 @@ const functions = [
     path: "/uuid",
     params: [],
     type: "FUNCTION",
-    ext: "ts",
     builtin: true,
     definition: `function uuid(): string {}`,
   },
@@ -404,7 +400,6 @@ const functions = [
     path: "/random",
     params: [],
     type: "FUNCTION",
-    ext: "ts",
     builtin: true,
     definition: `function random(length: number): string {}`,
   },
