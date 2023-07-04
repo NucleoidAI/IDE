@@ -1,3 +1,5 @@
+import { storage } from "nuc-storage";
+
 const Settings = {
   projects: [],
   dialog: {},
@@ -5,16 +7,16 @@ const Settings = {
     base: "https://nucleoid.com",
     terminal: (url) => {
       if (url) {
-        localStorage.setItem("terminal", url);
+        storage.set("ide", "terminal", url);
       } else {
-        return localStorage.getItem("terminal");
+        return storage.get("ide", "terminal");
       }
     },
     app: (url) => {
       if (url) {
-        localStorage.setItem("app", url);
+        storage.set("ide", "app", url);
       } else {
-        return localStorage.getItem("app");
+        return storage.get("ide", "app");
       }
     },
   },
@@ -22,9 +24,9 @@ const Settings = {
     url: "https://nucleoid.com/sandbox/",
     sandboxID: (id) => {
       if (id) {
-        localStorage.setItem("sandbox_id", id);
+        storage.set("ide", "sandbox_id", id);
       } else {
-        return localStorage.getItem("sandbox_id");
+        return storage.get("ide", "sandbox_id");
       }
     },
   },
@@ -41,51 +43,55 @@ const Settings = {
   connection: true,
   beta: (status) => {
     if (status !== undefined && status !== null) {
-      localStorage.setItem("beta", status);
+      storage.set("ide", "beta", status);
     } else {
-      return localStorage.getItem("beta") === "true";
+      return storage.get("ide", "beta") === true;
     }
   },
   debug: (status) => {
     if (status !== undefined && status !== null) {
-      localStorage.setItem("debug", status);
+      storage.set("ide", "debug", status);
     } else {
-      return localStorage.getItem("debug") === "true";
+      return storage.get("ide", "debug") === true;
     }
   },
   runtime: (data) => {
     if (data !== undefined && data !== null) {
-      localStorage.setItem("runtime", data);
+      storage.set("ide", "runtime", data);
     } else {
-      return localStorage.getItem("runtime");
+      return storage.get("ide", "runtime");
     }
   },
   description: (data) => {
     if (data !== undefined && data !== null) {
-      localStorage.setItem("description", data);
+      storage.set("ide", "description", data);
     } else {
-      return localStorage.getItem("description");
+      return storage.get("ide", "description");
+    }
+  },
+  name: (data) => {
+    if (data !== undefined && data !== null) {
+      storage.set("ide", "name", data);
+    } else {
+      return storage.get("ide", "name");
     }
   },
   plugin: (data) => {
     if (data !== undefined && data !== null) {
-      localStorage.setItem("plugin", data);
+      storage.set("ide", "plugin", data);
     } else {
-      return localStorage.getItem("plugin");
+      return storage.get("ide", "plugin");
     }
   },
   landing: (data) => {
     if (data !== undefined && data !== null) {
-      localStorage.setItem("landing", JSON.stringify(data));
+      storage.set("ide", "landing", data);
     } else {
-      return JSON.parse(localStorage.getItem("landing"));
+      return storage.get("ide", "landing");
     }
   },
   token: () => {
-    if (
-      localStorage.getItem("refreshToken") &&
-      localStorage.getItem("accessToken")
-    ) {
+    if (storage.get("refreshToken") && storage.get("accessToken")) {
       return true;
     } else {
       return false;

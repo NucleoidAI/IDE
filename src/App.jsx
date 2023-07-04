@@ -1,21 +1,11 @@
-import API from "./pages/ide/API";
-import BusinessFlow from "./pages/ide/BusinessFlow";
 import ContextProvider from "./context/context";
-import Dashboard from "./pages/ide/Dashboard";
-import Dev from "./pages/Dev";
 import EventRegistry from "./EventRegistry";
-import Functions from "./pages/ide/Functions";
-import IDE from "./layouts/IDE";
-import Login from "./pages/ide/login";
-import Logs from "./pages/ide/Logs";
-import Query from "./pages/ide/Query";
 import React from "react";
 import Settings from "./settings";
 import State from "./state";
 import { contextReducer } from "./context/reducer";
 import { contextToMap } from "./utils/Parser";
-import project from "./project";
-import service from "./service";
+import routes from "./routes";
 import { subscribe } from "@nucleoidjs/synapses";
 import theme from "./theme";
 import vfs from "./vfs";
@@ -26,7 +16,11 @@ import {
   ThemeProvider,
 } from "@mui/material";
 
+import IDE from "./layouts/IDE"; // eslint-disable-line
+
 function App() {
+  const progressElement = document.getElementById("nuc-progress-indicator");
+
   function checkMobileSize() {
     return window.innerWidth < 600 ? true : false;
   }
@@ -36,16 +30,36 @@ function App() {
     window.location.hostname === "nucleoid.com" ? 1000 - elapsed : 0;
 
   React.useEffect(() => {
-    const progressElement = document.getElementById("nuc-progress-indicator");
-
     subscribe("EDITOR_LOADING_COMPLETED", () => {
       setTimeout(() => {
         progressElement.classList.add("hidden");
       }, delay);
     });
-  }, [delay]);
+    const progressElement = document.getElementById("nuc-progress-indicator");
+  }, [delay, progressElement]);
 
-  const InitContext = () => {
+  function project(id) {
+    return new Promise((resolve, reject) => {
+      // TODO : replace service call
+      setTimeout(() => {
+        if (id === "2643bf5a-b03a-4eee-93f5-68bd5103beb0") {
+          const context = State.withSample();
+          context.get = (prop) => State.resolve(context, prop);
+          context.nucleoid.project = {
+            name: "Test-Project",
+            description:
+              "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore",
+            id: "2643bf5a-b03a-4eee-93f5-68bd5103beb0",
+          };
+          resolve(context);
+        }
+
+        reject("error");
+      }, 3000);
+    });
+  }
+
+  const InitVfs = (context) => {
     if (!Settings.beta()) {
       Settings.beta(false);
     }
@@ -67,9 +81,11 @@ function App() {
     }
 
     if (!Settings.description()) {
-      Settings.description(
-        "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore"
-      );
+      Settings.description(context.nucleoid.project.description);
+    }
+
+    if (!Settings.name()) {
+      Settings.name(context.nucleoid.project.name);
     }
 
     if (!Settings.landing()) {
@@ -80,56 +96,77 @@ function App() {
       Settings.landing({ level: 4 });
     }
 
-    if (project.isAuth()) {
-      service.getProjects().then(({ data }) => {
-        Settings.projects = [...data];
-      });
-    }
-
-    let context;
-
-    if (project.check()) {
-      context = project.get().context;
-      context.get = (prop) => State.resolve(context, prop);
-    } else {
-      project.setDemo();
-      context = project.get().context;
-      context.get = (prop) => State.resolve(context, prop);
-    }
-
     const files = contextToMap(context.nucleoid);
     vfs.init(files);
 
     return context;
   };
 
+  const [context, setContext] = React.useState();
+
+  React.useEffect(() => {
+    async function initContext() {
+      const id = window.location.pathname.split("/")[2];
+      let context;
+
+      if (id === "sample") {
+        context = State.withSample();
+        context.get = (prop) => State.resolve(context, prop);
+        context.nucleoid.project = {
+          name: "Sample",
+          id: "Sample",
+          description:
+            "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore",
+        };
+
+        return setContext(InitVfs(context));
+      }
+
+      if (id) {
+        project(id)
+          .then((result) => {
+            return setContext(InitVfs(result));
+          })
+          .catch(() => {
+            progressElement.classList.add("hidden");
+
+            return setContext("error");
+          });
+      } else {
+        window.location.assign(`${window.location.href}sample/api`);
+      }
+    }
+
+    initContext();
+    // eslint-disable-next-line
+  }, [progressElement.classList]);
+
+  if (!context) return null;
+  if (context === "error") return "forbidden";
+
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <ContextProvider state={InitContext()} reducer={contextReducer}>
-          <BrowserRouter basename="ide">
+        <BrowserRouter basename="ide">
+          <ContextProvider state={context} reducer={contextReducer}>
             <EventRegistry />
             <Routes>
               <Route path="/" element={<IDE />}>
-                {Settings.plugin() || checkMobileSize() ? (
-                  <Route index element={<Navigate to="/dashboard" />} />
-                ) : (
-                  <Route index element={<Navigate to="/api" />} />
-                )}
-                <Route path={"/dashboard"} element={<Dashboard />} />
-                <Route path={"/businessflow"} element={<BusinessFlow />} />
-                <Route path={"/api"} element={<API />} />
-                <Route path={"/functions"} element={<Functions />} />
-                <Route path={"/query"} element={<Query />} />
-                <Route path={"/logs"} element={<Logs />} />
-                <Route path={"/sample"} element={<Navigate to="/" />} />
+                <Route index element={<Navigate to="/sample/api" />} />
+                {routes.map((route) => (
+                  <Route
+                    path={route.path}
+                    key={route.link}
+                    element={route.element}
+                  />
+                ))}
               </Route>
-              <Route path={"/dev"} element={<Dev />} />
-              <Route path={"/login"} element={<Login />} />
+              <Route path={"/graph"} />
+              <Route path={"*"} element={<Navigate to="/" />} />
             </Routes>
-          </BrowserRouter>
-        </ContextProvider>
+          </ContextProvider>
+        </BrowserRouter>
       </ThemeProvider>
     </StyledEngineProvider>
   );

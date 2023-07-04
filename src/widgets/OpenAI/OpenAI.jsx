@@ -101,8 +101,7 @@ export default function OpenAI({ functions, editor }) {
       setOpen(true);
     } else {
       setLogin(true);
-      localStorage.removeItem("refreshToken");
-      localStorage.removeItem("accessToken");
+      // TODO : replace refreshToken and accessToken with storage
 
       service
         .getProjects()

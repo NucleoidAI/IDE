@@ -1,5 +1,4 @@
 import State from "../state";
-import project from "../project";
 import { publish } from "@nucleoidjs/synapses";
 import { v4 as uuid } from "uuid";
 
@@ -328,7 +327,6 @@ function contextReducer(state, { type, payload }) {
   }
 
   console.debug("contextReducer", type, state);
-  project.updateCurrent(state);
   return state;
 }
 

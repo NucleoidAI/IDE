@@ -1,5 +1,4 @@
 import React from "react";
-import project from "../../project";
 import styles from "./styles";
 import { Box, Switch, TextField, Typography } from "@mui/material";
 
@@ -7,9 +6,6 @@ const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
   const [url, setUrl] = React.useState(urlRef.current.url);
   const [custom, setCustom] = React.useState(
     urlRef.current.runtime === "custom" ? true : false
-  );
-  const [description, setDesciption] = React.useState(
-    urlRef.current.description
   );
 
   const context = urlRef.current;
@@ -19,10 +15,7 @@ const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
     setUrl(value);
   };
 
-  const handleSetDescription = (value) => {
-    context.description = value;
-    setDesciption(value);
-  };
+  const handleSetDescription = () => {};
 
   const handleSetRuntime = (value) => {
     context.runtime = value ? "custom" : "sandbox";
@@ -44,7 +37,8 @@ const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
       <Section title={"Project"}>
         <BetweenComponents title={"Name"}>
           <TextField
-            value={project.get().name}
+            // TODO : get project name
+            value={""}
             variant={"standard"}
             size={"small"}
             disabled={true}
@@ -56,11 +50,13 @@ const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
           <TextField
             InputProps={{ classes: { underline: "red" } }}
             sx={styles.textField}
-            value={description}
+            // TODO : get project description
+            value={""}
             multiline
             row={2}
             variant={"standard"}
             size={"small"}
+            disabled={true}
             onChange={(e) => handleSetDescription(e.target.value)}
           />
         </BetweenComponents>

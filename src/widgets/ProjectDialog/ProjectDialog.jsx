@@ -1,11 +1,8 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Delete from "@mui/icons-material/Delete";
 import React from "react";
-import State from "../../state";
-import project from "../../project";
-import service from "../../service";
 import styles from "./styles";
-import useService from "../../hooks/useService";
+
 import { Backdrop, CircularProgress } from "@mui/material";
 
 import {
@@ -22,32 +19,9 @@ import {
 
 //eslint-disable-next-line
 import { DataGrid } from "@mui/x-data-grid";
-import Settings from "../../settings";
 
 const NewProjectScreen = ({ setScreen, handleClose }) => {
-  const [, dispatch] = useService();
-  const [open, setOpen] = React.useState(false);
-  const projectName = React.useRef("");
-
-  const addProject = () => {
-    setOpen(true);
-    service
-      .addProject(projectName.current, JSON.stringify(State.withSample()))
-      .then(({ data }) => {
-        Settings.projects.push({
-          id: data,
-          name: projectName.current,
-          project: data,
-        });
-        project.set(data, projectName.current, State.withSample());
-        dispatch({
-          type: "SET_PROJECT",
-          payload: { project: State.withSample() },
-        });
-        setOpen(false);
-        handleClose();
-      });
-  };
+  const [open] = React.useState(false);
 
   return (
     <>
@@ -69,9 +43,6 @@ const NewProjectScreen = ({ setScreen, handleClose }) => {
       </DialogTitle>
       <DialogContent sx={styles.content}>
         <TextField
-          onChange={(e) => {
-            projectName.current = e.target.value;
-          }}
           label="Project Name"
           variant="outlined"
           sx={{ width: "100%", marginTop: 1 }}
@@ -89,7 +60,7 @@ const NewProjectScreen = ({ setScreen, handleClose }) => {
           <Grid />
           <Grid>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={addProject}>Save</Button>
+            <Button>Save</Button>
           </Grid>
           <ProgressBackDrop open={open} />
         </Grid>
@@ -98,9 +69,8 @@ const NewProjectScreen = ({ setScreen, handleClose }) => {
   );
 };
 
-const ListProjectsScreen = ({ setScreen, handleClose }) => {
-  const [, dispatch, handleGetProjects] = useService();
-  const [open, setOpen] = React.useState(false);
+const ListProjectsScreen = ({ handleClose }) => {
+  const [open] = React.useState(false);
   const select = React.useRef();
   const [dialog, setDialog] = React.useState(false);
 
@@ -112,37 +82,6 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
     );
   };
 
-  const handleDelete = () => {
-    setOpen(true);
-    const id = select.current;
-    service.deleteProject(id).then(() => {
-      Settings.projects = Settings.projects.filter(
-        (item) => item.project !== id
-      );
-      setScreen("ListProjects");
-      setOpen(false);
-      setDialog(false);
-    });
-  };
-
-  const handleSelect = () => {
-    if (select.current) {
-      setOpen(true);
-
-      service.getProject(select.current).then(({ data }) => {
-        project.setWithoutStringify(data.project, data.name, data.context);
-        dispatch({
-          type: "SET_PROJECT",
-          payload: { project: JSON.parse(data.context) },
-        });
-        handleClose();
-        setOpen(false);
-      });
-    } else {
-      handleClose();
-    }
-  };
-
   const handleCloseDialog = () => {
     setDialog(false);
   };
@@ -150,18 +89,6 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
   const handleOpenDialog = (params) => {
     select.current = params.id;
     setDialog(true);
-  };
-
-  const handleOpenNewProject = () => {
-    if (project.get().project !== "") {
-      setScreen("NewProject");
-    } else {
-      setOpen(true);
-      handleGetProjects((result) => {
-        if (result) setScreen("NewProject");
-        setOpen(false);
-      });
-    }
   };
 
   const columns = [
@@ -175,7 +102,7 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
       headerName: "Action",
       flex: 1,
       renderCell: (params) =>
-        params.id !== project.get().project ? (
+        params.id !== "" ? (
           <DeleteButton
             params={params}
             handleDelete={(params) => handleOpenDialog(params)}
@@ -184,12 +111,7 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
     },
   ];
 
-  const rows =
-    Settings.projects.length > 0
-      ? Settings.projects.map((data) => {
-          return { id: data.project, ...data };
-        })
-      : [{ id: "", name: project.get().name }];
+  const rows = [];
 
   return (
     <>
@@ -203,9 +125,7 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
           }}
         >
           <Typography variant="h6">Select a project</Typography>
-          <Button onClick={() => handleOpenNewProject()} variant="text">
-            NEW PROJECT
-          </Button>
+          <Button variant="text">NEW PROJECT</Button>
         </Grid>
       </DialogTitle>
       <DialogContent sx={styles.content}>
@@ -213,10 +133,8 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
           rows={rows}
           columns={columns}
           hideFooter={true}
-          // selectionModel={selected}
           onRowClick={(e) => {
             select.current = e.row.project;
-            // setSelected(e.row);
           }}
         />
       </DialogContent>
@@ -232,7 +150,7 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
           <Grid />
           <Grid>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleSelect}>Select</Button>
+            <Button>Select</Button>
           </Grid>
         </Grid>
         <ProgressBackDrop open={open} />
@@ -249,9 +167,7 @@ const ListProjectsScreen = ({ setScreen, handleClose }) => {
             <Button autoFocus onClick={handleCloseDialog}>
               Cancel
             </Button>
-            <Button onClick={handleDelete} autoFocus>
-              Delete
-            </Button>
+            <Button autoFocus>Delete</Button>
           </DialogActions>
         </Dialog>
       </DialogActions>
