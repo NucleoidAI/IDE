@@ -41,7 +41,7 @@
     "react-rnd": "^10.4.1",
     "react-router-dom": "^6.13.0",
     "reactflow": "^11.1.2",
-    "typescript": "^4.8.2",
+    "typescript": "^4.9.5",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

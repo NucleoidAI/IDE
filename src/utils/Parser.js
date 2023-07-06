@@ -15,7 +15,7 @@ const parser = {
 };
 
 const contextToMap = (files) => {
-  const arr = [];
+  const fileContents = [];
   const fileNames = [];
   fileNames.push("// @nuc-imports\n");
 
@@ -23,26 +23,29 @@ const contextToMap = (files) => {
     const func = files.functions[item];
     const className = func.path.split("/").pop();
 
-    fileNames.push(
-      "import " + className + ` from "` + func.path + `.` + func.ext + `"\n`
-    );
-
-    arr.push({
-      key: func.path + "." + func.ext,
-      value:
-        func.definition +
-        "// @nuc-exports\n" +
-        `${className}.filter = (fn) => ([]);\n` +
-        `${className}.find = (fn) =>  ({});\n` +
-        `export default ${className};`,
+    fileNames.push("import " + className + ` from "` + func.path + `"\n`);
+    const lastCurlyBracket = func.definition.lastIndexOf("}");
+    const newDefinition = `${func.definition.slice(
+      0,
+      lastCurlyBracket
+    )} static filter = (fn) => ([]);\n static find = (fn) =>  ({});\n}`;
+    // TODO: add @nuc-definitions and remove static before giving to sandbox
+    // TODO : clear this method
+    fileContents.push({
+      key: func.path + ".ts",
+      value: `${
+        !func.builtin ? newDefinition : func.definition
+      }\n// @nuc-exports\nexport default ${className};`,
     });
   });
+
   fileNames.push(`import  _ from "lodash/index";\n`);
+
   const imports = fileNames.join("");
 
   Object.keys(files.api).forEach((item) => {
     Object.keys(files.api[item]).forEach((method) => {
-      arr.push({
+      fileContents.push({
         key: item + "." + method + ".ts",
         value:
           imports +
@@ -53,7 +56,7 @@ const contextToMap = (files) => {
     });
   });
 
-  return arr;
+  return fileContents;
 };
 
 const mapToContext = (fsMap, context) => {

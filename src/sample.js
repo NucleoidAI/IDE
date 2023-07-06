@@ -21,10 +21,9 @@ const api = {
           },
         },
       },
-      "x-nuc-action": `function action(req) {
-  return { message: "Hello World" };
-}
-`,
+      "x-nuc-action": `function action(req: any): { message: string } {
+        return { message: "Hello World" };
+      }`,
     },
   },
   "/items": {
@@ -46,11 +45,10 @@ const api = {
           $ref: "#/components/schemas/Item",
         },
       },
-      "x-nuc-action": `function action(req) {
-  const name = req.query.name;
-  return Item.filter(item => item.name === name);
-}
-`,
+      "x-nuc-action": `function action(req: { query: { name: string } }): any {
+        const name = req.query.name;
+        return Item.filter(item => item.name === name);
+      }`,
     },
     post: {
       summary: "Create item",
@@ -69,19 +67,15 @@ const api = {
       response: {
         $ref: "#/components/schemas/Item",
       },
-      "x-nuc-action": `function action(req) {
-  const name = req.body.name;
-  const barcode = req.body.barcode;
-
-  const check = Item.find(i => i.barcode === barcode);
-
-  if(check) {
-    throw "DUPLICATE_BARCODE";
-  }
-
-  return new Item(name, barcode);
-}
-`,
+      "x-nuc-action": `function action(req: { body: { name: string, barcode: string } }): any {
+        const name = req.body.name;
+        const barcode = req.body.barcode;
+        const check = Item.find(i => i.barcode === barcode);
+        if(check) {
+          throw "DUPLICATE_BARCODE";
+        }
+        return new Item(name, barcode);
+      }`,
     },
   },
   "/items/{item}": {
@@ -99,11 +93,10 @@ const api = {
       ],
       request: { type: "object", properties: {} },
       response: { $ref: "#/components/schemas/Item" },
-      "x-nuc-action": `function action(req) {
-  const item = req.params.item;
-  return Item[item];
-}
-`,
+      "x-nuc-action": `function action(req: { params: { item: string } }): any {
+        const item = req.params.item;
+        return Item[item];
+      }`,
     },
     put: {
       summary: "Update item",
@@ -129,29 +122,23 @@ const api = {
         },
       },
       response: { $ref: "#/components/schemas/Item" },
-      "x-nuc-action": `function action(req) {
-  const item = Item[req.params.item];
-  const name = req.body.name;
-  const barcode = req.body.barcode;
-
-  if (!item) {
-    return;
-  }
-
-  const check = Item.find(
-    i => i.barcode === barcode && i.barcode !== item.barcode
-  );
-
-  if (check) {
-    throw "DUPLICATE_BARCODE";
-  }
-
-  item.name = name;
-  item.barcode = barcode;
-
-  return item;
-}
-`,
+      "x-nuc-action": `function action(req: { params: { item: string }, body: { name: string, barcode: string } }): any {
+        const item = Item[req.params.item];
+        const name = req.body.name;
+        const barcode = req.body.barcode;
+        if (!item) {
+          return;
+        }
+        const check = Item.find(
+          i => i.barcode === barcode && i.barcode !== item.barcode
+        );
+        if (check) {
+          throw "DUPLICATE_BARCODE";
+        }
+        item.name = name;
+        item.barcode = barcode;
+        return item;
+      }`,
     },
     del: {
       summary: "Delete item",
@@ -181,11 +168,10 @@ const api = {
           },
         },
       },
-      "x-nuc-action": `function action(req) {
-  const item = req.params.item;
-  delete Item[item];
-}
-`,
+      "x-nuc-action": `function action(req: { params: { item: string } }): void {
+        const item = req.params.item;
+        delete Item[item];
+      }`,
     },
   },
   "/orders": {
@@ -207,10 +193,9 @@ const api = {
           $ref: "#/components/schemas/Order",
         },
       },
-      "x-nuc-action": `function action(req) {
-  return Order;
-}
-`,
+      "x-nuc-action": `function action(req: any): any {
+        return Order;
+      }`,
     },
     post: {
       summary: "Create order",
@@ -230,17 +215,14 @@ const api = {
       response: {
         $ref: "#/components/schemas/Order",
       },
-      "x-nuc-action": `function action(req) {
-  const item = Item[req.body.item];
-  const qty = req.body.qty;
-
-  if (!item) {
-    throw "INVALID_ITEM";
-  }
-
-  return new Order(item, qty);
-}
-`,
+      "x-nuc-action": `function action(req: { body: { item: string, qty: number } }): any {
+        const item = Item[req.body.item];
+        const qty = req.body.qty;
+        if (!item) {
+          throw "INVALID_ITEM";
+        }
+        return new Order(item, qty);
+      }`,
     },
   },
   "/orders/{order}": {
@@ -258,11 +240,10 @@ const api = {
       ],
       request: { type: "object", properties: {} },
       response: { $ref: "#/components/schemas/Order" },
-      "x-nuc-action": `function action(req) {
-  const order = req.params.order;
-  return Order[order];
-}
-`,
+      "x-nuc-action": `function action(req: { params: { order: string } }): any {
+        const order = req.params.order;
+        return Order[order];
+      }`,
     },
     put: {
       summary: "Update order",
@@ -288,25 +269,20 @@ const api = {
         },
       },
       response: { $ref: "#/components/schemas/Order" },
-      "x-nuc-action": `function action(req) {
-  const order = Order[req.params.order];
-  const item = Item[req.body.item];
-  const qty = req.body.qty;
-
-  if (!order) {
-    return;
-  }
-
-  if (!item) {
-    throw "INVALID_ITEM";
-  }
-
-  order.item = item;
-  order.qty = qty;
-
-  return order;
-}
-`,
+      "x-nuc-action": `function action(req: { params: { order: string }, body: { item: string, qty: number } }): any {
+        const order = Order[req.params.order];
+        const item = Item[req.body.item];
+        const qty = req.body.qty;
+        if (!order) {
+          return;
+        }
+        if (!item) {
+          throw "INVALID_ITEM";
+        }
+        order.item = item;
+        order.qty = qty;
+        return order;
+      }`,
     },
     del: {
       summary: "Delete order",
@@ -336,11 +312,10 @@ const api = {
           },
         },
       },
-      "x-nuc-action": `function action(req) {
-  const order = req.params.order;
-  delete Order[order];
-}
-`,
+      "x-nuc-action": `function action(req: { params: { order: string } }): void {
+        const order = req.params.order;
+        delete Order[order];
+      }`,
     },
   },
 };
@@ -382,53 +357,51 @@ const functions = [
     path: "/Order",
     params: [],
     type: "CLASS",
-    ext: "js",
     definition: `class Order {
-  constructor(item, qty) {
-    this.item = item;
-    this.qty = qty;
-    this.date = Date.now();
-  }
-}
-`,
+      item: string;
+      qty: number;
+      date: number;
+      constructor(item: string, qty: number) {
+        this.item = item;
+        this.qty = qty;
+        this.date = Date.now();
+      }
+    }`,
   },
   {
     path: "/Item",
     params: [],
     type: "CLASS",
-    ext: "js",
     definition: `class Item {
-  constructor(name, barcode) {
-    this.name = name;
-    this.barcode = barcode;
-  }
-}
-`,
+      name: string;
+      barcode: string;
+      constructor(name: string, barcode: string) {
+        this.name = name;
+        this.barcode = barcode;
+      }
+    }`,
   },
 
   {
     path: "/event",
     params: [],
     type: "FUNCTION",
-    ext: "js",
     builtin: true,
-    definition: `function event(name, data) {}`,
+    definition: `function event(name: string, data: any): void {}`,
   },
   {
     path: "/uuid",
     params: [],
     type: "FUNCTION",
-    ext: "js",
     builtin: true,
-    definition: `function uuid() {}`,
+    definition: `function uuid(): void {}`,
   },
   {
     path: "/random",
     params: [],
     type: "FUNCTION",
-    ext: "js",
     builtin: true,
-    definition: `function random(length) {}`,
+    definition: `function random(length: number): void {}`,
   },
 ];
 

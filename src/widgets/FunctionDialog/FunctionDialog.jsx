@@ -39,7 +39,7 @@ export default function FunctionDialog() {
             type === "FUNCTION" ? "()" : ""
           } { }`,
           params: [],
-          ext: "js",
+          ext: "ts",
         },
       });
       handleClose();

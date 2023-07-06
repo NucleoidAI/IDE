@@ -115,7 +115,7 @@ const Editor = React.forwardRef((props, ref) => {
       const { path, method } = context.get("pages.api.selected");
       key = path + "." + method + ".ts";
     } else {
-      key = context.get("pages.functions.selected") + ".js";
+      key = context.get("pages.functions.selected") + ".ts";
     }
 
     publish("CONTEXT_CHANGED", {
@@ -185,7 +185,7 @@ const Editor = React.forwardRef((props, ref) => {
       },
     });
 
-    monaco.languages.registerDocumentFormattingEditProvider("javascript", {
+    monaco.languages.registerDocumentFormattingEditProvider("typescript", {
       provideDocumentFormattingEdits(model, options) {
         const result = linter.verifyAndFix(
           getFile(context, props).code,
@@ -193,7 +193,7 @@ const Editor = React.forwardRef((props, ref) => {
         );
 
         const formatted = prettierStandalone.format(result.output, {
-          parser: "babel",
+          parser: "typescript",
           plugins: plugins,
         });
 
@@ -207,13 +207,13 @@ const Editor = React.forwardRef((props, ref) => {
     });
 
     monaco.languages.registerDocumentRangeFormattingEditProvider(
-      { language: "javascript", exclusive: true },
+      { language: "typescript", exclusive: true },
       {
         provideDocumentRangeFormattingEdits(model) {
           const text = model.getValue();
 
           const formatted = prettierStandalone.format(text, {
-            // parser: "babel",
+            parser: "typescript",
             plugins: plugins,
           });
 
@@ -246,7 +246,7 @@ const Editor = React.forwardRef((props, ref) => {
     <Box sx={{ height: "100%" }}>
       <MonacoEditor
         height={"96%"}
-        defaultLanguage="javascript"
+        defaultLanguage="typescript"
         defaultValue={file.code}
         onChange={handleChange}
         onMount={handleEditorDidMount}
