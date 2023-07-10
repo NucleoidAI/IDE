@@ -124,28 +124,43 @@ const Editor = React.forwardRef((props, ref) => {
     });
   }, [api, context]);
 
-  const lint = React.useCallback(() => {
+  function getLineAndColumn(text, position) {
+    const textUpToPosition = text.slice(0, position);
+    const line = textUpToPosition.split("\n").length;
+    const column = position - textUpToPosition.lastIndexOf("\n");
+    return { line, column };
+  }
+
+  const lint = React.useCallback(async () => {
     const editor = editorRef?.current?.editor;
     const monaco = editorRef?.current?.monaco;
-    const result = linter.verify(editor.getValue(), options);
-
-    monaco.editor.setModelMarkers(
-      editor.getModel(),
-      "action",
-      result.map((item) => {
-        return {
-          startLineNumber: item.line,
-          startColumn: item.column,
-          endLineNumber: item.endLine,
-          endColumn: item.endColumn,
-          message: item.message,
-          severity:
-            item.severity === 1
-              ? monaco.MarkerSeverity.Warning
-              : monaco.MarkerSeverity.Error,
-        };
-      })
+    const worker = await monaco.languages.typescript.getTypeScriptWorker();
+    const ts = await worker(editor.getModel().uri);
+    const diagnostics = await ts.getSemanticDiagnostics(
+      editor.getModel().uri.toString()
     );
+    console.log(diagnostics);
+    const text = editor.getValue();
+
+    const markers = diagnostics.map((diagnostic) => {
+      const start = getLineAndColumn(text, diagnostic.start);
+      const end = getLineAndColumn(text, diagnostic.start + diagnostic.length);
+      const severity =
+        diagnostic.category === 1
+          ? monaco.MarkerSeverity.Warning
+          : monaco.MarkerSeverity.Error;
+
+      return {
+        startLineNumber: start.line,
+        startColumn: start.column,
+        endLineNumber: end.line,
+        endColumn: end.column,
+        message: diagnostic.messageText,
+        severity: severity,
+      };
+    });
+
+    monaco.editor.setModelMarkers(editor.getModel(), "action", markers);
   }, []);
 
   function handleEditorDidMount(editor, monaco) {
