@@ -1,7 +1,7 @@
 import Settings from "./settings";
 import axios from "axios";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
-import { storage } from "nuc-storage";
+import { storage } from "@nucleoidjs/webstorage";
 
 const refreshAuthLogic = async (failedRequest) => {
   const refreshToken = storage.get("refreshToken");
