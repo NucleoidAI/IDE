@@ -2,7 +2,6 @@ import MonacoEditor from "@monaco-editor/react";
 import OpenAI from "../OpenAI";
 import React from "react";
 import { contextToMap } from "../../utils/Parser";
-import linter from "../../linter";
 import { parser } from "react-nucleoid";
 import { publish } from "@nucleoidjs/synapses";
 import rules from "./rules";
@@ -139,7 +138,6 @@ const Editor = React.forwardRef((props, ref) => {
     const diagnostics = await ts.getSemanticDiagnostics(
       editor.getModel().uri.toString()
     );
-    console.log(diagnostics);
     const text = editor.getValue();
 
     const markers = diagnostics.map((diagnostic) => {
@@ -201,13 +199,10 @@ const Editor = React.forwardRef((props, ref) => {
     });
 
     monaco.languages.registerDocumentFormattingEditProvider("typescript", {
-      provideDocumentFormattingEdits(model, options) {
-        const result = linter.verifyAndFix(
-          getFile(context, props).code,
-          options
-        );
+      provideDocumentFormattingEdits(model) {
+        const text = model.getValue();
 
-        const formatted = prettierStandalone.format(result.output, {
+        const formatted = prettierStandalone.format(text, {
           parser: "typescript",
           plugins: plugins,
         });
