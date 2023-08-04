@@ -3,9 +3,8 @@ import Settings from "../../settings";
 import service from "../../service";
 import { useContext } from "../../context/context";
 import { useEvent } from "@nucleoidjs/synapses";
-import ChatWindow, {
-  handleAddResponseMessage,
-} from "../../components/ChatWindow";
+
+import { ChatWindow, handleAddResponseMessage } from "@nucleoidjs/components";
 
 const Chat = () => {
   const [open, setOpen] = useEvent("CHAT_WINDOW", false);
@@ -52,6 +51,7 @@ const Chat = () => {
 
   return (
     <ChatWindow
+      title={"Nucbot-Powered by OpenAI"}
       open={openChat}
       handleClose={handleClose}
       history={[{ message: "Welcome to NucBot! 🤖", user: false }]}
