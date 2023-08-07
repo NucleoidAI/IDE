@@ -23,6 +23,3 @@ jobs:
       - run: npm test
       - run: npm run lint
       - run: npm run build
-      - run: docker build . -t 533052815932.dkr.ecr.us-east-1.amazonaws.com/nuc:ide-test
-      - run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 533052815932.dkr.ecr.us-east-1.amazonaws.com
-      - run: docker push 533052815932.dkr.ecr.us-east-1.amazonaws.com/nuc:ide-test
