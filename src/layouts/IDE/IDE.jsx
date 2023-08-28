@@ -1,17 +1,17 @@
-import Box from "@mui/material/Box";
+import { Box } from "@mui/material";
 import Chat from "../../widgets/Chat";
 import EducationDrawer from "../../components/EducationDrawer/EducationDrawer";
 import GlobalSnackMessage from "../../components/GlobalSnackMessage";
 import GraphDialog from "../../components/GraphDialog/GraphDialog";
 import Menu from "../../components/Menu";
 import Onboard from "../../components/Onboard";
+import { Outlet } from "react-router-dom"; // eslint-disable-line
 import ProcessDrawer from "../../widgets/ProcessDrawer/ProcessDrawer";
 import React from "react";
 import Settings from "../../settings";
 import SwaggerDialog from "../../components/SwaggerDialog";
 import routes from "../../routes";
 import styles from "./styles";
-import { Outlet } from "react-router-dom"; // eslint-disable-line
 
 function IDE() {
   return (

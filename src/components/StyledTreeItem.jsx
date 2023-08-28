@@ -1,7 +1,7 @@
-import Box from "@mui/material/Box";
 import React from "react";
-import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
+
+import { Box, Typography } from "@mui/material";
 import TreeItem, { treeItemClasses } from "@mui/lab/TreeItem";
 
 const StyledTreeItemRoot = styled(TreeItem)(
