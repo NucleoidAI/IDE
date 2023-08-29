@@ -1,5 +1,6 @@
 import ContextProvider from "./context/context";
 import EventRegistry from "./EventRegistry";
+import IDE from "./layouts/IDE"; // eslint-disable-line
 import React from "react";
 import Settings from "./settings";
 import State from "./state";
@@ -9,14 +10,13 @@ import routes from "./routes";
 import { subscribe } from "@nucleoidjs/synapses";
 import theme from "./theme";
 import vfs from "./vfs";
+
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import {
   CssBaseline,
   StyledEngineProvider,
   ThemeProvider,
 } from "@mui/material";
-
-import IDE from "./layouts/IDE"; // eslint-disable-line
 
 function App() {
   const progressElement = document.getElementById("nuc-progress-indicator");
@@ -133,7 +133,7 @@ function App() {
             return setContext("error");
           });
       } else {
-        window.location.assign(`${window.location.href}sample/api`);
+        window.location.assign(`${window.location.href}/sample/api`);
       }
     }
 

@@ -1,4 +1,5 @@
-import Box from "@mui/material/Box";
+import "regenerator-runtime";
+
 import CircularProgress from "@mui/material/CircularProgress";
 import CloseIcon from "@mui/icons-material/Close";
 import { DescriptionPopover } from "../../components/DescriptionPopover/DescriptionPopover";
@@ -8,6 +9,8 @@ import DialogContent from "@mui/material/DialogContent";
 import Draggable from "react-draggable";
 import Editor from "@monaco-editor/react";
 import MarkQuestionIcon from "@mui/icons-material/Help";
+import MicIcon from "@mui/icons-material/Mic";
+import MicNoneIcon from "@mui/icons-material/MicNone";
 import OpenAIButton from "../../components/OpenAIButton";
 import OpenAICodeExplainButton from "../../components/OpenAICodeExplainButton";
 import OpenAIIcon from "../../icons/OpenAI";
@@ -17,7 +20,11 @@ import SendIcon from "@mui/icons-material/Send";
 import Settings from "../../settings";
 import { deepCopy } from "../../utils/DeepCopy";
 import service from "../../service";
-import { Button, DialogTitle, IconButton, TextField } from "@mui/material";
+
+import { Box, Button, DialogTitle, IconButton, TextField } from "@mui/material";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 
 import * as angularPlugin from "prettier/parser-angular";
 import * as babelPlugin from "prettier/parser-babel";
@@ -51,6 +58,11 @@ export default function OpenAI({ functions, editor }) {
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchorEl2, setAnchorEl2] = React.useState(null);
+  const [listen, setListen] = React.useState(false);
+  const [input, setInput] = React.useState(null);
+
+  const { transcript, browserSupportsSpeechRecognition, resetTranscript } =
+    useSpeechRecognition();
 
   const plugins = [
     angularPlugin,
@@ -68,6 +80,19 @@ export default function OpenAI({ functions, editor }) {
     request: "",
   });
 
+  React.useEffect(() => {
+    listen
+      ? SpeechRecognition.startListening({
+          continuous: true,
+          language: "en-US",
+        })
+      : SpeechRecognition.stopListening();
+  }, [listen]);
+
+  const listenUser = () => {
+    setListen(!listen);
+  };
+
   const generateContent = () => {
     if (editor.current) {
       const mEditor = editor.current.editor;
@@ -82,10 +107,13 @@ export default function OpenAI({ functions, editor }) {
   };
 
   const handleSend = async () => {
-    if (data.current.request) {
+    if (data.current.request || transcript) {
       setLoading(true);
       service
-        .openai(generateContent().trim(), data.current.request?.trim())
+        .openai(
+          generateContent().trim(),
+          data.current.request?.trim() || transcript
+        )
         .then((res) => {
           setResponse(res.data.text?.trim());
         })
@@ -94,6 +122,7 @@ export default function OpenAI({ functions, editor }) {
   };
 
   const handleClickOpen = () => {
+    resetTranscript();
     if (Settings.token()) {
       setResponse("");
       data.current.request = "";
@@ -279,6 +308,15 @@ export default function OpenAI({ functions, editor }) {
           />
         </DialogContent>
         <DialogActions>
+          {browserSupportsSpeechRecognition && (
+            <IconButton onClick={listenUser}>
+              {listen ? (
+                <MicIcon sx={{ color: "primary" }} />
+              ) : (
+                <MicNoneIcon sx={{ color: "primary" }} />
+              )}
+            </IconButton>
+          )}
           <TextField
             autoComplete="off"
             sx={{ width: "100%", ml: 2 }}
@@ -289,8 +327,14 @@ export default function OpenAI({ functions, editor }) {
                 handleSend();
               }
             }}
-            autoFocus
-            onChange={(e) => (data.current.request = e.target.value)}
+            onChange={(e) => {
+              if (e.target.value === "") {
+                resetTranscript();
+              }
+              data.current.request = e.currentTarget.value;
+              setInput(data.current.request);
+            }}
+            value={input || transcript}
           />
           <IconButton
             disabled={loading}
