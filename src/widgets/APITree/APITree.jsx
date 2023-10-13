@@ -42,9 +42,6 @@ function APITree() {
   const [state, dispatch] = useContext();
   const api = state.get("nucleoid.api");
   const grph = graph(api);
-  console.log("api", api);
-  console.log("grph", grph);
-  const newTree = compile2(myApi);
 
   const expandList = [];
 
@@ -191,7 +188,22 @@ function APITree() {
           <AddIcon />
         </Fab>
       </CardActions>
-      <Box> {newTree}</Box>
+      <TreeView
+        defaultCollapseIcon={<ArrowIcon down />}
+        defaultExpandIcon={<ArrowIcon right />}
+        onNodeToggle={handleToggle}
+        expanded={expanded}
+        onNodeSelect={(event, value) => select(value)}
+        selected={selected}
+      >
+        {compile2(
+          myApi,
+          handleContextMenu,
+          expandList,
+          rightClickMethod,
+          errors
+        )}
+      </TreeView>
     </Card>
   );
 }
@@ -304,24 +316,39 @@ export const compile = (
     expandList.push(api.path);
 
     return (
-      <NonExpandableAPITreeItem
-        key={api.path}
-        nodeId={api.path}
-        label={api.label}
-        children={children}
-        onClick={() => {
-          return { hash: resourceHash, map: map };
-        }}
-      />
+      console.log("******///////////////compile******"),
+      console.log("key ", api.path),
+      console.log("nodeId ", api.path),
+      console.log("label ", api.path),
+      console.log("children ", children),
+      console.log("onClick ", () => {
+        return { hash: resourceHash, map: map };
+      }),
+      (
+        <NonExpandableAPITreeItem
+          key={api.path}
+          nodeId={api.path}
+          label={api.label}
+          children={children}
+          onClick={() => {
+            return { hash: resourceHash, map: map };
+          }}
+        />
+      )
     );
   });
 
-export const compile2 = (apiData) => {
+export const compile2 = (
+  apiData,
+  handleContextMenu,
+  expandList,
+  rightClickMethod,
+  errors
+) => {
   const groupedByPath = apiData.reduce((acc, endpoint) => {
     let parts = endpoint.path.split("/");
     let currentLevel = acc;
 
-    // Special handling for the root path
     if (endpoint.path === "/") {
       if (!currentLevel["/"]) {
         currentLevel["/"] = {
@@ -330,25 +357,28 @@ export const compile2 = (apiData) => {
         };
       }
       currentLevel["/"].methods.push(endpoint);
-      return acc;
+    } else {
+      currentLevel = currentLevel["/"].children;
+
+      parts.forEach((part, idx, arr) => {
+        if (idx !== 0) {
+          let currentPart = "/" + part;
+
+          if (!currentLevel[currentPart]) {
+            currentLevel[currentPart] = {
+              methods: [],
+              children: {},
+            };
+          }
+
+          if (idx === arr.length - 1) {
+            currentLevel[currentPart].methods.push(endpoint);
+          } else {
+            currentLevel = currentLevel[currentPart].children;
+          }
+        }
+      });
     }
-
-    parts.forEach((part, idx, arr) => {
-      if (part) {
-        if (!currentLevel[part]) {
-          currentLevel[part] = {
-            methods: [],
-            children: {},
-          };
-        }
-
-        if (idx === arr.length - 1) {
-          currentLevel[part].methods.push(endpoint);
-        } else {
-          currentLevel = currentLevel[part].children;
-        }
-      }
-    });
 
     return acc;
   }, {});
@@ -357,25 +387,76 @@ export const compile2 = (apiData) => {
     return Object.keys(data).map((path) => {
       const { methods, children } = data[path];
 
-      let methodItems = methods.map((method, idx) => (
-        <TreeItem
-          key={method.method + idx}
-          nodeId={method.method + idx}
-          label={<div className="method">{method.method.toUpperCase()}</div>}
-        />
-      ));
+      let methodItems = methods.map((method, idx) => {
+        const payload = { path: path, method: method.method };
+        const hash = window.btoa(JSON.stringify(payload));
+
+        const error = errors.find((item) => {
+          const [errPath, errMethod] = item.file.fileName.split(".");
+          if (errPath === path && errMethod === method.method) {
+            return item;
+          } else {
+            return null;
+          }
+        });
+
+        return (
+          <TreeItem
+            key={hash}
+            nodeId={hash}
+            onContextMenu={(event) => handleContextMenu(event, hash)}
+            sx={{
+              bgcolor:
+                hash === rightClickMethod &&
+                theme.palette.custom.apiTreeRightClick,
+            }}
+            label={
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Box sx={styles.apiTreeItem}>
+                  <span
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {method.method.toUpperCase()}
+                  </span>
+                </Box>
+                {error && (
+                  <Tooltip title={error.messageText} placement={"right"}>
+                    <Error sx={{ color: "#8f8f91" }} />
+                  </Tooltip>
+                )}
+              </Box>
+            }
+          />
+        );
+      });
 
       let childItems = children ? renderTree(children) : [];
+      expandList.push(path);
 
       return (
         <TreeItem
           key={path}
           nodeId={path}
           label={<div className="path">{path}</div>}
-        >
-          {methodItems}
-          {childItems}
-        </TreeItem>
+          children={[...methodItems, ...childItems]}
+          onClick={() => {
+            return { hash: "", map: map };
+          }}
+          collapseIcon={<ArrowIcon down />}
+          expandIcon={<ArrowIcon right />}
+        />
       );
     });
   };
