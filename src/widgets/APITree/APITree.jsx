@@ -7,10 +7,12 @@ import Error from "@mui/icons-material/Error";
 import Fade from "@mui/material/Fade";
 import NonExpandableAPITreeItem from "../../components/NonExpandableAPITreeItem";
 import ResourceMenu from "../ResourceMenu";
+import { myApi } from "./sample2";
 import styles from "./styles";
 import theme from "../../theme";
 import { useContext } from "../../context/context";
 import { useEvent } from "@nucleoidjs/synapses";
+
 import {
   Box,
   Card,
@@ -40,6 +42,9 @@ function APITree() {
   const [state, dispatch] = useContext();
   const api = state.get("nucleoid.api");
   const grph = graph(api);
+  console.log("api", api);
+  console.log("grph", grph);
+  const newTree = compile2(myApi);
 
   const expandList = [];
 
@@ -186,6 +191,7 @@ function APITree() {
           <AddIcon />
         </Fab>
       </CardActions>
+      <Box> {newTree}</Box>
     </Card>
   );
 }
@@ -309,5 +315,72 @@ export const compile = (
       />
     );
   });
+
+export const compile2 = (apiData) => {
+  const groupedByPath = apiData.reduce((acc, endpoint) => {
+    let parts = endpoint.path.split("/");
+    let currentLevel = acc;
+
+    // Special handling for the root path
+    if (endpoint.path === "/") {
+      if (!currentLevel["/"]) {
+        currentLevel["/"] = {
+          methods: [],
+          children: {},
+        };
+      }
+      currentLevel["/"].methods.push(endpoint);
+      return acc;
+    }
+
+    parts.forEach((part, idx, arr) => {
+      if (part) {
+        if (!currentLevel[part]) {
+          currentLevel[part] = {
+            methods: [],
+            children: {},
+          };
+        }
+
+        if (idx === arr.length - 1) {
+          currentLevel[part].methods.push(endpoint);
+        } else {
+          currentLevel = currentLevel[part].children;
+        }
+      }
+    });
+
+    return acc;
+  }, {});
+
+  const renderTree = (data) => {
+    return Object.keys(data).map((path) => {
+      const { methods, children } = data[path];
+
+      let methodItems = methods.map((method, idx) => (
+        <TreeItem
+          key={method.method + idx}
+          nodeId={method.method + idx}
+          label={<div className="method">{method.method.toUpperCase()}</div>}
+        />
+      ));
+
+      let childItems = children ? renderTree(children) : [];
+
+      return (
+        <TreeItem
+          key={path}
+          nodeId={path}
+          label={<div className="path">{path}</div>}
+        >
+          {methodItems}
+          {childItems}
+        </TreeItem>
+      );
+    });
+  };
+
+  return <TreeView>{renderTree(groupedByPath)}</TreeView>;
+};
 
 export default APITree;
