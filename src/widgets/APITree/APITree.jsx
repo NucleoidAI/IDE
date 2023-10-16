@@ -261,6 +261,7 @@ export const compile = (
       .map((method) => {
         const payload = { path: api.path, method };
         const hash = (resourceHash = window.btoa(JSON.stringify(payload)));
+
         map[hash] = payload;
         const error = err.find((item) => {
           const [errPath, errMethod] = item.file.fileName.split(".");
@@ -316,25 +317,15 @@ export const compile = (
     expandList.push(api.path);
 
     return (
-      console.log("******///////////////compile******"),
-      console.log("key ", api.path),
-      console.log("nodeId ", api.path),
-      console.log("label ", api.path),
-      console.log("children ", children),
-      console.log("onClick ", () => {
-        return { hash: resourceHash, map: map };
-      }),
-      (
-        <NonExpandableAPITreeItem
-          key={api.path}
-          nodeId={api.path}
-          label={api.label}
-          children={children}
-          onClick={() => {
-            return { hash: resourceHash, map: map };
-          }}
-        />
-      )
+      <NonExpandableAPITreeItem
+        key={api.path}
+        nodeId={api.path}
+        label={api.label}
+        children={children}
+        onClick={() => {
+          return { hash: resourceHash, map: map };
+        }}
+      />
     );
   });
 
@@ -384,12 +375,14 @@ export const compile2 = (
   }, {});
 
   const renderTree = (data) => {
+    let resourceHash;
     return Object.keys(data).map((path) => {
       const { methods, children } = data[path];
 
       let methodItems = methods.map((method, idx) => {
-        const payload = { path: path, method: method.method };
-        const hash = window.btoa(JSON.stringify(payload));
+        const payload = { path: method.path, method: method.method };
+        const hash = (resourceHash = window.btoa(JSON.stringify(payload)));
+        map[hash] = payload;
 
         const error = errors.find((item) => {
           const [errPath, errMethod] = item.file.fileName.split(".");
@@ -451,9 +444,6 @@ export const compile2 = (
           nodeId={path}
           label={<div className="path">{path}</div>}
           children={[...methodItems, ...childItems]}
-          onClick={() => {
-            return { hash: "", map: map };
-          }}
           collapseIcon={<ArrowIcon down />}
           expandIcon={<ArrowIcon right />}
         />
