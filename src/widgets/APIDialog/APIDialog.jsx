@@ -9,6 +9,7 @@ import actions from "../../actions";
 import styles from "./styles";
 import { useContext } from "../../context/context";
 import { v4 as uuid } from "uuid";
+
 import { Dialog, DialogActions, DialogContent, Grid } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -209,12 +210,18 @@ function APIDialog() {
   const checkMethodDeletable = () => {
     const { pages, nucleoid } = context;
     const { api } = nucleoid;
-    const path = pages.api.selected.path;
+
+    const selectedPath = pages.api.selected?.path;
 
     if (action === "add") return true;
-    if (pages.api) {
-      return Object.keys(api[path]).length <= 1 ? true : false;
+
+    if (pages.api && selectedPath) {
+      const samePathCount = api.filter(
+        (endpoint) => endpoint.path === selectedPath
+      ).length;
+      return samePathCount <= 1;
     }
+    return false;
   };
 
   const handleSetParams = () => {

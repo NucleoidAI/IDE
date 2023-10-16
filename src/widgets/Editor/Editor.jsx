@@ -6,6 +6,7 @@ import { parser } from "react-nucleoid";
 import { publish } from "@nucleoidjs/synapses";
 import rules from "./rules";
 import { useContext } from "../../context/context";
+
 import { Backdrop, Box } from "@mui/material";
 
 import * as angularPlugin from "prettier/parser-angular";
@@ -290,9 +291,16 @@ function getFile(context, props) {
 
     if (!selected) return file;
 
+    const apiConfig = context.nucleoid.api.find(
+      (endpoint) =>
+        endpoint.path === selected?.path && endpoint.method === selected?.method
+    );
+
+    if (!apiConfig) return file;
+
     file.path = selected?.path + selected?.method;
-    file.code =
-      context.nucleoid.api[selected?.path][selected?.method]["x-nuc-action"];
+
+    file.code = apiConfig["x-nuc-action"];
   }
 
   if (functions) {
@@ -301,12 +309,18 @@ function getFile(context, props) {
     if (!selected) return file;
 
     file.path = selected;
-    file.code = context.nucleoid.functions.find(
+    const functionItem = context.nucleoid.functions.find(
       (item) => item.path === selected
-    ).definition;
+    );
+
+    if (!functionItem) return file; // or handle this absence
+
+    file.code = functionItem.definition;
   }
 
   if (query) {
+    // I'm assuming your logic for 'query' will remain the same,
+    // so no changes are required here if that's the case.
     console.log("query");
   }
 

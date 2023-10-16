@@ -7,7 +7,6 @@ import Error from "@mui/icons-material/Error";
 import Fade from "@mui/material/Fade";
 import NonExpandableAPITreeItem from "../../components/NonExpandableAPITreeItem";
 import ResourceMenu from "../ResourceMenu";
-import { myApi } from "./sample2";
 import styles from "./styles";
 import theme from "../../theme";
 import { useContext } from "../../context/context";
@@ -41,7 +40,6 @@ function APITree() {
   const [errors] = useEvent("DIAGNOSTICS_COMPLETED", []);
   const [state, dispatch] = useContext();
   const api = state.get("nucleoid.api");
-  const grph = graph(api);
 
   const expandList = [];
 
@@ -115,10 +113,15 @@ function APITree() {
     const { pages, nucleoid } = state;
     const { api } = nucleoid;
 
+    const countMethodsForPath = (path) => {
+      return api.filter((endpoint) => endpoint.path === path).length;
+    };
     if (pages.api.selected) {
-      const path = pages.api.selected.path;
-      return Object.keys(api[path]).length <= 1 ? true : false;
+      const apiSelectedPath = pages.api.selected.path;
+
+      return countMethodsForPath(apiSelectedPath) <= 1;
     }
+    return false;
   };
 
   useEffect(() => {
@@ -145,14 +148,15 @@ function APITree() {
           onNodeSelect={(event, value) => select(value)}
           selected={selected}
         >
-          {compile(
-            [grph["/"]],
+          {compile2(
+            api,
             handleContextMenu,
             expandList,
             rightClickMethod,
             errors
           )}
         </TreeView>
+
         <Menu
           open={contextMenu !== null}
           onClose={handleClose}
@@ -188,22 +192,6 @@ function APITree() {
           <AddIcon />
         </Fab>
       </CardActions>
-      <TreeView
-        defaultCollapseIcon={<ArrowIcon down />}
-        defaultExpandIcon={<ArrowIcon right />}
-        onNodeToggle={handleToggle}
-        expanded={expanded}
-        onNodeSelect={(event, value) => select(value)}
-        selected={selected}
-      >
-        {compile2(
-          myApi,
-          handleContextMenu,
-          expandList,
-          rightClickMethod,
-          errors
-        )}
-      </TreeView>
     </Card>
   );
 }
@@ -451,7 +439,7 @@ export const compile2 = (
     });
   };
 
-  return <TreeView>{renderTree(groupedByPath)}</TreeView>;
+  return renderTree(groupedByPath);
 };
 
 export default APITree;
