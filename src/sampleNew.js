@@ -26,6 +26,9 @@ export const myApi = [
       },
     ],
     response: "object",
+    "x-nuc-action": `function action(req: any): { message: string } {
+        return { message: "Hello World" };
+      }`,
   },
   {
     path: "/items",
@@ -39,6 +42,10 @@ export const myApi = [
       },
     ],
     response: "Item[]",
+    "x-nuc-action": `function action(req: { query: { name: string } }): any {
+      const name = req.query.name;
+      return Item.filter(item => item.name === name);
+    }`,
   },
   {
     path: "/items",
@@ -55,6 +62,15 @@ export const myApi = [
       },
     },
     response: "Item",
+    "x-nuc-action": `function action(req: { body: { name: string, barcode: string } }): any {
+      const name = req.body.name;
+      const barcode = req.body.barcode;
+      const check = Item.find(i => i.barcode === barcode);
+      if(check) {
+        throw "DUPLICATE_BARCODE";
+      }
+      return new Item(name, barcode);
+    }`,
   },
   {
     path: "/items/{item}",
@@ -69,6 +85,10 @@ export const myApi = [
       },
     ],
     response: "Item",
+    "x-nuc-action": `function action(req: { params: { item: string } }): any {
+      const item = req.params.item;
+      return Item[item];
+    }`,
   },
   {
     path: "/items/{item}",
@@ -94,6 +114,23 @@ export const myApi = [
       },
     },
     response: "Item",
+    "x-nuc-action": `function action(req: { params: { item: string }, body: { name: string, barcode: string } }): any {
+      const item = Item[req.params.item];
+      const name = req.body.name;
+      const barcode = req.body.barcode;
+      if (!item) {
+        return;
+      }
+      const check = Item.find(
+        i => i.barcode === barcode && i.barcode !== item.barcode
+      );
+      if (check) {
+        throw "DUPLICATE_BARCODE";
+      }
+      item.name = name;
+      item.barcode = barcode;
+      return item;
+    }`,
   },
   {
     path: "/items/{item}",
@@ -108,12 +145,19 @@ export const myApi = [
       },
     ],
     response: "object",
+    "x-nuc-action": `function action(req: { params: { item: string } }): void {
+      const item = req.params.item;
+      delete Item[item];
+    }`,
   },
   {
     path: "/orders",
     method: "get",
     params: [],
     response: "Order[]",
+    "x-nuc-action": `function action(req: any): any {
+      return Order;
+    }`,
   },
   {
     path: "/orders",
@@ -130,6 +174,14 @@ export const myApi = [
       },
     },
     response: "Order",
+    "x-nuc-action": `function action(req: { body: { item: string, qty: number } }): any {
+      const item = Item[req.body.item];
+      const qty = req.body.qty;
+      if (!item) {
+        throw "INVALID_ITEM";
+      }
+      return new Order(item, qty);
+    }`,
   },
   {
     path: "/orders/{order}",
@@ -144,6 +196,10 @@ export const myApi = [
       },
     ],
     response: "Order",
+    "x-nuc-action": `function action(req: { params: { order: string } }): any {
+      const order = req.params.order;
+      return Order[order];
+    }`,
   },
   {
     path: "/orders/{order}",
@@ -169,6 +225,20 @@ export const myApi = [
       },
     },
     response: "Order",
+    "x-nuc-action": `function action(req: { params: { order: string }, body: { item: string, qty: number } }): any {
+      const order = Order[req.params.order];
+      const item = Item[req.body.item];
+      const qty = req.body.qty;
+      if (!order) {
+        return;
+      }
+      if (!item) {
+        throw "INVALID_ITEM";
+      }
+      order.item = item;
+      order.qty = qty;
+      return order;
+    }`,
   },
   {
     path: "/orders/{order}",
@@ -183,5 +253,9 @@ export const myApi = [
       },
     ],
     response: "object",
+    "x-nuc-action": `function action(req: { params: { order: string } }): void {
+      const order = req.params.order;
+      delete Order[order];
+    }`,
   },
 ];
