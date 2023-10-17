@@ -59,11 +59,27 @@ function APIDialog() {
     };
 
     const initEdit = (method, path) => {
+      const route = apiRef.current.find(
+        (route) =>
+          route.path === path &&
+          route.method.toLowerCase() === method.toLowerCase()
+      );
+
+      if (!route) {
+        console.error(
+          "No matching route found for method and path:",
+          method,
+          path
+        );
+        return;
+      }
+
       setMethod(method);
-      setParams(apiRef.current[path][method].params);
-      paramsRef.current = index(apiRef.current[path][method].params);
-      requestRef.current = compile(apiRef.current[path][method].request);
-      responseRef.current = compile(apiRef.current[path][method].response);
+
+      setParams(route.params);
+      paramsRef.current = index(route.params);
+      requestRef.current = route.request ? compile(route.request) : null;
+      responseRef.current = route.response ? compile(route.response) : null;
       typesRef.current = Object.entries(context.get("nucleoid.types"))
         .map(([key, value]) => ({
           ...value,

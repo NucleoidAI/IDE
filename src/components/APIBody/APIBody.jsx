@@ -1,6 +1,7 @@
 import ParamView from "../ParamView";
 import Schema from "../Schema";
 import styles from "./styles";
+
 import { Divider, Grid } from "@mui/material";
 import React, { forwardRef } from "react";
 
@@ -15,13 +16,14 @@ const APIBody = forwardRef(
               <ParamView params={params} />
             </>
           )}
-          {method !== "get" && (
+
+          {/*method !== "get" && (
             <Schema edit types={types} request ref={requestRef} />
-          )}
+          )*/}
         </Grid>
         <Divider orientation={"vertical"} sx={styles.divider} />
         <Grid item md sx={styles.schema}>
-          <Schema edit response types={types} ref={responseRef} />
+          {/*<Schema edit response types={types} ref={responseRef} />*/}
         </Grid>
       </Grid>
     );

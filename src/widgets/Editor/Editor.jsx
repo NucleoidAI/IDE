@@ -313,14 +313,12 @@ function getFile(context, props) {
       (item) => item.path === selected
     );
 
-    if (!functionItem) return file; // or handle this absence
+    if (!functionItem) return file;
 
     file.code = functionItem.definition;
   }
 
   if (query) {
-    // I'm assuming your logic for 'query' will remain the same,
-    // so no changes are required here if that's the case.
     console.log("query");
   }
 

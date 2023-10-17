@@ -2,6 +2,7 @@ import Schema from "./Schema";
 import TextField from "@mui/material/TextField";
 import TreeItem from "@mui/lab/TreeItem";
 import TypeMenu from "./TypeMenu";
+
 import React, { useRef, useState } from "react";
 
 function SchemaType({ id, name, map, type, types, edit, ...other }) {
@@ -36,13 +37,11 @@ function SchemaType({ id, name, map, type, types, edit, ...other }) {
                 map={map}
                 edit
               />
-              <Schema ref={typeSchema} types={types} />
+              {/*<Schema ref={typeSchema} types={types} /> */}
             </>
           )}
           {!edit && (
-            <>
-              {type} <Schema ref={typeSchema} types={types} />
-            </>
+            <>{/*{type} <Schema ref={typeSchema} types={types} /> */}</>
           )}
         </>
       }
