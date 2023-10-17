@@ -135,9 +135,23 @@ function contextReducer(state, { type, payload }) {
     case "DELETE_METHOD": {
       const { path, method } = pages.api.selected;
 
-      if (Object.keys(nucleoid.api[path]).length > 1) {
-        delete nucleoid.api[path][method];
-        state.pages.api.selected.method = Object.keys(nucleoid.api[path])[0];
+      const routeIndex = nucleoid.api.findIndex(
+        (route) =>
+          route.path === path &&
+          route.method.toLowerCase() === method.toLowerCase()
+      );
+
+      if (routeIndex !== -1) {
+        nucleoid.api.splice(routeIndex, 1);
+      }
+
+      const samePathRoutes = nucleoid.api.filter(
+        (route) => route.path === path
+      );
+      if (samePathRoutes.length > 0) {
+        state.pages.api.selected.method = samePathRoutes[0].method;
+      } else {
+        state.pages.api.selected.method = null;
       }
 
       break;
