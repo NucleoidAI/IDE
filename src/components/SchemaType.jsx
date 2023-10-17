@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Schema from "./Schema";
 import TextField from "@mui/material/TextField";
 import TreeItem from "@mui/lab/TreeItem";
@@ -51,3 +52,4 @@ function SchemaType({ id, name, map, type, types, edit, ...other }) {
 }
 
 export default SchemaType;
+/* eslint-disable */

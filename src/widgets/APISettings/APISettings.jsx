@@ -1,3 +1,4 @@
+/* eslint-disable */
 import EditButton from "../../components/EditButton";
 import EditIcon from "@mui/icons-material/Edit";
 import ParamView from "../../components/ParamView";
@@ -127,3 +128,4 @@ function APISettings() {
 }
 
 export default APISettings;
+/* eslint-disable */

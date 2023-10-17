@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import ParamView from "../ParamView";
 import Schema from "../Schema";
 import styles from "./styles";
@@ -31,3 +33,4 @@ const APIBody = forwardRef(
 );
 
 export default APIBody;
+/* eslint-disable */

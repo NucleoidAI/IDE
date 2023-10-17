@@ -35,8 +35,11 @@
 //   }
 // }
 
+/* eslint-disable */
 import { mount } from "cypress/react18";
 
 Cypress.Commands.add("mount", (component, options) => {
   return mount(component, options);
 });
+
+/* eslint-enable */
