@@ -5,7 +5,6 @@ import DeleteMethodDialog from "../../components/DeleteMethodDialog";
 import EditIcon from "@mui/icons-material/Edit";
 import Error from "@mui/icons-material/Error";
 import Fade from "@mui/material/Fade";
-import NonExpandableAPITreeItem from "../../components/NonExpandableAPITreeItem";
 import ResourceMenu from "../ResourceMenu";
 import styles from "./styles";
 import theme from "../../theme";
@@ -148,7 +147,7 @@ function APITree() {
           onNodeSelect={(event, value) => select(value)}
           selected={selected}
         >
-          {compile2(
+          {compile(
             api,
             handleContextMenu,
             expandList,
@@ -196,128 +195,7 @@ function APITree() {
   );
 }
 
-export const graph = (api) => {
-  const list = Object.keys(api).map((key) => ({
-    path: key,
-    methods: Object.keys(api[key]),
-  }));
-
-  const graph = {};
-
-  list.forEach((each) => {
-    const parts = each.path.substring(1).split("/");
-    const label = "/" + parts.pop();
-    const parent = "/" + parts.join("/");
-
-    const node = {
-      label,
-      path: each.path,
-      resources: [],
-      methods: each.methods,
-    };
-
-    if (graph[parent]) graph[parent].resources.push(node);
-
-    graph[each.path] = node;
-  });
-
-  return graph;
-};
-
 export const compile = (
-  list,
-  handleContextMenu,
-  expandList,
-  rightClickMethod,
-  err
-) =>
-  list.map((api) => {
-    let children = undefined;
-    let resourceHash;
-
-    if (api.resources && api.resources.length > 0) {
-      children = compile(
-        api.resources,
-        handleContextMenu,
-        expandList,
-        rightClickMethod,
-        err
-      );
-    }
-
-    children = api.methods
-      .map((method) => {
-        const payload = { path: api.path, method };
-        const hash = (resourceHash = window.btoa(JSON.stringify(payload)));
-
-        map[hash] = payload;
-        const error = err.find((item) => {
-          const [errPath, errMethod] = item.file.fileName.split(".");
-          if (errPath === api.path && errMethod === method) {
-            return item;
-          } else {
-            return null;
-          }
-        });
-
-        return (
-          <TreeItem
-            key={hash}
-            nodeId={hash}
-            onContextMenu={(event) => handleContextMenu(event, hash)}
-            sx={{
-              bgcolor:
-                hash === rightClickMethod &&
-                theme.palette.custom.apiTreeRightClick,
-            }}
-            label={
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Box sx={styles.apiTreeItem}>
-                  <span
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {method.toUpperCase()}
-                  </span>
-                </Box>
-                {error && (
-                  <Tooltip title={error.messageText} placement={"right"}>
-                    <Error sx={{ color: "#8f8f91" }} />
-                  </Tooltip>
-                )}
-              </Box>
-            }
-          />
-        );
-      })
-      .concat(children);
-    expandList.push(api.path);
-
-    return (
-      <NonExpandableAPITreeItem
-        key={api.path}
-        nodeId={api.path}
-        label={api.label}
-        children={children}
-        onClick={() => {
-          return { hash: resourceHash, map: map };
-        }}
-      />
-    );
-  });
-
-export const compile2 = (
   apiData,
   handleContextMenu,
   expandList,
@@ -325,7 +203,7 @@ export const compile2 = (
   errors
 ) => {
   const groupedByPath = apiData.reduce((acc, endpoint) => {
-    let parts = endpoint.path.split("/");
+    const parts = endpoint.path.split("/");
     let currentLevel = acc;
 
     if (endpoint.path === "/") {
@@ -341,7 +219,7 @@ export const compile2 = (
 
       parts.forEach((part, idx, arr) => {
         if (idx !== 0) {
-          let currentPart = "/" + part;
+          const currentPart = "/" + part;
 
           if (!currentLevel[currentPart]) {
             currentLevel[currentPart] = {
@@ -363,11 +241,13 @@ export const compile2 = (
   }, {});
 
   const renderTree = (data) => {
+    // eslint-disable-next-line
     let resourceHash;
+
     return Object.keys(data).map((path) => {
       const { methods, children } = data[path];
 
-      let methodItems = methods.map((method, idx) => {
+      const methodItems = methods.map((method) => {
         const payload = { path: method.path, method: method.method };
         const hash = (resourceHash = window.btoa(JSON.stringify(payload)));
         map[hash] = payload;
@@ -423,7 +303,7 @@ export const compile2 = (
         );
       });
 
-      let childItems = children ? renderTree(children) : [];
+      const childItems = children ? renderTree(children) : [];
       expandList.push(path);
 
       return (
