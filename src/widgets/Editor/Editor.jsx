@@ -93,7 +93,14 @@ const Editor = React.forwardRef((props, ref) => {
 
     if (api) {
       const selected = context.pages.api.selected;
-      context.nucleoid.api[selected.path][selected.method]["x-nuc-action"] = e;
+      const endpointIndex = context.nucleoid.api.findIndex(
+        (endpoint) =>
+          endpoint.path === selected.path &&
+          endpoint.method.toLowerCase() === selected.method.toLowerCase()
+      );
+      if (endpointIndex !== -1) {
+        context.nucleoid.api[endpointIndex]["x-nuc-action"] = e;
+      }
     }
 
     if (functions) {

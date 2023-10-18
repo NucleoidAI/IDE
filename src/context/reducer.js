@@ -98,8 +98,13 @@ function contextReducer(state, { type, payload }) {
 
     case "SET_SELECTED_API": {
       if (payload.method === null) {
-        const method = Object.keys(nucleoid.api[payload.path])[0];
-        payload.method = method;
+        const endpoint = nucleoid.api.find(
+          (endpoint) => endpoint.path === payload.path
+        );
+
+        if (endpoint && endpoint.method) {
+          payload.method = endpoint.method;
+        }
       }
       pages.api.selected = {
         path: payload.path,
