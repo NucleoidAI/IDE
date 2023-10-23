@@ -3,6 +3,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { DataGrid } from "@mui/x-data-grid";
 import RemoveIcon from "@mui/icons-material/Remove";
 import Schema from "../Schema";
+import Types from "../../lib/TypeScript";
 import styles from "./styles";
 import { v4 as uuid } from "uuid";
 
@@ -11,7 +12,9 @@ import React, { forwardRef, useRef, useState } from "react";
 
 const APITypes = forwardRef((props, typesRef) => {
   const types = typesRef.current;
+  const typesTS = Types.getTypes();
   const [selected, setSelected] = useState(types.length ? types[0] : {});
+  const [selectedTypeName, setSelectedTypeName] = useState(null);
 
   const schema = useRef(types.length ? types[0] : null);
 
@@ -59,6 +62,38 @@ const APITypes = forwardRef((props, typesRef) => {
       flex: 1,
     },
   ];
+  const renderTypeNames = () => {
+    return (
+      <div style={{ marginTop: "20px" }}>
+        <h3>Type Names:</h3>
+        {typesTS.map((typeInfo, index) => (
+          <div key={index} style={{ cursor: "pointer" }}>
+            <span onClick={() => setSelectedTypeName(typeInfo.typeName)}>
+              {typeInfo.typeName}
+            </span>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const renderTypeDefinitions = () => {
+    const selectedType = typesTS.find(
+      (type) => type.typeName === selectedTypeName
+    );
+
+    if (!selectedType) {
+      return <div>No type selected</div>;
+    }
+
+    return (
+      <div>
+        <h3>Type Definitions:</h3>
+
+        <pre>{JSON.stringify(selectedType.typeDefinition, null, 2)}</pre>
+      </div>
+    );
+  };
 
   return (
     <Grid container sx={styles.root}>
@@ -74,6 +109,7 @@ const APITypes = forwardRef((props, typesRef) => {
           }}
           // TODO focus will be added
         />
+        {renderTypeNames()}
         <IconButton onClick={addType}>
           <AddIcon />
         </IconButton>
@@ -88,6 +124,7 @@ const APITypes = forwardRef((props, typesRef) => {
         {/* {schema.current && (
           <Schema edit key={uuid()} ref={schema} types={types} />
         )} */}
+        {renderTypeDefinitions()}
       </Grid>
     </Grid>
   );
