@@ -19,18 +19,23 @@ const resolveNestedClasses = (classStructures) => {
     classNameToStructureMap[className] = structure.typeDefinition[className];
   });
 
-  const resolvePropertyType = (propType) => {
-    if (classNameToStructureMap.hasOwnProperty(propType)) {
-      return classNameToStructureMap[propType];
+  const resolvePropertyType = (propType, depth = 0) => {
+    if (depth > 1 || !classNameToStructureMap.hasOwnProperty(propType)) {
+      return propType;
     }
 
-    return propType;
+    return Object.fromEntries(
+      Object.entries(classNameToStructureMap[propType]).map(([name, type]) => [
+        name,
+        resolvePropertyType(type, depth + 1),
+      ])
+    );
   };
 
   classStructures.forEach((structure) => {
     const properties = structure.typeDefinition[structure.typeName];
     for (const propName in properties) {
-      properties[propName] = resolvePropertyType(properties[propName]);
+      properties[propName] = resolvePropertyType(properties[propName], 1);
     }
   });
 
@@ -117,17 +122,36 @@ const getOpenApiSchemas = () => {
 
   classStructures.forEach((structure) => {
     const className = structure.typeName;
-    const properties = structure.typeDefinition[className];
-    const schema = {
+    openApiSchemas[className] = {
       type: "object",
       properties: {},
     };
+  });
+
+  classStructures.forEach((structure) => {
+    const className = structure.typeName;
+    const properties = structure.typeDefinition[className];
+    const schema = openApiSchemas[className];
 
     for (const [propName, propType] of Object.entries(properties)) {
-      schema.properties[propName] = toOpenApiType(propType);
-    }
+      if (typeof propType === "object" && !Array.isArray(propType)) {
+        const matchingClass = classStructures.find(
+          (struct) =>
+            JSON.stringify(struct.typeDefinition[struct.typeName]) ===
+            JSON.stringify(propType)
+        );
 
-    openApiSchemas[className] = schema;
+        if (matchingClass) {
+          schema.properties[propName] = {
+            $ref: `#/components/schemas/${matchingClass.typeName}`,
+          };
+        } else {
+          schema.properties[propName] = propType;
+        }
+      } else {
+        schema.properties[propName] = toOpenApiType(propType);
+      }
+    }
   });
 
   return openApiSchemas;
