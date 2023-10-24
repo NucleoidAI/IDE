@@ -11,6 +11,32 @@ const getClassFunctions = () => {
     .map((func) => func.definition);
 };
 
+const resolveNestedClasses = (classStructures) => {
+  const classNameToStructureMap = {};
+
+  classStructures.forEach((structure) => {
+    const className = structure.typeName;
+    classNameToStructureMap[className] = structure.typeDefinition[className];
+  });
+
+  const resolvePropertyType = (propType) => {
+    if (classNameToStructureMap.hasOwnProperty(propType)) {
+      return classNameToStructureMap[propType];
+    }
+
+    return propType;
+  };
+
+  classStructures.forEach((structure) => {
+    const properties = structure.typeDefinition[structure.typeName];
+    for (const propName in properties) {
+      properties[propName] = resolvePropertyType(properties[propName]);
+    }
+  });
+
+  return classStructures;
+};
+
 const transformClassDefinitionUsingTS = (classDef) => {
   const sourceFile = ts.createSourceFile(
     "temp.ts",
@@ -60,13 +86,54 @@ const transformAllClassesUsingTS = (classes) => {
   }, []);
 };
 
+const toOpenApiType = (type) => {
+  switch (type) {
+    case "string":
+      return "string";
+    case "number":
+      return "number";
+    case "boolean":
+      return "boolean";
+
+    default:
+      return { type: "object", properties: type };
+  }
+};
+
 const getTypes = () => {
   const classFunctions = getClassFunctions();
   const transformedClassesUsingTS = transformAllClassesUsingTS(classFunctions);
-  console.log("transformedClassesUsingTS", transformedClassesUsingTS);
-  return transformedClassesUsingTS;
+  const resolvedClassStructures = resolveNestedClasses(
+    transformedClassesUsingTS
+  );
+
+  return resolvedClassStructures;
+};
+
+const getOpenApiSchemas = () => {
+  const classStructures = getTypes();
+
+  const openApiSchemas = {};
+
+  classStructures.forEach((structure) => {
+    const className = structure.typeName;
+    const properties = structure.typeDefinition[className];
+    const schema = {
+      type: "object",
+      properties: {},
+    };
+
+    for (const [propName, propType] of Object.entries(properties)) {
+      schema.properties[propName] = toOpenApiType(propType);
+    }
+
+    openApiSchemas[className] = schema;
+  });
+
+  return openApiSchemas;
 };
 
 export default {
   getTypes,
+  getOpenApiSchemas,
 };

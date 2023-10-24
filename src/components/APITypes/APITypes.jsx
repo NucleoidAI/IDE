@@ -13,6 +13,7 @@ import React, { forwardRef, useRef, useState } from "react";
 const APITypes = forwardRef((props, typesRef) => {
   const types = typesRef.current;
   const typesTS = Types.getTypes();
+  const openAPITypes = Types.getOpenApiSchemas();
   const [selected, setSelected] = useState(types.length ? types[0] : {});
   const [selectedTypeName, setSelectedTypeName] = useState(null);
 
@@ -125,6 +126,10 @@ const APITypes = forwardRef((props, typesRef) => {
           <Schema edit key={uuid()} ref={schema} types={types} />
         )} */}
         {renderTypeDefinitions()}
+        <h3>OpenAPI Types:</h3>
+        <pre style={{ whiteSpace: "pre-wrap" }}>
+          {JSON.stringify(openAPITypes, null, 2)}
+        </pre>
       </Grid>
     </Grid>
   );
