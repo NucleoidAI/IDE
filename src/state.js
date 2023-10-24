@@ -48,9 +48,14 @@ function copy(state) {
 
 function withSample() {
   const state = init();
+  const newTypes = JSON.parse(JSON.stringify(types));
+  for (const typeName in newTypes) {
+    newTypes[typeName].src = "openapi";
+  }
   state.nucleoid.api = api;
   state.nucleoid.types = types;
   state.nucleoid.functions = functions;
+  state.nucleoid.newTypes = newTypes;
   return state;
 }
 
