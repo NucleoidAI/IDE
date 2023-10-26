@@ -5,12 +5,12 @@ import DeleteMethodDialog from "../../components/DeleteMethodDialog";
 import EditIcon from "@mui/icons-material/Edit";
 import Error from "@mui/icons-material/Error";
 import Fade from "@mui/material/Fade";
-import NonExpandableAPITreeItem from "../../components/NonExpandableAPITreeItem";
 import ResourceMenu from "../ResourceMenu";
 import styles from "./styles";
 import theme from "../../theme";
 import { useContext } from "../../context/context";
 import { useEvent } from "@nucleoidjs/synapses";
+
 import {
   Box,
   Card,
@@ -39,7 +39,6 @@ function APITree() {
   const [errors] = useEvent("DIAGNOSTICS_COMPLETED", []);
   const [state, dispatch] = useContext();
   const api = state.get("nucleoid.api");
-  const grph = graph(api);
 
   const expandList = [];
 
@@ -113,10 +112,15 @@ function APITree() {
     const { pages, nucleoid } = state;
     const { api } = nucleoid;
 
+    const countMethodsForPath = (path) => {
+      return api.filter((endpoint) => endpoint.path === path).length;
+    };
     if (pages.api.selected) {
-      const path = pages.api.selected.path;
-      return Object.keys(api[path]).length <= 1 ? true : false;
+      const apiSelectedPath = pages.api.selected.path;
+
+      return countMethodsForPath(apiSelectedPath) <= 1;
     }
+    return false;
   };
 
   useEffect(() => {
@@ -144,13 +148,14 @@ function APITree() {
           selected={selected}
         >
           {compile(
-            [grph["/"]],
+            api,
             handleContextMenu,
             expandList,
             rightClickMethod,
             errors
           )}
         </TreeView>
+
         <Menu
           open={contextMenu !== null}
           onClose={handleClose}
@@ -190,63 +195,66 @@ function APITree() {
   );
 }
 
-export const graph = (api) => {
-  const list = Object.keys(api).map((key) => ({
-    path: key,
-    methods: Object.keys(api[key]),
-  }));
-
-  const graph = {};
-
-  list.forEach((each) => {
-    const parts = each.path.substring(1).split("/");
-    const label = "/" + parts.pop();
-    const parent = "/" + parts.join("/");
-
-    const node = {
-      label,
-      path: each.path,
-      resources: [],
-      methods: each.methods,
-    };
-
-    if (graph[parent]) graph[parent].resources.push(node);
-
-    graph[each.path] = node;
-  });
-
-  return graph;
-};
-
 export const compile = (
-  list,
+  apiData,
   handleContextMenu,
   expandList,
   rightClickMethod,
-  err
-) =>
-  list.map((api) => {
-    let children = undefined;
-    let resourceHash;
+  errors
+) => {
+  const groupedByPath = apiData.reduce((acc, endpoint) => {
+    const parts = endpoint.path.split("/");
+    let currentLevel = acc;
 
-    if (api.resources && api.resources.length > 0) {
-      children = compile(
-        api.resources,
-        handleContextMenu,
-        expandList,
-        rightClickMethod,
-        err
-      );
+    if (endpoint.path === "/") {
+      if (!currentLevel["/"]) {
+        currentLevel["/"] = {
+          methods: [],
+          children: {},
+        };
+      }
+      currentLevel["/"].methods.push(endpoint);
+    } else {
+      currentLevel = currentLevel["/"].children;
+
+      parts.forEach((part, idx, arr) => {
+        if (idx !== 0) {
+          const currentPart = "/" + part;
+
+          if (!currentLevel[currentPart]) {
+            currentLevel[currentPart] = {
+              methods: [],
+              children: {},
+            };
+          }
+
+          if (idx === arr.length - 1) {
+            currentLevel[currentPart].methods.push(endpoint);
+          } else {
+            currentLevel = currentLevel[currentPart].children;
+          }
+        }
+      });
     }
 
-    children = api.methods
-      .map((method) => {
-        const payload = { path: api.path, method };
+    return acc;
+  }, {});
+
+  const renderTree = (data) => {
+    // eslint-disable-next-line
+    let resourceHash;
+
+    return Object.keys(data).map((path) => {
+      const { methods, children } = data[path];
+
+      const methodItems = methods.map((method) => {
+        const payload = { path: method.path, method: method.method };
         const hash = (resourceHash = window.btoa(JSON.stringify(payload)));
         map[hash] = payload;
-        const error = err.find((item) => {
+
+        const error = errors.find((item) => {
           const [errPath, errMethod] = item.file.fileName.split(".");
-          if (errPath === api.path && errMethod === method) {
+          if (errPath === path && errMethod === method.method) {
             return item;
           } else {
             return null;
@@ -281,7 +289,7 @@ export const compile = (
                       justifyContent: "center",
                     }}
                   >
-                    {method.toUpperCase()}
+                    {method.method.toUpperCase()}
                   </span>
                 </Box>
                 {error && (
@@ -293,21 +301,25 @@ export const compile = (
             }
           />
         );
-      })
-      .concat(children);
-    expandList.push(api.path);
+      });
 
-    return (
-      <NonExpandableAPITreeItem
-        key={api.path}
-        nodeId={api.path}
-        label={api.label}
-        children={children}
-        onClick={() => {
-          return { hash: resourceHash, map: map };
-        }}
-      />
-    );
-  });
+      const childItems = children ? renderTree(children) : [];
+      expandList.push(path);
+
+      return (
+        <TreeItem
+          key={path}
+          nodeId={path}
+          label={<div className="path">{path}</div>}
+          children={[...methodItems, ...childItems]}
+          collapseIcon={<ArrowIcon down />}
+          expandIcon={<ArrowIcon right />}
+        />
+      );
+    });
+  };
+
+  return renderTree(groupedByPath);
+};
 
 export default APITree;

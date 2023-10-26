@@ -8,6 +8,7 @@ import SourceIcon from "@mui/icons-material/Source";
 import styles from "./styles";
 import { useContext } from "../../context/context";
 import { useRef } from "react";
+
 import { Divider, Menu, MenuItem, Typography } from "@mui/material";
 
 const ResourceMenu = (props) => {
@@ -24,17 +25,20 @@ const ResourceMenu = (props) => {
       const { pages, nucleoid } = state;
       const { api } = nucleoid;
 
+      const countMethodsForPath = (path) => {
+        return api.filter((endpoint) => endpoint.path === path).length;
+      };
+
       if (hash) {
         const path = map ? map[hash].path : null;
-
-        return Object.keys(api[path]).length > 3 ? true : false;
+        return countMethodsForPath(path) > 3;
       }
 
       if (pages.api.selected) {
         const apiSelectedPath = pages.api.selected.path;
-
-        return Object.keys(api[apiSelectedPath]).length > 3 ? true : false;
+        return countMethodsForPath(apiSelectedPath) > 3;
       }
+      return false;
     };
 
     setMethodDisabled(checkMethodAddable());

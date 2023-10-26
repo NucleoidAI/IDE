@@ -1,0 +1,261 @@
+export class Item {
+  constructor(name, barcode) {
+    this.name = name;
+    this.barcode = barcode;
+  }
+}
+
+export class Order {
+  constructor(item, qty) {
+    this.item = item;
+    this.qty = qty;
+  }
+}
+
+export const myApi = [
+  {
+    path: "/",
+    method: "get",
+    params: [
+      {
+        name: "example",
+        in: "query",
+        type: "string",
+        required: false,
+        description: "example",
+      },
+    ],
+    response: "object",
+    "x-nuc-action": `function action(req: any): { message: string } {
+        return { message: "Hello World" };
+      }`,
+  },
+  {
+    path: "/items",
+    method: "get",
+    params: [
+      {
+        in: "query",
+        type: "string",
+        required: true,
+        name: "name",
+      },
+    ],
+    response: "Item[]",
+    "x-nuc-action": `function action(req: { query: { name: string } }): any {
+      const name = req.query.name;
+      return Item.filter(item => item.name === name);
+    }`,
+  },
+  {
+    path: "/items",
+    method: "post",
+    request: {
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+        },
+        barcode: {
+          type: "string",
+        },
+      },
+    },
+    response: "Item",
+    "x-nuc-action": `function action(req: { body: { name: string, barcode: string } }): any {
+      const name = req.body.name;
+      const barcode = req.body.barcode;
+      const check = Item.find(i => i.barcode === barcode);
+      if(check) {
+        throw "DUPLICATE_BARCODE";
+      }
+      return new Item(name, barcode);
+    }`,
+  },
+  {
+    path: "/items/{item}",
+    method: "get",
+    params: [
+      {
+        name: "item",
+        in: "path",
+        type: "string",
+        required: true,
+        description: "item",
+      },
+    ],
+    response: "Item",
+    "x-nuc-action": `function action(req: { params: { item: string } }): any {
+      const item = req.params.item;
+      return Item[item];
+    }`,
+  },
+  {
+    path: "/items/{item}",
+    method: "put",
+    params: [
+      {
+        name: "item",
+        in: "path",
+        type: "string",
+        required: true,
+        description: "item",
+      },
+    ],
+    request: {
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+        },
+        barcode: {
+          type: "string",
+        },
+      },
+    },
+    response: "Item",
+    "x-nuc-action": `function action(req: { params: { item: string }, body: { name: string, barcode: string } }): any {
+      const item = Item[req.params.item];
+      const name = req.body.name;
+      const barcode = req.body.barcode;
+      if (!item) {
+        return;
+      }
+      const check = Item.find(
+        i => i.barcode === barcode && i.barcode !== item.barcode
+      );
+      if (check) {
+        throw "DUPLICATE_BARCODE";
+      }
+      item.name = name;
+      item.barcode = barcode;
+      return item;
+    }`,
+  },
+  {
+    path: "/items/{item}",
+    method: "del",
+    params: [
+      {
+        name: "item",
+        in: "path",
+        type: "string",
+        required: true,
+        description: "item",
+      },
+    ],
+    response: "object",
+    "x-nuc-action": `function action(req: { params: { item: string } }): void {
+      const item = req.params.item;
+      delete Item[item];
+    }`,
+  },
+  {
+    path: "/orders",
+    method: "get",
+    params: [],
+    response: "Order[]",
+    "x-nuc-action": `function action(req: any): any {
+      return Order;
+    }`,
+  },
+  {
+    path: "/orders",
+    method: "post",
+    request: {
+      type: "object",
+      properties: {
+        item: {
+          type: "string",
+        },
+        qty: {
+          type: "integer",
+        },
+      },
+    },
+    response: "Order",
+    "x-nuc-action": `function action(req: { body: { item: string, qty: number } }): any {
+      const item = Item[req.body.item];
+      const qty = req.body.qty;
+      if (!item) {
+        throw "INVALID_ITEM";
+      }
+      return new Order(item, qty);
+    }`,
+  },
+  {
+    path: "/orders/{order}",
+    method: "get",
+    params: [
+      {
+        name: "order",
+        in: "path",
+        type: "string",
+        required: true,
+        description: "order",
+      },
+    ],
+    response: "Order",
+    "x-nuc-action": `function action(req: { params: { order: string } }): any {
+      const order = req.params.order;
+      return Order[order];
+    }`,
+  },
+  {
+    path: "/orders/{order}",
+    method: "put",
+    params: [
+      {
+        name: "order",
+        in: "path",
+        type: "string",
+        required: true,
+        description: "Order id",
+      },
+    ],
+    request: {
+      type: "object",
+      properties: {
+        item: {
+          type: "string",
+        },
+        qty: {
+          type: "integer",
+        },
+      },
+    },
+    response: "Order",
+    "x-nuc-action": `function action(req: { params: { order: string }, body: { item: string, qty: number } }): any {
+      const order = Order[req.params.order];
+      const item = Item[req.body.item];
+      const qty = req.body.qty;
+      if (!order) {
+        return;
+      }
+      if (!item) {
+        throw "INVALID_ITEM";
+      }
+      order.item = item;
+      order.qty = qty;
+      return order;
+    }`,
+  },
+  {
+    path: "/orders/{order}",
+    method: "del",
+    params: [
+      {
+        name: "order",
+        in: "path",
+        type: "string",
+        required: true,
+        description: "Order id",
+      },
+    ],
+    response: "object",
+    "x-nuc-action": `function action(req: { params: { order: string } }): void {
+      const order = req.params.order;
+      delete Order[order];
+    }`,
+  },
+];

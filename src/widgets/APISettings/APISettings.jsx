@@ -1,3 +1,4 @@
+/* eslint-disable */
 import EditButton from "../../components/EditButton";
 import EditIcon from "@mui/icons-material/Edit";
 import ParamView from "../../components/ParamView";
@@ -7,6 +8,7 @@ import SummaryForm from "../../components/SummaryForm";
 import { compile } from "../../widgets/APIDialog/Context";
 import styles from "./styles";
 import { useContext } from "../../context/context";
+
 import { Box, Fab, Grid, Typography, useMediaQuery } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 
@@ -28,22 +30,29 @@ function APISettings() {
     const api = state.get("nucleoid.api");
 
     if (selected) {
-      setMethod(selected.method);
-      setParams(api[selected.path][selected.method].params);
-      setSummary(api[selected.path][selected.method].summary);
-      setRequest(compile(api[selected.path][selected.method].request));
-      setResponse(compile(api[selected.path][selected.method].response));
-      setDescription(api[selected.path][selected.method].description);
-
-      setTypes(
-        Object.entries(state.get("nucleoid.types"))
-          .map(([key, value]) => ({
-            ...value,
-            name: key,
-            type: value.type,
-          }))
-          .map((type) => compile(type))
+      const selectedApiEndpoint = api.find(
+        (endpoint) =>
+          endpoint.path === selected.path && endpoint.method === selected.method
       );
+
+      if (selectedApiEndpoint) {
+        setMethod(selected.method);
+        setParams(selectedApiEndpoint.params || []);
+        setSummary(selectedApiEndpoint.summary || "");
+        setRequest(compile(selectedApiEndpoint.request || {}));
+        setResponse(compile(selectedApiEndpoint.response || {}));
+        setDescription(selectedApiEndpoint.description || "");
+
+        setTypes(
+          Object.entries(state.get("nucleoid.types"))
+            .map(([key, value]) => ({
+              ...value,
+              name: key,
+              type: value.type,
+            }))
+            .map((type) => compile(type))
+        );
+      }
     }
   }, [state, method]);
 
@@ -73,24 +82,25 @@ function APISettings() {
                 <ParamView params={params} />
               </Grid>
             )}
-            {method !== "get" && request && (
+            //TODO: decide on how to display request and response
+            {/*method !== "get" && request && (
               <Schema
                 key={Object.keys(request)[0]}
                 request
                 types={types}
                 ref={request}
               />
-            )}
+            )*/}
           </Grid>
           <Grid item xs={6} sx={styles.schema}>
-            {response && (
+            {/*response && (
               <Schema
                 key={Object.keys(response)[0]}
                 response
                 types={types}
                 ref={response}
               />
-            )}
+            )*/}
           </Grid>
         </Grid>
         {!matchWidth && <EditButton openEditDialog={openEditDialog} />}
@@ -118,3 +128,4 @@ function APISettings() {
 }
 
 export default APISettings;
+/* eslint-disable */

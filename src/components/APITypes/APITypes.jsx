@@ -1,10 +1,11 @@
+/* eslint-disable */
 import AddIcon from "@mui/icons-material/Add";
 import { DataGrid } from "@mui/x-data-grid";
 import RemoveIcon from "@mui/icons-material/Remove";
 import Schema from "../Schema";
-
 import styles from "./styles";
 import { v4 as uuid } from "uuid";
+
 import { Divider, Grid, IconButton, TextField } from "@mui/material";
 import React, { forwardRef, useRef, useState } from "react";
 
@@ -84,12 +85,13 @@ const APITypes = forwardRef((props, typesRef) => {
       </Grid>
       <Divider orientation={"vertical"} sx={styles.divider} />
       <Grid item md sx={styles.content}>
-        {schema.current && (
+        {/* {schema.current && (
           <Schema edit key={uuid()} ref={schema} types={types} />
-        )}
+        )} */}
       </Grid>
     </Grid>
   );
 });
 
 export default APITypes;
+/* eslint-disable */

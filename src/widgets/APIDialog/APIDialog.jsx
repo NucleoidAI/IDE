@@ -9,6 +9,7 @@ import actions from "../../actions";
 import styles from "./styles";
 import { useContext } from "../../context/context";
 import { v4 as uuid } from "uuid";
+
 import { Dialog, DialogActions, DialogContent, Grid } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -58,11 +59,27 @@ function APIDialog() {
     };
 
     const initEdit = (method, path) => {
+      const route = apiRef.current.find(
+        (route) =>
+          route.path === path &&
+          route.method.toLowerCase() === method.toLowerCase()
+      );
+
+      if (!route) {
+        console.error(
+          "No matching route found for method and path:",
+          method,
+          path
+        );
+        return;
+      }
+
       setMethod(method);
-      setParams(apiRef.current[path][method].params);
-      paramsRef.current = index(apiRef.current[path][method].params);
-      requestRef.current = compile(apiRef.current[path][method].request);
-      responseRef.current = compile(apiRef.current[path][method].response);
+
+      setParams(route.params);
+      paramsRef.current = index(route.params);
+      requestRef.current = route.request ? compile(route.request) : null;
+      responseRef.current = route.response ? compile(route.response) : null;
       typesRef.current = Object.entries(context.get("nucleoid.types"))
         .map(([key, value]) => ({
           ...value,
@@ -209,12 +226,18 @@ function APIDialog() {
   const checkMethodDeletable = () => {
     const { pages, nucleoid } = context;
     const { api } = nucleoid;
-    const path = pages.api.selected.path;
+
+    const selectedPath = pages.api.selected?.path;
 
     if (action === "add") return true;
-    if (pages.api) {
-      return Object.keys(api[path]).length <= 1 ? true : false;
+
+    if (pages.api && selectedPath) {
+      const samePathCount = api.filter(
+        (endpoint) => endpoint.path === selectedPath
+      ).length;
+      return samePathCount <= 1;
     }
+    return false;
   };
 
   const handleSetParams = () => {
