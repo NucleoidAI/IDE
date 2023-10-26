@@ -5,17 +5,33 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import Schema from "../Schema";
 import Types from "../../lib/TypeScript";
 import styles from "./styles";
+import { useContext } from "../../context/context.jsx";
 import { v4 as uuid } from "uuid";
 
-import { Divider, Grid, IconButton, TextField } from "@mui/material";
-import React, { forwardRef, useRef, useState } from "react";
+import {
+  Box,
+  Divider,
+  Grid,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 
 const APITypes = forwardRef((props, typesRef) => {
   const types = typesRef.current;
   const typesTS = Types.getTypes();
   const openAPITypes = Types.getOpenApiSchemas();
+
   const [selected, setSelected] = useState(types.length ? types[0] : {});
   const [selectedTypeName, setSelectedTypeName] = useState(null);
+  const [context] = useContext();
+  const newTypes = context.get("nucleoid.newTypes");
+  const allTypes = [...newTypes, ...typesTS];
 
   const schema = useRef(types.length ? types[0] : null);
 
@@ -63,43 +79,47 @@ const APITypes = forwardRef((props, typesRef) => {
       flex: 1,
     },
   ];
+
   const renderTypeNames = () => {
     return (
-      <div style={{ marginTop: "20px" }}>
-        <h3>Type Names:</h3>
-        {typesTS.map((typeInfo, index) => (
-          <div key={index} style={{ cursor: "pointer" }}>
-            <span onClick={() => setSelectedTypeName(typeInfo.typeName)}>
-              {typeInfo.typeName}
-            </span>
-          </div>
-        ))}
-      </div>
+      <Box sx={{ mt: 2 }}>
+        <Typography variant="h6">Type Names:</Typography>
+        <List component={Paper}>
+          {allTypes.map((typeInfo, index) => (
+            <ListItem
+              key={index}
+              onClick={() => setSelectedTypeName(typeInfo.typeName)}
+            >
+              <ListItemText primary={typeInfo.typeName} />
+              {typeInfo.src === "typescript" && <Typography>TS</Typography>}
+            </ListItem>
+          ))}
+        </List>
+      </Box>
     );
   };
 
   const renderTypeDefinitions = () => {
-    const selectedType = typesTS.find(
+    const selectedType = allTypes.find(
       (type) => type.typeName === selectedTypeName
     );
 
     if (!selectedType) {
-      return <div>No type selected</div>;
+      return <Typography>No type selected</Typography>;
     }
 
     return (
-      <div>
-        <h3>Type Definitions:</h3>
-
+      <Box sx={{ mt: 2 }}>
+        <Typography variant="h6">Type Definitions:</Typography>
         <pre>{JSON.stringify(selectedType.typeDefinition, null, 2)}</pre>
-      </div>
+      </Box>
     );
   };
 
   return (
     <Grid container sx={styles.root}>
       <Grid item md sx={styles.content}>
-        <DataGrid
+        {/* <DataGrid
           sx={styles.dataGrid}
           columns={columns}
           rows={types.map((type) => type[Object.keys(type)[0]])}
@@ -109,7 +129,7 @@ const APITypes = forwardRef((props, typesRef) => {
             setSelected(types.find((type) => type[id]) || {});
           }}
           // TODO focus will be added
-        />
+        /> */}
         {renderTypeNames()}
         <IconButton onClick={addType}>
           <AddIcon />
@@ -125,11 +145,8 @@ const APITypes = forwardRef((props, typesRef) => {
         {/* {schema.current && (
           <Schema edit key={uuid()} ref={schema} types={types} />
         )} */}
+
         {renderTypeDefinitions()}
-        <h3>OpenAPI Types:</h3>
-        <pre style={{ whiteSpace: "pre-wrap" }}>
-          {JSON.stringify(openAPITypes, null, 2)}
-        </pre>
       </Grid>
     </Grid>
   );

@@ -111,7 +111,9 @@ const getTypes = () => {
   const resolvedClassStructures = resolveNestedClasses(
     transformedClassesUsingTS
   );
-
+  resolvedClassStructures.forEach((structure) => {
+    structure.src = "typescript";
+  });
   return resolvedClassStructures;
 };
 

@@ -48,10 +48,20 @@ function copy(state) {
 
 function withSample() {
   const state = init();
-  const newTypes = JSON.parse(JSON.stringify(types));
-  for (const typeName in newTypes) {
-    newTypes[typeName].src = "openapi";
+  const newTypes = [];
+
+  for (const typeName in types) {
+    const newTypeStructure = {
+      typeName: typeName,
+      typeDefinition: {
+        [typeName]: types[typeName],
+      },
+      src: "openapi",
+    };
+
+    newTypes.push(newTypeStructure);
   }
+  console.log(newTypes);
   state.nucleoid.api = api;
   state.nucleoid.types = types;
   state.nucleoid.functions = functions;
