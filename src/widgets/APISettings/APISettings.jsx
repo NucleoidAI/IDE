@@ -44,13 +44,9 @@ function APISettings() {
         setDescription(selectedApiEndpoint.description || "");
 
         setTypes(
-          Object.entries(state.get("nucleoid.types"))
-            .map(([key, value]) => ({
-              ...value,
-              name: key,
-              type: value.type,
-            }))
-            .map((type) => compile(type))
+          state.get("nucleoid.types").map((typeObject) => {
+            return compile(typeObject);
+          })
         );
       }
     }

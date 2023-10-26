@@ -12,7 +12,7 @@ export class Order {
   }
 }
 
-export const myApi = [
+export const api = [
   {
     path: "/",
     method: "GET",
@@ -257,5 +257,44 @@ export const myApi = [
       const order = req.params.order;
       delete Order[order];
     }`,
+  },
+];
+
+export const types = [
+  {
+    name: "Item",
+    type: "OPENAPI",
+    schema: {
+      type: "object",
+      properties: {
+        id: {
+          type: "string",
+        },
+        name: {
+          type: "string",
+        },
+        barcode: {
+          type: "string",
+        },
+      },
+    },
+  },
+  {
+    name: "Order",
+    type: "OPENAPI",
+    schema: {
+      type: "object",
+      properties: {
+        id: {
+          type: "string",
+        },
+        item: {
+          $ref: "#/components/schemas/Item",
+        },
+        qty: {
+          type: "integer",
+        },
+      },
+    },
   },
 ];

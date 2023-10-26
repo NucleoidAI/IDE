@@ -59,14 +59,21 @@ const APITypes = forwardRef((props, typesRef) => {
       flex: 1,
     },
   ];
-
+  const adjustedRows = types.map((type) => {
+    const key = Object.keys(type).find((k) => k !== "name" && k !== "type");
+    return {
+      id: type[key].id,
+      ...type,
+    };
+  });
+  console.log(types);
   return (
     <Grid container sx={styles.root}>
       <Grid item md sx={styles.content}>
         <DataGrid
           sx={styles.dataGrid}
           columns={columns}
-          rows={types.map((type) => type[Object.keys(type)[0]])}
+          rows={adjustedRows}
           hideFooter
           onRowClick={({ id }) => {
             setSchema(types.find((type) => type[id]));
