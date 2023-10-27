@@ -1,5 +1,6 @@
 import Defaults from "../defaults";
 import { v4 as uuid } from "uuid";
+
 import { Divider, MenuItem, Select } from "@mui/material";
 import { forwardRef, useState } from "react";
 
@@ -83,15 +84,13 @@ const TypeMenu = forwardRef(
             ]}
             {globalTypes && <Divider />}
             {globalTypes &&
-              types.map((item) => (
-                <MenuItem
-                  key={uuid()}
-                  id={uuid()}
-                  value={item[Object.keys(item)].name}
-                >
-                  {item[Object.keys(item)].name}
-                </MenuItem>
-              ))}
+              types.map((item) => {
+                return (
+                  <MenuItem key={uuid()} id={uuid()} value={item.name}>
+                    {item.name}
+                  </MenuItem>
+                );
+              })}
           </Select>
         )}
         {!edit && <>{type}</>}

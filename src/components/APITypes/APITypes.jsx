@@ -92,9 +92,9 @@ const APITypes = forwardRef((props, typesRef) => {
       </Grid>
       <Divider orientation={"vertical"} sx={styles.divider} />
       <Grid item md sx={styles.content}>
-        {/* {schema.current && (
+        {schema.current && (
           <Schema edit key={uuid()} ref={schema} types={types} />
-        )} */}
+        )}
       </Grid>
     </Grid>
   );
