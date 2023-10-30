@@ -1,5 +1,3 @@
-import React from "react";
-
 import * as ts from "typescript";
 
 const getClassFunctions = (functions) => {
@@ -17,7 +15,10 @@ const resolveNestedClasses = (classStructures) => {
   });
 
   const resolvePropertyType = (propType, depth = 0) => {
-    if (depth > 1 || !classNameToStructureMap.hasOwnProperty(propType)) {
+    if (
+      depth > 1 ||
+      !Object.prototype.hasOwnProperty.call(classNameToStructureMap, propType)
+    ) {
       return propType;
     }
 
