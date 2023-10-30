@@ -357,7 +357,7 @@ const functions = [
     path: "/Order",
     params: [],
     type: "CLASS",
-    definition: `class Order {
+    definition: `class Order1 {
       item: string;
       qty: number;
       date: number;
@@ -372,7 +372,7 @@ const functions = [
     path: "/Item",
     params: [],
     type: "CLASS",
-    definition: `class Item {
+    definition: `class Item1 {
       name: string;
       barcode: string;
       constructor(name: string, barcode: string) {

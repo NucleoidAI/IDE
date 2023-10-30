@@ -6,6 +6,7 @@ import APITypes from "../../components/APITypes";
 import ClosableDialogTitle from "../../components/ClosableDialogTitle";
 import Defaults from "../../defaults";
 import actions from "../../actions";
+import { getTypes } from "../../lib/TypeScript";
 import styles from "./styles";
 import { useContext } from "../../context/context";
 import { v4 as uuid } from "uuid";
@@ -80,7 +81,12 @@ function APIDialog() {
       paramsRef.current = index(route.params);
       requestRef.current = route.request ? compile(route.request) : null;
       responseRef.current = route.response ? compile(route.response) : null;
-      typesRef.current = context.get("nucleoid.types").map((schemaObject) => {
+
+      const nucleoidTypes = context.get("nucleoid.types");
+      const otherTypes = getTypes(context.get("nucleoid.functions"));
+      const combinedTypes = [...nucleoidTypes, ...otherTypes];
+
+      typesRef.current = combinedTypes.map((schemaObject) => {
         const { name, schema } = schemaObject;
         const compiledSchema = compile(schema);
         return {
@@ -108,6 +114,7 @@ function APIDialog() {
       paramsRef.current = index(paths);
       requestRef.current = compile(Defaults.object);
       responseRef.current = compile(Defaults.object);
+
       typesRef.current = context.get("nucleoid.types").map((schemaObject) => {
         const { name, schema } = schemaObject;
         const compiledSchema = compile(schema);
@@ -138,6 +145,7 @@ function APIDialog() {
       paramsRef.current = index(paths);
       requestRef.current = compile(Defaults.object);
       responseRef.current = compile(Defaults.object);
+
       typesRef.current = context.get("nucleoid.types").map((schemaObject) => {
         const { name, schema } = schemaObject;
         const compiledSchema = compile(schema);
