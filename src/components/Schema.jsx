@@ -9,11 +9,10 @@ import SchemaProperty from "./SchemaProperty";
 import SchemaView from "./SchemaView";
 import TreeView from "@mui/lab/TreeView";
 import TypeMenu from "./TypeMenu";
-
 import { decompile } from "../widgets/APIDialog/Context";
-
 import { compile as mapSchema } from "../utils/Map";
 import { v4 as uuid } from "uuid";
+
 import { Grid, IconButton, Typography } from "@mui/material";
 import { forwardRef, useEffect, useState } from "react";
 
@@ -73,7 +72,6 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
     handleExpandClick();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
-
   return (
     <Grid
       container
@@ -96,7 +94,7 @@ const Schema = forwardRef(({ request, response, types, edit }, ref) => {
               <TypeMenu
                 objAndArr
                 globalTypes
-                type={schema[Object.keys(schema)].type || "object"}
+                type={schema.type || "object"}
                 types={types}
                 map={schema[Object.keys(schema)]}
                 edit={edit}
@@ -167,7 +165,6 @@ const compile = (edit, map, schema, types, expandList, setKey, name) => {
     case "array": {
       const item = items[Object.keys(items)[0]];
       expandList.push(id);
-
       children.push(
         compile(edit, map, { root: item }, types, expandList, setKey, name)
       );

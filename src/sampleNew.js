@@ -12,10 +12,10 @@ export class Order {
   }
 }
 
-export const myApi = [
+export const api = [
   {
     path: "/",
-    method: "get",
+    method: "GET",
     params: [
       {
         name: "example",
@@ -32,7 +32,7 @@ export const myApi = [
   },
   {
     path: "/items",
-    method: "get",
+    method: "GET",
     params: [
       {
         in: "query",
@@ -49,7 +49,7 @@ export const myApi = [
   },
   {
     path: "/items",
-    method: "post",
+    method: "POST",
     request: {
       type: "object",
       properties: {
@@ -74,7 +74,7 @@ export const myApi = [
   },
   {
     path: "/items/{item}",
-    method: "get",
+    method: "GET",
     params: [
       {
         name: "item",
@@ -92,7 +92,7 @@ export const myApi = [
   },
   {
     path: "/items/{item}",
-    method: "put",
+    method: "PUT",
     params: [
       {
         name: "item",
@@ -134,7 +134,7 @@ export const myApi = [
   },
   {
     path: "/items/{item}",
-    method: "del",
+    method: "DEL",
     params: [
       {
         name: "item",
@@ -152,7 +152,7 @@ export const myApi = [
   },
   {
     path: "/orders",
-    method: "get",
+    method: "GET",
     params: [],
     response: "Order[]",
     "x-nuc-action": `function action(req: any): any {
@@ -161,7 +161,7 @@ export const myApi = [
   },
   {
     path: "/orders",
-    method: "post",
+    method: "POST",
     request: {
       type: "object",
       properties: {
@@ -185,7 +185,7 @@ export const myApi = [
   },
   {
     path: "/orders/{order}",
-    method: "get",
+    method: "GET",
     params: [
       {
         name: "order",
@@ -203,7 +203,7 @@ export const myApi = [
   },
   {
     path: "/orders/{order}",
-    method: "put",
+    method: "PUT",
     params: [
       {
         name: "order",
@@ -242,7 +242,7 @@ export const myApi = [
   },
   {
     path: "/orders/{order}",
-    method: "del",
+    method: "DEL",
     params: [
       {
         name: "order",
@@ -257,5 +257,44 @@ export const myApi = [
       const order = req.params.order;
       delete Order[order];
     }`,
+  },
+];
+
+export const types = [
+  {
+    name: "Item",
+    type: "OPENAPI",
+    schema: {
+      type: "object",
+      properties: {
+        id: {
+          type: "string",
+        },
+        name: {
+          type: "string",
+        },
+        barcode: {
+          type: "string",
+        },
+      },
+    },
+  },
+  {
+    name: "Order",
+    type: "OPENAPI",
+    schema: {
+      type: "object",
+      properties: {
+        id: {
+          type: "string",
+        },
+        item: {
+          $ref: "#/components/schemas/Item",
+        },
+        qty: {
+          type: "integer",
+        },
+      },
+    },
   },
 ];
