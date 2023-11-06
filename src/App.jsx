@@ -4,6 +4,7 @@ import IDE from "./layouts/IDE"; // eslint-disable-line
 import React from "react";
 import Settings from "./settings";
 import State from "./state";
+import axios from "axios";
 import { contextReducer } from "./context/reducer";
 import { contextToMap } from "./utils/Parser";
 import routes from "./routes";
@@ -39,26 +40,21 @@ function App() {
   }, [delay, progressElement]);
 
   function project(id) {
-    return new Promise((resolve, reject) => {
-      // TODO : replace service call
-      setTimeout(() => {
-        if (id === "2643bf5a-b03a-4eee-93f5-68bd5103beb0") {
-          const context = State.withSample();
-          context.get = (prop) => State.resolve(context, prop);
-          context.nucleoid.project = {
-            name: "Test-Project",
-            description:
-              "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore",
-            id: "2643bf5a-b03a-4eee-93f5-68bd5103beb0",
-          };
-          resolve(context);
-        }
-
-        reject("error");
-      }, 3000);
+    return Promise.all([
+      axios.get(`http://localhost:3001/api/services/${id}/context`),
+      axios.get(`http://localhost:3001/api/services/${id}`),
+    ]).then(([contextResult, serviceResult]) => {
+      const context = contextResult.data.context;
+      const service = serviceResult.data;
+      context.get = (prop) => State.resolve(context, prop);
+      context.nucleoid.project = {
+        name: service.name,
+        id: id,
+        description: service.description,
+      };
+      return context;
     });
   }
-
   const InitVfs = (context) => {
     if (!Settings.beta()) {
       Settings.beta(false);
@@ -80,11 +76,14 @@ function App() {
       Settings.runtime("sandbox");
     }
 
-    if (!Settings.description()) {
+    if (
+      !Settings.description() ||
+      Settings.description() !== context.nucleoid.project.description
+    ) {
       Settings.description(context.nucleoid.project.description);
     }
 
-    if (!Settings.name()) {
+    if (!Settings.name() || Settings.name !== context.nucleoid.project.name) {
       Settings.name(context.nucleoid.project.name);
     }
 
@@ -108,7 +107,6 @@ function App() {
     async function initContext() {
       const id = window.location.pathname.split("/")[2];
       let context;
-
       if (id === "sample") {
         context = State.withSample();
         context.get = (prop) => State.resolve(context, prop);
@@ -118,7 +116,6 @@ function App() {
           description:
             "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore",
         };
-
         return setContext(InitVfs(context));
       }
 
@@ -140,6 +137,8 @@ function App() {
     initContext();
     // eslint-disable-next-line
   }, [progressElement.classList]);
+
+  React.useEffect(() => {}, []);
 
   if (!context) return null;
   if (context === "error") return "forbidden";
