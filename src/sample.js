@@ -44,7 +44,10 @@ export const api = [
         name: "name",
       },
     ],
-    response: "Item[]",
+    response: {
+      type: "OPENAPI",
+      schema: { name: "Item", type: "ref", ref: "Item" },
+    },
     "x-nuc-action": `function action(req: { query: { name: string } }): any {
       const name = req.query.name;
       return Item.filter(item => item.name === name);
@@ -323,6 +326,26 @@ export const types = [
             { name: "title", type: "string" },
             { name: "code", type: "number" },
             { name: "adress", type: "string" },
+            {
+              name: "UserList",
+              type: "array",
+              properties: [
+                {
+                  name: "User",
+                  type: "object",
+                  properties: [
+                    {
+                      name: "name",
+                      type: "string",
+                    },
+                    {
+                      name: "age",
+                      type: "number",
+                    },
+                  ],
+                },
+              ],
+            },
           ],
         },
       ],
