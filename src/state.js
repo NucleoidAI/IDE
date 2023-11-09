@@ -1,4 +1,4 @@
-import { api, types, functions } from "./sample";
+import { api, functions, types } from "./sample";
 
 function init() {
   const state = {
