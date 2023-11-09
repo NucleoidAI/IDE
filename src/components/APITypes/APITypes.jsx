@@ -66,7 +66,7 @@ const APITypes = forwardRef((props, typesRef) => {
       ...type,
     };
   });
-  console.log(types);
+
   return (
     <Grid container sx={styles.root}>
       <Grid item md sx={styles.content}>

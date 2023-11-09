@@ -84,9 +84,9 @@ function APIDialog() {
 
       const nucleoidTypes = context.get("nucleoid.types");
       const otherTypes = getTypes(context.get("nucleoid.functions"));
-      const combinedTypes = [...nucleoidTypes, ...otherTypes];
+      console.log("otherTypes", otherTypes);
 
-      typesRef.current = combinedTypes.map((schemaObject) => {
+      typesRef.current = nucleoidTypes.map((schemaObject) => {
         const { name, schema } = schemaObject;
         const compiledSchema = compile(schema);
         return {

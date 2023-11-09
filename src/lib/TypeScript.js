@@ -6,39 +6,56 @@ const getClassFunctions = (functions) => {
     .map((func) => func.definition);
 };
 
-const resolveNestedClasses = (classStructures) => {
-  const classNameToStructureMap = {};
-
-  classStructures.forEach((structure) => {
-    const className = structure.typeName;
-    classNameToStructureMap[className] = structure.typeDefinition[className];
-  });
-
-  const resolvePropertyType = (propType, depth = 0) => {
-    if (
-      depth > 1 ||
-      !Object.prototype.hasOwnProperty.call(classNameToStructureMap, propType)
-    ) {
-      return propType;
+const resolveType = (type, classNameToStructureMap) => {
+  if (typeof type === "string") {
+    if (classNameToStructureMap[type]) {
+      return { type: "ref", ref: type };
+    } else {
+      return { type };
     }
-
-    return Object.fromEntries(
-      Object.entries(classNameToStructureMap[propType]).map(([name, type]) => [
-        name,
-        resolvePropertyType(type, depth + 1),
-      ])
-    );
-  };
-
-  classStructures.forEach((structure) => {
-    const properties = structure.typeDefinition[structure.typeName];
-    for (const propName in properties) {
-      properties[propName] = resolvePropertyType(properties[propName], 1);
-    }
-  });
-
-  return classStructures;
+  } else if (Array.isArray(type)) {
+    const itemType = resolveType(type[0], classNameToStructureMap);
+    return {
+      type: "array",
+      items: { ...itemType, name: type[0] },
+    };
+  } else {
+    throw new Error("Type structure not recognized");
+  }
 };
+
+const resolveProperties = (properties, classNameToStructureMap) => {
+  return Object.keys(properties).map((propName) => {
+    const propType = properties[propName];
+    return {
+      name: propName,
+      ...resolveType(propType, classNameToStructureMap),
+    };
+  });
+};
+
+function resolveNestedClasses(classStructures) {
+  const classNameToStructureMap = classStructures.reduce((acc, structure) => {
+    acc[structure.typeName] = structure.typeDefinition[structure.typeName];
+    return acc;
+  }, {});
+
+  return classStructures.map((structure) => {
+    const resolvedProperties = resolveProperties(
+      structure.typeDefinition[structure.typeName],
+      classNameToStructureMap
+    );
+    return {
+      name: structure.typeName,
+      type: "OPENAPI",
+      schema: {
+        name: structure.typeName,
+        type: "object",
+        properties: resolvedProperties,
+      },
+    };
+  });
+}
 
 const transformClassDefinitionUsingTS = (classDef) => {
   const sourceFile = ts.createSourceFile(
@@ -59,7 +76,13 @@ const transformClassDefinitionUsingTS = (classDef) => {
       node.members.forEach((member) => {
         if (ts.isPropertyDeclaration(member) && member.type) {
           const propName = member.name.getText(sourceFile);
-          const propType = member.type.getText(sourceFile);
+          let propType = member.type.getText(sourceFile);
+
+          if (member.type.kind === ts.SyntaxKind.ArrayType) {
+            const arrayType = member.type.elementType;
+            propType = [arrayType.getText(sourceFile)];
+          }
+
           properties[propName] = propType;
         }
       });
@@ -106,21 +129,7 @@ const toOpenApiType = (type) => {
 function getTypes(functions) {
   const classFunctions = getClassFunctions(functions);
   const transformedClassesUsingTS = transformAllClassesUsingTS(classFunctions);
-  const resolvedClassStructures = resolveNestedClasses(
-    transformedClassesUsingTS
-  );
-  resolvedClassStructures.forEach((structure) => {
-    structure.src = "typescript";
-  });
-
-  return resolvedClassStructures.map((structure) => ({
-    name: structure.typeName,
-    type: structure.src.toUpperCase(),
-    schema: {
-      type: "object",
-      properties: structure.typeDefinition[structure.typeName],
-    },
-  }));
+  return resolveNestedClasses(transformedClassesUsingTS);
 }
 
 const getOpenApiSchemas = () => {
