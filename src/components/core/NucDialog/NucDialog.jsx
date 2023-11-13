@@ -16,7 +16,7 @@ export default function NucDialog({
   handleClose,
 }) {
   return (
-    <Dialog open onClose={handleClose}>
+    <Dialog fullWidth maxWidth={"md"} open onClose={handleClose}>
       <DialogTitle sx={{ m: 0, p: 2 }}>{title}</DialogTitle>
       <IconButton
         aria-label="close"

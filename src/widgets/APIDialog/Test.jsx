@@ -40,6 +40,7 @@ const data = {
     },
   ],
 };
+
 const RecursiveTree = ({ node, onChange, focusedNode, setFocusedNode }) => (
   <TreeItem
     nodeId={node.name}

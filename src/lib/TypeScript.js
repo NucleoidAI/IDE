@@ -47,7 +47,7 @@ function resolveNestedClasses(classStructures) {
     );
     return {
       name: structure.typeName,
-      type: "OPENAPI",
+      type: "TS",
       schema: {
         name: structure.typeName,
         type: "object",

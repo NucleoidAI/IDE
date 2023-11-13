@@ -386,10 +386,10 @@ export const functions = [
     params: [],
     type: "CLASS",
     definition: `class Order1 {
-      item: string;
+      item: Item1;
       qty: number;
       date: number;
-      constructor(item: string, qty: number) {
+      constructor(item: Item1, qty: number) {
         this.item = item;
         this.qty = qty;
         this.date = Date.now();
@@ -403,13 +403,25 @@ export const functions = [
     definition: `class Item1 {
       name: string;
       barcode: string;
-      constructor(name: string, barcode: string) {
+      adress: Adress1;
+      constructor(name: string, barcode: string,adress: Adress1) {
         this.name = name;
         this.barcode = barcode;
+        this.adress = adress;
       }
     }`,
   },
-
+  {
+    path: "/Adress",
+    params: [],
+    type: "CLASS",
+    definition: `class Adress1 {
+      name: string;
+      constructor(name: string) {
+        this.name = name;
+      }
+    }`,
+  },
   {
     path: "/event",
     params: [],
