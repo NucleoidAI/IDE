@@ -2,13 +2,16 @@ import APIDialogAction from "../../components/APIDialogAction";
 import APIPath from "../../components/APIPath";
 import APITypes from "../../components/APITypes";
 import AdressTree from "./Test";
+import NewAPITree from "./NewAPITree";
 import NucDialog from "../../components/core/nucDialog/nucDialog";
-import React from "react";
 import { getTypes } from "../../lib/TypeScript";
 import { useContext } from "../../context/context";
 
+import React, { useState } from "react";
+
 function APIDialog() {
   const [context, dispatch] = useContext();
+
   const { open, view } = context.get("pages.api.dialog");
 
   const types = [
@@ -42,7 +45,7 @@ function APIDialog() {
 function TabManager({ view, types }) {
   switch (view) {
     case "TYPES":
-      return <APITypes types={types} />;
+      return <NewAPITree apiData={types} />;
     case "BODY": {
       return <AdressTree />;
     }

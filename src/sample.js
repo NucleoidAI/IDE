@@ -375,7 +375,7 @@ export const types = [
     schema: {
       name: "Users",
       type: "array",
-      properties: [{ type: "ref", ref: "User" }],
+      properties: [{ name: "user", type: "ref", ref: "User" }],
     },
   },
 ];
