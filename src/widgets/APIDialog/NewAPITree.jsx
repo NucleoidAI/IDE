@@ -6,9 +6,15 @@ import React, { useState } from "react";
 import { TreeItem, TreeView } from "@mui/lab";
 
 const NewAPITree = ({ apiData }) => {
-  const [selectedType, setSelectedType] = useState(null);
-  const [expanded, setExpanded] = useState([]);
-  const [loaded, setLoaded] = useState({});
+  const [selectedType, setSelectedType] = useState(
+    apiData.length > 0 ? apiData[0].name : null
+  );
+  const [expanded, setExpanded] = useState(apiData.map((item) => item.name));
+  const preloaded = {};
+  apiData.forEach((item) => {
+    preloaded[item.name] = true;
+  });
+  const [loaded, setLoaded] = useState(preloaded);
 
   const handleToggle = (event, nodeIds) => {
     setExpanded(nodeIds);
