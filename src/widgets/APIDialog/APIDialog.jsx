@@ -3,7 +3,7 @@ import APIPath from "../../components/APIPath";
 // import APITypes from "../../components/APITypes";
 import AdressTree from "./Test";
 import NewAPITree from "./NewAPITree";
-import NucDialog from "../../components/core/nucDialog/nucDialog";
+import NucDialog from "../../components/core/NucDialog/NucDialog";
 import React from "react";
 import { getTypes } from "../../lib/TypeScript";
 import { useContext } from "../../context/context";
