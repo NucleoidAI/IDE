@@ -1,10 +1,11 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import DialogTooltip from "../DialogTootip/DialogTooltip";
 import SaveIcon from "@mui/icons-material/Save";
+
 import { Box, Button, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { useEffect, useState } from "react";
 
-export default function APIDialogAction({
+function APIDialogAction({
   view,
   setApiDialogView,
   saveApiDialog,
@@ -95,3 +96,5 @@ export default function APIDialogAction({
     </Box>
   );
 }
+
+export default APIDialogAction;
