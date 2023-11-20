@@ -1,11 +1,8 @@
-import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DialogTooltip from "../DialogTootip/DialogTooltip";
-import Grid from "@mui/material/Grid";
 import SaveIcon from "@mui/icons-material/Save";
-import styles from "./styles";
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 
+import { Box, Button, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { useEffect, useState } from "react";
 
 function APIDialogAction({
@@ -32,9 +29,8 @@ function APIDialogAction({
   }, [view]);
 
   return (
-    <Grid container sx={styles.root}>
-      <Grid sx={styles.firstElement} />
-      <Grid item>
+    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Box>
         <ToggleButtonGroup
           value={alignment}
           exclusive
@@ -53,11 +49,14 @@ function APIDialogAction({
             Params
           </ToggleButton>
           <ToggleButton color={"primary"} variant={"contained"} value={"BODY"}>
-            &nbsp;Body&nbsp;
+            Body
+          </ToggleButton>
+          <ToggleButton color={"primary"} variant={"contained"} value={"TYPES"}>
+            Types
           </ToggleButton>
         </ToggleButtonGroup>
-      </Grid>
-      <Grid>
+      </Box>
+      <Box sx={{ display: "flex", gap: 1 }}>
         <DialogTooltip
           placement="top"
           open={openToolTip}
@@ -85,7 +84,6 @@ function APIDialogAction({
             Delete
           </Button>
         </DialogTooltip>
-        &nbsp;
         <Button
           variant={"outlined"}
           onClick={saveApiDialog}
@@ -94,8 +92,8 @@ function APIDialogAction({
         >
           Save
         </Button>
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 }
 
