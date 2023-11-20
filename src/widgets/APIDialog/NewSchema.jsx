@@ -158,12 +158,12 @@ const SchemaProperty = ({ prop, onChange, nodeId, customTypes }) => {
 const NewSchema = ({ customTypes, onSchemaChange, initialSchema }) => {
   const parseInitialSchema = (initialSchema) => {
     const parseProperties = (properties) => {
-      return Object.entries(properties).map(([key, value]) => {
+      return properties.map((prop) => {
         return {
           id: uuidv4(),
-          name: key,
-          type: value.type,
-          properties: value.properties ? parseProperties(value.properties) : [],
+          name: prop.name,
+          type: prop.type,
+          properties: prop.properties ? parseProperties(prop.properties) : [],
         };
       });
     };

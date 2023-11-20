@@ -9,38 +9,40 @@ const NewAPIBody = ({ types }) => {
 
   const exampleSchema = {
     type: "object",
-    properties: {
-      initial: {
+    properties: [
+      {
         type: "string",
+        name: "initial",
       },
-      schema: {
+      {
         type: "integer",
+        name: "schema",
       },
-      object: {
+      {
         type: "object",
-        properties: {
-          nested: {
+        name: "object",
+        properties: [
+          {
             type: "integer",
+            name: "nested",
           },
-        },
+        ],
       },
-    },
+    ],
   };
 
   const handleSave = () => {
     const buildSchemaStructure = (properties) => {
-      const structure = {};
-      properties.forEach((prop) => {
-        if (prop.type !== "object" && prop.type !== "array") {
-          structure[prop.name] = { type: prop.type };
-        } else {
-          structure[prop.name] = {
-            type: prop.type,
-            properties: buildSchemaStructure(prop.properties),
-          };
+      return properties.map((prop) => {
+        const propertyObject = {
+          type: prop.type,
+          name: prop.name,
+        };
+        if (prop.type === "object" || prop.type === "array") {
+          propertyObject.properties = buildSchemaStructure(prop.properties);
         }
+        return propertyObject;
       });
-      return structure;
     };
 
     const isTopLevelCustomType = (schema) =>
@@ -50,7 +52,7 @@ const NewAPIBody = ({ types }) => {
       ? {
           type: requestSchema.type,
           properties: isTopLevelCustomType(requestSchema)
-            ? {}
+            ? []
             : buildSchemaStructure(requestSchema.properties),
         }
       : {};
@@ -59,7 +61,7 @@ const NewAPIBody = ({ types }) => {
       ? {
           type: responseSchema.type,
           properties: isTopLevelCustomType(responseSchema)
-            ? {}
+            ? []
             : buildSchemaStructure(responseSchema.properties),
         }
       : {};

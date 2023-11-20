@@ -5,6 +5,7 @@ import APIPath from "../../components/APIPath";
 import NewAPIBody from "./NewAPIBody";
 import NewAPITree from "./NewAPITree";
 import NucDialog from "../../components/core/NucDialog/NucDialog";
+//BasicDialog
 import React from "react";
 import { getTypes } from "../../lib/TypeScript";
 import { useContext } from "../../context/context";
