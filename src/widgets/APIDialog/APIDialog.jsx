@@ -1,7 +1,8 @@
 import APIDialogAction from "../../components/APIDialogAction";
 import APIPath from "../../components/APIPath";
 // import APITypes from "../../components/APITypes";
-import AdressTree from "./Test";
+// import AdressTree from "./Test";
+import NewAPIBody from "./NewAPIBody";
 import NewAPITree from "./NewAPITree";
 import NucDialog from "../../components/core/NucDialog/NucDialog";
 import React from "react";
@@ -46,7 +47,7 @@ function TabManager({ view, types }) {
     case "TYPES":
       return <NewAPITree apiData={types} />;
     case "BODY": {
-      return <AdressTree />;
+      return <NewAPIBody types={types} />;
     }
 
     case "params":
