@@ -66,7 +66,7 @@ describe("Schema Component Tests", () => {
   test("Should remove a property by ID", () => {
     const { container } = render(<Schema initialData={initialSchema} />);
 
-    const currentSchemaWithIDs = schemaOutputWithIDs();
+    const currentSchemaWithIDs = Schema.schemaOutputWithIDs();
 
     const propertyToRemove = currentSchemaWithIDs.properties.find(
       (prop) => prop.name === "initial"
@@ -74,10 +74,11 @@ describe("Schema Component Tests", () => {
     if (!propertyToRemove) {
       throw new Error("Property to remove not found");
     }
-    const updatedSchema = removeProperty(propertyToRemove.id);
+    act(() => {
+      Schema.removeProperty(propertyToRemove.id);
+    });
 
-    const newCurrentSchema = schemaOutput();
-
+    const newCurrentSchema = Schema.schemaOutput();
     const isPropertyRemoved = newCurrentSchema.properties.every(
       (prop) => prop.name !== "initial"
     );

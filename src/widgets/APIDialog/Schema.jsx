@@ -2,6 +2,8 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import IconButton from "@mui/material/IconButton";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { sliderClasses } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 
 import React, { useEffect, useState } from "react";
@@ -66,7 +68,30 @@ const Schema = ({ initialData = {} }) => {
         properties: updatedProperties,
       };
     });
-    console.log("schemaData", schemaData);
+  };
+
+  const removeProperty = (propertyId) => {
+    const removePropertyFromNode = (node, propertyId) => {
+      if (node.id === propertyId) {
+        return null;
+      }
+      if (node.properties) {
+        const updatedProperties = node.properties
+          .map((childNode) => removePropertyFromNode(childNode, propertyId))
+          .filter((childNode) => childNode != null);
+
+        return { ...node, properties: updatedProperties };
+      }
+      return node;
+    };
+    setSchemaData((currentData) => {
+      const updatedProperties = currentData.properties
+        .map((node) => removePropertyFromNode(node, propertyId))
+        .filter((node) => node != null);
+      const updatedData = { ...currentData, properties: updatedProperties };
+
+      return updatedData;
+    });
   };
 
   const renderTree = (node, level = 0) => (
@@ -79,10 +104,12 @@ const Schema = ({ initialData = {} }) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            width: "100%",
           }}
         >
-          <span>{node.name}</span>
-          <div style={{ display: "flex", alignItems: "center" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <span>{node.name}:</span>
+            <span style={getTypeStyle(node.type)}>{node.type}</span>
             {(node.type === "object" || node.type === "array") && (
               <IconButton
                 size="small"
@@ -95,8 +122,21 @@ const Schema = ({ initialData = {} }) => {
                 <AddCircleOutlineIcon fontSize="small" />
               </IconButton>
             )}
-            <span style={getTypeStyle(node.type)}>({node.type})</span>
           </div>
+
+          {level > 0 && (
+            <IconButton
+              size="small"
+              style={{ marginLeft: "auto" }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                removeProperty(node.id);
+              }}
+            >
+              <RemoveCircleOutlineIcon fontSize="small" />
+            </IconButton>
+          )}
         </div>
       }
     >
@@ -105,6 +145,7 @@ const Schema = ({ initialData = {} }) => {
         : null}
     </TreeItem>
   );
+
   const schemaOutput = () => {
     const removeIds = (node) => {
       const { id, properties, ...rest } = node;
@@ -121,6 +162,7 @@ const Schema = ({ initialData = {} }) => {
   Schema.addProperty = addProperty;
   Schema.schemaOutput = schemaOutput;
   Schema.schemaOutputWithIDs = schemaOutputWithIDs;
+  Schema.removeProperty = removeProperty;
   return (
     <TreeView
       defaultCollapseIcon={<ExpandMoreIcon />}
