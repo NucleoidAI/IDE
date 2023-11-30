@@ -2,6 +2,7 @@ import "@testing-library/jest-dom";
 
 import React from "react";
 import Schema from "./Schema";
+import { act } from "react-dom/test-utils";
 
 import { fireEvent, render, screen } from "@testing-library/react";
 
@@ -49,11 +50,9 @@ describe("Schema Component Tests", () => {
 
   test("Should add a new property", () => {
     const { container } = render(<Schema initialData={initialSchema} />);
-    const updatedSchema = Schema.addProperty({
-      type: "string",
-      name: "additional",
+    act(() => {
+      Schema.addProperty({ type: "string", name: "additional" });
     });
-
     const currentSchema = Schema.schemaOutput();
     expect(currentSchema).toEqual({
       ...initialSchema,
