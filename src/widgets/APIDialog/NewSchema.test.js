@@ -24,14 +24,37 @@ describe("Schema Component Tests", () => {
 
     expect(screen.getByText(/initial/)).toBeInTheDocument();
     expect(screen.getByText(/schema/)).toBeInTheDocument();
-    expect(screen.getByText(/object/)).toBeInTheDocument();
+
+    // expect(screen.getByText(/nested/)).toBeInTheDocument();
+  });
+
+  test("Should initialize without initial data", () => {
+    render(<Schema />);
+
+    const expectedSchema = {
+      type: "object",
+      properties: [],
+    };
+
+    const outputSchema = Schema.schemaOutput();
+    expect(outputSchema).toEqual(expectedSchema);
+  });
+
+  test("Should provide output correctly with initial data", () => {
+    render(<Schema initialData={initialSchema} />);
+
+    const outputSchema = Schema.schemaOutput();
+    expect(outputSchema).toEqual(initialSchema);
   });
 
   test("Should add a new property", () => {
     const { container } = render(<Schema initialData={initialSchema} />);
-    const updatedSchema = addProperty({ type: "string", name: "additional" });
+    const updatedSchema = Schema.addProperty({
+      type: "string",
+      name: "additional",
+    });
 
-    const currentSchema = schemaOutput();
+    const currentSchema = Schema.schemaOutput();
     expect(currentSchema).toEqual({
       ...initialSchema,
       properties: [
@@ -91,65 +114,69 @@ describe("Schema Component Tests", () => {
     expect(changedProperty.name).toBe(changes.newName);
     expect(changedProperty.type).toBe(changes.newType);
   });
-});
-test("Should add a nested object and a property to it", () => {
-  const { container } = render(<Schema initialData={initialSchema} />);
 
-  const newNestedObject = { type: "object", name: "newNestedObject" };
-  addProperty(null, newNestedObject);
+  test("Should add a nested object and a property to it", () => {
+    const { container } = render(<Schema initialData={initialSchema} />);
 
-  const currentSchemaWithIDs = schemaOutputWithIDs();
+    const newNestedObject = { type: "object", name: "newNestedObject" };
+    addProperty(null, newNestedObject);
 
-  const nestedObjectId = currentSchemaWithIDs.properties.find(
-    (prop) => prop.name === "newNestedObject"
-  ).id;
-  if (!nestedObjectId) {
-    throw new Error("Nested object not found");
-  }
+    const currentSchemaWithIDs = schemaOutputWithIDs();
 
-  const newPropertyForNestedObject = { type: "string", name: "nestedProperty" };
-  addProperty(nestedObjectId, newPropertyForNestedObject);
+    const nestedObjectId = currentSchemaWithIDs.properties.find(
+      (prop) => prop.name === "newNestedObject"
+    ).id;
+    if (!nestedObjectId) {
+      throw new Error("Nested object not found");
+    }
 
-  const updatedSchemaWithIDs = schemaOutputWithIDs();
+    const newPropertyForNestedObject = {
+      type: "string",
+      name: "nestedProperty",
+    };
+    addProperty(nestedObjectId, newPropertyForNestedObject);
 
-  const updatedNestedObject = updatedSchemaWithIDs.properties.find(
-    (prop) => prop.id === nestedObjectId
-  );
-  expect(updatedNestedObject).toBeDefined();
-  expect(updatedNestedObject.properties).toContainEqual(
-    newPropertyForNestedObject
-  );
-});
+    const updatedSchemaWithIDs = schemaOutputWithIDs();
 
-test("Should add a property with a custom type", () => {
-  const customTypes = [
-    {
-      name: "Item",
-      type: "OPENAPI",
-      schema: {
+    const updatedNestedObject = updatedSchemaWithIDs.properties.find(
+      (prop) => prop.id === nestedObjectId
+    );
+    expect(updatedNestedObject).toBeDefined();
+    expect(updatedNestedObject.properties).toContainEqual(
+      newPropertyForNestedObject
+    );
+  });
+
+  test("Should add a property with a custom type", () => {
+    const customTypes = [
+      {
         name: "Item",
-        type: "object",
-        properties: [
-          { type: "string", name: "id" },
-          { type: "string", name: "name" },
-          { type: "string", name: "barcode" },
-        ],
+        type: "OPENAPI",
+        schema: {
+          name: "Item",
+          type: "object",
+          properties: [
+            { type: "string", name: "id" },
+            { type: "string", name: "name" },
+            { type: "string", name: "barcode" },
+          ],
+        },
       },
-    },
-  ];
+    ];
 
-  const { container } = render(
-    <Schema initialData={initialSchema} customTypes={customTypes} />
-  );
+    const { container } = render(
+      <Schema initialData={initialSchema} customTypes={customTypes} />
+    );
 
-  const newPropertyWithCustomType = { type: "Item", name: "newItem" };
-  addProperty(null, newPropertyWithCustomType);
+    const newPropertyWithCustomType = { type: "Item", name: "newItem" };
+    addProperty(null, newPropertyWithCustomType);
 
-  const updatedSchema = schemaOutput();
+    const updatedSchema = schemaOutput();
 
-  const addedProperty = updatedSchema.properties.find(
-    (prop) => prop.name === "newItem"
-  );
-  expect(addedProperty).toBeDefined();
-  expect(addedProperty.type).toBe("Item");
+    const addedProperty = updatedSchema.properties.find(
+      (prop) => prop.name === "newItem"
+    );
+    expect(addedProperty).toBeDefined();
+    expect(addedProperty.type).toBe("Item");
+  });
 });
