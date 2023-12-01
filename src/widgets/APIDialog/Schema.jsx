@@ -2,7 +2,10 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import IconButton from "@mui/material/IconButton";
+import Input from "@mui/material/Input";
+import MenuItem from "@mui/material/MenuItem";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import Select from "@mui/material/Select";
 import { sliderClasses } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 
@@ -33,8 +36,6 @@ const getTypeColor = (type) => {
 
 const Schema = ({ initialData = {} }) => {
   const [schemaData, setSchemaData] = useState({});
-  const [editablePropertyId, setEditablePropertyId] = useState(null);
-  const [editingValue, setEditingValue] = useState("");
 
   useEffect(() => {
     const addIdsToSchema = (schema) => {
@@ -109,6 +110,8 @@ const Schema = ({ initialData = {} }) => {
           !updatedNode.properties
         ) {
           updatedNode.properties = [];
+        } else if (changes.type !== "object" && changes.type !== "array") {
+          delete updatedNode.properties;
         }
         return updatedNode;
       }
@@ -143,8 +146,15 @@ const Schema = ({ initialData = {} }) => {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <span>{node.name}:</span>
-            <span style={getTypeStyle(node.type)}>{node.type}</span>
+            <SchemaPropertyEditor
+              node={node}
+              onNameChange={(newName) => {
+                changeProperty(node.id, { name: newName, type: node.type });
+              }}
+              onTypeChange={(newType) => {
+                changeProperty(node.id, { name: node.name, type: newType });
+              }}
+            />
             {(node.type === "object" || node.type === "array") && (
               <IconButton
                 size="small"
@@ -228,3 +238,74 @@ const Schema = ({ initialData = {} }) => {
 };
 
 export default Schema;
+
+const SchemaPropertyEditor = ({ node, onNameChange, onTypeChange }) => {
+  const [editMode, setEditMode] = useState(null);
+  const [name, setName] = useState(node.name);
+  const [type, setType] = useState(node.type);
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
+
+  const handleBlur = () => {
+    if (editMode === "name") {
+      onNameChange(name);
+    } else if (editMode === "type") {
+      onTypeChange(type);
+    }
+    setEditMode(null);
+    setIsSelectOpen(false);
+  };
+
+  const handleTypeChange = (newType) => {
+    setType(newType);
+    onTypeChange(newType);
+    setEditMode(null);
+    setIsSelectOpen(false);
+  };
+
+  const propertyTypes = ["string", "integer", "boolean", "object", "array"];
+
+  return (
+    <div style={{ display: "flex", gap: "8px" }}>
+      {editMode === "name" ? (
+        <Input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          onBlur={handleBlur}
+          onKeyDown={(e) => e.key === "Enter" && handleBlur()}
+          disableUnderline
+          autoFocus
+          fullWidth
+        />
+      ) : (
+        <span onClick={() => setEditMode("name")}>{node.name}</span>
+      )}
+
+      {editMode === "type" ? (
+        <Select
+          open={isSelectOpen}
+          value={type}
+          onChange={(e) => handleTypeChange(e.target.value)}
+          onClose={() => setIsSelectOpen(false)}
+          onOpen={() => setIsSelectOpen(true)}
+          fullWidth
+        >
+          {propertyTypes.map((typeOption) => (
+            <MenuItem value={typeOption} key={typeOption}>
+              {typeOption}
+            </MenuItem>
+          ))}
+        </Select>
+      ) : (
+        <span
+          onClick={() => {
+            setEditMode("type");
+            setIsSelectOpen(true);
+          }}
+          style={getTypeStyle(node.type)}
+        >
+          {node.type}
+        </span>
+      )}
+    </div>
+  );
+};
