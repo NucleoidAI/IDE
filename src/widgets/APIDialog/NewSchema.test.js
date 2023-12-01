@@ -88,7 +88,7 @@ describe("Schema Component Tests", () => {
   test("Should change a property type and name", () => {
     const { container } = render(<Schema initialData={initialSchema} />);
 
-    const currentSchemaWithIDs = schemaOutputWithIDs();
+    const currentSchemaWithIDs = Schema.schemaOutputWithIDs();
 
     const propertyToChange = currentSchemaWithIDs.properties.find(
       (prop) => prop.name === "initial"
@@ -97,22 +97,21 @@ describe("Schema Component Tests", () => {
       throw new Error("Property to change not found");
     }
 
-    const changes = {
-      id: propertyToChange.id,
-      newName: "initial2",
-      newType: "integer",
+    const change = {
+      name: "initial2",
+      type: "integer",
     };
-
-    const updatedSchema = changeProperty(changes);
-
-    const updatedSchemaWithIDs = schemaOutputWithIDs();
+    act(() => {
+      Schema.changeProperty(propertyToChange.id, change);
+    });
+    const updatedSchemaWithIDs = Schema.schemaOutputWithIDs();
 
     const changedProperty = updatedSchemaWithIDs.properties.find(
       (prop) => prop.id === propertyToChange.id
     );
     expect(changedProperty).toBeDefined();
-    expect(changedProperty.name).toBe(changes.newName);
-    expect(changedProperty.type).toBe(changes.newType);
+    expect(changedProperty.name).toBe(change.name);
+    expect(changedProperty.type).toBe(change.type);
   });
 
   test("Should add a nested object and a property to it", () => {

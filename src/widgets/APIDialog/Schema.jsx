@@ -33,6 +33,8 @@ const getTypeColor = (type) => {
 
 const Schema = ({ initialData = {} }) => {
   const [schemaData, setSchemaData] = useState({});
+  const [editablePropertyId, setEditablePropertyId] = useState(null);
+  const [editingValue, setEditingValue] = useState("");
 
   useEffect(() => {
     const addIdsToSchema = (schema) => {
@@ -91,6 +93,39 @@ const Schema = ({ initialData = {} }) => {
       const updatedData = { ...currentData, properties: updatedProperties };
 
       return updatedData;
+    });
+  };
+
+  const changeProperty = (propertyId, changes) => {
+    const updateProperty = (node, propertyId, changes) => {
+      if (node.id === propertyId) {
+        let updatedNode = {
+          ...node,
+          name: changes.name,
+          type: changes.type,
+        };
+        if (
+          (changes.type === "object" || changes.type === "array") &&
+          !updatedNode.properties
+        ) {
+          updatedNode.properties = [];
+        }
+        return updatedNode;
+      }
+      if (node.properties) {
+        const updatedProperties = node.properties.map((childNode) =>
+          updateProperty(childNode, propertyId, changes)
+        );
+        return { ...node, properties: updatedProperties };
+      }
+      return node;
+    };
+
+    setSchemaData((currentData) => {
+      const updatedProperties = currentData.properties.map((node) =>
+        updateProperty(node, propertyId, changes)
+      );
+      return { ...currentData, properties: updatedProperties };
     });
   };
 
@@ -163,6 +198,7 @@ const Schema = ({ initialData = {} }) => {
   Schema.schemaOutput = schemaOutput;
   Schema.schemaOutputWithIDs = schemaOutputWithIDs;
   Schema.removeProperty = removeProperty;
+  Schema.changeProperty = changeProperty;
   return (
     <TreeView
       defaultCollapseIcon={<ExpandMoreIcon />}
