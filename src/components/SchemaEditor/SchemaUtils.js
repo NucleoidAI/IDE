@@ -70,7 +70,7 @@ export const removeProperty = (propertyId, setSchemaData) => {
     if (node.properties) {
       const updatedProperties = node.properties
         .map((childNode) => removePropertyFromNode(childNode, propertyId))
-        .filter((childNode) => childNode != null);
+        .filter((childNode) => childNode !== null);
 
       return { ...node, properties: updatedProperties };
     }
@@ -79,7 +79,7 @@ export const removeProperty = (propertyId, setSchemaData) => {
   setSchemaData((currentData) => {
     const updatedProperties = currentData.properties
       .map((node) => removePropertyFromNode(node, propertyId))
-      .filter((node) => node != null);
+      .filter((node) => node !== null);
     const updatedData = { ...currentData, properties: updatedProperties };
 
     return updatedData;
@@ -89,7 +89,7 @@ export const removeProperty = (propertyId, setSchemaData) => {
 export const changeProperty = (propertyId, changes, setSchemaData) => {
   const updateProperty = (node, propertyId, changes) => {
     if (node.id === propertyId || propertyId === "1") {
-      let updatedNode = {
+      const updatedNode = {
         ...node,
         name: changes.name,
         type: changes.type,

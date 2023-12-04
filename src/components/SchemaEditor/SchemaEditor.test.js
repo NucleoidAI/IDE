@@ -4,7 +4,7 @@ import React from "react";
 import SchemaEditor from "./SchemaEditor";
 import { act } from "react-dom/test-utils";
 
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 
 describe("SchemaEditor Component Tests", () => {
   const initialSchema = {
@@ -49,7 +49,7 @@ describe("SchemaEditor Component Tests", () => {
   });
 
   test("Should add a new property", () => {
-    const { container } = render(<SchemaEditor initialData={initialSchema} />);
+    render(<SchemaEditor initialData={initialSchema} />);
     act(() => {
       SchemaEditor.addProperty({ type: "string", name: "additional" });
     });
@@ -64,7 +64,7 @@ describe("SchemaEditor Component Tests", () => {
   });
 
   test("Should remove a property by ID", () => {
-    const { container } = render(<SchemaEditor initialData={initialSchema} />);
+    render(<SchemaEditor initialData={initialSchema} />);
 
     const currentSchemaWithIDs = SchemaEditor.schemaOutputWithIDs();
 
@@ -86,7 +86,7 @@ describe("SchemaEditor Component Tests", () => {
   });
 
   test("Should change a property type and name", () => {
-    const { container } = render(<SchemaEditor initialData={initialSchema} />);
+    render(<SchemaEditor initialData={initialSchema} />);
 
     const currentSchemaWithIDs = SchemaEditor.schemaOutputWithIDs();
 
@@ -115,7 +115,7 @@ describe("SchemaEditor Component Tests", () => {
   });
 
   test("Should add a nested object and a property to it", () => {
-    const { container } = render(<SchemaEditor initialData={initialSchema} />);
+    render(<SchemaEditor initialData={initialSchema} />);
 
     const newNestedObject = { type: "object", name: "newNestedObject" };
     act(() => {
@@ -170,7 +170,7 @@ describe("SchemaEditor Component Tests", () => {
       },
     ];
 
-    const { container } = render(
+    render(
       <SchemaEditor initialData={initialSchema} customTypes={customTypes} />
     );
 

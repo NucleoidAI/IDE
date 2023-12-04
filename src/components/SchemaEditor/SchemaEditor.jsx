@@ -156,6 +156,7 @@ const SchemaEditor = forwardRef(
 
     const schemaOutput = () => {
       const removeIds = (node) => {
+        // eslint-disable-next-line no-unused-vars
         const { id, properties, ...rest } = node;
         if (node.type === "object" && properties) {
           return { ...rest, properties: properties.map(removeIds) };
