@@ -176,10 +176,11 @@ describe("Schema Component Tests", () => {
     );
 
     const newPropertyWithCustomType = { type: "Item", name: "newItem" };
-    addProperty(null, newPropertyWithCustomType);
+    act(() => {
+      Schema.addProperty(newPropertyWithCustomType);
+    });
 
-    const updatedSchema = schemaOutput();
-
+    const updatedSchema = Schema.schemaOutput();
     const addedProperty = updatedSchema.properties.find(
       (prop) => prop.name === "newItem"
     );

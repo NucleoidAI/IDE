@@ -34,7 +34,7 @@ const getTypeColor = (type) => {
   }
 };
 
-const Schema = ({ initialData = {} }) => {
+const Schema = ({ initialData = {}, customTypes = [] }) => {
   const [schemaData, setSchemaData] = useState({});
 
   useEffect(() => {
@@ -186,6 +186,7 @@ const Schema = ({ initialData = {} }) => {
                   type: newType,
                 });
               }}
+              customTypes={customTypes}
             />
             {(node.type === "object" || node.type === "array") && (
               <IconButton
@@ -222,10 +223,37 @@ const Schema = ({ initialData = {} }) => {
     >
       {Array.isArray(node.properties)
         ? node.properties.map((childNode) => renderTree(childNode, level + 1))
+        : isCustomType(node.type)
+        ? renderCustomTypeNode(node)
         : null}
     </TreeItem>
   );
+  const isCustomType = (type) => {
+    return customTypes.some((customType) => customType.name === type);
+  };
 
+  const renderCustomTypeNode = (node) => {
+    const customTypeSchema = customTypes.find(
+      (type) => type.name === node.type
+    )?.schema;
+
+    if (!customTypeSchema || !customTypeSchema.properties) {
+      return <div style={{ paddingLeft: "20px" }}>No properties defined</div>;
+    }
+
+    return (
+      <div style={{ paddingLeft: "20px" }}>
+        {customTypeSchema.properties.map((prop, index) => (
+          <div key={index} style={{ paddingTop: "5px", paddingBottom: "5px" }}>
+            <span>{prop.name}:</span>
+            <span style={{ ...getTypeStyle(prop.type), marginLeft: "8px" }}>
+              {prop.type}
+            </span>
+          </div>
+        ))}
+      </div>
+    );
+  };
   const schemaOutput = () => {
     const removeIds = (node) => {
       const { id, properties, ...rest } = node;
@@ -274,7 +302,12 @@ const Schema = ({ initialData = {} }) => {
 
 export default Schema;
 
-const SchemaPropertyEditor = ({ node, onNameChange, onTypeChange }) => {
+const SchemaPropertyEditor = ({
+  node,
+  onNameChange,
+  onTypeChange,
+  customTypes,
+}) => {
   const [editMode, setEditMode] = useState(null);
   const [name, setName] = useState(node.name);
   const [type, setType] = useState(node.type);
@@ -297,7 +330,14 @@ const SchemaPropertyEditor = ({ node, onNameChange, onTypeChange }) => {
     setIsSelectOpen(false);
   };
 
-  const propertyTypes = ["string", "integer", "boolean", "object", "array"];
+  const propertyTypes = [
+    "string",
+    "integer",
+    "boolean",
+    "object",
+    "array",
+    ...customTypes.map((type) => type.name),
+  ];
 
   return (
     <div style={{ display: "flex", gap: "8px" }}>
