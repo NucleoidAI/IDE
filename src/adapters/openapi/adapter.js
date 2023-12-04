@@ -13,7 +13,6 @@ const toOpenApiSchema = (schema) => {
         const nested = toOpenApiSchema(schema.properties[0]);
         object.items = nested;
         delete object.properties;
-        delete object.id;
       }
       break;
     case "object":
@@ -44,6 +43,10 @@ const toOpenApiSchema = (schema) => {
       return object;
     }
     default:
+      {
+        delete object.properties;
+        delete object.items;
+      }
       break;
   }
 
@@ -91,6 +94,9 @@ const toApi = (api) => {
 };
 
 const toSchemas = (types) => {
+  if (!types) {
+    return types;
+  }
   const schemas = {};
   types.forEach((type) => {
     schemas[type?.name] = toOpenApiSchema(type?.schema);

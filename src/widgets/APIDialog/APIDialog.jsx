@@ -28,7 +28,7 @@ function APIDialog() {
         sx={{ width: 900 }}
       >
         <APIPath />
-        <TabManager view={view} types={types} />
+        <TabManager view={view} types={types} api={context.nucleoid.api} />
         <APIDialogAction
           view={view}
           setApiDialogView={(button) =>
@@ -43,12 +43,12 @@ function APIDialog() {
   } else return null;
 }
 
-function TabManager({ view, types }) {
+function TabManager({ view, types, api }) {
   switch (view) {
     case "TYPES":
       return <NewAPITree apiData={types} />;
     case "BODY": {
-      return <NewAPIBody types={types} />;
+      return <NewAPIBody types={types} api={api} />;
     }
 
     case "params":

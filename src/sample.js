@@ -27,7 +27,20 @@ export const api = [
     ],
     response: {
       type: "TS",
-      schema: { name: "Item", type: "ref", ref: "Item" },
+      schema: {
+        name: "User",
+        type: "object",
+        properties: [
+          {
+            name: "name",
+            type: "string",
+          },
+          {
+            name: "age",
+            type: "number",
+          },
+        ],
+      },
     },
     "x-nuc-action": `function action(req: any): { message: string } {
         return { message: "Hello World" };
@@ -46,7 +59,14 @@ export const api = [
     ],
     response: {
       type: "OPENAPI",
-      schema: { name: "Item", type: "ref", ref: "Item" },
+      schema: {
+        name: "Item",
+        type: "object",
+        properties: [
+          { name: "name", type: "string" },
+          { name: "barcode", type: "string" },
+        ],
+      },
     },
     "x-nuc-action": `function action(req: { query: { name: string } }): any {
       const name = req.query.name;
@@ -57,17 +77,27 @@ export const api = [
     path: "/items",
     method: "POST",
     request: {
-      type: "object",
-      properties: {
-        name: {
-          type: "string",
-        },
-        barcode: {
-          type: "string",
-        },
+      type: "TS",
+      schema: {
+        name: "Item",
+        type: "object",
+        properties: [
+          { name: "name", type: "string" },
+          { name: "barcode", type: "string" },
+        ],
       },
     },
-    response: "Item",
+    response: {
+      type: "TS",
+      schema: {
+        name: "Item",
+        type: "object",
+        properties: [
+          { name: "name", type: "string" },
+          { name: "barcode", type: "string" },
+        ],
+      },
+    },
     "x-nuc-action": `function action(req: { body: { name: string, barcode: string } }): any {
       const name = req.body.name;
       const barcode = req.body.barcode;
@@ -90,7 +120,17 @@ export const api = [
         description: "item",
       },
     ],
-    response: "Item",
+    response: {
+      type: "TS",
+      schema: {
+        name: "Item",
+        type: "object",
+        properties: [
+          { name: "name", type: "string" },
+          { name: "barcode", type: "string" },
+        ],
+      },
+    },
     "x-nuc-action": `function action(req: { params: { item: string } }): any {
       const item = req.params.item;
       return Item[item];
@@ -99,27 +139,28 @@ export const api = [
   {
     path: "/items/{item}",
     method: "PUT",
-    params: [
-      {
-        name: "item",
-        in: "path",
-        type: "string",
-        required: true,
-        description: "item",
-      },
-    ],
     request: {
-      type: "object",
-      properties: {
-        name: {
-          type: "string",
-        },
-        barcode: {
-          type: "string",
-        },
+      type: "TS",
+      schema: {
+        name: "Item",
+        type: "object",
+        properties: [
+          { name: "name", type: "string" },
+          { name: "barcode", type: "string" },
+        ],
       },
     },
-    response: "Item",
+    response: {
+      type: "TS",
+      schema: {
+        name: "Item",
+        type: "object",
+        properties: [
+          { name: "name", type: "string" },
+          { name: "barcode", type: "string" },
+        ],
+      },
+    },
     "x-nuc-action": `function action(req: { params: { item: string }, body: { name: string, barcode: string } }): any {
       const item = Item[req.params.item];
       const name = req.body.name;
@@ -141,16 +182,28 @@ export const api = [
   {
     path: "/items/{item}",
     method: "DEL",
-    params: [
-      {
-        name: "item",
-        in: "path",
-        type: "string",
-        required: true,
-        description: "item",
+    request: {
+      type: "TS",
+      schema: {
+        name: "Item",
+        type: "object",
+        properties: [
+          { name: "name", type: "string" },
+          { name: "barcode", type: "string" },
+        ],
       },
-    ],
-    response: "object",
+    },
+    response: {
+      type: "TS",
+      schema: {
+        name: "Item",
+        type: "object",
+        properties: [
+          { name: "name", type: "string" },
+          { name: "barcode", type: "string" },
+        ],
+      },
+    },
     "x-nuc-action": `function action(req: { params: { item: string } }): void {
       const item = req.params.item;
       delete Item[item];
@@ -160,7 +213,14 @@ export const api = [
     path: "/orders",
     method: "GET",
     params: [],
-    response: "Order[]",
+    response: {
+      type: "TS",
+      schema: {
+        name: "Order",
+        type: "array",
+        properties: [{ name: "item", type: "ref", ref: "Item" }],
+      },
+    },
     "x-nuc-action": `function action(req: any): any {
       return Order;
     }`,
@@ -171,11 +231,14 @@ export const api = [
     request: {
       type: "object",
       properties: {
-        item: {
-          type: "string",
-        },
-        qty: {
-          type: "integer",
+        type: "TS",
+        schema: {
+          name: "Order",
+          type: "object",
+          properties: [
+            { name: "qty", type: "number" },
+            { name: "item", type: "ref", ref: "Item" },
+          ],
         },
       },
     },
@@ -201,7 +264,17 @@ export const api = [
         description: "order",
       },
     ],
-    response: "Order",
+    response: {
+      type: "TS",
+      schema: {
+        name: "Order",
+        type: "object",
+        properties: [
+          { name: "qty", type: "number" },
+          { name: "item", type: "ref", ref: "Item" },
+        ],
+      },
+    },
     "x-nuc-action": `function action(req: { params: { order: string } }): any {
       const order = req.params.order;
       return Order[order];
@@ -220,14 +293,14 @@ export const api = [
       },
     ],
     request: {
-      type: "object",
-      properties: {
-        item: {
-          type: "string",
-        },
-        qty: {
-          type: "integer",
-        },
+      type: "TS",
+      schema: {
+        name: "Order",
+        type: "object",
+        properties: [
+          { name: "qty", type: "number" },
+          { name: "item", type: "ref", ref: "Item" },
+        ],
       },
     },
     response: "Order",
@@ -258,7 +331,17 @@ export const api = [
         description: "Order id",
       },
     ],
-    response: "object",
+    response: {
+      type: "TS",
+      schema: {
+        name: "Order",
+        type: "object",
+        properties: [
+          { name: "qty", type: "number" },
+          { name: "item", type: "ref", ref: "Item" },
+        ],
+      },
+    },
     "x-nuc-action": `function action(req: { params: { order: string } }): void {
       const order = req.params.order;
       delete Order[order];

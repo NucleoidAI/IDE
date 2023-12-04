@@ -2,8 +2,8 @@ import NewSchema from "./NewSchema";
 
 import { Box, Button, Divider, Paper, Typography } from "@mui/material";
 import React, { useState } from "react";
-
-const NewAPIBody = ({ types }) => {
+import { toOpenApi, toOpenApiSchema } from "../../adapters/openapi/adapter";
+const NewAPIBody = ({ types, api }) => {
   const [requestSchema, setRequestSchema] = useState(null);
   const [responseSchema, setResponseSchema] = useState(null);
 
@@ -65,7 +65,8 @@ const NewAPIBody = ({ types }) => {
             : buildSchemaStructure(responseSchema.properties),
         }
       : {};
-
+    console.log(api, toOpenApi({ api }));
+    console.log(toOpenApiSchema(responseSavedSchema));
     console.log("Request:", JSON.stringify(requestSavedSchema, null, 2));
     console.log("Response:", JSON.stringify(responseSavedSchema, null, 2));
   };
