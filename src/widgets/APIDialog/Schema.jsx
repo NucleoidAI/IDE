@@ -58,13 +58,38 @@ const Schema = ({ initialData = {} }) => {
       }
     }
   }, [initialData, schemaData]);
-  const addProperty = (newProperty) => {
-    setSchemaData((currentData) => {
-      const updatedProperties = currentData.properties
-        ? [...currentData.properties]
-        : [];
+  const addProperty = (newProperty, parentId = null) => {
+    const addPropertyToNode = (node, parentId, newProperty) => {
+      if (node.id === parentId) {
+        const updatedProperties = node.properties
+          ? [...node.properties, { ...newProperty, id: uuidv4() }]
+          : [{ ...newProperty, id: uuidv4() }];
 
-      updatedProperties.push({ ...newProperty, id: uuidv4() });
+        return { ...node, properties: updatedProperties };
+      }
+      if (node.properties) {
+        const updatedProperties = node.properties.map((childNode) =>
+          addPropertyToNode(childNode, parentId, newProperty)
+        );
+        return { ...node, properties: updatedProperties };
+      }
+      return node;
+    };
+
+    setSchemaData((currentData) => {
+      if (!parentId) {
+        const updatedProperties = currentData.properties
+          ? [...currentData.properties, { ...newProperty, id: uuidv4() }]
+          : [{ ...newProperty, id: uuidv4() }];
+
+        return {
+          ...currentData,
+          properties: updatedProperties,
+        };
+      }
+      const updatedProperties = currentData.properties.map((node) =>
+        addPropertyToNode(node, parentId, newProperty)
+      );
 
       return {
         ...currentData,
@@ -99,7 +124,7 @@ const Schema = ({ initialData = {} }) => {
 
   const changeProperty = (propertyId, changes) => {
     const updateProperty = (node, propertyId, changes) => {
-      if (node.id === propertyId) {
+      if (node.id === propertyId || propertyId === "1") {
         let updatedNode = {
           ...node,
           name: changes.name,
@@ -115,6 +140,7 @@ const Schema = ({ initialData = {} }) => {
         }
         return updatedNode;
       }
+
       if (node.properties) {
         const updatedProperties = node.properties.map((childNode) =>
           updateProperty(childNode, propertyId, changes)
@@ -123,12 +149,15 @@ const Schema = ({ initialData = {} }) => {
       }
       return node;
     };
-
     setSchemaData((currentData) => {
-      const updatedProperties = currentData.properties.map((node) =>
-        updateProperty(node, propertyId, changes)
-      );
-      return { ...currentData, properties: updatedProperties };
+      if (propertyId === "1") {
+        return updateProperty(currentData, propertyId, changes);
+      } else {
+        const updatedProperties = currentData.properties.map((node) =>
+          updateProperty(node, propertyId, changes)
+        );
+        return { ...currentData, properties: updatedProperties };
+      }
     });
   };
 
@@ -152,7 +181,10 @@ const Schema = ({ initialData = {} }) => {
                 changeProperty(node.id, { name: newName, type: node.type });
               }}
               onTypeChange={(newType) => {
-                changeProperty(node.id, { name: node.name, type: newType });
+                changeProperty(level === 0 ? "1" : node.id, {
+                  name: node.name,
+                  type: newType,
+                });
               }}
             />
             {(node.type === "object" || node.type === "array") && (
@@ -161,7 +193,10 @@ const Schema = ({ initialData = {} }) => {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  addProperty({ type: "string", name: "newProperty" }, node.id);
+                  addProperty(
+                    { type: "string", name: "newProperty" },
+                    level === 0 ? null : node.id
+                  );
                 }}
               >
                 <AddCircleOutlineIcon fontSize="small" />
@@ -285,7 +320,10 @@ const SchemaPropertyEditor = ({ node, onNameChange, onTypeChange }) => {
           open={isSelectOpen}
           value={type}
           onChange={(e) => handleTypeChange(e.target.value)}
-          onClose={() => setIsSelectOpen(false)}
+          onClose={() => {
+            setEditMode(null);
+            setIsSelectOpen(false);
+          }}
           onOpen={() => setIsSelectOpen(true)}
           fullWidth
         >

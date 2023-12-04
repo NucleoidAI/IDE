@@ -118,9 +118,12 @@ describe("Schema Component Tests", () => {
     const { container } = render(<Schema initialData={initialSchema} />);
 
     const newNestedObject = { type: "object", name: "newNestedObject" };
-    addProperty(null, newNestedObject);
+    act(() => {
+      Schema.addProperty(newNestedObject);
+    });
 
-    const currentSchemaWithIDs = schemaOutputWithIDs();
+    const currentSchemaWithIDs = Schema.schemaOutputWithIDs();
+    console.log("currentSchemaWithIDs", currentSchemaWithIDs);
 
     const nestedObjectId = currentSchemaWithIDs.properties.find(
       (prop) => prop.name === "newNestedObject"
@@ -133,17 +136,22 @@ describe("Schema Component Tests", () => {
       type: "string",
       name: "nestedProperty",
     };
-    addProperty(nestedObjectId, newPropertyForNestedObject);
+    act(() => {
+      Schema.addProperty(newPropertyForNestedObject, nestedObjectId);
+    });
 
-    const updatedSchemaWithIDs = schemaOutputWithIDs();
+    const updatedSchemaWithIDs = Schema.schemaOutputWithIDs();
 
     const updatedNestedObject = updatedSchemaWithIDs.properties.find(
       (prop) => prop.id === nestedObjectId
     );
     expect(updatedNestedObject).toBeDefined();
-    expect(updatedNestedObject.properties).toContainEqual(
-      newPropertyForNestedObject
+    const hasNestedProperty = updatedNestedObject.properties.some(
+      (prop) =>
+        prop.name === newPropertyForNestedObject.name &&
+        prop.type === newPropertyForNestedObject.type
     );
+    expect(hasNestedProperty).toBe(true);
   });
 
   test("Should add a property with a custom type", () => {
