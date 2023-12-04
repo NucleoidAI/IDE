@@ -182,7 +182,6 @@ const SchemaEditor = forwardRef(
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
         defaultExpanded={["1"]}
-        onNodeToggle={() => console.log(schemaOutputWithIDs())}
         sx={{
           flexGrow: 1,
           overflowY: "auto",

@@ -6,7 +6,7 @@ import { act } from "react-dom/test-utils";
 
 import { render, screen } from "@testing-library/react";
 
-describe("SchemaEditor Component Tests", () => {
+describe("SchemaEditor Component", () => {
   const initialSchema = {
     type: "object",
     properties: [
@@ -20,7 +20,7 @@ describe("SchemaEditor Component Tests", () => {
     ],
   };
 
-  test("Should render with initial schema", () => {
+  test("renders with initial schema", () => {
     render(<SchemaEditor initialData={initialSchema} />);
 
     expect(screen.getByText(/initial/)).toBeInTheDocument();
@@ -29,7 +29,7 @@ describe("SchemaEditor Component Tests", () => {
     // expect(screen.getByText(/nested/)).toBeInTheDocument();
   });
 
-  test("Should initialize without initial data", () => {
+  test("initializes without initial data", () => {
     render(<SchemaEditor />);
 
     const expectedSchema = {
@@ -41,14 +41,14 @@ describe("SchemaEditor Component Tests", () => {
     expect(outputSchema).toEqual(expectedSchema);
   });
 
-  test("Should provide output correctly with initial data", () => {
+  test("provides output correctly with initial data", () => {
     render(<SchemaEditor initialData={initialSchema} />);
 
     const outputSchema = SchemaEditor.schemaOutput();
     expect(outputSchema).toEqual(initialSchema);
   });
 
-  test("Should add a new property", () => {
+  test("adds a new property", () => {
     render(<SchemaEditor initialData={initialSchema} />);
     act(() => {
       SchemaEditor.addProperty({ type: "string", name: "additional" });
@@ -63,7 +63,7 @@ describe("SchemaEditor Component Tests", () => {
     });
   });
 
-  test("Should remove a property by ID", () => {
+  test("removes a property by ID", () => {
     render(<SchemaEditor initialData={initialSchema} />);
 
     const currentSchemaWithIDs = SchemaEditor.schemaOutputWithIDs();
@@ -85,7 +85,7 @@ describe("SchemaEditor Component Tests", () => {
     expect(isPropertyRemoved).toBeTruthy();
   });
 
-  test("Should change a property type and name", () => {
+  test("changes a property type and name", () => {
     render(<SchemaEditor initialData={initialSchema} />);
 
     const currentSchemaWithIDs = SchemaEditor.schemaOutputWithIDs();
@@ -114,7 +114,7 @@ describe("SchemaEditor Component Tests", () => {
     expect(changedProperty.type).toBe(change.type);
   });
 
-  test("Should add a nested object and a property to it", () => {
+  test("adds a nested object and a property to it", () => {
     render(<SchemaEditor initialData={initialSchema} />);
 
     const newNestedObject = { type: "object", name: "newNestedObject" };
@@ -153,7 +153,7 @@ describe("SchemaEditor Component Tests", () => {
     expect(hasNestedProperty).toBe(true);
   });
 
-  test("Should add a property with a custom type", () => {
+  test("adds a property with a custom type", () => {
     const customTypes = [
       {
         name: "Item",
