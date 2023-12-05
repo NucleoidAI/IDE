@@ -1,11 +1,11 @@
-import NewSchema from "./NewSchema";
+import SchemaEditor from "../../components/SchemaEditor";
 
 import { Box, Button, Divider, Paper, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useRef } from "react";
 
 const NewAPIBody = ({ types }) => {
-  const [requestSchema, setRequestSchema] = useState(null);
-  const [responseSchema, setResponseSchema] = useState(null);
+  const requestSchema = useRef();
+  const responseSchema = useRef();
 
   const exampleSchema = {
     type: "object",
@@ -32,42 +32,14 @@ const NewAPIBody = ({ types }) => {
   };
 
   const handleSave = () => {
-    const buildSchemaStructure = (properties) => {
-      return properties.map((prop) => {
-        const propertyObject = {
-          type: prop.type,
-          name: prop.name,
-        };
-        if (prop.type === "object" || prop.type === "array") {
-          propertyObject.properties = buildSchemaStructure(prop.properties);
-        }
-        return propertyObject;
-      });
-    };
-
-    const isTopLevelCustomType = (schema) =>
-      types.some((type) => type.name === schema?.type);
-
-    const requestSavedSchema = requestSchema
-      ? {
-          type: requestSchema.type,
-          properties: isTopLevelCustomType(requestSchema)
-            ? []
-            : buildSchemaStructure(requestSchema.properties),
-        }
-      : {};
-
-    const responseSavedSchema = responseSchema
-      ? {
-          type: responseSchema.type,
-          properties: isTopLevelCustomType(responseSchema)
-            ? []
-            : buildSchemaStructure(responseSchema.properties),
-        }
-      : {};
-
-    console.log("Request:", JSON.stringify(requestSavedSchema, null, 2));
-    console.log("Response:", JSON.stringify(responseSavedSchema, null, 2));
+    console.log(
+      "Request:",
+      JSON.stringify(requestSchema.current.schemaOutput(), null, 2)
+    );
+    console.log(
+      "Response:",
+      JSON.stringify(responseSchema.current.schemaOutput(), null, 2)
+    );
   };
 
   return (
@@ -75,7 +47,7 @@ const NewAPIBody = ({ types }) => {
       sx={{
         display: "flex",
         flexDirection: "row",
-        height: "100%",
+        height: "25rem",
         p: 2,
       }}
     >
@@ -103,10 +75,10 @@ const NewAPIBody = ({ types }) => {
             alignItems: "center",
           }}
         >
-          <NewSchema
+          <SchemaEditor
+            ref={requestSchema}
+            initialData={exampleSchema}
             customTypes={types}
-            onSchemaChange={setRequestSchema}
-            initialSchema={exampleSchema}
           />
           <Typography variant="h6" gutterBottom>
             Request
@@ -126,6 +98,7 @@ const NewAPIBody = ({ types }) => {
           sx={{
             width: "100%",
             borderColor: "grey.300",
+            p: 2,
             borderWidth: 1,
             borderRadius: 2,
             borderStyle: "solid",
@@ -137,7 +110,7 @@ const NewAPIBody = ({ types }) => {
             alignItems: "center",
           }}
         >
-          <NewSchema customTypes={types} onSchemaChange={setResponseSchema} />
+          <SchemaEditor ref={responseSchema} customTypes={types} />
           <Typography variant="h6" gutterBottom>
             Response
           </Typography>
