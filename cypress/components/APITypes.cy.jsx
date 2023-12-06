@@ -1,3 +1,4 @@
+/* eslint-disable */
 import NewAPITree from "../../src/widgets/APIDialog/NewAPITree.jsx";
 import React from "react";
 
