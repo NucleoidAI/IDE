@@ -1,8 +1,8 @@
 /* eslint-disable */
-import NewAPITree from "../../src/widgets/APIDialog/NewAPITree.jsx";
+import APITypes from "../../src/components/APITypes";
 import React from "react";
 
-describe("NewAPITree Component", () => {
+describe("APITypes Component", () => {
   const apiData = [
     {
       name: "Item",
@@ -202,7 +202,7 @@ describe("NewAPITree Component", () => {
     },
   ];
   beforeEach(() => {
-    cy.mount(<NewAPITree apiData={apiData} />);
+    cy.mount(<APITypes apiData={apiData} />);
   });
 
   it("mounts successfully", () => {
@@ -226,7 +226,7 @@ describe("NewAPITree Component", () => {
       });
   });
 
-  it("can display nested types", () => {
+  it("displays schema with nested types", () => {
     const nestedSchema = apiData.find((item) => item.name === "Order");
 
     cy.get("nav").contains("Order").click();
@@ -247,7 +247,7 @@ describe("NewAPITree Component", () => {
     });
   });
 
-  it("can display references (ref)", () => {
+  it("displays schema with referenced nested types", () => {
     const refSchema = apiData.find((item) => item.name === "Order");
 
     cy.get("nav").contains("Order").click();
@@ -262,7 +262,7 @@ describe("NewAPITree Component", () => {
     });
   });
 
-  it("can display cross-referenced nested types", () => {
+  it("displays schema with cross-referenced nested types", () => {
     cy.get("nav").contains("Order1").click();
 
     cy.get('[aria-label="api data tree"]').should("contain", "Item1 (ref)");
