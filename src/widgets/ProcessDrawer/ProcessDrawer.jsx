@@ -9,6 +9,7 @@ import SchoolIcon from "@mui/icons-material/School";
 import Settings from "../../settings";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import { deepCopy } from "../../utils/DeepCopy";
+import { getTypes } from "../../lib/TypeScript";
 import gtag from "../../gtag";
 import { mapToContext } from "../../utils/Parser";
 import onboardDispatcher from "../../components/Onboard/onboardDispatcher";
@@ -16,6 +17,7 @@ import scheduler from "../../connectionScheduler";
 import service from "../../service";
 import styles from "./styles";
 import theme from "../../theme";
+import { toOpenApi } from "../../adapters/openapi/adapter";
 import { useContext } from "../../context/context";
 import { useLocation } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -239,9 +241,18 @@ function ApiButton() {
   }, [run.status]); //eslint-disable-line
 
   const runSandbox = async (context) => {
+    const types = [...(context?.types || []), ...getTypes(context?.functions)];
+
     setLoading(true);
     try {
-      const { data } = await service.createSandbox(context);
+      const openapi = {
+        openapi: {
+          ...toOpenApi({ api: context.api, types }),
+          functions: context.functions,
+        },
+      };
+
+      const { data } = await service.createSandbox(openapi);
       setLoading(false);
       setTimeout(() => {
         if (Settings.landing().level < 2) {
@@ -272,9 +283,16 @@ function ApiButton() {
 
   const runCustom = (context) => {
     setLoading(true);
+    const types = [...(context?.types || []), ...getTypes(context?.functions)];
+    const openapi = {
+      openapi: {
+        ...toOpenApi({ api: context.api, types }),
+        functions: context.functions,
+      },
+    };
 
     service
-      .openapi("start", context)
+      .openapi("start", openapi)
       .then(() => {
         publish("SWAGGER_DIALOG", { open: true });
         scheduler.start();
@@ -292,8 +310,6 @@ function ApiButton() {
 
   const handleRun = () => {
     const context = mapToContext(vfs.fsMap, state.get("nucleoid"));
-    console.debug(context, "handleRun");
-
     if (Settings.runtime() === "custom") {
       runCustom(context);
     } else {
