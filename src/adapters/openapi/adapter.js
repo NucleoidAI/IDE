@@ -59,11 +59,12 @@ const toApi = (api) => {
   api.forEach((method) => {
     if (!paths[method?.path]) paths[method?.path] = {};
     paths[method?.path][method?.method?.toLowerCase()] = {
-      summary: method?.summary,
-      description: method?.description,
+      summary: method?.summary || "",
+      description: method?.description || "",
       "x-nuc-action": method["x-nuc-action"],
       responses: {
         200: {
+          description: "Successful Operation",
           content: {
             "application/json": {
               schema: { ...toOpenApiSchema(method?.response?.schema) },
@@ -71,6 +72,7 @@ const toApi = (api) => {
           },
         },
         400: {
+          description: "Successful Operation",
           content: {
             "application/json": {
               schema: {
@@ -81,13 +83,18 @@ const toApi = (api) => {
           },
         },
       },
-      requestBody: {
+      requestBody: method?.request?.schema && {
         content: {
           "application/json": {
             schema: { ...toOpenApiSchema(method?.request?.schema) },
           },
         },
       },
+      parameters: [],
+      request: undefined,
+      response: undefined,
+      action: undefined,
+      params: undefined,
     };
   });
   return paths;
