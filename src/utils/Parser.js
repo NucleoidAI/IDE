@@ -55,32 +55,21 @@ const contextToMap = (files) => {
 
 const mapToContext = (fsMap, context) => {
   const tmpContext = deepCopy(context);
+  tmpContext?.functions?.forEach((func) => {
+    func.definition = parser.parse(
+      fsMap.get(`/build${func?.path}.js`)
+    ).result[0];
+  });
 
-  fsMap.forEach((item) => {
-    const filePath = item[0];
-    const fileContent = item[1];
-    const [path, method] = filePath.split(".");
-
-    if (!method) {
-      const functionToUpdate = tmpContext.functions.find(
-        (f) => f.path === path
-      );
-      if (functionToUpdate) {
-        functionToUpdate.definition = parser.parse(fileContent).result[0];
-      }
-    } else {
-      const apiToUpdate = tmpContext.api.find(
-        (api) => api.path === path && api.method === method
-      );
-      if (apiToUpdate) {
-        apiToUpdate["x-nuc-action"] = parser
-          .parse(fileContent)
-          .action()
-          .replace("export {};\n", "");
-      }
-    }
+  tmpContext?.api?.forEach((api) => {
+    console.log(api);
+    api["x-nuc-action"] = parser
+      .parse(fsMap.get(`/build${api?.path}.${api?.method}.js`))
+      .action()
+      .replace("export {};\n", "");
   });
 
   return tmpContext;
 };
+
 export { parser, mapToContext, contextToMap };

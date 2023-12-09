@@ -149,19 +149,13 @@ const getConfig = () => {
 };
 
 const createSandbox = (context) => {
-  const data = {
-    functions: context.functions,
-    api: context.api,
-    types: context.types,
-  };
-
   return axios(Settings.sandbox.url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
     },
-    data: JSON.stringify(data),
+    data: JSON.stringify(context),
   });
 };
 
