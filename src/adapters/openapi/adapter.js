@@ -53,7 +53,7 @@ const toOpenApiSchema = (schema) => {
   return object;
 };
 
-const toApi = (api) => {
+const toPaths = (api) => {
   const paths = {};
 
   api.forEach((method) => {
@@ -115,7 +115,7 @@ const toSchemas = (types) => {
 const toOpenApi = ({ api, types }) => {
   const openapi = {};
 
-  openapi.paths = toApi(api);
+  openapi.paths = toPaths(api);
   openapi.components = { schemas: toSchemas(types) };
 
   return openapi;
