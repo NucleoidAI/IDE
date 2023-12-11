@@ -54,8 +54,37 @@ export const api = [
       schema: {
         type: "object",
         properties: [
-          { name: "qty", type: "number" },
-          { name: "test", type: "string" },
+          {
+            type: "object",
+            name: "test",
+            properties: [
+              {
+                type: "string",
+                name: "test",
+              },
+              {
+                type: "array",
+                name: "array",
+                properties: [
+                  {
+                    type: "object",
+                    name: "test",
+                    properties: [
+                      {
+                        type: "ref",
+                        name: "ali",
+                        ref: "Item",
+                      },
+                      {
+                        type: "string",
+                        name: "veli",
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
         ],
       },
     },

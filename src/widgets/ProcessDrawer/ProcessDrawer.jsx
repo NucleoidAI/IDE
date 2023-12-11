@@ -281,18 +281,23 @@ function ApiButton() {
     }
   };
 
-  const runCustom = (context) => {
+  const runCustom = (context, originalContext) => {
     setLoading(true);
-    const types = [...(context?.types || []), ...getTypes(context?.functions)];
+    const types = [...(context?.types || []), ...getTypes(originalContext)];
     const openapi = {
-      openapi: {
-        ...toOpenApi({ api: context.api, types }),
-        functions: context.functions,
+      openapi: "3.0.1",
+      info: {
+        title: "nucleoid",
+        description: Settings.description(),
       },
+      ...toOpenApi({ api: context.api, types }),
     };
+    openapi["x-nuc-functions"] = context.functions;
+    openapi["x-nuc-action"] = "start";
+    openapi["x-nuc-prefix"] = "";
 
     service
-      .openapi("start", openapi)
+      .openapi(openapi)
       .then(() => {
         publish("SWAGGER_DIALOG", { open: true });
         scheduler.start();
@@ -309,11 +314,11 @@ function ApiButton() {
   };
 
   const handleRun = () => {
-    const context = mapToContext(vfs.fsMap, state.get("nucleoid"));
+    const context = mapToContext(vfs.fsMap, deepCopy(state.get("nucleoid")));
     if (Settings.runtime() === "custom") {
-      runCustom(context);
+      runCustom(context, state.get("nucleoid.functions"));
     } else {
-      runSandbox(context);
+      runSandbox(context, state.get("nucleoid"));
     }
   };
 

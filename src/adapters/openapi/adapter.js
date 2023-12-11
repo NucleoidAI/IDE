@@ -3,8 +3,8 @@ const toOpenApiSchema = (schema) => {
     return schema;
   }
 
-  const { type, properties, ...other } = schema;
-  const object = { ...other, type, properties: {}, items: {} };
+  const { type, properties, ref, ...other } = schema;
+  const object = { ...other, type, properties: {}, items: {}, ref };
 
   switch (type) {
     case "array":
@@ -33,19 +33,31 @@ const toOpenApiSchema = (schema) => {
               const nested = toOpenApiSchema(property);
               object.properties[name] = nested;
             } else {
-              object.properties[name] = { type };
+              if (type === "ref") {
+                object.properties[name] = {
+                  $ref: "#/components/schemas/" + property.ref,
+                };
+              } else {
+                object.properties[name] = { type };
+              }
             }
           }
         }
       }
       break;
-    case "ref": {
-      return object;
-    }
     default:
       {
+        if (type === "ref") {
+          object["$ref"] = `#/components/schemas/${object.ref}`;
+          delete object.type;
+        } else {
+          object["type"] = type;
+        }
+        delete object.name;
+        delete object.id;
         delete object.properties;
         delete object.items;
+        delete object.ref;
       }
       break;
   }
