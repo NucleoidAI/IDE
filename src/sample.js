@@ -72,12 +72,13 @@ export const api = [
                     properties: [
                       {
                         type: "ref",
-                        name: "ali",
+                        name: "item",
                         ref: "Item",
                       },
                       {
-                        type: "string",
-                        name: "veli",
+                        type: "ref",
+                        name: "order",
+                        ref: "Order1",
                       },
                     ],
                   },

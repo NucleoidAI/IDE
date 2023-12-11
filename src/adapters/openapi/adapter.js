@@ -1,5 +1,5 @@
 const toOpenApiSchema = (schema) => {
-  if (typeof schema !== "object" || schema.type === "ref") {
+  if (typeof schema !== "object") {
     return schema;
   }
 
