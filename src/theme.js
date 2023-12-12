@@ -1,7 +1,5 @@
+import { base } from "./palette";
 import { createTheme } from "@mui/material";
-import { storage } from "@nucleoidjs/webstorage";
-
-import { useEffect, useState } from "react";
 
 let lightTheme = createTheme({
   palette: {
@@ -154,7 +152,7 @@ lightTheme = {
     drawer: {
       "& .MuiDrawer-paper": {
         top: "10%",
-
+        height: 380,
         borderTopLeftRadius: "5px",
         borderBottomLeftRadius: "5px",
         background: "#353e48",
@@ -184,35 +182,35 @@ lightTheme = {
 
 lightTheme = {
   ...lightTheme,
-  spacing: (factor) => 8 * factor, // Bootstrap strategy
+  spacing: (factor) => 8 * factor,
 };
 
 let darkTheme = createTheme({
   palette: {
     primary: {
-      main: "#bdbdbd",
+      main: base.primary.dark,
     },
     secondary: {
-      main: "#424242",
+      main: base.secondary.dark,
     },
     custom: {
-      grey: "rgba(200, 200, 200, 0.7)",
-      fossil: "#bdbdbd",
-      darkDialogBg: "rgba(255,255,255,0.1)",
-      darkDialogPanel: "#333333",
-      darkDialog: "#616161",
-      apiTreeRightClick: "rgba(255, 255, 255, 0.2)",
-      drawerBG: "#252931",
-      textGray: "#e0e0e0",
-      messageBG: "#2c2c2c",
+      grey: base.grey[500],
+      fossil: base.grey[500],
+      darkDialogBg: base.common.white,
+      darkDialogPanel: base.grey[800],
+      darkDialog: base.grey[600],
+      apiTreeRightClick: base.common.white,
+      drawerBG: base.grey[900],
+      textGray: base.grey[500],
+      messageBG: base.grey[700],
     },
     background: {
-      default: "#121212",
-      paper: "#1e1e1e",
+      default: base.grey[900],
+      paper: base.grey[800],
     },
     text: {
-      primary: "#ffffff",
-      secondary: "#b3b3b3",
+      primary: base.common.white,
+      secondary: base.grey[500],
     },
   },
 });
@@ -223,33 +221,33 @@ darkTheme = {
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: "#121212",
-          color: "#ffffff",
+          backgroundColor: base.grey[900],
+          color: base.common.white,
           "&::-webkit-scrollbar, & *::-webkit-scrollbar": {
-            backgroundColor: "#2c2c2c",
+            backgroundColor: base.grey[700],
             width: 6,
             height: 6,
           },
           "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
             borderRadius: 10,
-            backgroundColor: "#616161",
+            backgroundColor: base.grey[600],
             minHeight: 24,
             border: "3px",
           },
           "&::-webkit-scrollbar-thumb:focus, & *::-webkit-scrollbar-thumb:focus":
             {
-              backgroundColor: "#757575",
+              backgroundColor: base.grey[500],
             },
           "&::-webkit-scrollbar-thumb:active, & *::-webkit-scrollbar-thumb:active":
             {
-              backgroundColor: "#757575",
+              backgroundColor: base.grey[500],
             },
           "&::-webkit-scrollbar-thumb:hover, & *::-webkit-scrollbar-thumb:hover":
             {
-              backgroundColor: "#757575",
+              backgroundColor: base.grey[500],
             },
           "&::-webkit-scrollbar-corner, & *::-webkit-scrollbar-corner": {
-            backgroundColor: "#1e1e1e",
+            backgroundColor: base.grey[800],
           },
         },
       },
@@ -258,15 +256,15 @@ darkTheme = {
     MuiListItemButton: {
       styleOverrides: {
         root: {
-          backgroundColor: "#1C1C1C !important",
-          color: "#e0e0e0",
+          backgroundColor: `${base.grey[900]} !important`,
+          color: base.grey[500],
           "&:hover": {
-            backgroundColor: "#333333",
+            backgroundColor: base.grey[800],
           },
 
           "&.Mui-selected, &.Mui-selected:hover": {
-            backgroundColor: "#424242",
-            color: "#ffffff",
+            backgroundColor: base.secondary.main,
+            color: base.common.white,
           },
         },
       },
@@ -285,10 +283,11 @@ darkTheme = {
     MuiDrawer: {
       styleOverrides: {
         paper: {
-          backgroundColor: "#1C1C1C",
+          backgroundColor: base.grey[900],
         },
       },
     },
+
     MuiCard: {
       styleOverrides: {
         root: {
@@ -308,7 +307,7 @@ darkTheme = {
     MuiBackdrop: {
       styleOverrides: {
         root: {
-          backgroundColor: "rgba(0,0,0,0.5)",
+          backgroundColor: base.common.black,
         },
       },
     },
@@ -332,16 +331,14 @@ darkTheme = {
     MuiFab: {
       styleOverrides: {
         root: {
-          backgroundColor: "#333333",
-          color: "#ffffff",
+          backgroundColor: base.grey[800],
+          color: base.common.white,
           "&:hover": {
-            backgroundColor: "#484848",
+            backgroundColor: base.grey[700],
           },
-
           boxShadow: "none",
-
           "&.Mui-disabled": {
-            backgroundColor: "#555555",
+            backgroundColor: base.grey[600],
           },
         },
       },
@@ -349,8 +346,8 @@ darkTheme = {
     MuiLinearProgress: {
       styleOverrides: {
         root: {
-          background: "#c9c9c9",
-          color: "#959595",
+          background: base.grey[300],
+          color: base.grey[400],
         },
       },
     },
@@ -365,24 +362,24 @@ darkTheme = {
     },
     apiTreeItem: {
       fontSize: 12,
-      color: "#c3c5c8",
+      color: base.grey[400],
       fontWeight: "bold",
-      backgroundColor: "#1C1C1C",
-      border: "1px solid #333333",
+      backgroundColor: base.grey[900],
+      border: `1px solid ${base.grey[800]}`,
       width: 44,
       borderRadius: 8,
       mt: 1 / 4,
       mb: 1 / 4,
-      boxShadow: "1px 1px #2c2c2c",
+      boxShadow: `1px 1px ${base.grey[700]}`,
     },
     drawer: {
       "& .MuiDrawer-paper": {
         top: "10%",
-
+        height: 380,
         borderTopLeftRadius: "5px",
         borderBottomLeftRadius: "5px",
-        background: "#1C1C1C",
-        border: "1px solid #474747",
+        background: base.grey[900],
+        border: `1px solid ${base.grey[600]}`,
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
@@ -396,8 +393,8 @@ darkTheme = {
         height: 338,
         borderTopLeftRadius: "5px",
         borderBottomLeftRadius: "5px",
-        background: "#1C1C1C",
-        border: "1px solid #474747",
+        background: base.grey[900],
+        border: `1px solid ${base.grey[600]}`,
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
