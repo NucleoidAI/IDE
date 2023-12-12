@@ -46,7 +46,7 @@ function App() {
     return () => {
       window.removeEventListener("storage", handleStorageChange);
     };
-  }, []);
+  }, [prefersDarkMode]);
 
   const progressElement = document.getElementById("nuc-progress-indicator");
 

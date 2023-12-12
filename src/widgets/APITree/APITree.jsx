@@ -241,9 +241,10 @@ export const compile = (
   }, {});
 
   const renderTree = (data) => {
-    const theme = useTheme();
     // eslint-disable-next-line
     let resourceHash;
+    // eslint-disable-next-line
+    const theme = useTheme();
 
     return Object.keys(data).map((path) => {
       const { methods, children } = data[path];

@@ -6,7 +6,6 @@ import { Box, Button, Card, Grid, useMediaQuery } from "@mui/material";
 import { Line, PolarArea } from "react-chartjs-2";
 
 const NucDataGrid = ({ rows }) => {
-  const theme = useTheme();
   const columns = [
     { field: "id", headerName: "ID", flex: 1 },
     {

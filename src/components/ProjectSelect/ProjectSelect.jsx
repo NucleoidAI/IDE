@@ -1,13 +1,11 @@
 import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
 import ProjectDialog from "../../widgets/ProjectDialog";
 import React from "react";
-import { useTheme } from "@mui/material/styles";
 
 import { Box, Button } from "@mui/material/";
 
 export default function ProjectSelect({ title }) {
   const [open, setOpen] = React.useState(false);
-  const theme = useTheme();
   const handleClose = () => {
     setOpen(!open);
   };

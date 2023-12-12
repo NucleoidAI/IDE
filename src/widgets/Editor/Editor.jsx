@@ -52,7 +52,7 @@ const Editor = React.forwardRef((props, ref) => {
   }, []);
 
   React.useEffect(() => {
-    const handleStorageChange = (e) => {
+    const handleStorageChange = () => {
       setTheme(storage.get("platform", "theme"));
     };
     window.addEventListener("storage", handleStorageChange);
