@@ -139,6 +139,46 @@ lightTheme = {
     schema: {
       width: 75,
     },
+    apiTreeItem: {
+      fontSize: 12,
+      color: "#666",
+      fontWeight: "bold",
+      backgroundColor: "#fdfdfd",
+      border: `1px solid #c3c5c8`,
+      width: 44,
+      borderRadius: 8,
+      mt: 1 / 4,
+      mb: 1 / 4,
+      boxShadow: "1px 1px #b8b8b8",
+    },
+    drawer: {
+      "& .MuiDrawer-paper": {
+        top: "10%",
+
+        borderTopLeftRadius: "5px",
+        borderBottomLeftRadius: "5px",
+        background: "#353e48",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        paddingTop: 1,
+        paddingBottom: 1,
+      },
+    },
+    drawerSmall: {
+      "& .MuiDrawer-paper": {
+        top: "10%",
+        height: 338,
+        borderTopLeftRadius: "5px",
+        borderBottomLeftRadius: "5px",
+        background: "#353e48",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        paddingTop: 1,
+        paddingBottom: 1,
+      },
+    },
   },
 };
 
@@ -231,6 +271,7 @@ darkTheme = {
         },
       },
     },
+
     MuiDataGrid: {
       styleOverrides: {
         root: {
@@ -321,6 +362,48 @@ darkTheme = {
   custom: {
     schema: {
       width: 75,
+    },
+    apiTreeItem: {
+      fontSize: 12,
+      color: "#c3c5c8",
+      fontWeight: "bold",
+      backgroundColor: "#1C1C1C",
+      border: "1px solid #333333",
+      width: 44,
+      borderRadius: 8,
+      mt: 1 / 4,
+      mb: 1 / 4,
+      boxShadow: "1px 1px #2c2c2c",
+    },
+    drawer: {
+      "& .MuiDrawer-paper": {
+        top: "10%",
+
+        borderTopLeftRadius: "5px",
+        borderBottomLeftRadius: "5px",
+        background: "#1C1C1C",
+        border: "1px solid #474747",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        paddingTop: 1,
+        paddingBottom: 1,
+      },
+    },
+    drawerSmall: {
+      "& .MuiDrawer-paper": {
+        top: "10%",
+        height: 338,
+        borderTopLeftRadius: "5px",
+        borderBottomLeftRadius: "5px",
+        background: "#1C1C1C",
+        border: "1px solid #474747",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        paddingTop: 1,
+        paddingBottom: 1,
+      },
     },
   },
 };

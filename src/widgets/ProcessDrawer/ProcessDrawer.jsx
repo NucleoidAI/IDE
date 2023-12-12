@@ -19,8 +19,9 @@ import theme from "../../theme";
 import { useContext } from "../../context/context";
 import { useLocation } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
-
+import { useTheme } from "@mui/material/styles";
 import vfs from "../../vfs";
+
 import {
   Box,
   CircularProgress,
@@ -28,11 +29,12 @@ import {
   ListItemButton,
   Tooltip,
 } from "@mui/material";
-import { publish, useEvent } from "@nucleoidjs/synapses";
 import React, { useState } from "react"; //eslint-disable-line
+import { publish, useEvent } from "@nucleoidjs/synapses";
 
 const ProcessDrawer = () => {
   const matchDownMD = useMediaQuery(theme.breakpoints.down("lg"));
+  const themeMui = useTheme();
   const location = useLocation();
   const [state] = useContext();
 
@@ -140,7 +142,7 @@ const ProcessDrawer = () => {
         variant="persistent"
         anchor={"right"}
         open={visible(location?.pathname)}
-        sx={matchDownMD ? styles.drawerSmall : styles.drawer}
+        sx={matchDownMD ? themeMui.custom.drawerSmall : themeMui.custom.drawer}
       >
         <Box>
           <ApiButton />

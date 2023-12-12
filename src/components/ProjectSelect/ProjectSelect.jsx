@@ -1,11 +1,13 @@
 import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
 import ProjectDialog from "../../widgets/ProjectDialog";
 import React from "react";
+import { useTheme } from "@mui/material/styles";
 
 import { Box, Button } from "@mui/material/";
 
 export default function ProjectSelect({ title }) {
   const [open, setOpen] = React.useState(false);
+  const theme = useTheme();
   const handleClose = () => {
     setOpen(!open);
   };
@@ -17,7 +19,7 @@ export default function ProjectSelect({ title }) {
         variant="contained"
         color={"inherit"}
         onClick={() => setOpen(true)}
-        endIcon={<ArrowDropDown />}
+        endIcon={<ArrowDropDown sx={{ color: "#121212" }} />}
       >
         {title}
       </Button>

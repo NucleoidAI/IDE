@@ -10,6 +10,7 @@ import styles from "./styles";
 import theme from "../../theme";
 import { useContext } from "../../context/context";
 import { useEvent } from "@nucleoidjs/synapses";
+import { useTheme } from "@mui/material/styles";
 
 import {
   Box,
@@ -241,6 +242,7 @@ export const compile = (
   }, {});
 
   const renderTree = (data) => {
+    const themeMui = useTheme();
     // eslint-disable-next-line
     let resourceHash;
 
@@ -280,7 +282,7 @@ export const compile = (
                   justifyContent: "space-between",
                 }}
               >
-                <Box sx={styles.apiTreeItem}>
+                <Box sx={themeMui.custom.apiTreeItem}>
                   <span
                     style={{
                       display: "flex",
