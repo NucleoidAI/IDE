@@ -1,11 +1,11 @@
-import NewSchema from "./NewSchema";
+import SchemaEditor from "../../components/SchemaEditor";
 
 import { Box, Button, Divider, Paper, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { toOpenApi, toOpenApiSchema } from "../../adapters/openapi/adapter";
 const NewAPIBody = ({ types, api }) => {
-  const [requestSchema, setRequestSchema] = useState(null);
-  const [responseSchema, setResponseSchema] = useState(null);
+  const [requestSchema] = useState(null);
+  const [responseSchema] = useState(null);
 
   const exampleSchema = {
     type: "object",
@@ -32,6 +32,14 @@ const NewAPIBody = ({ types, api }) => {
   };
 
   const handleSave = () => {
+    console.log(
+      "Request:",
+      JSON.stringify(requestSchema.current.schemaOutput(), null, 2)
+    );
+    console.log(
+      "Response:",
+      JSON.stringify(responseSchema.current.schemaOutput(), null, 2)
+    );
     const buildSchemaStructure = (properties) => {
       return properties.map((prop) => {
         const propertyObject = {
@@ -76,7 +84,7 @@ const NewAPIBody = ({ types, api }) => {
       sx={{
         display: "flex",
         flexDirection: "row",
-        height: "100%",
+        height: "25rem",
         p: 2,
       }}
     >
@@ -104,10 +112,10 @@ const NewAPIBody = ({ types, api }) => {
             alignItems: "center",
           }}
         >
-          <NewSchema
+          <SchemaEditor
+            ref={requestSchema}
+            initialData={exampleSchema}
             customTypes={types}
-            onSchemaChange={setRequestSchema}
-            initialSchema={exampleSchema}
           />
           <Typography variant="h6" gutterBottom>
             Request
@@ -127,6 +135,7 @@ const NewAPIBody = ({ types, api }) => {
           sx={{
             width: "100%",
             borderColor: "grey.300",
+            p: 2,
             borderWidth: 1,
             borderRadius: 2,
             borderStyle: "solid",
@@ -138,7 +147,7 @@ const NewAPIBody = ({ types, api }) => {
             alignItems: "center",
           }}
         >
-          <NewSchema customTypes={types} onSchemaChange={setResponseSchema} />
+          <SchemaEditor ref={responseSchema} customTypes={types} />
           <Typography variant="h6" gutterBottom>
             Response
           </Typography>
