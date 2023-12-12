@@ -5,6 +5,7 @@ import { contextToMap } from "../../utils/Parser";
 import { parser } from "react-nucleoid";
 import { publish } from "@nucleoidjs/synapses";
 import rules from "./rules";
+import { storage } from "@nucleoidjs/webstorage";
 import { useContext } from "../../context/context";
 
 import { Backdrop, Box } from "@mui/material";
@@ -40,7 +41,20 @@ const Editor = React.forwardRef((props, ref) => {
   const timerRef = React.useRef();
   const [open, setOpen] = React.useState(false);
   const [context] = useContext();
+  const [theme, setTheme] = React.useState(storage.get("theme") || "light");
 
+  React.useEffect(() => {
+    const storedTheme = storage.get("theme") || "light";
+    setTheme(storedTheme);
+  }, []);
+
+  React.useEffect(() => {
+    const handleStorageChange = (e) => {
+      setTheme(storage.get("theme"));
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
   const file = getFile(context, props);
 
   const plugins = [
@@ -172,6 +186,10 @@ const Editor = React.forwardRef((props, ref) => {
   function handleEditorDidMount(editor, monaco) {
     const nucFuncs = context.nucleoid.functions;
 
+    const monacoEditorTheme = theme === "dark" ? "vs-dark" : "vs-light";
+
+    monaco.editor.setTheme(monacoEditorTheme);
+
     monaco.editor.getModels().forEach((item) => {
       if (
         nucFuncs.find(
@@ -263,6 +281,7 @@ const Editor = React.forwardRef((props, ref) => {
   return (
     <Box sx={{ height: "100%" }}>
       <MonacoEditor
+        key={theme}
         height={"96%"}
         defaultLanguage="typescript"
         defaultValue={file.code}
