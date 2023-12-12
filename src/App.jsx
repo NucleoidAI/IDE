@@ -28,16 +28,16 @@ function App() {
   const [theme, setTheme] = useState(prefersDarkMode ? darkTheme : lightTheme);
 
   useEffect(() => {
-    const savedTheme = storage.get("theme");
+    const savedTheme = storage.get("platform", "theme");
     if (!savedTheme) {
-      storage.set("theme", prefersDarkMode ? "dark" : "light");
+      storage.set("platform", "theme", prefersDarkMode ? "dark" : "light");
       setTheme(prefersDarkMode ? darkTheme : lightTheme);
     } else {
       setTheme(savedTheme === "dark" ? darkTheme : lightTheme);
     }
 
     const handleStorageChange = () => {
-      const currentTheme = storage.get("theme");
+      const currentTheme = storage.get("platform", "theme");
       setTheme(currentTheme === "dark" ? darkTheme : lightTheme);
     };
 
