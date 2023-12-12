@@ -1,6 +1,7 @@
 import MonacoEditor from "@monaco-editor/react";
 import OpenAI from "../OpenAI";
 import React from "react";
+import { base } from "../../palette";
 import { contextToMap } from "../../utils/Parser";
 import { parser } from "react-nucleoid";
 import { publish } from "@nucleoidjs/synapses";
@@ -41,16 +42,18 @@ const Editor = React.forwardRef((props, ref) => {
   const timerRef = React.useRef();
   const [open, setOpen] = React.useState(false);
   const [context] = useContext();
-  const [theme, setTheme] = React.useState(storage.get("theme") || "light");
+  const [theme, setTheme] = React.useState(
+    storage.get("platform", "theme") || "light"
+  );
 
   React.useEffect(() => {
-    const storedTheme = storage.get("theme") || "light";
+    const storedTheme = storage.get("platform", "theme") || "light";
     setTheme(storedTheme);
   }, []);
 
   React.useEffect(() => {
     const handleStorageChange = (e) => {
-      setTheme(storage.get("theme"));
+      setTheme(storage.get("platform", "theme"));
     };
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
@@ -186,7 +189,24 @@ const Editor = React.forwardRef((props, ref) => {
   function handleEditorDidMount(editor, monaco) {
     const nucFuncs = context.nucleoid.functions;
 
-    const monacoEditorTheme = theme === "dark" ? "vs-dark" : "vs-light";
+    const customDarkThemeData = {
+      base: "vs-dark",
+      inherit: true,
+      rules: [],
+      colors: {
+        "editor.background": base.grey[800],
+        "editor.foreground": base.common.white,
+        "editor.lineHighlightBackground": base.grey[800],
+        "editorLineNumber.foreground": base.grey[600],
+        "editor.selectionBackground": base.primary.main,
+        "editor.hoverHighlightBackground": base.grey[700],
+      },
+    };
+
+    monaco.editor.defineTheme("custom-dark-theme", customDarkThemeData);
+
+    const monacoEditorTheme =
+      theme === "dark" ? "custom-dark-theme" : "vs-light";
 
     monaco.editor.setTheme(monacoEditorTheme);
 
