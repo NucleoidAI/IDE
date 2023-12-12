@@ -94,11 +94,15 @@ export const changeProperty = (propertyId, changes, setSchemaData) => {
         name: changes.name,
         type: changes.type,
       };
-      if (
-        (changes.type === "object" || changes.type === "array") &&
-        !updatedNode.properties
-      ) {
+
+      if (changes.type === "object" && !updatedNode.properties) {
         updatedNode.properties = [];
+      } else if (changes.type === "array") {
+        if (updatedNode.properties) {
+          updatedNode.properties = updatedNode.properties.slice(0, 1);
+        } else {
+          updatedNode.properties = [];
+        }
       } else if (changes.type !== "object" && changes.type !== "array") {
         delete updatedNode.properties;
       }
@@ -113,6 +117,7 @@ export const changeProperty = (propertyId, changes, setSchemaData) => {
     }
     return node;
   };
+
   setSchemaData((currentData) => {
     if (propertyId === "1") {
       return updateProperty(currentData, propertyId, changes);
