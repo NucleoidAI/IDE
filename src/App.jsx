@@ -8,8 +8,8 @@ import axios from "axios";
 import { contextReducer } from "./context/reducer";
 import { contextToMap } from "./utils/Parser";
 import routes from "./routes";
+import { storage } from "@nucleoidjs/webstorage";
 import { subscribe } from "@nucleoidjs/synapses";
-import theme from "./theme";
 import vfs from "./vfs";
 
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
@@ -18,8 +18,36 @@ import {
   StyledEngineProvider,
   ThemeProvider,
 } from "@mui/material";
+import { darkTheme, lightTheme } from "./theme";
+import { useEffect, useState } from "react";
 
 function App() {
+  const prefersDarkMode = window.matchMedia(
+    "(prefers-color-scheme: dark)"
+  ).matches;
+  const [theme, setTheme] = useState(prefersDarkMode ? darkTheme : lightTheme);
+
+  useEffect(() => {
+    const savedTheme = storage.get("theme");
+    if (!savedTheme) {
+      storage.set("theme", prefersDarkMode ? "dark" : "light");
+      setTheme(prefersDarkMode ? darkTheme : lightTheme);
+    } else {
+      setTheme(savedTheme === "dark" ? darkTheme : lightTheme);
+    }
+
+    const handleStorageChange = () => {
+      const currentTheme = storage.get("theme");
+      setTheme(currentTheme === "dark" ? darkTheme : lightTheme);
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
   const progressElement = document.getElementById("nuc-progress-indicator");
 
   function checkMobileSize() {
