@@ -3,10 +3,12 @@ import React from "react";
 import Settings from "../../settings";
 import SettingsDialogTabs from "../../components/SettingsDialogTabs";
 import { publish } from "@nucleoidjs/synapses";
-import theme from "../../theme";
+import { useTheme } from "@mui/material/styles";
+
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 
 const SettingsDialog = ({ handleClose }) => {
+  const theme = useTheme();
   const urlRef = React.useRef();
 
   React.useEffect(() => {
@@ -55,7 +57,7 @@ const SettingsDialog = ({ handleClose }) => {
       PaperProps={{
         style: {
           backgroundColor: theme.palette.custom.darkDialog,
-          color: theme.palette.custom.grey,
+          color: "white",
           minHeight: 600,
         },
       }}
@@ -70,7 +72,7 @@ const SettingsDialog = ({ handleClose }) => {
       </DialogContent>
       <DialogActions>
         <Button
-          sx={{ color: theme.palette.custom.grey }}
+          sx={{ color: "white" }}
           autoFocus
           onClick={() => saveSettingDialog()}
         >

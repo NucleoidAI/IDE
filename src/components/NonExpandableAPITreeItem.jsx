@@ -2,7 +2,8 @@ import React from "react";
 import ResourceMenu from "../widgets/ResourceMenu";
 import Typography from "@mui/material/Typography";
 import clsx from "clsx";
-import theme from "../theme";
+import { useTheme } from "@mui/material/styles";
+
 import { TreeItem, useTreeItem } from "@mui/lab";
 
 const NonExpandableTreeContent = React.forwardRef(function CustomContent(
@@ -51,7 +52,7 @@ const NonExpandableTreeContent = React.forwardRef(function CustomContent(
   const handleCloseResourceMenu = () => {
     setOpen(false);
   };
-
+  const theme = useTheme();
   return (
     <div
       className={clsx(className, classes.root, {

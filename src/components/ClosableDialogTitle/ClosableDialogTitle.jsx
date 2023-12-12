@@ -1,9 +1,11 @@
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "./styles";
-import theme from "../../theme";
+import { useTheme } from "@mui/material/styles";
+
 import { DialogTitle, Grid, IconButton, Typography } from "@mui/material";
 
 function ClosableDialogTitle({ handleClose, label, content, grey }) {
+  const theme = useTheme();
   return (
     <DialogTitle sx={styles.dialogTitle}>
       <Grid container sx={styles.content}>

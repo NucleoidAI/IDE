@@ -15,7 +15,6 @@ import onboardDispatcher from "../../components/Onboard/onboardDispatcher";
 import scheduler from "../../connectionScheduler";
 import service from "../../service";
 import styles from "./styles";
-import theme from "../../theme";
 import { useContext } from "../../context/context";
 import { useLocation } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -33,8 +32,9 @@ import React, { useState } from "react"; //eslint-disable-line
 import { publish, useEvent } from "@nucleoidjs/synapses";
 
 const ProcessDrawer = () => {
+  const theme = useTheme();
   const matchDownMD = useMediaQuery(theme.breakpoints.down("lg"));
-  const themeMui = useTheme();
+
   const location = useLocation();
   const [state] = useContext();
 
@@ -142,7 +142,7 @@ const ProcessDrawer = () => {
         variant="persistent"
         anchor={"right"}
         open={visible(location?.pathname)}
-        sx={matchDownMD ? themeMui.custom.drawerSmall : themeMui.custom.drawer}
+        sx={matchDownMD ? theme.custom.drawerSmall : theme.custom.drawer}
       >
         <Box>
           <ApiButton />

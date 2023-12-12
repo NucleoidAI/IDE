@@ -7,7 +7,6 @@ import Error from "@mui/icons-material/Error";
 import Fade from "@mui/material/Fade";
 import ResourceMenu from "../ResourceMenu";
 import styles from "./styles";
-import theme from "../../theme";
 import { useContext } from "../../context/context";
 import { useEvent } from "@nucleoidjs/synapses";
 import { useTheme } from "@mui/material/styles";
@@ -242,7 +241,7 @@ export const compile = (
   }, {});
 
   const renderTree = (data) => {
-    const themeMui = useTheme();
+    const theme = useTheme();
     // eslint-disable-next-line
     let resourceHash;
 
@@ -282,7 +281,7 @@ export const compile = (
                   justifyContent: "space-between",
                 }}
               >
-                <Box sx={themeMui.custom.apiTreeItem}>
+                <Box sx={theme.custom.apiTreeItem}>
                   <span
                     style={{
                       display: "flex",

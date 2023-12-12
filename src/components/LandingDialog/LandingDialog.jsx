@@ -6,7 +6,8 @@ import React from "react";
 import codeImage from "../../images/code.png";
 import onboardDispatcher from "../Onboard/onboardDispatcher";
 import styles from "./styles";
-import theme from "../../theme";
+import { useTheme } from "@mui/material/styles";
+
 import {
   Avatar,
   Box,
@@ -24,6 +25,7 @@ const LandingDialog = () => {
   const handleClose = () => {
     onboardDispatcher({ level: 1 });
   };
+  const theme = useTheme();
   return (
     <Dialog
       open={true}
