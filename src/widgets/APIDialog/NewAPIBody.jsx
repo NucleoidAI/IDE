@@ -1,11 +1,11 @@
 import SchemaEditor from "../../components/SchemaEditor";
 
 import { Box, Button, Divider, Paper, Typography } from "@mui/material";
-import React, { useState } from "react";
-import { toOpenApi, toOpenApiSchema } from "../../adapters/openapi/adapter";
-const NewAPIBody = ({ types, api }) => {
-  const [requestSchema] = useState(null);
-  const [responseSchema] = useState(null);
+import React, { useRef } from "react";
+
+const NewAPIBody = ({ types }) => {
+  const requestSchema = useRef();
+  const responseSchema = useRef();
 
   const exampleSchema = {
     type: "object",
@@ -40,43 +40,6 @@ const NewAPIBody = ({ types, api }) => {
       "Response:",
       JSON.stringify(responseSchema.current.schemaOutput(), null, 2)
     );
-    const buildSchemaStructure = (properties) => {
-      return properties.map((prop) => {
-        const propertyObject = {
-          type: prop.type,
-          name: prop.name,
-        };
-        if (prop.type === "object" || prop.type === "array") {
-          propertyObject.properties = buildSchemaStructure(prop.properties);
-        }
-        return propertyObject;
-      });
-    };
-
-    const isTopLevelCustomType = (schema) =>
-      types.some((type) => type.name === schema?.type);
-
-    const requestSavedSchema = requestSchema
-      ? {
-          type: requestSchema.type,
-          properties: isTopLevelCustomType(requestSchema)
-            ? []
-            : buildSchemaStructure(requestSchema.properties),
-        }
-      : {};
-
-    const responseSavedSchema = responseSchema
-      ? {
-          type: responseSchema.type,
-          properties: isTopLevelCustomType(responseSchema)
-            ? []
-            : buildSchemaStructure(responseSchema.properties),
-        }
-      : {};
-    console.log(api, toOpenApi({ api }));
-    console.log(toOpenApiSchema(responseSavedSchema));
-    console.log("Request:", JSON.stringify(requestSavedSchema, null, 2));
-    console.log("Response:", JSON.stringify(responseSavedSchema, null, 2));
   };
 
   return (
