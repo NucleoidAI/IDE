@@ -32,7 +32,7 @@ const contextToMap = (files) => {
       key: func.path + ".ts",
       value: `${
         !func.builtin ? newDefinition : func.definition
-      }\nexport default ${className};`,
+      }// @nuc-exports\nexport default ${className};`,
     });
   });
 
