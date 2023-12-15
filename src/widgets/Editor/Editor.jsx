@@ -3,6 +3,7 @@ import OpenAI from "../OpenAI";
 import React from "react";
 import { base } from "../../palette";
 import { contextToMap } from "../../utils/Parser";
+import monacoTheme from "../../lib/monacoEditorTheme.json";
 import { parser } from "react-nucleoid";
 import { publish } from "@nucleoidjs/synapses";
 import rules from "./rules";
@@ -189,19 +190,7 @@ const Editor = React.forwardRef((props, ref) => {
   function handleEditorDidMount(editor, monaco) {
     const nucFuncs = context.nucleoid.functions;
 
-    const customDarkThemeData = {
-      base: "vs-dark",
-      inherit: true,
-      rules: [],
-      colors: {
-        "editor.background": base.grey[800],
-        "editor.foreground": base.common.white,
-        "editor.lineHighlightBackground": base.grey[800],
-        "editorLineNumber.foreground": base.grey[600],
-        "editor.selectionBackground": base.primary.main,
-        "editor.hoverHighlightBackground": base.grey[700],
-      },
-    };
+    const customDarkThemeData = monacoTheme;
 
     monaco.editor.defineTheme("custom-dark-theme", customDarkThemeData);
 
