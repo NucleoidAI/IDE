@@ -1,4 +1,5 @@
 import ClosableDialogTitle from "../ClosableDialogTitle";
+import { Divider } from "@mui/material";
 import NumberOne from "../../images/number-one.png";
 import NumberThree from "../../images/number-three.png";
 import NumberTwo from "../../images/number-two.png";
@@ -58,16 +59,6 @@ const LandingDialog = () => {
         <Box sx={styles.welcome}>
           <h2> Welcome to Nucleoid Project </h2>
         </Box>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <span style={{ marginRight: 8 }}>Dark Mode</span>
-          <Switch checked={darkMode} onChange={handleThemeChange} />
-        </Box>
 
         <Box>
           Nucleoid low-code framework lets you build your APIs with the help of
@@ -83,7 +74,7 @@ const LandingDialog = () => {
                 <ListItemAvatar>
                   <Avatar src={NumberOne}></Avatar>
                 </ListItemAvatar>
-                <ListItemText primary="Write your business logic in JavaScript" />
+                <ListItemText primary="Write your business logic in TypeScript" />
               </ListItem>
               <ListItem>
                 <ListItemAvatar>
@@ -107,7 +98,25 @@ const LandingDialog = () => {
           </Box>
         </Box>
       </DialogContent>
-
+      <Divider sx={{ marginY: 2 }} />
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          marginTop: 2,
+          marginBottom: 1,
+        }}
+      >
+        <Typography variant="body2" sx={{ marginRight: 1 }}>
+          Light
+        </Typography>
+        <Switch checked={darkMode} onChange={handleThemeChange} />
+        <Typography variant="body2" sx={{ marginLeft: 1 }}>
+          Dark
+        </Typography>
+      </Box>
       <DialogActions>
         <Button sx={{ color: theme.palette.custom.grey }} onClick={handleClose}>
           CLOSE
