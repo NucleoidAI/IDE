@@ -196,9 +196,9 @@ let darkTheme = createTheme({
     custom: {
       grey: base.grey[500],
       fossil: base.grey[500],
-      darkDialogBg: base.common.white,
+      darkDialogBg: "rgba(0,0,0,0.5)",
       darkDialogPanel: base.grey[800],
-      darkDialog: base.grey[600],
+      darkDialog: base.grey[800],
       apiTreeRightClick: base.common.white,
       drawerBG: base.grey[900],
       textGray: base.grey[500],
@@ -307,7 +307,7 @@ darkTheme = {
     MuiBackdrop: {
       styleOverrides: {
         root: {
-          backgroundColor: base.common.black,
+          backgroundColor: "rgba(0,0,0,0.1)",
         },
       },
     },
