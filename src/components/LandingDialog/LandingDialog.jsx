@@ -3,8 +3,10 @@ import NumberOne from "../../images/number-one.png";
 import NumberThree from "../../images/number-three.png";
 import NumberTwo from "../../images/number-two.png";
 import React from "react";
+import { Switch } from "@mui/material";
 import codeImage from "../../images/code.png";
 import onboardDispatcher from "../Onboard/onboardDispatcher";
+import { storage } from "@nucleoidjs/webstorage";
 import styles from "./styles";
 import { useTheme } from "@mui/material/styles";
 
@@ -19,9 +21,20 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Typography,
 } from "@mui/material";
 
 const LandingDialog = () => {
+  const [darkMode, setDarkMode] = React.useState(
+    storage.get("platform", "theme") === "dark"
+  );
+
+  const handleThemeChange = (event) => {
+    const newTheme = event.target.checked ? "dark" : "light";
+    setDarkMode(event.target.checked);
+    storage.set("platform", "theme", newTheme);
+  };
+
   const handleClose = () => {
     onboardDispatcher({ level: 1 });
   };
@@ -45,6 +58,17 @@ const LandingDialog = () => {
         <Box sx={styles.welcome}>
           <h2> Welcome to Nucleoid Project </h2>
         </Box>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <span style={{ marginRight: 8 }}>Dark Mode</span>
+          <Switch checked={darkMode} onChange={handleThemeChange} />
+        </Box>
+
         <Box>
           Nucleoid low-code framework lets you build your APIs with the help of
           AI and built-in datastore.
@@ -83,6 +107,7 @@ const LandingDialog = () => {
           </Box>
         </Box>
       </DialogContent>
+
       <DialogActions>
         <Button sx={{ color: theme.palette.custom.grey }} onClick={handleClose}>
           CLOSE
