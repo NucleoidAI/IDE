@@ -1,7 +1,6 @@
 import { FileOpen } from "@mui/icons-material/";
 import ProjectDialog from "../../widgets/ProjectDialog";
 import React from "react";
-
 import { useContext } from "../../context/context";
 
 import { Box, Button, Tooltip } from "@mui/material/";
@@ -29,7 +28,7 @@ export default function ProjectSelectSmall() {
           color={"inherit"}
           onClick={() => setOpen(true)}
         >
-          <FileOpen sx={{ color: "#323a40" }} />
+          <FileOpen sx={{ color: "#343a43" }} />
         </Button>
         {open && <ProjectDialog handleClose={handleClose} />}
       </Box>

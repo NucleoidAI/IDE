@@ -48,7 +48,7 @@ export default function SwaggerDialog() {
       <AppBar
         sx={{
           position: "relative",
-          backgroundColor: "#323a40",
+          backgroundColor: "#343a43",
           color: theme.palette.custom.grey,
         }}
       >

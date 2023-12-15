@@ -76,7 +76,7 @@ lightTheme = {
     MuiDrawer: {
       styleOverrides: {
         paper: {
-          backgroundColor: "#323a40",
+          backgroundColor: "#343a43",
         },
       },
     },
