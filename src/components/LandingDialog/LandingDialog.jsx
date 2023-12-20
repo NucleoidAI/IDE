@@ -7,6 +7,7 @@ import React from "react";
 import { Switch } from "@mui/material";
 import codeImage from "../../images/code.png";
 import onboardDispatcher from "../Onboard/onboardDispatcher";
+import { publish } from "@nucleoidjs/synapses";
 import { storage } from "@nucleoidjs/webstorage";
 import styles from "./styles";
 import { useTheme } from "@mui/material/styles";
@@ -34,6 +35,7 @@ const LandingDialog = () => {
     const newTheme = event.target.checked ? "dark" : "light";
     setDarkMode(event.target.checked);
     storage.set("platform", "theme", newTheme);
+    publish("THEME_CHANGE", { theme: newTheme });
   };
 
   const handleClose = () => {

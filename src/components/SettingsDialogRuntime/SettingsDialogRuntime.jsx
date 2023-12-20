@@ -1,4 +1,5 @@
 import React from "react";
+import { publish } from "@nucleoidjs/synapses";
 import { storage } from "@nucleoidjs/webstorage";
 import styles from "./styles";
 
@@ -13,6 +14,7 @@ const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
     const newTheme = event.target.checked ? "dark" : "light";
     setDarkMode(event.target.checked);
     storage.set("platform", "theme", newTheme);
+    publish("THEME_CHANGE", { theme: newTheme });
   };
 
   const [url, setUrl] = React.useState(urlRef.current.url);

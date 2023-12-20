@@ -41,11 +41,7 @@ function App() {
       setTheme(currentTheme === "dark" ? darkTheme : lightTheme);
     };
 
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
+    subscribe("THEME_CHANGE", handleStorageChange);
   }, [prefersDarkMode]);
 
   const progressElement = document.getElementById("nuc-progress-indicator");

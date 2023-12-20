@@ -1,16 +1,15 @@
 import MonacoEditor from "@monaco-editor/react";
 import OpenAI from "../OpenAI";
 import React from "react";
-import { base } from "../../palette";
 import { contextToMap } from "../../utils/Parser";
 import monacoTheme from "../../lib/monacoEditorTheme.json";
 import { parser } from "react-nucleoid";
-import { publish } from "@nucleoidjs/synapses";
 import rules from "./rules";
 import { storage } from "@nucleoidjs/webstorage";
 import { useContext } from "../../context/context";
 
 import { Backdrop, Box } from "@mui/material";
+import { publish, subscribe } from "@nucleoidjs/synapses";
 
 import * as angularPlugin from "prettier/parser-angular";
 import * as babelPlugin from "prettier/parser-babel";
@@ -56,8 +55,7 @@ const Editor = React.forwardRef((props, ref) => {
     const handleStorageChange = () => {
       setTheme(storage.get("platform", "theme"));
     };
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
+    subscribe("THEME_CHANGE", handleStorageChange);
   }, []);
   const file = getFile(context, props);
 
