@@ -94,6 +94,11 @@ const SchemaEditor = forwardRef(
                       level === 0 ? null : node.id
                     );
                   }}
+                  disabled={
+                    node.type === "array" &&
+                    node.properties &&
+                    node.properties.length >= 1
+                  }
                 >
                   <AddCircleOutlineIcon fontSize="small" />
                 </IconButton>
@@ -158,11 +163,12 @@ const SchemaEditor = forwardRef(
       const removeIds = (node) => {
         // eslint-disable-next-line no-unused-vars
         const { id, properties, ...rest } = node;
-        if (node.type === "object" && properties) {
+        if ((node.type === "object" || node.type === "array") && properties) {
           return { ...rest, properties: properties.map(removeIds) };
         }
         return rest;
       };
+
       return removeIds(schemaData);
     };
 

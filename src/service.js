@@ -59,8 +59,8 @@ const query = async (body) => {
   }).then((response) => response.json());
 };
 
-const openapi = async (action, nuc) => {
-  if (action === undefined) {
+const openapi = async (openapi) => {
+  if (openapi["x-nuc-action"] === undefined) {
     return fetch(`${Settings.url.terminal()}/openapi`, {
       method: "GET",
     }).then((response) => response.json());
@@ -70,10 +70,7 @@ const openapi = async (action, nuc) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        ...nuc,
-        action,
-      }),
+      body: JSON.stringify(openapi),
     });
   }
 };
@@ -149,19 +146,13 @@ const getConfig = () => {
 };
 
 const createSandbox = (context) => {
-  const data = {
-    functions: context.functions,
-    api: context.api,
-    types: context.types,
-  };
-
   return axios(Settings.sandbox.url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
     },
-    data: JSON.stringify(data),
+    data: JSON.stringify(context),
   });
 };
 

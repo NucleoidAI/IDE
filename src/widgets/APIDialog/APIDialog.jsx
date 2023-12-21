@@ -1,9 +1,8 @@
 import APIDialogAction from "../../components/APIDialogAction";
 import APIPath from "../../components/APIPath";
-// import APITypes from "../../components/APITypes";
+import APITypes from "../../components/APITypes";
 // import AdressTree from "./Test";
 import NewAPIBody from "./NewAPIBody";
-import NewAPITree from "./NewAPITree";
 import NucDialog from "../../components/core/NucDialog/NucDialog";
 //BasicDialog
 import React from "react";
@@ -28,7 +27,7 @@ function APIDialog() {
         sx={{ width: 900 }}
       >
         <APIPath />
-        <TabManager view={view} types={types} />
+        <TabManager view={view} types={types} api={context.nucleoid.api} />
         <APIDialogAction
           view={view}
           setApiDialogView={(button) =>
@@ -43,12 +42,12 @@ function APIDialog() {
   } else return null;
 }
 
-function TabManager({ view, types }) {
+function TabManager({ view, types, api }) {
   switch (view) {
     case "TYPES":
-      return <NewAPITree apiData={types} />;
+      return <APITypes apiData={types} />;
     case "BODY": {
-      return <NewAPIBody types={types} />;
+      return <NewAPIBody types={types} api={api} />;
     }
 
     case "params":
