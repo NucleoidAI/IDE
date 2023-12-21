@@ -4,11 +4,12 @@ import React from "react";
 import { contextToMap } from "../../utils/Parser";
 import monacoTheme from "../../lib/monacoEditorTheme.json";
 import { parser } from "react-nucleoid";
+import { publish } from "@nucleoidjs/synapses";
+
 import rules from "./rules";
 import { useContext } from "../../context/context";
 
 import { Backdrop, Box } from "@mui/material";
-import { publish, subscribe } from "@nucleoidjs/synapses";
 import { storage, useStorage } from "@nucleoidjs/webstorage";
 
 import * as angularPlugin from "prettier/parser-angular";
@@ -42,9 +43,7 @@ const Editor = React.forwardRef((props, ref) => {
   const timerRef = React.useRef();
   const [open, setOpen] = React.useState(false);
   const [context] = useContext();
-  const [theme, setTheme] = React.useState(
-    storage.get("platform", "theme") || "light"
-  );
+
   const [themeStorage] = useStorage(
     "platform",
     "theme",

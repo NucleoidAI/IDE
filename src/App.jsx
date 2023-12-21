@@ -19,7 +19,6 @@ import {
 } from "@mui/material";
 import { darkTheme, lightTheme } from "./theme";
 import { storage, useStorage } from "@nucleoidjs/webstorage";
-import { useEffect, useState } from "react";
 
 function App() {
   const prefersDarkMode = window.matchMedia(

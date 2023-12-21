@@ -1,5 +1,4 @@
 import React from "react";
-import { publish } from "@nucleoidjs/synapses";
 import { storage } from "@nucleoidjs/webstorage";
 import styles from "./styles";
 
