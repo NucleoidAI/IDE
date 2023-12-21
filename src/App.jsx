@@ -8,7 +8,6 @@ import axios from "axios";
 import { contextReducer } from "./context/reducer";
 import { contextToMap } from "./utils/Parser";
 import routes from "./routes";
-import { storage } from "@nucleoidjs/webstorage";
 import { subscribe } from "@nucleoidjs/synapses";
 import vfs from "./vfs";
 
@@ -19,30 +18,19 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { darkTheme, lightTheme } from "./theme";
+import { storage, useStorage } from "@nucleoidjs/webstorage";
 import { useEffect, useState } from "react";
 
 function App() {
   const prefersDarkMode = window.matchMedia(
     "(prefers-color-scheme: dark)"
   ).matches;
-  const [theme, setTheme] = useState(prefersDarkMode ? darkTheme : lightTheme);
 
-  useEffect(() => {
-    const savedTheme = storage.get("platform", "theme");
-    if (!savedTheme) {
-      storage.set("platform", "theme", prefersDarkMode ? "dark" : "light");
-      setTheme(prefersDarkMode ? darkTheme : lightTheme);
-    } else {
-      setTheme(savedTheme === "dark" ? darkTheme : lightTheme);
-    }
-
-    const handleStorageChange = () => {
-      const currentTheme = storage.get("platform", "theme");
-      setTheme(currentTheme === "dark" ? darkTheme : lightTheme);
-    };
-
-    subscribe("THEME_CHANGE", handleStorageChange);
-  }, [prefersDarkMode]);
+  const [theme] = useStorage(
+    "platform",
+    "theme",
+    storage.get("platform,theme") || (prefersDarkMode ? "dark" : "light")
+  );
 
   const progressElement = document.getElementById("nuc-progress-indicator");
 
@@ -169,7 +157,7 @@ function App() {
 
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
         <CssBaseline />
         <BrowserRouter basename="ide">
           <ContextProvider state={context} reducer={contextReducer}>

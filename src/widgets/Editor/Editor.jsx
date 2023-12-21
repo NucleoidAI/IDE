@@ -5,11 +5,11 @@ import { contextToMap } from "../../utils/Parser";
 import monacoTheme from "../../lib/monacoEditorTheme.json";
 import { parser } from "react-nucleoid";
 import rules from "./rules";
-import { storage } from "@nucleoidjs/webstorage";
 import { useContext } from "../../context/context";
 
 import { Backdrop, Box } from "@mui/material";
 import { publish, subscribe } from "@nucleoidjs/synapses";
+import { storage, useStorage } from "@nucleoidjs/webstorage";
 
 import * as angularPlugin from "prettier/parser-angular";
 import * as babelPlugin from "prettier/parser-babel";
@@ -45,18 +45,12 @@ const Editor = React.forwardRef((props, ref) => {
   const [theme, setTheme] = React.useState(
     storage.get("platform", "theme") || "light"
   );
+  const [themeStorage] = useStorage(
+    "platform",
+    "theme",
+    storage.get("platform,theme")
+  );
 
-  React.useEffect(() => {
-    const storedTheme = storage.get("platform", "theme") || "light";
-    setTheme(storedTheme);
-  }, []);
-
-  React.useEffect(() => {
-    const handleStorageChange = () => {
-      setTheme(storage.get("platform", "theme"));
-    };
-    subscribe("THEME_CHANGE", handleStorageChange);
-  }, []);
   const file = getFile(context, props);
 
   const plugins = [
@@ -192,10 +186,9 @@ const Editor = React.forwardRef((props, ref) => {
 
     monaco.editor.defineTheme("custom-dark-theme", customDarkThemeData);
 
-    const monacoEditorTheme =
-      theme === "dark" ? "custom-dark-theme" : "vs-light";
-
-    monaco.editor.setTheme(monacoEditorTheme);
+    monaco.editor.setTheme(
+      themeStorage === "dark" ? "custom-dark-theme" : "vs-light"
+    );
 
     monaco.editor.getModels().forEach((item) => {
       if (
@@ -288,7 +281,7 @@ const Editor = React.forwardRef((props, ref) => {
   return (
     <Box sx={{ height: "100%" }}>
       <MonacoEditor
-        key={theme}
+        key={themeStorage}
         height={"96%"}
         defaultLanguage="typescript"
         defaultValue={file.code}
