@@ -9,6 +9,7 @@ import { contextReducer } from "./context/reducer";
 import { contextToMap } from "./utils/Parser";
 import routes from "./routes";
 import { subscribe } from "@nucleoidjs/synapses";
+import { useStorage } from "@nucleoidjs/webstorage";
 import vfs from "./vfs";
 
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
@@ -18,7 +19,6 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { darkTheme, lightTheme } from "./theme";
-import { useStorage } from "@nucleoidjs/webstorage";
 
 function App() {
   const prefersDarkMode = window.matchMedia(
