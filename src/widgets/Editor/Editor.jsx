@@ -10,7 +10,7 @@ import rules from "./rules";
 import { useContext } from "../../context/context";
 
 import { Backdrop, Box } from "@mui/material";
-import { storage, useStorage } from "@nucleoidjs/webstorage";
+import { useStorage } from "@nucleoidjs/webstorage";
 
 import * as angularPlugin from "prettier/parser-angular";
 import * as babelPlugin from "prettier/parser-babel";
@@ -44,11 +44,7 @@ const Editor = React.forwardRef((props, ref) => {
   const [open, setOpen] = React.useState(false);
   const [context] = useContext();
 
-  const [themeStorage] = useStorage(
-    "platform",
-    "theme",
-    storage.get("platform,theme")
-  );
+  const [themeStorage] = useStorage("platform", "theme", "light");
 
   const file = getFile(context, props);
 

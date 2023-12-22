@@ -18,7 +18,7 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { darkTheme, lightTheme } from "./theme";
-import { storage, useStorage } from "@nucleoidjs/webstorage";
+import { useStorage } from "@nucleoidjs/webstorage";
 
 function App() {
   const prefersDarkMode = window.matchMedia(
@@ -28,7 +28,7 @@ function App() {
   const [theme] = useStorage(
     "platform",
     "theme",
-    storage.get("platform,theme") || (prefersDarkMode ? "dark" : "light")
+    prefersDarkMode ? "dark" : "light"
   );
 
   const progressElement = document.getElementById("nuc-progress-indicator");
@@ -156,7 +156,7 @@ function App() {
 
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
+      <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
         <CssBaseline />
         <BrowserRouter basename="ide">
           <ContextProvider state={context} reducer={contextReducer}>
