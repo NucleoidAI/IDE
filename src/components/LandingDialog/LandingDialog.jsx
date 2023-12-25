@@ -7,7 +7,7 @@ import React from "react";
 import { Switch } from "@mui/material";
 import codeImage from "../../images/code.png";
 import onboardDispatcher from "../Onboard/onboardDispatcher";
-import { storage } from "@nucleoidjs/webstorage";
+import { storage, useStorage } from "@nucleoidjs/webstorage";
 import styles from "./styles";
 import { useTheme } from "@mui/material/styles";
 
@@ -26,14 +26,12 @@ import {
 } from "@mui/material";
 
 const LandingDialog = () => {
-  const [darkMode, setDarkMode] = React.useState(
-    storage.get("platform,theme") === "dark"
-  );
+  const [darkMode] = useStorage("platform", "theme", "light");
 
   const handleThemeChange = (event) => {
     const newTheme = event.target.checked ? "dark" : "light";
-    setDarkMode(event.target.checked);
-    storage.set("platform,theme", newTheme);
+
+    storage.set("platform", "theme", newTheme);
   };
 
   const handleClose = () => {
@@ -112,7 +110,7 @@ const LandingDialog = () => {
         <Typography variant="body2" sx={{ marginRight: 1 }}>
           Light
         </Typography>
-        <Switch checked={darkMode} onChange={handleThemeChange} />
+        <Switch checked={darkMode === "dark"} onChange={handleThemeChange} />
         <Typography variant="body2" sx={{ marginLeft: 1 }}>
           Dark
         </Typography>

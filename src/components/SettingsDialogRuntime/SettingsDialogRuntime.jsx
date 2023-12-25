@@ -1,18 +1,15 @@
 import React from "react";
-import { storage } from "@nucleoidjs/webstorage";
+import { storage, useStorage } from "@nucleoidjs/webstorage";
 import styles from "./styles";
 
 import { Box, Switch, TextField, Typography } from "@mui/material";
 
 const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
-  const [darkMode, setDarkMode] = React.useState(
-    storage.get("platform,theme") === "dark"
-  );
+  const [darkMode] = useStorage("platform", "theme", "light");
 
   const handleThemeChange = (event) => {
     const newTheme = event.target.checked ? "dark" : "light";
-    setDarkMode(event.target.checked);
-    storage.set("platform,theme", newTheme);
+    storage.set("platform.theme", newTheme);
   };
 
   const [url, setUrl] = React.useState(urlRef.current.url);
@@ -143,7 +140,7 @@ const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
       </Section>
       <Section title={"Theme"}>
         <BetweenComponents title={"Dark Mode"}>
-          <Switch checked={darkMode} onChange={handleThemeChange} />
+          <Switch checked={darkMode === "dark"} onChange={handleThemeChange} />
         </BetweenComponents>
       </Section>
     </Box>
