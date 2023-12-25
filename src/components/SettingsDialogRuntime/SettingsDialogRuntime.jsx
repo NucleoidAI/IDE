@@ -1,8 +1,9 @@
 import React from "react";
-import { storage, useStorage } from "@nucleoidjs/webstorage";
+
 import styles from "./styles";
 
 import { Box, Switch, TextField, Typography } from "@mui/material";
+import { storage, useStorage } from "@nucleoidjs/webstorage";
 
 const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
   const [darkMode] = useStorage("platform", "theme", "light");

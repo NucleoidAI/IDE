@@ -7,7 +7,7 @@ import React from "react";
 import { Switch } from "@mui/material";
 import codeImage from "../../images/code.png";
 import onboardDispatcher from "../Onboard/onboardDispatcher";
-import { storage, useStorage } from "@nucleoidjs/webstorage";
+
 import styles from "./styles";
 import { useTheme } from "@mui/material/styles";
 
@@ -24,6 +24,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import { storage, useStorage } from "@nucleoidjs/webstorage";
 
 const LandingDialog = () => {
   const [darkMode] = useStorage("platform", "theme", "light");
