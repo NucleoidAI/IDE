@@ -6,7 +6,7 @@ import { Box, Switch, TextField, Typography } from "@mui/material";
 import { storage, useStorage } from "@nucleoidjs/webstorage";
 
 const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
-  const [darkMode] = useStorage("platform", "theme", "light");
+  const [themeStorage] = useStorage("platform", "theme", "light");
 
   const handleThemeChange = (event) => {
     const newTheme = event.target.checked ? "dark" : "light";
@@ -141,7 +141,10 @@ const SettingsDialogRuntime = React.forwardRef((props, urlRef) => {
       </Section>
       <Section title={"Theme"}>
         <BetweenComponents title={"Dark Mode"}>
-          <Switch checked={darkMode === "dark"} onChange={handleThemeChange} />
+          <Switch
+            checked={themeStorage !== "light"}
+            onChange={handleThemeChange}
+          />
         </BetweenComponents>
       </Section>
     </Box>

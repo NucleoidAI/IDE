@@ -21,14 +21,14 @@ import {
 import { darkTheme, lightTheme } from "./theme";
 
 function App() {
-  const prefersDarkMode = window.matchMedia(
-    "(prefers-color-scheme: dark)"
+  const prefersLightMode = window.matchMedia(
+    "(prefers-color-scheme: light)"
   ).matches;
 
   const [theme] = useStorage(
     "platform",
     "theme",
-    prefersDarkMode ? "dark" : "light"
+    prefersLightMode ? "light" : "dark"
   );
 
   const progressElement = document.getElementById("nuc-progress-indicator");

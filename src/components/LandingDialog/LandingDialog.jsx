@@ -27,7 +27,7 @@ import {
 import { storage, useStorage } from "@nucleoidjs/webstorage";
 
 const LandingDialog = () => {
-  const [darkMode] = useStorage("platform", "theme", "light");
+  const [themeStorage] = useStorage("platform", "theme", "light");
 
   const handleThemeChange = (event) => {
     const newTheme = event.target.checked ? "dark" : "light";
@@ -111,7 +111,10 @@ const LandingDialog = () => {
         <Typography variant="body2" sx={{ marginRight: 1 }}>
           Light
         </Typography>
-        <Switch checked={darkMode === "dark"} onChange={handleThemeChange} />
+        <Switch
+          checked={themeStorage !== "light"}
+          onChange={handleThemeChange}
+        />
         <Typography variant="body2" sx={{ marginLeft: 1 }}>
           Dark
         </Typography>
