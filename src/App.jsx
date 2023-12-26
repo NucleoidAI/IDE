@@ -9,7 +9,7 @@ import { contextReducer } from "./context/reducer";
 import { contextToMap } from "./utils/Parser";
 import routes from "./routes";
 import { subscribe } from "@nucleoidjs/synapses";
-import theme from "./theme";
+import { useStorage } from "@nucleoidjs/webstorage";
 import vfs from "./vfs";
 
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
@@ -18,8 +18,19 @@ import {
   StyledEngineProvider,
   ThemeProvider,
 } from "@mui/material";
+import { darkTheme, lightTheme } from "./theme";
 
 function App() {
+  const prefersLightMode = window.matchMedia(
+    "(prefers-color-scheme: light)"
+  ).matches;
+
+  const [theme] = useStorage(
+    "platform",
+    "theme",
+    prefersLightMode ? "light" : "dark"
+  );
+
   const progressElement = document.getElementById("nuc-progress-indicator");
 
   function checkMobileSize() {
@@ -145,7 +156,7 @@ function App() {
 
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
         <CssBaseline />
         <BrowserRouter basename="ide">
           <ContextProvider state={context} reducer={contextReducer}>

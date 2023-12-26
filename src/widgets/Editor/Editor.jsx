@@ -2,10 +2,13 @@ import MonacoEditor from "@monaco-editor/react";
 import OpenAI from "../OpenAI";
 import React from "react";
 import { contextToMap } from "../../utils/Parser";
+import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
 import { parser } from "react-nucleoid";
 import { publish } from "@nucleoidjs/synapses";
+
 import rules from "./rules";
 import { useContext } from "../../context/context";
+import { useStorage } from "@nucleoidjs/webstorage";
 
 import { Backdrop, Box } from "@mui/material";
 
@@ -40,6 +43,8 @@ const Editor = React.forwardRef((props, ref) => {
   const timerRef = React.useRef();
   const [open, setOpen] = React.useState(false);
   const [context] = useContext();
+
+  const [themeStorage] = useStorage("platform", "theme", "light");
 
   const file = getFile(context, props);
 
@@ -172,6 +177,12 @@ const Editor = React.forwardRef((props, ref) => {
   function handleEditorDidMount(editor, monaco) {
     const nucFuncs = context.nucleoid.functions;
 
+    monaco.editor.defineTheme("custom-dark-theme", monacoDarkTheme);
+
+    monaco.editor.setTheme(
+      themeStorage === "light" ? "vs-light" : "custom-dark-theme"
+    );
+
     monaco.editor.getModels().forEach((item) => {
       if (
         nucFuncs.find(
@@ -263,6 +274,7 @@ const Editor = React.forwardRef((props, ref) => {
   return (
     <Box sx={{ height: "100%" }}>
       <MonacoEditor
+        key={themeStorage}
         height={"96%"}
         defaultLanguage="typescript"
         defaultValue={file.code}

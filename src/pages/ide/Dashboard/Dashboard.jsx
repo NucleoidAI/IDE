@@ -1,7 +1,8 @@
-import React from "react";
-import theme from "../../../theme";
-import { Box, Button, Card, Grid, useMediaQuery } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid"; //eslint-disable-line
+import React from "react";
+import { useTheme } from "@mui/material/styles";
+
+import { Box, Button, Card, Grid, useMediaQuery } from "@mui/material";
 import { Line, PolarArea } from "react-chartjs-2";
 
 const NucDataGrid = ({ rows }) => {
@@ -65,6 +66,7 @@ const NucDataGrid = ({ rows }) => {
 };
 
 const Dashboard = () => {
+  const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("md"));
 
   const generateRandomList = (length) => {

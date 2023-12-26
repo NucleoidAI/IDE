@@ -17,7 +17,7 @@ export default function ProjectSelect({ title }) {
         variant="contained"
         color={"inherit"}
         onClick={() => setOpen(true)}
-        endIcon={<ArrowDropDown />}
+        endIcon={<ArrowDropDown sx={{ color: "#121212" }} />}
       >
         {title}
       </Button>

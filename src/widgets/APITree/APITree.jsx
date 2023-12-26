@@ -7,9 +7,9 @@ import Error from "@mui/icons-material/Error";
 import Fade from "@mui/material/Fade";
 import ResourceMenu from "../ResourceMenu";
 import styles from "./styles";
-import theme from "../../theme";
 import { useContext } from "../../context/context";
 import { useEvent } from "@nucleoidjs/synapses";
+import { useTheme } from "@mui/material/styles";
 
 import {
   Box,
@@ -243,6 +243,8 @@ export const compile = (
   const renderTree = (data) => {
     // eslint-disable-next-line
     let resourceHash;
+    // eslint-disable-next-line
+    const theme = useTheme();
 
     return Object.keys(data).map((path) => {
       const { methods, children } = data[path];
@@ -280,7 +282,7 @@ export const compile = (
                   justifyContent: "space-between",
                 }}
               >
-                <Box sx={styles.apiTreeItem}>
+                <Box sx={theme.custom.apiTreeItem}>
                   <span
                     style={{
                       display: "flex",

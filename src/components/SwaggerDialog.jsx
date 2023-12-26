@@ -5,7 +5,8 @@ import Settings from "../settings";
 import StarUsOnGithub from "./StarUsOnGithub";
 import Swagger from "../icons/Swagger";
 import onboardDispatcher from "./Onboard/onboardDispatcher";
-import theme from "../theme";
+import { useTheme } from "@mui/material/styles";
+
 import {
   AppBar,
   Box,
@@ -22,6 +23,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function SwaggerDialog() {
+  const theme = useTheme();
   const [swagger] = useEvent("SWAGGER_DIALOG", { open: false });
 
   function handleClose() {
@@ -46,7 +48,7 @@ export default function SwaggerDialog() {
       <AppBar
         sx={{
           position: "relative",
-          backgroundColor: "#323a40",
+          backgroundColor: "#343a43",
           color: theme.palette.custom.grey,
         }}
       >
@@ -119,6 +121,7 @@ export default function SwaggerDialog() {
 }
 
 function OpenSwaggerNewTabButton(props) {
+  const theme = useTheme();
   const { url } = props;
 
   function handleClick() {

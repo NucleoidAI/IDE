@@ -1,9 +1,11 @@
 import React from "react";
 import Swagger from "../icons/Swagger";
-import theme from "../theme";
+import { useTheme } from "@mui/material/styles";
+
 import { Box, Button, Typography } from "@mui/material";
 
 const OpenSwaggerButton = ({ clickEvent, small, disabled }) => {
+  const theme = useTheme();
   return (
     <Button
       disabled={disabled}

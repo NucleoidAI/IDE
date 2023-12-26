@@ -16,13 +16,14 @@ import onboardDispatcher from "../../components/Onboard/onboardDispatcher";
 import scheduler from "../../connectionScheduler";
 import service from "../../service";
 import styles from "./styles";
-import theme from "../../theme";
+
 import { toOpenApi } from "../../adapters/openapi/adapter";
 import { useContext } from "../../context/context";
 import { useLocation } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
-
+import { useTheme } from "@mui/material/styles";
 import vfs from "../../vfs";
+
 import {
   Box,
   CircularProgress,
@@ -30,11 +31,13 @@ import {
   ListItemButton,
   Tooltip,
 } from "@mui/material";
-import { publish, useEvent } from "@nucleoidjs/synapses";
 import React, { useState } from "react"; //eslint-disable-line
+import { publish, useEvent } from "@nucleoidjs/synapses";
 
 const ProcessDrawer = () => {
+  const theme = useTheme();
   const matchDownMD = useMediaQuery(theme.breakpoints.down("lg"));
+
   const location = useLocation();
   const [state] = useContext();
 
@@ -142,7 +145,7 @@ const ProcessDrawer = () => {
         variant="persistent"
         anchor={"right"}
         open={visible(location?.pathname)}
-        sx={matchDownMD ? styles.drawerSmall : styles.drawer}
+        sx={matchDownMD ? theme.custom.drawerSmall : theme.custom.drawer}
       >
         <Box>
           <ApiButton />

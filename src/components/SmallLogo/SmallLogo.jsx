@@ -3,7 +3,12 @@ import { Typography } from "@mui/material";
 
 const SmallLogo = () => {
   return (
-    <Typography display={"inline"} fontSize={"26px"} color={"#209958"}>
+    <Typography
+      display={"inline"}
+      fontSize={"26px"}
+      color={"#209958"}
+      style={{ cursor: "pointer" }}
+    >
       nuc
     </Typography>
   );
