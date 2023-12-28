@@ -17,7 +17,15 @@ export default function NucDialog({
 }) {
   return (
     <Dialog fullWidth maxWidth={"md"} open onClose={handleClose}>
-      <DialogTitle sx={{ m: 0, p: 2 }}>{title}</DialogTitle>
+      <DialogTitle
+        sx={{
+          m: 0,
+          p: 2,
+          backgroundColor: (theme) => theme.palette.background.default,
+        }}
+      >
+        {title}
+      </DialogTitle>
       <IconButton
         aria-label="close"
         onClick={handleClose}
@@ -30,8 +38,19 @@ export default function NucDialog({
       >
         <Close />
       </IconButton>
-      <DialogContent sx={{ minWidth }}>{children}</DialogContent>
-      <DialogActions>{action}</DialogActions>
+      <DialogContent
+        sx={{
+          minWidth,
+          backgroundColor: (theme) => theme.palette.background.default,
+        }}
+      >
+        {children}
+      </DialogContent>
+      <DialogActions
+        sx={{ backgroundColor: (theme) => theme.palette.background.default }}
+      >
+        {action}
+      </DialogActions>
     </Dialog>
   );
 }

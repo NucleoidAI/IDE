@@ -59,14 +59,12 @@ const NewAPIBody = ({ types }) => {
         }}
       >
         <Paper
-          elevation={1}
+          elevation={3}
           sx={{
             width: "100%",
             p: 2,
-            borderColor: "grey.300",
-            borderWidth: 1,
+            bgcolor: "background.paper",
             borderRadius: 2,
-            borderStyle: "solid",
             height: "100%",
             boxSizing: "border-box",
             display: "flex",
@@ -85,7 +83,8 @@ const NewAPIBody = ({ types }) => {
           </Typography>
         </Paper>
       </Box>
-      <Divider orientation="vertical" flexItem />
+
+      <Divider orientation="vertical" flexItem sx={{ width: "1rem" }} />
       <Box
         sx={{
           flex: 1,
@@ -94,14 +93,12 @@ const NewAPIBody = ({ types }) => {
         }}
       >
         <Paper
-          elevation={1}
+          elevation={3}
           sx={{
             width: "100%",
-            borderColor: "grey.300",
             p: 2,
-            borderWidth: 1,
+            bgcolor: "background.paper",
             borderRadius: 2,
-            borderStyle: "solid",
             height: "100%",
             boxSizing: "border-box",
             display: "flex",
@@ -116,6 +113,9 @@ const NewAPIBody = ({ types }) => {
           </Typography>
         </Paper>
       </Box>
+
+      <Divider orientation="vertical" flexItem sx={{ width: "1rem" }} />
+
       <Button variant="outlined" onClick={handleSave}>
         Save
       </Button>
