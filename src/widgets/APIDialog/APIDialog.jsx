@@ -87,7 +87,7 @@ function TabManager({
 }) {
   switch (view) {
     case "TYPES":
-      return <APITypes apiData={types} />;
+      return <APITypes apiData={types} api={api} />;
     case "BODY": {
       return (
         <NewAPIBody

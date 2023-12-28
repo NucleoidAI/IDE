@@ -26,8 +26,8 @@ export const addProperty = (parentId = null, setSchemaData) => {
   const addPropertyToNode = (node, parentId) => {
     if (node.id === parentId) {
       const propertyCount = node.properties ? node.properties.length : 0;
-      let newName = propertyCount === 0 ? "id" : `prop${propertyCount + 1}`;
-      let newType = "string";
+      const newName = propertyCount === 0 ? "id" : `prop${propertyCount + 1}`;
+      const newType = "string";
 
       const newProperty = {
         name: newName,
@@ -41,24 +41,21 @@ export const addProperty = (parentId = null, setSchemaData) => {
 
       return { ...node, properties: updatedProperties };
     } else if (node.properties) {
-      // If the current node is not the one we're adding to, but it has child properties
       const updatedProperties = node.properties.map((childNode) =>
         addPropertyToNode(childNode, parentId)
       );
       return { ...node, properties: updatedProperties };
     }
-    // If the current node is not the one we're adding to and it has no child properties
     return node;
   };
 
   setSchemaData((currentData) => {
-    // If adding a property at the root level
     if (!parentId) {
       const propertyCount = currentData.properties
         ? currentData.properties.length
         : 0;
-      let newName = propertyCount === 0 ? "id" : `prop${propertyCount + 1}`;
-      let newType = "string";
+      const newName = propertyCount === 0 ? "id" : `prop${propertyCount + 1}`;
+      const newType = "string";
 
       const newProperty = {
         name: newName,
@@ -75,7 +72,6 @@ export const addProperty = (parentId = null, setSchemaData) => {
         properties: updatedProperties,
       };
     } else {
-      // If adding a property to a specific parent node
       return addPropertyToNode(currentData, parentId);
     }
   });
