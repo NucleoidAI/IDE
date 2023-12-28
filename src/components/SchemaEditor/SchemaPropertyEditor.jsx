@@ -1,6 +1,6 @@
 import { getTypeStyle } from "./SchemaUtils";
 
-import { Input, MenuItem, Select } from "@mui/material";
+import { Box, Input, MenuItem, Select, Typography } from "@mui/material";
 import React, { useState } from "react";
 
 const SchemaPropertyEditor = ({
@@ -41,7 +41,14 @@ const SchemaPropertyEditor = ({
   ];
 
   return (
-    <div style={{ display: "flex", gap: "8px" }}>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        width: "100%",
+        gap: "8px",
+      }}
+    >
       {editMode === "name" ? (
         <Input
           value={name}
@@ -53,7 +60,17 @@ const SchemaPropertyEditor = ({
           fullWidth
         />
       ) : (
-        <span onClick={() => setEditMode("name")}>{node.name}</span>
+        <Typography
+          variant="body2"
+          onClick={() => setEditMode("name")}
+          sx={{
+            cursor: "pointer",
+            fontWeight: "bold", // Make text bolder
+            "&:hover": { textDecoration: "underline" },
+          }}
+        >
+          {node.name}
+        </Typography>
       )}
 
       {editMode === "type" ? (
@@ -66,7 +83,6 @@ const SchemaPropertyEditor = ({
             setIsSelectOpen(false);
           }}
           onOpen={() => setIsSelectOpen(true)}
-          fullWidth
         >
           {propertyTypes.map((typeOption) => (
             <MenuItem value={typeOption} key={typeOption}>
@@ -75,17 +91,23 @@ const SchemaPropertyEditor = ({
           ))}
         </Select>
       ) : (
-        <span
+        <Typography
+          variant="body2"
           onClick={() => {
             setEditMode("type");
             setIsSelectOpen(true);
           }}
-          style={getTypeStyle(node.type)}
+          sx={{
+            cursor: "pointer",
+            textAlign: "left",
+
+            "&:hover": { textDecoration: "underline" },
+          }}
         >
           {node.type}
-        </span>
+        </Typography>
       )}
-    </div>
+    </Box>
   );
 };
 

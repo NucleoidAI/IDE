@@ -66,7 +66,14 @@ const SchemaEditor = forwardRef(
               width: "100%",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "1px",
+                width: "100%",
+              }}
+            >
               <SchemaPropertyEditor
                 node={node}
                 onNameChange={(newName) => {
@@ -83,7 +90,7 @@ const SchemaEditor = forwardRef(
                 }}
                 customTypes={customTypes}
               />
-              {(node.type === "object" || node.type === "array") && (
+              {true && (
                 <IconButton
                   size="small"
                   onClick={(e) => {
@@ -95,17 +102,20 @@ const SchemaEditor = forwardRef(
                     );
                   }}
                   disabled={
-                    node.type === "array" &&
-                    node.properties &&
-                    node.properties.length >= 1
+                    node.type !== "object" ||
+                    (node.type === "array" && node.properties.length >= 1)
                   }
+                  sx={{
+                    color: (theme) => theme.palette.grey[600],
+                    marginRight: "-8px ",
+                  }}
                 >
                   <AddCircleOutlineIcon fontSize="small" />
                 </IconButton>
               )}
             </div>
 
-            {level > 0 && (
+            {true && (
               <IconButton
                 size="small"
                 style={{ marginLeft: "auto" }}
@@ -113,6 +123,10 @@ const SchemaEditor = forwardRef(
                   e.preventDefault();
                   e.stopPropagation();
                   handleRemoveProperty(node.id);
+                }}
+                disabled={level === 0}
+                sx={{
+                  color: (theme) => theme.palette.grey[600],
                 }}
               >
                 <RemoveCircleOutlineIcon fontSize="small" />
@@ -149,7 +163,7 @@ const SchemaEditor = forwardRef(
               key={index}
               style={{ paddingTop: "5px", paddingBottom: "5px" }}
             >
-              <span>{prop.name}:</span>
+              <span>{prop.name}</span>
               <span style={{ ...getTypeStyle(prop.type), marginLeft: "8px" }}>
                 {prop.type}
               </span>
@@ -199,9 +213,20 @@ const SchemaEditor = forwardRef(
             width: "100%",
             display: "flex",
             justifyContent: "space-between",
+            padding: "4px 8px",
+            borderRadius: "4px",
+            margin: "2px 0",
+            transition: "all 0.3s",
           },
           ".MuiTreeItem-label": {
             width: "100%",
+            fontWeight: "bold",
+          },
+          ".MuiTreeItem-group": {
+            marginLeft: "16px !important",
+            paddingLeft: "8px",
+            borderLeft: `1px solid`,
+            borderColor: (theme) => theme.palette.grey[400],
           },
         }}
       >
