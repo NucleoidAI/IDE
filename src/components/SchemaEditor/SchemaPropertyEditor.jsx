@@ -77,7 +77,7 @@ const SchemaPropertyEditor = ({
             }}
           >
             {node.name}
-            {node.name && ":"} {/* Conditionally render the colon */}
+            {node.name && ":"}
           </Typography>
         </Box>
       )}
