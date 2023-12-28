@@ -22,43 +22,62 @@ const getTypeColor = (type) => {
   }
 };
 
-export const addProperty = (newProperty, parentId = null, setSchemaData) => {
-  const addPropertyToNode = (node, parentId, newProperty) => {
+export const addProperty = (parentId = null, setSchemaData) => {
+  const addPropertyToNode = (node, parentId) => {
     if (node.id === parentId) {
+      const propertyCount = node.properties ? node.properties.length : 0;
+      let newName = propertyCount === 0 ? "id" : `prop${propertyCount + 1}`;
+      let newType = "string";
+
+      const newProperty = {
+        name: newName,
+        type: newType,
+        id: uuidv4(),
+      };
+
       const updatedProperties = node.properties
-        ? [...node.properties, { ...newProperty, id: uuidv4() }]
-        : [{ ...newProperty, id: uuidv4() }];
+        ? [...node.properties, newProperty]
+        : [newProperty];
 
       return { ...node, properties: updatedProperties };
-    }
-    if (node.properties) {
+    } else if (node.properties) {
+      // If the current node is not the one we're adding to, but it has child properties
       const updatedProperties = node.properties.map((childNode) =>
-        addPropertyToNode(childNode, parentId, newProperty)
+        addPropertyToNode(childNode, parentId)
       );
       return { ...node, properties: updatedProperties };
     }
+    // If the current node is not the one we're adding to and it has no child properties
     return node;
   };
 
   setSchemaData((currentData) => {
+    // If adding a property at the root level
     if (!parentId) {
+      const propertyCount = currentData.properties
+        ? currentData.properties.length
+        : 0;
+      let newName = propertyCount === 0 ? "id" : `prop${propertyCount + 1}`;
+      let newType = "string";
+
+      const newProperty = {
+        name: newName,
+        type: newType,
+        id: uuidv4(),
+      };
+
       const updatedProperties = currentData.properties
-        ? [...currentData.properties, { ...newProperty, id: uuidv4() }]
-        : [{ ...newProperty, id: uuidv4() }];
+        ? [...currentData.properties, newProperty]
+        : [newProperty];
 
       return {
         ...currentData,
         properties: updatedProperties,
       };
+    } else {
+      // If adding a property to a specific parent node
+      return addPropertyToNode(currentData, parentId);
     }
-    const updatedProperties = currentData.properties.map((node) =>
-      addPropertyToNode(node, parentId, newProperty)
-    );
-
-    return {
-      ...currentData,
-      properties: updatedProperties,
-    };
   });
 };
 
@@ -85,7 +104,6 @@ export const removeProperty = (propertyId, setSchemaData) => {
     return updatedData;
   });
 };
-
 export const changeProperty = (propertyId, changes, setSchemaData) => {
   const updateProperty = (node, propertyId, changes) => {
     if (node.id === propertyId || propertyId === "1") {
@@ -95,8 +113,12 @@ export const changeProperty = (propertyId, changes, setSchemaData) => {
         type: changes.type,
       };
 
-      if (changes.type === "object" && !updatedNode.properties) {
-        updatedNode.properties = [];
+      if (changes.type === "object") {
+        if (!updatedNode.properties || updatedNode.properties.length === 0) {
+          updatedNode.properties = [
+            { name: "id", type: "string", id: uuidv4() },
+          ];
+        }
       } else if (changes.type === "array") {
         if (updatedNode.properties) {
           updatedNode.properties = updatedNode.properties.slice(0, 1);
@@ -119,13 +141,6 @@ export const changeProperty = (propertyId, changes, setSchemaData) => {
   };
 
   setSchemaData((currentData) => {
-    if (propertyId === "1") {
-      return updateProperty(currentData, propertyId, changes);
-    } else {
-      const updatedProperties = currentData.properties.map((node) =>
-        updateProperty(node, propertyId, changes)
-      );
-      return { ...currentData, properties: updatedProperties };
-    }
+    return updateProperty(currentData, propertyId, changes);
   });
 };
