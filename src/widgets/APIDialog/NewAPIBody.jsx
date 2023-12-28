@@ -1,47 +1,9 @@
+import React from "react";
 import SchemaEditor from "../../components/SchemaEditor";
 
-import { Box, Button, Divider, Paper, Typography } from "@mui/material";
-import React, { useRef } from "react";
+import { Box, Divider, Paper, Typography } from "@mui/material";
 
-const NewAPIBody = ({ types }) => {
-  const requestSchema = useRef();
-  const responseSchema = useRef();
-
-  const exampleSchema = {
-    type: "object",
-    properties: [
-      {
-        type: "string",
-        name: "initial",
-      },
-      {
-        type: "integer",
-        name: "schema",
-      },
-      {
-        type: "object",
-        name: "object",
-        properties: [
-          {
-            type: "integer",
-            name: "nested",
-          },
-        ],
-      },
-    ],
-  };
-
-  const handleSave = () => {
-    console.log(
-      "Request:",
-      JSON.stringify(requestSchema.current.schemaOutput(), null, 2)
-    );
-    console.log(
-      "Response:",
-      JSON.stringify(responseSchema.current.schemaOutput(), null, 2)
-    );
-  };
-
+const NewAPIBody = ({ types, api, requestSchemaRef, responseSchemaRef }) => {
   return (
     <Box
       sx={{
@@ -74,8 +36,8 @@ const NewAPIBody = ({ types }) => {
           }}
         >
           <SchemaEditor
-            ref={requestSchema}
-            initialData={exampleSchema}
+            ref={requestSchemaRef}
+            initialData={api.request ? api.request.schema : ""}
             customTypes={types}
           />
           <Typography variant="h6" gutterBottom>
@@ -107,18 +69,16 @@ const NewAPIBody = ({ types }) => {
             alignItems: "center",
           }}
         >
-          <SchemaEditor ref={responseSchema} customTypes={types} />
+          <SchemaEditor
+            ref={responseSchemaRef}
+            customTypes={types}
+            initialData={api.response ? api.response.schema : ""}
+          />
           <Typography variant="h6" gutterBottom>
             Response
           </Typography>
         </Paper>
       </Box>
-
-      <Divider orientation="vertical" flexItem sx={{ width: "1rem" }} />
-
-      <Button variant="outlined" onClick={handleSave}>
-        Save
-      </Button>
     </Box>
   );
 };
