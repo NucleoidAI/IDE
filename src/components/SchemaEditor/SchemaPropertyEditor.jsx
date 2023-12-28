@@ -1,4 +1,4 @@
-import { getTypeStyle } from "./SchemaUtils";
+import EditIcon from "@mui/icons-material/Edit";
 
 import { Box, Input, MenuItem, Select, Typography } from "@mui/material";
 import React, { useState } from "react";
@@ -33,7 +33,7 @@ const SchemaPropertyEditor = ({
 
   const propertyTypes = [
     "string",
-    "integer",
+    "number",
     "boolean",
     "object",
     "array",
@@ -46,7 +46,7 @@ const SchemaPropertyEditor = ({
         display: "flex",
         justifyContent: "space-between",
         width: "100%",
-        gap: "8px",
+        gap: "4px",
       }}
     >
       {editMode === "name" ? (
@@ -58,19 +58,30 @@ const SchemaPropertyEditor = ({
           disableUnderline
           autoFocus
           fullWidth
+          sx={{
+            fontFamily: "monospace",
+            border: "1px solid lightgray",
+            borderRadius: "4px",
+          }}
         />
       ) : (
-        <Typography
-          variant="body2"
+        <Box
+          sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}
           onClick={() => setEditMode("name")}
-          sx={{
-            cursor: "pointer",
-            fontWeight: "bold", // Make text bolder
-            "&:hover": { textDecoration: "underline" },
-          }}
         >
-          {node.name}
-        </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              fontFamily: "monospace",
+              padding: "2px 2px",
+              borderRadius: "4px",
+              "&:hover": { textDecoration: "underline" },
+            }}
+          >
+            {node.name}
+            {node.name && ":"} {/* Conditionally render the colon */}
+          </Typography>
+        </Box>
       )}
 
       {editMode === "type" ? (
@@ -91,21 +102,25 @@ const SchemaPropertyEditor = ({
           ))}
         </Select>
       ) : (
-        <Typography
-          variant="body2"
-          onClick={() => {
-            setEditMode("type");
-            setIsSelectOpen(true);
-          }}
-          sx={{
-            cursor: "pointer",
-            textAlign: "left",
-
-            "&:hover": { textDecoration: "underline" },
-          }}
-        >
-          {node.type}
-        </Typography>
+        <Box sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
+          <Typography
+            variant="body2"
+            onClick={() => {
+              setEditMode("type");
+              setIsSelectOpen(true);
+            }}
+            sx={{
+              cursor: "pointer",
+              fontFamily: "monospace",
+              borderRadius: "4px",
+              "&:hover": {
+                backgroundColor: (theme) => theme.palette.grey[600],
+              },
+            }}
+          >
+            {node.type}
+          </Typography>
+        </Box>
       )}
     </Box>
   );
