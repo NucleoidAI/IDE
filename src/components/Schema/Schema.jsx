@@ -3,12 +3,11 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { v4 as uuidv4 } from "uuid";
 
 import { Box, Typography } from "@mui/material";
-import React, { forwardRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TreeItem, TreeView } from "@mui/lab";
 
-const Schema = forwardRef(({ initialData = {}, customTypes = [] }) => {
+const Schema = ({ initialData = {}, customTypes = [] }) => {
   const [schemaData, setSchemaData] = useState({});
-  const codeFontFamily = `"Menlo", "Consolas"`;
 
   useEffect(() => {
     const addIdsToSchema = (schema) => {
@@ -71,7 +70,6 @@ const Schema = forwardRef(({ initialData = {}, customTypes = [] }) => {
                 <Typography
                   variant="body2"
                   sx={{
-                    fontFamily: codeFontFamily,
                     padding: "2px 2px",
                     borderRadius: "4px",
                   }}
@@ -92,7 +90,6 @@ const Schema = forwardRef(({ initialData = {}, customTypes = [] }) => {
                   variant="body2"
                   sx={{
                     cursor: "pointer",
-                    fontFamily: codeFontFamily,
                     borderRadius: "4px",
                   }}
                 >
@@ -201,6 +198,6 @@ const Schema = forwardRef(({ initialData = {}, customTypes = [] }) => {
       {renderTree(schemaData, 0)}
     </TreeView>
   );
-});
+};
 
 export default Schema;

@@ -11,7 +11,6 @@ const SchemaPropertyEditor = ({
   const [name, setName] = useState(node.name);
   const [type, setType] = useState(node.type);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
-  const codeFontFamily = `"Consolas", "Menlo"`;
 
   const handleBlur = () => {
     if (editMode === "name") {
@@ -58,7 +57,6 @@ const SchemaPropertyEditor = ({
           autoFocus
           fullWidth
           sx={{
-            fontFamily: codeFontFamily,
             border: "1px solid lightgray",
             borderRadius: "4px",
           }}
@@ -71,7 +69,6 @@ const SchemaPropertyEditor = ({
           <Typography
             variant="body2"
             sx={{
-              fontFamily: codeFontFamily,
               padding: "2px 2px",
               borderRadius: "4px",
               "&:hover": { textDecoration: "underline" },
@@ -110,7 +107,6 @@ const SchemaPropertyEditor = ({
             }}
             sx={{
               cursor: "pointer",
-              fontFamily: codeFontFamily,
               borderRadius: "4px",
               "&:hover": {
                 backgroundColor: (theme) => theme.palette.grey[600],
