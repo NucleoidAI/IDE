@@ -6,9 +6,9 @@ import { Box, Typography } from "@mui/material";
 import React, { forwardRef, useEffect, useState } from "react";
 import { TreeItem, TreeView } from "@mui/lab";
 
-const Schema = forwardRef(({ initialData = {}, customTypes = [] }, ref) => {
+const Schema = forwardRef(({ initialData = {}, customTypes = [] }) => {
   const [schemaData, setSchemaData] = useState({});
-  const codeFontFamily = `"Menlo", "Consolas", "Ubuntu Mono"`;
+  const codeFontFamily = `"Menlo", "Consolas"`;
 
   useEffect(() => {
     const addIdsToSchema = (schema) => {
