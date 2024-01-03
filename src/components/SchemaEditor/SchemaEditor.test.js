@@ -23,8 +23,8 @@ describe("SchemaEditor Component", () => {
   test("renders with initial schema", () => {
     render(<SchemaEditor initialData={initialSchema} />);
 
-    expect(screen.getByText(/initial/)).toBeInTheDocument();
-    expect(screen.getByText(/schema/)).toBeInTheDocument();
+    expect(screen.getByDisplayValue(/initial/)).toBeInTheDocument();
+    expect(screen.getByDisplayValue(/schema/)).toBeInTheDocument();
 
     // expect(screen.getByText(/nested/)).toBeInTheDocument();
   });
