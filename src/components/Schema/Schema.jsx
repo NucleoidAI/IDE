@@ -75,7 +75,6 @@ const Schema = ({ initialData = {}, customTypes = [] }) => {
                   }}
                 >
                   {node.name}
-                  {node.name && ":"}
                 </Typography>
               </Box>
 

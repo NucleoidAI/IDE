@@ -57,26 +57,45 @@ const SchemaPropertyEditor = ({
           autoFocus
           fullWidth
           sx={{
-            border: "1px solid lightgray",
-            borderRadius: "4px",
+            borderBottom: "1px solid lightgray",
+            "&:hover": {
+              borderBottom: "2px solid gray",
+            },
+            "&:focus": {
+              borderBottom: "2px solid blue",
+            },
           }}
         />
       ) : (
         <Box
-          sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}
-          onClick={() => setEditMode("name")}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+            gap: "4px",
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            setEditMode("name");
+          }}
         >
-          <Typography
-            variant="body2"
+          <Input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            onBlur={handleBlur}
+            onKeyDown={(e) => e.key === "Enter" && handleBlur()}
+            disableUnderline
+            autoFocus
+            fullWidth
             sx={{
-              padding: "2px 2px",
-              borderRadius: "4px",
-              "&:hover": { textDecoration: "underline" },
+              "&:hover": {
+                borderBottom: "2px solid gray",
+              },
+              "&:focus": {
+                borderBottom: "2px solid blue",
+              },
             }}
-          >
-            {node.name}
-            {node.name && ":"}
-          </Typography>
+          />
         </Box>
       )}
 
