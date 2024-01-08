@@ -175,7 +175,7 @@ const Schema = ({ initialData = {}, customTypes = [] }) => {
           padding: "1px 8px",
           borderRadius: "4px",
           margin: "1px 0",
-          transition: "all 0.3s",
+          transition: "width 0.3s ease-in-out, height 0.3s ease-in-out",
         },
         ".MuiTreeItem-label": {
           width: "100%",
