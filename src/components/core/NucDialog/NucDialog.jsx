@@ -17,8 +17,13 @@ export default function NucDialog({
   children,
   action,
   handleClose,
+  expandedDimensions = { width: "65rem", height: "50rem" },
+  minimizedDimensions = { width: "55rem", height: "40rem" },
 }) {
   const [expanded, setExpanded] = useState(false);
+
+  const currentDimensions = expanded ? expandedDimensions : minimizedDimensions;
+
   return (
     <Dialog
       open
@@ -26,8 +31,8 @@ export default function NucDialog({
       onClose={handleClose}
       sx={{
         "& .MuiDialog-paper": {
-          width: expanded ? "65rem" : "55rem",
-          height: expanded ? "50rem" : "40rem",
+          width: currentDimensions.width,
+          height: currentDimensions.height,
           transition: "width 0.3s ease-in-out, height 0.3s ease-in-out",
         },
       }}
