@@ -1,6 +1,4 @@
-import { getTypeStyle } from "./SchemaUtils";
-
-import { Input, MenuItem, Select } from "@mui/material";
+import { Box, Input, MenuItem, Select, Typography } from "@mui/material";
 import React, { useState } from "react";
 
 const SchemaPropertyEditor = ({
@@ -33,7 +31,7 @@ const SchemaPropertyEditor = ({
 
   const propertyTypes = [
     "string",
-    "integer",
+    "number",
     "boolean",
     "object",
     "array",
@@ -41,7 +39,14 @@ const SchemaPropertyEditor = ({
   ];
 
   return (
-    <div style={{ display: "flex", gap: "8px" }}>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        width: "100%",
+        gap: "4px",
+      }}
+    >
       {editMode === "name" ? (
         <Input
           value={name}
@@ -51,9 +56,47 @@ const SchemaPropertyEditor = ({
           disableUnderline
           autoFocus
           fullWidth
+          sx={{
+            borderBottom: "1px solid lightgray",
+            "&:hover": {
+              borderBottom: "2px solid gray",
+            },
+            "&:focus": {
+              borderBottom: "2px solid blue",
+            },
+          }}
         />
       ) : (
-        <span onClick={() => setEditMode("name")}>{node.name}</span>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+            gap: "4px",
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            setEditMode("name");
+          }}
+        >
+          <Input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            onBlur={handleBlur}
+            onKeyDown={(e) => e.key === "Enter" && handleBlur()}
+            disableUnderline
+            autoFocus
+            fullWidth
+            sx={{
+              "&:hover": {
+                borderBottom: "2px solid gray",
+              },
+              "&:focus": {
+                borderBottom: "2px solid blue",
+              },
+            }}
+          />
+        </Box>
       )}
 
       {editMode === "type" ? (
@@ -66,7 +109,6 @@ const SchemaPropertyEditor = ({
             setIsSelectOpen(false);
           }}
           onOpen={() => setIsSelectOpen(true)}
-          fullWidth
         >
           {propertyTypes.map((typeOption) => (
             <MenuItem value={typeOption} key={typeOption}>
@@ -75,17 +117,26 @@ const SchemaPropertyEditor = ({
           ))}
         </Select>
       ) : (
-        <span
-          onClick={() => {
-            setEditMode("type");
-            setIsSelectOpen(true);
-          }}
-          style={getTypeStyle(node.type)}
-        >
-          {node.type}
-        </span>
+        <Box sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
+          <Typography
+            variant="body2"
+            onClick={() => {
+              setEditMode("type");
+              setIsSelectOpen(true);
+            }}
+            sx={{
+              cursor: "pointer",
+              borderRadius: "4px",
+              "&:hover": {
+                backgroundColor: (theme) => theme.palette.grey[600],
+              },
+            }}
+          >
+            {node.type}
+          </Typography>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };
 

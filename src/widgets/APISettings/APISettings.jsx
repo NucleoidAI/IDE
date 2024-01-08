@@ -2,10 +2,11 @@
 import EditButton from "../../components/EditButton";
 import EditIcon from "@mui/icons-material/Edit";
 import ParamView from "../../components/ParamView";
-import Schema from "../../components/Schema";
+import Schema from "../../components/Schema/Schema";
 import Security from "../../components/Security";
 import SummaryForm from "../../components/SummaryForm";
 import { compile } from "../../widgets/APIDialog/Context";
+import { getTypes } from "../../lib/TypeScript";
 import styles from "./styles";
 import { useContext } from "../../context/context";
 
@@ -14,6 +15,7 @@ import { useEffect, useRef, useState } from "react";
 
 function APISettings() {
   const [state, dispatch] = useContext();
+  const [selectedApi, setSelectedApi] = useState({});
   const [method, setMethod] = useState();
   const [params, setParams] = useState();
   const [summary, setSummary] = useState();
@@ -24,9 +26,20 @@ function APISettings() {
 
   const matchWidth = useMediaQuery("(min-width:900px)");
   const summaryRef = useRef([]);
+  let customTypes = [];
 
   useEffect(() => {
     const selected = state.get("pages.api.selected");
+    const selectApi = state
+      .get("nucleoid.api")
+      .find(
+        (api) => api.path === selected?.path && api.method === selected.method
+      );
+
+    customTypes = [
+      ...(state?.nucleoid?.types || []),
+      ...getTypes(state.get("nucleoid.functions")),
+    ];
     const api = state.get("nucleoid.api");
 
     if (selected) {
@@ -36,6 +49,7 @@ function APISettings() {
       );
 
       if (selectedApiEndpoint) {
+        setSelectedApi(selectApi);
         setMethod(selected.method);
         setParams(selectedApiEndpoint.params || []);
         setSummary(selectedApiEndpoint.summary || "");
@@ -70,15 +84,12 @@ function APISettings() {
           spacing={1}
         >
           <Grid item xs={6} sx={styles.schema}>
-            {method === "get" && (
-              <Grid container justifyContent={"center"} alignItems={"center"}>
-                <Typography fontWeight={"bolder"} fontSize={"medium"}>
-                  Request
-                </Typography>
-                <ParamView params={params} />
-              </Grid>
-            )}
-            //TODO: decide on how to display request and response
+            <Grid container justifyContent={"center"} alignItems={"center"}>
+              <Typography fontWeight={"bolder"} fontSize={"medium"}>
+                Request
+              </Typography>
+            </Grid>
+
             {/*method !== "get" && request && (
               <Schema
                 key={Object.keys(request)[0]}
@@ -87,8 +98,19 @@ function APISettings() {
                 ref={request}
               />
             )*/}
+            {selectedApi.request && (
+              <Schema
+                initialData={selectedApi.request.schema}
+                customTypes={customTypes}
+              />
+            )}
           </Grid>
           <Grid item xs={6} sx={styles.schema}>
+            <Grid container justifyContent={"center"} alignItems={"center"}>
+              <Typography fontWeight={"bolder"} fontSize={"medium"}>
+                Response
+              </Typography>
+            </Grid>
             {/*response && (
               <Schema
                 key={Object.keys(response)[0]}
@@ -97,6 +119,12 @@ function APISettings() {
                 ref={response}
               />
             )*/}
+            {selectedApi.response && (
+              <Schema
+                initialData={selectedApi.response.schema}
+                customTypes={customTypes}
+              />
+            )}
           </Grid>
         </Grid>
         {!matchWidth && <EditButton openEditDialog={openEditDialog} />}

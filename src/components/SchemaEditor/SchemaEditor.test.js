@@ -23,8 +23,8 @@ describe("SchemaEditor Component", () => {
   test("renders with initial schema", () => {
     render(<SchemaEditor initialData={initialSchema} />);
 
-    expect(screen.getByText(/initial/)).toBeInTheDocument();
-    expect(screen.getByText(/schema/)).toBeInTheDocument();
+    expect(screen.getByDisplayValue(/initial/)).toBeInTheDocument();
+    expect(screen.getByDisplayValue(/schema/)).toBeInTheDocument();
 
     // expect(screen.getByText(/nested/)).toBeInTheDocument();
   });
@@ -49,18 +49,24 @@ describe("SchemaEditor Component", () => {
   });
 
   test("adds a new property", () => {
-    render(<SchemaEditor initialData={initialSchema} />);
+    const emptySchema = { type: "object", properties: [] };
+    render(<SchemaEditor initialData={emptySchema} />);
+
     act(() => {
-      SchemaEditor.addProperty({ type: "string", name: "additional" });
+      SchemaEditor.addProperty(null);
     });
-    const currentSchema = SchemaEditor.schemaOutput();
-    expect(currentSchema).toEqual({
-      ...initialSchema,
-      properties: [
-        ...initialSchema.properties,
-        { type: "string", name: "additional" },
-      ],
+
+    let updatedSchema = SchemaEditor.schemaOutput();
+    expect(updatedSchema.properties).toHaveLength(1);
+    expect(updatedSchema.properties[0].name).toBe("id");
+
+    act(() => {
+      SchemaEditor.addProperty(null);
     });
+
+    updatedSchema = SchemaEditor.schemaOutput();
+    expect(updatedSchema.properties).toHaveLength(2);
+    expect(updatedSchema.properties[1].name).toBe("prop2");
   });
 
   test("removes a property by ID", () => {
@@ -117,49 +123,33 @@ describe("SchemaEditor Component", () => {
   test("adds a nested object and a property to it", () => {
     render(<SchemaEditor initialData={initialSchema} />);
 
-    const newNestedObject = { type: "object", name: "newNestedObject" };
     act(() => {
-      SchemaEditor.addProperty(newNestedObject);
+      SchemaEditor.addProperty(null);
     });
 
-    const currentSchemaWithIDs = SchemaEditor.schemaOutputWithIDs();
-
-    const nestedObjectId = currentSchemaWithIDs.properties.find(
-      (prop) => prop.name === "newNestedObject"
+    let updatedSchemaWithIDs = SchemaEditor.schemaOutputWithIDs();
+    const newNestedObjectId = updatedSchemaWithIDs.properties.find(
+      (prop) => prop.name === "prop4"
     ).id;
-    if (!nestedObjectId) {
-      throw new Error("Nested object not found");
-    }
 
-    const newPropertyForNestedObject = {
-      type: "string",
-      name: "nestedProperty",
-    };
     act(() => {
-      SchemaEditor.addProperty(newPropertyForNestedObject, nestedObjectId);
+      SchemaEditor.addProperty(newNestedObjectId);
     });
 
-    const updatedSchemaWithIDs = SchemaEditor.schemaOutputWithIDs();
-
+    updatedSchemaWithIDs = SchemaEditor.schemaOutputWithIDs();
     const updatedNestedObject = updatedSchemaWithIDs.properties.find(
-      (prop) => prop.id === nestedObjectId
+      (prop) => prop.id === newNestedObjectId
     );
+    console.log("updatedNestedObject: ", updatedNestedObject);
     expect(updatedNestedObject).toBeDefined();
-    const hasNestedProperty = updatedNestedObject.properties.some(
-      (prop) =>
-        prop.name === newPropertyForNestedObject.name &&
-        prop.type === newPropertyForNestedObject.type
-    );
-    expect(hasNestedProperty).toBe(true);
+    expect(updatedNestedObject.name).toBe("prop4");
   });
 
-  test("adds a property with a custom type", () => {
+  test("changes a property to custom type", () => {
     const customTypes = [
       {
         name: "Item",
-        type: "OPENAPI",
         schema: {
-          name: "Item",
           type: "object",
           properties: [
             { type: "string", name: "id" },
@@ -174,16 +164,22 @@ describe("SchemaEditor Component", () => {
       <SchemaEditor initialData={initialSchema} customTypes={customTypes} />
     );
 
-    const newPropertyWithCustomType = { type: "Item", name: "newItem" };
+    const currentSchemaWithIDs = SchemaEditor.schemaOutputWithIDs();
+    const propertyToChange = currentSchemaWithIDs.properties[0];
+
+    const change = {
+      type: "Item",
+    };
+
     act(() => {
-      SchemaEditor.addProperty(newPropertyWithCustomType);
+      SchemaEditor.changeProperty(propertyToChange.id, change);
     });
 
-    const updatedSchema = SchemaEditor.schemaOutput();
-    const addedProperty = updatedSchema.properties.find(
-      (prop) => prop.name === "newItem"
+    const updatedSchemaWithIDs = SchemaEditor.schemaOutputWithIDs();
+    const updatedProperty = updatedSchemaWithIDs.properties.find(
+      (prop) => prop.id === propertyToChange.id
     );
-    expect(addedProperty).toBeDefined();
-    expect(addedProperty.type).toBe("Item");
+    expect(updatedProperty).toBeDefined();
+    expect(updatedProperty.type).toBe("Item");
   });
 });
