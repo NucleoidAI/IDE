@@ -47,7 +47,7 @@ const NewAPIBody = ({ types }) => {
       sx={{
         display: "flex",
         flexDirection: "row",
-        height: "25rem",
+        height: "85%",
         p: 2,
       }}
     >

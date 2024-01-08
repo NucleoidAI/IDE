@@ -24,10 +24,18 @@ function APIDialog() {
       <NucDialog
         title={"API"}
         handleClose={() => dispatch({ type: "CLOSE_API_DIALOG" })}
-        sx={{ width: 900 }}
       >
         <APIPath />
-        <TabManager view={view} types={types} api={context.nucleoid.api} />
+        <TabManager
+          view={view}
+          types={types}
+          api={context.nucleoid.api}
+          selectedApi={selectedApi}
+          requestSchemaRef={requestSchemaRef}
+          responseSchemaRef={responseSchemaRef}
+          saveApiDialog={() => saveApiDialog}
+        />
+
         <APIDialogAction
           view={view}
           setApiDialogView={(button) =>
