@@ -16,6 +16,7 @@ export default function NucDialog({
   minWidth = 600,
   children,
   action,
+  open,
   handleClose,
   expandedDimensions = { width: "65rem", height: "50rem" },
   minimizedDimensions = { width: "55rem", height: "40rem" },
@@ -26,7 +27,7 @@ export default function NucDialog({
 
   return (
     <Dialog
-      open
+      open={open}
       maxWidth={false}
       onClose={handleClose}
       sx={{

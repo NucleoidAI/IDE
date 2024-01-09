@@ -1,10 +1,12 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+//eslint-disable-next-line
+import { DataGrid } from "@mui/x-data-grid";
 import Delete from "@mui/icons-material/Delete";
+import NucDialog from "../../components/core/NucDialog/NucDialog";
 import React from "react";
 import styles from "./styles";
 
 import { Backdrop, CircularProgress } from "@mui/material";
-
 import {
   Button,
   Dialog,
@@ -16,9 +18,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material/";
-
-//eslint-disable-next-line
-import { DataGrid } from "@mui/x-data-grid";
 
 const NewProjectScreen = ({ setScreen, handleClose }) => {
   const [open] = React.useState(false);
@@ -115,62 +114,66 @@ const ListProjectsScreen = ({ handleClose }) => {
 
   return (
     <>
-      <DialogTitle>
-        <Grid
-          container
-          sx={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Typography variant="h6">Select a project</Typography>
-          <Button variant="text">NEW PROJECT</Button>
-        </Grid>
-      </DialogTitle>
-      <DialogContent sx={styles.content}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          hideFooter={true}
-          onRowClick={(e) => {
-            select.current = e.row.project;
-          }}
-        />
-      </DialogContent>
-      <DialogActions>
-        <Grid
-          container
-          sx={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Grid />
-          <Grid>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button>Select</Button>
+      <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+        {" "}
+        {/* Full height and flex container */}
+        <DialogTitle>
+          <Grid
+            container
+            sx={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Typography variant="h6">Select a project</Typography>
+            <Button variant="text">NEW PROJECT</Button>
           </Grid>
-        </Grid>
-        <ProgressBackDrop open={open} />
-        <Dialog
-          open={dialog}
-          onClose={handleClose}
-          aria-labelledby="responsive-dialog-title"
-        >
-          <DialogTitle id="responsive-dialog-title">
-            Delete resource
-          </DialogTitle>
-          <DialogContent>The selected project will be deleted.</DialogContent>
-          <DialogActions>
-            <Button autoFocus onClick={handleCloseDialog}>
-              Cancel
-            </Button>
-            <Button autoFocus>Delete</Button>
-          </DialogActions>
-        </Dialog>
-      </DialogActions>
+        </DialogTitle>
+        <DialogContent sx={styles.content}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            hideFooter={true}
+            onRowClick={(e) => {
+              select.current = e.row.project;
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Grid
+            container
+            sx={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Grid />
+            <Grid>
+              <Button onClick={handleClose}>Cancel</Button>
+              <Button>Select</Button>
+            </Grid>
+          </Grid>
+          <ProgressBackDrop open={open} />
+          <Dialog
+            open={dialog}
+            onClose={handleClose}
+            aria-labelledby="responsive-dialog-title"
+          >
+            <DialogTitle id="responsive-dialog-title">
+              Delete resource
+            </DialogTitle>
+            <DialogContent>The selected project will be deleted.</DialogContent>
+            <DialogActions>
+              <Button autoFocus onClick={handleCloseDialog}>
+                Cancel
+              </Button>
+              <Button autoFocus>Delete</Button>
+            </DialogActions>
+          </Dialog>
+        </DialogActions>
+      </div>
     </>
   );
 };
@@ -205,14 +208,14 @@ const ScreenManager = ({ handleClose }) => {
 
 const ProjectDialog = ({ handleClose }) => {
   return (
-    <Dialog
+    <NucDialog
       open={true}
-      fullWidth
-      maxWidth={"sm"}
-      onClose={(event) => (event.key === "Escape" ? handleClose() : null)}
+      handleClose={handleClose}
+      expandedDimensions={{ width: "50rem", height: "50rem" }}
+      minimizedDimensions={{ width: "40rem", height: "40rem" }}
     >
       <ScreenManager handleClose={handleClose} />
-    </Dialog>
+    </NucDialog>
   );
 };
 
