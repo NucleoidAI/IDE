@@ -1,6 +1,7 @@
 import { Close } from "@mui/icons-material";
 import Fullscreen from "@mui/icons-material/Fullscreen";
 import FullscreenExit from "@mui/icons-material/FullscreenExit";
+import React from "react";
 
 import {
   Dialog,
@@ -9,7 +10,7 @@ import {
   DialogTitle,
   IconButton,
 } from "@mui/material";
-import React, { useState } from "react";
+import { storage, useStorage } from "@nucleoidjs/webstorage";
 
 export default function NucDialog({
   title,
@@ -21,8 +22,7 @@ export default function NucDialog({
   expandedDimensions = { width: "65rem", height: "50rem" },
   minimizedDimensions = { width: "55rem", height: "40rem" },
 }) {
-  const [expanded, setExpanded] = useState(false);
-
+  const [expanded] = useStorage("platform", title, "expanded", false);
   const currentDimensions = expanded ? expandedDimensions : minimizedDimensions;
 
   return (
@@ -62,7 +62,7 @@ export default function NucDialog({
       {expanded ? (
         <IconButton
           aria-label="collapse"
-          onClick={() => setExpanded(false)}
+          onClick={() => storage.set("platform", title, "expanded", false)}
           sx={{
             position: "absolute",
             right: 48,
@@ -75,7 +75,7 @@ export default function NucDialog({
       ) : (
         <IconButton
           aria-label="expand"
-          onClick={() => setExpanded(true)}
+          onClick={() => storage.set("platform", title, "expanded", true)}
           sx={{
             position: "absolute",
             right: 48,
