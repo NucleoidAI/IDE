@@ -16,7 +16,7 @@ const GraphDialog = () => {
         open={true}
         handleClose={handleClose}
         title={"Graph"}
-        expandedDimensions={{ width: "75rem", height: "60rem" }}
+        maximizedDimensions={{ width: "75rem", height: "60rem" }}
         minimizedDimensions={{ width: "65rem", height: "50rem" }}
       >
         <DialogContent

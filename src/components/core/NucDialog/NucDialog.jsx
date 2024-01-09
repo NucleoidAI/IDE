@@ -19,11 +19,13 @@ export default function NucDialog({
   action,
   open,
   handleClose,
-  expandedDimensions = { width: "65rem", height: "50rem" },
+  maximizedDimensions = { width: "65rem", height: "50rem" },
   minimizedDimensions = { width: "55rem", height: "40rem" },
 }) {
-  const [expanded] = useStorage("platform", title, "expanded", false);
-  const currentDimensions = expanded ? expandedDimensions : minimizedDimensions;
+  const [maximized] = useStorage("platform", title, "maximized", false);
+  const currentDimensions = maximized
+    ? maximizedDimensions
+    : minimizedDimensions;
 
   return (
     <Dialog
@@ -59,10 +61,10 @@ export default function NucDialog({
       >
         <Close />
       </IconButton>
-      {expanded ? (
+      {maximized ? (
         <IconButton
           aria-label="collapse"
-          onClick={() => storage.set("platform", title, "expanded", false)}
+          onClick={() => storage.set("platform", title, "maximized", false)}
           sx={{
             position: "absolute",
             right: 48,
@@ -75,7 +77,7 @@ export default function NucDialog({
       ) : (
         <IconButton
           aria-label="expand"
-          onClick={() => storage.set("platform", title, "expanded", true)}
+          onClick={() => storage.set("platform", title, "maximized", true)}
           sx={{
             position: "absolute",
             right: 48,

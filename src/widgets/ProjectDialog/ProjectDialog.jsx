@@ -211,7 +211,7 @@ const ProjectDialog = ({ handleClose }) => {
     <NucDialog
       open={true}
       handleClose={handleClose}
-      expandedDimensions={{ width: "50rem", height: "50rem" }}
+      maximizedDimensions={{ width: "50rem", height: "50rem" }}
       minimizedDimensions={{ width: "40rem", height: "40rem" }}
     >
       <ScreenManager handleClose={handleClose} />
