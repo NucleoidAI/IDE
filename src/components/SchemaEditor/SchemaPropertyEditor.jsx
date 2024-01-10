@@ -4,6 +4,7 @@ import React, { useState } from "react";
 const SchemaPropertyEditor = ({
   node,
   onNameChange,
+  disableNameChange,
   onTypeChange,
   customTypes,
 }) => {
@@ -54,6 +55,7 @@ const SchemaPropertyEditor = ({
           onBlur={handleBlur}
           onKeyDown={(e) => e.key === "Enter" && handleBlur()}
           disableUnderline
+          disabled={disableNameChange}
           autoFocus
           fullWidth
           sx={{
@@ -84,6 +86,7 @@ const SchemaPropertyEditor = ({
             onChange={(e) => setName(e.target.value)}
             onBlur={handleBlur}
             onKeyDown={(e) => e.key === "Enter" && handleBlur()}
+            disabled={disableNameChange}
             disableUnderline
             autoFocus
             fullWidth
