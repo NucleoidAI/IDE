@@ -341,6 +341,24 @@ function contextReducer(state, { type, payload }) {
 
       break;
     }
+    case "UPDATE_API_SCHEMAS": {
+      const { path, method, requestSchema, responseSchema } = payload;
+      const apiIndex = nucleoid.api.findIndex(
+        (api) => api.path === path && api.method === method
+      );
+
+      if (apiIndex !== -1) {
+        nucleoid.api[apiIndex].request = {
+          ...nucleoid.api[apiIndex].request,
+          schema: requestSchema,
+        };
+        nucleoid.api[apiIndex].response = {
+          ...nucleoid.api[apiIndex].response,
+          schema: responseSchema,
+        };
+      }
+      break;
+    }
 
     default:
   }
