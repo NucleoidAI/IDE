@@ -6,14 +6,10 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import SchemaPropertyEditor from "./SchemaPropertyEditor";
 import { v4 as uuidv4 } from "uuid";
 
+import { Box, Typography } from "@mui/material";
 import React, { forwardRef, useEffect, useState } from "react";
 import { TreeItem, TreeView } from "@mui/lab";
-import {
-  addProperty,
-  changeProperty,
-  getTypeStyle,
-  removeProperty,
-} from "./SchemaUtils";
+import { addProperty, changeProperty, removeProperty } from "./SchemaUtils";
 
 const SchemaEditor = forwardRef(
   ({ initialData = {}, customTypes = [] }, ref) => {
@@ -42,7 +38,7 @@ const SchemaEditor = forwardRef(
     }, [initialData, schemaData]);
 
     const handleAddProperty = (newProperty, parentId = null) => {
-      addProperty(newProperty, parentId, setSchemaData);
+      addProperty(parentId, setSchemaData);
     };
 
     const handleRemoveProperty = (propertyId) => {
@@ -66,7 +62,14 @@ const SchemaEditor = forwardRef(
               width: "100%",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "1px",
+                width: "100%",
+              }}
+            >
               <SchemaPropertyEditor
                 node={node}
                 onNameChange={(newName) => {
@@ -83,7 +86,7 @@ const SchemaEditor = forwardRef(
                 }}
                 customTypes={customTypes}
               />
-              {(node.type === "object" || node.type === "array") && (
+              {true && (
                 <IconButton
                   size="small"
                   onClick={(e) => {
@@ -95,17 +98,20 @@ const SchemaEditor = forwardRef(
                     );
                   }}
                   disabled={
-                    node.type === "array" &&
-                    node.properties &&
-                    node.properties.length >= 1
+                    node.type !== "object" ||
+                    (node.type === "array" && node.properties.length >= 1)
                   }
+                  sx={{
+                    color: (theme) => theme.palette.grey[600],
+                    marginRight: "-8px ",
+                  }}
                 >
                   <AddCircleOutlineIcon fontSize="small" />
                 </IconButton>
               )}
             </div>
 
-            {level > 0 && (
+            {true && (
               <IconButton
                 size="small"
                 style={{ marginLeft: "auto" }}
@@ -113,6 +119,10 @@ const SchemaEditor = forwardRef(
                   e.preventDefault();
                   e.stopPropagation();
                   handleRemoveProperty(node.id);
+                }}
+                disabled={level === 0}
+                sx={{
+                  color: (theme) => theme.palette.grey[600],
                 }}
               >
                 <RemoveCircleOutlineIcon fontSize="small" />
@@ -139,23 +149,41 @@ const SchemaEditor = forwardRef(
       )?.schema;
 
       if (!customTypeSchema || !customTypeSchema.properties) {
-        return <div style={{ paddingLeft: "20px" }}>No properties defined</div>;
+        return <Box sx={{ paddingLeft: "20px" }}>No properties defined</Box>;
       }
 
       return (
-        <div style={{ paddingLeft: "20px" }}>
+        <Box sx={{ paddingLeft: "20px" }}>
           {customTypeSchema.properties.map((prop, index) => (
-            <div
+            <Box
               key={index}
-              style={{ paddingTop: "5px", paddingBottom: "5px" }}
+              sx={{
+                paddingTop: "5px",
+                paddingBottom: "5px",
+                display: "flex",
+                alignItems: "center",
+              }}
             >
-              <span>{prop.name}:</span>
-              <span style={{ ...getTypeStyle(prop.type), marginLeft: "8px" }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: (theme) => theme.palette.grey[600],
+                }}
+              >
+                {prop.name}
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  marginLeft: "8px",
+                  color: (theme) => theme.palette.grey[500],
+                }}
+              >
                 {prop.type}
-              </span>
-            </div>
+              </Typography>
+            </Box>
           ))}
-        </div>
+        </Box>
       );
     };
 
@@ -199,9 +227,25 @@ const SchemaEditor = forwardRef(
             width: "100%",
             display: "flex",
             justifyContent: "space-between",
+            padding: "1px 8px",
+            borderRadius: "4px",
+            margin: "1px 0",
+            transition: "all 0.3s",
           },
           ".MuiTreeItem-label": {
             width: "100%",
+            fontWeight: "bold",
+          },
+          ".MuiTreeItem-group": {
+            marginLeft: "16px !important",
+            paddingLeft: "8px",
+            borderLeft: `1px solid`,
+            borderColor: (theme) => theme.palette.grey[400],
+          },
+          ".MuiTreeItem-iconContainer": {
+            minWidth: "0",
+            marginRight: "0px",
+            padding: "0px",
           },
         }}
       >
