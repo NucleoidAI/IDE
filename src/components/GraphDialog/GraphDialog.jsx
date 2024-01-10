@@ -1,6 +1,6 @@
+import { DialogContent } from "@mui/material";
+import NucDialog from "../core/NucDialog/NucDialog";
 import React from "react";
-
-import { Dialog, DialogContent } from "@mui/material";
 import { useEvent } from "@nucleoidjs/synapses"; //eslint-disable-line
 
 const GraphDialog = () => {
@@ -12,7 +12,13 @@ const GraphDialog = () => {
 
   if (event.open) {
     return (
-      <Dialog maxWidth={"xl"} open={true} onClose={handleClose}>
+      <NucDialog
+        open={true}
+        handleClose={handleClose}
+        title={"Graph"}
+        maximizedDimensions={{ width: "75rem", height: "60rem" }}
+        minimizedDimensions={{ width: "65rem", height: "50rem" }}
+      >
         <DialogContent
           sx={{
             width: "80vw",
@@ -30,7 +36,7 @@ const GraphDialog = () => {
             src={"/ide/graph"}
           ></iframe>
         </DialogContent>
-      </Dialog>
+      </NucDialog>
     );
   } else {
     return null;

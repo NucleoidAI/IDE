@@ -49,8 +49,8 @@ function APIDialog() {
     return (
       <NucDialog
         title={"API"}
+        open={open}
         handleClose={() => dispatch({ type: "CLOSE_API_DIALOG" })}
-        sx={{ width: 900 }}
       >
         <APIPath />
         <TabManager
