@@ -16,21 +16,6 @@ function APIDialog() {
 
   const [context, dispatch] = useContext();
 
-  const saveApiDialog = () => {
-    const requestOutput = JSON.stringify(
-      requestSchemaRef.current.schemaOutput(),
-      null,
-      2
-    );
-    const responseOutput = JSON.stringify(
-      responseSchemaRef.current.schemaOutput(),
-      null,
-      2
-    );
-    console.log("request: ", requestOutput);
-    console.log("response: ", responseOutput);
-  };
-
   const { open, view } = context.get("pages.api.dialog");
 
   const selected = context.get("pages.api.selected");
@@ -44,6 +29,31 @@ function APIDialog() {
     ...(context?.nucleoid?.types || []),
     ...getTypes(context.get("nucleoid.functions")),
   ];
+  const saveApiDialog = () => {
+    const requestOutput = JSON.stringify(
+      requestSchemaRef.current.schemaOutput(),
+      null,
+      2
+    );
+    const responseOutput = JSON.stringify(
+      responseSchemaRef.current.schemaOutput(),
+      null,
+      2
+    );
+
+    dispatch({
+      type: "UPDATE_API_SCHEMAS",
+      payload: {
+        path: selected?.path,
+        method: selected?.method,
+        requestSchema: JSON.parse(requestOutput),
+        responseSchema: JSON.parse(responseOutput),
+      },
+    });
+
+    console.log("request: ", requestOutput);
+    console.log("response: ", responseOutput);
+  };
 
   if (open) {
     return (
