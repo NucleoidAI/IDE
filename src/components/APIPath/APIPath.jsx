@@ -2,27 +2,19 @@ import Constants from "../../constants";
 import LanguageIcon from "@mui/icons-material/Language";
 import styles from "./styles";
 
-import { Box, Button, Grid, MenuItem, Select, TextField } from "@mui/material";
+import { Box, Button, Grid, MenuItem, Select, Typography } from "@mui/material";
 
-const APIPath = () => {
+const APIPath = ({ method, path }) => {
   return (
     <Grid container sx={styles.root}>
       <Grid sx={styles.firstElement} />
       <Grid item>
         <Grid container item sx={styles.content}>
-          <Select defaultValue={""}>
-            {Constants.methods.map((item, index) => {
-              return (
-                <MenuItem value={item} key={index}>
-                  {item.toUpperCase()}
-                </MenuItem>
-              );
-            })}
-          </Select>
+          <Typography>{method}</Typography>
           <Box component={"span"} sx={styles.text}>
             /
           </Box>
-          <TextField />
+          <Typography>{path.replace("/", "")}</Typography>
         </Grid>
       </Grid>
       <Button>
