@@ -1,10 +1,8 @@
 import CloseIcon from "@mui/icons-material/Close";
-
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
-import styles from "./styles";
-import { Grid, Typography } from "@mui/material";
-import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+
+import { Grid, Tooltip, Typography, tooltipClasses } from "@mui/material";
 
 const DialogTooltip = styled(
   ({
@@ -24,18 +22,29 @@ const DialogTooltip = styled(
       disableTouchListener
       title={
         <>
-          <Grid container sx={styles.header}>
-            <Typography
-              sx={{ color: "black", fontSize: "1rem", fontWeight: "bold" }}
-            >
+          <Grid
+            container
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              backgroundColor: (theme) => theme.palette.background.paper,
+            }}
+          >
+            <Typography variant="subtitle1" sx={{ flexGrow: 1, marginLeft: 2 }}>
               {title}
             </Typography>
             <IconButton onClick={handleTooltipClose} size="small">
-              <CloseIcon fontSize="inherit" />
+              <CloseIcon />
             </IconButton>
           </Grid>
-          <Grid>
-            {message}
+          <Grid sx={{ padding: 2 }}>
+            <Typography
+              variant="body2"
+              sx={{ color: (theme) => theme.palette.text.primary }}
+            >
+              {message}
+            </Typography>
             {footer}
           </Grid>
         </>
@@ -46,12 +55,12 @@ const DialogTooltip = styled(
   )
 )(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: "#f5f5f9",
-    color: "rgba(0, 0, 0, 0.87)",
-    // maxWidth: 220,
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.text.primary,
     width: 600,
     fontSize: theme.typography.pxToRem(12),
-    border: "1px solid #dadde9",
+    border: `1px solid ${theme.palette.divider}`,
+    boxShadow: theme.shadows[1],
   },
 }));
 
