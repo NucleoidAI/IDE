@@ -11,6 +11,8 @@ const Schema = ({ initialData = {}, customTypes = [] }) => {
 
   useEffect(() => {
     const addIdsToSchema = (schema) => {
+      if (!schema) return null;
+
       return {
         ...schema,
         id: uuidv4(),
@@ -18,18 +20,15 @@ const Schema = ({ initialData = {}, customTypes = [] }) => {
       };
     };
 
-    if (!schemaData || Object.keys(schemaData).length === 0) {
-      if (Object.keys(initialData).length === 0) {
-        setSchemaData({
-          type: "object",
-          properties: [],
-        });
-      } else {
-        const dataWithIds = addIdsToSchema(initialData);
-        setSchemaData(dataWithIds);
-      }
+    if (Object.keys(initialData).length === 0) {
+      setSchemaData({
+        type: "object",
+        properties: [],
+      });
+    } else {
+      setSchemaData(addIdsToSchema(initialData));
     }
-  }, [initialData, schemaData]);
+  }, [initialData]);
 
   const renderTree = (node, level = 0) => (
     <TreeItem
