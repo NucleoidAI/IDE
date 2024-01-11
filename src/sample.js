@@ -111,6 +111,8 @@ export const api = [
         ],
       },
     },
+    summary: "Create new item",
+    description: "Create new item",
     "x-nuc-action": `function action(req: { body: { name: string, barcode: string } }): any {
         const name = req.body.name;
         const barcode = req.body.barcode;
@@ -146,6 +148,9 @@ export const api = [
         ],
       },
     },
+    summary: "Get item by id",
+    description: "Get item by id",
+
     "x-nuc-action": `function action(req: { params: { item: string } }): any {
         const item = req.params.item;
         return Item[item];
@@ -192,6 +197,8 @@ export const api = [
         ],
       },
     },
+    summary: "Update item",
+    description: "Update item",
     "x-nuc-action": `function action(req: { params: { item: string }, body: { name: string, barcode: string } }): any {
         const item = Item[req.params.item];
         const name = req.body.name;
@@ -234,6 +241,8 @@ export const api = [
         ],
       },
     },
+    summary: "Delete item",
+    description: "Delete item",
     "x-nuc-action": `function action(req: { params: { item: string } }): void {
         const item = req.params.item;
         delete Item[item];
@@ -256,6 +265,8 @@ export const api = [
         ],
       },
     },
+    summary: "Get all orders",
+    description: "Get all orders",
     "x-nuc-action": `function action(req: any): any {
         return Order;
       }`,
@@ -350,6 +361,8 @@ export const api = [
         ],
       },
     },
+    summary: "Get order by id",
+    description: "Get order by id",
     "x-nuc-action": `function action(req: { params: { order: string } }): any {
         const order = req.params.order;
         return Order[order];
@@ -396,6 +409,8 @@ export const api = [
         ],
       },
     },
+    summary: "Update order",
+    description: "Update order",
     "x-nuc-action": `function action(req: { params: { order: string }, body: { item: string, qty: number } }): any {
         const order = Order[req.params.order];
         const item = Item[req.body.item];
@@ -435,6 +450,8 @@ export const api = [
         ],
       },
     },
+    summary: "Delete order",
+    description: "Delete order",
     "x-nuc-action": `function action(req: { params: { order: string } }): void {
         const order = req.params.order;
         delete Order[order];
