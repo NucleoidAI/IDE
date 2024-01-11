@@ -8,8 +8,7 @@ import NucDialog from "../../components/core/NucDialog/NucDialog";
 import React from "react";
 import { getTypes } from "../../lib/TypeScript";
 import { useContext } from "../../context/context";
-
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 function APIDialog() {
   const requestSchemaRef = useRef();

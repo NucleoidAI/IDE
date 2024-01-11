@@ -1,8 +1,7 @@
-import Constants from "../../constants";
 import LanguageIcon from "@mui/icons-material/Language";
 import styles from "./styles";
 
-import { Box, Button, Grid, MenuItem, Select, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 
 const APIPath = ({ method, path, onTypesButtonClick }) => {
   return (
