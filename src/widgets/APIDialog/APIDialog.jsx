@@ -29,6 +29,7 @@ function APIDialog() {
     ...(context?.nucleoid?.types || []),
     ...getTypes(context.get("nucleoid.functions")),
   ];
+
   const saveApiDialog = () => {
     const requestOutput = JSON.stringify(
       requestSchemaRef.current.schemaOutput(),
@@ -62,7 +63,7 @@ function APIDialog() {
         open={open}
         handleClose={() => dispatch({ type: "CLOSE_API_DIALOG" })}
       >
-        <APIPath />
+        <APIPath method={selectedApi.method} path={selectedApi.path} />
         <TabManager
           view={view}
           types={types}
