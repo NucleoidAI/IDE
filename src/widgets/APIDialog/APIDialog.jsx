@@ -8,7 +8,8 @@ import NucDialog from "../../components/core/NucDialog/NucDialog";
 import React from "react";
 import { getTypes } from "../../lib/TypeScript";
 import { useContext } from "../../context/context";
-import { useRef } from "react";
+
+import { useRef, useState } from "react";
 
 function APIDialog() {
   const requestSchemaRef = useRef();
@@ -51,9 +52,13 @@ function APIDialog() {
         responseSchema: JSON.parse(responseOutput),
       },
     });
+  };
 
-    console.log("request: ", requestOutput);
-    console.log("response: ", responseOutput);
+  const handleTypesButtonClick = () => {
+    dispatch({
+      type: "SET_API_DIALOG_VIEW",
+      payload: { view: "TYPES" },
+    });
   };
 
   if (open) {
@@ -63,7 +68,12 @@ function APIDialog() {
         open={open}
         handleClose={() => dispatch({ type: "CLOSE_API_DIALOG" })}
       >
-        <APIPath method={selectedApi.method} path={selectedApi.path} />
+        <APIPath
+          method={selectedApi.method}
+          path={selectedApi.path}
+          onTypesButtonClick={handleTypesButtonClick}
+        />
+
         <TabManager
           view={view}
           types={types}

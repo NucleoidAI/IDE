@@ -4,7 +4,7 @@ import styles from "./styles";
 
 import { Box, Button, Grid, MenuItem, Select, Typography } from "@mui/material";
 
-const APIPath = ({ method, path }) => {
+const APIPath = ({ method, path, onTypesButtonClick }) => {
   return (
     <Grid container sx={styles.root}>
       <Grid sx={styles.firstElement} />
@@ -17,7 +17,7 @@ const APIPath = ({ method, path }) => {
           <Typography>{path.replace("/", "")}</Typography>
         </Grid>
       </Grid>
-      <Button>
+      <Button onClick={onTypesButtonClick}>
         <LanguageIcon sx={styles.icon} />
         Types
       </Button>
