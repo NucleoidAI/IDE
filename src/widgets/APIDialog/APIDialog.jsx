@@ -91,6 +91,11 @@ function APIDialog() {
               payload: { view: button },
             })
           }
+          deleteMethod={() => {
+            dispatch({
+              type: "DELETE_API",
+            });
+          }}
           saveApiDialog={() => saveApiDialog()}
         />
       </NucDialog>

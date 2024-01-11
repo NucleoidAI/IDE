@@ -383,6 +383,28 @@ function contextReducer(state, { type, payload }) {
       break;
     }
 
+    case "DELETE_API": {
+      const selectedIndex = nucleoid.api.findIndex(
+        (api) =>
+          api.path === pages.api.selected.path &&
+          api.method === pages.api.selected.method
+      );
+
+      if (selectedIndex > -1) {
+        nucleoid.api.splice(selectedIndex, 1);
+        if (nucleoid.api.length > 0) {
+          pages.api.selected.path = nucleoid.api[0].path;
+          pages.api.selected.method = nucleoid.api[0].method;
+        } else {
+          pages.api.selected.path = "/";
+          pages.api.selected.method = "get";
+        }
+      }
+      pages.api.dialog.open = false;
+
+      break;
+    }
+
     default:
   }
 

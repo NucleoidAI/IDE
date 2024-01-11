@@ -158,9 +158,11 @@ function APISettings() {
               onClick={() => console.log(summaryRef.current["Summary"].value)}
             />
             <Grid container sx={styles.editIcon}>
-              <Fab size={"small"} onClick={openEditDialog}>
-                <EditIcon />
-              </Fab>
+              {selectedApi && Object.keys(selectedApi).length > 0 && (
+                <Fab size={"small"} onClick={openEditDialog}>
+                  <EditIcon />
+                </Fab>
+              )}
             </Grid>
           </Grid>
         )}
