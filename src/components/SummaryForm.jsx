@@ -1,17 +1,18 @@
 import { TextField } from "@mui/material";
+
 import React, { forwardRef } from "react";
 
 const SummaryForm = forwardRef(
-  (
-    {
-      summaryTextChangeHandler,
-      descriptionTextChangeHandler,
-      summaryText,
-      descriptionText,
-    },
-    ref
-  ) => {
+  ({ onSummaryChange, onDescriptionChange, summary, description }, ref) => {
     if (ref) {
+      const handleSummaryChange = (event) => {
+        onSummaryChange(event.target.value);
+      };
+
+      const handleDescriptionChange = (event) => {
+        onDescriptionChange(event.target.value);
+      };
+
       return (
         <>
           <TextField
@@ -20,12 +21,10 @@ const SummaryForm = forwardRef(
             inputRef={(el) => {
               if (el) {
                 ref.current["Summary"] = el;
-                ref.current["Summary"].value = summaryText;
+                ref.current["Summary"].value = summary;
               }
             }}
-            onChange={() =>
-              summaryTextChangeHandler && summaryTextChangeHandler()
-            }
+            onChange={handleSummaryChange}
           />
           <TextField
             label={"Description"}
@@ -35,12 +34,10 @@ const SummaryForm = forwardRef(
             inputRef={(el) => {
               if (el) {
                 ref.current["Description"] = el;
-                ref.current["Description"].value = descriptionText;
+                ref.current["Description"].value = description;
               }
             }}
-            onChange={() =>
-              descriptionTextChangeHandler && descriptionTextChangeHandler()
-            }
+            onChange={handleDescriptionChange}
           />
         </>
       );

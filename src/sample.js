@@ -42,6 +42,8 @@ export const api = [
         ],
       },
     },
+    summary: "Get all users",
+    description: "Get all users",
     "x-nuc-action": `function action(req: any): { message: string } {
         return { message: "Hello World" };
       }`,
@@ -99,6 +101,8 @@ export const api = [
         ],
       },
     },
+    summary: "Create new order",
+    description: "Create new order",
     "x-nuc-action": `function action(req: { body: { item: string, qty: number } }): any {
       const item = Item[req.body.item];
       const qty = req.body.qty;
