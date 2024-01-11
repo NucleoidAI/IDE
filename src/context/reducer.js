@@ -4,6 +4,7 @@ import { v4 as uuid } from "uuid";
 
 function contextReducer(state, { type, payload }) {
   state = State.copy(state);
+
   const { nucleoid, pages } = state;
 
   switch (type) {
@@ -356,6 +357,28 @@ function contextReducer(state, { type, payload }) {
           ...nucleoid.api[apiIndex].response,
           schema: responseSchema,
         };
+      }
+      break;
+    }
+
+    case "UPDATE_API_SUMMARY": {
+      const { path, method, newSummary } = payload;
+      const apiEndpoint = nucleoid.api.find(
+        (api) => api.path === path && api.method === method
+      );
+      if (apiEndpoint) {
+        apiEndpoint.summary = newSummary;
+      }
+      break;
+    }
+
+    case "UPDATE_API_DESCRIPTION": {
+      const { path, method, newDescription } = payload;
+      const apiEndpoint = nucleoid.api.find(
+        (api) => api.path === path && api.method === method
+      );
+      if (apiEndpoint) {
+        apiEndpoint.description = newDescription;
       }
       break;
     }
