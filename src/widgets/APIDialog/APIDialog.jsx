@@ -16,21 +16,6 @@ function APIDialog() {
 
   const [context, dispatch] = useContext();
 
-  const saveApiDialog = () => {
-    const requestOutput = JSON.stringify(
-      requestSchemaRef.current.schemaOutput(),
-      null,
-      2
-    );
-    const responseOutput = JSON.stringify(
-      responseSchemaRef.current.schemaOutput(),
-      null,
-      2
-    );
-    console.log("request: ", requestOutput);
-    console.log("response: ", responseOutput);
-  };
-
   const { open, view } = context.get("pages.api.dialog");
 
   const selected = context.get("pages.api.selected");
@@ -45,6 +30,36 @@ function APIDialog() {
     ...getTypes(context.get("nucleoid.functions")),
   ];
 
+  const saveApiDialog = () => {
+    const requestOutput = JSON.stringify(
+      requestSchemaRef.current.schemaOutput(),
+      null,
+      2
+    );
+    const responseOutput = JSON.stringify(
+      responseSchemaRef.current.schemaOutput(),
+      null,
+      2
+    );
+
+    dispatch({
+      type: "UPDATE_API_SCHEMAS",
+      payload: {
+        path: selected?.path,
+        method: selected?.method,
+        requestSchema: JSON.parse(requestOutput),
+        responseSchema: JSON.parse(responseOutput),
+      },
+    });
+  };
+
+  const handleTypesButtonClick = () => {
+    dispatch({
+      type: "SET_API_DIALOG_VIEW",
+      payload: { view: "TYPES" },
+    });
+  };
+
   if (open) {
     return (
       <NucDialog
@@ -52,7 +67,12 @@ function APIDialog() {
         open={open}
         handleClose={() => dispatch({ type: "CLOSE_API_DIALOG" })}
       >
-        <APIPath />
+        <APIPath
+          method={selectedApi.method}
+          path={selectedApi.path}
+          onTypesButtonClick={handleTypesButtonClick}
+        />
+
         <TabManager
           view={view}
           types={types}
@@ -70,6 +90,11 @@ function APIDialog() {
               payload: { view: button },
             })
           }
+          deleteMethod={() => {
+            dispatch({
+              type: "DELETE_API",
+            });
+          }}
           saveApiDialog={() => saveApiDialog()}
         />
       </NucDialog>

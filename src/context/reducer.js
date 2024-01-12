@@ -4,6 +4,7 @@ import { v4 as uuid } from "uuid";
 
 function contextReducer(state, { type, payload }) {
   state = State.copy(state);
+
   const { nucleoid, pages } = state;
 
   switch (type) {
@@ -338,6 +339,68 @@ function contextReducer(state, { type, payload }) {
           { key: `${sample.path}.${sample.ext}`, value: sample.definition },
         ],
       });
+
+      break;
+    }
+    case "UPDATE_API_SCHEMAS": {
+      const { path, method, requestSchema, responseSchema } = payload;
+      const apiIndex = nucleoid.api.findIndex(
+        (api) => api.path === path && api.method === method
+      );
+
+      if (apiIndex !== -1) {
+        nucleoid.api[apiIndex].request = {
+          ...nucleoid.api[apiIndex].request,
+          schema: requestSchema,
+        };
+        nucleoid.api[apiIndex].response = {
+          ...nucleoid.api[apiIndex].response,
+          schema: responseSchema,
+        };
+      }
+      break;
+    }
+
+    case "UPDATE_API_SUMMARY": {
+      const { path, method, newSummary } = payload;
+      const apiEndpoint = nucleoid.api.find(
+        (api) => api.path === path && api.method === method
+      );
+      if (apiEndpoint) {
+        apiEndpoint.summary = newSummary;
+      }
+      break;
+    }
+
+    case "UPDATE_API_DESCRIPTION": {
+      const { path, method, newDescription } = payload;
+      const apiEndpoint = nucleoid.api.find(
+        (api) => api.path === path && api.method === method
+      );
+      if (apiEndpoint) {
+        apiEndpoint.description = newDescription;
+      }
+      break;
+    }
+
+    case "DELETE_API": {
+      const selectedIndex = nucleoid.api.findIndex(
+        (api) =>
+          api.path === pages.api.selected.path &&
+          api.method === pages.api.selected.method
+      );
+
+      if (selectedIndex > -1) {
+        nucleoid.api.splice(selectedIndex, 1);
+        if (nucleoid.api.length > 0) {
+          pages.api.selected.path = nucleoid.api[0].path;
+          pages.api.selected.method = nucleoid.api[0].method;
+        } else {
+          pages.api.selected.path = "/";
+          pages.api.selected.method = "get";
+        }
+      }
+      pages.api.dialog.open = false;
 
       break;
     }

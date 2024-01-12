@@ -72,6 +72,7 @@ const SchemaEditor = forwardRef(
             >
               <SchemaPropertyEditor
                 node={node}
+                disableNameChange={level === 0}
                 onNameChange={(newName) => {
                   handleChangeProperty(node.id, {
                     name: newName,

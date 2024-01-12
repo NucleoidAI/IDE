@@ -51,9 +51,6 @@ function APIDialogAction({
           <ToggleButton color={"primary"} variant={"contained"} value={"BODY"}>
             Body
           </ToggleButton>
-          <ToggleButton color={"primary"} variant={"contained"} value={"TYPES"}>
-            Types
-          </ToggleButton>
         </ToggleButtonGroup>
       </Box>
       <Box sx={{ display: "flex", gap: 1 }}>

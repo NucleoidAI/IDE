@@ -50,12 +50,12 @@ function APISettings() {
 
       if (selectedApiEndpoint) {
         setSelectedApi(selectApi);
-        setMethod(selected.method);
+        setMethod(selectApi.method);
         setParams(selectedApiEndpoint.params || []);
-        setSummary(selectedApiEndpoint.summary || "");
-        setRequest(compile(selectedApiEndpoint.request || {}));
-        setResponse(compile(selectedApiEndpoint.response || {}));
-        setDescription(selectedApiEndpoint.description || "");
+        setSummary(selectApi.summary || "");
+        setRequest(selectApi.request?.schema || {});
+        setResponse(selectedApi.response?.schema || {});
+        setDescription(selectApi.description || "");
 
         setTypes(
           state.get("nucleoid.types").map((typeObject) => {
@@ -65,6 +65,28 @@ function APISettings() {
       }
     }
   }, [state, method]);
+
+  const handleSummaryChange = (newSummary) => {
+    dispatch({
+      type: "UPDATE_API_SUMMARY",
+      payload: {
+        path: selectedApi.path,
+        method: selectedApi.method,
+        newSummary,
+      },
+    });
+  };
+
+  const handleDescriptionChange = (newDescription) => {
+    dispatch({
+      type: "UPDATE_API_DESCRIPTION",
+      payload: {
+        path: selectedApi.path,
+        method: selectedApi.method,
+        newDescription,
+      },
+    });
+  };
 
   const openEditDialog = () => {
     dispatch({
@@ -99,10 +121,7 @@ function APISettings() {
               />
             )*/}
             {selectedApi.request && (
-              <Schema
-                initialData={selectedApi.request.schema}
-                customTypes={customTypes}
-              />
+              <Schema initialData={request} customTypes={customTypes} />
             )}
           </Grid>
           <Grid item xs={6} sx={styles.schema}>
@@ -120,10 +139,7 @@ function APISettings() {
               />
             )*/}
             {selectedApi.response && (
-              <Schema
-                initialData={selectedApi.response.schema}
-                customTypes={customTypes}
-              />
+              <Schema initialData={response} customTypes={customTypes} />
             )}
           </Grid>
         </Grid>
@@ -131,8 +147,10 @@ function APISettings() {
         {matchWidth && (
           <Grid container md={3} item sx={styles.summaryFormRoot}>
             <SummaryForm
-              summaryText={summary}
-              descriptionText={description}
+              summary={selectedApi.summary}
+              description={selectedApi.description}
+              onSummaryChange={handleSummaryChange}
+              onDescriptionChange={handleDescriptionChange}
               ref={summaryRef}
             />
 
@@ -140,9 +158,11 @@ function APISettings() {
               onClick={() => console.log(summaryRef.current["Summary"].value)}
             />
             <Grid container sx={styles.editIcon}>
-              <Fab size={"small"} onClick={openEditDialog}>
-                <EditIcon />
-              </Fab>
+              {selectedApi && Object.keys(selectedApi).length > 0 && (
+                <Fab size={"small"} onClick={openEditDialog}>
+                  <EditIcon />
+                </Fab>
+              )}
             </Grid>
           </Grid>
         )}
