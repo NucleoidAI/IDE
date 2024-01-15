@@ -1,3 +1,4 @@
+import HorizontalSplitLayout from "../../../layouts/HorizontalSplitLayout";
 import Page from "../../../components/Page";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import QueryArrayTable from "../../../components/QueryArrayTable";
@@ -10,15 +11,14 @@ import { useContext } from "../../../context/context";
 import { useEvent } from "@nucleoidjs/synapses";
 import { useMonaco } from "@monaco-editor/react";
 import { useNavigate } from "react-router-dom";
+
 import {
   Box,
   Card,
   Fab,
   FormControlLabel,
   FormGroup,
-  Grid,
   LinearProgress,
-  Paper,
   Switch,
   Typography,
 } from "@mui/material";
@@ -107,38 +107,20 @@ function Query() {
 
   return (
     <Page title={"Query"}>
-      <Grid container sx={styles.root}>
-        <Grid
-          item
-          xs={12}
-          sx={{
-            ...styles.editorGrid,
-            height: 1 - outputRatio,
-          }}
-        >
-          <Paper sx={styles.editorPaper}>
-            <QueryEditor ref={editorRef} />
-            <Grid container item sx={styles.runButton}>
-              <Fab size={"small"} onClick={() => handleQuery()}>
-                <PlayArrowIcon style={styles.playArrowIcon} />
-              </Fab>
-            </Grid>
-          </Paper>
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          sx={{
-            ...styles.contentGrid,
-            height: outputRatio,
-          }}
-        >
-          {loading && (
+      <HorizontalSplitLayout
+        outputRatio={outputRatio}
+        queryEditor={<QueryEditor ref={editorRef} />}
+        playArrowIcon={
+          <Fab size={"small"} onClick={() => handleQuery()}>
+            <PlayArrowIcon style={styles.playArrowIcon} />
+          </Fab>
+        }
+        querys={
+          loading ? (
             <Card sx={styles.loadingCard}>
               <LinearProgress color="inherit" />
             </Card>
-          )}
-          {!loading && (
+          ) : (
             <Card sx={styles.contentCard}>
               <RatioIconButtons
                 handleSetOutputRatio={handleSetOutputRatio}
@@ -167,9 +149,9 @@ function Query() {
                 </Box>
               )}
             </Card>
-          )}
-        </Grid>
-      </Grid>
+          )
+        }
+      />
     </Page>
   );
 }
