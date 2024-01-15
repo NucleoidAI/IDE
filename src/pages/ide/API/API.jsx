@@ -4,11 +4,11 @@ import APITree from "../../../widgets/APITree";
 import Editor from "../../../widgets/Editor";
 import Page from "../../../components/Page";
 import React from "react";
-import TwoSideLayout from "../../../layouts/TwoSideLayout";
+import VerticalSplitLayout from "../../../layouts/VerticalSplitLayout";
 function API() {
   return (
     <Page title={"API"}>
-      <TwoSideLayout
+      <VerticalSplitLayout
         dialog={<APIDialog />}
         content1={<APITree />}
         content2={<Editor name={"api"} api />}

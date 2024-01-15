@@ -4,7 +4,7 @@ import styles from "./styles";
 
 import { Card, Grid, Paper } from "@mui/material";
 
-function TwoSideLayout({ dialog, content1, content2, content3 }) {
+function VerticalSplitLayout({ dialog, content1, content2, content3 }) {
   return (
     <Grid container sx={styles.root} columns={config.layout.ide.total}>
       {dialog}
@@ -49,4 +49,4 @@ function TwoSideLayout({ dialog, content1, content2, content3 }) {
   );
 }
 
-export default TwoSideLayout;
+export default VerticalSplitLayout;

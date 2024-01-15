@@ -2,7 +2,7 @@ import Editor from "../../../widgets/Editor";
 import FunctionDialog from "../../../widgets/FunctionDialog/FunctionDialog";
 import FunctionTree from "../../../widgets/FunctionTree";
 import Page from "../../../components/Page";
-import TwoSideLayout from "../../../layouts/TwoSideLayout";
+import VerticalSplitLayout from "../../../layouts/VerticalSplitLayout";
 import { useContext } from "../../../context/context";
 
 function Functions() {
@@ -17,7 +17,7 @@ function Functions() {
 
   return (
     <Page title={"Functions"}>
-      <TwoSideLayout
+      <VerticalSplitLayout
         dialog={<FunctionDialog />}
         content1={<FunctionTree openFunctionDialog={openFunctionDialog} />}
         content2={<Editor functions />}
