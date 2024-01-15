@@ -4,47 +4,16 @@ import APITree from "../../../widgets/APITree";
 import Editor from "../../../widgets/Editor";
 import Page from "../../../components/Page";
 import React from "react";
-import config from "../../../config";
-import styles from "./styles";
-import { Card, Grid, Paper } from "@mui/material";
-
+import TwoSideLayout from "../../../layouts/TwoSideLayout";
 function API() {
   return (
     <Page title={"API"}>
-      <Grid container sx={styles.root} columns={config.layout.ide.total}>
-        <APIDialog />
-        <Grid
-          item
-          xs={config.layout.ide.tree.xs}
-          sm={config.layout.ide.tree.sm}
-          md={config.layout.ide.tree.md}
-          lg={config.layout.ide.tree.lg}
-          xl={config.layout.ide.tree.xl}
-        >
-          <APITree />
-        </Grid>
-        <Grid
-          container
-          item
-          xs={config.layout.ide.tree.xs}
-          sm={config.layout.ide.content.sm}
-          md={config.layout.ide.content.md}
-          lg={config.layout.ide.content.lg}
-          xl={config.layout.ide.content.xl}
-          sx={styles.content}
-        >
-          <Grid item xs={12} sx={styles.editorGrid}>
-            <Paper sx={styles.editorPaper}>
-              <Editor name={"api"} api />
-            </Paper>
-          </Grid>
-          <Grid item xs={12} sx={styles.apiSettingsGrid}>
-            <Card sx={{ height: "100%", padding: 1 }}>
-              <APISettings />
-            </Card>
-          </Grid>
-        </Grid>
-      </Grid>
+      <TwoSideLayout
+        dialog={<APIDialog />}
+        content1={<APITree />}
+        content2={<Editor name={"api"} api />}
+        content3={<APISettings />}
+      />
     </Page>
   );
 }
