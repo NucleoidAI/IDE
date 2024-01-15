@@ -1,3 +1,4 @@
+import AddList from "../../components/AddList";
 import Arrow from "../../icons/Arrow";
 import Error from "@mui/icons-material/Error";
 import Fade from "@mui/material/Fade";
@@ -7,11 +8,21 @@ import actions from "../../actions";
 import styles from "./styles";
 import { useContext } from "../../context/context";
 import { useEvent } from "@nucleoidjs/synapses";
-import { Box, Grid, Menu, MenuItem, Tooltip, Typography } from "@mui/material";
+
+import {
+  Box,
+  Card,
+  CardActions,
+  Grid,
+  Menu,
+  MenuItem,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import React, { useEffect } from "react";
 import { TreeItem, TreeView } from "@mui/lab";
 
-function FunctionTree() {
+function FunctionTree({ openFunctionDialog }) {
   const [selected, setSelected] = React.useState(null);
   const [contextMenu, setContextMenu] = React.useState(null);
   const [state, dispatch] = useContext();
@@ -93,7 +104,7 @@ function FunctionTree() {
   };
 
   return (
-    <>
+    <Card sx={{ width: "100%", height: "100%" }}>
       <TreeView
         defaultCollapseIcon={<Arrow down />}
         defaultExpandIcon={<Arrow right />}
@@ -117,7 +128,10 @@ function FunctionTree() {
       >
         <MenuItem onClick={deleteFunction}>Delete</MenuItem>
       </Menu>
-    </>
+      <CardActions>
+        <AddList clickEvent={openFunctionDialog} list={["Class", "Function"]} />
+      </CardActions>
+    </Card>
   );
 }
 
