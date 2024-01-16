@@ -1,0 +1,13 @@
+name: land
+on:
+  push:
+    branches: [main]
+jobs:
+  test: 
+    uses: NucleoidJS/actions/.github/workflows/test.yml@main
+    secrets: inherit
+
+  deploy: 
+    needs: test
+    uses: NucleoidJS/actions/.github/workflows/deploy.yml@main
+    secrets: inherit
