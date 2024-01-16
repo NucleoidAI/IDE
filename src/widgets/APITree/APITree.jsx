@@ -134,7 +134,7 @@ function APITree() {
   }, [selected, state]);
 
   return (
-    <Card style={{ height: "100%" }}>
+    <Card sx={{ height: "100%" }}>
       <Grid sx={styles.apiTreeGrid}>
         {open && (
           <DeleteMethodDialog setOpen={setOpen} deleteMethod={deleteMethod} />
