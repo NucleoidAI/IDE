@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import React from "react";
 
-function BlankLayout({ logs }) {
+function BlankLayout({ content }) {
   return (
     <Grid container>
       <Grid
@@ -11,7 +11,7 @@ function BlankLayout({ logs }) {
         justifyContent={"flex-start"}
         alignContent={"center"}
       >
-        {logs}
+        {content}
       </Grid>
     </Grid>
   );
