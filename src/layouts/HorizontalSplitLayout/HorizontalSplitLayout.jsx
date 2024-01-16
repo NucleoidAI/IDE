@@ -3,12 +3,7 @@ import styles from "./styles";
 
 import { Grid, Paper } from "@mui/material";
 
-function HorizontalSplitLayout({
-  queryEditor,
-  playArrowIcon,
-  querys,
-  outputRatio,
-}) {
+function HorizontalSplitLayout({ topSection, bottomSection, outputRatio }) {
   return (
     <Grid container sx={styles.root}>
       <Grid
@@ -19,12 +14,7 @@ function HorizontalSplitLayout({
           height: 1 - outputRatio,
         }}
       >
-        <Paper sx={styles.editorPaper}>
-          {queryEditor}
-          <Grid container item sx={styles.runButton}>
-            {playArrowIcon}
-          </Grid>
-        </Paper>
+        <Paper sx={styles.editorPaper}>{topSection}</Paper>
       </Grid>
       <Grid
         item
@@ -34,7 +24,7 @@ function HorizontalSplitLayout({
           height: outputRatio,
         }}
       >
-        {querys}
+        {bottomSection}
       </Grid>
     </Grid>
   );
