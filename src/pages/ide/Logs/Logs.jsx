@@ -33,7 +33,6 @@ function Logs() {
   return (
     <Page title={"Logs"}>
       <BlankLayout
-        header={"Logs"}
         logs={
           loading ? (
             <CircularProgress />
