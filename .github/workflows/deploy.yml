@@ -1,27 +1,14 @@
-name: Deploy
+name: deploy
 on:
   push:
-    branches: [main]
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
 jobs:
+  test:
+    uses: NucleoidJS/actions/.github/workflows/test.yml@main
+    secrets: inherit
+
   deploy:
-    runs-on: ubuntu-latest
-    env:
-      NODE_OPTIONS: "--max_old_space_size=4096"
-      CI: false
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          registry-url: "https://registry.npmjs.org"
-      - uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-      - run: npm ci
-      - run: npm test
-      - run: npm run lint
-      - run: npm run build
-      - run: aws s3 rm s3://ide.nuc.land --recursive
-      - run: aws s3 cp dist s3://ide.nuc.land --recursive
+    needs: test    
+    uses: NucleoidJS/actions/.github/workflows/deploy.yml@main
+    secrets: inherit
