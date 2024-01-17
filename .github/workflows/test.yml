@@ -1,7 +1,9 @@
 name: test
+
 on:
   pull_request:
     branches: [main]
+    
 jobs:
   test: 
     uses: NucleoidJS/actions/.github/workflows/test.yml@main
