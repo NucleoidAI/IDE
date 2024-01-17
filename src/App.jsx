@@ -1,6 +1,6 @@
 import ContextProvider from "./context/context";
 import EventRegistry from "./EventRegistry";
-import IDE from "./layouts/IDE"; // eslint-disable-line
+import IDE from "./containers/IDE"; // eslint-disable-line
 import React from "react";
 import Settings from "./settings";
 import State from "./state";
