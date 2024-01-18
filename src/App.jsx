@@ -117,31 +117,45 @@ function App() {
   React.useEffect(() => {
     async function initContext() {
       const id = window.location.pathname.split("/")[2];
+
       let context;
-      if (id === "sample") {
-        context = State.withSample();
-        context.get = (prop) => State.resolve(context, prop);
-        context.nucleoid.project = {
-          name: "Sample",
-          id: "Sample",
-          description:
-            "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore",
-        };
-        return setContext(InitVfs(context));
+      try {
+        const serializedState = localStorage.getItem("contextState");
+        if (serializedState) {
+          context = JSON.parse(serializedState);
+          context.get = (prop) => State.resolve(context, prop);
+          return setContext(InitVfs(context));
+        }
+      } catch (error) {
+        console.error("Error loading state from local storage:", error);
       }
 
-      if (id) {
-        project(id)
-          .then((result) => {
-            return setContext(InitVfs(result));
-          })
-          .catch(() => {
-            progressElement.classList.add("hidden");
+      if (!context) {
+        if (id === "sample") {
+          context = State.withSample();
+          context.get = (prop) => State.resolve(context, prop);
+          context.nucleoid.project = {
+            name: "Sample",
+            id: "Sample",
+            description:
+              "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore",
+          };
+          return setContext(InitVfs(context));
+        }
 
-            return setContext("error");
-          });
-      } else {
-        window.location.assign(`${window.location.href}/sample/api`);
+        if (id) {
+          project(id)
+            .then((result) => {
+              return setContext(InitVfs(result));
+            })
+            .catch(() => {
+              progressElement.classList.add("hidden");
+
+              return setContext("error");
+            });
+        } else {
+          window.location.assign(`${window.location.href}/sample/api`);
+        }
       }
     }
 
