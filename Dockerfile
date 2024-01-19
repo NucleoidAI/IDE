@@ -1,8 +1,11 @@
 FROM node:18
 
-COPY dist /app/ide
-COPY serve.json /app
+WORKDIR /app
+
+COPY dist ./dist
+COPY config.js .
+COPY package.json .
 
 EXPOSE 80
 
-ENTRYPOINT npx -y serve -n -p 80 /app
+ENTRYPOINT npx @nucleoidjs/http-server start 

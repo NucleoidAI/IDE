@@ -1,7 +1,7 @@
 /* eslint-disable */
-const { defineConfig } = require("cypress");
+import { defineConfig } from "cypress";
 
-module.exports = defineConfig({
+const config = defineConfig({
   component: {
     devServer: {
       framework: "react",
@@ -13,4 +13,6 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {},
   },
 });
+
+export default config;
 /* eslint-enable */

@@ -5,8 +5,9 @@
   "author": "NucTeam",
   "license": "Apache-2.0",
   "homepage": "/ide",
+  "type": "module",
   "scripts": {
-    "prepare": "node prepare.js",
+    "prepare": "node prepare.cjs",
     "test": "jest",
     "dev": "vite",
     "build": "vite build",
