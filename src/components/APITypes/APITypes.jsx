@@ -1,11 +1,8 @@
-import { Box, Divider, Paper, Typography } from "@mui/material";
-import React, { useState } from "react";
-import { TreeItem, TreeView } from "@mui/lab";
-
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Schema from "../Schema/Schema";
 import SchemaEditor from "../SchemaEditor";
+
+import { Box, Divider, Paper, Typography } from "@mui/material";
+import React, { useState } from "react";
 
 const APITypes = ({ tstypes, nuctypes, typesRef }) => {
   const combinedData = [
@@ -16,14 +13,11 @@ const APITypes = ({ tstypes, nuctypes, typesRef }) => {
   const [selectedType, setSelectedType] = useState(
     combinedData.length > 0 ? combinedData[0].name : null
   );
-  const [expanded, setExpanded] = useState(
-    combinedData.map((item) => item.name)
-  );
+
   const preloaded = {};
   combinedData.forEach((item) => {
     preloaded[item.name] = true;
   });
-  const [loaded, setLoaded] = useState(preloaded);
 
   const isTypeScriptType = (typeName) => {
     return tstypes.some((type) => type.name === typeName);
@@ -49,63 +43,8 @@ const APITypes = ({ tstypes, nuctypes, typesRef }) => {
     );
   };
 
-  const handleToggle = (event, nodeIds) => {
-    setExpanded(nodeIds);
-    nodeIds.forEach((nodeId) => {
-      if (!loaded[nodeId]) {
-        setLoaded({ ...loaded, [nodeId]: true });
-      }
-    });
-  };
-
   const handleTypeSelect = (name) => {
     setSelectedType(name);
-  };
-
-  const renderTree = (node, isRef = false, parentPath = "") => {
-    let label;
-    let childNodes = [];
-
-    if (isRef) {
-      const refSchema = findSchemaByName(node.ref);
-      if (refSchema) {
-        childNodes = refSchema.properties;
-        label = `${refSchema.name} (ref)`;
-      } else {
-        label = `${node.name} (ref - not found)`;
-      }
-    } else {
-      switch (node.type) {
-        case "string":
-        case "number":
-          label = `${node.name} (${node.type})`;
-          break;
-        case "object":
-        case "array":
-          label = `${node.name} (${node.type})`;
-          childNodes = node.properties;
-          break;
-        default:
-          label = node.name;
-      }
-    }
-    const nodeId = parentPath ? `${parentPath}.${node.name}` : node.name;
-    const isLoaded = loaded[nodeId];
-    const isPrimitive = node.type === "string" || node.type === "number";
-
-    return (
-      <TreeItem key={nodeId} nodeId={nodeId} label={label}>
-        {isLoaded && !isPrimitive
-          ? childNodes.map((childNode) =>
-              childNode.type === "ref"
-                ? renderTree(childNode, true, nodeId)
-                : renderTree(childNode, false, nodeId)
-            )
-          : !isPrimitive && (
-              <TreeItem nodeId="placeholder" label="Loading..." />
-            )}
-      </TreeItem>
-    );
   };
 
   return (

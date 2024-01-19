@@ -17,16 +17,6 @@ const SchemaPropertyEditor = ({
     onNameChange(name);
   }, [name, onNameChange]);
 
-  const handleBlur = () => {
-    if (editMode === "name") {
-      onNameChange(name);
-    } else if (editMode === "type") {
-      onTypeChange(type);
-    }
-    setEditMode(null);
-    setIsSelectOpen(false);
-  };
-
   const handleTypeChange = (newType) => {
     setType(newType);
     onTypeChange(newType);

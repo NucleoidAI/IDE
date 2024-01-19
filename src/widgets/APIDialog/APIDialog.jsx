@@ -7,7 +7,6 @@ import NucDialog from "../../components/core/NucDialog/NucDialog";
 //BasicDialog
 import React from "react";
 import { getTypes } from "../../lib/TypeScript";
-import ts from "typescript";
 import { useContext } from "../../context/context";
 import { useRef } from "react";
 
@@ -123,7 +122,7 @@ function TabManager({
   tstypes,
   nuctypes,
   types,
-  api,
+
   selectedApi,
   requestSchemaRef,
   responseSchemaRef,
