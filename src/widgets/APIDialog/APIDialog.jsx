@@ -14,6 +14,7 @@ import { useRef } from "react";
 function APIDialog() {
   const requestSchemaRef = useRef();
   const responseSchemaRef = useRef();
+  const typesRef = useRef();
 
   const [context, dispatch] = useContext();
 
@@ -27,30 +28,42 @@ function APIDialog() {
     );
 
   const tstypes = getTypes(context.get("nucleoid.functions"));
-  const nuctypes = context?.nucleoid?.types || [];
+  const nuctypes = context.get("nucleoid.types");
   const types = [...nuctypes, ...tstypes];
 
   const saveApiDialog = () => {
-    const requestOutput = JSON.stringify(
-      requestSchemaRef.current.schemaOutput(),
-      null,
-      2
-    );
-    const responseOutput = JSON.stringify(
-      responseSchemaRef.current.schemaOutput(),
-      null,
-      2
-    );
+    switch (view) {
+      case "TYPES":
+        console.log("types", typesRef.current.schemaOutput());
+        dispatch({
+          type: "UPDATE_API_TYPES",
+          payload: {
+            updatedTypes: typesRef.current.schemaOutput(),
+          },
+        });
 
-    dispatch({
-      type: "UPDATE_API_SCHEMAS",
-      payload: {
-        path: selected?.path,
-        method: selected?.method,
-        requestSchema: JSON.parse(requestOutput),
-        responseSchema: JSON.parse(responseOutput),
-      },
-    });
+        break;
+
+      case "BODY":
+        dispatch({
+          type: "UPDATE_API_SCHEMAS",
+          payload: {
+            path: selected?.path,
+            method: selected?.method,
+            requestSchema: requestSchemaRef.current.schemaOutput(),
+            responseSchema: responseSchemaRef.current.schemaOutput(),
+          },
+        });
+        break;
+
+      case "params":
+        console.log("params");
+        break;
+
+      default:
+        console.log("default");
+        return;
+    }
   };
 
   const handleTypesButtonClick = () => {
@@ -82,6 +95,7 @@ function APIDialog() {
           selectedApi={selectedApi}
           requestSchemaRef={requestSchemaRef}
           responseSchemaRef={responseSchemaRef}
+          typesRef={typesRef}
           saveApiDialog={() => saveApiDialog}
         />
         <APIDialogAction
@@ -113,10 +127,13 @@ function TabManager({
   selectedApi,
   requestSchemaRef,
   responseSchemaRef,
+  typesRef,
 }) {
   switch (view) {
     case "TYPES":
-      return <APITypes tstypes={tstypes} nuctypes={nuctypes} />;
+      return (
+        <APITypes tstypes={tstypes} nuctypes={nuctypes} typesRef={typesRef} />
+      );
     case "BODY": {
       return (
         <NewAPIBody
