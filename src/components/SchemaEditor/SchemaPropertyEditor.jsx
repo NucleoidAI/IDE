@@ -1,5 +1,5 @@
 import { Box, Input, MenuItem, Select, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const SchemaPropertyEditor = ({
   node,
@@ -12,6 +12,10 @@ const SchemaPropertyEditor = ({
   const [name, setName] = useState(node.name);
   const [type, setType] = useState(node.type);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
+
+  useEffect(() => {
+    onNameChange(name);
+  }, [name, onNameChange]);
 
   const handleBlur = () => {
     if (editMode === "name") {
@@ -52,11 +56,8 @@ const SchemaPropertyEditor = ({
         <Input
           value={name}
           onChange={(e) => setName(e.target.value)}
-          onBlur={handleBlur}
-          onKeyDown={(e) => e.key === "Enter" && handleBlur()}
           disableUnderline
           disabled={disableNameChange}
-          autoFocus
           fullWidth
           sx={{
             borderBottom: "1px solid lightgray",
@@ -84,8 +85,6 @@ const SchemaPropertyEditor = ({
           <Input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            onBlur={handleBlur}
-            onKeyDown={(e) => e.key === "Enter" && handleBlur()}
             disabled={disableNameChange}
             disableUnderline
             autoFocus
