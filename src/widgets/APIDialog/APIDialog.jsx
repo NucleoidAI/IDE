@@ -7,6 +7,7 @@ import NucDialog from "../../components/core/NucDialog/NucDialog";
 //BasicDialog
 import React from "react";
 import { getTypes } from "../../lib/TypeScript";
+import ts from "typescript";
 import { useContext } from "../../context/context";
 import { useRef } from "react";
 
@@ -25,10 +26,9 @@ function APIDialog() {
       (api) => api.path === selected?.path && api.method === selected.method
     );
 
-  const types = [
-    ...(context?.nucleoid?.types || []),
-    ...getTypes(context.get("nucleoid.functions")),
-  ];
+  const tstypes = getTypes(context.get("nucleoid.functions"));
+  const nuctypes = context?.nucleoid?.types || [];
+  const types = [...nuctypes, ...tstypes];
 
   const saveApiDialog = () => {
     const requestOutput = JSON.stringify(
@@ -75,6 +75,8 @@ function APIDialog() {
 
         <TabManager
           view={view}
+          tstypes={tstypes}
+          nuctypes={nuctypes}
           types={types}
           api={context.nucleoid.api}
           selectedApi={selectedApi}
@@ -104,6 +106,8 @@ function APIDialog() {
 
 function TabManager({
   view,
+  tstypes,
+  nuctypes,
   types,
   api,
   selectedApi,
@@ -112,7 +116,7 @@ function TabManager({
 }) {
   switch (view) {
     case "TYPES":
-      return <APITypes apiData={types} api={api} />;
+      return <APITypes tstypes={tstypes} nuctypes={nuctypes} />;
     case "BODY": {
       return (
         <NewAPIBody

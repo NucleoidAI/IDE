@@ -1,7 +1,7 @@
+import { Box, Divider, Paper, Typography } from "@mui/material";
+
 import React from "react";
 import SchemaEditor from "../../components/SchemaEditor";
-
-import { Box, Divider, Paper, Typography } from "@mui/material";
 
 const NewAPIBody = ({ types, api, requestSchemaRef, responseSchemaRef }) => {
   return (

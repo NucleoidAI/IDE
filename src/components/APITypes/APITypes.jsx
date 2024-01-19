@@ -5,14 +5,22 @@ import { TreeItem, TreeView } from "@mui/lab";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Schema from "../Schema/Schema";
+import SchemaEditor from "../SchemaEditor";
 
-const APITypes = ({ apiData }) => {
+const APITypes = ({ tstypes, nuctypes }) => {
+  const combinedData = [
+    ...tstypes.map((item) => ({ ...item, isTypeScript: true })),
+    ...nuctypes.map((item) => ({ ...item, isTypeScript: false })),
+  ];
+
   const [selectedType, setSelectedType] = useState(
-    apiData.length > 0 ? apiData[0].name : null
+    combinedData.length > 0 ? combinedData[0].name : null
   );
-  const [expanded, setExpanded] = useState(apiData.map((item) => item.name));
+  const [expanded, setExpanded] = useState(
+    combinedData.map((item) => item.name)
+  );
   const preloaded = {};
-  apiData.forEach((item) => {
+  combinedData.forEach((item) => {
     preloaded[item.name] = true;
   });
   const [loaded, setLoaded] = useState(preloaded);
@@ -103,11 +111,11 @@ const APITypes = ({ apiData }) => {
             boxSizing: "border-box",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
+            justifyContent: "start",
             alignItems: "center",
           }}
         >
-          {apiData.map((item) => (
+          {combinedData.map((item) => (
             <Box
               key={item.name}
               onClick={() => handleTypeSelect(item.name)}
@@ -122,10 +130,26 @@ const APITypes = ({ apiData }) => {
                   bgcolor: "primary.light",
                 },
                 width: "100%",
-                textAlign: "center",
+
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
               }}
             >
-              <Typography variant="body1">{item.name}</Typography>
+              <Typography variant="body1" style={{ textAlign: "left" }}>
+                {item.name}
+              </Typography>
+              {item.isTypeScript && (
+                <span
+                  style={{
+                    marginRight: "4px",
+                    color: "#808080",
+                    fontWeight: "bold",
+                  }}
+                >
+                  TS
+                </span>
+              )}
             </Box>
           ))}
         </Paper>
@@ -154,22 +178,18 @@ const APITypes = ({ apiData }) => {
             alignItems: "center",
           }}
         >
-          <TreeView
-            aria-label="api data tree"
-            expanded={expanded}
-            onNodeToggle={handleToggle}
-            defaultCollapseIcon={<ExpandMoreIcon />}
-            defaultExpandIcon={<ChevronRightIcon />}
-          >
-            {selectedType && renderTree(findSchemaByName(selectedType))}
-          </TreeView>
+          {selectedType && (
+            <Box sx={{ width: "100%", height: "100%" }}>
+              <Schema initialData={findSchemaByName(selectedType)} />
+            </Box>
+          )}
         </Paper>
       </Box>
     </Box>
   );
 
   function findSchemaByName(name) {
-    const schema = apiData.find((schema) => schema.name === name);
+    const schema = combinedData.find((schema) => schema.name === name);
     return schema ? schema.schema : null;
   }
 };
