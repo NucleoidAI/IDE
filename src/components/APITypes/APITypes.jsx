@@ -7,7 +7,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Schema from "../Schema/Schema";
 import SchemaEditor from "../SchemaEditor";
 
-const APITypes = ({ tstypes, nuctypes }) => {
+const APITypes = ({ tstypes, nuctypes, typesRef }) => {
   const combinedData = [
     ...tstypes.map((item) => ({ ...item, isTypeScript: true })),
     ...nuctypes.map((item) => ({ ...item, isTypeScript: false })),
@@ -24,6 +24,30 @@ const APITypes = ({ tstypes, nuctypes }) => {
     preloaded[item.name] = true;
   });
   const [loaded, setLoaded] = useState(preloaded);
+
+  const isTypeScriptType = (typeName) => {
+    return tstypes.some((type) => type.name === typeName);
+  };
+  const renderRightPanel = () => {
+    if (!selectedType) return null;
+
+    const useSchemaEditor = !isTypeScriptType(selectedType);
+    const initialData = findSchemaByName(selectedType);
+
+    return (
+      <Box sx={{ width: "100%", height: "100%" }}>
+        {useSchemaEditor ? (
+          <SchemaEditor
+            key={selectedType}
+            ref={typesRef}
+            initialData={initialData}
+          />
+        ) : (
+          <Schema initialData={initialData} />
+        )}
+      </Box>
+    );
+  };
 
   const handleToggle = (event, nodeIds) => {
     setExpanded(nodeIds);
@@ -178,11 +202,7 @@ const APITypes = ({ tstypes, nuctypes }) => {
             alignItems: "center",
           }}
         >
-          {selectedType && (
-            <Box sx={{ width: "100%", height: "100%" }}>
-              <Schema initialData={findSchemaByName(selectedType)} />
-            </Box>
-          )}
+          {renderRightPanel()}
         </Paper>
       </Box>
     </Box>
