@@ -1,9 +1,10 @@
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
-import { Box, List, ListItemButton, ListItemText } from "@mui/material";
+import { Box, Divider, Paper, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { TreeItem, TreeView } from "@mui/lab";
+
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Schema from "../Schema/Schema";
 
 const APITypes = ({ apiData }) => {
   const [selectedType, setSelectedType] = useState(
@@ -76,44 +77,93 @@ const APITypes = ({ apiData }) => {
   };
 
   return (
-    <Box display="flex" height="100%" sx={{ p: 2, m: 1 }}>
-      <List
-        component="nav"
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        height: "85%",
+        p: 2,
+      }}
+    >
+      <Box
         sx={{
-          width: "50%",
-          bgcolor: "background.paper",
-          borderRadius: 1,
-          overflow: "auto",
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        {apiData.map((item) => (
-          <ListItemButton
-            selected={selectedType === item.name}
-            onClick={() => handleTypeSelect(item.name)}
-            key={item.name}
-          >
-            <ListItemText primary={item.name} />
-          </ListItemButton>
-        ))}
-      </List>
+        <Paper
+          elevation={3}
+          sx={{
+            width: "100%",
+            p: 2,
+            bgcolor: "background.paper",
+            borderRadius: 2,
+            height: "100%",
+            boxSizing: "border-box",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {apiData.map((item) => (
+            <Box
+              key={item.name}
+              onClick={() => handleTypeSelect(item.name)}
+              sx={{
+                padding: "8px 16px",
+                cursor: "pointer",
+                bgcolor:
+                  selectedType === item.name
+                    ? "primary.light"
+                    : "background.paper",
+                "&:hover": {
+                  bgcolor: "primary.light",
+                },
+                width: "100%",
+                textAlign: "center",
+              }}
+            >
+              <Typography variant="body1">{item.name}</Typography>
+            </Box>
+          ))}
+        </Paper>
+      </Box>
+      <Divider orientation="vertical" flexItem sx={{ width: "1rem" }} />
 
       <Box
         sx={{
-          width: "50%",
-          bgcolor: "background.paper",
-          borderRadius: 1,
-          overflowY: "auto",
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        <TreeView
-          aria-label="api data tree"
-          expanded={expanded}
-          onNodeToggle={handleToggle}
-          defaultCollapseIcon={<ExpandMoreIcon />}
-          defaultExpandIcon={<ChevronRightIcon />}
+        <Paper
+          elevation={3}
+          sx={{
+            width: "100%",
+            p: 2,
+            bgcolor: "background.paper",
+            borderRadius: 2,
+            height: "100%",
+            boxSizing: "border-box",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
-          {selectedType && renderTree(findSchemaByName(selectedType))}
-        </TreeView>
+          <TreeView
+            aria-label="api data tree"
+            expanded={expanded}
+            onNodeToggle={handleToggle}
+            defaultCollapseIcon={<ExpandMoreIcon />}
+            defaultExpandIcon={<ChevronRightIcon />}
+          >
+            {selectedType && renderTree(findSchemaByName(selectedType))}
+          </TreeView>
+        </Paper>
       </Box>
     </Box>
   );
