@@ -404,6 +404,24 @@ function contextReducer(state, { type, payload }) {
 
       break;
     }
+    case "UPDATE_API_TYPES": {
+      const { updatedTypes } = payload;
+      const typeIndex = nucleoid.types.findIndex(
+        (type) => type.name === updatedTypes.name
+      );
+      const updatedType = {
+        ...nucleoid.types[typeIndex],
+        schema: {
+          ...updatedTypes,
+        },
+      };
+      if (typeIndex !== -1) {
+        nucleoid.types[typeIndex] = updatedType;
+      } else {
+        nucleoid.types.push(updatedTypes);
+      }
+      break;
+    }
 
     default:
   }
