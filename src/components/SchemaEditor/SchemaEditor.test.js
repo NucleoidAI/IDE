@@ -7,6 +7,7 @@ import { act } from "react-dom/test-utils";
 import { render, screen } from "@testing-library/react";
 
 describe("SchemaEditor Component", () => {
+  console.log("SchemaEditor: ");
   const initialSchema = {
     type: "object",
     properties: [
@@ -21,6 +22,7 @@ describe("SchemaEditor Component", () => {
   };
 
   test("renders with initial schema", () => {
+    console.log("rendering ");
     render(<SchemaEditor initialData={initialSchema} />);
 
     expect(screen.getByDisplayValue(/initial/)).toBeInTheDocument();
@@ -30,6 +32,7 @@ describe("SchemaEditor Component", () => {
   });
 
   test("initializes without initial data", () => {
+    console.log("initializing without initial data");
     render(<SchemaEditor />);
 
     const expectedSchema = {
@@ -42,6 +45,7 @@ describe("SchemaEditor Component", () => {
   });
 
   test("provides output correctly with initial data", () => {
+    console.log("provides output correctly with initial data");
     render(<SchemaEditor initialData={initialSchema} />);
 
     const outputSchema = SchemaEditor.schemaOutput();
@@ -49,6 +53,7 @@ describe("SchemaEditor Component", () => {
   });
 
   test("adds a new property", () => {
+    console.log("adds a new property");
     const emptySchema = { type: "object", properties: [] };
     render(<SchemaEditor initialData={emptySchema} />);
 
@@ -70,6 +75,7 @@ describe("SchemaEditor Component", () => {
   });
 
   test("removes a property by ID", () => {
+    console.log("removes a property by ID");
     render(<SchemaEditor initialData={initialSchema} />);
 
     const currentSchemaWithIDs = SchemaEditor.schemaOutputWithIDs();
@@ -92,6 +98,7 @@ describe("SchemaEditor Component", () => {
   });
 
   test("changes a property type and name", () => {
+    console.log("changes a property type and name");
     render(<SchemaEditor initialData={initialSchema} />);
 
     const currentSchemaWithIDs = SchemaEditor.schemaOutputWithIDs();
@@ -121,6 +128,7 @@ describe("SchemaEditor Component", () => {
   });
 
   test("adds a nested object and a property to it", () => {
+    console.log("adds a nested object and a property to it");
     render(<SchemaEditor initialData={initialSchema} />);
 
     act(() => {
@@ -146,6 +154,7 @@ describe("SchemaEditor Component", () => {
   });
 
   test("changes a property to custom type", () => {
+    console.log("changes a property to custom type");
     const customTypes = [
       {
         name: "Item",
