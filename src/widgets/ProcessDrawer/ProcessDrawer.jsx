@@ -16,7 +16,6 @@ import onboardDispatcher from "../../components/Onboard/onboardDispatcher";
 import scheduler from "../../connectionScheduler";
 import service from "../../service";
 import styles from "./styles";
-
 import { toOpenApi } from "../../adapters/openapi/adapter";
 import { useContext } from "../../context/context";
 import { useLocation } from "react-router-dom";
@@ -254,8 +253,8 @@ function ApiButton() {
           functions: context.functions,
         },
       };
-
-      const { data } = await service.createSandbox(openapi);
+      console.log(openapi);
+      //const { data } = await service.createSandbox(openapi);
       setLoading(false);
       setTimeout(() => {
         if (Settings.landing().level < 2) {
