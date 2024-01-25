@@ -1,4 +1,4 @@
-name: land
+name: Land
 on:
   push:
     branches: [main]
