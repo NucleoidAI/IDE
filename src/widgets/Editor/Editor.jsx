@@ -5,6 +5,7 @@ import { contextToMap } from "../../utils/Parser";
 import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
 import { parser } from "react-nucleoid";
 import { publish } from "@nucleoidjs/synapses";
+
 import rules from "./rules";
 import { useContext } from "../../context/context";
 import { useStorage } from "@nucleoidjs/webstorage";
@@ -66,7 +67,7 @@ const Editor = React.forwardRef((props, ref) => {
     if (!api) return true;
 
     try {
-      //  parser.fn(value);
+      parser.fn(value);
 
       monaco.editor.setModelMarkers(editor?.getModel(), "action", []);
       return true;
@@ -173,52 +174,8 @@ const Editor = React.forwardRef((props, ref) => {
     monaco.editor.setModelMarkers(editor.getModel(), "action", markers);
   }, []);
 
-  function generateClassDefinitions(data) {
-    let classDefs = "";
-
-    data.forEach((item) => {
-      if (item.type === "OPENAPI" && item.schema.type === "object") {
-        classDefs += `class ${item.schema.name} {\n`;
-
-        classDefs += `  static items: ${item.schema.name}[] = [];\n\n`;
-
-        item.schema.properties.forEach((prop) => {
-          classDefs += `  ${prop.name}: ${prop.type};\n`;
-        });
-
-        classDefs += `  constructor(${item.schema.properties
-          .map((prop) => `${prop.name}: ${prop.type}`)
-          .join(", ")}) {\n`;
-        item.schema.properties.forEach((prop) => {
-          classDefs += `    this.${prop.name} = ${prop.name};\n`;
-        });
-        classDefs += "    " + item.schema.name + ".items.push(this);\n";
-        classDefs += "  }\n\n";
-
-        classDefs += `  static filter(predicate: (item: ${item.schema.name}) => boolean): ${item.schema.name}[] {\n`;
-        classDefs += `    return ${item.schema.name}.items.filter(predicate);\n`;
-        classDefs += "  }\n\n";
-
-        classDefs += `  static find(predicate: (item: ${item.schema.name}) => boolean): ${item.schema.name} | undefined {\n`;
-        classDefs += `    return ${item.schema.name}.items.find(predicate);\n`;
-        classDefs += "  }\n";
-
-        classDefs += "}\n\n";
-      }
-    });
-
-    return classDefs;
-  }
-
   function handleEditorDidMount(editor, monaco) {
     const nucFuncs = context.nucleoid.functions;
-
-    const typescriptDefs = generateClassDefinitions(context.nucleoid.types);
-
-    monaco.languages.typescript.typescriptDefaults.addExtraLib(
-      typescriptDefs,
-      "filename/classDefinitions.d.ts"
-    );
 
     monaco.editor.defineTheme("custom-dark-theme", monacoDarkTheme);
 
@@ -236,7 +193,6 @@ const Editor = React.forwardRef((props, ref) => {
       }
     });
     options.globals = {};
-
     nucFuncs.forEach((item) => {
       const pth = monaco.Uri.from({ path: item.path + "_MODEL" });
       options.globals[item.path.split("/")[1]] = "writable";
