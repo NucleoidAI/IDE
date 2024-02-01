@@ -17,20 +17,30 @@ const parser = {
 const contextToMap = (files) => {
   const fileContents = [];
   const fileNames = ["// @nuc-imports\n"];
-
   // TODO: add @nuc-definitions and remove static before giving to sandbox
   // TODO : clear this method
+
+  files.functions.map((func) => {
+    const className = func.path.split("/").pop();
+    const importStatement = `import ${className} from "${func.path}"\n`;
+    fileNames.push(importStatement);
+  });
+
   files.functions.forEach((func) => {
     const className = func.path.split("/").pop();
-    fileNames.push(`import ${className} from "${func.path}"\n`);
     const lastCurlyBracket = func.definition.lastIndexOf("}");
     const newDefinition = `${func.definition.slice(
       0,
       lastCurlyBracket
     )}// @nuc-exports\n static filter = (fn) => ([]);\n static find = (fn) => ({});\n}`;
+
+    const functionImports = fileNames
+      .filter((name) => !name.includes(func.path))
+      .join("");
+
     fileContents.push({
       key: func.path + ".ts",
-      value: `${
+      value: `${functionImports}${
         !func.builtin ? newDefinition : func.definition
       }\nexport default ${className};`,
     });
