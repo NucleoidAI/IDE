@@ -5,7 +5,6 @@ import { contextToMap } from "../../utils/Parser";
 import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
 import { parser } from "react-nucleoid";
 import { publish } from "@nucleoidjs/synapses";
-
 import rules from "./rules";
 import { useContext } from "../../context/context";
 import { useStorage } from "@nucleoidjs/webstorage";
@@ -196,8 +195,18 @@ const Editor = React.forwardRef((props, ref) => {
     nucFuncs.forEach((item) => {
       const pth = monaco.Uri.from({ path: item.path + "_MODEL" });
       options.globals[item.path.split("/")[1]] = "writable";
+      const className = item.path.split("/").pop();
+
+      const insertIndex = item.definition.lastIndexOf("}");
+      const newDefinition = [
+        item.definition.slice(0, insertIndex),
+        "static find(predicate: (item: any) => boolean): any;",
+        "static filter(predicate: (item: any) => boolean): any[];",
+        item.definition.slice(insertIndex),
+      ].join("\n");
+
       monaco.editor.createModel(
-        item.definition,
+        newDefinition,
         item.ext === "js" ? "javascript" : "typescript",
         pth
       );
