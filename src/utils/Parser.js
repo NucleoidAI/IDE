@@ -32,7 +32,7 @@ const contextToMap = (files) => {
     const newDefinition = `${func.definition.slice(
       0,
       lastCurlyBracket
-    )}// @nuc-exports\n static filter = (fn) => ([]);\n static find = (fn) => ({});\n}`;
+    )}// @nuc-exports\nstatic items: ${className}[] = [];\n static filter(fn: (item: ${className}) => boolean): ${className}[] { return this.items.filter(fn); }\n static find(fn: (item: ${className}) => boolean): ${className} | undefined { return this.items.find(fn); }\n}`;
 
     const functionImports = fileNames
       .filter((name) => !name.includes(func.path))
@@ -67,7 +67,7 @@ const mapToContext = (fsMap, context) => {
   const tmpContext = deepCopy(context);
   tmpContext?.functions?.forEach((func) => {
     func.definition = parser.parse(
-      fsMap.get(`/build${func?.path}.js`)
+      fsMap.get(`/build${func?.path}.ts`)
     ).result[0];
   });
 
