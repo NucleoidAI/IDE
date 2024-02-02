@@ -3,6 +3,7 @@ import { Chat } from "@mui/icons-material";
 import DownloadIcon from "@mui/icons-material/Download";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import SaveIcon from "@mui/icons-material/Save";
 import SchoolIcon from "@mui/icons-material/School";
@@ -195,6 +196,18 @@ const ProcessDrawer = () => {
               <GitHubIcon sx={styles.listItem} />
             </ListItemButton>
           </Tooltip>
+          {Settings.debug() && (
+            <Tooltip placement="left" title="Reset and Refresh">
+              <ListItemButton
+                onClick={() => {
+                  localStorage.clear();
+                  window.location.reload();
+                }}
+              >
+                <RefreshIcon sx={styles.listItem} />
+              </ListItemButton>
+            </Tooltip>
+          )}
         </Box>
       </Drawer>
       <Backdrop
