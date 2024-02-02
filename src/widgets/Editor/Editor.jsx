@@ -182,34 +182,23 @@ const Editor = React.forwardRef((props, ref) => {
       themeStorage === "light" ? "vs-light" : "custom-dark-theme"
     );
 
-    monaco.editor.getModels().forEach((item) => {
-      if (
-        nucFuncs.find(
-          (a) => item._associatedResource.path === a.path + "_MODEL"
-        )
-      ) {
-        item.dispose();
-      }
-    });
     options.globals = {};
     nucFuncs.forEach((item) => {
-      const pth = monaco.Uri.from({ path: item.path + "_MODEL" });
+      const pth = monaco.Uri.from({ path: item.path });
       options.globals[item.path.split("/")[1]] = "writable";
-      const className = item.path.split("/").pop();
-
       const insertIndex = item.definition.lastIndexOf("}");
       const newDefinition = [
         item.definition.slice(0, insertIndex),
-        "static find(predicate: (item: any) => boolean): any;",
-        "static filter(predicate: (item: any) => boolean): any[];",
         item.definition.slice(insertIndex),
       ].join("\n");
 
-      monaco.editor.createModel(
-        newDefinition,
-        item.ext === "js" ? "javascript" : "typescript",
-        pth
-      );
+      if (!monaco.editor.getModel(pth)) {
+        monaco.editor.createModel(
+          newDefinition,
+          item.ext === "js" ? "javascript" : "typescript",
+          pth
+        );
+      }
     });
 
     editor.addAction({
