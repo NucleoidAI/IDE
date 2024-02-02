@@ -326,7 +326,7 @@ function contextReducer(state, { type, payload }) {
 
       const sample = {
         definition: `class ${className} {\n  constructor() {\n  }\n}\n`,
-        ext: "js",
+        ext: "ts",
         params: [],
         path: `/${className}`,
         type: "CLASS",
