@@ -255,8 +255,8 @@ export const compile = (
         map[hash] = payload;
 
         const error = errors.find((item) => {
-          const [errPath, errMethod] = item.file.fileName.split(".");
-          if (errPath === path && errMethod === method.method) {
+          const [errPath, errMethod] = item.file.fileName.split(".", 2);
+          if (errPath === method.path && errMethod === method.method) {
             return item;
           } else {
             return null;
