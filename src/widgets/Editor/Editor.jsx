@@ -66,7 +66,7 @@ const Editor = React.forwardRef((props, ref) => {
     if (!api) return true;
 
     try {
-      //parser.fn(value);
+      parser.fn(value);
 
       monaco.editor.setModelMarkers(editor?.getModel(), "action", []);
       return true;
