@@ -1,6 +1,5 @@
 import MonacoEditor from "@monaco-editor/react";
 import OpenAI from "../OpenAI";
-import React from "react";
 import { contextToMap } from "../../utils/Parser";
 import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
 import { parser } from "react-nucleoid";
@@ -10,6 +9,7 @@ import { useContext } from "../../context/context";
 import { useStorage } from "@nucleoidjs/webstorage";
 
 import { Backdrop, Box } from "@mui/material";
+import React, { useCallback } from "react";
 
 import * as angularPlugin from "prettier/parser-angular";
 import * as babelPlugin from "prettier/parser-babel";
@@ -263,11 +263,35 @@ const Editor = React.forwardRef((props, ref) => {
     if (ref) ref.current = editor;
   }
 
+  const clearModels = useCallback(() => {
+    const { monaco, editor } = editorRef?.current || {};
+    const currentModel = editor?.getModel();
+    const NucFunctions = context.nucleoid.functions;
+
+    const functionModels = monaco?.editor
+      .getModels()
+      .filter((model) =>
+        NucFunctions.some(
+          (nucFunc) => model._associatedResource.path === nucFunc.path
+        )
+      );
+
+    monaco?.editor.getModels().forEach((model) => {
+      const isNotFunctionModel = !functionModels?.includes(model);
+      const isNotCurrentModel =
+        currentModel.uri.toString() !== model.uri.toString();
+      if (isNotFunctionModel && isNotCurrentModel) {
+        model.dispose();
+      }
+    });
+  }, [context.nucleoid.functions, editorRef]);
+
   React.useEffect(() => {
     if (editorRef.current) {
       checkFunction() && lint();
+      clearModels();
     }
-  }, [context, checkFunction, api, lint]);
+  }, [context, checkFunction, api, lint, clearModels]);
 
   return (
     <Box sx={{ height: "100%" }}>
