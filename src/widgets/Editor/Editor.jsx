@@ -2,7 +2,7 @@ import MonacoEditor from "@monaco-editor/react";
 import OpenAI from "../OpenAI";
 import { contextToMap } from "../../utils/Parser";
 import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
-import { parser } from "react-nucleoid";
+//import { parser } from "react-nucleoid";
 import { publish } from "@nucleoidjs/synapses";
 import rules from "./rules";
 import { useContext } from "../../context/context";
@@ -62,11 +62,11 @@ const Editor = React.forwardRef((props, ref) => {
   const checkFunction = React.useCallback(() => {
     const editor = editorRef?.current?.editor;
     const monaco = editorRef?.current?.monaco;
-    const value = editor?.getValue();
+    //const value = editor?.getValue();
     if (!api) return true;
 
     try {
-      parser.fn(value);
+      //parser.fn(value);
 
       monaco.editor.setModelMarkers(editor?.getModel(), "action", []);
       return true;
@@ -186,15 +186,10 @@ const Editor = React.forwardRef((props, ref) => {
     nucFuncs.forEach((item) => {
       const pth = monaco.Uri.from({ path: item.path });
       options.globals[item.path.split("/")[1]] = "writable";
-      const insertIndex = item.definition.lastIndexOf("}");
-      const newDefinition = [
-        item.definition.slice(0, insertIndex),
-        item.definition.slice(insertIndex),
-      ].join("\n");
 
       if (!monaco.editor.getModel(pth)) {
         monaco.editor.createModel(
-          newDefinition,
+          item.definition,
           item.ext === "js" ? "javascript" : "typescript",
           pth
         );
