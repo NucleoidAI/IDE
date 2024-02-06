@@ -73,7 +73,7 @@ const mapToContext = (fsMap, context) => {
 
   tmpContext?.api?.forEach((api) => {
     api["x-nuc-action"] = parser
-      .parse(fsMap.get(`/build${api?.path}.${api?.method}.js`))
+      .parse(fsMap.get(`/build${api?.path}.${api?.method}.ts`))
       .action()
       .replace("export {};\n", "");
   });
