@@ -272,7 +272,7 @@ function ApiButton() {
         },
       };
       console.log(openapi);
-      //const { data } = await service.createSandbox(openapi);
+      const { data } = await service.createSandbox(openapi);
       setLoading(false);
       setTimeout(() => {
         if (Settings.landing().level < 2) {
@@ -281,7 +281,7 @@ function ApiButton() {
       }, 0);
 
       gtag("event", "run_sandbox");
-      /*
+
       if (data.id) {
         Settings.sandbox.sandboxID(data.id);
         Settings.url.app(`https://nucleoid.com/sandbox/${data.id}/`);
@@ -291,7 +291,6 @@ function ApiButton() {
         scheduler.start();
         publish("SWAGGER_DIALOG", { open: true });
       }
-      */
     } catch {
       setLoading(false);
       publish("GLOBAL_MESSAGE", {
