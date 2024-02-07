@@ -1,4 +1,4 @@
-name: deploy
+name: Deploy
 on:
   push:
     tags:
@@ -9,6 +9,6 @@ jobs:
     secrets: inherit
 
   deploy:
-    needs: test    
+    needs: test
     uses: NucleoidJS/actions/.github/workflows/deploy.yml@main
     secrets: inherit
