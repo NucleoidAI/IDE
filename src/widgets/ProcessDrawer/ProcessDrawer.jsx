@@ -197,14 +197,19 @@ const ProcessDrawer = () => {
             </ListItemButton>
           </Tooltip>
           {Settings.debug() && (
-            <Tooltip placement="left" title="Reset and Refresh">
+            <Tooltip
+              placement="left"
+              title="Reset and Refresh"
+              sx={{ color: "red" }}
+            >
               <ListItemButton
+                sx={{ color: "red" }}
                 onClick={() => {
                   localStorage.clear();
                   window.location.reload();
                 }}
               >
-                <RefreshIcon sx={styles.listItem} />
+                <RefreshIcon color="error" />
               </ListItemButton>
             </Tooltip>
           )}
