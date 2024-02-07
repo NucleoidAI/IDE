@@ -7,7 +7,6 @@ import { act } from "react-dom/test-utils";
 import { render, screen } from "@testing-library/react";
 
 describe("SchemaEditor Component", () => {
-  console.log("SchemaEditor: ");
   const initialSchema = {
     type: "object",
     properties: [
