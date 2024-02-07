@@ -1,4 +1,4 @@
-import { publish } from "@nucleoidjs/synapses";
+import { publish } from "@nucleoidjs/react-event";
 import service from "./service";
 // TODO refactor this file
 const scheduler = {

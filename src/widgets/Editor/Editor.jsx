@@ -1,16 +1,15 @@
 import MonacoEditor from "@monaco-editor/react";
 import OpenAI from "../OpenAI";
-import React from "react";
 import { contextToMap } from "../../utils/Parser";
 import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
 import { parser } from "react-nucleoid";
-import { publish } from "@nucleoidjs/synapses";
-
+import { publish } from "@nucleoidjs/react-event";
 import rules from "./rules";
 import { useContext } from "../../context/context";
 import { useStorage } from "@nucleoidjs/webstorage";
 
 import { Backdrop, Box } from "@mui/material";
+import React, { useCallback } from "react";
 
 import * as angularPlugin from "prettier/parser-angular";
 import * as babelPlugin from "prettier/parser-babel";
@@ -183,24 +182,18 @@ const Editor = React.forwardRef((props, ref) => {
       themeStorage === "light" ? "vs-light" : "custom-dark-theme"
     );
 
-    monaco.editor.getModels().forEach((item) => {
-      if (
-        nucFuncs.find(
-          (a) => item._associatedResource.path === a.path + "_MODEL"
-        )
-      ) {
-        item.dispose();
-      }
-    });
     options.globals = {};
     nucFuncs.forEach((item) => {
-      const pth = monaco.Uri.from({ path: item.path + "_MODEL" });
+      const pth = monaco.Uri.from({ path: item.path });
       options.globals[item.path.split("/")[1]] = "writable";
-      monaco.editor.createModel(
-        item.definition,
-        item.ext === "js" ? "javascript" : "typescript",
-        pth
-      );
+
+      if (!monaco.editor.getModel(pth)) {
+        monaco.editor.createModel(
+          item.definition,
+          item.ext === "js" ? "javascript" : "typescript",
+          pth
+        );
+      }
     });
 
     editor.addAction({
@@ -265,11 +258,35 @@ const Editor = React.forwardRef((props, ref) => {
     if (ref) ref.current = editor;
   }
 
+  const clearModels = useCallback(() => {
+    const { monaco, editor } = editorRef?.current || {};
+    const currentModel = editor?.getModel();
+    const NucFunctions = context.nucleoid.functions;
+
+    const functionModels = monaco?.editor
+      .getModels()
+      .filter((model) =>
+        NucFunctions.some(
+          (nucFunc) => model._associatedResource.path === nucFunc.path
+        )
+      );
+
+    monaco?.editor.getModels().forEach((model) => {
+      const isNotFunctionModel = !functionModels?.includes(model);
+      const isNotCurrentModel =
+        currentModel.uri.toString() !== model.uri.toString();
+      if (isNotFunctionModel && isNotCurrentModel) {
+        model.dispose();
+      }
+    });
+  }, [context.nucleoid.functions, editorRef]);
+
   React.useEffect(() => {
     if (editorRef.current) {
       checkFunction() && lint();
+      clearModels();
     }
-  }, [context, checkFunction, api, lint]);
+  }, [context, checkFunction, api, lint, clearModels]);
 
   return (
     <Box sx={{ height: "100%" }}>

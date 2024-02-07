@@ -1,125 +1,154 @@
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Schema from "../Schema/Schema";
+import SchemaEditor from "../SchemaEditor";
 
-import { Box, List, ListItemButton, ListItemText } from "@mui/material";
+import { Box, Divider, Paper, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { TreeItem, TreeView } from "@mui/lab";
 
-const APITypes = ({ apiData }) => {
+const APITypes = ({ tstypes, nuctypes, typesRef }) => {
+  const combinedData = [
+    ...tstypes.map((item) => ({ ...item, isTypeScript: true })),
+    ...nuctypes.map((item) => ({ ...item, isTypeScript: false })),
+  ];
+
   const [selectedType, setSelectedType] = useState(
-    apiData.length > 0 ? apiData[0].name : null
+    combinedData.length > 0 ? combinedData[0].name : null
   );
-  const [expanded, setExpanded] = useState(apiData.map((item) => item.name));
+
   const preloaded = {};
-  apiData.forEach((item) => {
+  combinedData.forEach((item) => {
     preloaded[item.name] = true;
   });
-  const [loaded, setLoaded] = useState(preloaded);
 
-  const handleToggle = (event, nodeIds) => {
-    setExpanded(nodeIds);
-    nodeIds.forEach((nodeId) => {
-      if (!loaded[nodeId]) {
-        setLoaded({ ...loaded, [nodeId]: true });
-      }
-    });
+  const isTypeScriptType = (typeName) => {
+    return tstypes.some((type) => type.name === typeName);
+  };
+  const renderRightPanel = () => {
+    if (!selectedType) return null;
+
+    const useSchemaEditor = !isTypeScriptType(selectedType);
+    const initialData = findSchemaByName(selectedType);
+
+    return (
+      <Box sx={{ width: "100%", height: "100%" }}>
+        {useSchemaEditor ? (
+          <SchemaEditor
+            key={selectedType}
+            ref={typesRef}
+            initialData={initialData}
+          />
+        ) : (
+          <Schema initialData={initialData} />
+        )}
+      </Box>
+    );
   };
 
   const handleTypeSelect = (name) => {
     setSelectedType(name);
   };
 
-  const renderTree = (node, isRef = false, parentPath = "") => {
-    let label;
-    let childNodes = [];
-
-    if (isRef) {
-      const refSchema = findSchemaByName(node.ref);
-      if (refSchema) {
-        childNodes = refSchema.properties;
-        label = `${refSchema.name} (ref)`;
-      } else {
-        label = `${node.name} (ref - not found)`;
-      }
-    } else {
-      switch (node.type) {
-        case "string":
-        case "number":
-          label = `${node.name} (${node.type})`;
-          break;
-        case "object":
-        case "array":
-          label = `${node.name} (${node.type})`;
-          childNodes = node.properties;
-          break;
-        default:
-          label = node.name;
-      }
-    }
-    const nodeId = parentPath ? `${parentPath}.${node.name}` : node.name;
-    const isLoaded = loaded[nodeId];
-    const isPrimitive = node.type === "string" || node.type === "number";
-
-    return (
-      <TreeItem key={nodeId} nodeId={nodeId} label={label}>
-        {isLoaded && !isPrimitive
-          ? childNodes.map((childNode) =>
-              childNode.type === "ref"
-                ? renderTree(childNode, true, nodeId)
-                : renderTree(childNode, false, nodeId)
-            )
-          : !isPrimitive && (
-              <TreeItem nodeId="placeholder" label="Loading..." />
-            )}
-      </TreeItem>
-    );
-  };
-
   return (
-    <Box display="flex" height="100%" sx={{ p: 2, m: 1 }}>
-      <List
-        component="nav"
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        height: "85%",
+        p: 2,
+      }}
+    >
+      <Box
         sx={{
-          width: "50%",
-          bgcolor: "background.paper",
-          borderRadius: 1,
-          overflow: "auto",
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        {apiData.map((item) => (
-          <ListItemButton
-            selected={selectedType === item.name}
-            onClick={() => handleTypeSelect(item.name)}
-            key={item.name}
-          >
-            <ListItemText primary={item.name} />
-          </ListItemButton>
-        ))}
-      </List>
+        <Paper
+          elevation={3}
+          sx={{
+            width: "100%",
+            p: 2,
+            bgcolor: "background.paper",
+            borderRadius: 2,
+            height: "100%",
+            boxSizing: "border-box",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "start",
+            alignItems: "center",
+          }}
+        >
+          {combinedData.map((item) => (
+            <Box
+              key={item.name}
+              onClick={() => handleTypeSelect(item.name)}
+              sx={{
+                padding: "8px 16px",
+                cursor: "pointer",
+                bgcolor:
+                  selectedType === item.name
+                    ? "primary.light"
+                    : "background.paper",
+                "&:hover": {
+                  bgcolor: "primary.light",
+                },
+                width: "100%",
+
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography variant="body1" style={{ textAlign: "left" }}>
+                {item.name}
+              </Typography>
+              {item.isTypeScript && (
+                <span
+                  style={{
+                    marginRight: "4px",
+                    color: "#808080",
+                    fontWeight: "bold",
+                  }}
+                >
+                  TS
+                </span>
+              )}
+            </Box>
+          ))}
+        </Paper>
+      </Box>
+      <Divider orientation="vertical" flexItem sx={{ width: "1rem" }} />
 
       <Box
         sx={{
-          width: "50%",
-          bgcolor: "background.paper",
-          borderRadius: 1,
-          overflowY: "auto",
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        <TreeView
-          aria-label="api data tree"
-          expanded={expanded}
-          onNodeToggle={handleToggle}
-          defaultCollapseIcon={<ExpandMoreIcon />}
-          defaultExpandIcon={<ChevronRightIcon />}
+        <Paper
+          elevation={3}
+          sx={{
+            width: "100%",
+            p: 2,
+            bgcolor: "background.paper",
+            borderRadius: 2,
+            height: "100%",
+            boxSizing: "border-box",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
-          {selectedType && renderTree(findSchemaByName(selectedType))}
-        </TreeView>
+          {renderRightPanel()}
+        </Paper>
       </Box>
     </Box>
   );
 
   function findSchemaByName(name) {
-    const schema = apiData.find((schema) => schema.name === name);
+    const schema = combinedData.find((schema) => schema.name === name);
     return schema ? schema.schema : null;
   }
 };

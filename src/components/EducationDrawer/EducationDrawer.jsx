@@ -2,7 +2,7 @@ import Logo from "../Logo";
 import React from "react";
 import SchoolIcon from "@mui/icons-material/School";
 import service from "../../service";
-import { useEvent } from "@nucleoidjs/synapses";
+import { useEvent } from "@nucleoidjs/react-event";
 import { Box, Drawer, List, ListItem, ListItemButton } from "@mui/material";
 
 const Educations = React.memo(({ educations }) => {

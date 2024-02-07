@@ -1,5 +1,5 @@
 import State from "../state";
-import { publish } from "@nucleoidjs/synapses";
+import { publish } from "@nucleoidjs/react-event";
 import { v4 as uuid } from "uuid";
 
 function contextReducer(state, { type, payload }) {
@@ -326,7 +326,7 @@ function contextReducer(state, { type, payload }) {
 
       const sample = {
         definition: `class ${className} {\n  constructor() {\n  }\n}\n`,
-        ext: "js",
+        ext: "ts",
         params: [],
         path: `/${className}`,
         type: "CLASS",
@@ -402,6 +402,24 @@ function contextReducer(state, { type, payload }) {
       }
       pages.api.dialog.open = false;
 
+      break;
+    }
+    case "UPDATE_API_TYPES": {
+      const { updatedTypes } = payload;
+      const typeIndex = nucleoid.types.findIndex(
+        (type) => type.name === updatedTypes.name
+      );
+      const updatedType = {
+        ...nucleoid.types[typeIndex],
+        schema: {
+          ...updatedTypes,
+        },
+      };
+      if (typeIndex !== -1) {
+        nucleoid.types[typeIndex] = updatedType;
+      } else {
+        nucleoid.types.push(updatedTypes);
+      }
       break;
     }
 

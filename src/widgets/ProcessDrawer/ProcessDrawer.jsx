@@ -3,6 +3,7 @@ import { Chat } from "@mui/icons-material";
 import DownloadIcon from "@mui/icons-material/Download";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import SaveIcon from "@mui/icons-material/Save";
 import SchoolIcon from "@mui/icons-material/School";
@@ -16,7 +17,6 @@ import onboardDispatcher from "../../components/Onboard/onboardDispatcher";
 import scheduler from "../../connectionScheduler";
 import service from "../../service";
 import styles from "./styles";
-
 import { toOpenApi } from "../../adapters/openapi/adapter";
 import { useContext } from "../../context/context";
 import { useLocation } from "react-router-dom";
@@ -32,7 +32,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import React, { useState } from "react"; //eslint-disable-line
-import { publish, useEvent } from "@nucleoidjs/synapses";
+import { publish, useEvent } from "@nucleoidjs/react-event";
 
 const ProcessDrawer = () => {
   const theme = useTheme();
@@ -196,6 +196,23 @@ const ProcessDrawer = () => {
               <GitHubIcon sx={styles.listItem} />
             </ListItemButton>
           </Tooltip>
+          {Settings.debug() && (
+            <Tooltip
+              placement="left"
+              title="Reset and Refresh"
+              sx={{ color: "red" }}
+            >
+              <ListItemButton
+                sx={{ color: "red" }}
+                onClick={() => {
+                  localStorage.clear();
+                  window.location.reload();
+                }}
+              >
+                <RefreshIcon color="error" />
+              </ListItemButton>
+            </Tooltip>
+          )}
         </Box>
       </Drawer>
       <Backdrop
@@ -254,7 +271,7 @@ function ApiButton() {
           functions: context.functions,
         },
       };
-
+      console.log(openapi);
       const { data } = await service.createSandbox(openapi);
       setLoading(false);
       setTimeout(() => {

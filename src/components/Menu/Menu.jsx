@@ -12,7 +12,7 @@ import Status from "../../widgets/Status";
 import { drawerWidth } from "../../config";
 import settings from "../../settings";
 import styles from "./styles";
-import { useEvent } from "@nucleoidjs/synapses";
+import { useEvent } from "@nucleoidjs/react-event";
 import { useTheme } from "@mui/material/styles";
 import { ArrowForwardIos, DensityMedium } from "@mui/icons-material/";
 import { Link } from "react-router-dom"; // eslint-disable-line

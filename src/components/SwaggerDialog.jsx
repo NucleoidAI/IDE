@@ -16,7 +16,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { publish, useEvent } from "@nucleoidjs/synapses";
+import { publish, useEvent } from "@nucleoidjs/react-event";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;

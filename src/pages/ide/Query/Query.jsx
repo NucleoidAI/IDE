@@ -3,7 +3,7 @@ import Page from "../../../components/Page";
 import QueryEditor from "../../../widgets/QueryEditor";
 import QueryResultWidget from "../../../widgets/QueryResultWidget/QueryResultWidget";
 import { useContext } from "../../../context/context";
-import { useEvent } from "@nucleoidjs/synapses";
+import { useEvent } from "@nucleoidjs/react-event";
 import { useNavigate } from "react-router-dom";
 
 import React, { useRef, useState } from "react";

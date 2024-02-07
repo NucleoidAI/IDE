@@ -8,7 +8,7 @@ import axios from "axios";
 import { contextReducer } from "./context/reducer";
 import { contextToMap } from "./utils/Parser";
 import routes from "./routes";
-import { subscribe } from "@nucleoidjs/synapses";
+import { subscribe } from "@nucleoidjs/react-event";
 import { useStorage } from "@nucleoidjs/webstorage";
 import vfs from "./vfs";
 

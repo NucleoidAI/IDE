@@ -13,16 +13,10 @@ const SchemaPropertyEditor = ({
   const [type, setType] = useState(node.type);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
 
-  const handleBlur = () => {
-    if (editMode === "name") {
-      onNameChange(name);
-    } else if (editMode === "type") {
-      onTypeChange(type);
-    }
-    setEditMode(null);
-    setIsSelectOpen(false);
+  const handleNameChange = (newName) => {
+    setName(newName);
+    onNameChange(newName);
   };
-
   const handleTypeChange = (newType) => {
     setType(newType);
     onTypeChange(newType);
@@ -52,11 +46,8 @@ const SchemaPropertyEditor = ({
         <Input
           value={name}
           onChange={(e) => setName(e.target.value)}
-          onBlur={handleBlur}
-          onKeyDown={(e) => e.key === "Enter" && handleBlur()}
           disableUnderline
           disabled={disableNameChange}
-          autoFocus
           fullWidth
           sx={{
             borderBottom: "1px solid lightgray",
@@ -83,9 +74,7 @@ const SchemaPropertyEditor = ({
         >
           <Input
             value={name}
-            onChange={(e) => setName(e.target.value)}
-            onBlur={handleBlur}
-            onKeyDown={(e) => e.key === "Enter" && handleBlur()}
+            onChange={(e) => handleNameChange(e.target.value)}
             disabled={disableNameChange}
             disableUnderline
             autoFocus

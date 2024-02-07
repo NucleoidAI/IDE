@@ -3,7 +3,7 @@ import APITree from "../widgets/APITree";
 import FunctionTree from "../widgets/FunctionTree";
 import Logo from "../components/Logo";
 import ParamView from "../components/ParamView";
-import { publish } from "@nucleoidjs/synapses";
+import { publish } from "@nucleoidjs/react-event";
 import { Grid, Paper } from "@mui/material";
 import React, { useEffect } from "react";
 

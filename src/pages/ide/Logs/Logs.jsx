@@ -3,7 +3,7 @@ import Page from "../../../components/Page";
 import moment from "moment";
 import service from "../../../service";
 import styles from "./styles";
-import { useEvent } from "@nucleoidjs/synapses";
+import { useEvent } from "@nucleoidjs/react-event";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 

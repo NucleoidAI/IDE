@@ -2,7 +2,7 @@ import OpenSandboxButton from "../OpenSandboxButton";
 import OpenSwaggerButton from "../OpenSwaggerButton";
 import React from "react";
 import Settings from "../../settings";
-import { publish, useEvent } from "@nucleoidjs/synapses";
+import { publish, useEvent } from "@nucleoidjs/react-event";
 
 function OpenSwaggerDialog(props) {
   const { small } = props;

@@ -8,7 +8,7 @@ import Fade from "@mui/material/Fade";
 import ResourceMenu from "../ResourceMenu";
 import styles from "./styles";
 import { useContext } from "../../context/context";
-import { useEvent } from "@nucleoidjs/synapses";
+import { useEvent } from "@nucleoidjs/react-event";
 import { useTheme } from "@mui/material/styles";
 
 import {
@@ -255,8 +255,8 @@ export const compile = (
         map[hash] = payload;
 
         const error = errors.find((item) => {
-          const [errPath, errMethod] = item.file.fileName.split(".");
-          if (errPath === path && errMethod === method.method) {
+          const [errPath, errMethod] = item.file.fileName.split(".", 2);
+          if (errPath === method.path && errMethod === method.method) {
             return item;
           } else {
             return null;

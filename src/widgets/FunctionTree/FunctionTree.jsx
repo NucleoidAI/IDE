@@ -7,7 +7,7 @@ import NonExpandableFunctionTreeItem from "../../components/NonExpandableFunctio
 import actions from "../../actions";
 import styles from "./styles";
 import { useContext } from "../../context/context";
-import { useEvent } from "@nucleoidjs/synapses";
+import { useEvent } from "@nucleoidjs/react-event";
 
 import {
   Box,
