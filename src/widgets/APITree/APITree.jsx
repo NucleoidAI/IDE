@@ -8,7 +8,7 @@ import Fade from "@mui/material/Fade";
 import ResourceMenu from "../ResourceMenu";
 import styles from "./styles";
 import { useContext } from "../../context/context";
-import { useEvent } from "@nucleoidjs/synapses";
+import { useEvent } from "@nucleoidjs/react-event";
 import { useTheme } from "@mui/material/styles";
 
 import {

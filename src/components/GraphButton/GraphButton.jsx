@@ -2,7 +2,7 @@ import { Avatar } from "@mui/material";
 import GraphImage from "../../images/graph.png";
 import React from "react";
 import { Box, Fab } from "@mui/material/";
-import { publish, useEvent } from "@nucleoidjs/synapses";
+import { publish, useEvent } from "@nucleoidjs/react-event";
 
 const GraphButton = () => {
   const [state] = useEvent("RUNTIME_CONNECTION", {

@@ -3,7 +3,7 @@ import OpenAI from "../OpenAI";
 import { contextToMap } from "../../utils/Parser";
 import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
 import { parser } from "react-nucleoid";
-import { publish } from "@nucleoidjs/synapses";
+import { publish } from "@nucleoidjs/react-event";
 import rules from "./rules";
 import { useContext } from "../../context/context";
 import { useStorage } from "@nucleoidjs/webstorage";
