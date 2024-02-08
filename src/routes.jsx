@@ -1,5 +1,6 @@
 import API from "./pages/ide/API";
 import Functions from "./pages/ide/Functions";
+import Logic from "./pages/ide/Logic";
 import Logs from "./pages/ide/Logs";
 import Query from "./pages/ide/Query";
 
@@ -37,6 +38,14 @@ const routes = [
     anchor: false,
     element: <Logs />,
     icon: <ViewCarousel />,
+  },
+  {
+    title: "Logic",
+    link: "logic",
+    path: "/:project/logic",
+    anchor: false,
+    element: <Logic />,
+    icon: <></>,
   },
 ];
 
