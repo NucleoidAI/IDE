@@ -54,18 +54,19 @@ function App() {
 
   function project(id) {
     return Promise.all([
-      axios.get(`http://localhost:3001/api/services/${id}/context`),
-      axios.get(`http://localhost:3001/api/services/${id}`),
-    ]).then(([contextResult, serviceResult]) => {
-      const context = contextResult.data.context;
+      axios.get(`http://localhost:3000/api/services/${id}/context`),
+      axios.get(`http://localhost:3000/api/services/${id}`),
+    ]).then(([nucContextResult, serviceResult]) => {
+      const context = nucContextResult.data;
       const service = serviceResult.data;
-      context.get = (prop) => State.resolve(context, prop);
-      context.nucleoid.project = {
+      const nucContext = State.withPages(context);
+      nucContext.get = (prop) => State.resolve(nucContext, prop);
+      nucContext.nucleoid.project = {
         name: service.name,
         id: id,
         description: service.description,
       };
-      return context;
+      return nucContext;
     });
   }
   const InitContext = (context) => {
