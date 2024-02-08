@@ -21,10 +21,21 @@ const addSlashMark = (path) => {
   return path?.substring(path.length - 1) !== "/" ? "/" : "";
 };
 
+const getMode = () => {
+  const id = window.location.pathname.split("/")[2];
+
+  if (id === "sample") {
+    return "sample";
+  } else if (Number(id)) {
+    return "cloud";
+  }
+};
+
 const Path = {
   isUsed,
   split,
   addSlashMark,
+  getMode,
 };
 
 export default Path;
