@@ -21,6 +21,8 @@ import {
 import { darkTheme, lightTheme } from "./theme";
 
 function App() {
+  const [context, setContext] = React.useState();
+
   const prefersLightMode = window.matchMedia(
     "(prefers-color-scheme: light)"
   ).matches;
@@ -66,7 +68,7 @@ function App() {
       return context;
     });
   }
-  const InitVfs = (context) => {
+  const InitContext = (context) => {
     if (!Settings.beta()) {
       Settings.beta(false);
     }
@@ -106,13 +108,13 @@ function App() {
       Settings.landing({ level: 4 });
     }
 
-    const files = contextToMap(context.nucleoid);
-    vfs.init(files);
-
     return context;
   };
 
-  const [context, setContext] = React.useState();
+  const InitVfs = (context) => {
+    const files = contextToMap(context.nucleoid);
+    vfs.init(files);
+  };
 
   React.useEffect(() => {
     async function initContext() {
