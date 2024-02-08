@@ -1,5 +1,7 @@
 import MonacoEditor from "@monaco-editor/react";
 import OpenAI from "../OpenAI";
+import Path from "../../utils/Path";
+import axios from "axios";
 import { contextToMap } from "../../utils/Parser";
 import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
 import { parser } from "react-nucleoid";
@@ -37,6 +39,7 @@ const options = {
 };
 
 const Editor = React.forwardRef((props, ref) => {
+  const mode = Path.getMode();
   const { api, functions, query } = props;
   const editorRef = React.useRef(null);
   const timerRef = React.useRef();
@@ -127,6 +130,14 @@ const Editor = React.forwardRef((props, ref) => {
       key = path + "." + method + ".ts";
     } else {
       key = context.get("pages.functions.selected") + ".ts";
+    }
+
+    if (mode === "cloud") {
+      const {
+        project: { id },
+      } = context.nucleoid;
+      const url = `http://localhost:3000/api/services/${id}/context`;
+      axios.put(url, context.nucleoid);
     }
 
     publish("CONTEXT_CHANGED", {
