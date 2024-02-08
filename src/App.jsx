@@ -1,6 +1,7 @@
 import ContextProvider from "./context/context";
 import EventRegistry from "./EventRegistry";
 import IDE from "./containers/IDE"; // eslint-disable-line
+import Path from "./utils/Path";
 import React from "react";
 import Settings from "./settings";
 import State from "./state";
@@ -69,6 +70,19 @@ function App() {
       return nucContext;
     });
   }
+
+  function sampleProject() {
+    const context = State.withSample();
+    context.get = (prop) => State.resolve(context, prop);
+    context.nucleoid.project = {
+      name: "Sample",
+      id: "Sample",
+      description:
+        "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore",
+    };
+    return context;
+  }
+
   const InitContext = (context) => {
     if (!Settings.beta()) {
       Settings.beta(false);
@@ -118,51 +132,32 @@ function App() {
   };
 
   React.useEffect(() => {
-    async function initContext() {
+    async function InitMode() {
       const id = window.location.pathname.split("/")[2];
+      const mode = Path.getMode();
 
-      let context;
-      try {
-        const serializedState = localStorage.getItem("contextState");
-        if (serializedState) {
-          context = JSON.parse(serializedState);
-          context.get = (prop) => State.resolve(context, prop);
-          return setContext(InitVfs(context));
-        }
-      } catch (error) {
-        console.error("Error loading state from local storage:", error);
+      if (mode === "sample") {
+        const context = sampleProject();
+        InitVfs(context);
+        return setContext(InitContext(context));
       }
+      if (mode === "cloud") {
+        project(id)
+          .then((result) => {
+            InitVfs(result);
+            return setContext(InitContext(result));
+          })
+          .catch(() => {
+            progressElement.classList.add("hidden");
 
-      if (!context) {
-        if (id === "sample") {
-          context = State.withSample();
-          context.get = (prop) => State.resolve(context, prop);
-          context.nucleoid.project = {
-            name: "Sample",
-            id: "Sample",
-            description:
-              "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore",
-          };
-          return setContext(InitVfs(context));
-        }
-
-        if (id) {
-          project(id)
-            .then((result) => {
-              return setContext(InitVfs(result));
-            })
-            .catch(() => {
-              progressElement.classList.add("hidden");
-
-              return setContext("error");
-            });
-        } else {
-          window.location.assign(`${window.location.href}/sample/api`);
-        }
+            return setContext("error");
+          });
+      } else {
+        window.location.assign(`${window.location.origin}/ide/sample/api`);
       }
     }
 
-    initContext();
+    InitMode();
     // eslint-disable-next-line
   }, [progressElement.classList]);
 
