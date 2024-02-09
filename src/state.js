@@ -52,11 +52,9 @@ function withSample() {
   return state;
 }
 
-function withPages(nucContext) {
+function withPages({ api, types, functions }) {
   const state = init();
-  state.nucleoid.api = nucContext.api;
-  state.nucleoid.types = nucContext.types;
-  state.nucleoid.functions = nucContext.functions;
+  state.nucleoid = { api, types, functions };
   return state;
 }
 
