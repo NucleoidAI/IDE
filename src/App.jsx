@@ -83,7 +83,7 @@ function App() {
     return context;
   }
 
-  const InitContext = (context) => {
+  const initContext = (context) => {
     if (!Settings.beta()) {
       Settings.beta(false);
     }
@@ -126,26 +126,26 @@ function App() {
     return context;
   };
 
-  const InitVfs = (context) => {
+  const initVfs = (context) => {
     const files = contextToMap(context.nucleoid);
     vfs.init(files);
   };
 
   React.useEffect(() => {
-    async function InitMode() {
+    async function initMode() {
       const id = window.location.pathname.split("/")[2];
       const mode = Path.getMode();
 
       if (mode === "sample") {
         const context = sampleProject();
-        InitVfs(context);
-        return setContext(InitContext(context));
+        initVfs(context);
+        return setContext(initContext(context));
       }
       if (mode === "cloud") {
         project(id)
           .then((result) => {
-            InitVfs(result);
-            return setContext(InitContext(result));
+            initVfs(result);
+            return setContext(initContext(result));
           })
           .catch(() => {
             progressElement.classList.add("hidden");
@@ -157,7 +157,7 @@ function App() {
       }
     }
 
-    InitMode();
+    initMode();
     // eslint-disable-next-line
   }, [progressElement.classList]);
 
