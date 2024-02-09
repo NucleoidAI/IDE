@@ -6,6 +6,7 @@ import React from "react";
 import Settings from "./settings";
 import State from "./state";
 import axios from "axios";
+import config from "../config";
 import { contextReducer } from "./context/reducer";
 import { contextToMap } from "./utils/Parser";
 import routes from "./routes";
@@ -55,8 +56,8 @@ function App() {
 
   function project(id) {
     return Promise.all([
-      axios.get(`http://localhost:3000/api/services/${id}/context`),
-      axios.get(`http://localhost:3000/api/services/${id}`),
+      axios.get(`${config.api}/api/services/${id}/context`),
+      axios.get(`${config.api}/api/services/${id}`),
     ]).then(([nucContextResult, serviceResult]) => {
       const context = nucContextResult.data;
       const service = serviceResult.data;
