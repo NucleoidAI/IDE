@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   TextField,
@@ -7,6 +7,8 @@ import {
   useTheme,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import { useEvent } from "@nucleoidjs/react-event";
+import useChat from "./useChat";
 
 const ChatDisplay = ({ chat }) => {
   const theme = useTheme();
@@ -24,7 +26,7 @@ const ChatDisplay = ({ chat }) => {
         backgroundColor: theme.palette.background.paper,
       }}
     >
-      {chat.messages.map((message, index) => (
+      {chat?.messages.map((message, index) => (
         <Box
           key={index}
           sx={{
@@ -58,25 +60,15 @@ const ChatDisplay = ({ chat }) => {
 
 const ChatMainArea = () => {
   const theme = useTheme();
+  const [chatId] = useEvent("CHAT_ID_CHANGED", 0);
   const [inputValue, setInputValue] = useState("");
-  const [chat, setChat] = useState({
-    id: "1",
-    title: "Chat with GPT",
-    messages: [
-      { sender: "ai", text: "Hello! How can I assist you today?" },
-      { sender: "human", text: "Can you tell me more about React?" },
-      {
-        sender: "ai",
-        text: "Certainly! React is a JavaScript library for building user interfaces.",
-      },
-    ],
-  });
+  const chat = useChat(chatId);
 
   const handleSendMessage = (event) => {
     event.preventDefault();
     if (inputValue.trim()) {
       const newMessage = { sender: "human", text: inputValue };
-      setChat({ ...chat, messages: [...chat.messages, newMessage] });
+
       setInputValue("");
     }
   };

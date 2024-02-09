@@ -8,10 +8,12 @@ import {
 } from "@mui/material";
 import Settings from "../../components/Settings";
 import Logo from "../../components/Logo";
+import { publish } from "@nucleoidjs/react-event";
 
 const ChatHistory = ({ chats }) => {
   const theme = useTheme();
   const handleChatClick = (chatId) => {
+    publish("CHAT_ID_CHANGED", chatId);
     console.debug(`Chat clicked: ${chatId}`);
   };
 
@@ -44,9 +46,10 @@ const ChatHistory = ({ chats }) => {
 const ChatSideBar = () => {
   const theme = useTheme();
   const chatData = [
-    { chatId: "1", chatTitle: "What is the circumference of the Earth?" },
-    { chatId: "2", chatTitle: "How to center a div?" },
-    { chatId: "3", chatTitle: "What do blind people see in their dreams?" },
+    { chatId: "0", chatTitle: "What is the circumference of the Earth?" },
+    { chatId: "1", chatTitle: "How to center a div?" },
+    { chatId: "2", chatTitle: "What do blind people see in their dreams?" },
+    { chatId: "3", chatTitle: "Problem of criterion" },
   ];
 
   return (
