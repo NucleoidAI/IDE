@@ -3,80 +3,134 @@ import { useState, useEffect } from "react";
 const mockChats = [
   {
     id: "0",
+    title: "Circumference of the Earth",
     messages: [
       {
-        sender: "ai",
-        text: "The Earth's circumference is about 40,075 kilometers.",
+        sender: "human",
+        text: "Can anyone tell me the Earth's circumference?",
       },
-      { sender: "human", text: "That's interesting! How was this measured?" },
       {
         sender: "ai",
-        text: "It was first accurately measured by Eratosthenes in 240 BC.",
+        text: "Absolutely, the Earth's circumference measures approximately 40,075 kilometers.",
       },
-      { sender: "human", text: "Did he use any special tools?" },
+      {
+        sender: "human",
+        text: "Wow, that's vast! How could someone possibly measure that?",
+      },
       {
         sender: "ai",
-        text: "Yes, he used the shadows cast by sticks and the distance between two cities to make his calculations.",
+        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
+      },
+      {
+        sender: "human",
+        text: "Genius indeed! Did his method involve a lot of math?",
+      },
+      {
+        sender: "ai",
+        text: "Yes, it required understanding of geometry and the concept of angles. His calculation was remarkably accurate for his time.",
+      },
+      {
+        sender: "human",
+        text: "Incredible to think about the brains some people have!",
       },
     ],
   },
   {
     id: "1",
+    title: "Centering a Div",
     messages: [
-      { sender: "human", text: "Why is centering a div so complicated?" },
+      {
+        sender: "human",
+        text: "Why does centering a div feel like rocket science?",
+      },
       {
         sender: "ai",
-        text: "It's a rite of passage for many front-end developers.",
+        text: "It's a common challenge, but CSS Flexbox makes it much easier: use `display: flex; justify-content: center; align-items: center;`.",
       },
-      { sender: "human", text: "So, what's the easiest way to center a div?" },
+      {
+        sender: "human",
+        text: "Flexbox to the rescue again! Why isn't this the first thing they teach in CSS 101?",
+      },
       {
         sender: "ai",
-        text: "Using CSS Flexbox: display: flex; justify-content: center; align-items: center;",
+        text: "It should be! Flexbox and CSS Grid are transformative for layout design, making these tasks straightforward.",
       },
-      { sender: "human", text: "Flexbox really is a game-changer, isn't it?" },
+      {
+        sender: "human",
+        text: "Guess it's time to dive deeper into Flexbox. Any resources you recommend?",
+      },
+      {
+        sender: "ai",
+        text: "Absolutely, the CSS-Tricks guide to Flexbox is comprehensive and very beginner-friendly.",
+      },
+      {
+        sender: "human",
+        text: "Thanks! I'll check it out and conquer that div once and for all!",
+      },
     ],
   },
   {
     id: "2",
+    title: "Blind People's Dreams",
     messages: [
+      { sender: "human", text: "How do blind people experience dreams?" },
       {
         sender: "ai",
-        text: "Blind people can dream through other senses like sound, smell, and touch.",
-      },
-      { sender: "human", text: "Do they see visual images in their dreams?" },
-      {
-        sender: "ai",
-        text: "Those who weren't born blind may see images, but those born blind dream with non-visual senses.",
+        text: "Individuals who are blind dream through their other senses like sound, smell, and touch. Those who have lost their sight may have visual dreams, but those born blind experience dreams without visual images.",
       },
       {
         sender: "human",
-        text: "That's quite profound. It's like a different way of seeing the world.",
+        text: "That's quite a revelation. Does it mean their dream world is just as rich?",
       },
       {
         sender: "ai",
-        text: "Exactly, dreams are subjective and can encompass more than just the visual.",
+        text: "Absolutely. Their dreams are rich with sensory experiences that compensate for the lack of visuals, offering a vivid and meaningful dreamscape.",
+      },
+      {
+        sender: "human",
+        text: "So in a way, their perception of reality and dreams could be more intense than seeing people?",
+      },
+      {
+        sender: "ai",
+        text: "Potentially, yes. The brain adapts by enhancing the other senses, which can make those experiences more intense and detailed.",
+      },
+      {
+        sender: "human",
+        text: "Mind-blowing. It really opens up a new perspective on sensory experience and adaptation.",
       },
     ],
   },
   {
     id: "3",
+    title: "The Problem of Criterion",
     messages: [
-      { sender: "human", text: "What's the problem of criterion?" },
-      {
-        sender: "ai",
-        text: "It's a philosophical issue about the starting points of knowledge. How can we know without knowing the criterion for knowledge?",
-      },
       {
         sender: "human",
-        text: "So, it's like asking which came first, the chicken or the egg?",
+        text: "I stumbled upon the 'problem of criterion'. Can you shed some light on it?",
       },
       {
         sender: "ai",
-        text: "In a way, yes. It challenges us to consider how we justify what we claim to know.",
+        text: "Certainly! The problem of criterion is a philosophical puzzle concerning our starting points for knowledge. It asks how we can know anything without first knowing the criteria for what counts as knowledge.",
       },
       {
         sender: "human",
-        text: "Philosophy always leaves me with more questions than answers.",
+        text: "Sounds like a chicken and egg problem. How do philosophers approach solving it?",
+      },
+      {
+        sender: "ai",
+        text: "It's indeed similar to the chicken and egg problem. Philosophers approach it through various theories, but no single solution is universally accepted. It's about challenging and understanding the foundations of our knowledge.",
+      },
+      {
+        sender: "human",
+        text: "That must lead to some heated debates. Any famous philosophers I should look into for more insights?",
+      },
+      {
+        sender: "ai",
+        text: "Absolutely, you might find the works of Chisholm, Sextus Empiricus, and Laurence BonJour particularly illuminating on this topic.",
+      },
+      {
+        sender: "human",
+        text: "Thanks! Philosophy really has a way of making you question everything you thought you knew.",
       },
     ],
   },
