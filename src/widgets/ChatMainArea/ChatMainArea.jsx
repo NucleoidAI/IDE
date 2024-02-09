@@ -21,7 +21,7 @@ const ChatDisplay = ({ chat }) => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        backgroundColor: theme.palette.custom.darkDialog,
+        backgroundColor: theme.palette.background.paper,
       }}
     >
       {chat.messages.map((message, index) => (
@@ -36,7 +36,7 @@ const ChatDisplay = ({ chat }) => {
               message.sender === "ai"
                 ? theme.palette.custom.darkDialog
                 : theme.palette.custom.darkDialogPanel,
-            color: theme.palette.custom.textGray,
+            color: (theme) => theme.palette.grey[200],
             textAlign: "left",
             display: "flex",
             flexDirection: "column",
@@ -92,9 +92,7 @@ const ChatMainArea = () => {
         flexDirection: "column",
         height: "100%",
         width: "100%",
-        backgroundColor: theme.palette.custom.darkDialog,
-        color: theme.palette.custom.textGray,
-
+        backgroundColor: theme.palette.background.paper,
         paddingBottom: "10px",
       }}
     >
@@ -106,7 +104,7 @@ const ChatMainArea = () => {
           display: "flex",
           justifyContent: "center",
           padding: "10px",
-          backgroundColor: theme.palette.custom.darkDialog,
+          backgroundColor: theme.palette.background.paper,
         }}
       >
         <Box
@@ -118,8 +116,8 @@ const ChatMainArea = () => {
             borderRadius: "20px",
             padding: "10px",
             border: `1px solid `,
-            borderColor: (theme) => theme.palette.grey[400],
-            backgroundColor: theme.palette.custom.darkDialog,
+            borderColor: theme.palette.grey[400],
+            backgroundColor: theme.palette.background.paper,
           }}
         >
           <TextField
