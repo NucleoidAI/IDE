@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-} from "@mui/material";
+import { Box, List, ListItemButton, ListItemText } from "@mui/material";
 import Settings from "../../components/Settings";
 import Logo from "../../components/Logo";
 
@@ -39,7 +33,7 @@ const ChatHistory = ({ chats }) => {
 
 const ChatSideBar = () => {
   const chatData = [
-    { chatId: "1", chatTitle: "What is the circumfrance of the Earth?" },
+    { chatId: "1", chatTitle: "What is the circumference of the Earth?" },
     { chatId: "2", chatTitle: "How to center a div?" },
     { chatId: "3", chatTitle: "What do blind people see in their dreams?" },
   ];

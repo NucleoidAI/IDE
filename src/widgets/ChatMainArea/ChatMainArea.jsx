@@ -1,19 +1,27 @@
 import React, { useState } from "react";
-import { Box, TextField, IconButton, Typography } from "@mui/material";
+import {
+  Box,
+  TextField,
+  IconButton,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 
 const ChatDisplay = ({ chat }) => {
+  const theme = useTheme();
+
   return (
     <Box
       sx={{
         overflow: "auto",
-
         flex: 1,
         padding: "20px",
-        color: "white",
+        color: theme.palette.custom.textGray,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        backgroundColor: theme.palette.custom.darkDialog,
       }}
     >
       {chat.messages.map((message, index) => (
@@ -24,8 +32,11 @@ const ChatDisplay = ({ chat }) => {
             marginBottom: "20px",
             padding: "10px",
             borderRadius: "10px",
-            backgroundColor: message.sender === "ai" ? "#333" : "#555",
-            color: "white",
+            backgroundColor:
+              message.sender === "ai"
+                ? theme.palette.custom.darkDialog
+                : theme.palette.custom.darkDialogPanel,
+            color: theme.palette.custom.textGray,
             textAlign: "left",
             display: "flex",
             flexDirection: "column",
@@ -46,6 +57,7 @@ const ChatDisplay = ({ chat }) => {
 };
 
 const ChatMainArea = () => {
+  const theme = useTheme();
   const [inputValue, setInputValue] = useState("");
   const [chat, setChat] = useState({
     id: "1",
@@ -80,8 +92,8 @@ const ChatMainArea = () => {
         flexDirection: "column",
         height: "100%",
         width: "100%",
-        backgroundColor: "#121212",
-        color: "white",
+        backgroundColor: theme.palette.custom.darkDialog,
+        color: theme.palette.custom.textGray,
 
         paddingBottom: "10px",
       }}
@@ -94,7 +106,7 @@ const ChatMainArea = () => {
           display: "flex",
           justifyContent: "center",
           padding: "10px",
-          backgroundColor: "#121212",
+          backgroundColor: theme.palette.custom.darkDialog,
         }}
       >
         <Box
@@ -103,10 +115,11 @@ const ChatMainArea = () => {
             alignItems: "center",
             justifyContent: "center",
             width: "70%",
-            border: "1px solid white",
             borderRadius: "20px",
             padding: "10px",
-            backgroundColor: "#121212",
+            border: `1px solid `,
+            borderColor: (theme) => theme.palette.grey[400],
+            backgroundColor: theme.palette.custom.darkDialog,
           }}
         >
           <TextField
@@ -117,10 +130,16 @@ const ChatMainArea = () => {
             onChange={handleInputChange}
             multiline
             maxRows={4}
-            InputProps={{ disableUnderline: true }}
-            sx={{ flexGrow: 1, ".MuiInputBase-input": { color: "white" } }}
+            InputProps={{
+              disableUnderline: true,
+              style: { color: (theme) => theme.palette.grey[600] },
+            }}
+            sx={{ flexGrow: 1 }}
           />
-          <IconButton type="submit" sx={{ color: "white", ml: 1 }}>
+          <IconButton
+            type="submit"
+            sx={{ color: (theme) => theme.palette.grey[600], ml: 1 }}
+          >
             <SendIcon />
           </IconButton>
         </Box>
