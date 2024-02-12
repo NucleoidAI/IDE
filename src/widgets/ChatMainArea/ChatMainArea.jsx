@@ -4,14 +4,19 @@ import {
   TextField,
   IconButton,
   Typography,
+  Tooltip,
+  Fab,
   useTheme,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import ProjectIcon from "@mui/icons-material/Construction"; // Assuming this is your "convert to project" icon
+
 import { useEvent } from "@nucleoidjs/react-event";
 import useChat from "./useChat";
 import Prism from "prismjs";
 import "prismjs/themes/prism-twilight.css";
 import "prismjs/components/prism-typescript";
+import "./ChatMainArea.css";
 
 const ChatDisplay = ({ chat }) => {
   const theme = useTheme();
@@ -82,6 +87,106 @@ const ChatDisplay = ({ chat }) => {
   );
 };
 
+const MessageInput = ({ inputValue, setInputValue, handleSendMessage }) => {
+  const theme = useTheme();
+  const [showProjectIcon, setShowProjectIcon] = useState(false);
+  const [playAnimation, setPlayAnimation] = useState(true);
+
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleProjectIconClick = () => {
+    console.log("Project icon clicked");
+  };
+
+  const handleHover = () => {
+    setPlayAnimation(false);
+  };
+
+  const onSend = (m) => {
+    handleSendMessage(m);
+    setShowProjectIcon(!showProjectIcon);
+    setPlayAnimation(true);
+  };
+
+  return (
+    <Box
+      component="form"
+      onSubmit={onSend}
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        padding: "10px",
+        backgroundColor: theme.palette.background.paper,
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "70%",
+          borderRadius: "20px",
+          padding: "10px",
+          border: `1px solid `,
+          borderColor: theme.palette.grey[400],
+          backgroundColor: theme.palette.background.paper,
+        }}
+      >
+        <TextField
+          fullWidth
+          variant="standard"
+          placeholder="Type your message here..."
+          value={inputValue}
+          onChange={handleInputChange}
+          multiline
+          maxRows={4}
+          InputProps={{
+            disableUnderline: true,
+            style: { color: theme.palette.grey[600] },
+          }}
+          sx={{ flexGrow: 1 }}
+        />
+        <IconButton
+          type="submit"
+          sx={{ color: theme.palette.grey[600], ml: 1 }}
+        >
+          <SendIcon />
+        </IconButton>
+        {showProjectIcon && (
+          <Tooltip
+            title={
+              <Typography sx={{ fontSize: "1rem" }}>
+                Convert to Project
+              </Typography>
+            }
+            placement="top"
+          >
+            <Fab
+              color="primary"
+              size="small"
+              onClick={handleProjectIconClick}
+              onMouseEnter={handleHover}
+              sx={{
+                position: "absolute",
+                right: "12%",
+                backgroundColor: theme.palette.grey[600],
+
+                animation: playAnimation
+                  ? "pulseAnimationWithColor 2s infinite"
+                  : "none",
+              }}
+            >
+              <ProjectIcon />
+            </Fab>
+          </Tooltip>
+        )}
+      </Box>
+    </Box>
+  );
+};
+
 const ChatMainArea = () => {
   const theme = useTheme();
   const [chatId] = useEvent("CHAT_ID_CHANGED", 0);
@@ -96,10 +201,6 @@ const ChatMainArea = () => {
     }
   };
 
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value);
-  };
-
   return (
     <Box
       sx={{
@@ -112,51 +213,11 @@ const ChatMainArea = () => {
       }}
     >
       <ChatDisplay chat={chat} />
-      <Box
-        component="form"
-        onSubmit={handleSendMessage}
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          padding: "10px",
-          backgroundColor: theme.palette.background.paper,
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "70%",
-            borderRadius: "20px",
-            padding: "10px",
-            border: `1px solid `,
-            borderColor: theme.palette.grey[400],
-            backgroundColor: theme.palette.background.paper,
-          }}
-        >
-          <TextField
-            fullWidth
-            variant="standard"
-            placeholder="Type your message here..."
-            value={inputValue}
-            onChange={handleInputChange}
-            multiline
-            maxRows={4}
-            InputProps={{
-              disableUnderline: true,
-              style: { color: (theme) => theme.palette.grey[600] },
-            }}
-            sx={{ flexGrow: 1 }}
-          />
-          <IconButton
-            type="submit"
-            sx={{ color: (theme) => theme.palette.grey[600], ml: 1 }}
-          >
-            <SendIcon />
-          </IconButton>
-        </Box>
-      </Box>
+      <MessageInput
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+        handleSendMessage={handleSendMessage}
+      />
     </Box>
   );
 };
