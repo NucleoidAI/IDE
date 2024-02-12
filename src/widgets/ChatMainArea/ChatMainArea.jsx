@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   Box,
   TextField,
+  Button,
   IconButton,
   Typography,
   Tooltip,
@@ -187,6 +188,67 @@ const MessageInput = ({ inputValue, setInputValue, handleSendMessage }) => {
   );
 };
 
+const suggestions = [
+  "Define a new rule for user authentication",
+  "Test the logic for the shopping cart discount",
+  "Create a charter for managing state",
+  "Brainstorm edge cases for the payment processing workflow",
+];
+
+const SuggestionsOverlay = ({ setInputValue }) => {
+  const theme = useTheme();
+
+  const handleSuggestionClick = (suggestion) => {
+    setInputValue(suggestion);
+  };
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexWrap: "wrap",
+        justifyContent: "center",
+        position: "absolute",
+        bottom: "10%",
+        width: "100%",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          width: "70%",
+          boxSizing: "border-box",
+          padding: "10px",
+        }}
+      >
+        {suggestions.map((suggestion, index) => (
+          <Box key={index} sx={{ width: "50%", height: "50%", padding: "5px" }}>
+            <Button
+              variant="outlined"
+              sx={{
+                margin: "5px 0",
+                backgroundColor: theme.palette.background.paper,
+                borderColor: theme.palette.grey[400],
+                textAlign: "left",
+                justifyContent: "flex-start",
+                borderRadius: "10px",
+                textTransform: "none",
+                fontSize: "0.75rem",
+                width: "100%",
+                height: "100%",
+              }}
+              onClick={() => handleSuggestionClick(suggestion)}
+            >
+              {suggestion}
+            </Button>
+          </Box>
+        ))}
+      </Box>
+    </Box>
+  );
+};
+
 const ChatMainArea = () => {
   const theme = useTheme();
   const [chatId] = useEvent("CHAT_ID_CHANGED", 0);
@@ -200,6 +262,7 @@ const ChatMainArea = () => {
       setInputValue("");
     }
   };
+  const [showSuggestions, setShowSuggestions] = useState(true);
 
   return (
     <Box
@@ -213,6 +276,7 @@ const ChatMainArea = () => {
       }}
     >
       <ChatDisplay chat={chat} />
+      <SuggestionsOverlay setInputValue={setInputValue} />
       <MessageInput
         inputValue={inputValue}
         setInputValue={setInputValue}
