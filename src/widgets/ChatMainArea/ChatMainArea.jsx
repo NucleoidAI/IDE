@@ -9,9 +9,16 @@ import {
 import SendIcon from "@mui/icons-material/Send";
 import { useEvent } from "@nucleoidjs/react-event";
 import useChat from "./useChat";
+import Prism from "prismjs";
+import "prismjs/themes/prism-twilight.css";
+import "prismjs/components/prism-typescript";
 
 const ChatDisplay = ({ chat }) => {
   const theme = useTheme();
+
+  useEffect(() => {
+    Prism.highlightAll();
+  }, [chat]);
 
   return (
     <Box
@@ -19,11 +26,11 @@ const ChatDisplay = ({ chat }) => {
         overflow: "auto",
         flex: 1,
         padding: "20px",
-        color: theme.palette.custom.textGray,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         backgroundColor: theme.palette.background.paper,
+        userSelect: "text",
       }}
     >
       {chat?.messages.map((message, index) => (
@@ -34,24 +41,41 @@ const ChatDisplay = ({ chat }) => {
             marginBottom: "20px",
             padding: "10px",
             borderRadius: "10px",
-            backgroundColor:
-              message.sender === "ai"
-                ? theme.palette.custom.darkDialog
-                : theme.palette.custom.darkDialogPanel,
-            color: (theme) => theme.palette.grey[200],
             textAlign: "left",
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-start",
+            userSelect: "text",
           }}
         >
           <Typography
             variant="subtitle2"
-            sx={{ fontWeight: "bold", marginBottom: "8px" }}
+            sx={{ fontWeight: "bold", marginBottom: "8px", userSelect: "text" }}
           >
             {message.sender.toUpperCase()}
           </Typography>
-          <Typography variant="body2">{message.text}</Typography>
+          <Typography variant="body1" sx={{ userSelect: "text" }}>
+            {message.text}
+          </Typography>
+          {message.code && (
+            <Box
+              component="pre"
+              sx={{
+                overflowX: "auto",
+                justifyContent: "center",
+                marginTop: "8px",
+                backgroundColor: theme.palette.grey[100],
+                borderRadius: "5px",
+                padding: "10px",
+                userSelect: "text",
+                width: "100%",
+              }}
+            >
+              <Box component="code" className="language-typescript">
+                {message.code}
+              </Box>
+            </Box>
+          )}
         </Box>
       ))}
     </Box>
@@ -68,7 +92,6 @@ const ChatMainArea = () => {
     event.preventDefault();
     if (inputValue.trim()) {
       const newMessage = { sender: "human", text: inputValue };
-
       setInputValue("");
     }
   };
