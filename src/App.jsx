@@ -1,10 +1,12 @@
 import ContextProvider from "./context/context";
 import EventRegistry from "./EventRegistry";
 import IDE from "./containers/IDE"; // eslint-disable-line
+import Path from "./utils/Path";
 import React from "react";
 import Settings from "./settings";
 import State from "./state";
 import axios from "axios";
+import config from "../config";
 import { contextReducer } from "./context/reducer";
 import { contextToMap } from "./utils/Parser";
 import routes from "./routes";
@@ -21,6 +23,8 @@ import {
 import { darkTheme, lightTheme } from "./theme";
 
 function App() {
+  const [context, setContext] = React.useState();
+
   const prefersLightMode = window.matchMedia(
     "(prefers-color-scheme: light)"
   ).matches;
@@ -52,21 +56,35 @@ function App() {
 
   function project(id) {
     return Promise.all([
-      axios.get(`http://localhost:3001/api/services/${id}/context`),
-      axios.get(`http://localhost:3001/api/services/${id}`),
-    ]).then(([contextResult, serviceResult]) => {
-      const context = contextResult.data.context;
+      axios.get(`${config.api}/api/services/${id}/context`),
+      axios.get(`${config.api}/api/services/${id}`),
+    ]).then(([nucContextResult, serviceResult]) => {
+      const context = nucContextResult.data;
       const service = serviceResult.data;
-      context.get = (prop) => State.resolve(context, prop);
-      context.nucleoid.project = {
+      const nucContext = State.withPages(context);
+      nucContext.get = (prop) => State.resolve(nucContext, prop);
+      nucContext.nucleoid.project = {
         name: service.name,
         id: id,
         description: service.description,
       };
-      return context;
+      return nucContext;
     });
   }
-  const InitVfs = (context) => {
+
+  function sampleProject() {
+    const context = State.withSample();
+    context.get = (prop) => State.resolve(context, prop);
+    context.nucleoid.project = {
+      name: "Sample",
+      id: "Sample",
+      description:
+        "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore",
+    };
+    return context;
+  }
+
+  const initContext = (context) => {
     if (!Settings.beta()) {
       Settings.beta(false);
     }
@@ -106,60 +124,41 @@ function App() {
       Settings.landing({ level: 4 });
     }
 
-    const files = contextToMap(context.nucleoid);
-    vfs.init(files);
-
     return context;
   };
 
-  const [context, setContext] = React.useState();
+  const initVfs = (context) => {
+    const files = contextToMap(context.nucleoid);
+    vfs.init(files);
+  };
 
   React.useEffect(() => {
-    async function initContext() {
+    async function initMode() {
       const id = window.location.pathname.split("/")[2];
+      const mode = Path.getMode();
 
-      let context;
-      try {
-        const serializedState = localStorage.getItem("contextState");
-        if (serializedState) {
-          context = JSON.parse(serializedState);
-          context.get = (prop) => State.resolve(context, prop);
-          return setContext(InitVfs(context));
-        }
-      } catch (error) {
-        console.error("Error loading state from local storage:", error);
+      if (mode === "sample") {
+        const context = sampleProject();
+        initVfs(context);
+        return setContext(initContext(context));
       }
+      if (mode === "cloud") {
+        project(id)
+          .then((result) => {
+            initVfs(result);
+            return setContext(initContext(result));
+          })
+          .catch(() => {
+            progressElement.classList.add("hidden");
 
-      if (!context) {
-        if (id === "sample") {
-          context = State.withSample();
-          context.get = (prop) => State.resolve(context, prop);
-          context.nucleoid.project = {
-            name: "Sample",
-            id: "Sample",
-            description:
-              "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore",
-          };
-          return setContext(InitVfs(context));
-        }
-
-        if (id) {
-          project(id)
-            .then((result) => {
-              return setContext(InitVfs(result));
-            })
-            .catch(() => {
-              progressElement.classList.add("hidden");
-
-              return setContext("error");
-            });
-        } else {
-          window.location.assign(`${window.location.href}/sample/api`);
-        }
+            return setContext("error");
+          });
+      } else {
+        window.location.assign(`${window.location.origin}/ide/sample/api`);
       }
     }
 
-    initContext();
+    initMode();
     // eslint-disable-next-line
   }, [progressElement.classList]);
 
