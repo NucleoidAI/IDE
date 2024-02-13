@@ -145,7 +145,7 @@ const Editor = React.forwardRef((props, ref) => {
       // TODO Optimize preparing files
       files: contextToMap(context.nucleoid).filter((item) => item.key === key),
     });
-  }, [api, context]);
+  }, [api, context, mode]);
 
   function getLineAndColumn(text, position) {
     const textUpToPosition = text.slice(0, position);
