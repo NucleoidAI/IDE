@@ -52,6 +52,12 @@ function withSample() {
   return state;
 }
 
+function withPages({ api, types, functions }) {
+  const state = init();
+  state.nucleoid = { api, types, functions };
+  return state;
+}
+
 const resolve = (state, param) => {
   try {
     const parts = param.split(".");
@@ -62,5 +68,5 @@ const resolve = (state, param) => {
   }
 };
 
-const State = { init, copy, withSample, resolve };
+const State = { init, copy, withSample, resolve, withPages };
 export default State;
