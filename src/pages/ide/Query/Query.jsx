@@ -6,7 +6,7 @@ import { useContext } from "../../../context/context";
 import { useEvent } from "@nucleoidjs/react-event";
 import { useNavigate } from "react-router-dom";
 
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 
 function Query() {
   const [state] = useContext();
@@ -24,8 +24,6 @@ function Query() {
     }
   }, [runtimeConnection, navigate]);
 
-  const editorRef = useRef(null);
-
   const [loading, setLoading] = useState(false);
 
   const handleSetOutputRatio = (ratio) => {
@@ -39,11 +37,7 @@ function Query() {
       <HorizontalSplitLayout
         outputRatio={outputRatio}
         topSection={
-          <QueryEditor
-            loading={loading}
-            setLoading={setLoading}
-            ref={editorRef}
-          />
+          <QueryEditor loading={loading} setLoading={setLoading} query />
         }
         bottomSection={
           <QueryResultWidget

@@ -4,14 +4,14 @@ import React from "react";
 import service from "../..../../../service";
 import styles from "../../layouts/HorizontalSplitLayout/styles";
 import { useContext } from "../../context/context";
-import { useEffect } from "react";
 import { useMonaco } from "@monaco-editor/react";
 
 import { Fab, Grid } from "@mui/material";
+import { useEffect, useRef } from "react";
 
 const QueryEditor = React.forwardRef((props, ref) => {
   const monaco = useMonaco();
-
+  const editorRef = useRef(null);
   const [state, distpach] = useContext();
   const { setLoading } = props;
 
