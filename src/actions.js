@@ -15,6 +15,8 @@ const actions = {
   removeSchemaProperty: "REMOVE_SCHEMA_PROPERTY",
   addParam: "ADD_PARAM",
   removeParam: "REMOVE_PARAM",
+  openLogicDialog: "OPEN_LOGIC_DIALOG",
+  closeLogicDialog: "CLOSE_LOGIC_DIALOG",
 };
 
 export default actions;
