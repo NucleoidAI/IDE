@@ -174,6 +174,30 @@ function contextReducer(state, { type, payload }) {
       break;
     }
 
+    case "OPEN_LOGIC_DIALOG": {
+      pages.logic.dialog.open = true;
+      break;
+    }
+
+    case "CLOSE_LOGIC_DIALOG": {
+      pages.logic.dialog.open = false;
+      break;
+    }
+
+    case "SAVE_LOGIC_DIALOG": {
+      const { description, summary, definition } = payload;
+      const declarations = nucleoid.declarations;
+
+      declarations.push({
+        description,
+        summary,
+        definition,
+      });
+      pages.logic.selected = declarations[declarations.length - 1];
+
+      break;
+    }
+
     case "SAVE_FUNCTION_DIALOG": {
       const { path, type, definition, params, ext } = payload;
       const functions = nucleoid.functions;
