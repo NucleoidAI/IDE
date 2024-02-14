@@ -75,17 +75,19 @@ const ChatSideBar = () => {
         <Logo title={"Chat"} />
       </Box>
 
-      <Box sx={{ flexGrow: 0, my: 2 }}>
-        <Divider sx={{ my: 2 }} />
-        <Button
-          variant="outlined"
-          startIcon={<AddIcon />}
+      <Divider sx={{ my: 2 }} />
+      <Box sx={{ flexGrow: 0 }}>
+        <ListItemButton
           onClick={handleCreateNewChat}
-          fullWidth
+          sx={{ mb: 2, paddingX: 0 }}
         >
-          Create New Chat
-        </Button>
+          <ListItemText primary="Create New Chat" />
+          <Icon>
+            <AddIcon />
+          </Icon>
+        </ListItemButton>
       </Box>
+
       <Box sx={{ flexGrow: 1, overflowY: "auto" }}>
         <ChatHistory chats={chatData} />
       </Box>

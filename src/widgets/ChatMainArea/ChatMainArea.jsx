@@ -10,7 +10,8 @@ import {
   useTheme,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import ProjectIcon from "@mui/icons-material/Construction"; // Assuming this is your "convert to project" icon
+import ProjectIcon from "@mui/icons-material/Construction";
+import codeImage from "../../images/code.png";
 
 import { useEvent } from "@nucleoidjs/react-event";
 import useChat from "./useChat";
@@ -131,8 +132,8 @@ const MessageInput = ({ inputValue, setInputValue, handleSendMessage }) => {
           borderRadius: "20px",
           padding: "10px",
           border: `1px solid `,
-          borderColor: theme.palette.grey[400],
-          backgroundColor: theme.palette.background.paper,
+          borderColor: theme.palette.grey[500],
+          backgroundColor: theme.palette.background.default,
         }}
       >
         <TextField
@@ -145,16 +146,9 @@ const MessageInput = ({ inputValue, setInputValue, handleSendMessage }) => {
           maxRows={4}
           InputProps={{
             disableUnderline: true,
-            style: { color: theme.palette.grey[600] },
           }}
           sx={{ flexGrow: 1 }}
         />
-        <IconButton
-          type="submit"
-          sx={{ color: theme.palette.grey[600], ml: 1 }}
-        >
-          <SendIcon />
-        </IconButton>
         {showProjectIcon && (
           <Tooltip
             title={
@@ -170,8 +164,6 @@ const MessageInput = ({ inputValue, setInputValue, handleSendMessage }) => {
               onClick={handleProjectIconClick}
               onMouseEnter={handleHover}
               sx={{
-                position: "absolute",
-                right: "12%",
                 backgroundColor: theme.palette.grey[600],
 
                 animation: playAnimation
@@ -179,10 +171,16 @@ const MessageInput = ({ inputValue, setInputValue, handleSendMessage }) => {
                   : "none",
               }}
             >
-              <ProjectIcon />
+              <img src={codeImage} alt={"Code"} style={{ width: "100%" }} />{" "}
             </Fab>
           </Tooltip>
         )}
+        <IconButton
+          type="submit"
+          sx={{ color: theme.palette.grey[500], ml: 1 }}
+        >
+          <SendIcon />
+        </IconButton>
       </Box>
     </Box>
   );
@@ -211,38 +209,44 @@ const SuggestionsOverlay = ({ setInputValue }) => {
         position: "absolute",
         bottom: "10%",
         width: "100%",
+        padding: "10px",
+        zIndex: 1201,
       }}
     >
       <Box
         sx={{
           display: "flex",
           flexWrap: "wrap",
+          justifyContent: "space-between",
           width: "70%",
-          boxSizing: "border-box",
-          padding: "10px",
+          gap: "10px",
         }}
       >
         {suggestions.map((suggestion, index) => (
-          <Box key={index} sx={{ width: "50%", height: "50%", padding: "5px" }}>
-            <Button
-              variant="outlined"
-              sx={{
-                margin: "5px 0",
-                backgroundColor: theme.palette.background.paper,
-                borderColor: theme.palette.grey[400],
-                textAlign: "left",
-                justifyContent: "flex-start",
-                borderRadius: "10px",
-                textTransform: "none",
-                fontSize: "0.75rem",
-                width: "100%",
-                height: "100%",
-              }}
-              onClick={() => handleSuggestionClick(suggestion)}
-            >
-              {suggestion}
-            </Button>
-          </Box>
+          <Button
+            key={index}
+            variant="outlined"
+            sx={{
+              flexGrow: 1,
+              minHeight: "60px",
+              backgroundColor: theme.palette.background.default,
+              borderColor: theme.palette.grey[500],
+              "&:hover": {
+                backgroundColor: theme.palette.grey[200],
+                borderColor: theme.palette.primary.main,
+              },
+              textAlign: "left",
+              justifyContent: "flex-start",
+              borderRadius: "20px",
+              textTransform: "none",
+              fontSize: "0.875rem",
+              fontWeight: "medium",
+              width: "calc(50% - 30px)",
+            }}
+            onClick={() => handleSuggestionClick(suggestion)}
+          >
+            {suggestion}
+          </Button>
         ))}
       </Box>
     </Box>
