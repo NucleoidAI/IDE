@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Grid, Paper, IconButton } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
@@ -7,21 +7,38 @@ function ChatLayout({ chatContent, sidebarContent }) {
   const [isSidebarVisible, setSidebarVisible] = useState(true);
 
   return (
-    <Grid container sx={{ height: "100vh", overflow: "hidden" }}>
-      <Grid
-        item
-        xs={2}
+    <Box
+      sx={{
+        height: "100vh",
+        display: "flex",
+        overflow: "hidden",
+        position: "relative",
+      }}
+    >
+      <Box
         sx={{
-          display: isSidebarVisible ? "block" : "none",
+          width: "18%",
+          overflow: "hidden",
+          position: "absolute",
+          left: 0,
+          top: 0,
+          bottom: 0,
+          transition: "transform 0.3s ease-in-out",
+          transform: isSidebarVisible ? "translateX(0)" : "translateX(-100%)",
         }}
       >
         {sidebarContent}
-      </Grid>
+      </Box>
 
-      <Grid
-        item
-        xs={isSidebarVisible ? 10 : 12}
-        sx={{ position: "relative", bgcolor: "white" }}
+      <Box
+        sx={{
+          flexGrow: 1,
+          bgcolor: "white",
+          transition: "margin-left 0.3s ease-in-out",
+          marginLeft: isSidebarVisible ? "18%" : "0",
+          width: "100%",
+          position: "relative",
+        }}
       >
         <IconButton
           onClick={() => setSidebarVisible(!isSidebarVisible)}
@@ -31,15 +48,15 @@ function ChatLayout({ chatContent, sidebarContent }) {
             top: "50%",
             left: "1rem",
             transform: "translateY(-50%)",
-            zIndex: 1200,
+            zIndex: 1300,
           }}
         >
           {isSidebarVisible ? <ChevronLeftIcon /> : <ChevronRightIcon />}
         </IconButton>
 
         {chatContent}
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 }
 
