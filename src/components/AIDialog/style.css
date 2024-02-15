@@ -116,8 +116,8 @@
 /* Loader 2 */
 .loader-2 {
     display: block;
-    height: 32px;
-    width: 32px;
+    height: 42px;
+    width: 41px;
     -webkit-animation: loader-2-1 3s linear infinite;
     animation: loader-2-1 3s linear infinite;
 }
@@ -233,8 +233,8 @@
 /* Loader 3 */
 .loader-3 {
     display: block;
-    height: 32px;
-    width: 32px;
+    height: 42px;
+    width: 41px;
 }
 
 .loader-3 span {
@@ -758,8 +758,8 @@
 
 /* Loader 6 */
 .loader-6 {
-    height: 32px;
-    width: 32px;
+    height: 42px;
+    width: 41px;
 }
 
 .loader-6 span {
