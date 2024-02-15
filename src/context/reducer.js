@@ -119,6 +119,11 @@ function contextReducer(state, { type, payload }) {
       break;
     }
 
+    case "SET_SELECTED_LOGIC": {
+      pages.logic.selected = payload.logic;
+      break;
+    }
+
     case "OPEN_RESOURCE_MENU":
       pages.api.resourceMenu.open = true;
       pages.api.resourceMenu.anchor = payload.anchor;
