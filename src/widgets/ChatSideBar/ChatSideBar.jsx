@@ -1,18 +1,18 @@
+import AddIcon from "@mui/icons-material/Add";
+import Logo from "../../components/Logo";
 import React from "react";
+import Settings from "../../components/Settings";
+import { publish } from "@nucleoidjs/react-event";
+
 import {
   Box,
-  List,
-  Button,
-  ListItemButton,
-  ListItemText,
   Divider,
   Icon,
+  List,
+  ListItemButton,
+  ListItemText,
   useTheme,
 } from "@mui/material";
-import Settings from "../../components/Settings";
-import Logo from "../../components/Logo";
-import { publish } from "@nucleoidjs/react-event";
-import AddIcon from "@mui/icons-material/Add";
 
 const ChatHistory = ({ chats }) => {
   const theme = useTheme();
