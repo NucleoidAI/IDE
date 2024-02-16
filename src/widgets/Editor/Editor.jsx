@@ -1,5 +1,5 @@
 import MonacoEditor from "@monaco-editor/react";
-import OpenAI from "../OpenAI";
+import OpenAI from "../OpenAIDialog/OpenAIDialog";
 import Path from "../../utils/Path";
 import axios from "axios";
 import config from "../../../config";
