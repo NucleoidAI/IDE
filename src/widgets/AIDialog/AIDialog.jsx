@@ -36,11 +36,11 @@ function AIDialog() {
   const handleSendAIClick = () => {
     const { monaco } = editorRef?.current || {};
 
-    if (data.current.request) {
+    if (promptValue) {
       setLoading(true);
 
       service
-        .logic(generateContent().trim(), data.current.request?.trim())
+        .logic(generateContent().trim(), promptValue?.trim())
         .then((res) => {
           setSummary(res.data.summary);
           setDescription(res.data.description);
@@ -88,16 +88,10 @@ function AIDialog() {
         severity: "error",
       });
     }
-    setPromptValue("");
-    setLoading(false);
-    dispatch({ type: actions.closeLogicDialog });
+    handleClose();
   };
 
   const onCodeEditorChange = () => {};
-
-  React.useEffect(() => {
-    console.log();
-  }, []);
 
   const handleClose = () => {
     dispatch({ type: actions.closeLogicDialog });

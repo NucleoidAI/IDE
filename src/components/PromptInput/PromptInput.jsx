@@ -1,4 +1,5 @@
 import "./style.css";
+import "regenerator-runtime";
 
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import IconButton from "@mui/material/IconButton";
@@ -6,7 +7,11 @@ import InputBase from "@mui/material/InputBase";
 import MicIcon from "@mui/icons-material/Mic";
 import { Stack } from "@mui/material";
 import { alpha } from "@mui/material/styles";
-import { useState } from "react";
+
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
+import { useEffect, useState } from "react";
 
 function PromptInput({
   handlePromptChange,
@@ -15,12 +20,34 @@ function PromptInput({
   loading,
   handleSendAIClick,
   inputPlaceHolder,
+  setPromptValue,
 }) {
   const [mic, setMic] = useState(false);
+  const [keyDown, setKeyDown] = useState(false);
+  const { transcript, browserSupportsSpeechRecognition, resetTranscript } =
+    useSpeechRecognition();
+
+  useEffect(() => {
+    resetTranscript();
+  }, []);
+
+  useEffect(() => {
+    mic
+      ? SpeechRecognition.startListening({
+          continuous: true,
+          language: "en-US",
+        })
+      : SpeechRecognition.stopListening();
+  }, [mic]);
+
   const handleMicClick = () => {
-    console.log("mic open");
+    if (mic) {
+      console.log(transcript);
+      setPromptValue(transcript);
+    }
     setMic(!mic);
   };
+
   return (
     <Stack
       sx={{
@@ -31,9 +58,17 @@ function PromptInput({
       }}
     >
       <InputBase
-        onChange={(e) => handlePromptChange(e)}
+        onChange={(e) => {
+          if (e.target.value === "") {
+            setKeyDown(false);
+          }
+          handlePromptChange(e);
+        }}
+        onKeyPress={(e) => {
+          setKeyDown(true);
+        }}
         disabled={isCodeGenerated}
-        value={promptValue}
+        value={mic ? transcript : promptValue}
         fullWidth={true}
         sx={{ ml: 1, mt: 1 }}
         placeholder={inputPlaceHolder}
@@ -49,7 +84,6 @@ function PromptInput({
           <IconButton
             width="32px"
             height="32px"
-            disabled={promptValue === ""}
             className={loading && "loader-3"}
             size="medium"
             onClick={handleSendAIClick}
@@ -73,7 +107,7 @@ function PromptInput({
           </IconButton>
         )}
 
-        {!loading && !isCodeGenerated && (
+        {!loading && !isCodeGenerated && !keyDown && (
           <IconButton
             width="32px"
             height="32px"
