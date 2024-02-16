@@ -9,6 +9,8 @@ function CodeEditor({ onCodeEditorChange, setEditorRef }) {
   const [themeStorage] = useStorage("platform", "theme", "light");
 
   function editorOnMount(editor, monaco) {
+    window.EditorInstance = editor;
+
     editorRef.current = { editor: editor, monaco: monaco };
     setEditorRef(editorRef.current);
 
@@ -21,6 +23,7 @@ function CodeEditor({ onCodeEditorChange, setEditorRef }) {
 
   return (
     <Editor
+      data-cy="codeEditor-editor"
       ref={editorRef}
       key={themeStorage}
       onChange={onCodeEditorChange}

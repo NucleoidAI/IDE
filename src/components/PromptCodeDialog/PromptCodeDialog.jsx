@@ -104,6 +104,7 @@ function PromptCodeDialog({
                     />
 
                     <IconButton
+                      data-cy="promptCodeDialog-saveAIResponse-button"
                       onClick={handleSaveAIResponse}
                       sx={{
                         width: 32,

@@ -93,18 +93,17 @@ function OpenAIDialog({ functions, editor }) {
 
   const handleSendAIClick = async () => {
     const { monaco } = editorRef?.current || {};
-
     if (promptValue) {
       setLoading(true);
       service
-        .openai(generateContent().trim(), promptValue?.trim())
+        .openai(generateContent()?.trim(), promptValue?.trim())
         .then((res) => {
-          const model = monaco.editor.createModel(
+          const model = monaco?.editor?.createModel(
             res.data.code?.trim(),
             "typescript"
           );
 
-          editorRef.current.editor.setModel(model);
+          editorRef?.current?.editor.setModel(model);
           setIsCodeGenerated(true);
         })
         .finally(() => setLoading(false));

@@ -5,6 +5,7 @@ import React from "react";
 const OpenAIButton = ({ clickEvent }) => {
   return (
     <Button
+      data-cy="openAI-dialog-button"
       sx={{
         position: "relative",
         textTransform: "none",

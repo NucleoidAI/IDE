@@ -24,8 +24,7 @@ function PromptInput({
 }) {
   const [mic, setMic] = useState(false);
   const [keyDown, setKeyDown] = useState(false);
-  const { transcript, browserSupportsSpeechRecognition, resetTranscript } =
-    useSpeechRecognition();
+  const { transcript, resetTranscript } = useSpeechRecognition();
 
   useEffect(() => {
     resetTranscript();
@@ -58,6 +57,7 @@ function PromptInput({
       }}
     >
       <InputBase
+        data-cy="propmtInput-input"
         onChange={(e) => {
           if (e.target.value === "") {
             setKeyDown(false);
@@ -82,6 +82,7 @@ function PromptInput({
       >
         {!isCodeGenerated && (
           <IconButton
+            data-cy="propmtInput-sendAI-button"
             width="32px"
             height="32px"
             className={loading && "loader-3"}

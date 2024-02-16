@@ -88,11 +88,11 @@ const QueryEditor = React.forwardRef((props, ref) => {
   }
 
   const setModel = useCallback(() => {
-    monaco.editor.getModels().forEach((model) => model.dispose());
+    monaco?.editor.getModels().forEach((model) => model.dispose());
     const definition = selectedLogic.definition.trim();
-    const model = monaco.editor.createModel(definition, "typescript");
-    editorRef.current.setModel(model);
-  }, [selectedLogic, monaco.editor, editorRef]);
+    const model = monaco?.editor.createModel(definition, "typescript");
+    editorRef?.current.setModel(model);
+  }, [selectedLogic, monaco?.editor, editorRef]);
 
   function handleChange(e) {
     if (logic) {

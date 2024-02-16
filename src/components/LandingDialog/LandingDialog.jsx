@@ -7,7 +7,6 @@ import React from "react";
 import { Switch } from "@mui/material";
 import codeImage from "../../images/code.png";
 import onboardDispatcher from "../Onboard/onboardDispatcher";
-
 import styles from "./styles";
 import { useTheme } from "@mui/material/styles";
 
@@ -120,7 +119,11 @@ const LandingDialog = () => {
         </Typography>
       </Box>
       <DialogActions>
-        <Button sx={{ color: theme.palette.custom.grey }} onClick={handleClose}>
+        <Button
+          data-cy="landing-dialog-close-button"
+          sx={{ color: theme.palette.custom.grey }}
+          onClick={handleClose}
+        >
           CLOSE
         </Button>
       </DialogActions>

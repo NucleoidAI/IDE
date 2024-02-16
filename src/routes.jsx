@@ -25,6 +25,14 @@ const routes = [
     icon: <Folder />,
   },
   {
+    title: "Logic",
+    link: "logic",
+    path: "/:project/logic",
+    anchor: false,
+    element: <Logic />,
+    icon: <HubIcon />,
+  },
+  {
     title: "Query",
     link: "query",
     path: "/:project/query",
@@ -39,14 +47,6 @@ const routes = [
     anchor: false,
     element: <Logs />,
     icon: <ViewCarousel />,
-  },
-  {
-    title: "Logic",
-    link: "logic",
-    path: "/:project/logic",
-    anchor: false,
-    element: <Logic />,
-    icon: <HubIcon />,
   },
 ];
 

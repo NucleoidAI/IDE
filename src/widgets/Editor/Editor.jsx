@@ -186,6 +186,8 @@ const Editor = React.forwardRef((props, ref) => {
   }, []);
 
   function handleEditorDidMount(editor, monaco) {
+    window.monacoEditorInstance = editor;
+
     const nucFuncs = context.nucleoid.functions;
 
     monaco.editor.defineTheme("custom-dark-theme", monacoDarkTheme);
@@ -303,6 +305,7 @@ const Editor = React.forwardRef((props, ref) => {
   return (
     <Box sx={{ height: "100%" }}>
       <MonacoEditor
+        data-cy="editor-monacoEditor"
         key={themeStorage}
         height={"96%"}
         defaultLanguage="typescript"
