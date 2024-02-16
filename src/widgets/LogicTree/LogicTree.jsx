@@ -79,6 +79,7 @@ function LogicTree({ openLogicDialog }) {
     });
 
     setTreeData(treeData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -102,6 +103,7 @@ function LogicTree({ openLogicDialog }) {
       select(`${declarationClass}-${treeData[declarationClass]?.length}`);
     }
     publish("LOGIC_ADDED", false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newDeclaration]);
 
   return (

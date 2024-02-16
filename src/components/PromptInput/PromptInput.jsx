@@ -28,6 +28,7 @@ function PromptInput({
 
   useEffect(() => {
     resetTranscript();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -64,7 +65,7 @@ function PromptInput({
           }
           handlePromptChange(e);
         }}
-        onKeyPress={(e) => {
+        onKeyPress={() => {
           setKeyDown(true);
         }}
         disabled={isCodeGenerated}
