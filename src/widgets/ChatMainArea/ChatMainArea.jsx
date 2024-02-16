@@ -7,7 +7,7 @@ import useChat from "./useChat";
 import { useEvent } from "@nucleoidjs/react-event";
 
 import { Box, useTheme } from "@mui/material";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 
 const ChatMainArea = () => {
   const theme = useTheme();
@@ -19,8 +19,6 @@ const ChatMainArea = () => {
     console.log(message);
     messageInputRef.current.clear();
   };
-
-  const [showSuggestions, setShowSuggestions] = useState(true);
 
   return (
     <Box

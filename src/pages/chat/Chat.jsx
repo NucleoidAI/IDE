@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
-import Page from "../../components/Page";
 import ChatLayout from "../../layouts/ChatLayout";
-import ChatSideBar from "../../widgets/ChatSideBar";
 import ChatMainArea from "../../widgets/ChatMainArea";
+import ChatSideBar from "../../widgets/ChatSideBar";
+import Page from "../../components/Page";
 import { publish } from "@nucleoidjs/react-event";
+
+import React, { useEffect } from "react";
 
 function Chat() {
   useEffect(() => {

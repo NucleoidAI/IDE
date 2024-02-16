@@ -1,3 +1,4 @@
+import Chat from "./pages/Chat";
 import ContextProvider from "./context/context";
 import EventRegistry from "./EventRegistry";
 import IDE from "./containers/IDE"; // eslint-disable-line
@@ -11,7 +12,6 @@ import routes from "./routes";
 import { subscribe } from "@nucleoidjs/react-event";
 import { useStorage } from "@nucleoidjs/webstorage";
 import vfs from "./vfs";
-import Chat from "./pages/Chat";
 
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import {

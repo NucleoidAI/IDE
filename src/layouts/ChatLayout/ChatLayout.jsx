@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { Box, IconButton } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+
+import { Box, IconButton } from "@mui/material";
+import React, { useState } from "react";
 
 function ChatLayout({ chatContent, sidebarContent }) {
   const [isSidebarVisible, setSidebarVisible] = useState(true);
