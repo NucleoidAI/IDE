@@ -17,6 +17,8 @@ const actions = {
   removeParam: "REMOVE_PARAM",
   openLogicDialog: "OPEN_LOGIC_DIALOG",
   closeLogicDialog: "CLOSE_LOGIC_DIALOG",
+  openOpenAIDialog: "OPEN_OPEANAI_DIALOG",
+  closeOpenAIDialog: "CLOSE_OPEANAI_DIALOG",
 };
 
 export default actions;

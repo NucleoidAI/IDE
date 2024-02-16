@@ -189,6 +189,16 @@ function contextReducer(state, { type, payload }) {
       break;
     }
 
+    case "OPEN_OPEANAI_DIALOG": {
+      pages.api.openAIDialog.open = true;
+      break;
+    }
+
+    case "CLOSE_OPEANAI_DIALOG": {
+      pages.api.openAIDialog.open = false;
+      break;
+    }
+
     case "SAVE_LOGIC_DIALOG": {
       const { description, summary, definition } = payload;
       const declarations = nucleoid.declarations;
