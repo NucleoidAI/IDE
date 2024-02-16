@@ -89,7 +89,7 @@ const QueryEditor = React.forwardRef((props, ref) => {
 
   const setModel = useCallback(() => {
     monaco.editor.getModels().forEach((model) => model.dispose());
-    const definition = selectedLogic.definition.trim().slice(1, -1);
+    const definition = selectedLogic.definition.trim();
     const model = monaco.editor.createModel(definition, "typescript");
     editorRef.current.setModel(model);
   }, [selectedLogic, monaco.editor, editorRef]);
@@ -98,7 +98,7 @@ const QueryEditor = React.forwardRef((props, ref) => {
     if (logic) {
       state.nucleoid.declarations = state.nucleoid.declarations.map((item) => {
         if (item.summary === selectedLogic?.summary) {
-          return { ...item, definition: `{${e}}` };
+          return { ...item, definition: e };
         }
         return item;
       });
