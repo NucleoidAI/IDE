@@ -1,5 +1,8 @@
 import MonacoEditor from "@monaco-editor/react";
 import OpenAI from "../OpenAI";
+import Path from "../../utils/Path";
+import axios from "axios";
+import config from "../../../config";
 import { contextToMap } from "../../utils/Parser";
 import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
 import { parser } from "react-nucleoid";
@@ -37,6 +40,7 @@ const options = {
 };
 
 const Editor = React.forwardRef((props, ref) => {
+  const mode = Path.getMode();
   const { api, functions, query } = props;
   const editorRef = React.useRef(null);
   const timerRef = React.useRef();
@@ -129,11 +133,19 @@ const Editor = React.forwardRef((props, ref) => {
       key = context.get("pages.functions.selected") + ".ts";
     }
 
+    if (mode === "cloud") {
+      const {
+        project: { id },
+      } = context.nucleoid;
+      const url = `${config.api}/api/services/${id}/context`;
+      axios.put(url, context.nucleoid);
+    }
+
     publish("CONTEXT_CHANGED", {
       // TODO Optimize preparing files
       files: contextToMap(context.nucleoid).filter((item) => item.key === key),
     });
-  }, [api, context]);
+  }, [api, context, mode]);
 
   function getLineAndColumn(text, position) {
     const textUpToPosition = text.slice(0, position);
