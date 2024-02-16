@@ -72,35 +72,36 @@ function LogicTree({ openLogicDialog }) {
   const [newDeclaration] = useEvent("LOGIC_ADDED", false);
   const [state, dispatch] = useContext();
   const [treeData, setTreeData] = React.useState({});
-  const [selectedKey, setSelectedKey] = useState(null);
+  const [selectedKey, setSelectedKey] = useState([]);
+  const [nodeKey, setNodeKey] = useState([]);
 
   const declarations = state.nucleoid.declarations;
 
-  useEffect(() => {
-    const treeData = {};
-
-    declarations.map((desc) => {
-      const descSummary = desc.summary;
-      const descClass = desc?.definition?.split("$")[1]?.match(/\b(\w+)\b/)[0];
-      if (!treeData[descClass]) {
-        treeData[descClass] = [];
-      }
-
-      treeData[descClass].push(descSummary);
-    });
-    setTreeData(treeData);
-  }, []);
-
+  function findIndexInObject(key) {
+    const keys = Object.keys(treeData);
+    const index = keys.indexOf(key);
+    return index;
+  }
 
   function select(value) {
     const logicClass = value.split("-")[0];
     const logicIndex = value.split("-")[1];
 
-    setSelectedKey(`${logicClass}-${logicIndex}`);
-
     if (logicIndex === undefined) {
+      setNodeKey((oldNodeKey) => {
+        if (oldNodeKey.includes(logicClass)) {
+          return oldNodeKey.filter((item) => item !== logicClass);
+        } else {
+          return [...oldNodeKey, `${logicClass}`];
+        }
+      });
       return;
     }
+
+    const index = findIndexInObject(logicClass);
+    setNodeKey([`${index}`]);
+
+    setSelectedKey([`${logicClass}-${logicIndex}`]);
 
     const selectedSummary = treeData[logicClass][logicIndex];
 
@@ -113,6 +114,22 @@ function LogicTree({ openLogicDialog }) {
       });
     }
   }
+
+  useEffect(() => {
+    const treeData = {};
+
+    declarations.map((dec) => {
+      const decSummary = dec.summary;
+      const decClass = dec?.definition?.split("$")[1]?.match(/\b(\w+)\b/)[0];
+      if (!treeData[decClass]) {
+        treeData[decClass] = [];
+      }
+
+      treeData[decClass].push(decSummary);
+    });
+
+    setTreeData(treeData);
+  }, []);
 
   useEffect(() => {
     if (newDeclaration) {
@@ -143,17 +160,17 @@ function LogicTree({ openLogicDialog }) {
         <CardHeader avatar={<HubIcon sx={{ color: "#c3c5c8" }} />} />
         <CardContent sx={{ width: "100%", height: "100%" }}>
           <TreeView
-            aria-label="customized"
-            defaultExpanded={["5"]}
+            aria-label="controlled"
             defaultCollapseIcon={<MinusSquare />}
             defaultExpandIcon={<PlusSquare />}
             defaultEndIcon={<CloseSquare />}
             sx={{ overflowX: "hidden" }}
             onNodeSelect={(event, value) => select(value)}
+            expanded={nodeKey}
             selected={selectedKey}
           >
             {Object.entries(treeData).map(([nodeId, labels], index) => (
-              <StyledTreeItem
+              <LogicTreeItem
                 key={nodeId}
                 nodeId={index.toString()}
                 label={nodeId}
@@ -176,14 +193,14 @@ function LogicTree({ openLogicDialog }) {
                         borderColor: alpha("#209958", 0.5),
                       }}
                     ></Box>
-                    <StyledTreeItem
+                    <LogicTreeItem
                       key={index}
                       nodeId={`${nodeId}-${index}`}
                       label={label}
                     />
                   </Stack>
                 ))}
-              </StyledTreeItem>
+              </LogicTreeItem>
             ))}
           </TreeView>
         </CardContent>
