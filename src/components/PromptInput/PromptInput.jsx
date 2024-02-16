@@ -1,24 +1,20 @@
 import "./style.css";
 
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import IconButton from "@mui/material/IconButton";
 import InputBase from "@mui/material/InputBase";
 import MicIcon from "@mui/icons-material/Mic";
-import SaveIcon from "@mui/icons-material/Save";
 import { Stack } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { useState } from "react";
 
-function PromptArea({
+function PromptInput({
   handlePromptChange,
-  handleSaveAIResponse,
   promptValue,
   isCodeGenerated,
   loading,
   handleSendAIClick,
-  saveChangedCode,
-  isCodeChanged,
+  inputPlaceHolder,
 }) {
   const [mic, setMic] = useState(false);
   const handleMicClick = () => {
@@ -36,10 +32,11 @@ function PromptArea({
     >
       <InputBase
         onChange={(e) => handlePromptChange(e)}
+        disabled={isCodeGenerated}
         value={promptValue}
-        fullWidth
+        fullWidth={true}
         sx={{ ml: 1, mt: 1 }}
-        placeholder="Explain Logic"
+        placeholder={inputPlaceHolder}
         multiline
         minRows={2}
         size="medium"
@@ -48,7 +45,7 @@ function PromptArea({
         direction="row-reverse"
         sx={{ display: "flex", justifyItems: "end" }}
       >
-        {!isCodeGenerated ? (
+        {!isCodeGenerated && (
           <IconButton
             width="32px"
             height="32px"
@@ -74,55 +71,8 @@ function PromptArea({
               }}
             />
           </IconButton>
-        ) : (
-          <IconButton
-            width="32px"
-            height="32px"
-            size="medium"
-            onClick={handleSaveAIResponse}
-            sx={{
-              m: 1,
-              display: "flex",
-              alignContent: "end",
-              justifyItems: "end",
-              border: `1px solid ${alpha("#209958", 0.7)}`,
-              backgroundColor: promptValue !== "" ? alpha("#209958", 0.7) : "",
-            }}
-          >
-            <DoneOutlineIcon
-              width="32px"
-              height="32px"
-              component={loading && "span"}
-              sx={{
-                color: alpha("#209958", 1),
-              }}
-            />
-          </IconButton>
         )}
 
-        {isCodeChanged && (
-          <IconButton
-            width="32px"
-            height="32px"
-            size="medium"
-            onClick={saveChangedCode}
-            sx={{
-              m: 1,
-              display: "flex",
-              alignContent: "end",
-              justifyItems: "end",
-              border: `1px solid ${alpha("#209958", 0.7)}`,
-            }}
-          >
-            <SaveIcon
-              width="32px"
-              height="32px"
-              sx={{
-                color: alpha("#209958", 1),
-              }}
-            />
-          </IconButton>
-        )}
         {!loading && !isCodeGenerated && (
           <IconButton
             width="32px"
@@ -153,4 +103,4 @@ function PromptArea({
   );
 }
 
-export default PromptArea;
+export default PromptInput;
