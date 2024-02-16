@@ -19,13 +19,41 @@ import Prism from "prismjs";
 import "prismjs/themes/prism-twilight.css";
 import "prismjs/components/prism-typescript";
 import "./ChatMainArea.css";
+import { CircularProgress } from "@mui/material";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+} from "@mui/material";
 
 const ChatDisplay = ({ chat }) => {
   const theme = useTheme();
+  const [isLoading, setIsLoading] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedCode, setSelectedCode] = useState("");
+
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     Prism.highlightAll();
-  }, [chat]);
+  }, [isLoading, openDialog, selectedCode]);
+
+  const handleOpenDialog = (code) => {
+    setSelectedCode(code);
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
 
   return (
     <Box
@@ -40,51 +68,94 @@ const ChatDisplay = ({ chat }) => {
         userSelect: "text",
       }}
     >
-      {chat?.messages.map((message, index) => (
-        <Box
-          key={index}
-          sx={{
-            width: "60%",
-            marginBottom: "20px",
-            padding: "10px",
-            borderRadius: "10px",
-            textAlign: "left",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            userSelect: "text",
-          }}
-        >
-          <Typography
-            variant="subtitle2"
-            sx={{ fontWeight: "bold", marginBottom: "8px", userSelect: "text" }}
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        chat?.messages.map((message, index) => (
+          <Box
+            key={index}
+            sx={{
+              width: "60%",
+              marginBottom: "20px",
+              padding: "10px",
+              borderRadius: "10px",
+              textAlign: "left",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              userSelect: "text",
+            }}
           >
-            {message.sender.toUpperCase()}
-          </Typography>
-          <Typography variant="body1" sx={{ userSelect: "text" }}>
-            {message.text}
-          </Typography>
-          {message.code && (
-            <Box
-              component="pre"
+            <Typography
+              variant="subtitle2"
               sx={{
-                overflowX: "auto",
-                justifyContent: "center",
-                marginTop: "8px",
-                backgroundColor: theme.palette.grey[100],
-                borderRadius: "5px",
-                padding: "10px",
+                fontWeight: "bold",
+                marginBottom: "8px",
                 userSelect: "text",
-                width: "100%",
               }}
             >
-              <Box component="code" className="language-typescript">
-                {message.code}
+              {message.sender.toUpperCase()}
+            </Typography>
+            <Typography variant="body1" sx={{ userSelect: "text" }}>
+              {message.text}
+            </Typography>
+            {message.code && (
+              <Box
+                component="pre"
+                sx={{
+                  overflowX: "auto",
+                  justifyContent: "center",
+                  marginTop: "8px",
+                  backgroundColor: theme.palette.grey[100],
+                  borderRadius: "5px",
+                  padding: "10px",
+                  userSelect: "text",
+                  width: "100%",
+                }}
+                onClick={() => handleOpenDialog(message.code)}
+              >
+                <Box component="code" className="language-typescript">
+                  {message.code}
+                </Box>
               </Box>
+            )}
+          </Box>
+        ))
+      )}
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        maxWidth="md"
+        sx={{
+          "& .MuiDialog-paper": {
+            minHeight: "60vh",
+            maxHeight: "80vh",
+          },
+        }}
+      >
+        <DialogTitle>Code Analysis</DialogTitle>
+        <DialogContent dividers>
+          <Box
+            component="pre"
+            sx={{
+              overflowX: "auto",
+              justifyContent: "center",
+              marginTop: "8px",
+              backgroundColor: theme.palette.grey[100],
+              borderRadius: "5px",
+              padding: "10px",
+              userSelect: "text",
+              width: "100%",
+            }}
+            onClick={() => Prism.highlightAll()}
+          >
+            <Box component="code" className="language-typescript">
+              {selectedCode}
             </Box>
-          )}
-        </Box>
-      ))}
+          </Box>
+        </DialogContent>
+        <Button onClick={handleCloseDialog}>Close</Button>
+      </Dialog>
     </Box>
   );
 };
@@ -237,7 +308,7 @@ const SuggestionsOverlay = ({ setInputValue }) => {
               },
               textAlign: "left",
               justifyContent: "flex-start",
-              borderRadius: "20px",
+              borderRadius: "10px",
               textTransform: "none",
               fontSize: "0.875rem",
               fontWeight: "medium",
