@@ -1,104 +1,124 @@
-import CodeDialog from "../../components/AIDialog/CodeDialog";
+import HubIcon from "@mui/icons-material/Hub";
+import PromptCodeDialog from "../../components/PromptCodeDialog";
 import actions from "../../actions";
+import { deepCopy } from "../../utils/DeepCopy";
+import { publish } from "@nucleoidjs/react-event";
 import service from "../../service";
 import { useContext } from "../../context/context";
 
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-function AIDialog(props) {
-  const { logic, api } = props;
-
-  const [, dispatch] = useContext();
+function AIDialog() {
+  const [context, dispatch] = useContext();
   const [loading, setLoading] = useState(false);
   const [promptValue, setPromptValue] = useState("");
-  const [generatedCode, setGeneratedCode] = useState("");
-  const [isCodeChanged, setIsCodeChanged] = useState(false);
-  const [response, setResponse] = useState();
+  const [isCodeGenerated, setIsCodeGenerated] = useState(false);
+  const [summary, setSummary] = useState("");
+  const [description, setDescription] = useState("");
+
+  const functions = context.nucleoid.functions;
+
+  const editorRef = React.useRef(null);
+
+  const data = React.useRef({
+    request: "",
+  });
+
+  const setEditorRef = (ref) => {
+    editorRef.current = ref;
+  };
+
+  const generateContent = () => {
+    const nucFunctions = deepCopy(functions);
+    return nucFunctions.map((item) => item.definition).join("\n");
+  };
 
   const handleSendAIClick = () => {
-    if (logic) {
+    const { monaco } = editorRef?.current || {};
+
+    if (data.current.request) {
       setLoading(true);
-      /*
-      dispatch({
-        type: "SAVE_LOGIC_DIALOG",
-        payload: {
-          description: inputValue,
-          summary: "If the human is under 18 years of age",
-          definition: `{
-          if( $Human.age < 18 )
-          {
-            //do something
-          }
-        }`,
-        },
-      });
-      */
-    }
-    if (api) {
-      setLoading(true);
+
       service
-        .openai(promptValue)
+        .logic(generateContent().trim(), data.current.request?.trim())
         .then((res) => {
-          setGeneratedCode(res.data.text?.trim());
+          setSummary(res.data.summary);
+          setDescription(res.data.description);
+          const model = monaco.editor.createModel(
+            res.data.code?.trim(),
+            "typescript"
+          );
+
+          editorRef.current.editor.setModel(model);
+          setIsCodeGenerated(true);
         })
         .finally(() => setLoading(false));
     }
   };
 
   const handleInputChange = (e) => {
-    setPromptValue(e.target.value);
-    console.log("prompt input change", e.target.value);
+    data.current.request = e.currentTarget.value;
+    setPromptValue(data.current.request);
   };
 
+  function logicValidation(generatedCode) {
+    const declarationClass = generatedCode
+      ?.split("$")[1]
+      ?.match(/\b(\w+)\b/)[0];
+
+    return functions.find((func) => func.path === `/${declarationClass}`);
+  }
+
   const handleSaveAIResponse = () => {
-    console.log("ai response save");
+    const generatedCode = editorRef.current.editor.getModel().getValue();
+
+    if (logicValidation(generatedCode)) {
+      dispatch({
+        type: "SAVE_LOGIC_DIALOG",
+        payload: {
+          description: description,
+          summary: summary,
+          definition: generatedCode,
+        },
+      });
+    } else {
+      publish("GLOBAL_MESSAGE", {
+        status: true,
+        message: `You can only create declaration for existing functions.`,
+        severity: "error",
+      });
+    }
     setPromptValue("");
-    setGeneratedCode("");
     setLoading(false);
     dispatch({ type: actions.closeLogicDialog });
   };
 
-  const handleEditorChange = (e) => {
-    console.log("editor change");
+  const onCodeEditorChange = () => {};
+
+  React.useEffect(() => {
+    console.log();
+  }, []);
+
+  const handleClose = () => {
+    dispatch({ type: actions.closeLogicDialog });
+    setIsCodeGenerated(false);
+    setPromptValue("");
   };
-
-  const saveChangedCode = () => {
-    setIsCodeChanged(false);
-  };
-
-  const onCodeEditorChange = (e) => {
-    setIsCodeChanged(true);
-  };
-
-  useEffect(() => {
-    if (loading) {
-      const timer = setTimeout(() => {
-        setLoading(false);
-        setPromptValue("");
-        setGeneratedCode(` 
-        if( $Human.age < 18 )
-          {
-            //do something
-          }
-          `);
-      }, 5000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [loading]);
-
   return (
-    <CodeDialog
+    <PromptCodeDialog
+      logic
+      logo={HubIcon}
+      title={"Logic"}
+      inputPlaceHolder={"Explain Logic"}
       handleSendAIClick={handleSendAIClick}
       handleSaveAIResponse={handleSaveAIResponse}
       handlePromptChange={handleInputChange}
-      handleEditorChange={handleEditorChange}
-      saveChangedCode={saveChangedCode}
       onCodeEditorChange={onCodeEditorChange}
       setPromptValue={setPromptValue}
-      isCodeChanged={isCodeChanged}
+      setEditorRef={setEditorRef}
+      handleClose={handleClose}
       promptValue={promptValue}
-      generatedCode={generatedCode}
+      isCodeGenerated={isCodeGenerated}
       loading={loading}
     />
   );
