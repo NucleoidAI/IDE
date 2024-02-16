@@ -1,6 +1,8 @@
+import ChatIcon from "@mui/icons-material/Chat";
 import Drawer from "@mui/material/Drawer";
 import GraphButton from "../GraphButton/GraphButton";
 import LgDrawerStyled from "../LgDrawerStyled";
+import { Link } from "react-router-dom"; // eslint-disable-line
 import Logo from "../Logo";
 import OpenSwaggerDialog from "../OpenSwaggerDialog";
 import ProjectSelect from "../../components/ProjectSelect";
@@ -14,8 +16,8 @@ import settings from "../../settings";
 import styles from "./styles";
 import { useEvent } from "@nucleoidjs/react-event";
 import { useTheme } from "@mui/material/styles";
+
 import { ArrowForwardIos, DensityMedium } from "@mui/icons-material/";
-import { Link } from "react-router-dom"; // eslint-disable-line
 import {
   Box,
   Button,
@@ -226,6 +228,12 @@ const MenuLinks = (props) => {
           </React.Fragment>
         );
       })}
+      <ListItemButton sx={styles.listItem} component={Link} to="../chat">
+        <ListItemIcon sx={styles.listItemIcon}>
+          <ChatIcon />
+        </ListItemIcon>
+        <ListItemText primary="Chat" />
+      </ListItemButton>
     </>
   );
 };

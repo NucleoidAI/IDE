@@ -1,12 +1,7 @@
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { Box } from "@mui/material";
+import React from "react";
 
-import { Box, IconButton } from "@mui/material";
-import React, { useState } from "react";
-
-function ChatLayout({ chatContent, sidebarContent }) {
-  const [isSidebarVisible, setSidebarVisible] = useState(true);
-
+function ChatLayout({ content }) {
   return (
     <Box
       sx={{
@@ -18,44 +13,15 @@ function ChatLayout({ chatContent, sidebarContent }) {
     >
       <Box
         sx={{
-          width: "18%",
-          overflow: "hidden",
-          position: "absolute",
-          left: 0,
-          top: 0,
-          bottom: 0,
-          transition: "transform 0.3s ease-in-out",
-          transform: isSidebarVisible ? "translateX(0)" : "translateX(-100%)",
-        }}
-      >
-        {sidebarContent}
-      </Box>
-
-      <Box
-        sx={{
           flexGrow: 1,
           bgcolor: "white",
           transition: "margin-left 0.3s ease-in-out",
-          marginLeft: isSidebarVisible ? "18%" : "0",
+
           width: "100%",
           position: "relative",
         }}
       >
-        <IconButton
-          onClick={() => setSidebarVisible(!isSidebarVisible)}
-          sx={{
-            color: "white",
-            position: "absolute",
-            top: "50%",
-            left: "1rem",
-            transform: "translateY(-50%)",
-            zIndex: 1300,
-          }}
-        >
-          {isSidebarVisible ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-        </IconButton>
-
-        {chatContent}
+        {content}
       </Box>
     </Box>
   );

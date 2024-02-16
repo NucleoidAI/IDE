@@ -1,6 +1,5 @@
 import ChatLayout from "../../layouts/ChatLayout";
 import ChatMainArea from "../../widgets/ChatMainArea";
-import ChatSideBar from "../../widgets/ChatSideBar";
 import Page from "../../components/Page";
 import { publish } from "@nucleoidjs/react-event";
 
@@ -12,10 +11,7 @@ function Chat() {
   }, []);
   return (
     <Page title="Chat">
-      <ChatLayout
-        chatContent={<ChatMainArea />}
-        sidebarContent={<ChatSideBar />}
-      />
+      <ChatLayout content={<ChatMainArea />} />
     </Page>
   );
 }
