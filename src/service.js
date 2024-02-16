@@ -75,10 +75,17 @@ const openapi = async (openapi) => {
   }
 };
 
-const openai = async (context, command) => {
+const openai = async (context, prompt) => {
   return axios(Settings.service.openai, {
     method: "POST",
-    data: { context, command },
+    data: { context, prompt },
+  });
+};
+
+const logic = async (context, prompt) => {
+  return axios(Settings.service.logic, {
+    method: "POST",
+    data: { context, prompt },
   });
 };
 
@@ -160,6 +167,7 @@ const service = {
   query,
   openapi,
   openai,
+  logic,
   metrics,
   logs,
   auth,
