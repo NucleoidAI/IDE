@@ -1,4 +1,4 @@
-import LogicDialog from "../../../widgets/LogicDialog/LogicDialog";
+import AIDialog from "../../../widgets/AIDialog/AIDialog";
 import LogicTree from "../../../widgets/LogicTree";
 import QueryEditor from "../../../widgets/QueryEditor";
 import React from "react";
@@ -9,7 +9,7 @@ import { useContext } from "../../../context/context";
 function Logic() {
   const [, dispatch] = useContext();
 
-  function openLogicDialog() {
+  function openAIDialog() {
     dispatch({
       type: actions.openLogicDialog,
     });
@@ -17,8 +17,8 @@ function Logic() {
 
   return (
     <VerticalSplitLayout
-      dialog={<LogicDialog />}
-      content1={<LogicTree openLogicDialog={openLogicDialog} />}
+      dialog={<AIDialog logic />}
+      content1={<LogicTree openLogicDialog={openAIDialog} />}
       content2={<QueryEditor logic />}
     />
   );
