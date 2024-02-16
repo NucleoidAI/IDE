@@ -13,6 +13,7 @@ function init() {
       started: false,
       opened: false,
       api: {
+        openAIDialog: { open: false },
         dialog: {
           view: "BODY",
           type: "",
