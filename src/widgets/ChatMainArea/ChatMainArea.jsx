@@ -1,4 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  forwardRef,
+  useRef,
+  useImperativeHandle,
+} from "react";
 import {
   Box,
   TextField,
@@ -10,22 +16,66 @@ import {
   useTheme,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import ProjectIcon from "@mui/icons-material/Construction";
 import codeImage from "../../images/code.png";
+import MonacoEditor from "@monaco-editor/react";
+import { useStorage } from "@nucleoidjs/webstorage";
+import { v4 as uuidv4 } from "uuid";
 
 import { useEvent } from "@nucleoidjs/react-event";
 import useChat from "./useChat";
-import Prism from "prismjs";
-import "prismjs/themes/prism-twilight.css";
-import "prismjs/components/prism-typescript";
 import "./ChatMainArea.css";
+import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
 import { CircularProgress } from "@mui/material";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-} from "@mui/material";
+import { Dialog, DialogTitle, DialogContent } from "@mui/material";
+
+const MonacoEditorWrapper = ({ code, readOnly }) => {
+  const [editorHeight, setEditorHeight] = useState("100%");
+  const [themeStorage] = useStorage("platform", "theme", "light");
+
+  function handleEditorDidMount(editor, monaco) {
+    monaco.editor.defineTheme("custom-dark-theme", monacoDarkTheme);
+
+    monaco.editor.setTheme(
+      themeStorage === "light" ? "vs-light" : "custom-dark-theme"
+    );
+  }
+  useEffect(() => {
+    const calculateInitialHeight = (code) => {
+      const lineCount = code.split("\n").length;
+      const lineHeight = 18;
+      const paddingLines = 2;
+      const calculatedHeight = lineHeight * (lineCount + paddingLines);
+      return `${calculatedHeight}px`;
+    };
+
+    const initialHeight = calculateInitialHeight(code);
+    setEditorHeight(initialHeight);
+  }, [code]);
+
+  const options = {
+    readOnly: readOnly,
+    minimap: { enabled: false },
+    scrollbar: {
+      vertical: "hidden",
+      horizontal: "hidden",
+    },
+    lineNumbers: "on",
+    automaticLayout: true,
+    tabSize: 2,
+  };
+
+  return (
+    <MonacoEditor
+      key={`themeStorage-${uuidv4()}`}
+      height={editorHeight}
+      defaultLanguage="typescript"
+      onMount={handleEditorDidMount}
+      defaultValue={code}
+      options={options}
+      theme="vs-dark"
+    />
+  );
+};
 
 const ChatDisplay = ({ chat }) => {
   const theme = useTheme();
@@ -41,10 +91,6 @@ const ChatDisplay = ({ chat }) => {
 
     return () => clearTimeout(timer);
   }, []);
-
-  useEffect(() => {
-    Prism.highlightAll();
-  }, [isLoading, openDialog, selectedCode]);
 
   const handleOpenDialog = (code) => {
     setSelectedCode(code);
@@ -108,15 +154,13 @@ const ChatDisplay = ({ chat }) => {
                   marginTop: "8px",
                   backgroundColor: theme.palette.grey[100],
                   borderRadius: "5px",
-                  padding: "10px",
+                  padding: "0",
                   userSelect: "text",
                   width: "100%",
                 }}
                 onClick={() => handleOpenDialog(message.code)}
               >
-                <Box component="code" className="language-typescript">
-                  {message.code}
-                </Box>
+                <MonacoEditorWrapper code={message.code} readOnly={true} />
               </Box>
             )}
           </Box>
@@ -126,32 +170,19 @@ const ChatDisplay = ({ chat }) => {
         open={openDialog}
         onClose={handleCloseDialog}
         maxWidth="md"
+        fullWidth={true}
         sx={{
           "& .MuiDialog-paper": {
-            minHeight: "60vh",
-            maxHeight: "80vh",
+            minHeight: "30vh",
+            maxHeight: "60vh",
+            width: "60%",
           },
         }}
       >
         <DialogTitle>Code Analysis</DialogTitle>
         <DialogContent dividers>
-          <Box
-            component="pre"
-            sx={{
-              overflowX: "auto",
-              justifyContent: "center",
-              marginTop: "8px",
-              backgroundColor: theme.palette.grey[100],
-              borderRadius: "5px",
-              padding: "10px",
-              userSelect: "text",
-              width: "100%",
-            }}
-            onClick={() => Prism.highlightAll()}
-          >
-            <Box component="code" className="language-typescript">
-              {selectedCode}
-            </Box>
+          <Box sx={{ width: "100%" }}>
+            <MonacoEditorWrapper code={selectedCode} readOnly={true} />
           </Box>
         </DialogContent>
         <Button onClick={handleCloseDialog}>Close</Button>
@@ -160,27 +191,37 @@ const ChatDisplay = ({ chat }) => {
   );
 };
 
-const MessageInput = ({ inputValue, setInputValue, handleSendMessage }) => {
+const MessageInput = forwardRef((props, ref) => {
+  const { handleSendMessage } = props;
   const theme = useTheme();
   const [showProjectIcon, setShowProjectIcon] = useState(false);
   const [playAnimation, setPlayAnimation] = useState(true);
 
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value);
-  };
-
-  const handleProjectIconClick = () => {
-    console.log("Project icon clicked");
-  };
+  const inputRef = useRef(null);
 
   const handleHover = () => {
     setPlayAnimation(false);
   };
 
-  const onSend = (m) => {
-    handleSendMessage(m);
-    setShowProjectIcon(!showProjectIcon);
-    setPlayAnimation(true);
+  useImperativeHandle(ref, () => ({
+    getValue: () => inputRef.current.value,
+    clear: () => {
+      inputRef.current.value = "";
+    },
+  }));
+
+  const handleProjectIconClick = () => {
+    console.log("Project icon clicked");
+  };
+
+  const onSend = (event) => {
+    event.preventDefault();
+    const message = inputRef.current.value;
+    if (message.trim()) {
+      handleSendMessage(message);
+      inputRef.current.value = "";
+      setShowProjectIcon(!showProjectIcon);
+    }
   };
 
   return (
@@ -211,13 +252,12 @@ const MessageInput = ({ inputValue, setInputValue, handleSendMessage }) => {
           fullWidth
           variant="standard"
           placeholder="Type your message here..."
-          value={inputValue}
-          onChange={handleInputChange}
-          multiline
-          maxRows={4}
           InputProps={{
             disableUnderline: true,
           }}
+          inputRef={inputRef}
+          multiline
+          maxRows={4}
           sx={{ flexGrow: 1 }}
         />
         {showProjectIcon && (
@@ -242,7 +282,7 @@ const MessageInput = ({ inputValue, setInputValue, handleSendMessage }) => {
                   : "none",
               }}
             >
-              <img src={codeImage} alt={"Code"} style={{ width: "100%" }} />{" "}
+              <img src={codeImage} alt={"Code"} style={{ width: "100%" }} />
             </Fab>
           </Tooltip>
         )}
@@ -255,7 +295,7 @@ const MessageInput = ({ inputValue, setInputValue, handleSendMessage }) => {
       </Box>
     </Box>
   );
-};
+});
 
 const suggestions = [
   "Define a new rule for user authentication",
@@ -326,17 +366,16 @@ const SuggestionsOverlay = ({ setInputValue }) => {
 
 const ChatMainArea = () => {
   const theme = useTheme();
+  const messageInputRef = useRef();
   const [chatId] = useEvent("CHAT_ID_CHANGED", 0);
   const [inputValue, setInputValue] = useState("");
   const chat = useChat(chatId);
 
-  const handleSendMessage = (event) => {
-    event.preventDefault();
-    if (inputValue.trim()) {
-      const newMessage = { sender: "human", text: inputValue };
-      setInputValue("");
-    }
+  const handleSendMessage = (message) => {
+    console.log(message);
+    messageInputRef.current.clear();
   };
+
   const [showSuggestions, setShowSuggestions] = useState(true);
 
   return (
@@ -351,11 +390,12 @@ const ChatMainArea = () => {
       }}
     >
       <ChatDisplay chat={chat} />
-      <SuggestionsOverlay setInputValue={setInputValue} />
+      {
+        //<SuggestionsOverlay setInputValue={setInputValue} />
+      }
       <MessageInput
-        inputValue={inputValue}
-        setInputValue={setInputValue}
         handleSendMessage={handleSendMessage}
+        ref={messageInputRef}
       />
     </Box>
   );
