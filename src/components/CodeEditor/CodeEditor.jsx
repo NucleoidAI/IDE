@@ -1,17 +1,16 @@
+import Editor from "@monaco-editor/react";
 import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
+import { useRef } from "react";
 import { useStorage } from "@nucleoidjs/webstorage";
 
-import Editor, { useMonaco } from "@monaco-editor/react";
-import { useEffect, useRef } from "react";
-
-function CodeEditor({ onCodeEditorChange, generatedCode }) {
+function CodeEditor({ onCodeEditorChange, setEditorRef }) {
   const editorRef = useRef(null);
-  const monaco = useMonaco();
 
   const [themeStorage] = useStorage("platform", "theme", "light");
 
   function editorOnMount(editor, monaco) {
-    editorRef.current = editor;
+    editorRef.current = { editor: editor, monaco: monaco };
+    setEditorRef(editorRef.current);
 
     monaco.editor.defineTheme("custom-dark-theme", monacoDarkTheme);
 
@@ -20,23 +19,13 @@ function CodeEditor({ onCodeEditorChange, generatedCode }) {
     );
   }
 
-  useEffect(() => {
-    if (generatedCode !== "") {
-      setModel();
-    }
-  }, [generatedCode]);
-
-  function setModel() {
-    const model = monaco.editor.createModel(generatedCode, "typescript");
-    editorRef.current.setModel(model);
-  }
-
   return (
     <Editor
+      ref={editorRef}
       key={themeStorage}
-      onChange={(e) => onCodeEditorChange(e)}
+      onChange={onCodeEditorChange}
       onMount={editorOnMount}
-      height={"300px"}
+      height={"100%"}
       defaultLanguage="typescript"
       options={{
         tabSize: 2,
@@ -48,6 +37,7 @@ function CodeEditor({ onCodeEditorChange, generatedCode }) {
           horizontal: "hidden",
         },
         renderLineHighlightOnlyWhenFocus: true,
+        selectOnLineNumbers: true,
       }}
     />
   );
