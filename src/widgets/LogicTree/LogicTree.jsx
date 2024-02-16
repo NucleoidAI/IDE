@@ -66,10 +66,10 @@ const StyledTreeItem = styled(CustomTreeItem)(({ theme }) => ({
     borderLeft: `2px solid ${alpha("#209958", 0.4)}`,
   },
 }));
+import { publish, useEvent } from "@nucleoidjs/react-event";
 
 function LogicTree({ openLogicDialog }) {
-  const firstUpdate = React.useRef(true);
-
+  const [newDeclaration] = useEvent("LOGIC_ADDED", false);
   const [state, dispatch] = useContext();
   const [treeData, setTreeData] = React.useState({});
   const [selectedKey, setSelectedKey] = useState(null);
@@ -91,29 +91,6 @@ function LogicTree({ openLogicDialog }) {
     setTreeData(treeData);
   }, []);
 
-  useEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-      return;
-    }
-
-    const desc = declarations[declarations.length - 1];
-    const descSummary = desc.summary;
-    const descClass = desc?.definition?.split("$")[1]?.match(/\b(\w+)\b/)[0];
-
-    setTreeData((prevTreeData) => {
-      const newTreeData = { ...prevTreeData };
-
-      if (!newTreeData[descClass]) {
-        newTreeData[descClass] = [];
-      }
-      newTreeData[descClass].push(descSummary);
-
-      return newTreeData;
-    });
-
-    select(`${descClass}-${treeData[descClass].length}`);
-  }, [declarations.length]);
 
   function select(value) {
     const logicClass = value.split("-")[0];
@@ -136,6 +113,29 @@ function LogicTree({ openLogicDialog }) {
       });
     }
   }
+
+  useEffect(() => {
+    if (newDeclaration) {
+      const declarationSummary = newDeclaration.declaration.summary;
+      const declarationClass = newDeclaration.declaration?.definition
+        ?.split("$")[1]
+        ?.match(/\b(\w+)\b/)[0];
+
+      setTreeData((prevTreeData) => {
+        const newTreeData = { ...prevTreeData };
+
+        if (!newTreeData[declarationClass]) {
+          newTreeData[declarationClass] = [];
+        }
+        newTreeData[declarationClass].push(declarationSummary);
+
+        return newTreeData;
+      });
+
+      select(`${declarationClass}-${treeData[declarationClass]?.length}`);
+    }
+    publish("LOGIC_ADDED", false);
+  }, [newDeclaration]);
 
   return (
     <>

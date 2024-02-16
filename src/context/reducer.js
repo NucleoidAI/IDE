@@ -210,6 +210,10 @@ function contextReducer(state, { type, payload }) {
       });
       pages.logic.selected = declarations[declarations.length - 1];
 
+      publish("LOGIC_ADDED", {
+        declaration: declarations[declarations.length - 1],
+      });
+
       break;
     }
 
