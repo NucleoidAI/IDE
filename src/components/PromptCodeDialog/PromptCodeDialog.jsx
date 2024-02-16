@@ -84,7 +84,7 @@ function PromptCodeDialog({
                 <Divider color="gray" />
                 <CardContent
                   sx={{
-                    height: isCodeGenerated ? "15rem" : 1,
+                    height: isCodeGenerated ? "17rem" : 2,
                     width: 1,
                     m: 1,
                   }}
