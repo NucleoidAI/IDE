@@ -16,7 +16,6 @@ import {
   Divider,
   Stack,
 } from "@mui/material";
-import { useEffect, useState } from "react";
 
 function PromptCodeDialog({
   handleSendAIClick,
@@ -26,8 +25,7 @@ function PromptCodeDialog({
   setPromptValue,
   promptValue,
   loading,
-  logic,
-  openAI,
+  page,
   logo,
   title,
   inputPlaceHolder,
@@ -35,25 +33,10 @@ function PromptCodeDialog({
   isCodeGenerated,
   handleClose,
 }) {
-  const [open, setOpen] = useState(false);
   const [context] = useContext();
-
-  function initDialog() {
-    if (logic) {
-      setOpen(Boolean(context.get("pages.logic.dialog.open")));
-    }
-    if (openAI) {
-      setOpen(Boolean(context.get("pages.api.openAIDialog.open")));
-    }
-  }
-
-  useEffect(() => {
-    initDialog();
-  });
-
   return (
     <Dialog
-      open={open}
+      open={Boolean(context.get(`pages.${page}.AIDialog.open`))}
       fullWidth={true}
       onClose={handleClose}
       sx={{
