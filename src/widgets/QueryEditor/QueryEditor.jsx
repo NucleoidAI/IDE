@@ -1,4 +1,6 @@
+import AIDialog from "../AIDialog/AIDialog";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import QueryAIButton from "../../components/QueryAIButton";
 import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
 import service from "../..../../../service";
 import styles from "../../layouts/HorizontalSplitLayout/styles";
@@ -22,7 +24,7 @@ const QueryEditor = React.forwardRef((props, ref) => {
   useEffect(() => {
     if (query) {
       setTimeout(() => {
-        if (ref.current) {
+        if (ref?.current) {
           ref.current.focus();
           ref.current.setValue(state.get("pages.query.text"));
           ref.current.setPosition({ lineNumber: 1, column: 1000 });
@@ -37,8 +39,8 @@ const QueryEditor = React.forwardRef((props, ref) => {
           });
 
           const query = state.get("pages.query");
-          ref.current.onKeyUp(() => {
-            query.text = ref.current.getValue();
+          ref?.current.onKeyUp(() => {
+            query.text = ref?.current?.getValue();
           });
         }
       }, 1);
@@ -85,6 +87,10 @@ const QueryEditor = React.forwardRef((props, ref) => {
     if (logic) {
       setModel();
     }
+
+    if (query) {
+      setQueryModel();
+    }
   }
 
   const setModel = useCallback(() => {
@@ -93,6 +99,15 @@ const QueryEditor = React.forwardRef((props, ref) => {
     const model = monaco?.editor.createModel(definition, "typescript");
     editorRef?.current.setModel(model);
   }, [selectedLogic, monaco?.editor, editorRef]);
+
+  const setQueryModel = useCallback(() => {
+    monaco?.editor.getModels().forEach((model) => model.dispose());
+    const model = monaco?.editor.createModel(
+      state.get("pages.query.text"),
+      "typescript"
+    );
+    editorRef?.current.setModel(model);
+  }, [monaco?.editor, editorRef, state]);
 
   function handleChange(e) {
     if (logic) {
@@ -103,11 +118,17 @@ const QueryEditor = React.forwardRef((props, ref) => {
         return item;
       });
     }
+    if (query) {
+      state.pages.query.text = e;
+    }
   }
 
   React.useEffect(() => {
-    if (editorRef.current) {
+    if (editorRef.current && logic) {
       setModel();
+    }
+    if (editorRef.current && query) {
+      setQueryModel();
     }
   }, [state, logic, setModel]);
 
@@ -132,6 +153,8 @@ const QueryEditor = React.forwardRef((props, ref) => {
         }}
       />
       <Grid container item sx={styles.runButton}>
+        <QueryAIButton />
+        <AIDialog imperative page={"query"} editor={editorRef} />
         <Fab size={"small"} onClick={() => handleQuery()}>
           <PlayArrowIcon style={styles.playArrowIcon} />
         </Fab>
