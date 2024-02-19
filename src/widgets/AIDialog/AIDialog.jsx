@@ -61,8 +61,8 @@ function AIDialog({ editor, declarative, imperative, page }) {
     if (editor?.current) {
       const mEditor = editor.current.editor;
       const selected = mEditor
-        .getModel()
-        .getValueInRange(mEditor.getSelection());
+        ?.getModel()
+        .getValueInRange(mEditor?.getSelection());
       if (selected) {
         context.push(selected);
       }
@@ -110,7 +110,7 @@ function AIDialog({ editor, declarative, imperative, page }) {
   }
 
   const handleSaveAIResponse = () => {
-    const generatedCode = editorRef.current.editor.getModel().getValue();
+    const generatedCode = editorRef.current.editor?.getModel().getValue();
     if (mode === "declarative") {
       handleSaveDeclarative(generatedCode);
     }
@@ -142,11 +142,13 @@ function AIDialog({ editor, declarative, imperative, page }) {
 
   const handleSaveImperative = (generatedCode) => {
     const mEditor = editor.current.editor;
-    const lineNumber = mEditor.getSelection().endLineNumber;
-    const selected = mEditor.getModel().getValueInRange(mEditor.getSelection());
+    const lineNumber = mEditor?.getSelection().endLineNumber;
+    const selected = mEditor
+      ?.getModel()
+      .getValueInRange(mEditor.getSelection());
 
     if (selected) {
-      const withLine = mEditor.getModel().getValue().split("\n");
+      const withLine = mEditor?.getModel().getValue().split("\n");
 
       withLine.splice(lineNumber, 0, generatedCode);
       const res = withLine.join("\n");
@@ -154,19 +156,25 @@ function AIDialog({ editor, declarative, imperative, page }) {
         plugins,
       });
 
-      mEditor.getModel().setValue(prettyText);
+      mEditor?.getModel().setValue(prettyText);
     } else {
-      const action = prettierStandalone.format(
-        `
+      if (page === "api") {
+        const action = prettierStandalone.format(
+          `
       function action(req) {
         ${generatedCode}
       }
       `,
-        {
-          plugins,
-        }
-      );
-      mEditor.getModel().setValue(action);
+          {
+            plugins,
+          }
+        );
+        mEditor?.getModel().setValue(action);
+      }
+      if (page === "query") {
+        const query = context.get("pages.query");
+        query.text = generatedCode;
+      }
     }
   };
 
