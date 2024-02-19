@@ -1,6 +1,6 @@
+import Editor from "../../../widgets/Editor";
 import HorizontalSplitLayout from "../../../layouts/HorizontalSplitLayout";
 import Page from "../../../components/Page";
-import QueryEditor from "../../../widgets/QueryEditor";
 import QueryResultWidget from "../../../widgets/QueryResultWidget/QueryResultWidget";
 import { useContext } from "../../../context/context";
 import { useEvent } from "@nucleoidjs/react-event";
@@ -36,9 +36,7 @@ function Query() {
     <Page title={"Query"}>
       <HorizontalSplitLayout
         outputRatio={outputRatio}
-        topSection={
-          <QueryEditor loading={loading} setLoading={setLoading} query />
-        }
+        topSection={<Editor loading={loading} setLoading={setLoading} query />}
         bottomSection={
           <QueryResultWidget
             result={result}

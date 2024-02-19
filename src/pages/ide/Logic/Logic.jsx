@@ -1,7 +1,7 @@
 import AIDialog from "../../../widgets/AIDialog/AIDialog";
 import LogicTree from "../../../widgets/LogicTree";
 import Page from "../../../components/Page";
-import QueryEditor from "../../../widgets/QueryEditor";
+import Editor from "../../../widgets/Editor";
 import React from "react";
 import VerticalSplitLayout from "../../../layouts/VerticalSplitLayout";
 import actions from "../../../actions";
@@ -22,7 +22,7 @@ function Logic() {
       <VerticalSplitLayout
         dialog={<AIDialog declarative page={"logic"} />}
         content1={<LogicTree openLogicDialog={openAIDialog} />}
-        content2={<QueryEditor logic />}
+        content2={<Editor logic />}
       />
     </Page>
   );

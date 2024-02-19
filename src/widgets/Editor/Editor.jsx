@@ -2,7 +2,7 @@ import AIDialog from "../AIDialog/AIDialog";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import QueryAIButton from "../../components/QueryAIButton";
 import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
-import service from "../..../../../service";
+import service from "../../service";
 import styles from "../../layouts/HorizontalSplitLayout/styles";
 import { useContext } from "../../context/context";
 import { useStorage } from "@nucleoidjs/webstorage";
@@ -11,7 +11,7 @@ import { Fab, Grid } from "@mui/material";
 import MonacoEditor, { useMonaco } from "@monaco-editor/react";
 import React, { useCallback, useEffect, useRef } from "react";
 
-const QueryEditor = React.forwardRef((props, ref) => {
+const Editor = React.forwardRef((props, ref) => {
   const monaco = useMonaco();
   const editorRef = useRef(null);
 
@@ -163,4 +163,4 @@ const QueryEditor = React.forwardRef((props, ref) => {
   );
 });
 
-export default QueryEditor;
+export default Editor;
