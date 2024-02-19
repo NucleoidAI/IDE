@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import Chat from "../../widgets/Chat";
+import PopChat from "../../widgets/PopChat";
 import EducationDrawer from "../../components/EducationDrawer/EducationDrawer";
 import GlobalSnackMessage from "../../components/GlobalSnackMessage";
 import GraphDialog from "../../components/GraphDialog/GraphDialog";
@@ -25,7 +25,7 @@ function IDE() {
       <ProcessDrawer />
       <SwaggerDialog />
       <GlobalSnackMessage />
-      <Chat />
+      <PopChat />
       <GraphDialog />
     </Box>
   );

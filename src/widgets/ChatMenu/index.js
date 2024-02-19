@@ -1,1 +1,1 @@
-export { default } from "./ChatSideBar";
+export { default } from "./ChatMenu";

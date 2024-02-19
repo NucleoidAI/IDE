@@ -6,7 +6,7 @@ import { useEvent } from "@nucleoidjs/react-event";
 
 import { ChatWindow, handleAddResponseMessage } from "@nucleoidjs/components";
 
-const Chat = () => {
+const PopChat = () => {
   const [open, setOpen] = useEvent("CHAT_WINDOW", false);
   const [openChat, setOpenChat] = React.useState(false);
   const [, dispatch] = useContext();
@@ -60,4 +60,4 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default PopChat;
