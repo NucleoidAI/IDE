@@ -8,20 +8,42 @@ import { useContext } from "../../context/context";
 
 import React, { useState } from "react";
 
-function AIDialog() {
+import * as angularPlugin from "prettier/parser-angular";
+import * as babelPlugin from "prettier/parser-babel";
+import * as glimmerPlugin from "prettier/parser-glimmer";
+import * as graphqlPlugin from "prettier/parser-graphql";
+import * as htmlPlugin from "prettier/parser-html";
+import * as markdownPlugin from "prettier/parser-markdown";
+import * as meriyahPlugin from "prettier/parser-meriyah";
+import * as prettierStandalone from "prettier/standalone";
+import * as typescriptPlugin from "prettier/parser-typescript";
+import * as yamlPlugin from "prettier/parser-yaml";
+
+function AIDialog({ editor, declarative, imperative, page }) {
   const [context, dispatch] = useContext();
   const [loading, setLoading] = useState(false);
   const [promptValue, setPromptValue] = useState("");
   const [isCodeGenerated, setIsCodeGenerated] = useState(false);
   const [summary, setSummary] = useState("");
   const [description, setDescription] = useState("");
+  const plugins = [
+    angularPlugin,
+    babelPlugin,
+    glimmerPlugin,
+    graphqlPlugin,
+    htmlPlugin,
+    markdownPlugin,
+    meriyahPlugin,
+    typescriptPlugin,
+    yamlPlugin,
+  ];
 
   const functions = context.nucleoid.functions;
   const declarations = context.nucleoid.declarations;
 
-  const mode = "declarative";
-
   const editorRef = React.useRef(null);
+
+  const mode = declarative === true ? "declarative" : "imperative";
 
   const data = React.useRef({
     request: "",
@@ -30,12 +52,22 @@ function AIDialog() {
   const setEditorRef = (ref) => {
     editorRef.current = ref;
   };
-
   const generateContent = () => {
+    const context = [];
+
     const nucDeclarations = deepCopy(declarations);
     const nucFunctions = deepCopy(functions);
 
-    const context = [];
+    if (editor?.current) {
+      const mEditor = editor.current.editor;
+      const selected = mEditor
+        .getModel()
+        .getValueInRange(mEditor.getSelection());
+      if (selected) {
+        context.push(selected);
+      }
+    }
+
     nucFunctions.map((item) => context.push(item.definition));
     nucDeclarations.map((item) => context.push(item.definition));
 
@@ -47,7 +79,6 @@ function AIDialog() {
 
     if (promptValue) {
       setLoading(true);
-
       service
         .completions(mode, generateContent(), promptValue?.trim())
         .then((res) => {
@@ -80,7 +111,17 @@ function AIDialog() {
 
   const handleSaveAIResponse = () => {
     const generatedCode = editorRef.current.editor.getModel().getValue();
+    if (mode === "declarative") {
+      handleSaveDeclarative(generatedCode);
+    }
+    if (mode === "imperative") {
+      handleSaveImperative(generatedCode);
+    }
 
+    handleClose();
+  };
+
+  function handleSaveDeclarative(generatedCode) {
     if (logicValidation(generatedCode)) {
       dispatch({
         type: "SAVE_LOGIC_DIALOG",
@@ -97,22 +138,53 @@ function AIDialog() {
         severity: "error",
       });
     }
-    handleClose();
+  }
+
+  const handleSaveImperative = (generatedCode) => {
+    const mEditor = editor.current.editor;
+    const lineNumber = mEditor.getSelection().endLineNumber;
+    const selected = mEditor.getModel().getValueInRange(mEditor.getSelection());
+
+    if (selected) {
+      const withLine = mEditor.getModel().getValue().split("\n");
+
+      withLine.splice(lineNumber, 0, generatedCode);
+      const res = withLine.join("\n");
+      const prettyText = prettierStandalone.format(res, {
+        plugins,
+      });
+
+      mEditor.getModel().setValue(prettyText);
+    } else {
+      const action = prettierStandalone.format(
+        `
+      function action(req) {
+        ${generatedCode}
+      }
+      `,
+        {
+          plugins,
+        }
+      );
+      mEditor.getModel().setValue(action);
+    }
   };
 
   const onCodeEditorChange = () => {};
 
   const handleClose = () => {
-    dispatch({ type: actions.closeLogicDialog });
+    dispatch({ type: actions.closeAIDialog, payload: { page } });
     setIsCodeGenerated(false);
     setPromptValue("");
   };
+
   return (
     <PromptCodeDialog
       logic
       logo={HubIcon}
-      title={"Logic"}
-      inputPlaceHolder={"Explain Logic"}
+      title={mode}
+      page={page}
+      inputPlaceHolder={page}
       handleSendAIClick={handleSendAIClick}
       handleSaveAIResponse={handleSaveAIResponse}
       handlePromptChange={handleInputChange}
