@@ -3,7 +3,7 @@ import Chat from "../../widgets/Chat";
 import EducationDrawer from "../../components/EducationDrawer/EducationDrawer";
 import GlobalSnackMessage from "../../components/GlobalSnackMessage";
 import GraphDialog from "../../components/GraphDialog/GraphDialog";
-import Menu from "../../components/Menu";
+import Menu from "../../widgets/Menu";
 import Onboard from "../../components/Onboard";
 import { Outlet } from "react-router-dom"; // eslint-disable-line
 import ProcessDrawer from "../../widgets/ProcessDrawer/ProcessDrawer";
