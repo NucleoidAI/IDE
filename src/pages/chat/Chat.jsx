@@ -1,5 +1,5 @@
-import ChatLayout from "../../layouts/ChatLayout";
 import ChatContent from "../../widgets/Chat";
+import ChatLayout from "../../layouts/ChatLayout";
 import Page from "../../components/Page";
 import { publish } from "@nucleoidjs/react-event";
 
