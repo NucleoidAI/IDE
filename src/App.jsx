@@ -155,8 +155,6 @@ function App() {
 
             return setContext("error");
           });
-      } else {
-        // window.location.assign(`${window.location.origin}/ide/sample/api`);
       }
     }
 
