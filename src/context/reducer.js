@@ -179,23 +179,15 @@ function contextReducer(state, { type, payload }) {
       break;
     }
 
-    case "OPEN_LOGIC_DIALOG": {
-      pages.logic.dialog.open = true;
+    case "OPEN_AI_DIALOG": {
+      const page = payload.page;
+      pages[page].AIDialog.open = true;
       break;
     }
 
-    case "CLOSE_LOGIC_DIALOG": {
-      pages.logic.dialog.open = false;
-      break;
-    }
-
-    case "OPEN_OPEANAI_DIALOG": {
-      pages.api.openAIDialog.open = true;
-      break;
-    }
-
-    case "CLOSE_OPEANAI_DIALOG": {
-      pages.api.openAIDialog.open = false;
+    case "CLOSE_AI_DIALOG": {
+      const page = payload.page;
+      pages[page].AIDialog.open = false;
       break;
     }
 

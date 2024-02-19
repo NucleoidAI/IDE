@@ -13,7 +13,7 @@ function init() {
       started: false,
       opened: false,
       api: {
-        openAIDialog: { open: false },
+        AIDialog: { open: false },
         dialog: {
           view: "BODY",
           type: "",
@@ -35,7 +35,7 @@ function init() {
         outputRatio: 0.5,
       },
       logic: {
-        dialog: {
+        AIDialog: {
           open: false,
         },
         selected: {

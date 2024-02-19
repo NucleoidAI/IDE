@@ -15,10 +15,8 @@ const actions = {
   removeSchemaProperty: "REMOVE_SCHEMA_PROPERTY",
   addParam: "ADD_PARAM",
   removeParam: "REMOVE_PARAM",
-  openLogicDialog: "OPEN_LOGIC_DIALOG",
-  closeLogicDialog: "CLOSE_LOGIC_DIALOG",
-  openOpenAIDialog: "OPEN_OPEANAI_DIALOG",
-  closeOpenAIDialog: "CLOSE_OPEANAI_DIALOG",
+  openAIDialog: "OPEN_AI_DIALOG",
+  closeAIDialog: "CLOSE_AI_DIALOG",
 };
 
 export default actions;
