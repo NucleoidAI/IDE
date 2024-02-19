@@ -12,14 +12,15 @@ function Logic() {
 
   function openAIDialog() {
     dispatch({
-      type: actions.openLogicDialog,
+      type: actions.openAIDialog,
+      payload: { page: "logic" },
     });
   }
 
   return (
     <Page title={"Logic"}>
       <VerticalSplitLayout
-        dialog={<AIDialog logic />}
+        dialog={<AIDialog declarative page={"logic"} />}
         content1={<LogicTree openLogicDialog={openAIDialog} />}
         content2={<QueryEditor logic />}
       />

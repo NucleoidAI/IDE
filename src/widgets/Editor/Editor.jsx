@@ -1,5 +1,6 @@
+import AIDialog from "../AIDialog/AIDialog";
 import MonacoEditor from "@monaco-editor/react";
-import OpenAI from "../OpenAIDialog/OpenAIDialog";
+import OpenAIButton from "../../components/OpenAIButton";
 import Path from "../../utils/Path";
 import axios from "axios";
 import config from "../../../config";
@@ -326,7 +327,10 @@ const Editor = React.forwardRef((props, ref) => {
         }}
       />
       {!functions && (
-        <OpenAI functions={context?.nucleoid?.functions} editor={editorRef} />
+        <>
+          <OpenAIButton />
+          <AIDialog imperative editor={editorRef} page="api" />
+        </>
       )}
       <Backdrop open={open} />
     </Box>
