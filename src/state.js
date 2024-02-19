@@ -30,6 +30,9 @@ function init() {
         },
       },
       query: {
+        AIDialog: {
+          open: false,
+        },
         results: "",
         text: 'Item.filter((item) => item.name === "item-1");',
         outputRatio: 0.5,
