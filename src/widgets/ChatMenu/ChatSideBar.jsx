@@ -47,7 +47,7 @@ const ChatHistory = ({ chats }) => {
   );
 };
 
-const ChatSideBar = () => {
+const ChatMenu = () => {
   const theme = useTheme();
   const chatData = [
     { chatId: "0", chatTitle: "What is the circumference of the Earth?" },
@@ -98,4 +98,4 @@ const ChatSideBar = () => {
   );
 };
 
-export default ChatSideBar;
+export default ChatMenu;

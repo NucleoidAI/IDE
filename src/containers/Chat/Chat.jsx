@@ -1,4 +1,4 @@
-import ChatSideBar from "../../widgets/ChatSideBar";
+import ChatMenu from "../../widgets/ChatMenu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { Outlet } from "react-router-dom"; // eslint-disable-line
@@ -30,7 +30,7 @@ function ChatContainer() {
           transform: isSidebarVisible ? "translateX(0)" : "translateX(-100%)",
         }}
       >
-        <ChatSideBar />
+        <ChatMenu />
       </Box>
 
       <Box
