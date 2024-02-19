@@ -1,62 +1,43 @@
-import React from "react";
-import Settings from "../../settings";
-import service from "../../service";
-import { useContext } from "../../context/context";
+import "./ChatMainArea.css";
+
+import ChatDisplay from "./ChatDisplay";
+import MessageInput from "./MessageInput";
+import SuggestionsOverlay from "./SuggestionsOverlay";
+import useChat from "./useChat";
 import { useEvent } from "@nucleoidjs/react-event";
 
-import { ChatWindow, handleAddResponseMessage } from "@nucleoidjs/components";
+import { Box, useTheme } from "@mui/material";
+import React, { useRef } from "react";
 
 const Chat = () => {
-  const [open, setOpen] = useEvent("CHAT_WINDOW", false);
-  const [openChat, setOpenChat] = React.useState(false);
-  const [, dispatch] = useContext();
+  const theme = useTheme();
+  const messageInputRef = useRef();
+  const [chatId] = useEvent("CHAT_ID_CHANGED", 0);
+  const chat = useChat(chatId);
 
-  React.useEffect(() => {
-    if (open) {
-      if (Settings.token()) {
-        setOpenChat(true);
-      } else {
-        service.getProjects().finally(() => {
-          setOpenChat(false);
-          setOpen("CHAT_WINDOW", false);
-        });
-      }
-    } else {
-      setOpenChat(false);
-    }
-  }, [open, setOpen]);
-
-  const handleNewUserMessage = (message) => {
-    const parts = message.split('"');
-
-    if (parts.length === 1) {
-      setTimeout(() => {
-        handleAddResponseMessage("Not able to understand your message");
-      }, 500);
-
-      return;
-    }
-
-    const resource = parts[1];
-
-    setTimeout(() => {
-      dispatch({ type: "CREATE_SAMPLE_CRUD", payload: { resource } });
-      handleAddResponseMessage(`"${resource}" resource is created.`);
-    }, 1000);
-  };
-
-  const handleClose = () => {
-    setOpen("CHAT_WINDOW", false);
+  const handleSendMessage = (message) => {
+    console.log(message);
+    messageInputRef.current.clear();
   };
 
   return (
-    <ChatWindow
-      title={"Nucbot-Powered by OpenAI"}
-      open={openChat}
-      handleClose={handleClose}
-      history={[{ message: "Welcome to NucBot! 🤖", user: false }]}
-      handleNewUserMessage={handleNewUserMessage}
-    />
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        width: "100%",
+        backgroundColor: theme.palette.background.paper,
+        paddingBottom: "10px",
+      }}
+    >
+      <ChatDisplay chat={chat} />
+      <SuggestionsOverlay setInputValue={() => {}} />
+      <MessageInput
+        handleSendMessage={handleSendMessage}
+        ref={messageInputRef}
+      />
+    </Box>
   );
 };
 

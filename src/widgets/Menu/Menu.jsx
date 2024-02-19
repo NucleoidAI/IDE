@@ -1,21 +1,23 @@
+import ChatIcon from "@mui/icons-material/Chat";
 import Drawer from "@mui/material/Drawer";
-import GraphButton from "../GraphButton/GraphButton";
-import LgDrawerStyled from "../LgDrawerStyled";
-import Logo from "../Logo";
-import OpenSwaggerDialog from "../OpenSwaggerDialog";
+import GraphButton from "../../components/GraphButton/GraphButton";
+import LgDrawerStyled from "../../components/LgDrawerStyled";
+import { Link } from "react-router-dom"; // eslint-disable-line
+import Logo from "../../components/Logo";
+import OpenSwaggerDialog from "../../components/OpenSwaggerDialog";
 import ProjectSelect from "../../components/ProjectSelect";
-import ProjectSelectSmall from "../ProjectSelectSmall/ProjectSelectSmall";
+import ProjectSelectSmall from "../../components/ProjectSelectSmall/ProjectSelectSmall";
 import React from "react";
-import Settings from "../Settings";
-import SmallLogo from "../SmallLogo";
-import Status from "../../widgets/Status";
+import Settings from "../../components/Settings";
+import SmallLogo from "../../components/SmallLogo";
+import Status from "../Status";
 import { drawerWidth } from "../../config";
 import settings from "../../settings";
 import styles from "./styles";
 import { useEvent } from "@nucleoidjs/react-event";
 import { useTheme } from "@mui/material/styles";
+
 import { ArrowForwardIos, DensityMedium } from "@mui/icons-material/";
-import { Link } from "react-router-dom"; // eslint-disable-line
 import {
   Box,
   Button,
@@ -226,6 +228,12 @@ const MenuLinks = (props) => {
           </React.Fragment>
         );
       })}
+      <ListItemButton sx={styles.listItem} component={Link} to="../chat">
+        <ListItemIcon sx={styles.listItemIcon}>
+          <ChatIcon />
+        </ListItemIcon>
+        <ListItemText primary="Chat" />
+      </ListItemButton>
     </>
   );
 };

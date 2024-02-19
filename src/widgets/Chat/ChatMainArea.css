@@ -1,0 +1,14 @@
+@keyframes pulseAnimationWithColor {
+  0% {
+    transform: scale(1);
+    background-color: initial;
+  }
+  50% {
+    transform: scale(1.2);
+    background-color: #209958;
+  }
+  100% {
+    transform: scale(1);
+    background-color: initial;
+  }
+}
