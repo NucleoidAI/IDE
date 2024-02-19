@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import React, { useEffect, useState } from "react";
 
-const MonacoEditorWrapper = ({ code, readOnly }) => {
+const ChatEditor = ({ code, readOnly }) => {
   const [editorHeight, setEditorHeight] = useState("100%");
   const [themeStorage] = useStorage("platform", "theme", "light");
 
@@ -53,4 +53,4 @@ const MonacoEditorWrapper = ({ code, readOnly }) => {
     />
   );
 };
-export default MonacoEditorWrapper;
+export default ChatEditor;

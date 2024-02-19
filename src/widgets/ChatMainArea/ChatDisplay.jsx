@@ -1,4 +1,4 @@
-import MonacoEditorWrapper from "./MonacoEditorWrapper";
+import ChatEditor from "./ChatEditor";
 
 import {
   Box,
@@ -96,7 +96,7 @@ const ChatDisplay = ({ chat }) => {
                 }}
                 onClick={() => handleOpenDialog(message.code)}
               >
-                <MonacoEditorWrapper code={message.code} readOnly={true} />
+                <ChatEditor code={message.code} readOnly={true} />
               </Box>
             )}
           </Box>
@@ -118,7 +118,7 @@ const ChatDisplay = ({ chat }) => {
         <DialogTitle>Code Analysis</DialogTitle>
         <DialogContent dividers>
           <Box sx={{ width: "100%" }}>
-            <MonacoEditorWrapper code={selectedCode} readOnly={true} />
+            <ChatEditor code={selectedCode} readOnly={true} />
           </Box>
         </DialogContent>
         <Button onClick={handleCloseDialog}>Close</Button>
