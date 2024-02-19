@@ -58,7 +58,7 @@ function PromptCodeDialog({
           <Card sx={{ width: 1 }}>
             <CardHeader
               avatar={<Box component={logo} />}
-              title={title}
+              title={page.toUpperCase()}
               titleTypographyProps={{ variant: "h5" }}
             />
 
