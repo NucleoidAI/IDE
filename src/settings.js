@@ -38,8 +38,7 @@ const Settings = {
   service: {
     auth: "https://nucleoid.com/oauth",
     projects: "https://nucleoid.com/projects",
-    openai: `${config.api}/api/generate/action`,
-    logic: `${config.api}/api/generate/logic`,
+    completions: `${config.api}/api/chat/completions`,
   },
 
   connection: true,
