@@ -40,7 +40,7 @@ const options = {
   globals: {},
 };
 
-const Editor = React.forwardRef((props, ref) => {
+const VFSEditor = React.forwardRef((props, ref) => {
   const mode = Path.getMode();
   const { api, functions, query } = props;
   const editorRef = React.useRef(null);
@@ -380,4 +380,4 @@ function getFile(context, props) {
   return file;
 }
 
-export default Editor;
+export default VFSEditor;
