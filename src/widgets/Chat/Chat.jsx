@@ -9,7 +9,7 @@ import { useEvent } from "@nucleoidjs/react-event";
 import { Box, useTheme } from "@mui/material";
 import React, { useRef } from "react";
 
-const ChatMainArea = () => {
+const Chat = () => {
   const theme = useTheme();
   const messageInputRef = useRef();
   const [chatId] = useEvent("CHAT_ID_CHANGED", 0);
@@ -41,4 +41,4 @@ const ChatMainArea = () => {
   );
 };
 
-export default ChatMainArea;
+export default Chat;
