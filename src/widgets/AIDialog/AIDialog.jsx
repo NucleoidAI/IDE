@@ -17,6 +17,9 @@ function AIDialog() {
   const [description, setDescription] = useState("");
 
   const functions = context.nucleoid.functions;
+  const declarations = context.nucleoid.declarations;
+
+  const mode = "declarative";
 
   const editorRef = React.useRef(null);
 
@@ -29,8 +32,14 @@ function AIDialog() {
   };
 
   const generateContent = () => {
+    const nucDeclarations = deepCopy(declarations);
     const nucFunctions = deepCopy(functions);
-    return nucFunctions.map((item) => item.definition).join("\n");
+
+    const context = [];
+    nucFunctions.map((item) => context.push(item.definition));
+    nucDeclarations.map((item) => context.push(item.definition));
+
+    return context;
   };
 
   const handleSendAIClick = () => {
@@ -40,7 +49,7 @@ function AIDialog() {
       setLoading(true);
 
       service
-        .logic(generateContent().trim(), promptValue?.trim())
+        .completions(mode, generateContent(), promptValue?.trim())
         .then((res) => {
           setSummary(res.data.summary);
           setDescription(res.data.description);

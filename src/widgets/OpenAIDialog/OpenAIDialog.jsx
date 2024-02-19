@@ -22,7 +22,7 @@ import * as typescriptPlugin from "prettier/parser-typescript";
 import * as yamlPlugin from "prettier/parser-yaml";
 
 function OpenAIDialog({ functions, editor }) {
-  const [, dispatch] = useContext();
+  const [state, dispatch] = useContext();
   const [loading, setLoading] = useState(false);
   const [promptValue, setPromptValue] = useState("");
   const [isCodeGenerated, setIsCodeGenerated] = useState(false);
@@ -38,6 +38,10 @@ function OpenAIDialog({ functions, editor }) {
     typescriptPlugin,
     yamlPlugin,
   ];
+
+  const declarations = state.nucleoid.declarations;
+
+  const mode = "imperative";
 
   const data = React.useRef({
     request: "",
@@ -79,13 +83,20 @@ function OpenAIDialog({ functions, editor }) {
   const generateContent = () => {
     if (editor.current) {
       const mEditor = editor.current.editor;
-
+      const nucDeclarations = deepCopy(declarations);
       const nucFunctions = deepCopy(functions);
       const selected = mEditor
         .getModel()
         .getValueInRange(mEditor.getSelection());
 
-      return nucFunctions.map((item) => item.definition).join("\n") + selected;
+      const context = [];
+      nucFunctions.map((item) => context.push(item.definition));
+      nucDeclarations.map((item) => context.push(item.definition));
+      if (selected) {
+        context.push(selected);
+      }
+
+      return context;
     }
   };
 
@@ -93,10 +104,11 @@ function OpenAIDialog({ functions, editor }) {
 
   const handleSendAIClick = async () => {
     const { monaco } = editorRef?.current || {};
+    console.log(generateContent());
     if (promptValue) {
       setLoading(true);
       service
-        .openai(generateContent()?.trim(), promptValue?.trim())
+        .completions(mode, generateContent(), promptValue?.trim())
         .then((res) => {
           const model = monaco?.editor?.createModel(
             res.data.code?.trim(),
