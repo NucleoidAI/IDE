@@ -19,6 +19,7 @@ const ChatDisplay = ({ chat }) => {
   const [selectedCode, setSelectedCode] = useState("");
 
   useEffect(() => {
+    //TODO: Replace with actual loading logic
     setIsLoading(true);
     const timer = setTimeout(() => {
       setIsLoading(false);
