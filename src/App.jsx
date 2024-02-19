@@ -1,4 +1,4 @@
-import Chat from "./pages/Chat";
+import Chat from "./pages/chat";
 import ChatContainer from "./containers/Chat/Chat";
 import ContextProvider from "./context/context";
 import EventRegistry from "./EventRegistry";
