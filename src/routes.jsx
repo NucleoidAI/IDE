@@ -3,7 +3,7 @@ import React, { lazy } from "react";
 
 const Chat = lazy(() => import("./pages/chat"));
 const API = lazy(() => import("./pages/ide/API"));
-const ChatContainer = lazy(() => import("./Containers/Chat"));
+const ChatContainer = lazy(() => import("./containers/Chat/Chat"));
 const Functions = lazy(() => import("./pages/ide/Functions"));
 const IDE = lazy(() => import("./containers/IDE"));
 const Logic = lazy(() => import("./pages/ide/Logic"));
