@@ -75,10 +75,10 @@ const openapi = async (openapi) => {
   }
 };
 
-const completions = async (mode, context, message) => {
+const completions = async (mode, context, prompt) => {
   return axios(Settings.service.completions, {
     method: "POST",
-    data: { mode, context, message },
+    data: { mode, context, prompt },
   });
 };
 

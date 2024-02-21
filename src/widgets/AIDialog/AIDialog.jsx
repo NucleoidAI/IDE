@@ -43,7 +43,7 @@ function AIDialog({ editor, declarative, imperative, page }) {
 
   const editorRef = React.useRef(null);
 
-  const mode = declarative === true ? "declarative" : "imperative";
+  const mode = declarative === true ? "DECLARATIVE" : "IMPERATIVE";
 
   const data = React.useRef({
     request: "",
@@ -99,7 +99,6 @@ function AIDialog({ editor, declarative, imperative, page }) {
   };
 
   function logicValidation(generatedCode) {
-    console.log(generatedCode);
     const declarationClass = generatedCode
       ?.split("$")[1]
       ?.match(/\b(\w+)\b/)[0];
@@ -109,10 +108,10 @@ function AIDialog({ editor, declarative, imperative, page }) {
 
   const handleSaveAIResponse = () => {
     const generatedCode = editorRef.current.nucEditor?.getModel().getValue();
-    if (mode === "declarative") {
+    if (mode === "DECLARATIVE") {
       handleSaveDeclarative(generatedCode);
     }
-    if (mode === "imperative") {
+    if (mode === "IMPERATIVE") {
       handleSaveImperative(generatedCode);
     }
 
