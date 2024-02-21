@@ -122,8 +122,9 @@ function App() {
       Settings.landing({ level: 0 });
     }
     if (checkMobileSize()) {
+      window.location.assign(`${window.location.origin}/ide/mobile`);
       Settings.plugin(" ");
-      Settings.landing({ level: 4 });
+      Settings.landing({ level: Number.MAX_SAFE_INTEGER });
     }
 
     return context;
