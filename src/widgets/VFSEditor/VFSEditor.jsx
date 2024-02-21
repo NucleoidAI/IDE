@@ -1,30 +1,18 @@
 import AIDialog from "../AIDialog/AIDialog";
-import MonacoEditor from "@monaco-editor/react";
 import OpenAIButton from "../../components/OpenAIButton";
 import Path from "../../utils/Path";
 import axios from "axios";
 import config from "../../../config";
 import { contextToMap } from "../../utils/Parser";
-import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
 import { parser } from "react-nucleoid";
 import { publish } from "@nucleoidjs/react-event";
 import rules from "./rules";
 import { useContext } from "../../context/context";
-import { useStorage } from "@nucleoidjs/webstorage";
 
 import { Backdrop, Box } from "@mui/material";
 import React, { useCallback } from "react";
 
-import * as angularPlugin from "prettier/parser-angular";
-import * as babelPlugin from "prettier/parser-babel";
-import * as glimmerPlugin from "prettier/parser-glimmer";
-import * as graphqlPlugin from "prettier/parser-graphql";
-import * as htmlPlugin from "prettier/parser-html";
-import * as markdownPlugin from "prettier/parser-markdown";
-import * as meriyahPlugin from "prettier/parser-meriyah";
-import * as prettierStandalone from "prettier/standalone";
-import * as typescriptPlugin from "prettier/parser-typescript";
-import * as yamlPlugin from "prettier/parser-yaml";
+import NucEditor from "../../components/NucEditor/NucEditor";
 
 const options = {
   env: {
@@ -43,26 +31,12 @@ const options = {
 const VFSEditor = React.forwardRef((props, ref) => {
   const mode = Path.getMode();
   const { api, functions, query } = props;
-  const editorRef = React.useRef(null);
   const timerRef = React.useRef();
   const [open, setOpen] = React.useState(false);
   const [context] = useContext();
-
-  const [themeStorage] = useStorage("platform", "theme", "light");
+  const editorRef = React.useRef(null);
 
   const file = getFile(context, props);
-
-  const plugins = [
-    angularPlugin,
-    babelPlugin,
-    glimmerPlugin,
-    graphqlPlugin,
-    htmlPlugin,
-    markdownPlugin,
-    meriyahPlugin,
-    typescriptPlugin,
-    yamlPlugin,
-  ];
 
   const checkFunction = React.useCallback(() => {
     const editor = editorRef?.current?.editor;
@@ -97,7 +71,6 @@ const VFSEditor = React.forwardRef((props, ref) => {
     timerRef.current = setTimeout(() => {
       compile();
       checkFunction();
-      lint();
     }, 400);
 
     if (api) {
@@ -148,54 +121,12 @@ const VFSEditor = React.forwardRef((props, ref) => {
     });
   }, [api, context, mode]);
 
-  function getLineAndColumn(text, position) {
-    const textUpToPosition = text.slice(0, position);
-    const line = textUpToPosition.split("\n").length;
-    const column = position - textUpToPosition.lastIndexOf("\n");
-    return { line, column };
-  }
-
-  const lint = React.useCallback(async () => {
-    const editor = editorRef?.current?.editor;
-    const monaco = editorRef?.current?.monaco;
-    const worker = await monaco.languages.typescript.getTypeScriptWorker();
-    const ts = await worker(editor.getModel().uri);
-    const diagnostics = await ts.getSemanticDiagnostics(
-      editor.getModel().uri.toString()
-    );
-    const text = editor.getValue();
-
-    const markers = diagnostics.map((diagnostic) => {
-      const start = getLineAndColumn(text, diagnostic.start);
-      const end = getLineAndColumn(text, diagnostic.start + diagnostic.length);
-      const severity =
-        diagnostic.category === 1
-          ? monaco.MarkerSeverity.Warning
-          : monaco.MarkerSeverity.Error;
-
-      return {
-        startLineNumber: start.line,
-        startColumn: start.column,
-        endLineNumber: end.line,
-        endColumn: end.column,
-        message: diagnostic.messageText,
-        severity: severity,
-      };
-    });
-
-    monaco.editor.setModelMarkers(editor.getModel(), "action", markers);
-  }, []);
-
   function handleEditorDidMount(editor, monaco) {
     window.monacoEditorInstance = editor;
 
+    editorRef.current = { editor: editor, monaco: monaco };
+
     const nucFuncs = context.nucleoid.functions;
-
-    monaco.editor.defineTheme("custom-dark-theme", monacoDarkTheme);
-
-    monaco.editor.setTheme(
-      themeStorage === "light" ? "vs-light" : "custom-dark-theme"
-    );
 
     options.globals = {};
     nucFuncs.forEach((item) => {
@@ -225,48 +156,7 @@ const VFSEditor = React.forwardRef((props, ref) => {
       },
     });
 
-    monaco.languages.registerDocumentFormattingEditProvider("typescript", {
-      provideDocumentFormattingEdits(model) {
-        const text = model.getValue();
-
-        const formatted = prettierStandalone.format(text, {
-          parser: "typescript",
-          plugins: plugins,
-        });
-
-        return [
-          {
-            range: model.getFullModelRange(),
-            text: formatted,
-          },
-        ];
-      },
-    });
-
-    monaco.languages.registerDocumentRangeFormattingEditProvider(
-      { language: "typescript", exclusive: true },
-      {
-        provideDocumentRangeFormattingEdits(model) {
-          const text = model.getValue();
-
-          const formatted = prettierStandalone.format(text, {
-            parser: "typescript",
-            plugins: plugins,
-          });
-
-          return [
-            {
-              range: model.getFullModelRange(),
-              text: formatted,
-            },
-          ];
-        },
-      }
-    );
-
-    editorRef.current = { editor: editor, monaco: monaco };
-
-    checkFunction() && lint();
+    checkFunction();
 
     publish("EDITOR_LOADING_COMPLETED", true);
 
@@ -297,23 +187,19 @@ const VFSEditor = React.forwardRef((props, ref) => {
   }, [context.nucleoid.functions, editorRef]);
 
   React.useEffect(() => {
-    if (editorRef.current) {
-      checkFunction() && lint();
+    if (editorRef?.current) {
+      checkFunction();
       clearModels();
     }
-  }, [context, checkFunction, api, lint, clearModels]);
+  }, [context, checkFunction, api, clearModels]);
 
   return (
     <Box sx={{ height: "100%" }}>
-      <MonacoEditor
-        data-cy="editor-monacoEditor"
-        key={themeStorage}
-        height={"96%"}
-        defaultLanguage="typescript"
+      <NucEditor
         defaultValue={file.code}
-        onChange={handleChange}
-        onMount={handleEditorDidMount}
         path={file.path}
+        onMount={handleEditorDidMount}
+        onCodeEditorChange={handleChange}
         options={{
           tabSize: 2,
           minimap: {

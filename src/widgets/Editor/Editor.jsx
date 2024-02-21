@@ -6,16 +6,14 @@ import service from "../../service";
 import styles from "../../layouts/HorizontalSplitLayout/styles";
 import { useContext } from "../../context/context";
 import { useStorage } from "@nucleoidjs/webstorage";
-
+import NucEditor from "../../components/NucEditor/NucEditor";
 import { Fab, Grid } from "@mui/material";
-import MonacoEditor, { useMonaco } from "@monaco-editor/react";
-import React, { useCallback, useEffect, useRef } from "react";
+import { useMonaco } from "@monaco-editor/react";
+import React, { useCallback, useEffect } from "react";
 
 const Editor = React.forwardRef((props, ref) => {
   const monaco = useMonaco();
-  const editorRef = useRef(null);
-
-  const [themeStorage] = useStorage("platform", "theme", "light");
+  const editorRef = React.useRef(null);
 
   const [state, distpach] = useContext();
   const { setLoading, logic, query } = props;
@@ -24,11 +22,11 @@ const Editor = React.forwardRef((props, ref) => {
   useEffect(() => {
     if (query) {
       setTimeout(() => {
-        if (ref?.current) {
-          ref.current.focus();
-          ref.current.setValue(state.get("pages.query.text"));
-          ref.current.setPosition({ lineNumber: 1, column: 1000 });
-          ref.current.addAction({
+        if (editorRef?.current) {
+          editorRef.current.focus();
+          editorRef.current.setValue(state.get("pages.query.text"));
+          editorRef.current.setPosition({ lineNumber: 1, column: 1000 });
+          editorRef.current.addAction({
             id: "lintEvent",
             label: "lintEvent",
             keybindings: [
@@ -39,8 +37,8 @@ const Editor = React.forwardRef((props, ref) => {
           });
 
           const query = state.get("pages.query");
-          ref?.current.onKeyUp(() => {
-            query.text = ref?.current?.getValue();
+          editorRef?.current.onKeyUp(() => {
+            query.text = editorRef?.current?.getValue();
           });
         }
       }, 1);
@@ -51,7 +49,7 @@ const Editor = React.forwardRef((props, ref) => {
   const handleQuery = () => {
     setLoading(true);
     service
-      .query(ref ? ref.current.getValue() : null)
+      .query(editorRef ? editorRef.current.getValue() : null)
       .then((data) => {
         try {
           distpach({
@@ -76,16 +74,10 @@ const Editor = React.forwardRef((props, ref) => {
       });
   };
   function editorOnMount(editor, monaco) {
-    editorRef.current = editor;
-
-    monaco.editor.defineTheme("custom-dark-theme", monacoDarkTheme);
-
-    monaco.editor.setTheme(
-      themeStorage === "light" ? "vs-light" : "custom-dark-theme"
-    );
+    editorRef.current = { editor, monaco };
 
     if (logic) {
-      setModel();
+      setLogicModel(editor, monaco);
     }
 
     if (query) {
@@ -93,11 +85,11 @@ const Editor = React.forwardRef((props, ref) => {
     }
   }
 
-  const setModel = useCallback(() => {
+  const setLogicModel = useCallback(() => {
     monaco?.editor.getModels().forEach((model) => model.dispose());
     const definition = selectedLogic.definition.trim();
     const model = monaco?.editor.createModel(definition, "typescript");
-    editorRef?.current.setModel(model);
+    editorRef?.current.editor.setModel(model);
   }, [selectedLogic, monaco?.editor, editorRef]);
 
   const setQueryModel = useCallback(() => {
@@ -125,32 +117,19 @@ const Editor = React.forwardRef((props, ref) => {
 
   React.useEffect(() => {
     if (editorRef.current && logic) {
-      setModel();
+      setLogicModel();
     }
     if (editorRef.current && query) {
       setQueryModel();
     }
-  }, [state, logic, setModel]);
+  }, [state, logic, setLogicModel, setQueryModel]);
 
   return (
     <>
-      <MonacoEditor
-        key={themeStorage}
-        height={"100%"}
-        defaultLanguage="typescript"
+      <NucEditor
         onMount={editorOnMount}
-        onChange={handleChange}
-        options={{
-          tabSize: 2,
-          minimap: {
-            enabled: false,
-          },
-          scrollbar: {
-            vertical: "hidden",
-            horizontal: "hidden",
-          },
-          renderLineHighlightOnlyWhenFocus: true,
-        }}
+        onCodeEditorChange={handleChange}
+        setEditorRef={editorRef}
       />
       <Grid container item sx={styles.runButton}>
         <QueryAIButton />
