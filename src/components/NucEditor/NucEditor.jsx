@@ -129,7 +129,7 @@ function NucEditor({ onCodeEditorChange, defaultValue, path, onMount }) {
     lint();
     onMount && onMount(editor, monaco);
 
-    publish("EDITOR_LOADING_COMPLETED", true);
+    publish("PAGE_LOADING_COMPLETED", true);
   }
 
   function handleChange(e) {

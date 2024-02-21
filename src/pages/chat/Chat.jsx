@@ -7,7 +7,7 @@ import React, { useEffect } from "react";
 
 function Chat() {
   useEffect(() => {
-    publish("EDITOR_LOADING_COMPLETED", true);
+    publish("PAGE_LOADING_COMPLETED", true);
   }, []);
   return (
     <Page title="Chat">

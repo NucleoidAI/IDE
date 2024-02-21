@@ -1,10 +1,7 @@
 import { BrowserRouter } from "react-router-dom";
-import Chat from "./pages/chat";
-import ChatContainer from "./containers/Chat/Chat";
 import ContextProvider from "./context/context";
 import EventRegistry from "./EventRegistry";
 import IDE from "./containers/IDE"; // eslint-disable-line
-import Mobile from "./pages/ide/Mobile";
 import Path from "./utils/Path";
 import React from "react";
 import RouteManager from "./RouteManager";
@@ -50,7 +47,7 @@ function App() {
     window.location.hostname === "nucleoid.com" ? 1000 - elapsed : 0;
 
   React.useEffect(() => {
-    subscribe("EDITOR_LOADING_COMPLETED", () => {
+    subscribe("PAGE_LOADING_COMPLETED", () => {
       setTimeout(() => {
         progressElement.classList.add("hidden");
       }, delay);
