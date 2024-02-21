@@ -1,11 +1,11 @@
 import { Box } from "@mui/material";
-import Chat from "../../widgets/Chat";
 import EducationDrawer from "../../components/EducationDrawer/EducationDrawer";
 import GlobalSnackMessage from "../../components/GlobalSnackMessage";
 import GraphDialog from "../../components/GraphDialog/GraphDialog";
-import Menu from "../../components/Menu";
+import Menu from "../../widgets/Menu";
 import Onboard from "../../components/Onboard";
 import { Outlet } from "react-router-dom"; // eslint-disable-line
+import PopChat from "../../widgets/PopChat";
 import ProcessDrawer from "../../widgets/ProcessDrawer/ProcessDrawer";
 import React from "react";
 import Settings from "../../settings";
@@ -25,7 +25,7 @@ function IDE() {
       <ProcessDrawer />
       <SwaggerDialog />
       <GlobalSnackMessage />
-      <Chat />
+      <PopChat />
       <GraphDialog />
     </Box>
   );

@@ -1,3 +1,5 @@
+import Chat from "./pages/chat";
+import ChatContainer from "./containers/Chat/Chat";
 import ContextProvider from "./context/context";
 import EventRegistry from "./EventRegistry";
 import IDE from "./containers/IDE"; // eslint-disable-line
@@ -153,8 +155,6 @@ function App() {
 
             return setContext("error");
           });
-      } else {
-        window.location.assign(`${window.location.origin}/ide/sample/api`);
       }
     }
 
@@ -184,6 +184,9 @@ function App() {
                     element={route.element}
                   />
                 ))}
+              </Route>
+              <Route path="/" element={<ChatContainer />}>
+                <Route path="/chat" element={<Chat />} />
               </Route>
               <Route path={"/graph"} />
               <Route path={"*"} element={<Navigate to="/" />} />

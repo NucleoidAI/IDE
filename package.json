@@ -7,7 +7,6 @@
   "homepage": "/ide",
   "type": "module",
   "scripts": {
-    "prepare": "node prepare.cjs",
     "test": "jest",
     "dev": "vite",
     "build": "vite build",
@@ -54,6 +53,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
+    "@types/prismjs": "^1.26.3",
     "@vitejs/plugin-react": "^4.0.0",
     "babel-jest": "^29.5.0",
     "cypress": "^13.3.1",
