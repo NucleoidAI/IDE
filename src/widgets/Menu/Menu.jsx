@@ -208,7 +208,7 @@ const MenuLinks = (props) => {
 
   return (
     <>
-      {props.list.map(({ title, link, anchor, icon }) => {
+      {props.list[0].pages.map(({ title, link, anchor, icon }) => {
         return (
           <React.Fragment key={title}>
             <ListItemButton

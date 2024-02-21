@@ -4,6 +4,7 @@ import FunctionTree from "../widgets/FunctionTree";
 import Logo from "../components/Logo";
 import ParamView from "../components/ParamView";
 import { publish } from "@nucleoidjs/react-event";
+
 import { Grid, Paper } from "@mui/material";
 import React, { useEffect } from "react";
 
@@ -69,7 +70,7 @@ const style = { height: 300, width: 300 };
 function Dev() {
   useEffect(() => {
     setTimeout(() => {
-      publish("EDITOR_LOADING_COMPLETED", {});
+      publish("IDE_LOADING_COMPLETED", {});
     }, 0);
   }, []);
 
