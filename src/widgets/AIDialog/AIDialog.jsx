@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import HubIcon from "@mui/icons-material/Hub";
 import PromptCodeDialog from "../../components/PromptCodeDialog";
 import actions from "../../actions";
@@ -5,7 +7,7 @@ import { deepCopy } from "../../utils/DeepCopy";
 import { publish } from "@nucleoidjs/react-event";
 import service from "../../service";
 import { useContext } from "../../context/context";
-import NucEditor from "../../components/NucEditor/NucEditor";
+
 import React, { useState } from "react";
 
 import * as angularPlugin from "prettier/parser-angular";

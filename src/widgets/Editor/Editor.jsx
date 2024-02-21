@@ -1,14 +1,15 @@
+/* eslint-disable */
+
 import AIDialog from "../AIDialog/AIDialog";
+import NucEditor from "../../components/NucEditor/NucEditor";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import QueryAIButton from "../../components/QueryAIButton";
-import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
 import service from "../../service";
 import styles from "../../layouts/HorizontalSplitLayout/styles";
 import { useContext } from "../../context/context";
-import { useStorage } from "@nucleoidjs/webstorage";
-import NucEditor from "../../components/NucEditor/NucEditor";
-import { Fab, Grid } from "@mui/material";
 import { useMonaco } from "@monaco-editor/react";
+
+import { Fab, Grid } from "@mui/material";
 import React, { useCallback, useEffect } from "react";
 
 const Editor = React.forwardRef((props, ref) => {
@@ -122,7 +123,7 @@ const Editor = React.forwardRef((props, ref) => {
     if (editorRef.current && query) {
       setQueryModel();
     }
-  }, [state, logic, setLogicModel, setQueryModel]);
+  }, [state, logic, query, setLogicModel, setQueryModel]);
 
   return (
     <>

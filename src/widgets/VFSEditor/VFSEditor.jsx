@@ -1,4 +1,5 @@
 import AIDialog from "../AIDialog/AIDialog";
+import NucEditor from "../../components/NucEditor/NucEditor";
 import OpenAIButton from "../../components/OpenAIButton";
 import Path from "../../utils/Path";
 import axios from "axios";
@@ -11,8 +12,6 @@ import { useContext } from "../../context/context";
 
 import { Backdrop, Box } from "@mui/material";
 import React, { useCallback } from "react";
-
-import NucEditor from "../../components/NucEditor/NucEditor";
 
 const options = {
   env: {

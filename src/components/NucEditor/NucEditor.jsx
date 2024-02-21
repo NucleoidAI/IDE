@@ -1,8 +1,8 @@
 import Editor from "@monaco-editor/react";
+import React from "react";
 import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
 import { useRef } from "react";
 import { useStorage } from "@nucleoidjs/webstorage";
-import React from "react";
 
 import * as angularPlugin from "prettier/parser-angular";
 import * as babelPlugin from "prettier/parser-babel";
