@@ -33,7 +33,7 @@ const Mobile = () => {
   useEffect(() => {
     publish("IDE_LOADING_COMPLETED", true);
     const timer = setTimeout(() => {
-      window.location.href = "https://nucleoid.com/docs/get-started";
+      window.location.href = "https://nucleoid.com/docs";
     }, 5000);
 
     return () => clearTimeout(timer);
