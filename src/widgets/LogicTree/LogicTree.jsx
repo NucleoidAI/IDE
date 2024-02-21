@@ -1,7 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import HubIcon from "@mui/icons-material/Hub";
 import LogicTreeItem from "./LogicTreeItem";
-import { TreeView } from "@mui/x-tree-view/TreeView";
+import { TreeView } from "@mui/lab";
 import { alpha } from "@mui/material/styles";
 import { useContext } from "../../context/context";
 

@@ -1,4 +1,4 @@
-import { TreeItem, treeItemClasses } from "@mui/x-tree-view/TreeItem";
+import { TreeItem, treeItemClasses } from "@mui/lab";
 import { alpha, styled } from "@mui/material/styles";
 
 const CustomTreeItem = ({ label, ...otherProps }) => {
