@@ -22,12 +22,12 @@ const RouteManager = ({ routes }) => {
                 element={<Navigate to={route.container?.indexPath} />}
               />
               {route.pages &&
-                route.pages.map((child, j) => (
-                  <Route key={j} path={child.path} element={child.element} />
+                route.pages.map((page, j) => (
+                  <Route key={j} path={page.path} element={page.element} />
                 ))}
             </Route>
           ) : (
-            <Route key={i} path={route.path} element={route.element} />
+            <Route key={i} path={route.path} element={route?.element} />
           )
         )}
       </Routes>

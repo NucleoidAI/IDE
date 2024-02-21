@@ -71,6 +71,7 @@ const routes = [
     path: "/mobile",
     element: <Mobile />,
   },
+  { path: "/graph" },
 ];
 
 export default routes;
