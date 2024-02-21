@@ -1,7 +1,7 @@
 import { Folder, Hub, Send, Storage, ViewCarousel } from "@mui/icons-material";
 import React, { lazy } from "react";
 
-const Chat = lazy(() => import("./pages/Chat"));
+const Chat = lazy(() => import("./pages/chat"));
 const API = lazy(() => import("./pages/ide/API"));
 const ChatContainer = lazy(() => import("./Containers/Chat"));
 const Functions = lazy(() => import("./pages/ide/Functions"));
