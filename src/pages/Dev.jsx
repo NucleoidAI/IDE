@@ -70,7 +70,7 @@ const style = { height: 300, width: 300 };
 function Dev() {
   useEffect(() => {
     setTimeout(() => {
-      publish("PAGE_LOADING_COMPLETED", {});
+      publish("IDE_LOADING_COMPLETED", {});
     }, 0);
   }, []);
 

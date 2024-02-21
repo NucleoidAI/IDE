@@ -159,7 +159,7 @@ const VFSEditor = React.forwardRef((props, ref) => {
 
     if (ref) ref.current = editor;
 
-    publish("PAGE_LOADING_COMPLETED", true);
+    publish("IDE_LOADING_COMPLETED", true);
   }
 
   const clearModels = useCallback(() => {
