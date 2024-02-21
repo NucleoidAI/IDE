@@ -1,8 +1,9 @@
 import Editor from "@monaco-editor/react";
 import React from "react";
 import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
-import { useRef } from "react";
 import { useStorage } from "@nucleoidjs/webstorage";
+
+import { useEffect, useRef } from "react";
 
 import * as angularPlugin from "prettier/parser-angular";
 import * as babelPlugin from "prettier/parser-babel";
@@ -75,6 +76,19 @@ function NucEditor({ onCodeEditorChange, defaultValue, path, onMount }) {
     }
   }, []);
 
+  useEffect(() => {
+    const formatDocument = () => {
+      const editor = editorRef.current?.editor;
+      if (editor) {
+        editor.getAction("editor.action.formatDocument").run();
+      }
+    };
+
+    if (editorRef.current) {
+      formatDocument();
+    }
+  }, [path]);
+
   function editorOnMount(editor, monaco) {
     window.EditorInstance = editor;
 
@@ -93,6 +107,7 @@ function NucEditor({ onCodeEditorChange, defaultValue, path, onMount }) {
         const formatted = prettierStandalone.format(text, {
           parser: "typescript",
           plugins: plugins,
+          singleQuote: true,
         });
 
         return [
