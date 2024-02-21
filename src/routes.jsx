@@ -1,52 +1,75 @@
-import API from "./pages/ide/API";
-import Functions from "./pages/ide/Functions";
-import HubIcon from "@mui/icons-material/Hub";
-import Logic from "./pages/ide/Logic";
-import Logs from "./pages/ide/Logs";
-import Query from "./pages/ide/Query";
+import { Folder, Hub, Send, Storage, ViewCarousel } from "@mui/icons-material";
+import React, { lazy } from "react";
 
-import { Folder, Send, Storage, ViewCarousel } from "@mui/icons-material";
+const Chat = lazy(() => import("./pages/Chat"));
+const API = lazy(() => import("./pages/ide/API"));
+const ChatContainer = lazy(() => import("./Containers/Chat"));
+const Functions = lazy(() => import("./pages/ide/Functions"));
+const IDE = lazy(() => import("./containers/IDE"));
+const Logic = lazy(() => import("./pages/ide/Logic"));
+const Logs = lazy(() => import("./pages/ide/Logs"));
+const Mobile = lazy(() => import("./pages/ide/Mobile"));
+const Query = lazy(() => import("./pages/ide/Query"));
 
 const routes = [
   {
-    title: "API",
-    link: "api",
-    path: "/:project/api",
-    anchor: true,
-    element: <API />,
-    icon: <Send />,
+    container: { element: <IDE />, indexPath: "/sample/api" },
+    pages: [
+      {
+        title: "API",
+        link: "api",
+        path: "/:project/api",
+        anchor: true,
+        element: <API />,
+        icon: <Send />,
+      },
+      {
+        title: "Functions",
+        link: "functions",
+        path: "/:project/functions",
+        anchor: true,
+        element: <Functions />,
+        icon: <Folder />,
+      },
+      {
+        title: "Logic",
+        link: "logic",
+        path: "/:project/logic",
+        anchor: false,
+        element: <Logic />,
+        icon: <Hub />,
+      },
+      {
+        title: "Query",
+        link: "query",
+        path: "/:project/query",
+        anchor: false,
+        element: <Query />,
+        icon: <Storage />,
+      },
+      {
+        title: "Logs",
+        link: "logs",
+        path: "/:project/logs",
+        anchor: false,
+        element: <Logs />,
+        icon: <ViewCarousel />,
+      },
+    ],
   },
   {
-    title: "Functions",
-    link: "functions",
-    path: "/:project/functions",
-    anchor: true,
-    element: <Functions />,
-    icon: <Folder />,
+    container: { element: <ChatContainer />, indexPath: "/chat" },
+    pages: [
+      {
+        title: "Chat",
+        path: "/chat",
+        element: <Chat />,
+      },
+    ],
   },
   {
-    title: "Logic",
-    link: "logic",
-    path: "/:project/logic",
-    anchor: false,
-    element: <Logic />,
-    icon: <HubIcon />,
-  },
-  {
-    title: "Query",
-    link: "query",
-    path: "/:project/query",
-    anchor: false,
-    element: <Query />,
-    icon: <Storage />,
-  },
-  {
-    title: "Logs",
-    link: "logs",
-    path: "/:project/logs",
-    anchor: false,
-    element: <Logs />,
-    icon: <ViewCarousel />,
+    path: "/mobile",
+    element: <Mobile />,
   },
 ];
 
