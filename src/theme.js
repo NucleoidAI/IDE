@@ -26,10 +26,6 @@ let lightTheme = createTheme({
       variant: "contained",
     },
   },
-});
-
-lightTheme = {
-  ...lightTheme,
   components: {
     MuiCssBaseline: {
       styleOverrides: {
@@ -129,10 +125,6 @@ lightTheme = {
       },
     },
   },
-};
-
-lightTheme = {
-  ...lightTheme,
   custom: {
     schema: {
       width: 75,
@@ -178,14 +170,10 @@ lightTheme = {
       },
     },
   },
-};
+  spacing: (factor) => 8 * factor, // Bootstrap strategy
+});
 
-lightTheme = {
-  ...lightTheme,
-  spacing: (factor) => 8 * factor,
-};
-
-let darkTheme = createTheme({
+const darkTheme = createTheme({
   palette: {
     primary: {
       main: base.primary.dark,
@@ -213,10 +201,6 @@ let darkTheme = createTheme({
       secondary: base.grey[500],
     },
   },
-});
-
-darkTheme = {
-  ...darkTheme,
   components: {
     MuiCssBaseline: {
       styleOverrides: {
@@ -331,14 +315,14 @@ darkTheme = {
     MuiFab: {
       styleOverrides: {
         root: {
-          backgroundColor: base.grey[800],
-          color: base.common.white,
+          backgroundColor: base.grey[900],
+          color: base.grey[400],
           "&:hover": {
             backgroundColor: base.grey[700],
           },
           boxShadow: "none",
           "&.Mui-disabled": {
-            backgroundColor: base.grey[600],
+            backgroundColor: base.grey[900],
           },
         },
       },
@@ -352,10 +336,6 @@ darkTheme = {
       },
     },
   },
-};
-
-darkTheme = {
-  ...darkTheme,
   custom: {
     schema: {
       width: 75,
@@ -403,12 +383,8 @@ darkTheme = {
       },
     },
   },
-};
-
-darkTheme = {
-  ...darkTheme,
   spacing: (factor) => 8 * factor, // Bootstrap strategy
-};
+});
 
 const theme = lightTheme;
 export { lightTheme, darkTheme };
