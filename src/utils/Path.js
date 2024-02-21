@@ -28,6 +28,10 @@ const getMode = () => {
     return "sample";
   } else if (Number(id)) {
     return "cloud";
+  } else if (id === "chat") {
+    return "chat";
+  } else if (id === "mobile") {
+    return "mobile";
   }
 };
 

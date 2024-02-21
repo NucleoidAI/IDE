@@ -146,16 +146,20 @@ function App() {
         return setContext(initContext(context));
       }
       if (mode === "cloud") {
-        project(id)
-          .then((result) => {
-            initVfs(result);
-            return setContext(initContext(result));
-          })
-          .catch(() => {
-            progressElement.classList.add("hidden");
-
-            return setContext("error");
-          });
+        project(id).then((result) => {
+          initVfs(result);
+          return setContext(initContext(result));
+        });
+      }
+      if (mode === "chat") {
+        const context = sampleProject();
+        initVfs(context);
+        return setContext(initContext(context));
+      }
+      if (mode === "mobile") {
+        return setContext("mobile");
+      } else {
+        window.location.assign(`${window.location.origin}/ide/sample/api`);
       }
     }
 
