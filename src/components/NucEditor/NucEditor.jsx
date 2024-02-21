@@ -136,7 +136,7 @@ function NucEditor({ onCodeEditorChange, defaultValue, path, onMount }) {
       lint();
     }, 400);
 
-    onCodeEditorChange(e);
+    onCodeEditorChange && onCodeEditorChange(e);
   }
 
   return (
@@ -146,7 +146,7 @@ function NucEditor({ onCodeEditorChange, defaultValue, path, onMount }) {
       key={themeStorage}
       defaultValue={defaultValue}
       path={path}
-      onChange={onCodeEditorChange}
+      onChange={handleChange}
       onMount={editorOnMount}
       height={"96%"}
       defaultLanguage="typescript"

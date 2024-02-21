@@ -5,7 +5,7 @@ import { deepCopy } from "../../utils/DeepCopy";
 import { publish } from "@nucleoidjs/react-event";
 import service from "../../service";
 import { useContext } from "../../context/context";
-
+import NucEditor from "../../components/NucEditor/NucEditor";
 import React, { useState } from "react";
 
 import * as angularPlugin from "prettier/parser-angular";
@@ -49,9 +49,6 @@ function AIDialog({ editor, declarative, imperative, page }) {
     request: "",
   });
 
-  const setEditorRef = (ref) => {
-    editorRef.current = ref;
-  };
   const generateContent = () => {
     const context = [];
 
@@ -89,7 +86,7 @@ function AIDialog({ editor, declarative, imperative, page }) {
             "typescript"
           );
 
-          editorRef.current.editor.setModel(model);
+          editorRef.current.nucEditor.setModel(model);
           setIsCodeGenerated(true);
         })
         .finally(() => setLoading(false));
@@ -102,6 +99,7 @@ function AIDialog({ editor, declarative, imperative, page }) {
   };
 
   function logicValidation(generatedCode) {
+    console.log(generatedCode);
     const declarationClass = generatedCode
       ?.split("$")[1]
       ?.match(/\b(\w+)\b/)[0];
@@ -110,7 +108,7 @@ function AIDialog({ editor, declarative, imperative, page }) {
   }
 
   const handleSaveAIResponse = () => {
-    const generatedCode = editorRef.current.editor?.getModel().getValue();
+    const generatedCode = editorRef.current.nucEditor?.getModel().getValue();
     if (mode === "declarative") {
       handleSaveDeclarative(generatedCode);
     }
@@ -178,7 +176,9 @@ function AIDialog({ editor, declarative, imperative, page }) {
     }
   };
 
-  const onCodeEditorChange = () => {};
+  const editorOnMount = (nucEditor, monaco) => {
+    editorRef.current = { nucEditor, monaco };
+  };
 
   const handleClose = () => {
     dispatch({ type: actions.closeAIDialog, payload: { page } });
@@ -196,9 +196,8 @@ function AIDialog({ editor, declarative, imperative, page }) {
       handleSendAIClick={handleSendAIClick}
       handleSaveAIResponse={handleSaveAIResponse}
       handlePromptChange={handleInputChange}
-      onCodeEditorChange={onCodeEditorChange}
       setPromptValue={setPromptValue}
-      setEditorRef={setEditorRef}
+      onMount={editorOnMount}
       handleClose={handleClose}
       promptValue={promptValue}
       isCodeGenerated={isCodeGenerated}

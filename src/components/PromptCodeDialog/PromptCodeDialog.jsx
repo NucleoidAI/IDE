@@ -1,4 +1,3 @@
-import CodeEditor from "../CodeEditor/CodeEditor";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
@@ -7,6 +6,7 @@ import PromptInput from "../PromptInput/PromptInput";
 import Slide from "@mui/material/Slide";
 import { alpha } from "@mui/material/styles";
 import { useContext } from "../../context/context";
+import NucEditor from "../../components/NucEditor/NucEditor";
 
 import {
   Box,
@@ -21,13 +21,12 @@ function PromptCodeDialog({
   handleSendAIClick,
   handleSaveAIResponse,
   handlePromptChange,
-  onCodeEditorChange,
   setPromptValue,
   promptValue,
   loading,
   page,
   logo,
-  title,
+  onMount,
   inputPlaceHolder,
   setEditorRef,
   isCodeGenerated,
@@ -81,10 +80,7 @@ function PromptCodeDialog({
                       alignItems: "flex-end",
                     }}
                   >
-                    <CodeEditor
-                      onCodeEditorChange={onCodeEditorChange}
-                      setEditorRef={setEditorRef}
-                    />
+                    <NucEditor onMount={onMount} />
 
                     <IconButton
                       data-cy="promptCodeDialog-saveAIResponse-button"
