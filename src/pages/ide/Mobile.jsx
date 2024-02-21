@@ -1,6 +1,16 @@
+import CardMedia from "@mui/material/CardMedia";
 import React from "react";
+import { publish } from "@nucleoidjs/react-event";
+import { useEffect } from "react";
 
-import { Box, CssBaseline, Grid, Typography, styled } from "@mui/material";
+import {
+  Box,
+  CssBaseline,
+  Grid,
+  Stack,
+  Typography,
+  styled,
+} from "@mui/material";
 
 const Mobile = () => {
   const Nucleoid = styled("span")({
@@ -20,6 +30,14 @@ const Mobile = () => {
     fontSize: "22px",
   });
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      window.location.href = "https://nucleoid.com/docs/get-started";
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <>
       <CssBaseline />
@@ -33,28 +51,56 @@ const Mobile = () => {
           bgcolor: "#323a40",
         }}
       >
-        <Grid container flexDirection={"row"} sx={{ height: 100 }}>
-          <Grid
-            item
-            xs={12}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "50px",
-            }}
-          >
-            <Nucleoid>Nucleoid</Nucleoid> &nbsp;
-            <Typography display={"inline"} fontSize={"18px"} color={"#dfdfdf"}>
-              IDE
-            </Typography>
+        <Stack
+          direction={"column"}
+          sx={{
+            display: "flex",
+            height: 1,
+            width: 1,
+            alignItems: "center",
+            justifyContent: "space-around",
+          }}
+        >
+          <CardMedia
+            component="img"
+            image="https://cdn.nucleoid.com/media/d1afb01b-ca2e-4752-8f5b-d01f9c73e8d6.png"
+            sx={{ width: 300, height: 300 }}
+          />
+          <Grid container flexDirection={"row"} sx={{ height: 100 }}>
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "50px",
+              }}
+            >
+              <Nucleoid>Nucleoid</Nucleoid> &nbsp;
+              <Typography
+                display={"inline"}
+                fontSize={"18px"}
+                color={"#dfdfdf"}
+              >
+                IDE
+              </Typography>
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              <Typography
+                display={"inline"}
+                fontSize={"16px"}
+                color={"#dfdfdf"}
+              >
+                Nucleoid IDE cannot be used on mobile devices
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
-            <Typography display={"inline"} fontSize={"18px"} color={"#dfdfdf"}>
-              Nucleoid IDE cannot be used on mobile devices
-            </Typography>
-          </Grid>
-        </Grid>
+        </Stack>
       </Box>
     </>
   );
