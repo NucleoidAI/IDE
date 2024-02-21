@@ -1,10 +1,13 @@
+import { BrowserRouter } from "react-router-dom";
 import Chat from "./pages/chat";
 import ChatContainer from "./containers/Chat/Chat";
 import ContextProvider from "./context/context";
 import EventRegistry from "./EventRegistry";
 import IDE from "./containers/IDE"; // eslint-disable-line
+import Mobile from "./pages/ide/Mobile";
 import Path from "./utils/Path";
 import React from "react";
+import RouteManager from "./RouteManager";
 import Settings from "./settings";
 import State from "./state";
 import axios from "axios";
@@ -16,7 +19,6 @@ import { subscribe } from "@nucleoidjs/react-event";
 import { useStorage } from "@nucleoidjs/webstorage";
 import vfs from "./vfs";
 
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import {
   CssBaseline,
   StyledEngineProvider,
@@ -179,23 +181,7 @@ function App() {
         <BrowserRouter basename="ide">
           <ContextProvider state={context} reducer={contextReducer}>
             <EventRegistry />
-            <Routes>
-              <Route path="/" element={<IDE />}>
-                <Route index element={<Navigate to="/sample/api" />} />
-                {routes.map((route) => (
-                  <Route
-                    path={route.path}
-                    key={route.link}
-                    element={route.element}
-                  />
-                ))}
-              </Route>
-              <Route path="/" element={<ChatContainer />}>
-                <Route path="/chat" element={<Chat />} />
-              </Route>
-              <Route path={"/graph"} />
-              <Route path={"*"} element={<Navigate to="/" />} />
-            </Routes>
+            <RouteManager routes={routes} mode={Path.getMode()} />
           </ContextProvider>
         </BrowserRouter>
       </ThemeProvider>
