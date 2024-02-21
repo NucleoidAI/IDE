@@ -130,6 +130,8 @@ const ProcessDrawer = () => {
         return true;
       case "functions":
         return true;
+      case "logic":
+        return true;
       case "query":
         return false;
       case "logs":

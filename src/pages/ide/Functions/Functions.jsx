@@ -1,7 +1,7 @@
-import Editor from "../../../widgets/Editor";
 import FunctionDialog from "../../../widgets/FunctionDialog/FunctionDialog";
 import FunctionTree from "../../../widgets/FunctionTree";
 import Page from "../../../components/Page";
+import VFSEditor from "../../../widgets/VFSEditor";
 import VerticalSplitLayout from "../../../layouts/VerticalSplitLayout";
 import { useContext } from "../../../context/context";
 
@@ -20,7 +20,7 @@ function Functions() {
       <VerticalSplitLayout
         dialog={<FunctionDialog />}
         content1={<FunctionTree openFunctionDialog={openFunctionDialog} />}
-        content2={<Editor functions />}
+        content2={<VFSEditor functions />}
       />
     </Page>
   );

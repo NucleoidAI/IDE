@@ -1,5 +1,7 @@
 import API from "./pages/ide/API";
 import Functions from "./pages/ide/Functions";
+import HubIcon from "@mui/icons-material/Hub";
+import Logic from "./pages/ide/Logic";
 import Logs from "./pages/ide/Logs";
 import Query from "./pages/ide/Query";
 
@@ -21,6 +23,14 @@ const routes = [
     anchor: true,
     element: <Functions />,
     icon: <Folder />,
+  },
+  {
+    title: "Logic",
+    link: "logic",
+    path: "/:project/logic",
+    anchor: false,
+    element: <Logic />,
+    icon: <HubIcon />,
   },
   {
     title: "Query",
