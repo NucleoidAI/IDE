@@ -4,6 +4,7 @@ import AIDialog from "../AIDialog/AIDialog";
 import NucEditor from "../../components/NucEditor/NucEditor";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import QueryAIButton from "../../components/QueryAIButton";
+import { publish } from "@nucleoidjs/react-event";
 import service from "../../service";
 import styles from "../../layouts/HorizontalSplitLayout/styles";
 import { useContext } from "../../context/context";
@@ -84,6 +85,8 @@ const Editor = React.forwardRef((props, ref) => {
     if (query) {
       setQueryModel();
     }
+
+    publish("PAGE_LOADING_COMPLETED", true);
   }
 
   const setLogicModel = useCallback(() => {

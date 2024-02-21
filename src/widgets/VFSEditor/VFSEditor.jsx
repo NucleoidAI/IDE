@@ -6,6 +6,7 @@ import axios from "axios";
 import config from "../../../config";
 import { contextToMap } from "../../utils/Parser";
 import { parser } from "react-nucleoid";
+import { publish } from "@nucleoidjs/react-event";
 import rules from "./rules";
 import { useContext } from "../../context/context";
 
@@ -157,6 +158,8 @@ const VFSEditor = React.forwardRef((props, ref) => {
     checkFunction();
 
     if (ref) ref.current = editor;
+
+    publish("PAGE_LOADING_COMPLETED", true);
   }
 
   const clearModels = useCallback(() => {

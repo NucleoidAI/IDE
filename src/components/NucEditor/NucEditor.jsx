@@ -1,7 +1,6 @@
 import Editor from "@monaco-editor/react";
 import React from "react";
 import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
-import { publish } from "@nucleoidjs/react-event";
 import { useRef } from "react";
 import { useStorage } from "@nucleoidjs/webstorage";
 
@@ -128,8 +127,6 @@ function NucEditor({ onCodeEditorChange, defaultValue, path, onMount }) {
 
     lint();
     onMount && onMount(editor, monaco);
-
-    publish("PAGE_LOADING_COMPLETED", true);
   }
 
   function handleChange(e) {
