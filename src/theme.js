@@ -313,6 +313,23 @@ const darkTheme = createTheme({
       },
     },
     MuiFab: {
+      variants: [
+        {
+          props: { variant: "button" },
+          style: (props) => ({
+            color: base.grey[400],
+            display: props.hide || props.loading ? "none" : "flex",
+
+            "&:hover": {
+              backgroundColor: base.grey[400],
+              color: base.grey[900],
+            },
+            "&:disabled": {
+              color: base.grey[700],
+            },
+          }),
+        },
+      ],
       styleOverrides: {
         root: {
           backgroundColor: base.grey[900],
