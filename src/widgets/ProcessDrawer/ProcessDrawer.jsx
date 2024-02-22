@@ -16,7 +16,6 @@ import { mapToContext } from "../../utils/Parser";
 import onboardDispatcher from "../../components/Onboard/onboardDispatcher";
 import scheduler from "../../connectionScheduler";
 import service from "../../service";
-import styles from "./styles";
 import { toOpenApi } from "../../adapters/openapi/adapter";
 import { useContext } from "../../context/context";
 import { useLocation } from "react-router-dom";
@@ -242,7 +241,7 @@ function SwaggerButton() {
         disabled={!runtimeConnection.status}
         onClick={handleOpenSwaggerDialog}
       >
-        <ViewListIcon variant="pageIcon"/>
+        <ViewListIcon variant="pageIcon" />
       </ListItemButton>
     </Tooltip>
   );
