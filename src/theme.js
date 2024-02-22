@@ -37,7 +37,102 @@ const micAnimation = {
   },
 };
 
-let lightTheme = createTheme({
+const commonThemeProperties = {
+  props: {
+    MuiButton: {
+      variant: "contained",
+    },
+  },
+  components: {
+    MuiDialog: {
+      styleOverrides: {
+        root: {
+          "& .MuiDialog-paper": {
+            borderRadius: "10px",
+          },
+        },
+      },
+    },
+    MuiListItemIcon: {
+      variants: [
+        {
+          props: { variant: "pageIcon" },
+          style: {
+            color: base.grey[400],
+          },
+        },
+      ],
+    },
+    MuiDataGrid: {
+      styleOverrides: {
+        root: {
+          "& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-cell:focus-within":
+            {
+              outline: "none",
+            },
+        },
+      },
+    },
+
+    MuiCircularProgress: {
+      variants: [
+        {
+          props: { show: false },
+          style: {
+            display: "none",
+          },
+        },
+      ],
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        },
+      },
+    },
+    MuiCardActions: {
+      styleOverrides: {
+        root: {
+          justifyContent: "center",
+        },
+      },
+    },
+    MuiTextField: {
+      defaultProps: {
+        variant: "standard",
+      },
+    },
+    MuiSelect: {
+      defaultProps: {
+        variant: "standard",
+      },
+    },
+    MuiSvgIcon: {
+      variants: [
+        {
+          props: { variant: "pageIcon" },
+          style: {
+            color: base.grey[400],
+          },
+        },
+      ],
+    },
+  },
+  custom: {
+    chat: {
+      inputBorderRadius: "15px",
+    },
+    schema: {
+      width: 75,
+    },
+  },
+  spacing: (factor) => 8 * factor,
+};
+
+const lightTheme = createTheme({
   palette: {
     primary: {
       main: "#747474",
@@ -57,11 +152,7 @@ let lightTheme = createTheme({
       messageBG: "#f5f5f9",
     },
   },
-  props: {
-    MuiButton: {
-      variant: "contained",
-    },
-  },
+  ...commonThemeProperties.props,
   components: {
     MuiCssBaseline: {
       styleOverrides: {
@@ -94,26 +185,15 @@ let lightTheme = createTheme({
           },
         },
       },
-    },
-    MuiDialog: {
-      styleOverrides: {
-        root: {
-          "& .MuiDialog-paper": {
-            borderRadius: "10px",
+      MuiDrawer: {
+        styleOverrides: {
+          paper: {
+            backgroundColor: "#343a43",
           },
         },
       },
     },
-    MuiListItemIcon: {
-      variants: [
-        {
-          props: { variant: "pageIcon" },
-          style: {
-            color: base.grey[400],
-          },
-        },
-      ],
-    },
+
     MuiFab: {
       variants: [
         {
@@ -139,26 +219,7 @@ let lightTheme = createTheme({
         },
       },
     },
-    MuiDataGrid: {
-      styleOverrides: {
-        root: {
-          "& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-cell:focus-within":
-            {
-              outline: "none",
-            },
-        },
-      },
-    },
-    MuiCircularProgress: {
-      variants: [
-        {
-          props: { show: false },
-          style: {
-            display: "none",
-          },
-        },
-      ],
-    },
+
     MuiDrawer: {
       styleOverrides: {
         paper: {
@@ -166,59 +227,13 @@ let lightTheme = createTheme({
         },
       },
     },
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-        },
-      },
-    },
-    MuiCardActions: {
-      styleOverrides: {
-        root: {
-          justifyContent: "center",
-        },
-      },
-    },
+
     MuiBackdrop: {
       styleOverrides: {
         root: {
           backgroundColor: "rgba(0,0,0,0.1)",
         },
       },
-    },
-    MuiTextField: {
-      defaultProps: {
-        variant: "standard",
-      },
-    },
-    MuiSelect: {
-      defaultProps: {
-        variant: "standard",
-      },
-    },
-    MuiSvgIcon: {
-      variants: [
-        {
-          props: { variant: "pageIcon" },
-          style: {
-            color: base.grey[400],
-          },
-        },
-      ],
-    },
-
-    MuiListItemIcon: {
-      variants: [
-        {
-          props: { variant: "pageIcon" },
-          style: {
-            color: base.grey[400],
-          },
-        },
-      ],
     },
 
     MuiLinearProgress: {
@@ -229,14 +244,9 @@ let lightTheme = createTheme({
         },
       },
     },
+    ...commonThemeProperties.components,
   },
   custom: {
-    chat: {
-      inputBorderRadius: "15px",
-    },
-    schema: {
-      width: 75,
-    },
     apiTreeItem: {
       fontSize: 12,
       color: "#666",
@@ -277,8 +287,9 @@ let lightTheme = createTheme({
         paddingBottom: 1,
       },
     },
+    ...commonThemeProperties.custom,
   },
-  spacing: (factor) => 8 * factor, // Bootstrap strategy
+  spacing: (factor) => 8 * factor,
 });
 
 const darkTheme = createTheme({
@@ -348,16 +359,6 @@ const darkTheme = createTheme({
       },
     },
 
-    MuiDialog: {
-      styleOverrides: {
-        root: {
-          "& .MuiDialog-paper": {
-            borderRadius: "10px",
-          },
-        },
-      },
-    },
-
     MuiListItemButton: {
       styleOverrides: {
         root: {
@@ -375,27 +376,6 @@ const darkTheme = createTheme({
       },
     },
 
-    MuiListItemIcon: {
-      variants: [
-        {
-          props: { variant: "pageIcon" },
-          style: {
-            color: base.grey[400],
-          },
-        },
-      ],
-    },
-
-    MuiDataGrid: {
-      styleOverrides: {
-        root: {
-          "& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-cell:focus-within":
-            {
-              outline: "none",
-            },
-        },
-      },
-    },
     MuiDrawer: {
       styleOverrides: {
         paper: {
@@ -404,22 +384,6 @@ const darkTheme = createTheme({
       },
     },
 
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-        },
-      },
-    },
-    MuiCardActions: {
-      styleOverrides: {
-        root: {
-          justifyContent: "center",
-        },
-      },
-    },
     MuiBackdrop: {
       styleOverrides: {
         root: {
@@ -427,16 +391,7 @@ const darkTheme = createTheme({
         },
       },
     },
-    MuiTextField: {
-      defaultProps: {
-        variant: "standard",
-      },
-    },
-    MuiSelect: {
-      defaultProps: {
-        variant: "standard",
-      },
-    },
+
     MuiButton: {
       styleOverrides: {
         root: {
@@ -444,18 +399,6 @@ const darkTheme = createTheme({
         },
       },
     },
-
-    MuiCircularProgress: {
-      variants: [
-        {
-          props: { show: false },
-          style: {
-            display: "none",
-          },
-        },
-      ],
-    },
-
     MuiInputBase: {
       variants: [
         {
@@ -516,14 +459,9 @@ const darkTheme = createTheme({
         },
       },
     },
+    ...commonThemeProperties.components,
   },
   custom: {
-    chat: {
-      inputBorderRadius: "15px",
-    },
-    schema: {
-      width: 75,
-    },
     apiTreeItem: {
       fontSize: 12,
       color: base.grey[400],
@@ -566,8 +504,9 @@ const darkTheme = createTheme({
         paddingBottom: 1,
       },
     },
+    ...commonThemeProperties.custom,
   },
-  spacing: (factor) => 8 * factor, // Bootstrap strategy
+  spacing: (factor) => 8 * factor,
 });
 
 const theme = lightTheme;
