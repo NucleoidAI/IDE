@@ -1,5 +1,41 @@
+import { alpha } from "@mui/material/styles";
 import { base } from "./palette";
 import { createTheme } from "@mui/material";
+
+const micAnimation = {
+  "& span": {
+    display: "block",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    margin: "auto",
+    height: "32px",
+    width: "32px",
+    "&::before, &::after": {
+      content: '""',
+      display: "block",
+      position: "absolute",
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0,
+      margin: "auto",
+      height: "32px",
+      width: "32px",
+      border: "2px solid #FFF",
+      borderRadius: "50%",
+      opacity: 0,
+      animation:
+        "loader-6-1 1.5s cubic-bezier(0.075, 0.820, 0.165, 1.000) infinite",
+    },
+    "&::after": {
+      animation:
+        "loader-6-2 1.5s cubic-bezier(0.075, 0.820, 0.165, 1.000) .25s infinite",
+    },
+  },
+};
 
 let lightTheme = createTheme({
   palette: {
@@ -319,6 +355,7 @@ const darkTheme = createTheme({
           style: (props) => ({
             color: base.grey[400],
             display: props.hide || props.loading ? "none" : "flex",
+            ...(props.type === "mic" && props.activate ? micAnimation : {}),
 
             "&:hover": {
               backgroundColor: base.grey[400],
