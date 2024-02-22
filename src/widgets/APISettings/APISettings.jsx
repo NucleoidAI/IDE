@@ -1,5 +1,4 @@
 /* eslint-disable */
-import EditButton from "../../components/EditButton";
 import EditIcon from "@mui/icons-material/Edit";
 import ParamView from "../../components/ParamView";
 import Schema from "../../components/Schema/Schema";
