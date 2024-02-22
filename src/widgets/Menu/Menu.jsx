@@ -222,14 +222,14 @@ const MenuLinks = (props) => {
               state={{ anchor }}
               relative="path"
             >
-              <ListItemIcon sx={styles.listItemIcon}>{icon}</ListItemIcon>
+              <ListItemIcon variant="pageIcon">{icon}</ListItemIcon>
               <ListItemText primary={title} />
             </ListItemButton>
           </React.Fragment>
         );
       })}
       <ListItemButton sx={styles.listItem} component={Link} to="../chat">
-        <ListItemIcon sx={styles.listItemIcon}>
+        <ListItemIcon variant="pageIcon">
           <ChatIcon />
         </ListItemIcon>
         <ListItemText primary="Chat" />

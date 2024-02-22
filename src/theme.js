@@ -104,6 +104,16 @@ let lightTheme = createTheme({
         },
       },
     },
+    MuiListItemIcon: {
+      variants: [
+        {
+          props: { variant: "pageIcon" },
+          style: {
+            color: base.grey[400],
+          },
+        },
+      ],
+    },
     MuiFab: {
       variants: [
         {
@@ -188,6 +198,27 @@ let lightTheme = createTheme({
       defaultProps: {
         variant: "standard",
       },
+    },
+    MuiSvgIcon: {
+      variants: [
+        {
+          props: { variant: "pageIcon" },
+          style: {
+            color: base.grey[400],
+          },
+        },
+      ],
+    },
+
+    MuiListItemIcon: {
+      variants: [
+        {
+          props: { variant: "pageIcon" },
+          style: {
+            color: base.grey[400],
+          },
+        },
+      ],
     },
 
     MuiLinearProgress: {
@@ -342,6 +373,17 @@ const darkTheme = createTheme({
           },
         },
       },
+    },
+
+    MuiListItemIcon: {
+      variants: [
+        {
+          props: { variant: "pageIcon" },
+          style: {
+            color: base.grey[400],
+          },
+        },
+      ],
     },
 
     MuiDataGrid: {

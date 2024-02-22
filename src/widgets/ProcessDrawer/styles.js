@@ -29,11 +29,6 @@ const styles = {
       paddingBottom: 1,
     },
   },
-  listItem(theme) {
-    return {
-      fill: theme.palette.custom.grey,
-    };
-  },
 };
 
 export default styles;
