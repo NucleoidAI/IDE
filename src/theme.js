@@ -373,6 +373,17 @@ const darkTheme = createTheme({
         },
       },
     },
+
+    MuiCircularProgress: {
+      variants: [
+        {
+          props: { show: false },
+          style: {
+            display: "none",
+          },
+        },
+      ],
+    },
     MuiFab: {
       variants: [
         {
