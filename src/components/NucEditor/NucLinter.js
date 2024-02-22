@@ -49,10 +49,6 @@ export class NucLinter {
     this.checkForHelloWorld();
     this.parseCodeToAST();
 
-    if (this.ast) {
-      this.ast.forEachChild((child) => {});
-    }
-
     return this.diagnostics;
   }
 }

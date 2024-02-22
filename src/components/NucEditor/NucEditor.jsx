@@ -41,7 +41,10 @@ function NucEditor({ onCodeEditorChange, defaultValue, path, onMount }) {
     return { line, column };
   }
 
-  const lintWithCustomLinter = async (editor, monaco) => {
+  const lintWithCustomLinter = async () => {
+    const editor = editorRef?.current?.editor;
+    const monaco = editorRef?.current?.monaco;
+
     const code = editor.getValue();
     const linter = new NucLinter(code);
     const diagnostics = linter.lint();
@@ -98,7 +101,6 @@ function NucEditor({ onCodeEditorChange, defaultValue, path, onMount }) {
 
       monaco.editor.setModelMarkers(editor.getModel(), "action", markers);
     }
-    lintWithCustomLinter(editor, monaco);
   }, []);
 
   useEffect(() => {
@@ -174,6 +176,7 @@ function NucEditor({ onCodeEditorChange, defaultValue, path, onMount }) {
 
     timerRef.current = setTimeout(() => {
       lint();
+      lintWithCustomLinter();
     }, 400);
 
     onCodeEditorChange && onCodeEditorChange(e);
