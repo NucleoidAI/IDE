@@ -36,7 +36,7 @@ const withFilter = (Component) => {
     let list;
 
     if (!settings.plugin()) {
-      list = props.list.filter(
+      list = props.list[0].pages.filter(
         (item) => item.link !== "/dashboard" && item.link !== "/businessflow"
       );
     } else {
@@ -241,7 +241,7 @@ const MenuLinks = (props) => {
 const SmallMenuLinks = (props) => {
   return (
     <>
-      {props.list.map((item, key) => (
+      {props.list[0].pages.map((item, key) => (
         <MenuItem {...item} key={key} />
       ))}
     </>
