@@ -98,6 +98,15 @@ let lightTheme = createTheme({
         },
       },
     },
+    MuiDialog: {
+      styleOverrides: {
+        root: {
+          "& .MuiDialog-paper": {
+            borderRadius: "10px",
+          },
+        },
+      },
+    },
     MuiDataGrid: {
       styleOverrides: {
         root: {
@@ -274,6 +283,16 @@ const darkTheme = createTheme({
             },
           "&::-webkit-scrollbar-corner, & *::-webkit-scrollbar-corner": {
             backgroundColor: base.grey[800],
+          },
+        },
+      },
+    },
+
+    MuiDialog: {
+      styleOverrides: {
+        root: {
+          "& .MuiDialog-paper": {
+            borderRadius: "10px",
           },
         },
       },
