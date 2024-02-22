@@ -1,4 +1,5 @@
 import Editor from "@monaco-editor/react";
+import { NucLinter } from "./NucLinter";
 import React from "react";
 import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
 import { useStorage } from "@nucleoidjs/webstorage";
@@ -40,6 +41,29 @@ function NucEditor({ onCodeEditorChange, defaultValue, path, onMount }) {
     return { line, column };
   }
 
+  const lintWithCustomLinter = async (editor, monaco) => {
+    const code = editor.getValue();
+    const linter = new NucLinter(code);
+    const diagnostics = linter.lint();
+
+    const markers = diagnostics.map((diagnostic) => {
+      const { line, column } = getLineAndColumn(code, diagnostic.index);
+      return {
+        startLineNumber: line,
+        startColumn: column,
+        endLineNumber: line,
+        endColumn: column + diagnostic.length,
+        message: diagnostic.message,
+        severity:
+          diagnostic.severity === "error"
+            ? monaco.MarkerSeverity.Error
+            : monaco.MarkerSeverity.Warning,
+      };
+    });
+
+    monaco.editor.setModelMarkers(editor.getModel(), "customLinting", markers);
+  };
+
   const lint = React.useCallback(async () => {
     const editor = editorRef?.current?.editor;
     const monaco = editorRef?.current?.monaco;
@@ -74,6 +98,7 @@ function NucEditor({ onCodeEditorChange, defaultValue, path, onMount }) {
 
       monaco.editor.setModelMarkers(editor.getModel(), "action", markers);
     }
+    lintWithCustomLinter(editor, monaco);
   }, []);
 
   useEffect(() => {
