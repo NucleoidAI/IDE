@@ -56,6 +56,9 @@ let lightTheme = createTheme({
       textGray: "#c3c5c8",
       messageBG: "#f5f5f9",
     },
+    chat: {
+      inputBorderRadius: "15px",
+    },
   },
   props: {
     MuiButton: {
@@ -227,6 +230,9 @@ const darkTheme = createTheme({
       drawerBG: base.grey[900],
       textGray: base.grey[500],
       messageBG: base.grey[700],
+    },
+    chat: {
+      inputBorderRadius: "15px",
     },
     background: {
       default: base.grey[900],
