@@ -104,6 +104,31 @@ let lightTheme = createTheme({
         },
       },
     },
+    MuiFab: {
+      variants: [
+        {
+          props: { variant: "button" },
+          style: (props) => ({
+            color: base.grey[900],
+            display: props.hide || props.loading ? "none" : "flex",
+            ...(props.type === "mic" && props.activate ? micAnimation : {}),
+          }),
+        },
+      ],
+      styleOverrides: {
+        root: {
+          backgroundColor: base.grey[300],
+          color: base.grey[900],
+          "&:hover": {
+            backgroundColor: base.grey[700],
+            color: base.grey[200],
+          },
+          "&:disabled": {
+            color: base.grey[700],
+          },
+        },
+      },
+    },
     MuiDataGrid: {
       styleOverrides: {
         root: {
@@ -113,6 +138,16 @@ let lightTheme = createTheme({
             },
         },
       },
+    },
+    MuiCircularProgress: {
+      variants: [
+        {
+          props: { show: false },
+          style: {
+            display: "none",
+          },
+        },
+      ],
     },
     MuiDrawer: {
       styleOverrides: {
@@ -154,13 +189,7 @@ let lightTheme = createTheme({
         variant: "standard",
       },
     },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          color: "black",
-        },
-      },
-    },
+
     MuiLinearProgress: {
       styleOverrides: {
         root: {
@@ -427,7 +456,6 @@ const darkTheme = createTheme({
           "&:hover": {
             backgroundColor: base.grey[700],
           },
-          boxShadow: "none",
           "&.Mui-disabled": {
             backgroundColor: base.grey[900],
           },
