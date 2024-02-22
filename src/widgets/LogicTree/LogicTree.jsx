@@ -109,7 +109,7 @@ function LogicTree({ openLogicDialog }) {
   return (
     <>
       <Card sx={{ width: "100%", height: "100%" }}>
-        <CardHeader avatar={<HubIcon sx={{ color: "#c3c5c8" }} />} />
+        <CardHeader avatar={<HubIcon variant="pageIcon" />} />
 
         <CardContent sx={{ width: "100%", height: "100%" }}>
           <TreeView
