@@ -1,5 +1,5 @@
+import config from "../config";
 import { storage } from "@nucleoidjs/webstorage";
-
 const Settings = {
   projects: [],
   dialog: {},
@@ -38,8 +38,9 @@ const Settings = {
   service: {
     auth: "https://nucleoid.com/oauth",
     projects: "https://nucleoid.com/projects",
-    openai: "https://nucleoid.com/openai",
+    completions: `${config.expert}/chat/completions`,
   },
+
   connection: true,
   beta: (status) => {
     if (status !== undefined && status !== null) {

@@ -75,10 +75,10 @@ const openapi = async (openapi) => {
   }
 };
 
-const openai = async (context, command) => {
-  return axios(Settings.service.openai, {
+const completions = async (mode, context, prompt) => {
+  return axios(Settings.service.completions, {
     method: "POST",
-    data: { context, command },
+    data: { mode, context, prompt },
   });
 };
 
@@ -159,7 +159,7 @@ const createSandbox = (context) => {
 const service = {
   query,
   openapi,
-  openai,
+  completions,
   metrics,
   logs,
   auth,

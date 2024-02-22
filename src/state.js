@@ -1,4 +1,4 @@
-import { api, functions, types } from "./sample";
+import { api, declarations, functions, types } from "./sample";
 
 function init() {
   const state = {
@@ -7,11 +7,13 @@ function init() {
       types: {},
       functions: [],
       project: {},
+      declarations: {},
     },
     pages: {
       started: false,
       opened: false,
       api: {
+        AIDialog: { open: false },
         dialog: {
           view: "BODY",
           type: "",
@@ -28,9 +30,22 @@ function init() {
         },
       },
       query: {
+        AIDialog: {
+          open: false,
+        },
         results: "",
         text: 'Item.filter((item) => item.name === "item-1");',
         outputRatio: 0.5,
+      },
+      logic: {
+        AIDialog: {
+          open: false,
+        },
+        selected: {
+          description: "All Orders barcode string starts with NUC",
+          summary: "All orders barcode start with NUC prefix",
+          definition: '{\n      $Order.barcode.include("NUC")\n    }\n    ',
+        },
       },
       branches: {},
     },
@@ -49,12 +64,14 @@ function withSample() {
   state.nucleoid.api = api;
   state.nucleoid.types = types;
   state.nucleoid.functions = functions;
+  state.nucleoid.declarations = declarations;
+
   return state;
 }
 
-function withPages({ api, types, functions }) {
+function withPages({ api, types, functions, logic }) {
   const state = init();
-  state.nucleoid = { api, types, functions };
+  state.nucleoid = { api, types, functions, logic };
   return state;
 }
 

@@ -1,12 +1,12 @@
+import Editor from "../../../widgets/Editor";
 import HorizontalSplitLayout from "../../../layouts/HorizontalSplitLayout";
 import Page from "../../../components/Page";
-import QueryEditor from "../../../widgets/QueryEditor";
 import QueryResultWidget from "../../../widgets/QueryResultWidget/QueryResultWidget";
 import { useContext } from "../../../context/context";
 import { useEvent } from "@nucleoidjs/react-event";
 import { useNavigate } from "react-router-dom";
 
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 
 function Query() {
   const [state] = useContext();
@@ -24,8 +24,6 @@ function Query() {
     }
   }, [runtimeConnection, navigate]);
 
-  const editorRef = useRef(null);
-
   const [loading, setLoading] = useState(false);
 
   const handleSetOutputRatio = (ratio) => {
@@ -38,13 +36,7 @@ function Query() {
     <Page title={"Query"}>
       <HorizontalSplitLayout
         outputRatio={outputRatio}
-        topSection={
-          <QueryEditor
-            loading={loading}
-            setLoading={setLoading}
-            ref={editorRef}
-          />
-        }
+        topSection={<Editor loading={loading} setLoading={setLoading} query />}
         bottomSection={
           <QueryResultWidget
             result={result}

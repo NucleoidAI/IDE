@@ -119,6 +119,11 @@ function contextReducer(state, { type, payload }) {
       break;
     }
 
+    case "SET_SELECTED_LOGIC": {
+      pages.logic.selected = payload.logic;
+      break;
+    }
+
     case "OPEN_RESOURCE_MENU":
       pages.api.resourceMenu.open = true;
       pages.api.resourceMenu.anchor = payload.anchor;
@@ -171,6 +176,36 @@ function contextReducer(state, { type, payload }) {
     case "OPEN_FUNCTION_DIALOG": {
       pages.functions.dialog.type = payload.type;
       pages.functions.dialog.open = true;
+      break;
+    }
+
+    case "OPEN_AI_DIALOG": {
+      const page = payload.page;
+      pages[page].AIDialog.open = true;
+      break;
+    }
+
+    case "CLOSE_AI_DIALOG": {
+      const page = payload.page;
+      pages[page].AIDialog.open = false;
+      break;
+    }
+
+    case "SAVE_LOGIC_DIALOG": {
+      const { description, summary, definition } = payload;
+      const declarations = nucleoid.declarations;
+
+      declarations.push({
+        description,
+        summary,
+        definition,
+      });
+      pages.logic.selected = declarations[declarations.length - 1];
+
+      publish("LOGIC_ADDED", {
+        declaration: declarations[declarations.length - 1],
+      });
+
       break;
     }
 

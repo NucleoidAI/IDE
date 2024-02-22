@@ -1,10 +1,10 @@
-import Chat from "./pages/chat";
-import ChatContainer from "./containers/Chat/Chat";
+import { BrowserRouter } from "react-router-dom";
 import ContextProvider from "./context/context";
 import EventRegistry from "./EventRegistry";
 import IDE from "./containers/IDE"; // eslint-disable-line
 import Path from "./utils/Path";
 import React from "react";
+import RouteManager from "./RouteManager";
 import Settings from "./settings";
 import State from "./state";
 import axios from "axios";
@@ -16,7 +16,6 @@ import { subscribe } from "@nucleoidjs/react-event";
 import { useStorage } from "@nucleoidjs/webstorage";
 import vfs from "./vfs";
 
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import {
   CssBaseline,
   StyledEngineProvider,
@@ -48,7 +47,7 @@ function App() {
     window.location.hostname === "nucleoid.com" ? 1000 - elapsed : 0;
 
   React.useEffect(() => {
-    subscribe("EDITOR_LOADING_COMPLETED", () => {
+    subscribe("IDE_LOADING_COMPLETED", () => {
       setTimeout(() => {
         progressElement.classList.add("hidden");
       }, delay);
@@ -122,8 +121,9 @@ function App() {
       Settings.landing({ level: 0 });
     }
     if (checkMobileSize()) {
+      window.location.assign(`${window.location.origin}/ide/mobile`);
       Settings.plugin(" ");
-      Settings.landing({ level: 4 });
+      Settings.landing({ level: Number.MAX_SAFE_INTEGER });
     }
 
     return context;
@@ -145,16 +145,20 @@ function App() {
         return setContext(initContext(context));
       }
       if (mode === "cloud") {
-        project(id)
-          .then((result) => {
-            initVfs(result);
-            return setContext(initContext(result));
-          })
-          .catch(() => {
-            progressElement.classList.add("hidden");
-
-            return setContext("error");
-          });
+        project(id).then((result) => {
+          initVfs(result);
+          return setContext(initContext(result));
+        });
+      }
+      if (mode === "chat") {
+        const context = sampleProject();
+        initVfs(context);
+        return setContext(initContext(context));
+      }
+      if (mode === "mobile") {
+        return setContext("mobile");
+      } else {
+        window.location.assign(`${window.location.origin}/ide/sample/api`);
       }
     }
 
@@ -174,23 +178,7 @@ function App() {
         <BrowserRouter basename="ide">
           <ContextProvider state={context} reducer={contextReducer}>
             <EventRegistry />
-            <Routes>
-              <Route path="/" element={<IDE />}>
-                <Route index element={<Navigate to="/sample/api" />} />
-                {routes.map((route) => (
-                  <Route
-                    path={route.path}
-                    key={route.link}
-                    element={route.element}
-                  />
-                ))}
-              </Route>
-              <Route path="/" element={<ChatContainer />}>
-                <Route path="/chat" element={<Chat />} />
-              </Route>
-              <Route path={"/graph"} />
-              <Route path={"*"} element={<Navigate to="/" />} />
-            </Routes>
+            <RouteManager routes={routes} mode={Path.getMode()} />
           </ContextProvider>
         </BrowserRouter>
       </ThemeProvider>
