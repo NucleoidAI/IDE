@@ -384,6 +384,23 @@ const darkTheme = createTheme({
         },
       ],
     },
+
+    MuiInputBase: {
+      variants: [
+        {
+          props: { variant: "chat" },
+          style: {
+            color: base.grey[400],
+            margin: 5,
+            borderRadius: 10,
+            "& .MuiInputBase-input.Mui-disabled": {
+              WebkitTextFillColor: alpha(base.grey[400], 0.5),
+            },
+          },
+        },
+      ],
+    },
+
     MuiFab: {
       variants: [
         {
