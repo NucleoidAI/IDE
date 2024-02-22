@@ -430,6 +430,17 @@ const darkTheme = createTheme({
       ],
     },
 
+    MuiSvgIcon: {
+      variants: [
+        {
+          props: { variant: "pageIcon" },
+          style: {
+            color: base.grey[400],
+          },
+        },
+      ],
+    },
+
     MuiFab: {
       variants: [
         {
@@ -450,6 +461,7 @@ const darkTheme = createTheme({
           },
           "&.Mui-disabled": {
             backgroundColor: base.grey[900],
+            color: base.grey[700],
           },
         },
       },
