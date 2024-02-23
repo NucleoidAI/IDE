@@ -36,7 +36,7 @@ const withFilter = (Component) => {
     let list;
 
     if (!settings.plugin()) {
-      list = props.list.filter(
+      list = props.list[0].pages.filter(
         (item) => item.link !== "/dashboard" && item.link !== "/businessflow"
       );
     } else {
@@ -222,14 +222,14 @@ const MenuLinks = (props) => {
               state={{ anchor }}
               relative="path"
             >
-              <ListItemIcon sx={styles.listItemIcon}>{icon}</ListItemIcon>
+              <ListItemIcon variant="pageIcon">{icon}</ListItemIcon>
               <ListItemText primary={title} />
             </ListItemButton>
           </React.Fragment>
         );
       })}
       <ListItemButton sx={styles.listItem} component={Link} to="../chat">
-        <ListItemIcon sx={styles.listItemIcon}>
+        <ListItemIcon variant="pageIcon">
           <ChatIcon />
         </ListItemIcon>
         <ListItemText primary="Chat" />
@@ -241,7 +241,7 @@ const MenuLinks = (props) => {
 const SmallMenuLinks = (props) => {
   return (
     <>
-      {props.list.map((item, key) => (
+      {props.list[0].pages.map((item, key) => (
         <MenuItem {...item} key={key} />
       ))}
     </>

@@ -16,7 +16,6 @@ import { mapToContext } from "../../utils/Parser";
 import onboardDispatcher from "../../components/Onboard/onboardDispatcher";
 import scheduler from "../../connectionScheduler";
 import service from "../../service";
-import styles from "./styles";
 import { toOpenApi } from "../../adapters/openapi/adapter";
 import { useContext } from "../../context/context";
 import { useLocation } from "react-router-dom";
@@ -157,12 +156,12 @@ const ProcessDrawer = () => {
             <ListItemButton
               onClick={() => publish("EDUCATION_DRAWER_OPENED", true)}
             >
-              <SchoolIcon sx={styles.listItem} />
+              <SchoolIcon variant="pageIcon" />
             </ListItemButton>
           </Tooltip>
           <Tooltip placement="left" title="Deploy (Coming soon)">
             <ListItemButton>
-              <RocketLaunchIcon sx={styles.listItem} />
+              <RocketLaunchIcon variant="pageIcon" />
             </ListItemButton>
           </Tooltip>
           <Tooltip placement="left" title="Download project">
@@ -174,17 +173,17 @@ const ProcessDrawer = () => {
               download={"nuc.openapi.json"}
               target="_blank"
             >
-              <DownloadIcon sx={styles.listItem} />
+              <DownloadIcon variant="pageIcon" />
             </ListItemButton>
           </Tooltip>
           <Tooltip placement="left" title="Save project">
             <ListItemButton onClick={handleSaveProject}>
-              <SaveIcon sx={styles.listItem} />
+              <SaveIcon variant="pageIcon" />
             </ListItemButton>
           </Tooltip>
           {Settings.beta() && (
             <ListItemButton onClick={handleOpenChat}>
-              <Chat sx={styles.listItem} />
+              <Chat variant="pageIcon" />
             </ListItemButton>
           )}
         </Box>
@@ -195,7 +194,7 @@ const ProcessDrawer = () => {
                 window.open("https://github.com/NucleoidJS/Nucleoid", "_blank")
               }
             >
-              <GitHubIcon sx={styles.listItem} />
+              <GitHubIcon variant="pageIcon" />
             </ListItemButton>
           </Tooltip>
           {Settings.debug() && (
@@ -242,7 +241,7 @@ function SwaggerButton() {
         disabled={!runtimeConnection.status}
         onClick={handleOpenSwaggerDialog}
       >
-        <ViewListIcon sx={styles.listItem} />
+        <ViewListIcon variant="pageIcon" />
       </ListItemButton>
     </Tooltip>
   );
@@ -360,7 +359,7 @@ function ApiButton() {
             }}
             disabled={errors.length > 0}
           >
-            <PlayCircleFilledIcon sx={styles.listItem} />
+            <PlayCircleFilledIcon variant="pageIcon" />
           </ListItemButton>
         </Tooltip>
       )}

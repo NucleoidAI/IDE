@@ -16,9 +16,7 @@ const styles = {
       color: "rgba(255, 255, 255, 1)",
     },
   },
-  listItemIcon: {
-    color: "custom.grey",
-  },
+
   listItemIconSmall: {
     color: "custom.grey",
     width: "100%",
