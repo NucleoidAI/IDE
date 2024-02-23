@@ -10,7 +10,7 @@ import styles from "../../layouts/HorizontalSplitLayout/styles";
 import { useContext } from "../../context/context";
 import { useMonaco } from "@monaco-editor/react";
 
-import { Fab, Grid } from "@mui/material";
+import { CircularProgress, Fab, Grid } from "@mui/material";
 import React, { useCallback, useEffect } from "react";
 
 const Editor = React.forwardRef((props, ref) => {
@@ -18,17 +18,17 @@ const Editor = React.forwardRef((props, ref) => {
   const editorRef = React.useRef(null);
 
   const [state, distpach] = useContext();
-  const { setLoading, logic, query } = props;
+  const { setLoading, logic, query, loading } = props;
   const selectedLogic = state.get("pages.logic.selected");
 
   useEffect(() => {
     if (query) {
       setTimeout(() => {
         if (editorRef?.current) {
-          editorRef.current.focus();
-          editorRef.current.setValue(state.get("pages.query.text"));
-          editorRef.current.setPosition({ lineNumber: 1, column: 1000 });
-          editorRef.current.addAction({
+          editorRef.current.editor.focus();
+          editorRef.current.editor.setValue(state.get("pages.query.text"));
+          editorRef.current.editor.setPosition({ lineNumber: 1, column: 1000 });
+          editorRef.current.editor.addAction({
             id: "lintEvent",
             label: "lintEvent",
             keybindings: [
@@ -39,8 +39,8 @@ const Editor = React.forwardRef((props, ref) => {
           });
 
           const query = state.get("pages.query");
-          editorRef?.current.onKeyUp(() => {
-            query.text = editorRef?.current?.getValue();
+          editorRef?.current.editor.onKeyUp(() => {
+            query.text = editorRef?.current?.editor.getValue();
           });
         }
       }, 1);
@@ -51,7 +51,7 @@ const Editor = React.forwardRef((props, ref) => {
   const handleQuery = () => {
     setLoading(true);
     service
-      .query(editorRef ? editorRef.current.getValue() : null)
+      .query(editorRef ? editorRef.current.editor.getValue() : null)
       .then((data) => {
         try {
           distpach({
@@ -102,7 +102,7 @@ const Editor = React.forwardRef((props, ref) => {
       state.get("pages.query.text"),
       "typescript"
     );
-    editorRef?.current.setModel(model);
+    editorRef?.current.editor.setModel(model);
   }, [monaco?.editor, editorRef, state]);
 
   function handleChange(e) {
@@ -135,13 +135,21 @@ const Editor = React.forwardRef((props, ref) => {
         onCodeEditorChange={handleChange}
         setEditorRef={editorRef}
       />
-      <Grid container item sx={styles.runButton}>
-        <QueryAIButton />
-        <AIDialog imperative page={"query"} editor={editorRef} />
-        <Fab size={"small"} onClick={() => handleQuery()}>
-          <PlayArrowIcon style={styles.playArrowIcon} />
-        </Fab>
-      </Grid>
+      {query && (
+        <Grid container item sx={styles.runButton}>
+          <QueryAIButton />
+          <AIDialog imperative page={"query"} editor={editorRef} />
+          <Fab
+            variant="button"
+            hide={loading}
+            size={"small"}
+            onClick={() => handleQuery()}
+          >
+            <PlayArrowIcon />
+          </Fab>
+          <CircularProgress show={loading} />
+        </Grid>
+      )}
     </>
   );
 });
