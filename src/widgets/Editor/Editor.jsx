@@ -20,6 +20,7 @@ const Editor = React.forwardRef((props, ref) => {
   const [state, distpach] = useContext();
   const { setLoading, logic, query, loading } = props;
   const selectedLogic = state.get("pages.logic.selected");
+  const nucFuncs = state.nucleoid.functions;
 
   useEffect(() => {
     if (query) {
@@ -83,6 +84,7 @@ const Editor = React.forwardRef((props, ref) => {
     }
 
     if (query) {
+      addFunctionsModels();
       setQueryModel();
     }
 
@@ -97,7 +99,6 @@ const Editor = React.forwardRef((props, ref) => {
   }, [selectedLogic, monaco?.editor, editorRef]);
 
   const setQueryModel = useCallback(() => {
-    monaco?.editor.getModels().forEach((model) => model.dispose());
     const model = monaco?.editor.createModel(
       state.get("pages.query.text"),
       "typescript"
@@ -118,6 +119,14 @@ const Editor = React.forwardRef((props, ref) => {
       state.pages.query.text = e;
     }
   }
+
+  const addFunctionsModels = () => {
+    nucFuncs.forEach((item) => {
+      if (!monaco?.editor.getModel(item.path)) {
+        monaco?.editor.createModel(item.definition, "typescript", item.path);
+      }
+    });
+  };
 
   React.useEffect(() => {
     if (editorRef.current && logic) {
