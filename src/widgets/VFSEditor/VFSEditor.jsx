@@ -1,4 +1,5 @@
 import AIDialog from "../AIDialog/AIDialog";
+import { Box } from "@mui/material";
 import NucEditor from "../../components/NucEditor/NucEditor";
 import OpenAIButton from "../../components/OpenAIButton";
 import Path from "../../utils/Path";
@@ -10,7 +11,6 @@ import { publish } from "@nucleoidjs/react-event";
 import rules from "./rules";
 import { useContext } from "../../context/context";
 
-import { Backdrop, Box } from "@mui/material";
 import React, { useCallback } from "react";
 
 const options = {
@@ -31,7 +31,6 @@ const VFSEditor = React.forwardRef((props, ref) => {
   const mode = Path.getMode();
   const { api, functions, query } = props;
   const timerRef = React.useRef();
-  const [open, setOpen] = React.useState(false);
   const [context] = useContext();
   const editorRef = React.useRef(null);
 
@@ -89,6 +88,7 @@ const VFSEditor = React.forwardRef((props, ref) => {
     }
   }
 
+  //eslint-disable-next-line
   function handleChange(e) {
     clearTimeout(timerRef.current);
 
@@ -206,7 +206,6 @@ const VFSEditor = React.forwardRef((props, ref) => {
           <AIDialog imperative editor={editorRef} page="api" />
         </>
       )}
-      <Backdrop open={open} />
     </Box>
   );
 });
