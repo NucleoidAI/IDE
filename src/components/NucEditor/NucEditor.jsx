@@ -17,7 +17,13 @@ import * as prettierStandalone from "prettier/standalone";
 import * as typescriptPlugin from "prettier/parser-typescript";
 import * as yamlPlugin from "prettier/parser-yaml";
 
-function NucEditor({ onCodeEditorChange, defaultValue, path, onMount }) {
+function NucEditor({
+  onCodeEditorChange,
+  defaultValue,
+  path,
+  onMount,
+  onSave,
+}) {
   const plugins = [
     angularPlugin,
     babelPlugin,
@@ -103,14 +109,14 @@ function NucEditor({ onCodeEditorChange, defaultValue, path, onMount }) {
     }
   }, []);
 
-  useEffect(() => {
-    const formatDocument = () => {
-      const editor = editorRef.current?.editor;
-      if (editor) {
-        editor.getAction("editor.action.formatDocument").run();
-      }
-    };
+  const formatDocument = () => {
+    const editor = editorRef.current?.editor;
+    if (editor) {
+      editor.getAction("editor.action.formatDocument").run();
+    }
+  };
 
+  useEffect(() => {
     if (editorRef.current) {
       formatDocument();
     }
@@ -168,6 +174,20 @@ function NucEditor({ onCodeEditorChange, defaultValue, path, onMount }) {
     );
 
     lint();
+
+    editor.addAction({
+      id: "saveEvent",
+      label: "Save Project",
+      keybindings: [
+        monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS,
+        monaco.KeyMod.chord(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS),
+      ],
+
+      run: () => {
+        onSave && onSave(editor.getValue());
+        editorRef.current && formatDocument();
+      },
+    });
     onMount && onMount(editor, monaco);
   }
 
@@ -178,6 +198,8 @@ function NucEditor({ onCodeEditorChange, defaultValue, path, onMount }) {
       lint();
       lintWithCustomLinter();
     }, 400);
+
+    onSave && onSave(e);
 
     onCodeEditorChange && onCodeEditorChange(e);
   }
