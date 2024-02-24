@@ -13,10 +13,13 @@ const Chat = () => {
   const theme = useTheme();
   const messageInputRef = useRef();
   const [chatId] = useEvent("CHAT_ID_CHANGED", 0);
-  const chat = useChat(chatId);
+  const { chat, sendMessage } = useChat(chatId);
 
   const handleSendMessage = (message) => {
     console.log(message);
+
+    sendMessage(chatId, message);
+
     messageInputRef.current.clear();
   };
 
@@ -32,7 +35,7 @@ const Chat = () => {
       }}
     >
       <ChatDisplay chat={chat} />
-      <SuggestionsOverlay setInputValue={() => {}} />
+
       <MessageInput
         handleSendMessage={handleSendMessage}
         ref={messageInputRef}

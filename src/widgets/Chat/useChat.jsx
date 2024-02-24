@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const mockChats = [
   {
@@ -402,7 +402,73 @@ const useChat = (chatId) => {
     setChat(foundChat);
   }, [chatId]);
 
-  return chat;
+  const sendMessage = async (id, message) => {
+    const chatIndex = mockChats.findIndex((c) => c.id === id.toString());
+    if (chatIndex === -1) {
+      console.error("Chat not found");
+      return;
+    }
+
+    const newMessage = {
+      sender: "human",
+      text: message,
+    };
+
+    let updatedMessages = [...mockChats[chatIndex].messages, newMessage];
+
+    try {
+      const response = await fetch(
+        "https://nuc.land/ide/api/expert/chat/12345",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            context: ["string"],
+            prompt: message,
+          }),
+        }
+      );
+
+      if (!response.ok) throw new Error("Network response was not ok.");
+
+      const data = await response.json();
+      let responseText = "";
+      if (data.description) {
+        responseText = data.description;
+      } else if (data.prompt) {
+        responseText = data.prompt;
+      } else {
+        responseText = "Received a response without a description.";
+      }
+
+      const responseMessage = {
+        sender: "ai",
+        text: responseText,
+      };
+
+      if (data.code) {
+        responseMessage.code = data.code;
+      }
+
+      updatedMessages = [...updatedMessages, responseMessage];
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+
+    const updatedChat = {
+      ...mockChats[chatIndex],
+      messages: updatedMessages,
+    };
+    mockChats[chatIndex] = updatedChat;
+
+    if (id.toString() === chatId.toString()) {
+      setChat(updatedChat);
+    }
+  };
+
+  return { chat, sendMessage };
 };
 
 export default useChat;
