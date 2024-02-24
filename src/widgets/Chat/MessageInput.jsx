@@ -19,6 +19,7 @@ import React, {
 
 const MessageInput = forwardRef((props, ref) => {
   const { handleSendMessage } = props;
+  const { loading } = props;
   const theme = useTheme();
   const [showProjectIcon, setShowProjectIcon] = useState(false);
   const [playAnimation, setPlayAnimation] = useState(true);
@@ -40,8 +41,7 @@ const MessageInput = forwardRef((props, ref) => {
     console.log("Project icon clicked");
   };
 
-  const onSend = (event) => {
-    event.preventDefault();
+  const onSend = () => {
     const message = inputRef.current.value;
     if (message.trim()) {
       handleSendMessage(message);
@@ -77,6 +77,13 @@ const MessageInput = forwardRef((props, ref) => {
         <TextField
           fullWidth
           variant="standard"
+          onKeyPress={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              onSend();
+            }
+          }}
+          disabled={loading}
           placeholder="Type your message here..."
           InputProps={{
             disableUnderline: true,
@@ -114,6 +121,7 @@ const MessageInput = forwardRef((props, ref) => {
         )}
         <IconButton
           type="submit"
+          disabled={loading}
           sx={{ color: theme.palette.grey[500], ml: 1 }}
         >
           <SendIcon />

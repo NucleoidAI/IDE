@@ -402,7 +402,17 @@ const useChat = (chatId) => {
     setChat(foundChat);
   }, [chatId]);
 
-  const sendMessage = async (id, message) => {
+  function updateChat(chatIndex, message) {
+    const updatedMessages = [...mockChats[chatIndex].messages, message];
+    const updatedChat = {
+      ...mockChats[chatIndex],
+      messages: updatedMessages,
+    };
+    mockChats[chatIndex] = updatedChat;
+    setChat(updatedChat);
+  }
+
+  const sendMessage = async (id, message, setLoading) => {
     const chatIndex = mockChats.findIndex((c) => c.id === id.toString());
     if (chatIndex === -1) {
       console.error("Chat not found");
@@ -414,7 +424,8 @@ const useChat = (chatId) => {
       text: message,
     };
 
-    let updatedMessages = [...mockChats[chatIndex].messages, newMessage];
+    updateChat(chatIndex, newMessage);
+    setLoading(true);
 
     try {
       const response = await fetch(
@@ -452,20 +463,11 @@ const useChat = (chatId) => {
         responseMessage.code = data.code;
       }
 
-      updatedMessages = [...updatedMessages, responseMessage];
+      updateChat(chatIndex, responseMessage);
     } catch (error) {
       console.error("Error sending message:", error);
     }
-
-    const updatedChat = {
-      ...mockChats[chatIndex],
-      messages: updatedMessages,
-    };
-    mockChats[chatIndex] = updatedChat;
-
-    if (id.toString() === chatId.toString()) {
-      setChat(updatedChat);
-    }
+    setLoading(false);
   };
 
   return { chat, sendMessage };
