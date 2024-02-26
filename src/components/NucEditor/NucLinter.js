@@ -32,21 +32,7 @@ export class NucLinter {
     node.forEachChild((child) => this.findInlineFunctions(child));
   }
 
-  checkForHelloWorld() {
-    const helloWorldRegex = /hello world/gi;
-    let match;
-    while ((match = helloWorldRegex.exec(this.code)) !== null) {
-      this.diagnostics.push({
-        message: "You literally are not allowed to say hello world",
-        index: match.index,
-        length: match[0].length,
-        severity: "warning",
-      });
-    }
-  }
-
   lint() {
-    this.checkForHelloWorld();
     this.parseCodeToAST();
 
     return this.diagnostics;
