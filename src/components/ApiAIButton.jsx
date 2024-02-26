@@ -7,7 +7,7 @@ import { useContext } from "../context/context";
 
 import { CircularProgress, Fab } from "@mui/material";
 
-const OpenAIButton = () => {
+const ApiAIButton = () => {
   const [, dispatch] = useContext();
   const [login, setLogin] = React.useState(false);
   const handleClickOpen = () => {
@@ -55,4 +55,4 @@ const OpenAIButton = () => {
   );
 };
 
-export default OpenAIButton;
+export default ApiAIButton;
