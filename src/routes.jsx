@@ -1,6 +1,6 @@
 import {
   Folder,
-  LensBlurIcon,
+  LensBlur,
   Send,
   Storage,
   ViewCarousel,
@@ -43,7 +43,7 @@ const routes = [
         path: "/:project/logic",
         anchor: false,
         element: <Logic />,
-        icon: <LensBlurIcon />,
+        icon: <LensBlur />,
       },
       {
         title: "Query",
