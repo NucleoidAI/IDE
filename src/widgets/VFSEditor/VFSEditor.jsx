@@ -1,6 +1,6 @@
 import AIDialog from "../AIDialog/AIDialog";
+import ApiAIButton from "../../components/ApiAIButton";
 import NucEditor from "../../components/NucEditor/NucEditor";
-import OpenAIButton from "../../components/OpenAIButton";
 import Path from "../../utils/Path";
 import axios from "axios";
 import config from "../../../config";
@@ -10,7 +10,7 @@ import { publish } from "@nucleoidjs/react-event";
 import rules from "./rules";
 import { useContext } from "../../context/context";
 
-import { Backdrop, Box } from "@mui/material";
+import { Backdrop, Box, Grid } from "@mui/material";
 import React, { useCallback } from "react";
 
 const options = {
@@ -213,8 +213,20 @@ const VFSEditor = React.forwardRef((props, ref) => {
       />
       {!functions && (
         <>
-          <OpenAIButton />
-          <AIDialog imperative editor={editorRef} page="api" />
+          <Grid
+            container
+            item
+            sx={{
+              position: "relative",
+              bottom: (theme) => 3 + theme.spacing(1),
+              left: (theme) => theme.spacing(1),
+              justifyContent: "flex-start",
+              alignItems: "center",
+            }}
+          >
+            <ApiAIButton />
+            <AIDialog imperative editor={editorRef} page="api" />
+          </Grid>
         </>
       )}
       <Backdrop open={open} />
