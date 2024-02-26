@@ -10,12 +10,15 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const ChatDisplay = ({ chat, loading }) => {
   const theme = useTheme();
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedCode, setSelectedCode] = useState("");
+  const messagesContainerRef = useRef(null);
+
+  const [isAtBottom, setIsAtBottom] = useState(true);
 
   const handleOpenDialog = (code) => {
     setSelectedCode(code);
@@ -25,6 +28,32 @@ const ChatDisplay = ({ chat, loading }) => {
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
+
+  const scrollToBottom = () => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
+    }
+  };
+
+  const handleScroll = () => {
+    if (messagesContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } =
+        messagesContainerRef.current;
+      const atBottom = Math.abs(scrollTop + clientHeight - scrollHeight) < 1;
+      setIsAtBottom(atBottom);
+    }
+  };
+
+  useEffect(() => {
+    if (isAtBottom) {
+      scrollToBottom();
+    }
+  }, [chat?.messages]);
+
+  useEffect(() => {
+    setTimeout(scrollToBottom, 0);
+  }, []);
 
   return (
     <Box
@@ -36,8 +65,9 @@ const ChatDisplay = ({ chat, loading }) => {
         flexDirection: "column",
         alignItems: "center",
         backgroundColor: theme.palette.background.paper,
-        userSelect: "text",
       }}
+      ref={messagesContainerRef}
+      onScroll={handleScroll}
     >
       {chat?.messages.map((message, index) => (
         <Box
@@ -87,6 +117,14 @@ const ChatDisplay = ({ chat, loading }) => {
           )}
         </Box>
       ))}
+      {!isAtBottom && (
+        <Button
+          onClick={scrollToBottom}
+          sx={{ position: "fixed", bottom: 20, right: 20 }}
+        >
+          Scroll to Bottom
+        </Button>
+      )}
       {loading && <CircularProgress />}
       <Dialog
         open={openDialog}
