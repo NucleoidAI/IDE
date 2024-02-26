@@ -1,5 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
-import HubIcon from "@mui/icons-material/Hub";
+import LensBlurIcon from "@mui/icons-material/LensBlur";
 import LogicTreeItem from "./LogicTreeItem";
 import { TreeView } from "@mui/lab";
 import { alpha } from "@mui/material/styles";
@@ -17,6 +17,7 @@ import {
 import { CloseSquare, MinusSquare, PlusSquare } from "./TreeIcons/TreeIcons";
 import React, { useEffect, useState } from "react";
 import { publish, useEvent } from "@nucleoidjs/react-event";
+import { AutoAwesome } from "@mui/icons-material";
 
 function LogicTree({ openLogicDialog }) {
   const [newDeclaration] = useEvent("LOGIC_ADDED", false);
@@ -109,7 +110,7 @@ function LogicTree({ openLogicDialog }) {
   return (
     <>
       <Card sx={{ width: "100%", height: "100%" }}>
-        <CardHeader avatar={<HubIcon variant="pageIcon" />} />
+        <CardHeader avatar={<LensBlurIcon variant="pageIcon" />} />
 
         <CardContent sx={{ width: "100%", height: "100%" }}>
           <TreeView
@@ -158,8 +159,8 @@ function LogicTree({ openLogicDialog }) {
           </TreeView>
         </CardContent>
         <CardActions>
-          <Fab size="small" onClick={openLogicDialog}>
-            <AddIcon />
+          <Fab size="medium" onClick={openLogicDialog}>
+            <AutoAwesome />
           </Fab>
         </CardActions>
       </Card>
