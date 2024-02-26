@@ -1,10 +1,10 @@
 import "regenerator-runtime";
 
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import Fab from "@mui/material/Fab";
 import InputBase from "@mui/material/InputBase";
 import MicIcon from "@mui/icons-material/Mic";
 import { alpha } from "@mui/material/styles";
+import BoltIcon from "@mui/icons-material/Bolt";
 
 import { CircularProgress, Stack } from "@mui/material";
 import SpeechRecognition, {
@@ -91,7 +91,7 @@ function PromptInput({
           disabled={mic || promptValue === ""}
           data-cy="propmtInput-sendAI-button"
         >
-          <AutoAwesomeIcon />
+          <BoltIcon />
         </Fab>
         <CircularProgress show={loading} />
         <Fab
