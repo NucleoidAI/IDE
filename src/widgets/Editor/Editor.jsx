@@ -119,7 +119,9 @@ const Editor = React.forwardRef((props, ref) => {
       state.pages.query.text = e;
     }
   }
-  console.log(state.pages.query.text);
+
+  console.debug("Current Query:" + state?.pages?.query?.text);
+
   const addFunctionsModels = () => {
     nucFuncs.forEach((item) => {
       if (!monaco?.editor.getModel(item.path)) {
