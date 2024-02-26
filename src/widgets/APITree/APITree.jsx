@@ -187,7 +187,7 @@ function APITree() {
         />
       </Grid>
       <CardActions>
-        <Fab size={"small"} onClick={handleResourceMenu}>
+        <Fab variant="button" size={"small"} onClick={handleResourceMenu}>
           <AddIcon />
         </Fab>
       </CardActions>
