@@ -1,6 +1,10 @@
-import LensBlurIcon from "@mui/icons-material/LensBlur";
-
-import { Folder, Hub, Send, Storage, ViewCarousel } from "@mui/icons-material";
+import {
+  Folder,
+  LensBlurIcon,
+  Send,
+  Storage,
+  ViewCarousel,
+} from "@mui/icons-material";
 import React, { lazy } from "react";
 
 const Chat = lazy(() => import("./pages/chat"));

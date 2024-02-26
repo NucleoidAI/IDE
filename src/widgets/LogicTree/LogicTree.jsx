@@ -1,4 +1,4 @@
-import AddIcon from "@mui/icons-material/Add";
+import { AutoAwesome } from "@mui/icons-material";
 import LensBlurIcon from "@mui/icons-material/LensBlur";
 import LogicTreeItem from "./LogicTreeItem";
 import { TreeView } from "@mui/lab";
@@ -17,7 +17,6 @@ import {
 import { CloseSquare, MinusSquare, PlusSquare } from "./TreeIcons/TreeIcons";
 import React, { useEffect, useState } from "react";
 import { publish, useEvent } from "@nucleoidjs/react-event";
-import { AutoAwesome } from "@mui/icons-material";
 
 function LogicTree({ openLogicDialog }) {
   const [newDeclaration] = useEvent("LOGIC_ADDED", false);

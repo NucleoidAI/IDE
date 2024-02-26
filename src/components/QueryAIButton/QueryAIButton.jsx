@@ -1,8 +1,7 @@
-import AutoModeIcon from "@mui/icons-material/AutoMode";
+import { AutoAwesome } from "@mui/icons-material";
 import { Fab } from "@mui/material";
 import actions from "../../actions";
 import { useContext } from "../../context/context";
-import { AutoAwesome } from "@mui/icons-material";
 
 function QueryAIButton() {
   const [, dispatch] = useContext();

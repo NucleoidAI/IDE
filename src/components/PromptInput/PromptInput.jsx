@@ -1,10 +1,10 @@
 import "regenerator-runtime";
 
+import BoltIcon from "@mui/icons-material/Bolt";
 import Fab from "@mui/material/Fab";
 import InputBase from "@mui/material/InputBase";
 import MicIcon from "@mui/icons-material/Mic";
 import { alpha } from "@mui/material/styles";
-import BoltIcon from "@mui/icons-material/Bolt";
 
 import { CircularProgress, Stack } from "@mui/material";
 import SpeechRecognition, {
