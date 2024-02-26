@@ -2,7 +2,7 @@ import "./ChatMainArea.css";
 
 import ChatDisplay from "./ChatDisplay";
 import MessageInput from "./MessageInput";
-import SuggestionsOverlay from "./SuggestionsOverlay";
+// import SuggestionsOverlay from "./SuggestionsOverlay";
 import useChat from "./useChat";
 import { useEvent } from "@nucleoidjs/react-event";
 
