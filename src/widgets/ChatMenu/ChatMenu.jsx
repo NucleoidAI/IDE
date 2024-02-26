@@ -66,47 +66,43 @@ const ChatMenu = ({ isSidebarVisible }) => {
   const handleCreateNewChat = () => {
     publish("CHAT_ID_CHANGED", "-1");
   };
-
   return (
-    <Box component={"nav"}>
-      <Drawer
-        open={isSidebarVisible}
-        variant="permanent"
-        sx={{
-          height: "100%",
+    <Drawer
+      open={isSidebarVisible}
+      variant="permanent"
+      sx={{
+        width: 350,
+        "& .MuiDrawer-paper": {
           width: 350,
-          "& .MuiDrawer-paper": {
-            width: 350,
-            boxSizing: "border-box",
-            boxShadow: "inherit",
-          },
+          boxSizing: "border-box",
+          boxShadow: "inherit",
+        },
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          margin: 2,
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            margin: 2,
-          }}
-        >
-          <Logo title={"Chat"} />
-        </Box>
+        <Logo title={"Chat"} />
+      </Box>
 
-        <Stack sx={{ height: "100%", width: "100%" }}>
-          <Fab
-            variant="button"
-            edge="start"
-            size="small"
-            onClick={handleCreateNewChat}
-            sx={{ alignSelf: "center", my: 2 }}
-          >
-            <AddIcon />
-          </Fab>
-          <ChatHistory chats={chatData} />
-        </Stack>
-        <Settings size={"large"} />
-      </Drawer>
-    </Box>
+      <Stack sx={{ height: "100%", width: "100%" }}>
+        <Fab
+          variant="button"
+          edge="start"
+          size="small"
+          onClick={handleCreateNewChat}
+          sx={{ alignSelf: "center", my: 2 }}
+        >
+          <AddIcon />
+        </Fab>
+        <ChatHistory chats={chatData} />
+      </Stack>
+      <Settings size={"large"} />
+    </Drawer>
   );
 };
 
