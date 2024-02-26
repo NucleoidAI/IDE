@@ -123,7 +123,7 @@ const commonThemeProperties = {
   },
   custom: {
     chat: {
-      inputBorderRadius: "15px",
+      inputBorderRadius: "10px",
     },
     schema: {
       width: 75,
