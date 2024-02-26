@@ -1,3 +1,5 @@
+import LensBlurIcon from "@mui/icons-material/LensBlur";
+
 import { Folder, Hub, Send, Storage, ViewCarousel } from "@mui/icons-material";
 import React, { lazy } from "react";
 
@@ -37,7 +39,7 @@ const routes = [
         path: "/:project/logic",
         anchor: false,
         element: <Logic />,
-        icon: <Hub />,
+        icon: <LensBlurIcon />,
       },
       {
         title: "Query",
