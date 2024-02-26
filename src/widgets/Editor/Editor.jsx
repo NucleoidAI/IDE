@@ -101,7 +101,7 @@ const Editor = React.forwardRef((props, ref) => {
   const setQueryModel = useCallback(() => {
     const model = monaco?.editor.createModel(
       state.get("pages.query.text"),
-      "typescript"
+      "javascript"
     );
     editorRef?.current.editor.setModel(model);
   }, [monaco?.editor, editorRef, state]);
@@ -119,7 +119,7 @@ const Editor = React.forwardRef((props, ref) => {
       state.pages.query.text = e;
     }
   }
-
+  console.log(state.pages.query.text);
   const addFunctionsModels = () => {
     nucFuncs.forEach((item) => {
       if (!monaco?.editor.getModel(item.path)) {
