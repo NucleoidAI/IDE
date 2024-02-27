@@ -1,6 +1,8 @@
+import Chip from "@mui/material/Chip";
 import React from "react";
 import Settings from "../../settings";
 import styles from "./styles";
+import version from "../../version.json";
 import { Box, Switch, Typography } from "@mui/material";
 
 const SettingsDialogDev = () => {
@@ -31,6 +33,18 @@ const SettingsDialogDev = () => {
           }}
         />
       </Box>
+      {version && (
+        <Box
+          sx={{
+            width: "50%",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Typography>Version</Typography>
+          <Chip label={version.version} color="secondary" sx={{ mx: 1 }} />
+        </Box>
+      )}
     </Box>
   );
 };
