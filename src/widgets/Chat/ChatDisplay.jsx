@@ -18,8 +18,6 @@ const ChatDisplay = ({ chat, loading }) => {
   const [selectedCode, setSelectedCode] = useState("");
   const messagesContainerRef = useRef(null);
 
-  const [isAtBottom, setIsAtBottom] = useState(true);
-
   const handleOpenDialog = (code) => {
     setSelectedCode(code);
     setOpenDialog(true);
@@ -41,19 +39,19 @@ const ChatDisplay = ({ chat, loading }) => {
       const { scrollTop, scrollHeight, clientHeight } =
         messagesContainerRef.current;
       const atBottom = Math.abs(scrollTop + clientHeight - scrollHeight) < 1;
-      setIsAtBottom(atBottom);
+
+      const scrollToBottomButton = document.getElementById(
+        "scrollToBottomButton"
+      );
+      if (scrollToBottomButton) {
+        scrollToBottomButton.style.display = atBottom ? "none" : "block";
+      }
     }
   };
 
   useEffect(() => {
-    if (isAtBottom) {
-      scrollToBottom();
-    }
-  }, [chat?.messages]);
-
-  useEffect(() => {
-    setTimeout(scrollToBottom, 0);
-  }, []);
+    setTimeout(scrollToBottom, 10);
+  }, [chat]);
 
   return (
     <Box
@@ -117,14 +115,14 @@ const ChatDisplay = ({ chat, loading }) => {
           )}
         </Box>
       ))}
-      {!isAtBottom && (
-        <Button
-          onClick={scrollToBottom}
-          sx={{ position: "fixed", bottom: 20, right: 20 }}
-        >
-          Scroll to Bottom
-        </Button>
-      )}
+      <Button
+        onClick={scrollToBottom}
+        sx={{ position: "fixed", bottom: 20, right: 20 }}
+        id="scrollToBottomButton"
+        style={{ display: "none" }}
+      >
+        Scroll to Bottom
+      </Button>
       {loading && <CircularProgress />}
       <Dialog
         open={openDialog}
