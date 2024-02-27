@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Stack, Box, Button, Typography, useTheme } from "@mui/material";
+import { Box, Button, Stack, Typography, useTheme } from "@mui/material";
 
 const suggestions = [
   {
