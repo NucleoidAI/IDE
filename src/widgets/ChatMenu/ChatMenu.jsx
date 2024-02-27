@@ -3,23 +3,16 @@ import Drawer from "@mui/material/Drawer";
 import Logo from "../../components/Logo";
 import React from "react";
 import Settings from "../../components/Settings";
-import Slide from "@mui/material/Slide";
 import { publish } from "@nucleoidjs/react-event";
 
 import {
   Box,
-  Divider,
-  Icon,
+  Fab,
   List,
   ListItemButton,
   ListItemText,
   Stack,
-  ListItemAvatar,
-  ListItem,
-  IconButton,
   useTheme,
-  Fab,
-  ListSubheader,
 } from "@mui/material";
 
 const ChatHistory = ({ chats }) => {
