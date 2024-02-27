@@ -1,8 +1,10 @@
 import Editor from "@monaco-editor/react";
+import { NucLinter } from "./NucLinter";
 import React from "react";
 import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
-import { useRef } from "react";
 import { useStorage } from "@nucleoidjs/webstorage";
+
+import { useEffect, useRef } from "react";
 
 import * as angularPlugin from "prettier/parser-angular";
 import * as babelPlugin from "prettier/parser-babel";
@@ -15,7 +17,13 @@ import * as prettierStandalone from "prettier/standalone";
 import * as typescriptPlugin from "prettier/parser-typescript";
 import * as yamlPlugin from "prettier/parser-yaml";
 
-function NucEditor({ onCodeEditorChange, defaultValue, path, onMount }) {
+function NucEditor({
+  onCodeEditorChange,
+  defaultValue,
+  path,
+  onMount,
+  onSave,
+}) {
   const plugins = [
     angularPlugin,
     babelPlugin,
@@ -38,6 +46,32 @@ function NucEditor({ onCodeEditorChange, defaultValue, path, onMount }) {
     const column = position - textUpToPosition.lastIndexOf("\n");
     return { line, column };
   }
+
+  const lintWithCustomLinter = async () => {
+    const editor = editorRef?.current?.editor;
+    const monaco = editorRef?.current?.monaco;
+
+    const code = editor.getValue();
+    const linter = new NucLinter(code);
+    const diagnostics = linter.lint();
+
+    const markers = diagnostics.map((diagnostic) => {
+      const { line, column } = getLineAndColumn(code, diagnostic.index);
+      return {
+        startLineNumber: line,
+        startColumn: column,
+        endLineNumber: line,
+        endColumn: column + diagnostic.length,
+        message: diagnostic.message,
+        severity:
+          diagnostic.severity === "error"
+            ? monaco.MarkerSeverity.Error
+            : monaco.MarkerSeverity.Warning,
+      };
+    });
+
+    monaco.editor.setModelMarkers(editor.getModel(), "customLinting", markers);
+  };
 
   const lint = React.useCallback(async () => {
     const editor = editorRef?.current?.editor;
@@ -75,6 +109,19 @@ function NucEditor({ onCodeEditorChange, defaultValue, path, onMount }) {
     }
   }, []);
 
+  const formatDocument = () => {
+    const editor = editorRef.current?.editor;
+    if (editor) {
+      editor.getAction("editor.action.formatDocument").run();
+    }
+  };
+
+  useEffect(() => {
+    if (editorRef.current) {
+      formatDocument();
+    }
+  }, [path]);
+
   function editorOnMount(editor, monaco) {
     window.EditorInstance = editor;
 
@@ -93,6 +140,7 @@ function NucEditor({ onCodeEditorChange, defaultValue, path, onMount }) {
         const formatted = prettierStandalone.format(text, {
           parser: "typescript",
           plugins: plugins,
+          singleQuote: true,
         });
 
         return [
@@ -126,6 +174,20 @@ function NucEditor({ onCodeEditorChange, defaultValue, path, onMount }) {
     );
 
     lint();
+
+    editor.addAction({
+      id: "saveEvent",
+      label: "Save Project",
+      keybindings: [
+        monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS,
+        monaco.KeyMod.chord(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS),
+      ],
+
+      run: () => {
+        onSave && onSave(editor.getValue());
+        editorRef.current && formatDocument();
+      },
+    });
     onMount && onMount(editor, monaco);
   }
 
@@ -134,7 +196,10 @@ function NucEditor({ onCodeEditorChange, defaultValue, path, onMount }) {
 
     timerRef.current = setTimeout(() => {
       lint();
+      lintWithCustomLinter();
     }, 400);
+
+    onSave && onSave(e);
 
     onCodeEditorChange && onCodeEditorChange(e);
   }
