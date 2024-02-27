@@ -2,6 +2,8 @@ name: Land
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+
 jobs:
   test:
     uses: NucleoidJS/actions/.github/workflows/test.yml@main
