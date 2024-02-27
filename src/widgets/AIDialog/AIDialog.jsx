@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import HubIcon from "@mui/icons-material/Hub";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import PromptCodeDialog from "../../components/PromptCodeDialog";
 import actions from "../../actions";
 import { deepCopy } from "../../utils/DeepCopy";
@@ -190,7 +190,7 @@ function AIDialog({ editor, declarative, imperative, page }) {
   return (
     <PromptCodeDialog
       logic
-      logo={HubIcon}
+      logo={AutoAwesomeIcon}
       title={mode}
       page={page}
       inputPlaceHolder={page}

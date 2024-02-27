@@ -205,10 +205,9 @@ const MenuLinks = (props) => {
       free: 50,
     },
   });
-
   return (
     <>
-      {props.list[0].pages.map(({ title, link, anchor, icon }) => {
+      {props.list.map(({ title, link, anchor, icon }) => {
         return (
           <React.Fragment key={title}>
             <ListItemButton
@@ -241,7 +240,7 @@ const MenuLinks = (props) => {
 const SmallMenuLinks = (props) => {
   return (
     <>
-      {props.list[0].pages.map((item, key) => (
+      {props.list.map((item, key) => (
         <MenuItem {...item} key={key} />
       ))}
     </>

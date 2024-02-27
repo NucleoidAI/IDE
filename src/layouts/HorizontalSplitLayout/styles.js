@@ -5,7 +5,7 @@ const styles = {
   runButton(theme) {
     return {
       position: "relative",
-      bottom: 40 + theme.spacing(1),
+      bottom: 3 + theme.spacing(1),
       right: theme.spacing(1),
       justifyContent: "flex-end",
       alignItems: "center",
@@ -14,9 +14,6 @@ const styles = {
   contentGrid: { pt: 1, transition: "all .3s ease-in-out" },
   loadingCard: { height: "100%" },
   contentCard: { height: "100%", padding: 1 },
-  playArrowIcon: {
-    fill: "#212121",
-  },
   jsonSwitch: {
     "z-index": 1,
     position: "absolute",
