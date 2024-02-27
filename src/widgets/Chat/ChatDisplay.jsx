@@ -1,4 +1,6 @@
 import ChatEditor from "./ChatEditor";
+import EditIcon from "@mui/icons-material/Edit";
+import ReadOnlyEditor from "../../components/ReadOnlyEditor";
 
 import {
   Box,
@@ -94,9 +96,13 @@ const ChatDisplay = ({ chat }) => {
                   userSelect: "text",
                   width: "100%",
                 }}
-                onClick={() => handleOpenDialog(message.code)}
               >
-                <ChatEditor code={message.code} readOnly={true} />
+                <ReadOnlyEditor
+                  value={message.code}
+                  language="typescript"
+                  actionIcon={EditIcon}
+                  onActionClick={() => handleOpenDialog(message.code)}
+                />
               </Box>
             )}
           </Box>
