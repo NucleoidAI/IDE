@@ -31,7 +31,6 @@ const VFSEditor = React.forwardRef((props, ref) => {
   const mode = Path.getMode();
   const { api, functions, query } = props;
   const timerRef = React.useRef();
-  const [open, setOpen] = React.useState(false);
   const [context] = useContext();
   const editorRef = React.useRef(null);
 
@@ -64,14 +63,7 @@ const VFSEditor = React.forwardRef((props, ref) => {
     }
   }, [api]);
 
-  function handleChange(e) {
-    clearTimeout(timerRef.current);
-
-    timerRef.current = setTimeout(() => {
-      compile();
-      checkFunction();
-    }, 400);
-
+  function handleSave(e) {
     if (api) {
       const selected = context.pages.api.selected;
       const endpointIndex = context.nucleoid.api.findIndex(
@@ -94,6 +86,16 @@ const VFSEditor = React.forwardRef((props, ref) => {
     if (query) {
       console.log("query");
     }
+  }
+
+  //eslint-disable-next-line
+  function handleChange(e) {
+    clearTimeout(timerRef.current);
+
+    timerRef.current = setTimeout(() => {
+      compile();
+      checkFunction();
+    }, 400);
   }
 
   const compile = React.useCallback(() => {
@@ -141,20 +143,6 @@ const VFSEditor = React.forwardRef((props, ref) => {
       }
     });
 
-    editor.addAction({
-      id: "saveEvent",
-      label: "Save Project",
-      keybindings: [
-        monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS,
-        monaco.KeyMod.chord(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS),
-      ],
-
-      run: () => {
-        setOpen(true);
-        // TODO SAVE PROJECT
-      },
-    });
-
     checkFunction();
 
     if (ref) ref.current = editor;
@@ -199,6 +187,7 @@ const VFSEditor = React.forwardRef((props, ref) => {
         path={file.path}
         onMount={handleEditorDidMount}
         onCodeEditorChange={handleChange}
+        onSave={handleSave}
         options={{
           tabSize: 2,
           minimap: {
@@ -229,7 +218,6 @@ const VFSEditor = React.forwardRef((props, ref) => {
           </Grid>
         </>
       )}
-      <Backdrop open={open} />
     </Box>
   );
 });
