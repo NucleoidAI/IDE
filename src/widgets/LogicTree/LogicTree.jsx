@@ -1,5 +1,5 @@
-import AddIcon from "@mui/icons-material/Add";
-import HubIcon from "@mui/icons-material/Hub";
+import { AutoAwesome } from "@mui/icons-material";
+import LensBlurIcon from "@mui/icons-material/LensBlur";
 import LogicTreeItem from "./LogicTreeItem";
 import { TreeView } from "@mui/lab";
 import { alpha } from "@mui/material/styles";
@@ -109,7 +109,7 @@ function LogicTree({ openLogicDialog }) {
   return (
     <>
       <Card sx={{ width: "100%", height: "100%" }}>
-        <CardHeader avatar={<HubIcon sx={{ color: "#c3c5c8" }} />} />
+        <CardHeader avatar={<LensBlurIcon variant="pageIcon" />} />
 
         <CardContent sx={{ width: "100%", height: "100%" }}>
           <TreeView
@@ -158,8 +158,8 @@ function LogicTree({ openLogicDialog }) {
           </TreeView>
         </CardContent>
         <CardActions>
-          <Fab size="small" onClick={openLogicDialog}>
-            <AddIcon />
+          <Fab size="medium" onClick={openLogicDialog}>
+            <AutoAwesome />
           </Fab>
         </CardActions>
       </Card>

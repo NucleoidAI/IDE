@@ -1,4 +1,4 @@
-import AutoModeIcon from "@mui/icons-material/AutoMode";
+import { AutoAwesome } from "@mui/icons-material";
 import { Fab } from "@mui/material";
 import actions from "../../actions";
 import { useContext } from "../../context/context";
@@ -15,7 +15,7 @@ function QueryAIButton() {
 
   return (
     <Fab size={"small"} onClick={handleClickOpen}>
-      <AutoModeIcon />
+      <AutoAwesome />
     </Fab>
   );
 }

@@ -1,7 +1,138 @@
+import { alpha } from "@mui/material/styles";
 import { base } from "./palette";
 import { createTheme } from "@mui/material";
 
-let lightTheme = createTheme({
+const micAnimation = {
+  "& span": {
+    display: "block",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    margin: "auto",
+    height: "32px",
+    width: "32px",
+    "&::before, &::after": {
+      content: '""',
+      display: "block",
+      position: "absolute",
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0,
+      margin: "auto",
+      height: "32px",
+      width: "32px",
+      border: "2px solid #FFF",
+      borderRadius: "50%",
+      opacity: 0,
+      animation:
+        "loader-6-1 1.5s cubic-bezier(0.075, 0.820, 0.165, 1.000) infinite",
+    },
+    "&::after": {
+      animation:
+        "loader-6-2 1.5s cubic-bezier(0.075, 0.820, 0.165, 1.000) .25s infinite",
+    },
+  },
+};
+
+const commonThemeProperties = {
+  props: {
+    MuiButton: {
+      variant: "contained",
+    },
+  },
+  components: {
+    MuiDialog: {
+      styleOverrides: {
+        root: {
+          "& .MuiDialog-paper": {
+            borderRadius: "10px",
+          },
+        },
+      },
+    },
+    MuiListItemIcon: {
+      variants: [
+        {
+          props: { variant: "pageIcon" },
+          style: {
+            color: base.grey[400],
+          },
+        },
+      ],
+    },
+    MuiDataGrid: {
+      styleOverrides: {
+        root: {
+          "& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-cell:focus-within":
+            {
+              outline: "none",
+            },
+        },
+      },
+    },
+
+    MuiCircularProgress: {
+      variants: [
+        {
+          props: { show: false },
+          style: {
+            display: "none",
+          },
+        },
+      ],
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        },
+      },
+    },
+    MuiCardActions: {
+      styleOverrides: {
+        root: {
+          justifyContent: "center",
+        },
+      },
+    },
+    MuiTextField: {
+      defaultProps: {
+        variant: "standard",
+      },
+    },
+    MuiSelect: {
+      defaultProps: {
+        variant: "standard",
+      },
+    },
+    MuiSvgIcon: {
+      variants: [
+        {
+          props: { variant: "pageIcon" },
+          style: {
+            color: base.grey[400],
+          },
+        },
+      ],
+    },
+  },
+  custom: {
+    chat: {
+      inputBorderRadius: "10px",
+    },
+    schema: {
+      width: 75,
+    },
+  },
+  spacing: (factor) => 8 * factor,
+};
+
+const lightTheme = createTheme({
   palette: {
     primary: {
       main: "#747474",
@@ -21,15 +152,7 @@ let lightTheme = createTheme({
       messageBG: "#f5f5f9",
     },
   },
-  props: {
-    MuiButton: {
-      variant: "contained",
-    },
-  },
-});
-
-lightTheme = {
-  ...lightTheme,
+  ...commonThemeProperties.props,
   components: {
     MuiCssBaseline: {
       styleOverrides: {
@@ -62,17 +185,41 @@ lightTheme = {
           },
         },
       },
-    },
-    MuiDataGrid: {
-      styleOverrides: {
-        root: {
-          "& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-cell:focus-within":
-            {
-              outline: "none",
-            },
+      MuiDrawer: {
+        styleOverrides: {
+          paper: {
+            backgroundColor: "#343a43",
+          },
         },
       },
     },
+
+    MuiFab: {
+      variants: [
+        {
+          props: { variant: "button" },
+          style: (props) => ({
+            color: base.grey[900],
+            display: props.hide || props.loading ? "none" : "flex",
+            ...(props.type === "mic" && props.activate ? micAnimation : {}),
+          }),
+        },
+      ],
+      styleOverrides: {
+        root: {
+          backgroundColor: base.grey[300],
+          color: base.grey[900],
+          "&:hover": {
+            backgroundColor: base.grey[700],
+            color: base.grey[200],
+          },
+          "&:disabled": {
+            color: base.grey[700],
+          },
+        },
+      },
+    },
+
     MuiDrawer: {
       styleOverrides: {
         paper: {
@@ -80,22 +227,7 @@ lightTheme = {
         },
       },
     },
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-        },
-      },
-    },
-    MuiCardActions: {
-      styleOverrides: {
-        root: {
-          justifyContent: "center",
-        },
-      },
-    },
+
     MuiBackdrop: {
       styleOverrides: {
         root: {
@@ -103,23 +235,7 @@ lightTheme = {
         },
       },
     },
-    MuiTextField: {
-      defaultProps: {
-        variant: "standard",
-      },
-    },
-    MuiSelect: {
-      defaultProps: {
-        variant: "standard",
-      },
-    },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          color: "black",
-        },
-      },
-    },
+
     MuiLinearProgress: {
       styleOverrides: {
         root: {
@@ -128,15 +244,9 @@ lightTheme = {
         },
       },
     },
+    ...commonThemeProperties.components,
   },
-};
-
-lightTheme = {
-  ...lightTheme,
   custom: {
-    schema: {
-      width: 75,
-    },
     apiTreeItem: {
       fontSize: 12,
       color: "#666",
@@ -177,15 +287,12 @@ lightTheme = {
         paddingBottom: 1,
       },
     },
+    ...commonThemeProperties.custom,
   },
-};
-
-lightTheme = {
-  ...lightTheme,
   spacing: (factor) => 8 * factor,
-};
+});
 
-let darkTheme = createTheme({
+const darkTheme = createTheme({
   palette: {
     primary: {
       main: base.primary.dark,
@@ -204,6 +311,9 @@ let darkTheme = createTheme({
       textGray: base.grey[500],
       messageBG: base.grey[700],
     },
+    chat: {
+      inputBorderRadius: "15px",
+    },
     background: {
       default: base.grey[900],
       paper: base.grey[800],
@@ -213,10 +323,6 @@ let darkTheme = createTheme({
       secondary: base.grey[500],
     },
   },
-});
-
-darkTheme = {
-  ...darkTheme,
   components: {
     MuiCssBaseline: {
       styleOverrides: {
@@ -270,16 +376,6 @@ darkTheme = {
       },
     },
 
-    MuiDataGrid: {
-      styleOverrides: {
-        root: {
-          "& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-cell:focus-within":
-            {
-              outline: "none",
-            },
-        },
-      },
-    },
     MuiDrawer: {
       styleOverrides: {
         paper: {
@@ -288,22 +384,6 @@ darkTheme = {
       },
     },
 
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-        },
-      },
-    },
-    MuiCardActions: {
-      styleOverrides: {
-        root: {
-          justifyContent: "center",
-        },
-      },
-    },
     MuiBackdrop: {
       styleOverrides: {
         root: {
@@ -311,16 +391,7 @@ darkTheme = {
         },
       },
     },
-    MuiTextField: {
-      defaultProps: {
-        variant: "standard",
-      },
-    },
-    MuiSelect: {
-      defaultProps: {
-        variant: "standard",
-      },
-    },
+
     MuiButton: {
       styleOverrides: {
         root: {
@@ -328,17 +399,55 @@ darkTheme = {
         },
       },
     },
+    MuiInputBase: {
+      variants: [
+        {
+          props: { variant: "chat" },
+          style: {
+            color: base.grey[400],
+            margin: 5,
+            borderRadius: 10,
+            "& .MuiInputBase-input.Mui-disabled": {
+              WebkitTextFillColor: alpha(base.grey[400], 0.5),
+            },
+          },
+        },
+      ],
+    },
+
+    MuiSvgIcon: {
+      variants: [
+        {
+          props: { variant: "pageIcon" },
+          style: {
+            color: base.grey[400],
+          },
+        },
+      ],
+    },
+
     MuiFab: {
+      variants: [
+        {
+          props: { variant: "button" },
+          style: (props) => ({
+            color: base.grey[400],
+            display: props.hide || props.loading ? "none" : "flex",
+            ...(props.type === "mic" && props.activate ? micAnimation : {}),
+          }),
+        },
+      ],
       styleOverrides: {
         root: {
-          backgroundColor: base.grey[800],
-          color: base.common.white,
+          backgroundColor: base.grey[900],
+          color: base.grey[400],
           "&:hover": {
-            backgroundColor: base.grey[700],
+            backgroundColor: base.grey[400],
+            color: base.grey[900],
           },
-          boxShadow: "none",
           "&.Mui-disabled": {
-            backgroundColor: base.grey[600],
+            backgroundColor: base.grey[900],
+            color: base.grey[700],
           },
         },
       },
@@ -351,15 +460,9 @@ darkTheme = {
         },
       },
     },
+    ...commonThemeProperties.components,
   },
-};
-
-darkTheme = {
-  ...darkTheme,
   custom: {
-    schema: {
-      width: 75,
-    },
     apiTreeItem: {
       fontSize: 12,
       color: base.grey[400],
@@ -402,13 +505,10 @@ darkTheme = {
         paddingBottom: 1,
       },
     },
+    ...commonThemeProperties.custom,
   },
-};
-
-darkTheme = {
-  ...darkTheme,
-  spacing: (factor) => 8 * factor, // Bootstrap strategy
-};
+  spacing: (factor) => 8 * factor,
+});
 
 const theme = lightTheme;
 export { lightTheme, darkTheme };

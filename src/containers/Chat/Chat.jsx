@@ -30,15 +30,14 @@ function ChatContainer() {
           transform: isSidebarVisible ? "translateX(0)" : "translateX(-100%)",
         }}
       >
-        <ChatMenu />
+        <ChatMenu isSidebarVisible={isSidebarVisible} />
       </Box>
 
       <Box
         sx={{
-          flexGrow: 1,
           bgcolor: "white",
-          transition: "margin-left 0.3s ease-in-out",
-          marginLeft: isSidebarVisible ? "18%" : "0",
+          transition: "margin-left 0.5s ease-in-out",
+          marginLeft: isSidebarVisible ? "350px" : "0",
           width: "100%",
           position: "relative",
         }}
@@ -49,7 +48,7 @@ function ChatContainer() {
             color: "white",
             position: "absolute",
             top: "50%",
-            left: "1rem",
+            left: "3rem",
             transform: "translateY(-50%)",
             zIndex: 1300,
           }}

@@ -1,4 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
+import Drawer from "@mui/material/Drawer";
 import Logo from "../../components/Logo";
 import React from "react";
 import Settings from "../../components/Settings";
@@ -6,11 +7,11 @@ import { publish } from "@nucleoidjs/react-event";
 
 import {
   Box,
-  Divider,
-  Icon,
+  Fab,
   List,
   ListItemButton,
   ListItemText,
+  Stack,
   useTheme,
 } from "@mui/material";
 
@@ -22,7 +23,7 @@ const ChatHistory = ({ chats }) => {
   };
 
   return (
-    <List sx={{ width: "100%" }}>
+    <List sx={{ maxWidth: 350, width: "100%" }}>
       {chats.map((chat) => (
         <ListItemButton
           key={chat.chatId}
@@ -47,8 +48,7 @@ const ChatHistory = ({ chats }) => {
   );
 };
 
-const ChatMenu = () => {
-  const theme = useTheme();
+const ChatMenu = ({ isSidebarVisible }) => {
   const chatData = [
     { chatId: "0", chatTitle: "What is the circumference of the Earth?" },
     { chatId: "1", chatTitle: "How to center a div?" },
@@ -59,42 +59,43 @@ const ChatMenu = () => {
   const handleCreateNewChat = () => {
     publish("CHAT_ID_CHANGED", "-1");
   };
-
   return (
-    <Box
+    <Drawer
+      open={isSidebarVisible}
+      variant="permanent"
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        backgroundColor:
-          theme.components.MuiDrawer.styleOverrides.paper.backgroundColor,
+        width: 350,
+        "& .MuiDrawer-paper": {
+          width: 350,
+          boxSizing: "border-box",
+          boxShadow: "inherit",
+        },
       }}
-      p={2}
     >
-      <Box sx={{ flexGrow: 0 }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          margin: 2,
+        }}
+      >
         <Logo title={"Chat"} />
       </Box>
 
-      <Divider sx={{ my: 2 }} />
-      <Box sx={{ flexGrow: 0 }}>
-        <ListItemButton
+      <Stack sx={{ height: "100%", width: "100%" }}>
+        <Fab
+          variant="button"
+          edge="start"
+          size="small"
           onClick={handleCreateNewChat}
-          sx={{ mb: 2, paddingX: 0 }}
+          sx={{ alignSelf: "center", my: 2 }}
         >
-          <ListItemText primary="Create New Chat" />
-          <Icon>
-            <AddIcon />
-          </Icon>
-        </ListItemButton>
-      </Box>
-
-      <Box sx={{ flexGrow: 1, overflowY: "auto" }}>
+          <AddIcon />
+        </Fab>
         <ChatHistory chats={chatData} />
-      </Box>
-      <Box sx={{ flexGrow: 0 }}>
-        <Settings size={"large"} />
-      </Box>
-    </Box>
+      </Stack>
+      <Settings size={"large"} />
+    </Drawer>
   );
 };
 

@@ -1,6 +1,7 @@
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useState } from "react";
+
 import { Box, Fab, Tooltip, Typography } from "@mui/material";
 
 const CopyClipboard = () => {
@@ -14,7 +15,7 @@ const CopyClipboard = () => {
         alignItems: "center",
       }}
     >
-      <ArrowForwardIosIcon />
+      <ArrowForwardIosIcon variant="pageIcon" />
       <Typography fontFamily={"Trebuchet MS"} variant={"h6"}>
         npx nucleoidjs start
       </Typography>
