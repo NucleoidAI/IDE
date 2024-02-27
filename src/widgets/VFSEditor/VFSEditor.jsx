@@ -10,7 +10,7 @@ import { publish } from "@nucleoidjs/react-event";
 import rules from "./rules";
 import { useContext } from "../../context/context";
 
-import { Backdrop, Box, Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import React, { useCallback } from "react";
 
 const options = {
