@@ -1,13 +1,13 @@
-import Button from "@mui/material/Button";
-import { CircularProgress } from "@mui/material";
-import OpenAI from "../icons/OpenAI";
+import { AutoAwesome } from "@mui/icons-material";
 import React from "react";
 import Settings from "../settings";
 import actions from "../actions";
 import service from "../service";
 import { useContext } from "../context/context";
 
-const OpenAIButton = () => {
+import { CircularProgress, Fab } from "@mui/material";
+
+const ApiAIButton = () => {
   const [, dispatch] = useContext();
   const [login, setLogin] = React.useState(false);
   const handleClickOpen = () => {
@@ -37,19 +37,9 @@ const OpenAIButton = () => {
   return (
     <>
       {!login ? (
-        <Button
-          data-cy="openAI-dialog-button"
-          sx={{
-            position: "relative",
-            textTransform: "none",
-            bottom: 20,
-            left: 15,
-          }}
-          onClick={handleClickOpen}
-          startIcon={<OpenAI />}
-        >
-          OpenAI
-        </Button>
+        <Fab size="medium" variant="button" onClick={handleClickOpen}>
+          <AutoAwesome />
+        </Fab>
       ) : (
         <CircularProgress
           size={25}
@@ -65,4 +55,4 @@ const OpenAIButton = () => {
   );
 };
 
-export default OpenAIButton;
+export default ApiAIButton;

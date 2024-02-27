@@ -78,9 +78,9 @@ function NucEditor({
     const monaco = editorRef?.current?.monaco;
     if (editor.getModel()) {
       const worker = await monaco.languages.typescript.getTypeScriptWorker();
-      const ts = await worker(editor.getModel().uri);
+      const ts = await worker(editor?.getModel()?.uri);
       const diagnostics = await ts.getSemanticDiagnostics(
-        editor.getModel().uri.toString()
+        editor?.getModel()?.uri?.toString()
       );
       const text = editor.getValue();
 

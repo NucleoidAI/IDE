@@ -442,7 +442,8 @@ const darkTheme = createTheme({
           backgroundColor: base.grey[900],
           color: base.grey[400],
           "&:hover": {
-            backgroundColor: base.grey[700],
+            backgroundColor: base.grey[400],
+            color: base.grey[900],
           },
           "&.Mui-disabled": {
             backgroundColor: base.grey[900],
