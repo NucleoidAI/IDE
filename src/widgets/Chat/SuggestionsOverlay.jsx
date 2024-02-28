@@ -1,12 +1,16 @@
 import React from "react";
 
-import { Box, Button, useTheme } from "@mui/material";
+import { Box, Button, Stack, Typography, useTheme } from "@mui/material";
 
 const suggestions = [
-  "Define a new rule for user authentication",
-  "Test the logic for the shopping cart discount",
-  "Create a charter for managing state",
-  "Brainstorm edge cases for the payment processing workflow",
+  {
+    summary: "Define a new rule",
+    description: "Define a new rule for user authentication",
+  },
+  {
+    summary: "Test the logic",
+    description: "Test the logic for the shopping cart discount",
+  },
 ];
 
 const SuggestionsOverlay = ({ setInputValue }) => {
@@ -44,7 +48,7 @@ const SuggestionsOverlay = ({ setInputValue }) => {
             variant="outlined"
             sx={{
               flexGrow: 1,
-              minHeight: "60px",
+              minHeight: "100px",
               backgroundColor: theme.palette.background.default,
               borderColor: theme.palette.grey[600],
               "&:hover": {
@@ -53,7 +57,7 @@ const SuggestionsOverlay = ({ setInputValue }) => {
               },
               textAlign: "left",
               justifyContent: "flex-start",
-              borderRadius: "5px",
+              borderRadius: "8px",
               textTransform: "none",
               fontSize: "0.875rem",
               fontWeight: "medium",
@@ -61,7 +65,12 @@ const SuggestionsOverlay = ({ setInputValue }) => {
             }}
             onClick={() => handleSuggestionClick(suggestion)}
           >
-            {suggestion}
+            <Stack direction={"column"}>
+              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                {suggestion.summary}
+              </Typography>
+              <Typography>{suggestion.description}</Typography>
+            </Stack>
           </Button>
         ))}
       </Box>
