@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 import { storage, useStorage } from "@nucleoidjs/webstorage";
 import { useEffect, useState } from "react";
 
@@ -350,6 +352,7 @@ const mockChats = [
         code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
       },
     ],
+    uuid: uuidv4(),
   },
   {
     id: "1",
@@ -365,6 +368,7 @@ const mockChats = [
         code: "div {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}",
       },
     ],
+    uuid: uuidv4(),
   },
   {
     id: "2",
@@ -377,6 +381,7 @@ const mockChats = [
         code: "interface Dream {\n  sounds?: string[];\n  smells?: string[];\n  touches?: string[];\n}",
       },
     ],
+    uuid: uuidv4(),
   },
   {
     id: "3",
@@ -392,6 +397,7 @@ const mockChats = [
         code: "interface Knowledge {\n  criteria: string[];\n  validate(criteria: string): boolean;\n}",
       },
     ],
+    uuid: uuidv4(),
   },
 ];
 
@@ -419,6 +425,8 @@ const useChat = (chatId) => {
       console.error("Chat not found");
       return;
     }
+    const chats = [...chatStorage];
+    const chat = chats[chatIndex];
 
     const newMessage = {
       sender: "human",
@@ -430,7 +438,7 @@ const useChat = (chatId) => {
 
     try {
       const response = await fetch(
-        "https://nuc.land/ide/api/expert/chat/12345",
+        `https://nuc.land/ide/api/expert/chat/sessions/${chat.uuid}`,
         {
           method: "POST",
           headers: {
