@@ -1,3 +1,4 @@
+import { storage, useStorage } from "@nucleoidjs/webstorage";
 import { useEffect, useState } from "react";
 
 const mockChats = [
@@ -395,25 +396,25 @@ const mockChats = [
 ];
 
 const useChat = (chatId) => {
+  const [chatStorage] = useStorage("chat", mockChats);
   const [chat, setChat] = useState(null);
 
   useEffect(() => {
-    const foundChat = mockChats.find((c) => c.id === chatId.toString());
+    const chats = [...chatStorage];
+    const foundChat = chats.find((c) => c.id === chatId.toString());
     setChat(foundChat);
-  }, [chatId]);
+  }, [chatId, chatStorage]);
 
   function updateChat(chatIndex, message) {
-    const updatedMessages = [...mockChats[chatIndex].messages, message];
-    const updatedChat = {
-      ...mockChats[chatIndex],
-      messages: updatedMessages,
-    };
-    mockChats[chatIndex] = updatedChat;
-    setChat(updatedChat);
+    const chats = [...chatStorage];
+    const updatedMessages = [...chats[chatIndex].messages, message];
+    chats[chatIndex] = { ...chats[chatIndex], messages: updatedMessages };
+    storage.set("chat", chats);
+    setChat(chats[chatIndex]);
   }
 
   const sendMessage = async (id, message, setLoading) => {
-    const chatIndex = mockChats.findIndex((c) => c.id === id.toString());
+    const chatIndex = chatStorage.findIndex((c) => c.id === id.toString());
     if (chatIndex === -1) {
       console.error("Chat not found");
       return;
