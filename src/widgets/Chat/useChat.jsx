@@ -1,4 +1,7 @@
-import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+
+import { storage, useStorage } from "@nucleoidjs/webstorage";
+import { useEffect, useRef } from "react";
 
 const mockChats = [
   {
@@ -349,6 +352,7 @@ const mockChats = [
         code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
       },
     ],
+    uuid: uuidv4(),
   },
   {
     id: "1",
@@ -364,6 +368,7 @@ const mockChats = [
         code: "div {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}",
       },
     ],
+    uuid: uuidv4(),
   },
   {
     id: "2",
@@ -376,6 +381,7 @@ const mockChats = [
         code: "interface Dream {\n  sounds?: string[];\n  smells?: string[];\n  touches?: string[];\n}",
       },
     ],
+    uuid: uuidv4(),
   },
   {
     id: "3",
@@ -391,18 +397,81 @@ const mockChats = [
         code: "interface Knowledge {\n  criteria: string[];\n  validate(criteria: string): boolean;\n}",
       },
     ],
+    uuid: uuidv4(),
   },
 ];
 
 const useChat = (chatId) => {
-  const [chat, setChat] = useState(null);
+  const [chatData] = useStorage("chat", mockChats);
+  const chatRef = useRef();
+  chatRef.current = chatData.find((c) => c.id === chatId.toString());
 
   useEffect(() => {
-    const foundChat = mockChats.find((c) => c.id === chatId.toString());
-    setChat(foundChat);
-  }, [chatId]);
+    chatRef.current = chatData.find((c) => c.id === chatId.toString());
+  }, [chatId, chatData]);
 
-  return chat;
+  function updateChat(message) {
+    chatRef.current.messages.push(message);
+  }
+
+  const sendMessage = async (message, setLoading) => {
+    const newMessage = {
+      sender: "human",
+      text: message,
+    };
+
+    updateChat(newMessage);
+    setLoading(true);
+
+    try {
+      const response = await fetch(
+        `https://nuc.land/ide/api/expert/chat/sessions/${chatRef.current.uuid}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            context: ["string"],
+            prompt: message,
+          }),
+        }
+      );
+
+      if (!response.ok) throw new Error("Network response was not ok.");
+
+      const data = await response.json();
+      let responseText = "";
+      if (data.description) {
+        responseText = data.description;
+      } else if (data.prompt) {
+        responseText = data.prompt;
+      } else {
+        responseText = "Received a response without a description.";
+      }
+
+      const responseMessage = {
+        sender: "ai",
+        text: responseText,
+      };
+
+      if (data.code) {
+        responseMessage.code = data.code;
+      }
+      updateChat(responseMessage);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+    storage.set(
+      "chat",
+      chatData.map((item) =>
+        item.id === chatRef.current.id ? chatRef.current : item
+      )
+    );
+  };
+
+  return { chat: chatRef.current, sendMessage };
 };
 
 export default useChat;

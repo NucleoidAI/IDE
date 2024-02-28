@@ -12,23 +12,13 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-const ChatDisplay = ({ chat }) => {
+const ChatDisplay = ({ chat, loading }) => {
   const theme = useTheme();
-  const [isLoading, setIsLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedCode, setSelectedCode] = useState("");
-
-  useEffect(() => {
-    //TODO: Replace with actual loading logic
-    setIsLoading(true);
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
+  const messagesContainerRef = useRef(null);
 
   const handleOpenDialog = (code) => {
     setSelectedCode(code);
@@ -38,6 +28,32 @@ const ChatDisplay = ({ chat }) => {
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
+
+  const scrollToBottom = () => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
+    }
+  };
+
+  const handleScroll = () => {
+    if (messagesContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } =
+        messagesContainerRef.current;
+      const atBottom = Math.abs(scrollTop + clientHeight - scrollHeight) < 1;
+
+      const scrollToBottomButton = document.getElementById(
+        "scrollToBottomButton"
+      );
+      if (scrollToBottomButton) {
+        scrollToBottomButton.style.display = atBottom ? "none" : "block";
+      }
+    }
+  };
+
+  useEffect(() => {
+    setTimeout(scrollToBottom, 10);
+  }, [chat]);
 
   return (
     <Box
@@ -49,65 +65,71 @@ const ChatDisplay = ({ chat }) => {
         flexDirection: "column",
         alignItems: "center",
         backgroundColor: theme.palette.background.paper,
-        userSelect: "text",
       }}
+      ref={messagesContainerRef}
+      onScroll={handleScroll}
     >
-      {isLoading ? (
-        <CircularProgress />
-      ) : (
-        chat?.messages.map((message, index) => (
-          <Box
-            key={index}
+      {chat?.messages.map((message, index) => (
+        <Box
+          key={index}
+          sx={{
+            width: "60%",
+            marginBottom: "20px",
+            padding: "10px",
+            borderRadius: "10px",
+            textAlign: "left",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            userSelect: "text",
+          }}
+        >
+          <Typography
+            variant="subtitle2"
             sx={{
-              width: "60%",
-              marginBottom: "20px",
-              padding: "10px",
-              borderRadius: "10px",
-              textAlign: "left",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
+              fontWeight: "bold",
+              marginBottom: "8px",
               userSelect: "text",
             }}
           >
-            <Typography
-              variant="subtitle2"
+            {message.sender.toUpperCase()}
+          </Typography>
+          <Typography variant="body1" sx={{ userSelect: "text" }}>
+            {message.text}
+          </Typography>
+          {message.code && (
+            <Box
+              component="pre"
               sx={{
-                fontWeight: "bold",
-                marginBottom: "8px",
+                overflowX: "auto",
+                justifyContent: "center",
+                marginTop: "8px",
+                backgroundColor: theme.palette.grey[100],
+                borderRadius: "5px",
+                padding: "0",
                 userSelect: "text",
+                width: "100%",
               }}
             >
-              {message.sender.toUpperCase()}
-            </Typography>
-            <Typography variant="body1" sx={{ userSelect: "text" }}>
-              {message.text}
-            </Typography>
-            {message.code && (
-              <Box
-                component="pre"
-                sx={{
-                  overflowX: "auto",
-                  justifyContent: "center",
-                  marginTop: "8px",
-                  backgroundColor: theme.palette.grey[100],
-                  borderRadius: "5px",
-                  padding: "0",
-                  userSelect: "text",
-                  width: "100%",
-                }}
-              >
-                <ReadOnlyEditor
-                  value={message.code}
-                  language="typescript"
-                  actionIcon={EditIcon}
-                  onActionClick={() => handleOpenDialog(message.code)}
-                />
-              </Box>
-            )}
-          </Box>
-        ))
-      )}
+              <ReadOnlyEditor
+                value={message.code}
+                language="typescript"
+                actionIcon={EditIcon}
+                onActionClick={() => handleOpenDialog(message.code)}
+              />
+            </Box>
+          )}
+        </Box>
+      ))}
+      <Button
+        onClick={scrollToBottom}
+        sx={{ position: "fixed", bottom: 20, right: 20 }}
+        id="scrollToBottomButton"
+        style={{ display: "none" }}
+      >
+        Scroll to Bottom
+      </Button>
+      {loading && <CircularProgress />}
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
