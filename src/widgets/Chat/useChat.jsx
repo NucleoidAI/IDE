@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 import { storage, useStorage } from "@nucleoidjs/webstorage";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 
 const mockChats = [
   {
@@ -403,14 +403,15 @@ const mockChats = [
 
 const useChat = (chatId) => {
   const [chatData] = useStorage("chat", mockChats);
-  let chat = chatData.find((c) => c.id === chatId.toString());
+  const chatRef = useRef();
+  chatRef.current = chatData.find((c) => c.id === chatId.toString());
 
   useEffect(() => {
-    chat = chatData.find((c) => c.id === chatId.toString());
-  }, [chatData]);
+    chatRef.current = chatData.find((c) => c.id === chatId.toString());
+  }, [chatId, chatData]);
 
   function updateChat(message) {
-    chat.messages.push(message);
+    chatRef.current.messages.push(message);
   }
 
   const sendMessage = async (message, setLoading) => {
@@ -424,7 +425,7 @@ const useChat = (chatId) => {
 
     try {
       const response = await fetch(
-        `https://nuc.land/ide/api/expert/chat/sessions/${chat.uuid}`,
+        `https://nuc.land/ide/api/expert/chat/sessions/${chatRef.current.uuid}`,
         {
           method: "POST",
           headers: {
@@ -464,11 +465,13 @@ const useChat = (chatId) => {
     }
     storage.set(
       "chat",
-      chatData.map((item) => (item.id === chat.id ? chat : item))
+      chatData.map((item) =>
+        item.id === chatRef.current.id ? chatRef.current : item
+      )
     );
   };
 
-  return { chat, sendMessage };
+  return { chat: chatRef.current, sendMessage };
 };
 
 export default useChat;
