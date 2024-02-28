@@ -402,38 +402,24 @@ const mockChats = [
 ];
 
 const useChat = (chatId) => {
-  const [chatStorage] = useStorage("chat", mockChats);
-  const [chat, setChat] = useState(null);
+  const [chatData] = useStorage("chat", mockChats);
+  let chat = chatData.find((c) => c.id === chatId.toString());
 
   useEffect(() => {
-    const chats = [...chatStorage];
-    const foundChat = chats.find((c) => c.id === chatId.toString());
-    setChat(foundChat);
-  }, [chatId, chatStorage]);
+    chat = chatData.find((c) => c.id === chatId.toString());
+  }, [chatData]);
 
-  function updateChat(chatIndex, message) {
-    const chats = [...chatStorage];
-    const updatedMessages = [...chats[chatIndex].messages, message];
-    chats[chatIndex] = { ...chats[chatIndex], messages: updatedMessages };
-    storage.set("chat", chats);
-    setChat(chats[chatIndex]);
+  function updateChat(message) {
+    chat.messages.push(message);
   }
 
-  const sendMessage = async (id, message, setLoading) => {
-    const chatIndex = chatStorage.findIndex((c) => c.id === id.toString());
-    if (chatIndex === -1) {
-      console.error("Chat not found");
-      return;
-    }
-    const chats = [...chatStorage];
-    const chat = chats[chatIndex];
-
+  const sendMessage = async (message, setLoading) => {
     const newMessage = {
       sender: "human",
       text: message,
     };
 
-    updateChat(chatIndex, newMessage);
+    updateChat(newMessage);
     setLoading(true);
 
     try {
@@ -471,12 +457,15 @@ const useChat = (chatId) => {
       if (data.code) {
         responseMessage.code = data.code;
       }
-
-      updateChat(chatIndex, responseMessage);
+      updateChat(responseMessage);
+      setLoading(false);
     } catch (error) {
       console.error("Error sending message:", error);
     }
-    setLoading(false);
+    storage.set(
+      "chat",
+      chatData.map((item) => (item.id === chat.id ? chat : item))
+    );
   };
 
   return { chat, sendMessage };

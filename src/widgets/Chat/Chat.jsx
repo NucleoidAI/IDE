@@ -17,7 +17,7 @@ const Chat = () => {
   const { chat, sendMessage } = useChat(chatId);
 
   const handleSendMessage = (message) => {
-    sendMessage(chatId, message, setLoading);
+    sendMessage(message, setLoading);
 
     messageInputRef.current.clear();
   };
