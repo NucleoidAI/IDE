@@ -121,6 +121,14 @@ const ChatDisplay = ({ chat, loading }) => {
           )}
         </Box>
       ))}
+      <Button
+        onClick={scrollToBottom}
+        sx={{ position: "fixed", bottom: 20, right: 20 }}
+        id="scrollToBottomButton"
+        style={{ display: "none" }}
+      >
+        Scroll to Bottom
+      </Button>
       {loading && <CircularProgress />}
       <Dialog
         open={openDialog}
