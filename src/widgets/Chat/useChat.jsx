@@ -5,13 +5,11 @@ import { useEffect, useState } from "react";
 
 const mockChats = [
   {
-    id: "0",
     title: "Circumference of the Earth",
     messages: [],
-    uuid: uuidv4(),
+    id: 0,
   },
   {
-    id: "1",
     title: "Centering a Div",
     messages: [
       {
@@ -24,10 +22,9 @@ const mockChats = [
         code: "div {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}",
       },
     ],
-    uuid: uuidv4(),
+    id: 1,
   },
   {
-    id: "2",
     title: "Blind People's Dreams",
     messages: [
       { sender: "human", text: "How do blind people experience dreams?" },
@@ -37,7 +34,7 @@ const mockChats = [
         code: "interface Dream {\n  sounds?: string[];\n  smells?: string[];\n  touches?: string[];\n}",
       },
     ],
-    uuid: uuidv4(),
+    id: 2,
   },
   {
     id: "3",
@@ -53,12 +50,21 @@ const mockChats = [
         code: "interface Knowledge {\n  criteria: string[];\n  validate(criteria: string): boolean;\n}",
       },
     ],
-    uuid: uuidv4(),
   },
 ];
 
 const useChat = (chatId) => {
   const [chat, setChat] = useState(null);
+
+  const initializeMockChats = () => {
+    mockChats.forEach((chat) => {
+      const chatKey = `chat.${chat.id}`;
+      if (!localStorage.getItem(chatKey)) {
+        localStorage.setItem(chatKey, JSON.stringify(chat));
+      }
+    });
+  };
+  initializeMockChats();
 
   useEffect(() => {
     if (chatId === "-1") {
@@ -67,7 +73,6 @@ const useChat = (chatId) => {
         id: newChatId,
         title: "New Chat",
         messages: [],
-        uuid: uuidv4(),
       };
 
       const chatKey = `chat.${newChatId}`;
