@@ -59,8 +59,13 @@ const useChat = (chatId) => {
   const initializeMockChats = () => {
     mockChats.forEach((chat) => {
       const chatKey = `chat.${chat.id}`;
+      const currentTime = new Date().getTime();
       if (!localStorage.getItem(chatKey)) {
-        localStorage.setItem(chatKey, JSON.stringify(chat));
+        const chatWithTimestamp = {
+          ...chat,
+          timestamp: currentTime,
+        };
+        localStorage.setItem(chatKey, JSON.stringify(chatWithTimestamp));
       }
     });
   };
@@ -69,10 +74,12 @@ const useChat = (chatId) => {
   useEffect(() => {
     if (chatId === "-1") {
       const newChatId = uuidv4();
+      const currentTime = new Date().getTime();
       const newChat = {
         id: newChatId,
         title: "New Chat",
         messages: [],
+        timestamp: currentTime,
       };
 
       const chatKey = `chat.${newChatId}`;
@@ -113,7 +120,7 @@ const useChat = (chatId) => {
 
     try {
       const response = await fetch(
-        `https://nuc.land/ide/api/expert/chat/sessions/${chat.uuid}`,
+        `https://nuc.land/ide/api/expert/chat/sessions/${chat.id}`,
         {
           method: "POST",
           headers: {

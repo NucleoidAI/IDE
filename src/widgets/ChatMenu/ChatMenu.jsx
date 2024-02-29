@@ -43,6 +43,7 @@ const ChatHistory = () => {
             loadedChats.push({
               chatId: chatData.id,
               chatTitle: chatData.title,
+              timestamp: chatData.timestamp,
             });
           }
         } catch (e) {
@@ -50,6 +51,7 @@ const ChatHistory = () => {
         }
       }
     }
+    loadedChats.sort((a, b) => b.timestamp - a.timestamp);
     setChats(loadedChats);
   }, [chatAdded]);
 
