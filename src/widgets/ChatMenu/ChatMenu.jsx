@@ -3,7 +3,6 @@ import Drawer from "@mui/material/Drawer";
 import Logo from "../../components/Logo";
 import React from "react";
 import Settings from "../../components/Settings";
-import { publish } from "@nucleoidjs/react-event";
 
 import {
   Box,
@@ -14,11 +13,22 @@ import {
   Stack,
   useTheme,
 } from "@mui/material";
+import { publish, useEvent } from "@nucleoidjs/react-event";
 import { useEffect, useState } from "react";
 
 const ChatHistory = () => {
   const theme = useTheme();
   const [chats, setChats] = useState([]);
+  const [chatAdded] = useEvent("CHAT_ID_CHANGED", 0);
+
+  const handleCreateNewChat = () => {
+    publish("CHAT_ID_CHANGED", "-1");
+  };
+
+  const handleChatClick = (chatId) => {
+    publish("CHAT_ID_CHANGED", chatId);
+    console.debug(`Chat clicked: ${chatId}`);
+  };
 
   useEffect(() => {
     const loadedChats = [];
@@ -41,35 +51,41 @@ const ChatHistory = () => {
       }
     }
     setChats(loadedChats);
-  }, []);
-
-  const handleChatClick = (chatId) => {
-    publish("CHAT_ID_CHANGED", chatId);
-    console.debug(`Chat clicked: ${chatId}`);
-  };
+  }, [chatAdded]);
 
   return (
-    <List sx={{ maxWidth: 350, width: "100%" }}>
-      {chats.map((chat) => (
-        <ListItemButton
-          key={chat.chatId}
-          onClick={() => handleChatClick(chat.chatId)}
-          sx={{
-            paddingX: 0,
-            "& .MuiListItemText-root": {
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-            },
-          }}
-        >
-          <ListItemText
-            sx={{ color: theme.palette.custom.grey }}
-            primary={chat.chatTitle}
-          />
-        </ListItemButton>
-      ))}
-    </List>
+    <>
+      <Fab
+        variant="button"
+        edge="start"
+        size="small"
+        onClick={handleCreateNewChat}
+        sx={{ alignSelf: "center", my: 2 }}
+      >
+        <AddIcon />
+      </Fab>
+      <List sx={{ maxWidth: 350, width: "100%" }}>
+        {chats.map((chat) => (
+          <ListItemButton
+            key={chat.chatId}
+            onClick={() => handleChatClick(chat.chatId)}
+            sx={{
+              paddingX: 0,
+              "& .MuiListItemText-root": {
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+              },
+            }}
+          >
+            <ListItemText
+              sx={{ color: theme.palette.custom.grey }}
+              primary={chat.chatTitle}
+            />
+          </ListItemButton>
+        ))}
+      </List>
+    </>
   );
 };
 
@@ -81,9 +97,6 @@ const ChatMenu = ({ isSidebarVisible }) => {
     { chatId: "3", chatTitle: "Problem of criterion" },
   ];
 
-  const handleCreateNewChat = () => {
-    publish("CHAT_ID_CHANGED", "-1");
-  };
   return (
     <Drawer
       open={isSidebarVisible}
@@ -108,15 +121,6 @@ const ChatMenu = ({ isSidebarVisible }) => {
       </Box>
 
       <Stack sx={{ height: "100%", width: "100%" }}>
-        <Fab
-          variant="button"
-          edge="start"
-          size="small"
-          onClick={handleCreateNewChat}
-          sx={{ alignSelf: "center", my: 2 }}
-        >
-          <AddIcon />
-        </Fab>
         <ChatHistory chats={chatData} />
       </Stack>
       <Settings size={"large"} />

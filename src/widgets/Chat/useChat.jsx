@@ -1,3 +1,4 @@
+import { publish } from "@nucleoidjs/react-event";
 import { v4 as uuidv4 } from "uuid";
 
 import { useEffect, useState } from "react";
@@ -60,15 +61,30 @@ const useChat = (chatId) => {
   const [chat, setChat] = useState(null);
 
   useEffect(() => {
-    const chatKey = `chat.${chatId}`;
-    const storedChat = localStorage.getItem(chatKey);
-    if (storedChat) {
-      setChat(JSON.parse(storedChat));
+    if (chatId === "-1") {
+      const newChatId = uuidv4();
+      const newChat = {
+        id: newChatId,
+        title: "New Chat",
+        messages: [],
+        uuid: uuidv4(),
+      };
+
+      const chatKey = `chat.${newChatId}`;
+      localStorage.setItem(chatKey, JSON.stringify(newChat));
+      setChat(newChat);
+      publish("CHAT_ID_CHANGED", newChatId);
     } else {
-      const initialChat = mockChats.find((c) => c.id === chatId.toString());
-      if (initialChat) {
-        localStorage.setItem(chatKey, JSON.stringify(initialChat));
-        setChat(initialChat);
+      const chatKey = `chat.${chatId}`;
+      const storedChat = localStorage.getItem(chatKey);
+      if (storedChat) {
+        setChat(JSON.parse(storedChat));
+      } else {
+        const initialChat = mockChats.find((c) => c.id === chatId.toString());
+        if (initialChat) {
+          localStorage.setItem(chatKey, JSON.stringify(initialChat));
+          setChat(initialChat);
+        }
       }
     }
   }, [chatId]);
