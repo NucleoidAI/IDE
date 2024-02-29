@@ -136,6 +136,19 @@ const useChat = (chatId) => {
       if (!response.ok) throw new Error("Network response was not ok.");
 
       const data = await response.json();
+      if (data.type === "DECLARATIVE") {
+        setChat((currentChat) => {
+          const updatedPrompts = currentChat.prompts
+            ? [...currentChat.prompts, data]
+            : [data];
+          const updatedChat = {
+            ...currentChat,
+            prompts: updatedPrompts,
+          };
+          localStorage.setItem(`chat.${chatId}`, JSON.stringify(updatedChat));
+          return updatedChat;
+        });
+      }
       let responseText = "";
       if (data.description) {
         responseText = data.description;
