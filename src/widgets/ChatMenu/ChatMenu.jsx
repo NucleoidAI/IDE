@@ -14,9 +14,35 @@ import {
   Stack,
   useTheme,
 } from "@mui/material";
+import { useEffect, useState } from "react";
 
-const ChatHistory = ({ chats }) => {
+const ChatHistory = () => {
   const theme = useTheme();
+  const [chats, setChats] = useState([]);
+
+  useEffect(() => {
+    const loadedChats = [];
+
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+
+      if (key.startsWith("chat.")) {
+        try {
+          const chatData = JSON.parse(localStorage.getItem(key));
+          if (chatData) {
+            loadedChats.push({
+              chatId: chatData.id,
+              chatTitle: chatData.title,
+            });
+          }
+        } catch (e) {
+          console.error("Error parsing chat data from local storage:", e);
+        }
+      }
+    }
+    setChats(loadedChats);
+  }, []);
+
   const handleChatClick = (chatId) => {
     publish("CHAT_ID_CHANGED", chatId);
     console.debug(`Chat clicked: ${chatId}`);
@@ -30,7 +56,6 @@ const ChatHistory = ({ chats }) => {
           onClick={() => handleChatClick(chat.chatId)}
           sx={{
             paddingX: 0,
-
             "& .MuiListItemText-root": {
               overflow: "hidden",
               whiteSpace: "nowrap",
