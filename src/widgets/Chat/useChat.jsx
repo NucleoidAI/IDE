@@ -1,357 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { storage, useStorage } from "@nucleoidjs/webstorage";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 
 const mockChats = [
   {
     id: "0",
     title: "Circumference of the Earth",
-    messages: [
-      {
-        sender: "human",
-        text: "Can anyone tell me the Earth's circumference?",
-      },
-      {
-        sender: "ai",
-        text: "Absolutely, the Earth's circumference measures approximately 40,075 kilometers.",
-        code: "const earthCircumferenceKm: number = 40075;",
-      },
-      {
-        sender: "human",
-        text: "Wow, that's vast! How could someone possibly measure that?",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-      {
-        sender: "ai",
-        text: "Eratosthenes, a Greek mathematician, did it in 240 BC with an ingenious method using sticks' shadows and calculating the distance between two cities.",
-        code: "function calculateCircumference(earthRadiusKm: number): number {\n  return 2 * Math.PI * earthRadiusKm;\n}",
-      },
-    ],
+    messages: [],
     uuid: uuidv4(),
   },
   {
@@ -402,18 +57,30 @@ const mockChats = [
 ];
 
 const useChat = (chatId) => {
-  const [chatData] = useStorage("chat", mockChats);
-  const chatRef = useRef();
-  chatRef.current = chatData.find((c) => c.id === chatId.toString());
+  const [chat, setChat] = useState(null);
 
   useEffect(() => {
-    chatRef.current = chatData.find((c) => c.id === chatId.toString());
-  }, [chatId, chatData]);
+    const chatKey = `chat.${chatId}`;
+    const storedChat = localStorage.getItem(chatKey);
+    if (storedChat) {
+      setChat(JSON.parse(storedChat));
+    } else {
+      const initialChat = mockChats.find((c) => c.id === chatId.toString());
+      if (initialChat) {
+        localStorage.setItem(chatKey, JSON.stringify(initialChat));
+        setChat(initialChat);
+      }
+    }
+  }, [chatId]);
 
   function updateChat(message) {
-    chatRef.current.messages.push(message);
+    setChat((currentChat) => {
+      const updatedMessages = [...currentChat.messages, message];
+      const updatedChat = { ...currentChat, messages: updatedMessages };
+      localStorage.setItem(`chat.${chatId}`, JSON.stringify(updatedChat));
+      return updatedChat;
+    });
   }
-
   const sendMessage = async (message, setLoading) => {
     const newMessage = {
       sender: "human",
@@ -425,7 +92,7 @@ const useChat = (chatId) => {
 
     try {
       const response = await fetch(
-        `https://nuc.land/ide/api/expert/chat/sessions/${chatRef.current.uuid}`,
+        `https://nuc.land/ide/api/expert/chat/sessions/${chat.uuid}`,
         {
           method: "POST",
           headers: {
@@ -463,15 +130,9 @@ const useChat = (chatId) => {
     } catch (error) {
       console.error("Error sending message:", error);
     }
-    storage.set(
-      "chat",
-      chatData.map((item) =>
-        item.id === chatRef.current.id ? chatRef.current : item
-      )
-    );
   };
 
-  return { chat: chatRef.current, sendMessage };
+  return { chat: chat, sendMessage };
 };
 
 export default useChat;
