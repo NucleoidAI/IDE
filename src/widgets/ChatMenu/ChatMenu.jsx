@@ -6,6 +6,7 @@ import React from "react";
 import Settings from "../../components/Settings";
 import SmallLogo from "../../components/SmallLogo";
 import { drawerWidth } from "../../config";
+import styles from "./styles";
 import { useTheme } from "@mui/material/styles";
 
 import { ArrowForwardIos, DensityMedium } from "@mui/icons-material/";
@@ -267,29 +268,28 @@ const ChatHistory = () => {
   }, [chatAdded]);
 
   return (
-    <>
-      <List sx={{ maxWidth: 350, width: "100%" }}>
-        {chats.map((chat) => (
+    <Box sx={{ marginTop: "10px" }}>
+      {chats.map((chat) => (
+        <React.Fragment key={chat.chatId}>
           <ListItemButton
-            key={chat.chatId}
             onClick={() => handleChatClick(chat.chatId)}
-            sx={{
-              paddingX: 0,
-              "& .MuiListItemText-root": {
-                overflow: "hidden",
-                whiteSpace: "nowrap",
-                textOverflow: "ellipsis",
-              },
-            }}
+            sx={styles.listItem}
           >
             <ListItemText
-              sx={{ color: theme.palette.custom.grey }}
               primary={chat.chatTitle}
+              sx={{
+                ".MuiListItemText-primary": {
+                  position: "relative",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                },
+              }}
             />
           </ListItemButton>
-        ))}
-      </List>
-    </>
+        </React.Fragment>
+      ))}
+    </Box>
   );
 };
 
