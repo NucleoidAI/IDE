@@ -1,3 +1,12 @@
+import API from "./pages/ide/API";
+import Chat from "./pages/chat";
+import ChatContainer from "./containers/Chat/Chat";
+import Functions from "./pages/ide/Functions";
+import Logic from "./pages/ide/Logic";
+import Logs from "./pages/ide/Logs";
+import Mobile from "./pages/ide/Mobile";
+import Query from "./pages/ide/Query";
+
 import {
   Folder,
   LensBlur,
@@ -7,16 +16,7 @@ import {
 } from "@mui/icons-material";
 import React, { lazy } from "react";
 
-const Chat = lazy(() => import("./pages/chat"));
-const API = lazy(() => import("./pages/ide/API"));
-const ChatContainer = lazy(() => import("./containers/Chat/Chat"));
-const Functions = lazy(() => import("./pages/ide/Functions"));
 const IDE = lazy(() => import("./containers/IDE"));
-const Logic = lazy(() => import("./pages/ide/Logic"));
-const Logs = lazy(() => import("./pages/ide/Logs"));
-const Mobile = lazy(() => import("./pages/ide/Mobile"));
-const Query = lazy(() => import("./pages/ide/Query"));
-
 const routes = [
   {
     container: { element: <IDE />, indexPath: "/sample/api" },

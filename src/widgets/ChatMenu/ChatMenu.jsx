@@ -1,33 +1,42 @@
 import AddIcon from "@mui/icons-material/Add";
 import Drawer from "@mui/material/Drawer";
+import LgDrawerStyled from "../../components/LgDrawerStyled";
 import Logo from "../../components/Logo";
 import React from "react";
 import Settings from "../../components/Settings";
+import SmallLogo from "../../components/SmallLogo";
+import { drawerWidth } from "../../config";
+import { publish } from "@nucleoidjs/react-event";
+import styles from "./styles";
+import { useTheme } from "@mui/material/styles";
 
+import { ArrowForwardIos, DensityMedium } from "@mui/icons-material/";
 import {
   Box,
+  Button,
   Fab,
+  IconButton,
   List,
+  ListItem,
   ListItemButton,
   ListItemText,
-  Stack,
-  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import { publish, useEvent } from "@nucleoidjs/react-event";
 import { useEffect, useState } from "react";
 
-const ChatHistory = () => {
+function ChatMenu(props) {
+  const [openMd, setOpenMd] = React.useState(false);
+  const [openLg, setOpenLg] = React.useState(true);
   const theme = useTheme();
-  const [chats, setChats] = useState([]);
-  const [chatAdded] = useEvent("CHAT_ID_CHANGED", 0);
+  const matchDownMD = useMediaQuery(theme.breakpoints.down("lg"));
 
-  const handleCreateNewChat = () => {
-    publish("CHAT_ID_CHANGED", "-1");
+  const handleClose = () => {
+    setOpenMd(false);
   };
 
-  const handleChatClick = (chatId) => {
-    publish("CHAT_ID_CHANGED", chatId);
-    console.debug(`Chat clicked: ${chatId}`);
+  const handleCreateNewChat = () => {
+    publish("CHAT_ID_CHANGED", -1);
   };
 
   useEffect(() => {
@@ -56,77 +65,235 @@ const ChatHistory = () => {
   }, [chatAdded]);
 
   return (
-    <>
-      <Fab
-        variant="button"
-        edge="start"
-        size="small"
-        onClick={handleCreateNewChat}
-        sx={{ alignSelf: "center", my: 2 }}
-      >
-        <AddIcon />
-      </Fab>
-      <List sx={{ maxWidth: 350, width: "100%" }}>
-        {chats.map((chat) => (
-          <ListItemButton
-            key={chat.chatId}
-            onClick={() => handleChatClick(chat.chatId)}
+    <Box component="nav" sx={{ flexShrink: { md: 0 } }}>
+      {matchDownMD ? (
+        <>
+          {!openMd && (
+            <Drawer
+              variant="permanent"
+              sx={{
+                width: 75,
+                "& .MuiDrawer-paper": {
+                  width: 75,
+                },
+              }}
+            >
+              <List>
+                <ListItem onClick={() => setOpenMd(true)}>
+                  <SmallLogo />
+                </ListItem>
+                <br />
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Fab
+                    variant="button"
+                    edge="start"
+                    size="small"
+                    onClick={handleCreateNewChat}
+                    sx={{ alignSelf: "center", my: 2 }}
+                  >
+                    <AddIcon />
+                  </Fab>
+                </Box>
+              </List>
+
+              <Box sx={{ height: "100%" }} />
+
+              <Settings size={"large"} />
+              <Button sx={{ pb: 3 }} onClick={() => setOpenMd(true)}>
+                <ArrowForwardIos
+                  fontSize="small"
+                  sx={{ fill: theme.palette.custom.grey }}
+                />
+              </Button>
+            </Drawer>
+          )}
+          <Drawer
+            open={openMd}
+            onClose={handleClose}
+            ModalProps={{ keepMounted: true }}
+            variant="temporary"
             sx={{
-              paddingX: 0,
-              "& .MuiListItemText-root": {
-                overflow: "hidden",
-                whiteSpace: "nowrap",
-                textOverflow: "ellipsis",
+              display: { xs: "block", lg: "none" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+                borderRight: `1px solid ${theme.palette.divider}`,
+                backgroundImage: "none",
+                boxShadow: "inherit",
               },
             }}
           >
-            <ListItemText
-              sx={{ color: theme.palette.custom.grey }}
-              primary={chat.chatTitle}
-            />
-          </ListItemButton>
-        ))}
-      </List>
-    </>
-  );
-};
+            <List>
+              <ListItem>
+                <Logo title={props.title} />
+                <IconButton
+                  variant={"contained"}
+                  onClick={() => setOpenMd(false)}
+                >
+                  <DensityMedium
+                    fontSize="medium"
+                    sx={{ fill: theme.palette.custom.grey }}
+                  />
+                </IconButton>
+              </ListItem>
+              <br />
+            </List>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Fab
+                variant="button"
+                edge="start"
+                size="small"
+                onClick={handleCreateNewChat}
+                sx={{ alignSelf: "center", my: 2 }}
+              >
+                <AddIcon />
+              </Fab>
+            </Box>
+            <ChatHistory />
+            <Box sx={{ height: "100%" }} />
 
-const ChatMenu = ({ isSidebarVisible }) => {
-  const chatData = [
+            <Settings size={"large"} />
+          </Drawer>
+        </>
+      ) : (
+        <>
+          {!openLg && (
+            <Drawer
+              variant="permanent"
+              sx={{
+                width: 75,
+                "& .MuiDrawer-paper": {
+                  width: 75,
+                },
+              }}
+            >
+              <List>
+                <ListItem onClick={() => setOpenLg(true)}>
+                  <SmallLogo />
+                </ListItem>
+                <br />
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Fab
+                    variant="button"
+                    edge="start"
+                    size="small"
+                    onClick={handleCreateNewChat}
+                    sx={{ alignSelf: "center", my: 2 }}
+                  >
+                    <AddIcon />
+                  </Fab>
+                </Box>
+              </List>
+
+              <Box sx={{ height: "100%" }} />
+
+              <Settings size={"large"} />
+              <Button sx={{ pb: 3 }} onClick={() => setOpenLg(true)}>
+                <ArrowForwardIos
+                  fontSize="small"
+                  sx={{
+                    fill: theme.palette.custom.grey,
+                  }}
+                />
+              </Button>
+            </Drawer>
+          )}
+          <LgDrawerStyled variant="permanent" open={openLg}>
+            <List>
+              <ListItem>
+                <Logo title={props.title} />
+                <IconButton
+                  variant={"contained"}
+                  onClick={() => setOpenLg(false)}
+                >
+                  <DensityMedium
+                    fontSize="medium"
+                    sx={{ fill: theme.palette.custom.grey }}
+                  />
+                </IconButton>
+              </ListItem>
+            </List>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Fab
+                variant="button"
+                edge="start"
+                size="small"
+                onClick={handleCreateNewChat}
+                sx={{ alignSelf: "center", my: 2 }}
+              >
+                <AddIcon />
+              </Fab>
+            </Box>
+            <ChatHistory />
+            <Box sx={{ height: "100%" }} />
+            <Settings size={"large"} />
+          </LgDrawerStyled>
+        </>
+      )}
+    </Box>
+  );
+}
+
+const ChatHistory = () => {
+  const chats = [
     { chatId: "0", chatTitle: "What is the circumference of the Earth?" },
     { chatId: "1", chatTitle: "How to center a div?" },
     { chatId: "2", chatTitle: "What do blind people see in their dreams?" },
     { chatId: "3", chatTitle: "Problem of criterion" },
   ];
 
-  return (
-    <Drawer
-      open={isSidebarVisible}
-      variant="permanent"
-      sx={{
-        width: 350,
-        "& .MuiDrawer-paper": {
-          width: 350,
-          boxSizing: "border-box",
-          boxShadow: "inherit",
-        },
-      }}
-    >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          margin: 2,
-        }}
-      >
-        <Logo title={"Chat"} />
-      </Box>
+  const handleChatClick = (chatId) => {
+    publish("CHAT_ID_CHANGED", chatId);
+    console.debug(`Chat clicked: ${chatId}`);
+  };
 
-      <Stack sx={{ height: "100%", width: "100%" }}>
-        <ChatHistory chats={chatData} />
-      </Stack>
-      <Settings size={"large"} />
-    </Drawer>
+  return (
+    <Box sx={{ marginTop: "10px" }}>
+      {chats.map((chat) => (
+        <React.Fragment key={chat.chatId}>
+          <ListItemButton
+            onClick={() => handleChatClick(chat.chatId)}
+            sx={styles.listItem}
+          >
+            <ListItemText
+              primary={chat.chatTitle}
+              sx={{
+                ".MuiListItemText-primary": {
+                  position: "relative",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                },
+              }}
+            />
+          </ListItemButton>
+        </React.Fragment>
+      ))}
+    </Box>
   );
 };
 
