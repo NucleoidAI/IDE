@@ -34,7 +34,7 @@ function ChatMenu(props) {
   };
 
   const handleCreateNewChat = () => {
-    publish("CHAT_ID_CHANGED", -1);
+    publish("CHAT_ID_CHANGED", "-1");
   };
 
   return (
