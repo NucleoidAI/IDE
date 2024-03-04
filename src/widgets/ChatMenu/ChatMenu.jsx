@@ -22,8 +22,6 @@ import {
   ListItemText,
   useMediaQuery,
 } from "@mui/material";
-import { publish, useEvent } from "@nucleoidjs/react-event";
-import { useEffect, useState } from "react";
 
 function ChatMenu(props) {
   const [openMd, setOpenMd] = React.useState(false);
@@ -38,31 +36,6 @@ function ChatMenu(props) {
   const handleCreateNewChat = () => {
     publish("CHAT_ID_CHANGED", -1);
   };
-
-  useEffect(() => {
-    const loadedChats = [];
-
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-
-      if (key.startsWith("chat.")) {
-        try {
-          const chatData = JSON.parse(localStorage.getItem(key));
-          if (chatData) {
-            loadedChats.push({
-              chatId: chatData.id,
-              chatTitle: chatData.title,
-              timestamp: chatData.timestamp,
-            });
-          }
-        } catch (e) {
-          console.error("Error parsing chat data from local storage:", e);
-        }
-      }
-    }
-    loadedChats.sort((a, b) => b.timestamp - a.timestamp);
-    setChats(loadedChats);
-  }, [chatAdded]);
 
   return (
     <Box component="nav" sx={{ flexShrink: { md: 0 } }}>
