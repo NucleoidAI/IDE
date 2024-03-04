@@ -3,73 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 
 import { useEffect, useState } from "react";
 
-const mockChats = [
-  {
-    title: "Circumference of the Earth",
-    messages: [],
-    id: 0,
-  },
-  {
-    title: "Centering a Div",
-    messages: [
-      {
-        sender: "human",
-        text: "Why does centering a div feel like rocket science?",
-      },
-      {
-        sender: "ai",
-        text: "It's a common challenge, but CSS Flexbox makes it much easier: use `display: flex; justify-content: center; align-items: center;`.",
-        code: "div {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}",
-      },
-    ],
-    id: 1,
-  },
-  {
-    title: "Blind People's Dreams",
-    messages: [
-      { sender: "human", text: "How do blind people experience dreams?" },
-      {
-        sender: "ai",
-        text: "Individuals who are blind dream through their other senses like sound, smell, and touch. Those who have lost their sight may have visual dreams, but those born blind experience dreams without visual images.",
-        code: "interface Dream {\n  sounds?: string[];\n  smells?: string[];\n  touches?: string[];\n}",
-      },
-    ],
-    id: 2,
-  },
-  {
-    id: "3",
-    title: "The Problem of Criterion",
-    messages: [
-      {
-        sender: "human",
-        text: "I stumbled upon the 'problem of criterion'. Can you shed some light on it?",
-      },
-      {
-        sender: "ai",
-        text: "Certainly! The problem of criterion is a philosophical puzzle concerning our starting points for knowledge. It asks how we can know anything without first knowing the criteria for what counts as knowledge.",
-        code: "interface Knowledge {\n  criteria: string[];\n  validate(criteria: string): boolean;\n}",
-      },
-    ],
-  },
-];
-
 const useChat = (chatId) => {
   const [chat, setChat] = useState(null);
-
-  const initializeMockChats = () => {
-    mockChats.forEach((chat) => {
-      const chatKey = `chat.${chat.id}`;
-      const currentTime = new Date().getTime();
-      if (!localStorage.getItem(chatKey)) {
-        const chatWithTimestamp = {
-          ...chat,
-          timestamp: currentTime,
-        };
-        localStorage.setItem(chatKey, JSON.stringify(chatWithTimestamp));
-      }
-    });
-  };
-  initializeMockChats();
 
   useEffect(() => {
     if (chatId === "-1") {
