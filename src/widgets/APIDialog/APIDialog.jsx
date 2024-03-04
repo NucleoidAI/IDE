@@ -1,4 +1,5 @@
 import APIDialogAction from "../../components/APIDialogAction";
+import APIParams from "../../components/APIParams";
 import APIPath from "../../components/APIPath";
 import APITypes from "../../components/APITypes";
 // import AdressTree from "./Test";
@@ -14,6 +15,7 @@ function APIDialog() {
   const requestSchemaRef = useRef();
   const responseSchemaRef = useRef();
   const typesRef = useRef();
+  const paramsRef = useRef();
 
   const [context, dispatch] = useContext();
 
@@ -25,6 +27,15 @@ function APIDialog() {
     .find(
       (api) => api.path === selected?.path && api.method === selected.method
     );
+
+  paramsRef.current = selectedApi?.params;
+
+  if (selectedApi?.params) {
+    paramsRef.current = selectedApi.params.map((param, index) => ({
+      ...param,
+      id: index + 1,
+    }));
+  }
 
   const tstypes = getTypes(context.get("nucleoid.functions"));
   const nuctypes = context.get("nucleoid.types");
@@ -95,6 +106,7 @@ function APIDialog() {
           requestSchemaRef={requestSchemaRef}
           responseSchemaRef={responseSchemaRef}
           typesRef={typesRef}
+          paramsRef={paramsRef}
           saveApiDialog={() => saveApiDialog}
         />
         <APIDialogAction
@@ -122,7 +134,7 @@ function TabManager({
   tstypes,
   nuctypes,
   types,
-
+  paramsRef,
   selectedApi,
   requestSchemaRef,
   responseSchemaRef,
@@ -144,8 +156,8 @@ function TabManager({
       );
     }
 
-    case "params":
-      return <>c</>;
+    case "PARAMS":
+      return <APIParams types={types} ref={paramsRef} />;
     default:
       return "a";
   }

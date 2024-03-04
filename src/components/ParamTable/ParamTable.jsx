@@ -3,6 +3,7 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import TypeMenu from "../TypeMenu";
 import styles from "./styles";
 import { v4 as uuid } from "uuid";
+
 import { Checkbox, IconButton, TextField } from "@mui/material";
 import React, { useState } from "react";
 
