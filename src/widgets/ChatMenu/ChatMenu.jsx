@@ -233,7 +233,6 @@ function ChatMenu(props) {
 }
 
 const ChatHistory = () => {
-  const theme = useTheme();
   const [chats, setChats] = useState([]);
   const [chatAdded] = useEvent("CHAT_ID_CHANGED", 0);
 
