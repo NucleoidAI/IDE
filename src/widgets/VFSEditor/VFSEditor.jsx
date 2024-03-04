@@ -38,7 +38,7 @@ const VFSEditor = React.forwardRef((props, ref) => {
   const checkFunction = React.useCallback(() => {
     const editor = editorRef?.current?.editor;
     const monaco = editorRef?.current?.monaco;
-    const value = editor?.getValue();
+
     if (!api) return true;
 
     try {
