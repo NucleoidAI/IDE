@@ -26,12 +26,6 @@ const useChat = (chatId) => {
       const storedChat = localStorage.getItem(chatKey);
       if (storedChat) {
         setChat(JSON.parse(storedChat));
-      } else {
-        const initialChat = mockChats.find((c) => c.id === chatId.toString());
-        if (initialChat) {
-          localStorage.setItem(chatKey, JSON.stringify(initialChat));
-          setChat(initialChat);
-        }
       }
     }
   }, [chatId]);
