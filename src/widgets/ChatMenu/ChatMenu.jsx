@@ -6,8 +6,6 @@ import React from "react";
 import Settings from "../../components/Settings";
 import SmallLogo from "../../components/SmallLogo";
 import { drawerWidth } from "../../config";
-import { publish } from "@nucleoidjs/react-event";
-import styles from "./styles";
 import { useTheme } from "@mui/material/styles";
 
 import { ArrowForwardIos, DensityMedium } from "@mui/icons-material/";
@@ -22,6 +20,8 @@ import {
   ListItemText,
   useMediaQuery,
 } from "@mui/material";
+import { publish, useEvent } from "@nucleoidjs/react-event";
+import { useEffect, useState } from "react";
 
 function ChatMenu(props) {
   const [openMd, setOpenMd] = React.useState(false);
@@ -232,41 +232,77 @@ function ChatMenu(props) {
 }
 
 const ChatHistory = () => {
-  const chats = [
-    { chatId: "0", chatTitle: "What is the circumference of the Earth?" },
-    { chatId: "1", chatTitle: "How to center a div?" },
-    { chatId: "2", chatTitle: "What do blind people see in their dreams?" },
-    { chatId: "3", chatTitle: "Problem of criterion" },
-  ];
+  const theme = useTheme();
+  const [chats, setChats] = useState([]);
+  const [chatAdded] = useEvent("CHAT_ID_CHANGED", 0);
+
+  const handleCreateNewChat = () => {
+    publish("CHAT_ID_CHANGED", "-1");
+  };
 
   const handleChatClick = (chatId) => {
     publish("CHAT_ID_CHANGED", chatId);
     console.debug(`Chat clicked: ${chatId}`);
   };
 
+  useEffect(() => {
+    const loadedChats = [];
+
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+
+      if (key.startsWith("chat.")) {
+        try {
+          const chatData = JSON.parse(localStorage.getItem(key));
+          if (chatData) {
+            loadedChats.push({
+              chatId: chatData.id,
+              chatTitle: chatData.title,
+              timestamp: chatData.timestamp,
+            });
+          }
+        } catch (e) {
+          console.error("Error parsing chat data from local storage:", e);
+        }
+      }
+    }
+    loadedChats.sort((a, b) => b.timestamp - a.timestamp);
+    setChats(loadedChats);
+  }, [chatAdded]);
+
   return (
-    <Box sx={{ marginTop: "10px" }}>
-      {chats.map((chat) => (
-        <React.Fragment key={chat.chatId}>
+    <>
+      <Fab
+        variant="button"
+        edge="start"
+        size="small"
+        onClick={handleCreateNewChat}
+        sx={{ alignSelf: "center", my: 2 }}
+      >
+        <AddIcon />
+      </Fab>
+      <List sx={{ maxWidth: 350, width: "100%" }}>
+        {chats.map((chat) => (
           <ListItemButton
+            key={chat.chatId}
             onClick={() => handleChatClick(chat.chatId)}
-            sx={styles.listItem}
+            sx={{
+              paddingX: 0,
+              "& .MuiListItemText-root": {
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+              },
+            }}
           >
             <ListItemText
+              sx={{ color: theme.palette.custom.grey }}
               primary={chat.chatTitle}
-              sx={{
-                ".MuiListItemText-primary": {
-                  position: "relative",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                },
-              }}
             />
           </ListItemButton>
-        </React.Fragment>
-      ))}
-    </Box>
+        ))}
+      </List>
+    </>
   );
 };
 
