@@ -173,8 +173,6 @@ function NucEditor({
       }
     );
 
-    lint();
-
     editor.addAction({
       id: "saveEvent",
       label: "Save Project",
@@ -188,6 +186,9 @@ function NucEditor({
         editorRef.current && formatDocument();
       },
     });
+    lint();
+    lintWithCustomLinter();
+    formatDocument();
     onMount && onMount(editor, monaco);
   }
 
