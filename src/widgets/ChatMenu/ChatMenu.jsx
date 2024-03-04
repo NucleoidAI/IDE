@@ -236,10 +236,6 @@ const ChatHistory = () => {
   const [chats, setChats] = useState([]);
   const [chatAdded] = useEvent("CHAT_ID_CHANGED", 0);
 
-  const handleCreateNewChat = () => {
-    publish("CHAT_ID_CHANGED", "-1");
-  };
-
   const handleChatClick = (chatId) => {
     publish("CHAT_ID_CHANGED", chatId);
     console.debug(`Chat clicked: ${chatId}`);
@@ -272,15 +268,6 @@ const ChatHistory = () => {
 
   return (
     <>
-      <Fab
-        variant="button"
-        edge="start"
-        size="small"
-        onClick={handleCreateNewChat}
-        sx={{ alignSelf: "center", my: 2 }}
-      >
-        <AddIcon />
-      </Fab>
       <List sx={{ maxWidth: 350, width: "100%" }}>
         {chats.map((chat) => (
           <ListItemButton
