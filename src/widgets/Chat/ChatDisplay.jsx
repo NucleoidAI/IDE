@@ -93,10 +93,10 @@ const ChatDisplay = ({ chat, loading }) => {
                 userSelect: "text",
               }}
             >
-              {message.sender.toUpperCase()}
+              {message.user.toUpperCase()}
             </Typography>
             <Typography variant="body1" sx={{ userSelect: "text" }}>
-              {message.text}
+              {message.prompt}
             </Typography>
             {message.code && (
               <Box

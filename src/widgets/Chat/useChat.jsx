@@ -42,8 +42,8 @@ const useChat = () => {
       storage.set("selected", "chat", "id", chat.id);
     }
     const newMessage = {
-      sender: "human",
-      text: message,
+      user: "human",
+      prompt: message,
     };
 
     updateChat(newMessage);
@@ -67,33 +67,11 @@ const useChat = () => {
       if (!response.ok) throw new Error("Network response was not ok.");
 
       const data = await response.json();
-      if (data.type === "DECLARATIVE") {
-        setChat((currentChat) => {
-          const updatedPrompts = currentChat.prompts
-            ? [...currentChat.prompts, data]
-            : [data];
-          const updatedChat = {
-            ...currentChat,
-            prompts: updatedPrompts,
-          };
-          localStorage.setItem(`chat.${chat.id}`, JSON.stringify(updatedChat));
-          return updatedChat;
-        });
-      }
-      let responseText = "";
-      if (data.description) {
-        responseText = data.description;
-      } else if (data.prompt) {
-        responseText = data.prompt;
-      } else {
-        responseText = "Received a response without a description.";
-      }
-
       const responseMessage = {
-        sender: "ai",
-        text: responseText,
+        user: "ai",
+        ...data,
       };
-
+      console.log("responseMessage", responseMessage);
       if (data.code) {
         responseMessage.code = data.code;
       }
