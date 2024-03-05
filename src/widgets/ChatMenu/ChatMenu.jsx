@@ -21,7 +21,7 @@ import {
   ListItemText,
   useMediaQuery,
 } from "@mui/material";
-import { publish, useEvent } from "@nucleoidjs/react-event";
+import { storage, useStorage } from "@nucleoidjs/webstorage";
 import { useEffect, useState } from "react";
 
 function ChatMenu(props) {
@@ -35,7 +35,7 @@ function ChatMenu(props) {
   };
 
   const handleCreateNewChat = () => {
-    publish("CHAT_ID_CHANGED", "-1");
+    storage.set("selected", "chat", "id", "-1");
   };
 
   return (
@@ -234,10 +234,10 @@ function ChatMenu(props) {
 
 const ChatHistory = () => {
   const [chats, setChats] = useState([]);
-  const [chatAdded] = useEvent("CHAT_ID_CHANGED", 0);
+  const [selectedChatId] = useStorage("selected", "chat", "id", "-1");
 
   const handleChatClick = (chatId) => {
-    publish("CHAT_ID_CHANGED", chatId);
+    storage.set("selected", "chat", "id", chatId);
     console.debug(`Chat clicked: ${chatId}`);
   };
 
@@ -264,7 +264,7 @@ const ChatHistory = () => {
     }
     loadedChats.sort((a, b) => b.timestamp - a.timestamp);
     setChats(loadedChats);
-  }, [chatAdded]);
+  }, [selectedChatId]);
 
   return (
     <Box sx={{ marginTop: "10px" }}>

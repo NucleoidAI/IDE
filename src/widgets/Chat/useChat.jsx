@@ -1,13 +1,14 @@
-import { publish } from "@nucleoidjs/react-event";
 import { v4 as uuidv4 } from "uuid";
 
+import { storage, useStorage } from "@nucleoidjs/webstorage";
 import { useEffect, useState } from "react";
 
-const useChat = (chatId) => {
+const useChat = () => {
   const [chat, setChat] = useState(null);
+  const [selectedChatId] = useStorage("selected", "chat", "id", -1);
 
   useEffect(() => {
-    if (chatId === "-1") {
+    if (selectedChatId === -1) {
       const newChatId = uuidv4();
       const currentTime = new Date().getTime();
       const newChat = {
@@ -19,22 +20,25 @@ const useChat = (chatId) => {
 
       const chatKey = `chat.${newChatId}`;
       localStorage.setItem(chatKey, JSON.stringify(newChat));
+      storage.set("selected", "chat", "id", newChatId);
       setChat(newChat);
-      publish("CHAT_ID_CHANGED", newChatId);
     } else {
-      const chatKey = `chat.${chatId}`;
+      const chatKey = `chat.${selectedChatId}`;
       const storedChat = localStorage.getItem(chatKey);
       if (storedChat) {
         setChat(JSON.parse(storedChat));
       }
     }
-  }, [chatId]);
+  }, [selectedChatId]);
 
   function updateChat(message) {
     setChat((currentChat) => {
       const updatedMessages = [...currentChat.messages, message];
       const updatedChat = { ...currentChat, messages: updatedMessages };
-      localStorage.setItem(`chat.${chatId}`, JSON.stringify(updatedChat));
+      localStorage.setItem(
+        `chat.${selectedChatId}`,
+        JSON.stringify(updatedChat)
+      );
       return updatedChat;
     });
   }
@@ -74,7 +78,10 @@ const useChat = (chatId) => {
             ...currentChat,
             prompts: updatedPrompts,
           };
-          localStorage.setItem(`chat.${chatId}`, JSON.stringify(updatedChat));
+          localStorage.setItem(
+            `chat.${selectedChatId}`,
+            JSON.stringify(updatedChat)
+          );
           return updatedChat;
         });
       }

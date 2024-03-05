@@ -4,7 +4,6 @@ import ChatDisplay from "./ChatDisplay";
 import MessageInput from "./MessageInput";
 // import SuggestionsOverlay from "./SuggestionsOverlay";
 import useChat from "./useChat";
-import { useEvent } from "@nucleoidjs/react-event";
 
 import { Box, useTheme } from "@mui/material";
 import React, { useRef, useState } from "react";
@@ -13,8 +12,8 @@ const Chat = () => {
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
   const messageInputRef = useRef();
-  const [chatId] = useEvent("CHAT_ID_CHANGED", 0);
-  const { chat, sendMessage } = useChat(chatId);
+
+  const { chat, sendMessage } = useChat();
 
   const handleSendMessage = (message) => {
     sendMessage(message, setLoading);
