@@ -69,58 +69,59 @@ const ChatDisplay = ({ chat, loading }) => {
       ref={messagesContainerRef}
       onScroll={handleScroll}
     >
-      {chat?.messages.map((message, index) => (
-        <Box
-          key={index}
-          sx={{
-            width: "60%",
-            marginBottom: "20px",
-            padding: "10px",
-            borderRadius: "10px",
-            textAlign: "left",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            userSelect: "text",
-          }}
-        >
-          <Typography
-            variant="subtitle2"
+      {chat &&
+        chat.messages.map((message, index) => (
+          <Box
+            key={index}
             sx={{
-              fontWeight: "bold",
-              marginBottom: "8px",
+              width: "60%",
+              marginBottom: "20px",
+              padding: "10px",
+              borderRadius: "10px",
+              textAlign: "left",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
               userSelect: "text",
             }}
           >
-            {message.sender.toUpperCase()}
-          </Typography>
-          <Typography variant="body1" sx={{ userSelect: "text" }}>
-            {message.text}
-          </Typography>
-          {message.code && (
-            <Box
-              component="pre"
+            <Typography
+              variant="subtitle2"
               sx={{
-                overflowX: "auto",
-                justifyContent: "center",
-                marginTop: "8px",
-                backgroundColor: theme.palette.grey[100],
-                borderRadius: "5px",
-                padding: "0",
+                fontWeight: "bold",
+                marginBottom: "8px",
                 userSelect: "text",
-                width: "100%",
               }}
             >
-              <ReadOnlyEditor
-                value={message.code}
-                language="typescript"
-                actionIcon={EditIcon}
-                onActionClick={() => handleOpenDialog(message.code)}
-              />
-            </Box>
-          )}
-        </Box>
-      ))}
+              {message.sender.toUpperCase()}
+            </Typography>
+            <Typography variant="body1" sx={{ userSelect: "text" }}>
+              {message.text}
+            </Typography>
+            {message.code && (
+              <Box
+                component="pre"
+                sx={{
+                  overflowX: "auto",
+                  justifyContent: "center",
+                  marginTop: "8px",
+                  backgroundColor: theme.palette.grey[100],
+                  borderRadius: "5px",
+                  padding: "0",
+                  userSelect: "text",
+                  width: "100%",
+                }}
+              >
+                <ReadOnlyEditor
+                  value={message.code}
+                  language="typescript"
+                  actionIcon={EditIcon}
+                  onActionClick={() => handleOpenDialog(message.code)}
+                />
+              </Box>
+            )}
+          </Box>
+        ))}
       <Button
         onClick={scrollToBottom}
         sx={{ position: "fixed", bottom: 20, right: 20 }}

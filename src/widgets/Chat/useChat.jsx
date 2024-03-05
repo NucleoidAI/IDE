@@ -17,10 +17,6 @@ const useChat = () => {
         messages: [],
         timestamp: currentTime,
       };
-
-      const chatKey = `chat.${newChatId}`;
-      localStorage.setItem(chatKey, JSON.stringify(newChat));
-      storage.set("selected", "chat", "id", newChatId);
       setChat(newChat);
     } else {
       const chatKey = `chat.${selectedChatId}`;
@@ -35,14 +31,16 @@ const useChat = () => {
     setChat((currentChat) => {
       const updatedMessages = [...currentChat.messages, message];
       const updatedChat = { ...currentChat, messages: updatedMessages };
-      localStorage.setItem(
-        `chat.${selectedChatId}`,
-        JSON.stringify(updatedChat)
-      );
+      localStorage.setItem(`chat.${chat.id}`, JSON.stringify(updatedChat));
       return updatedChat;
     });
   }
   const sendMessage = async (message, setLoading) => {
+    if (selectedChatId === -1) {
+      const chatKey = `chat.${chat.id}`;
+      localStorage.setItem(chatKey, JSON.stringify(chat));
+      storage.set("selected", "chat", "id", chat.id);
+    }
     const newMessage = {
       sender: "human",
       text: message,
@@ -78,10 +76,7 @@ const useChat = () => {
             ...currentChat,
             prompts: updatedPrompts,
           };
-          localStorage.setItem(
-            `chat.${selectedChatId}`,
-            JSON.stringify(updatedChat)
-          );
+          localStorage.setItem(`chat.${chat.id}`, JSON.stringify(updatedChat));
           return updatedChat;
         });
       }
