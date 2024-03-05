@@ -1,4 +1,3 @@
-import ChatIcon from "@mui/icons-material/Chat";
 import Drawer from "@mui/material/Drawer";
 import GraphButton from "../../components/GraphButton/GraphButton";
 import LgDrawerStyled from "../../components/LgDrawerStyled";
@@ -227,12 +226,6 @@ const MenuLinks = (props) => {
           </React.Fragment>
         );
       })}
-      <ListItemButton sx={styles.listItem} component={Link} to="../chat">
-        <ListItemIcon variant="pageIcon">
-          <ChatIcon />
-        </ListItemIcon>
-        <ListItemText primary="Chat" />
-      </ListItemButton>
     </>
   );
 };
