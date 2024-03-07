@@ -5,7 +5,7 @@ import TypeMenu from "../TypeMenu";
 import styles from "./styles";
 import { v4 as uuid } from "uuid";
 
-import { Checkbox, IconButton, TextField } from "@mui/material";
+import { Checkbox, IconButton, InputBase } from "@mui/material";
 
 const ParamTable = ({ types, params, setParams }) => {
   const columns = [
@@ -15,10 +15,12 @@ const ParamTable = ({ types, params, setParams }) => {
       renderCell: (param) => {
         const { id } = param.row;
         return (
-          <TextField
+          <InputBase
             disabled={param.row.in === "path"}
-            value={param.value}
+            value={param.value || ""}
             onChange={(event) => updateParam(id, "name", event.target.value)}
+            fullWidth
+            placeholder="Enter name"
           />
         );
       },
@@ -71,13 +73,14 @@ const ParamTable = ({ types, params, setParams }) => {
       renderCell: (param) => {
         const { id } = param.row;
         return (
-          <TextField
+          <InputBase
             disabled={param.row.in === "path"}
-            value={param.value}
+            value={param.value || ""}
             onChange={(event) =>
               updateParam(id, "description", event.target.value)
             }
             fullWidth
+            placeholder="Enter description"
           />
         );
       },
