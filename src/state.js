@@ -69,9 +69,14 @@ function withSample() {
   return state;
 }
 
-function withPages({ api, types, functions, logic }) {
+function withPages({ context }) {
   const state = init();
-  state.nucleoid = { api, types, functions, logic };
+
+  const { nucleoid, pages } = context;
+
+  state.nucleoid = nucleoid;
+  state.pages = pages;
+
   return state;
 }
 
