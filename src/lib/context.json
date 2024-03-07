@@ -1,0 +1,311 @@
+{
+    "context": {
+        "nucleoid": {
+            "api": [
+                {
+                    "path": "/",
+                    "method": "GET",
+                    "params": [
+                        {
+                            "name": "example",
+                            "in": "query",
+                            "type": "string",
+                            "required": false,
+                            "description": "example"
+                        }
+                    ],
+                    "response": "object",
+                    "x-nuc-action": "function action(req: any): { message: string } {\n        return { message: \"Hello World\" };\n      }"
+                },
+                {
+                    "path": "/items",
+                    "method": "GET",
+                    "params": [
+                        {
+                            "in": "query",
+                            "type": "string",
+                            "required": true,
+                            "name": "name"
+                        }
+                    ],
+                    "response": "Item[]",
+                    "x-nuc-action": "function action(req: { query: { name: string } }): any {\n      const name = req.query.name;\n      return Item.filter(item => item.name === name);\n    }"
+                },
+                {
+                    "path": "/items",
+                    "method": "POST",
+                    "request": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "barcode": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "response": "Item",
+                    "x-nuc-action": "function action(req: { body: { name: string, barcode: string } }): any {\n      const name = req.body.name;\n      const barcode = req.body.barcode;\n      const check = Item.find(i => i.barcode === barcode);\n      if(check) {\n        throw \"DUPLICATE_BARCODE\";\n      }\n      return new Item(name, barcode);\n    }"
+                },
+                {
+                    "path": "/items/{item}",
+                    "method": "GET",
+                    "params": [
+                        {
+                            "name": "item",
+                            "in": "path",
+                            "type": "string",
+                            "required": true,
+                            "description": "item"
+                        }
+                    ],
+                    "response": "Item",
+                    "x-nuc-action": "function action(req: { params: { item: string } }): any {\n      const item = req.params.item;\n      return Item[item];\n    }"
+                },
+                {
+                    "path": "/items/{item}",
+                    "method": "PUT",
+                    "params": [
+                        {
+                            "name": "item",
+                            "in": "path",
+                            "type": "string",
+                            "required": true,
+                            "description": "item"
+                        }
+                    ],
+                    "request": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "barcode": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "response": "Item",
+                    "x-nuc-action": "function action(req: { params: { item: string }, body: { name: string, barcode: string } }): any {\n      const item = Item[req.params.item];\n      const name = req.body.name;\n      const barcode = req.body.barcode;\n      if (!item) {\n        return;\n      }\n      const check = Item.find(\n        i => i.barcode === barcode && i.barcode !== item.barcode\n      );\n      if (check) {\n        throw \"DUPLICATE_BARCODE\";\n      }\n      item.name = name;\n      item.barcode = barcode;\n      return item;\n    }"
+                },
+                {
+                    "path": "/items/{item}",
+                    "method": "DEL",
+                    "params": [
+                        {
+                            "name": "item",
+                            "in": "path",
+                            "type": "string",
+                            "required": true,
+                            "description": "item"
+                        }
+                    ],
+                    "response": "object",
+                    "x-nuc-action": "function action(req: { params: { item: string } }): void {\n      const item = req.params.item;\n      delete Item[item];\n    }"
+                },
+                {
+                    "path": "/orders",
+                    "method": "GET",
+                    "params": [],
+                    "response": "Order[]",
+                    "x-nuc-action": "function action(req: any): any {\n      return Order;\n    }"
+                },
+                {
+                    "path": "/orders",
+                    "method": "POST",
+                    "request": {
+                        "type": "object",
+                        "properties": {
+                            "item": {
+                                "type": "string"
+                            },
+                            "qty": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "response": "Order",
+                    "x-nuc-action": "function action(req: { body: { item: string, qty: number } }): any {\n      const item = Item[req.body.item];\n      const qty = req.body.qty;\n      if (!item) {\n        throw \"INVALID_ITEM\";\n      }\n      return new Order(item, qty);\n    }"
+                },
+                {
+                    "path": "/orders/{order}",
+                    "method": "GET",
+                    "params": [
+                        {
+                            "name": "order",
+                            "in": "path",
+                            "type": "string",
+                            "required": true,
+                            "description": "order"
+                        }
+                    ],
+                    "response": "Order",
+                    "x-nuc-action": "function action(req: { params: { order: string } }): any {\n      const order = req.params.order;\n      return Order[order];\n    }"
+                },
+                {
+                    "path": "/orders/{order}",
+                    "method": "PUT",
+                    "params": [
+                        {
+                            "name": "order",
+                            "in": "path",
+                            "type": "string",
+                            "required": true,
+                            "description": "Order id"
+                        }
+                    ],
+                    "request": {
+                        "type": "object",
+                        "properties": {
+                            "item": {
+                                "type": "string"
+                            },
+                            "qty": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "response": "Order",
+                    "x-nuc-action": "function action(req: { params: { order: string }, body: { item: string, qty: number } }): any {\n      const order = Order[req.params.order];\n      const item = Item[req.body.item];\n      const qty = req.body.qty;\n      if (!order) {\n        return;\n      }\n      if (!item) {\n        throw \"INVALID_ITEM\";\n      }\n      order.item = item;\n      order.qty = qty;\n      return order;\n    }"
+                },
+                {
+                    "path": "/orders/{order}",
+                    "method": "DEL",
+                    "params": [
+                        {
+                            "name": "order",
+                            "in": "path",
+                            "type": "string",
+                            "required": true,
+                            "description": "Order id"
+                        }
+                    ],
+                    "response": "object",
+                    "x-nuc-action": "function action(req: { params: { order: string } }): void {\n      const order = req.params.order;\n      delete Order[order];\n    }"
+                }
+            ],
+            "types": [
+                {
+                    "path": "/Order",
+                    "params": [],
+                    "type": "CLASS",
+                    "definition": "class Order1 {\n  item: string;\n  qty: number;\n  date: number;\n  constructor(item: string, qty: number) {\n    this.item = item;\n    this.qty = qty;\n    this.date = Date.now();\n  }\n}"
+                },
+                {
+                    "path": "/Item",
+                    "params": [],
+                    "type": "CLASS",
+                    "definition": "class Item1 {\n  name: string;\n  barcode: string;\n  constructor(name: string, barcode: string) {\n    this.name = name;\n    this.barcode = barcode;\n  }\n}"
+                },
+                {
+                    "path": "/event",
+                    "params": [],
+                    "type": "FUNCTION",
+                    "builtin": true,
+                    "definition": "function event(name: string, data: any): void {}"
+                },
+                {
+                    "path": "/uuid",
+                    "params": [],
+                    "type": "FUNCTION",
+                    "builtin": true,
+                    "definition": "function uuid(): void {}"
+                },
+                {
+                    "path": "/random",
+                    "params": [],
+                    "type": "FUNCTION",
+                    "builtin": true,
+                    "definition": "function random(length: number): void {}"
+                }
+            ],
+            "functions": [
+                {
+                    "path": "/Order",
+                    "params": [],
+                    "type": "CLASS",
+                    "ext": "js",
+                    "definition": "class Order {\n  constructor(item, qty) {\n    this.item = item;\n    this.qty = qty;\n    this.date = Date.now();\n  }\n}\n"
+                },
+                {
+                    "path": "/Item",
+                    "params": [],
+                    "type": "CLASS",
+                    "ext": "js",
+                    "definition": "class Item {\n  constructor(name, barcode) {\n    this.name = name;\n    this barcode = barcode;\n  }\n}\n"
+                }
+            ],
+            "declarations": [
+                {
+                    "description": "All humans mortal property must be true",
+                    "summary": "All humans are mortal",
+                    "definition": "$Human.mortal = true\n\nsocrates = new Human('Socrates')\n\nsocrates.mortal === true\n"
+                },
+                {
+                    "description": "If the human is older than 18, do something",
+                    "summary": "If The Human is Over 18 Years Old",
+                    "definition": "if( $Human.age > 18 )\n{\n    //do something\n}\n"
+                },
+                {
+                    "description": "All Orders barcode string starts with NUC",
+                    "summary": "All orders barcode start with NUC prefix",
+                    "definition": "$Order.barcode.include('NUC')\n"
+                }
+            ],
+            "project": {
+                "type": "LOCAL",
+                "name": "Project from chat",
+                "id": "2",
+                "description": "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore"
+            }
+        },
+        "pages": {
+            "started": false,
+            "opened": false,
+            "api": {
+                "dialog": {
+                    "AIDialog": {
+                        "open": false
+                    },
+                    "view": "BODY",
+                    "type": "",
+                    "action": ""
+                },
+                "resourceMenu": {
+                    "open": false,
+                    "anchor": {}
+                },
+                "selected": {
+                    "path": "/",
+                    "method": "get"
+                }
+            },
+            "functions": {
+                "dialog": {
+                    "open": false
+                },
+                "selected": "/Order"
+            },
+            "query": {
+                "AIDialog": {
+                    "open": false
+                },
+                "results": "",
+                "text": "Item.filter((item) => item.name === \"item-1\");",
+                "outputRatio": 0.5
+            },
+            "logic": {
+                "AIDialog": {
+                    "open": false
+                },
+                "selected": {
+                    "description": "All Orders barcode string starts with NUC",
+                    "summary": "All orders barcode start with NUC prefix",
+                    "definition": "{\n  $Order.barcode.include('NUC')\n}\n"
+                }
+            },
+            "branches": {}
+        }
+    }
+}
