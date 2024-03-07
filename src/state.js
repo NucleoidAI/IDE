@@ -75,6 +75,12 @@ function withPages({ api, types, functions, logic }) {
   return state;
 }
 
+function withProjcet({ api, types, functions, logic, project }) {
+  const state = init();
+  state.nucleoid = { api, types, functions, logic, project };
+  return state;
+}
+
 const resolve = (state, param) => {
   try {
     const parts = param.split(".");
@@ -85,5 +91,5 @@ const resolve = (state, param) => {
   }
 };
 
-const State = { init, copy, withSample, resolve, withPages };
+const State = { init, copy, withSample, withProjcet, resolve, withPages };
 export default State;
