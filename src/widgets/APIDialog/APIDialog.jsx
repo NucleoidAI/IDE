@@ -9,13 +9,15 @@ import NucDialog from "../../components/core/NucDialog/NucDialog";
 import React from "react";
 import { getTypes } from "../../lib/TypeScript";
 import { useContext } from "../../context/context";
-import { useRef } from "react";
+
+import { useEffect, useRef } from "react";
 
 function APIDialog() {
   const requestSchemaRef = useRef();
   const responseSchemaRef = useRef();
   const typesRef = useRef();
-  const paramsRef = useRef();
+  const paramsRef = useRef([]);
+  const addParams = useRef(() => {});
 
   const [context, dispatch] = useContext();
 
@@ -28,14 +30,16 @@ function APIDialog() {
       (api) => api.path === selected?.path && api.method === selected.method
     );
 
-  paramsRef.current = selectedApi?.params;
-
-  if (selectedApi?.params) {
-    paramsRef.current = selectedApi.params.map((param, index) => ({
-      ...param,
-      id: index + 1,
-    }));
-  }
+  useEffect(() => {
+    if (selectedApi?.params) {
+      paramsRef.current = selectedApi.params.map((param, index) => ({
+        ...param,
+        id: index + 1,
+      }));
+    } else {
+      paramsRef.current = [];
+    }
+  }, [selectedApi]);
 
   const tstypes = getTypes(context.get("nucleoid.functions"));
   const nuctypes = context.get("nucleoid.types");
@@ -66,8 +70,15 @@ function APIDialog() {
         });
         break;
 
-      case "params":
-        console.log("params");
+      case "PARAMS":
+        dispatch({
+          type: "SAVE_API_PARAMS",
+          payload: {
+            path: selected?.path,
+            method: selected?.method,
+            params: paramsRef.current,
+          },
+        });
         break;
 
       default:
@@ -107,7 +118,8 @@ function APIDialog() {
           responseSchemaRef={responseSchemaRef}
           typesRef={typesRef}
           paramsRef={paramsRef}
-          saveApiDialog={() => saveApiDialog}
+          addParams={addParams}
+          saveApiDialog={saveApiDialog}
         />
         <APIDialogAction
           view={view}
@@ -122,7 +134,7 @@ function APIDialog() {
               type: "DELETE_API",
             });
           }}
-          saveApiDialog={() => saveApiDialog()}
+          saveApiDialog={saveApiDialog}
         />
       </NucDialog>
     );
@@ -135,6 +147,7 @@ function TabManager({
   nuctypes,
   types,
   paramsRef,
+  addParams,
   selectedApi,
   requestSchemaRef,
   responseSchemaRef,
@@ -157,7 +170,7 @@ function TabManager({
     }
 
     case "PARAMS":
-      return <APIParams types={types} ref={paramsRef} />;
+      return <APIParams types={types} ref={{ paramsRef, addParams }} />;
     default:
       return "a";
   }

@@ -1,32 +1,13 @@
 import { DataGrid } from "@mui/x-data-grid";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import React from "react";
 import TypeMenu from "../TypeMenu";
 import styles from "./styles";
 import { v4 as uuid } from "uuid";
 
 import { Checkbox, IconButton, TextField } from "@mui/material";
-import React, { useState } from "react";
 
-const ParamTable = React.forwardRef(({ types }, { paramsRef, addParams }) => {
-  const [params, setParams] = useState(paramsRef.current);
-
-  addParams.current = () => {
-    const id = uuid();
-    paramsRef.current[id] = {
-      id: id,
-      in: "query",
-      type: "string",
-      required: true,
-    };
-    setParams({ ...paramsRef.current });
-  };
-
-  const removeParam = (id) => {
-    delete paramsRef.current[id];
-    setTimeout(() => setParams({ ...paramsRef.current }), 0);
-    // TODO Check "No row with id" issue in MUI 5
-  };
-
+const ParamTable = ({ types, params, setParams }) => {
   const columns = [
     {
       field: "name",
@@ -36,8 +17,8 @@ const ParamTable = React.forwardRef(({ types }, { paramsRef, addParams }) => {
         return (
           <TextField
             disabled={param.row.in === "path"}
-            defaultValue={param.value}
-            onChange={(event) => (params[id].name = event.target.value)}
+            value={param.value}
+            onChange={(event) => updateParam(id, "name", event.target.value)}
           />
         );
       },
@@ -53,10 +34,9 @@ const ParamTable = React.forwardRef(({ types }, { paramsRef, addParams }) => {
             disabled={param.row.in === "path"}
             primitive
             types={types}
-            ref={params}
             id={id}
             type={param.value}
-            edit
+            onChange={(type) => updateParam(id, "type", type)}
           />
         );
       },
@@ -76,8 +56,10 @@ const ParamTable = React.forwardRef(({ types }, { paramsRef, addParams }) => {
         return (
           <Checkbox
             disabled={param.row.in === "path"}
-            defaultChecked={param.value}
-            onChange={(event) => (params[id].required = event.target.checked)}
+            checked={param.value}
+            onChange={(event) =>
+              updateParam(id, "required", event.target.checked)
+            }
           />
         );
       },
@@ -91,8 +73,10 @@ const ParamTable = React.forwardRef(({ types }, { paramsRef, addParams }) => {
         return (
           <TextField
             disabled={param.row.in === "path"}
-            defaultValue={param.value}
-            onChange={(event) => (params[id].description = event.target.value)}
+            value={param.value}
+            onChange={(event) =>
+              updateParam(id, "description", event.target.value)
+            }
             fullWidth
           />
         );
@@ -118,15 +102,38 @@ const ParamTable = React.forwardRef(({ types }, { paramsRef, addParams }) => {
     },
   ];
 
+  const addParam = () => {
+    const id = uuid();
+    const newParam = {
+      id,
+      in: "query",
+      type: "string",
+      required: true,
+    };
+    setParams((prevParams) => [...prevParams, newParam]);
+  };
+
+  const removeParam = (id) => {
+    setParams((prevParams) => prevParams.filter((param) => param.id !== id));
+  };
+
+  const updateParam = (id, field, value) => {
+    setParams((prevParams) =>
+      prevParams.map((param) =>
+        param.id === id ? { ...param, [field]: value } : param
+      )
+    );
+  };
+
   return (
     <DataGrid
       sx={styles.dataGrid}
       columns={columns}
-      rows={Object.values(params).filter((p) => p.id)}
+      rows={params}
       hideFooter
       disableSelectionOnClick
     />
   );
-});
+};
 
 export default ParamTable;
