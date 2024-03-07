@@ -71,18 +71,11 @@ function withSample() {
 
 function withPages({ context }) {
   const state = init();
-
   const { nucleoid, pages } = context;
 
   state.nucleoid = nucleoid;
   state.pages = pages;
 
-  return state;
-}
-
-function withProjcet({ api, types, functions, logic, project }) {
-  const state = init();
-  state.nucleoid = { api, types, functions, logic, project };
   return state;
 }
 
@@ -96,5 +89,5 @@ const resolve = (state, param) => {
   }
 };
 
-const State = { init, copy, withSample, withProjcet, resolve, withPages };
+const State = { init, copy, withSample, resolve, withPages };
 export default State;
