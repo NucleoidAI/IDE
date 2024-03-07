@@ -22,16 +22,19 @@ const addSlashMark = (path) => {
 };
 
 const getMode = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const mode = urlParams.get("mode");
+
   const id = window.location.pathname.split("/")[2];
 
-  if (id === "sample") {
-    return "sample";
-  } else if (Number(id)) {
-    return "cloud";
-  } else if (id === "chat") {
-    return "chat";
-  } else if (id === "mobile") {
-    return "mobile";
+  if (mode) {
+    return mode;
+  } else {
+    if (id === "sample") {
+      return "sample";
+    } else if (id === "mobile") {
+      return "mobile";
+    }
   }
 };
 
