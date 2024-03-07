@@ -13,7 +13,6 @@ import { contextReducer } from "./context/reducer";
 import { contextToMap } from "./utils/Parser";
 import routes from "./routes";
 import { subscribe } from "@nucleoidjs/react-event";
-import { useStorage } from "@nucleoidjs/webstorage";
 import vfs from "./vfs";
 
 import {
@@ -22,6 +21,7 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { darkTheme, lightTheme } from "./theme";
+import { storage, useStorage } from "@nucleoidjs/webstorage";
 
 function App() {
   const [context, setContext] = React.useState();
@@ -54,6 +54,16 @@ function App() {
     });
     const progressElement = document.getElementById("nuc-progress-indicator");
   }, [delay, progressElement]);
+
+  function getContextFromStorage(id) {
+    const context = storage.get("ide", "projects", id);
+    const nucContext = State.withProjcet(context);
+    nucContext.get = (prop) => State.resolve(nucContext, prop);
+    nucContext.nucleoid.project = {
+      type: "LOCAL",
+    };
+    return nucContext;
+  }
 
   function project(id) {
     return Promise.all([
@@ -148,11 +158,10 @@ function App() {
           initVfs(result);
           return setContext(initContext(result));
         });
-      } else if (mode === "chat") {
-        const context = getContextFromStorage();
+      } else if (mode === "chat" || mode === "local") {
+        const context = getContextFromStorage(id);
         initVfs(context);
         return setContext(initContext(context));
-      } else if (mode === "local") {
       } else if (mode === "mobile") {
         return setContext("mobile");
       } else {
