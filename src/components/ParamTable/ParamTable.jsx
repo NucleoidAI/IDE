@@ -3,7 +3,6 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import React from "react";
 import TypeMenu from "../TypeMenu";
 import styles from "./styles";
-import { v4 as uuid } from "uuid";
 
 import { Checkbox, IconButton, InputBase } from "@mui/material";
 
@@ -104,17 +103,6 @@ const ParamTable = ({ types, params, setParams }) => {
       },
     },
   ];
-
-  const addParam = () => {
-    const id = uuid();
-    const newParam = {
-      id,
-      in: "query",
-      type: "string",
-      required: true,
-    };
-    setParams((prevParams) => [...prevParams, newParam]);
-  };
 
   const removeParam = (id) => {
     setParams((prevParams) => prevParams.filter((param) => param.id !== id));

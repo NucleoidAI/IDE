@@ -14,7 +14,7 @@ const APIParams = forwardRef(({ types }, ref) => {
 
   useEffect(() => {
     paramsRef.current = params;
-  }, [params]);
+  }, [params, paramsRef]);
 
   const handleAddParams = () => {
     const id = Date.now().toString();
