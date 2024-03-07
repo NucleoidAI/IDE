@@ -11,6 +11,7 @@ import axios from "axios";
 import config from "../config";
 import { contextReducer } from "./context/reducer";
 import { contextToMap } from "./utils/Parser";
+import exampleContext from "./lib/context.json";
 import routes from "./routes";
 import { subscribe } from "@nucleoidjs/react-event";
 import vfs from "./vfs";
@@ -57,11 +58,9 @@ function App() {
 
   function getContextFromStorage(id) {
     const context = storage.get("ide", "projects", id);
-    const nucContext = State.withProjcet(context);
+    const nucContext = State.withPages(context);
     nucContext.get = (prop) => State.resolve(nucContext, prop);
-    nucContext.nucleoid.project = {
-      type: "LOCAL",
-    };
+
     return nucContext;
   }
 
@@ -159,6 +158,9 @@ function App() {
           return setContext(initContext(result));
         });
       } else if (mode === "chat" || mode === "local") {
+        //FOR TESTING
+        storage.set("ide", "projects", "1", JSON.stringify(exampleContext));
+
         const context = getContextFromStorage(id);
         initVfs(context);
         return setContext(initContext(context));
