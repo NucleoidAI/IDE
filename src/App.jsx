@@ -143,19 +143,17 @@ function App() {
         const context = sampleProject();
         initVfs(context);
         return setContext(initContext(context));
-      }
-      if (mode === "cloud") {
+      } else if (mode === "cloud") {
         project(id).then((result) => {
           initVfs(result);
           return setContext(initContext(result));
         });
-      }
-      if (mode === "chat") {
-        const context = sampleProject();
+      } else if (mode === "chat") {
+        const context = getContextFromStorage();
         initVfs(context);
         return setContext(initContext(context));
-      }
-      if (mode === "mobile") {
+      } else if (mode === "local") {
+      } else if (mode === "mobile") {
         return setContext("mobile");
       } else {
         window.location.assign(`${window.location.origin}/ide/sample/api`);
