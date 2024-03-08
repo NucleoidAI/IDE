@@ -24,18 +24,18 @@ import { darkTheme, lightTheme } from "./theme";
 import { storage, useStorage } from "@nucleoidjs/webstorage";
 
 function App() {
-  const [context, setContext] = React.useState();
+  const { id } = useParams();
 
+  const [context, setContext] = React.useState();
+  const navigate = useNavigate();
   const prefersLightMode = window.matchMedia(
     "(prefers-color-scheme: light)"
   ).matches;
-
   const [theme] = useStorage(
     "platform",
     "theme",
     prefersLightMode ? "light" : "dark"
   );
-
   const progressElement = document.getElementById("nuc-progress-indicator");
 
   function checkMobileSize() {
@@ -57,7 +57,8 @@ function App() {
 
   function getContextFromStorage(id) {
     const context = storage.get("ide", "projects", id);
-    const nucContext = State.withPages(context);
+
+    const nucContext = State.withPages({ context });
     nucContext.get = (prop) => State.resolve(nucContext, prop);
 
     return nucContext;
@@ -84,12 +85,10 @@ function App() {
   function sampleProject() {
     const context = State.withSample();
     context.get = (prop) => State.resolve(context, prop);
-    context.nucleoid.project = {
-      name: "Sample",
-      id: "Sample",
-      description:
-        "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore",
-    };
+    storage.set("ide", "projects", context.nucleoid.project.id, context);
+
+    navigate(`${context.nucleoid.project.id}/api?mode=local`);
+
     return context;
   }
 
@@ -129,7 +128,7 @@ function App() {
       Settings.landing({ level: 0 });
     }
     if (checkMobileSize()) {
-      window.location.assign(`${window.location.origin}/ide/mobile`);
+      navigate("/mobile");
       Settings.plugin(" ");
       Settings.landing({ level: Number.MAX_SAFE_INTEGER });
     }
@@ -141,10 +140,8 @@ function App() {
     const files = contextToMap(context.nucleoid);
     vfs.init(files);
   };
-
   React.useEffect(() => {
     async function initMode() {
-      const id = window.location.pathname.split("/")[2];
       const mode = Path.getMode();
 
       if (mode === "sample") {
@@ -166,15 +163,13 @@ function App() {
       } else if (mode === "mobile") {
         return setContext("mobile");
       } else {
-        window.location.assign(`${window.location.origin}/ide/sample/api`);
+        navigate("/sample/api");
       }
     }
 
     initMode();
     // eslint-disable-next-line
   }, [progressElement.classList]);
-
-  React.useEffect(() => {}, []);
 
   if (!context) return null;
   if (context === "error") return "forbidden";
