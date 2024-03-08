@@ -24,7 +24,7 @@ const routes = [
       {
         title: "API",
         link: "api",
-        path: "/api",
+        path: ":id/api",
         anchor: true,
         element: <API />,
         icon: <Send />,
@@ -32,7 +32,7 @@ const routes = [
       {
         title: "Functions",
         link: "functions",
-        path: "/functions",
+        path: ":id/functions",
         anchor: true,
         element: <Functions />,
         icon: <Folder />,
@@ -40,7 +40,7 @@ const routes = [
       {
         title: "Logic",
         link: "logic",
-        path: "/logic",
+        path: ":id/logic",
         anchor: false,
         element: <Logic />,
         icon: <LensBlur />,
@@ -48,7 +48,7 @@ const routes = [
       {
         title: "Query",
         link: "query",
-        path: "/query",
+        path: ":id/query",
         anchor: false,
         element: <Query />,
         icon: <Storage />,
@@ -56,7 +56,7 @@ const routes = [
       {
         title: "Logs",
         link: "logs",
-        path: "/logs",
+        path: ":id/logs",
         anchor: false,
         element: <Logs />,
         icon: <ViewCarousel />,
