@@ -26,6 +26,7 @@ const Chat = () => {
         id: chatId,
         title: "New Chat",
         messages: [],
+        created: Date.now(),
       });
 
       navigate(`/chat/${chatId}`);
@@ -38,8 +39,13 @@ const Chat = () => {
 
   const handleSendMessage = async (message) => {
     setLoading(true);
+    const first = !chat.messages.length;
 
     await sendMessage(message, setLoading);
+
+    if (first) {
+      publish("CHAT_INITIATED", chat.id);
+    }
 
     setLoading(false);
     messageInputRef.current.clear();

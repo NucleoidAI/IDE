@@ -1,4 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
+import ChatHistory from "./ChatHistory";
 import Drawer from "@mui/material/Drawer";
 import LgDrawerStyled from "../../components/LgDrawerStyled";
 import Logo from "../../components/Logo";
@@ -6,9 +7,8 @@ import React from "react";
 import Settings from "../../components/Settings";
 import SmallLogo from "../../components/SmallLogo";
 import { drawerWidth } from "../../config";
-import styles from "./styles";
+import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
-
 import { ArrowForwardIos, DensityMedium } from "@mui/icons-material/";
 import {
   Box,
@@ -17,26 +17,18 @@ import {
   IconButton,
   List,
   ListItem,
-  ListItemButton,
-  ListItemText,
   useMediaQuery,
 } from "@mui/material";
-import { storage, useStorage } from "@nucleoidjs/webstorage";
-import { useEffect, useState } from "react";
 
 function ChatMenu(props) {
+  const theme = useTheme();
+  const navigate = useNavigate();
   const [openMd, setOpenMd] = React.useState(false);
   const [openLg, setOpenLg] = React.useState(true);
-  const theme = useTheme();
   const matchDownMD = useMediaQuery(theme.breakpoints.down("lg"));
 
-  const handleClose = () => {
-    setOpenMd(false);
-  };
-
-  const handleCreateNewChat = () => {
-    storage.set("selected", "chat", "id", "-1");
-  };
+  const handleCreateNewChat = () => navigate("/chat");
+  const handleClose = () => setOpenMd(false);
 
   return (
     <Box component="nav" sx={{ flexShrink: { md: 0 } }}>
@@ -231,65 +223,5 @@ function ChatMenu(props) {
     </Box>
   );
 }
-
-const ChatHistory = () => {
-  const [chats, setChats] = useState([]);
-  const [selectedChatId] = useStorage("selected", "chat", "id", "-1");
-
-  const handleChatClick = (chatId) => {
-    storage.set("selected", "chat", "id", chatId);
-    console.debug(`Chat clicked: ${chatId}`);
-  };
-
-  useEffect(() => {
-    const loadedChats = [];
-
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-
-      if (key.startsWith("chat.")) {
-        try {
-          const chatData = JSON.parse(localStorage.getItem(key));
-          if (chatData) {
-            loadedChats.push({
-              chatId: chatData.id,
-              chatTitle: chatData.title,
-              timestamp: chatData.timestamp,
-            });
-          }
-        } catch (e) {
-          console.error("Error parsing chat data from local storage:", e);
-        }
-      }
-    }
-    loadedChats.sort((a, b) => b.timestamp - a.timestamp);
-    setChats(loadedChats);
-  }, [selectedChatId]);
-
-  return (
-    <Box sx={{ marginTop: "10px" }}>
-      {chats.map((chat) => (
-        <React.Fragment key={chat.chatId}>
-          <ListItemButton
-            onClick={() => handleChatClick(chat.chatId)}
-            sx={styles.listItem}
-          >
-            <ListItemText
-              primary={chat.chatTitle}
-              sx={{
-                ".MuiListItemText-primary": {
-                  position: "relative",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                },
-              }}
-            />
-          </ListItemButton>
-        </React.Fragment>
-      ))}
-    </Box>
-  );
-};
 
 export default ChatMenu;
