@@ -143,16 +143,16 @@ function APISettings() {
           </Grid>
         </Grid>
 
-        <Fab
-          variant="button"
-          hide={matchWidth}
-          size={"small"}
-          onClick={openEditDialog}
-          sx={{ position: "absolute", right: 15, bottom: 15 }}
-        >
-          <EditIcon />
-        </Fab>
-
+        {!matchWidth && (
+          <Fab
+            variant="button"
+            size={"small"}
+            onClick={openEditDialog}
+            sx={{ position: "absolute", right: 15, bottom: 15 }}
+          >
+            <EditIcon />
+          </Fab>
+        )}
         {matchWidth && (
           <Grid container md={3} item sx={styles.summaryFormRoot}>
             <SummaryForm
@@ -167,14 +167,11 @@ function APISettings() {
               onClick={() => console.log(summaryRef.current["Summary"].value)}
             />
             <Grid container sx={styles.editIcon}>
-              <Fab
-                variant="button"
-                show={selectedApi && Object.keys(selectedApi).length > 0}
-                size={"small"}
-                onClick={openEditDialog}
-              >
-                <EditIcon />
-              </Fab>
+              {selectedApi && Object.keys(selectedApi).length > 0 && (
+                <Fab variant="button" size={"small"} onClick={openEditDialog}>
+                  <EditIcon />
+                </Fab>
+              )}
             </Grid>
           </Grid>
         )}
