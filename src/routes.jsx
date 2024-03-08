@@ -19,12 +19,12 @@ import React, { lazy } from "react";
 const IDE = lazy(() => import("./containers/IDE"));
 const routes = [
   {
-    container: { element: <IDE />, indexPath: "/sample/api" },
+    container: { element: <IDE /> },
     pages: [
       {
         title: "API",
         link: "api",
-        path: "/:project/api",
+        path: "/api",
         anchor: true,
         element: <API />,
         icon: <Send />,
@@ -32,7 +32,7 @@ const routes = [
       {
         title: "Functions",
         link: "functions",
-        path: "/:project/functions",
+        path: "/functions",
         anchor: true,
         element: <Functions />,
         icon: <Folder />,
@@ -40,7 +40,7 @@ const routes = [
       {
         title: "Logic",
         link: "logic",
-        path: "/:project/logic",
+        path: "/logic",
         anchor: false,
         element: <Logic />,
         icon: <LensBlur />,
@@ -48,7 +48,7 @@ const routes = [
       {
         title: "Query",
         link: "query",
-        path: "/:project/query",
+        path: "/query",
         anchor: false,
         element: <Query />,
         icon: <Storage />,
@@ -56,7 +56,7 @@ const routes = [
       {
         title: "Logs",
         link: "logs",
-        path: "/:project/logs",
+        path: "/logs",
         anchor: false,
         element: <Logs />,
         icon: <ViewCarousel />,
