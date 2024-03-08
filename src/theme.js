@@ -413,6 +413,29 @@ const darkTheme = createTheme({
           },
         },
       ],
+      styleOverrides: {
+        root: {
+          color: base.grey[200],
+          "&.Mui-disabled": {
+            color: base.grey[500],
+          },
+          "&:before": {
+            borderBottom: `1px solid ${base.grey[600]}`,
+          },
+          "&:hover:not(.Mui-disabled):before": {
+            borderBottom: `2px solid ${base.grey[400]}`,
+          },
+          "&.Mui-focused:after": {
+            borderBottom: `2px solid ${base.primary.dark}`,
+          },
+        },
+        input: {
+          "&::placeholder": {
+            color: base.grey[500],
+            opacity: 1,
+          },
+        },
+      },
     },
 
     MuiSvgIcon: {
@@ -457,6 +480,33 @@ const darkTheme = createTheme({
         root: {
           background: base.grey[300],
           color: base.grey[400],
+        },
+      },
+    },
+
+    MuiCheckbox: {
+      styleOverrides: {
+        root: {
+          color: base.grey[500],
+          "&.Mui-checked": {
+            color: base.primary.dark,
+          },
+          "&.Mui-disabled": {
+            color: base.grey[700],
+          },
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          color: base.grey[500],
+          "&:hover": {
+            backgroundColor: alpha(base.grey[500], 0.1),
+          },
+          "&.Mui-disabled": {
+            color: base.grey[700],
+          },
         },
       },
     },

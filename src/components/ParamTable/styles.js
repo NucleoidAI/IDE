@@ -1,7 +1,7 @@
 const styles = {
   dataGrid: {
     border: "none",
-    width: 850,
+    width: "100%",
     "& .MuiDataGrid-cell": {
       cursor: "pointer",
       borderBottom: "none",
