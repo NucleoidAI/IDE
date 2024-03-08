@@ -185,6 +185,7 @@ const VFSEditor = React.forwardRef((props, ref) => {
         onMount={handleEditorDidMount}
         onCodeEditorChange={handleChange}
         onSave={handleSave}
+        ref={ref}
         options={{
           tabSize: 2,
           minimap: {

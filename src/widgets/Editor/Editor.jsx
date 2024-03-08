@@ -145,6 +145,7 @@ const Editor = React.forwardRef((props, ref) => {
         onMount={editorOnMount}
         onCodeEditorChange={handleChange}
         setEditorRef={editorRef}
+        ref={ref}
       />
       {query && (
         <Grid container item sx={styles.runButton}>
