@@ -38,7 +38,6 @@ const Settings = {
   service: {
     auth: "https://nucleoid.com/oauth",
     projects: "https://nucleoid.com/projects",
-    completions: `${config.expert}/chat/completions`,
   },
 
   connection: true,

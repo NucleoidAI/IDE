@@ -35,7 +35,7 @@ const Chat = () => {
       const session = storage.get("ide", "chat", "sessions", chatId);
       publish("CHAT_SELECTED", session);
     }
-  }, [chatId]);
+  }, [chatId, navigate]);
 
   const handleSendMessage = async (message) => {
     setLoading(true);

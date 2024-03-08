@@ -24,13 +24,6 @@ const openapi = async (openapi) => {
   }
 };
 
-const completions = async (mode, context, prompt) => {
-  return http(Settings.service.completions, {
-    method: "POST",
-    data: { mode, context, prompt },
-  });
-};
-
 const metrics = () =>
   fetch(`${Settings.url.terminal()}/metrics`, {
     method: "GET",
@@ -99,7 +92,6 @@ const createSandbox = (context) => {
 const service = {
   query,
   openapi,
-  completions,
   metrics,
   logs,
   getUserFromGit,
