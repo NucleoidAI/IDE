@@ -1,7 +1,6 @@
 import { BrowserRouter } from "react-router-dom";
 import ContextProvider from "./context/context";
 import EventRegistry from "./EventRegistry";
-import IDE from "./containers/IDE"; // eslint-disable-line
 import Path from "./utils/Path";
 import React from "react";
 import RouteManager from "./RouteManager";
@@ -10,6 +9,7 @@ import State from "./state";
 import config from "../config";
 import { contextReducer } from "./context/reducer";
 import { contextToMap } from "./utils/Parser";
+import http from "./http";
 import routes from "./routes";
 import { subscribe } from "@nucleoidjs/react-event";
 import { useStorage } from "@nucleoidjs/webstorage";
@@ -38,7 +38,7 @@ function App() {
   const progressElement = document.getElementById("nuc-progress-indicator");
 
   function checkMobileSize() {
-    return window.innerWidth < 600 ? true : false;
+    return window.innerWidth < 600;
   }
 
   const elapsed = Date.now() - window.start;
@@ -56,8 +56,8 @@ function App() {
 
   function project(id) {
     return Promise.all([
-      axios.get(`${config.api}/api/services/${id}/context`),
-      axios.get(`${config.api}/api/services/${id}`),
+      http.get(`${config.api}/api/services/${id}/context`),
+      http.get(`${config.api}/api/services/${id}`),
     ]).then(([nucContextResult, serviceResult]) => {
       const context = nucContextResult.data;
       const service = serviceResult.data;
