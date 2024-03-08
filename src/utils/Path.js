@@ -21,11 +21,16 @@ const addSlashMark = (path) => {
   return path?.substring(path.length - 1) !== "/" ? "/" : "";
 };
 
+const getProjectId = () => {
+  const id = window.location.pathname.split("/")[2];
+  return id;
+};
+
 const getMode = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const mode = urlParams.get("mode");
 
-  const id = window.location.pathname.split("/")[2];
+  const id = getProjectId();
 
   if (mode) {
     return mode;
@@ -47,6 +52,7 @@ const Path = {
   split,
   addSlashMark,
   getMode,
+  getProjectId,
 };
 
 export default Path;
