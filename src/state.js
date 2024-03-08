@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 import { api, declarations, functions, types } from "./sample";
 
 function init() {
@@ -6,7 +8,12 @@ function init() {
       api: {},
       types: {},
       functions: [],
-      project: {},
+      project: {
+        name: "Sample",
+        id: "Sample",
+        description:
+          "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore",
+      },
       declarations: {},
     },
     pages: {
@@ -65,14 +72,15 @@ function withSample() {
   state.nucleoid.types = types;
   state.nucleoid.functions = functions;
   state.nucleoid.declarations = declarations;
+  state.nucleoid.project.id = uuidv4();
 
   return state;
 }
 
 function withPages({ context }) {
   const state = init();
-  const { nucleoid, pages } = context;
 
+  const { nucleoid, pages } = context;
   state.nucleoid = nucleoid;
   state.pages = pages;
 
