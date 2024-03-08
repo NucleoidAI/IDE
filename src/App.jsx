@@ -1,4 +1,3 @@
-import { BrowserRouter } from "react-router-dom";
 import ContextProvider from "./context/context";
 import EventRegistry from "./EventRegistry";
 import IDE from "./containers/IDE"; // eslint-disable-line
@@ -184,12 +183,10 @@ function App() {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
         <CssBaseline />
-        <BrowserRouter basename="ide">
-          <ContextProvider state={context} reducer={contextReducer}>
-            <EventRegistry />
-            <RouteManager routes={routes} mode={Path.getMode()} />
-          </ContextProvider>
-        </BrowserRouter>
+        <ContextProvider state={context} reducer={contextReducer}>
+          <EventRegistry />
+          <RouteManager routes={routes} mode={Path.getMode()} />
+        </ContextProvider>
       </ThemeProvider>
     </StyledEngineProvider>
   );
