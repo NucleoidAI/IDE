@@ -13,6 +13,7 @@ import { contextToMap } from "./utils/Parser";
 import exampleContext from "./lib/context.json";
 import routes from "./routes";
 import { subscribe } from "@nucleoidjs/react-event";
+import { useNavigate } from "react-router-dom";
 import vfs from "./vfs";
 
 import {
@@ -24,8 +25,6 @@ import { darkTheme, lightTheme } from "./theme";
 import { storage, useStorage } from "@nucleoidjs/webstorage";
 
 function App() {
-  const { id } = useParams();
-
   const [context, setContext] = React.useState();
   const navigate = useNavigate();
   const prefersLightMode = window.matchMedia(
@@ -55,8 +54,8 @@ function App() {
     const progressElement = document.getElementById("nuc-progress-indicator");
   }, [delay, progressElement]);
 
-  function getContextFromStorage(id) {
-    const context = storage.get("ide", "projects", id);
+  function getContextFromStorage(projectId) {
+    const context = storage.get("ide", "projects", projectId);
 
     const nucContext = State.withPages({ context });
     nucContext.get = (prop) => State.resolve(nucContext, prop);
@@ -64,10 +63,10 @@ function App() {
     return nucContext;
   }
 
-  function project(id) {
+  function project(projectId) {
     return Promise.all([
-      axios.get(`${config.api}/api/services/${id}/context`),
-      axios.get(`${config.api}/api/services/${id}`),
+      axios.get(`${config.api}/api/services/${projectId}/context`),
+      axios.get(`${config.api}/api/services/${projectId}`),
     ]).then(([nucContextResult, serviceResult]) => {
       const context = nucContextResult.data;
       const service = serviceResult.data;
@@ -75,7 +74,7 @@ function App() {
       nucContext.get = (prop) => State.resolve(nucContext, prop);
       nucContext.nucleoid.project = {
         name: service.name,
-        id: id,
+        id: projectId,
         description: service.description,
       };
       return nucContext;
@@ -143,13 +142,14 @@ function App() {
   React.useEffect(() => {
     async function initMode() {
       const mode = Path.getMode();
+      const projectId = Path.getProjectId();
 
       if (mode === "sample") {
         const context = sampleProject();
         initVfs(context);
         return setContext(initContext(context));
       } else if (mode === "cloud") {
-        project(id).then((result) => {
+        project(projectId).then((result) => {
           initVfs(result);
           return setContext(initContext(result));
         });
@@ -157,7 +157,7 @@ function App() {
         //FOR TESTING
         storage.set("ide", "projects", "1", JSON.stringify(exampleContext));
 
-        const context = getContextFromStorage(id);
+        const context = getContextFromStorage(projectId);
         initVfs(context);
         return setContext(initContext(context));
       } else if (mode === "mobile") {
