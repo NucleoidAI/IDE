@@ -34,6 +34,10 @@ const getMode = () => {
       return "sample";
     } else if (id === "mobile") {
       return "mobile";
+    } else if (id) {
+      return "cloud";
+    } else {
+      return "undefined";
     }
   }
 };
