@@ -7,7 +7,6 @@ import React from "react";
 import RouteManager from "./RouteManager";
 import Settings from "./settings";
 import State from "./state";
-import axios from "axios";
 import config from "../config";
 import { contextReducer } from "./context/reducer";
 import { contextToMap } from "./utils/Parser";
