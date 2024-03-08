@@ -1,6 +1,6 @@
+import expert from "../../http/expert.js";
 import { useEvent } from "@nucleoidjs/react-event";
 import { useEffect, useState } from "react";
-import expert from "../../http/expert.js";
 
 const useChat = () => {
   const [selectedChat] = useEvent("CHAT_SELECTED");
