@@ -71,6 +71,11 @@ const routes = [
         path: "/chat",
         element: <Chat />,
       },
+      {
+        title: "Chat",
+        path: "/chat/:chatId",
+        element: <Chat />,
+      },
     ],
   },
   {

@@ -1,4 +1,3 @@
-import config from "../config";
 import { storage } from "@nucleoidjs/webstorage";
 const Settings = {
   projects: [],
@@ -38,7 +37,6 @@ const Settings = {
   service: {
     auth: "https://nucleoid.com/oauth",
     projects: "https://nucleoid.com/projects",
-    completions: `${config.expert}/chat/completions`,
   },
 
   connection: true,
