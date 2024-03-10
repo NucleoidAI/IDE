@@ -1,31 +1,10 @@
-import { typeCheck } from "../../utils/ConvertProject";
+import {
+  extractCodeSnippet,
+  extractCodeSnippets,
+  typeCheck,
+} from "../../utils/ConvertProject";
 
 describe("Project Converter", () => {
-  describe("codeAdapter", () => {
-    test("should return an object with functions and declarations properties", () => {
-      const prompts = [];
-      const result = codeAdapter(prompts);
-      expect(result).toHaveProperty("functions");
-      expect(result).toHaveProperty("declarations");
-      expect(Array.isArray(result.functions)).toBe(true);
-      expect(typeof result.declarations).toBe("object");
-    });
-
-    test("should handle an empty array of prompts", () => {
-      const prompts = [];
-      const result = codeAdapter(prompts);
-      expect(result.functions).toHaveLength(0);
-      expect(Object.keys(result.declarations)).toHaveLength(0);
-    });
-
-    test("should correctly identify and categorize code snippets", () => {
-      const prompts = [];
-      const result = codeAdapter(prompts);
-      expect(result.functions).toHaveLength(1);
-      expect(Object.keys(result.declarations)).toHaveLength(2);
-    });
-  });
-
   describe("typeCheck", () => {
     test("should identify a function code snippet", () => {
       const functionSnippet = `function greet(name: string) {
@@ -53,6 +32,139 @@ describe("Project Converter", () => {
     test("should return null for an unknown code snippet type", () => {
       const unknownSnippet = "invalid code snippet";
       expect(typeCheck(unknownSnippet)).toBeNull();
+    });
+  });
+
+  describe("extractCodeSnippet", () => {
+    test("should extract a function code snippet", () => {
+      const functionSnippet = `function greet(name: string) {
+        return \`Hello, \${name}!\`;
+      }`;
+      const messageContent = "Here's a function to greet someone:";
+      const expectedFunction = {
+        path: "",
+        params: [],
+        type: "FUNCTION",
+        definition: functionSnippet,
+      };
+      expect(extractCodeSnippet(functionSnippet, messageContent)).toEqual(
+        expectedFunction
+      );
+    });
+
+    test("should extract a class code snippet", () => {
+      const classSnippet = `class Human {
+        name: string;
+        constructor(name: string) {
+          this.name = name;
+        }
+      }`;
+      const messageContent = "Here's a class definition for Human:";
+      const expectedClass = {
+        path: "Human",
+        params: [],
+        type: "CLASS",
+        definition: classSnippet,
+      };
+      expect(extractCodeSnippet(classSnippet, messageContent)).toEqual(
+        expectedClass
+      );
+    });
+
+    test("should extract a declaration code snippet", () => {
+      const declarationSnippet = `use declarative;
+      $Human.mortal = true;`;
+      const messageContent = "And here's a declaration:";
+      const expectedDeclaration = {
+        description: messageContent,
+        summary: messageContent,
+        definition: declarationSnippet,
+      };
+      expect(extractCodeSnippet(declarationSnippet, messageContent)).toEqual(
+        expectedDeclaration
+      );
+    });
+
+    test("should return null for an unknown code snippet type", () => {
+      const unknownSnippet = "invalid code snippet";
+      const messageContent = "An unknown code snippet:";
+      expect(extractCodeSnippet(unknownSnippet, messageContent)).toBeNull();
+    });
+  });
+
+  describe("extractCodeSnippets", () => {
+    test("should extract functions, classes, and declarations from messages", () => {
+      const messages = [
+        {
+          role: "ASSISTANT",
+          content: "Here's a function to greet someone:",
+          code: `function greet(name: string) {
+            return \`Hello, \${name}!\`;
+          }`,
+        },
+        {
+          role: "ASSISTANT",
+          content: "And here's a declaration:",
+          code: `use declarative;
+          $Human.mortal = true;`,
+        },
+        {
+          role: "ASSISTANT",
+          content: "Finally, here's a class definition:",
+          code: `class Human {
+            name: string;
+            constructor(name: string) {
+              this.name = name;
+            }
+          }`,
+        },
+      ];
+      const expectedFunctions = [
+        {
+          path: "",
+          params: [],
+          type: "FUNCTION",
+          definition: expect.stringContaining("function greet(name: string)"),
+        },
+        {
+          path: "Human",
+          params: [],
+          type: "CLASS",
+          definition: expect.stringContaining("class Human"),
+        },
+      ];
+      const expectedDeclarations = [
+        {
+          description: "And here's a declaration:",
+          summary: "And here's a declaration:",
+          definition: expect.stringContaining("use declarative;"),
+        },
+      ];
+      const result = extractCodeSnippets(messages);
+      expect(result.functions).toEqual(
+        expect.arrayContaining(expectedFunctions)
+      );
+      expect(result.declarations).toEqual(
+        expect.arrayContaining(expectedDeclarations)
+      );
+    });
+
+    test("should handle messages with no code snippets", () => {
+      const messages = [
+        {
+          role: "USER",
+          content: "Hello!",
+        },
+        {
+          role: "ASSISTANT",
+          content: "Hi there!",
+        },
+      ];
+      const expectedResult = {
+        functions: [],
+        declarations: [],
+      };
+      expect(extractCodeSnippets(messages)).toEqual(expectedResult);
     });
   });
 
