@@ -29,25 +29,25 @@ describe("Project Converter", () => {
   describe("typeCheck", () => {
     test("should identify a function code snippet", () => {
       const functionSnippet = `function greet(name: string) {
-    return \`Hello, \${name}!\`;
-  }`;
+        return \`Hello, \${name}!\`;
+      }`;
       expect(typeCheck(functionSnippet)).toBe("function");
     });
 
     test("should identify a declaration code snippet", () => {
       const declarationSnippet = `use declarative;
-  $Human.mortal = true;`;
+      $Human.mortal = true;`;
       expect(typeCheck(declarationSnippet)).toBe("declaration");
     });
 
-    test("should identify a class declaration code snippet", () => {
+    test("should identify a class code snippet", () => {
       const classSnippet = `class Human {
-    name: string;
-    constructor(name: string) {
-      this.name = name;
-    }
-  }`;
-      expect(typeCheck(classSnippet)).toBe("declaration");
+        name: string;
+        constructor(name: string) {
+          this.name = name;
+        }
+      }`;
+      expect(typeCheck(classSnippet)).toBe("class");
     });
 
     test("should return null for an unknown code snippet type", () => {
