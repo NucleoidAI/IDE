@@ -23,6 +23,7 @@ const MessageInput = forwardRef((props, ref) => {
   const theme = useTheme();
   const [showProjectIcon, setShowProjectIcon] = useState(false);
   const [playAnimation, setPlayAnimation] = useState(true);
+  const [isInputEmpty, setIsInputEmpty] = useState(true);
 
   const inputRef = useRef(null);
 
@@ -34,6 +35,7 @@ const MessageInput = forwardRef((props, ref) => {
     getValue: () => inputRef.current.value,
     clear: () => {
       inputRef.current.value = "";
+      setIsInputEmpty(true);
     },
   }));
 
@@ -46,8 +48,13 @@ const MessageInput = forwardRef((props, ref) => {
     if (message.trim()) {
       handleSendMessage(message);
       inputRef.current.value = "";
+      setIsInputEmpty(true);
       setShowProjectIcon(!showProjectIcon);
     }
+  };
+
+  const handleInputChange = (event) => {
+    setIsInputEmpty(!event.target.value.trim());
   };
 
   return (
@@ -77,6 +84,7 @@ const MessageInput = forwardRef((props, ref) => {
         <TextField
           fullWidth
           variant="standard"
+          onChange={handleInputChange}
           onKeyPress={(event) => {
             if (event.key === "Enter") {
               event.preventDefault();
@@ -121,7 +129,7 @@ const MessageInput = forwardRef((props, ref) => {
         )}
         <IconButton
           type="submit"
-          disabled={loading}
+          disabled={loading || isInputEmpty}
           sx={{ color: theme.palette.grey[500], ml: 1 }}
         >
           <SendIcon />
