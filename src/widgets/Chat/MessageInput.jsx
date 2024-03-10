@@ -18,7 +18,7 @@ import React, {
 } from "react";
 
 const MessageInput = forwardRef((props, ref) => {
-  const { handleSendMessage } = props;
+  const { handleConvertProject, handleSendMessage } = props;
   const { loading } = props;
   const theme = useTheme();
   const [showProjectIcon, setShowProjectIcon] = useState(false);
@@ -40,7 +40,7 @@ const MessageInput = forwardRef((props, ref) => {
   }));
 
   const handleProjectIconClick = () => {
-    console.log("Project icon clicked");
+    handleConvertProject();
   };
 
   const onSend = () => {
