@@ -1,9 +1,4 @@
-import {
-  codeAdapter,
-  createAPI,
-  createProject,
-  typeCheck,
-} from "./projectConverter";
+import { typeCheck } from "../../utils/ConvertProject";
 
 describe("Project Converter", () => {
   describe("codeAdapter", () => {
@@ -33,17 +28,25 @@ describe("Project Converter", () => {
 
   describe("typeCheck", () => {
     test("should identify a function code snippet", () => {
-      const functionSnippet = "";
+      const functionSnippet = `function greet(name: string) {
+    return \`Hello, \${name}!\`;
+  }`;
       expect(typeCheck(functionSnippet)).toBe("function");
     });
 
     test("should identify a declaration code snippet", () => {
-      const declarationSnippet = "";
+      const declarationSnippet = `use declarative;
+  $Human.mortal = true;`;
       expect(typeCheck(declarationSnippet)).toBe("declaration");
     });
 
     test("should identify a class declaration code snippet", () => {
-      const classSnippet = "";
+      const classSnippet = `class Human {
+    name: string;
+    constructor(name: string) {
+      this.name = name;
+    }
+  }`;
       expect(typeCheck(classSnippet)).toBe("declaration");
     });
 
