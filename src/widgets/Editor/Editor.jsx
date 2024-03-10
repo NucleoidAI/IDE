@@ -9,13 +9,16 @@ import service from "../../service";
 import styles from "../../layouts/HorizontalSplitLayout/styles";
 import { useContext } from "../../context/context";
 import { useMonaco } from "@monaco-editor/react";
+import { v4 as uuidv4 } from "uuid";
 
 import { CircularProgress, Fab, Grid } from "@mui/material";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 const Editor = React.forwardRef((props, ref) => {
   const monaco = useMonaco();
   const editorRef = React.useRef(null);
+  const [logicPath, setLogicPath] = React.useState("");
+  const [queryPath, setQueryPath] = React.useState("");
 
   const [state, distpach] = useContext();
   const { setLoading, logic, query, loading } = props;
@@ -94,16 +97,25 @@ const Editor = React.forwardRef((props, ref) => {
   const setLogicModel = useCallback(() => {
     monaco?.editor.getModels().forEach((model) => model.dispose());
     const definition = selectedLogic.definition.trim();
-    const model = monaco?.editor.createModel(definition, "typescript");
+    const uniquePath = `/tmp/${uuidv4()}.ts`;
+    const model = monaco?.editor.createModel(
+      definition,
+      "typescript",
+      monaco.Uri.file(uniquePath)
+    );
     editorRef?.current.editor.setModel(model);
+    setLogicPath(uniquePath);
   }, [selectedLogic, monaco?.editor, editorRef]);
 
   const setQueryModel = useCallback(() => {
+    const uniquePath = `/tmp/${uuidv4()}.ts`;
     const model = monaco?.editor.createModel(
       state.get("pages.query.text"),
-      "javascript"
+      "javascript",
+      monaco.Uri.file(uniquePath)
     );
     editorRef?.current.editor.setModel(model);
+    setQueryPath(uniquePath);
   }, [monaco?.editor, editorRef, state]);
 
   function handleChange(e) {
@@ -124,8 +136,12 @@ const Editor = React.forwardRef((props, ref) => {
 
   const addFunctionsModels = () => {
     nucFuncs.forEach((item) => {
-      if (!monaco?.editor.getModel(item.path)) {
-        monaco?.editor.createModel(item.definition, "typescript", item.path);
+      if (!monaco?.editor.getModel(monaco.Uri.file(item.path))) {
+        monaco?.editor.createModel(
+          item.definition,
+          "typescript",
+          monaco.Uri.file(item.path)
+        );
       }
     });
   };
@@ -143,6 +159,7 @@ const Editor = React.forwardRef((props, ref) => {
     <>
       <NucEditor
         onMount={editorOnMount}
+        path={logic ? logicPath : queryPath}
         onCodeEditorChange={handleChange}
         setEditorRef={editorRef}
         ref={ref}
