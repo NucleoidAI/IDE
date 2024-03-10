@@ -457,6 +457,18 @@ function contextReducer(state, { type, payload }) {
       }
       break;
     }
+    case "SAVE_API_PARAMS": {
+      console.log("SAVE_API_PARAMS", payload);
+      const { path, method, params } = payload;
+      const apiIndex = nucleoid.api.findIndex(
+        (api) => api.path === path && api.method === method
+      );
+
+      if (apiIndex !== -1) {
+        nucleoid.api[apiIndex].params = params;
+      }
+      break;
+    }
 
     default:
   }

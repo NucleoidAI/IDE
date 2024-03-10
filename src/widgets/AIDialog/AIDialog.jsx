@@ -3,6 +3,7 @@
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import PromptCodeDialog from "../../components/PromptCodeDialog";
 import actions from "../../actions";
+import expert from "../../http/expert.js";
 import { deepCopy } from "../../utils/DeepCopy";
 import { publish } from "@nucleoidjs/react-event";
 import service from "../../service";
@@ -51,7 +52,7 @@ function AIDialog({ editor, declarative, imperative, page }) {
     request: "",
   });
 
-  const generateContent = () => {
+  const generateContext = () => {
     const context = [];
 
     const nucDeclarations = deepCopy(declarations);
@@ -78,8 +79,13 @@ function AIDialog({ editor, declarative, imperative, page }) {
 
     if (promptValue) {
       setLoading(true);
-      service
-        .completions(mode, generateContent(), promptValue?.trim())
+
+      expert.post("/chat/completions", {
+        mode,
+        role: "USER",
+        context: generateContext(),
+        content: promptValue?.trim(),
+      } )
         .then((res) => {
           setSummary(res.data.summary);
           setDescription(res.data.description);
