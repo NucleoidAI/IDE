@@ -60,7 +60,15 @@ const Chat = () => {
     }
 
     setLoading(false);
-    messageInputRef.current.clear();
+  };
+
+  const refreshChat = () => {
+    messageInputRef.current.setValue(userMessageRef.current);
+    publish("EXPERT_ERROR_OCCURRED", {
+      status: false,
+      type: "",
+      content: "",
+    });
   };
 
   useEffect(() => {
@@ -85,6 +93,7 @@ const Chat = () => {
         chat={chat}
         loading={loading}
         error={error}
+        refreshChat={refreshChat}
       />
       <MessageInput
         handleSendMessage={handleSendMessage}

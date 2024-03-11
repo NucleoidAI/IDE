@@ -55,6 +55,7 @@ const ErroMessage = ({ show, content, type, refreshChat }) => {
           </Typography>
           <Box
             component={RefreshIcon}
+            onClick={refreshChat}
             sx={{
               "&:hover": {
                 color: "gray",
@@ -81,8 +82,13 @@ const ErroMessage = ({ show, content, type, refreshChat }) => {
   );
 };
 
-const ChatDisplay = ({ chat, loading, error }) => {
+const ChatDisplay = ({
+  chat,
+  loading,
+  error,
+  refreshChat,
   currentUserMessage,
+}) => {
   const theme = useTheme();
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedCode, setSelectedCode] = useState("");
@@ -121,7 +127,6 @@ const ChatDisplay = ({ chat, loading, error }) => {
   useEffect(() => {
     setTimeout(scrollToBottom, 10);
   }, [chat]);
-
   return (
     <Box
       sx={{
@@ -222,6 +227,7 @@ const ChatDisplay = ({ chat, loading, error }) => {
         show={error.status}
         content={error.content}
         type={error.type}
+        refreshChat={refreshChat}
       />
       <Button
         onClick={scrollToBottom}
