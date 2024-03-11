@@ -49,11 +49,11 @@ const Chat = () => {
   const handleSendMessage = async () => {
     setLoading(true);
     const first = !chat.messages.length;
-    const value = messageInputRef.current.getValue();
-    userMessageRef.current = value;
+    const userMessage = messageInputRef.current.getValue();
+    userMessageRef.current = userMessage;
     messageInputRef.current.clear();
 
-    await sendMessage(value, setLoading);
+    await sendMessage(userMessage, setLoading);
 
     if (first) {
       publish("CHAT_INITIATED", chat.id);
