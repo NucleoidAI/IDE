@@ -2,7 +2,6 @@ import ChatEditor from "./ChatEditor";
 import EditIcon from "@mui/icons-material/Edit";
 import ReadOnlyEditor from "../../components/ReadOnlyEditor";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import { useEvent } from "@nucleoidjs/react-event";
 
 import {
   Box,
@@ -19,7 +18,6 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 
 const ErroMessage = ({ show, content, type }) => {
-  console.log(show);
   return (
     show && (
       <Box
@@ -83,22 +81,11 @@ const ErroMessage = ({ show, content, type }) => {
   );
 };
 
-const ChatDisplay = ({ chat, loading, setLoading }) => {
+const ChatDisplay = ({ chat, loading, error }) => {
   const theme = useTheme();
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedCode, setSelectedCode] = useState("");
   const messagesContainerRef = useRef(null);
-  const [error] = useEvent("EXPERT_ERROR_OCCURRED", {
-    status: false,
-    type: "",
-    content: "",
-  });
-
-  useEffect(() => {
-    if (error.status) {
-      setLoading(false);
-    }
-  }, [error.status]);
 
   const handleOpenDialog = (code) => {
     setSelectedCode(code);
@@ -130,7 +117,6 @@ const ChatDisplay = ({ chat, loading, setLoading }) => {
       }
     }
   };
-
   useEffect(() => {
     setTimeout(scrollToBottom, 10);
   }, [chat]);

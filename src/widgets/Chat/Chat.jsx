@@ -1,11 +1,14 @@
 import "./ChatMainArea.css";
+
 import ChatDisplay from "./ChatDisplay";
 import MessageInput from "./MessageInput";
 // import SuggestionsOverlay from "./SuggestionsOverlay";
 import { publish } from "@nucleoidjs/react-event";
 import { storage } from "@nucleoidjs/webstorage";
 import useChat from "./useChat";
+import { useEvent } from "@nucleoidjs/react-event";
 import { v4 as uuid } from "uuid";
+
 import { Box, useTheme } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -17,6 +20,11 @@ const Chat = () => {
   const [loading, setLoading] = useState(false);
   const messageInputRef = useRef();
   const [chat, sendMessage] = useChat();
+  const [error] = useEvent("EXPERT_ERROR_OCCURRED", {
+    status: false,
+    type: "",
+    content: "",
+  });
 
   useEffect(() => {
     if (!chatId) {
@@ -51,6 +59,12 @@ const Chat = () => {
     messageInputRef.current.clear();
   };
 
+  useEffect(() => {
+    if (error.status) {
+      setLoading(false);
+    }
+  }, [error.status]);
+
   return (
     <Box
       sx={{
@@ -62,7 +76,7 @@ const Chat = () => {
         paddingBottom: "10px",
       }}
     >
-      <ChatDisplay chat={chat} loading={loading} />
+      <ChatDisplay chat={chat} loading={loading} error={error} />
       <MessageInput
         handleSendMessage={handleSendMessage}
         ref={messageInputRef}
