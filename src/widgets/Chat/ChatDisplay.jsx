@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
-const ErroMessage = ({ show, content, type }) => {
+const ErroMessage = ({ show, content, type, refreshChat }) => {
   return (
     show && (
       <Box
@@ -82,6 +82,7 @@ const ErroMessage = ({ show, content, type }) => {
 };
 
 const ChatDisplay = ({ chat, loading, error }) => {
+  currentUserMessage,
   const theme = useTheme();
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedCode, setSelectedCode] = useState("");
@@ -188,6 +189,35 @@ const ChatDisplay = ({ chat, loading, error }) => {
             )}
           </Box>
         ))}
+      {loading && (
+        <Box
+          sx={{
+            width: "60%",
+            marginBottom: "20px",
+            padding: "10px",
+            borderRadius: "10px",
+            textAlign: "left",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            userSelect: "text",
+          }}
+        >
+          <Typography
+            variant="subtitle2"
+            sx={{
+              fontWeight: "bold",
+              marginBottom: "8px",
+              userSelect: "text",
+            }}
+          >
+            USER
+          </Typography>
+          <Typography variant="body1" sx={{ userSelect: "text" }}>
+            {currentUserMessage}
+          </Typography>
+        </Box>
+      )}
       <ErroMessage
         show={error.status}
         content={error.content}

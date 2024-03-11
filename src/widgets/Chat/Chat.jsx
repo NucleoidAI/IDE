@@ -19,6 +19,7 @@ const Chat = () => {
   const { chatId } = useParams("chatId");
   const [loading, setLoading] = useState(false);
   const messageInputRef = useRef();
+  const userMessageRef = useRef("");
   const [chat, sendMessage] = useChat();
   const [error] = useEvent("EXPERT_ERROR_OCCURRED", {
     status: false,
@@ -49,6 +50,8 @@ const Chat = () => {
     setLoading(true);
     const first = !chat.messages.length;
     const value = messageInputRef.current.getValue();
+    userMessageRef.current = value;
+    messageInputRef.current.clear();
 
     await sendMessage(value, setLoading);
 
@@ -77,7 +80,12 @@ const Chat = () => {
         paddingBottom: "10px",
       }}
     >
-      <ChatDisplay chat={chat} loading={loading} error={error} />
+      <ChatDisplay
+        currentUserMessage={userMessageRef.current}
+        chat={chat}
+        loading={loading}
+        error={error}
+      />
       <MessageInput
         handleSendMessage={handleSendMessage}
         ref={messageInputRef}
