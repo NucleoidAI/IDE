@@ -1,6 +1,8 @@
 import MuiAlert from "@mui/material/Alert";
 import React from "react";
 import Snackbar from "@mui/material/Snackbar";
+import { Stack } from "@mui/material";
+
 import { publish, useEvent } from "@nucleoidjs/react-event";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -22,21 +24,31 @@ export default function GlobalSnackMessage() {
 
   if (globalMessage.status) {
     return (
-      <Snackbar
-        sx={{ zIndex: 999999999 }}
-        open={true}
-        autoHideDuration={6000}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        onClose={handleClose}
+      <Stack
+        sx={{
+          width: "500px",
+          height: "500px",
+          position: "relative",
+        }}
       >
-        <Alert
+        <Snackbar
+          sx={{
+            zIndex: 99999,
+          }}
+          open={true}
+          autoHideDuration={6000}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
           onClose={handleClose}
-          severity={globalMessage.severity}
-          sx={{ width: "100%" }}
         >
-          {globalMessage.message}
-        </Alert>
-      </Snackbar>
+          <Alert
+            onClose={handleClose}
+            severity={globalMessage.severity}
+            sx={{ width: "100%" }}
+          >
+            {globalMessage.message}
+          </Alert>
+        </Snackbar>
+      </Stack>
     );
   } else {
     return null;
