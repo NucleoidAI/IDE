@@ -60,6 +60,13 @@ const ChatDisplay = ({
     setTimeout(scrollToBottom, 10);
   }, [chat]);
 
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
+    }
+  }, [currentUserMessage]);
+
   return (
     <Box
       sx={{
