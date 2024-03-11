@@ -19,6 +19,11 @@ const ChatDisplay = ({ chat, loading }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedCode, setSelectedCode] = useState("");
   const messagesContainerRef = useRef(null);
+  const [error] = useEvent("EXPERT_ERROR_OCCURRED", {
+    status: false,
+    type: "",
+    content: "",
+  });
 
   const handleOpenDialog = (code) => {
     setSelectedCode(code);
