@@ -48,12 +48,10 @@ const MessageInput = forwardRef((props, ref) => {
     console.log("Project icon clicked");
   };
 
-  const onSend = () => {
-    const message = inputRef.current.value;
+  const onSend = (event) => {
+    event.preventDefault();
 
-    if (message.trim()) {
-      handleSendMessage();
-    }
+    handleSendMessage();
   };
 
   const handleInputChange = (event) => {
@@ -63,7 +61,7 @@ const MessageInput = forwardRef((props, ref) => {
   return (
     <Box
       component="form"
-      onSubmit={onSend}
+      onSubmit={(event) => onSend(event)}
       sx={{
         display: "flex",
         justifyContent: "center",
@@ -90,8 +88,7 @@ const MessageInput = forwardRef((props, ref) => {
           onChange={handleInputChange}
           onKeyPress={(event) => {
             if (event.key === "Enter") {
-              event.preventDefault();
-              onSend();
+              onSend(event);
             }
           }}
           disabled={loading}
