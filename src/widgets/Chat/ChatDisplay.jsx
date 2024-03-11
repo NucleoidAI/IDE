@@ -1,7 +1,6 @@
 import ChatEditor from "./ChatEditor";
-import EditIcon from "@mui/icons-material/Edit";
-import ReadOnlyEditor from "../../components/ReadOnlyEditor";
-import RefreshIcon from "@mui/icons-material/Refresh";
+import ErrorMessage from "./components/ErrorMessage";
+import MessageBox from "./components/MessageBox";
 
 import {
   Box,
@@ -10,77 +9,10 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  Stack,
   Typography,
-  alpha,
   useTheme,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-
-const ErroMessage = ({ show, content, type, refreshChat }) => {
-  return (
-    show && (
-      <Box
-        sx={{
-          backgroundColor: alpha("#f44336", 0.1),
-          border: "1px solid #f44336",
-          width: "60%",
-          marginBottom: "20px",
-          padding: "10px",
-          borderRadius: "10px",
-          textAlign: "left",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          userSelect: "text",
-        }}
-      >
-        <Stack
-          direction={"row"}
-          sx={{
-            width: "100%",
-            display: "flex",
-            alignItems: "space-between",
-            justifyContent: "space-between",
-          }}
-        >
-          <Typography
-            variant="subtitle1"
-            sx={{
-              fontWeight: "bold",
-              userSelect: "text",
-            }}
-          >
-            EXPERT ERROR
-          </Typography>
-          <Box
-            component={RefreshIcon}
-            onClick={refreshChat}
-            sx={{
-              "&:hover": {
-                color: "gray",
-                cursor: "pointer",
-              },
-            }}
-          />
-        </Stack>
-        <Typography
-          variant="subtitle2"
-          sx={{
-            fontWeight: "bold",
-            my: "8px",
-            userSelect: "text",
-          }}
-        >
-          {type}
-        </Typography>
-        <Typography variant="body1" sx={{ userSelect: "text" }}>
-          {content}
-        </Typography>
-      </Box>
-    )
-  );
-};
 
 const ChatDisplay = ({
   chat,
@@ -124,9 +56,11 @@ const ChatDisplay = ({
       }
     }
   };
+
   useEffect(() => {
     setTimeout(scrollToBottom, 10);
   }, [chat]);
+
   return (
     <Box
       sx={{
@@ -143,87 +77,14 @@ const ChatDisplay = ({
     >
       {chat &&
         chat.messages.map((message, index) => (
-          <Box
+          <MessageBox
             key={index}
-            sx={{
-              width: "60%",
-              marginBottom: "20px",
-              padding: "10px",
-              borderRadius: "10px",
-              textAlign: "left",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              userSelect: "text",
-            }}
-          >
-            <Typography
-              variant="subtitle2"
-              sx={{
-                fontWeight: "bold",
-                marginBottom: "8px",
-                userSelect: "text",
-              }}
-            >
-              {message.role}
-            </Typography>
-            <Typography variant="body1" sx={{ userSelect: "text" }}>
-              {message.content}
-            </Typography>
-            {message.code && (
-              <Box
-                component="pre"
-                sx={{
-                  overflowX: "auto",
-                  justifyContent: "center",
-                  marginTop: "8px",
-                  backgroundColor: theme.palette.grey[100],
-                  borderRadius: "5px",
-                  padding: "0",
-                  userSelect: "text",
-                  width: "100%",
-                }}
-              >
-                <ReadOnlyEditor
-                  value={message.code}
-                  language="typescript"
-                  actionIcon={EditIcon}
-                  onActionClick={() => handleOpenDialog(message.code)}
-                />
-              </Box>
-            )}
-          </Box>
+            message={message}
+            handleOpenDialog={handleOpenDialog}
+          />
         ))}
-      {loading && (
-        <Box
-          sx={{
-            width: "60%",
-            marginBottom: "20px",
-            padding: "10px",
-            borderRadius: "10px",
-            textAlign: "left",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            userSelect: "text",
-          }}
-        >
-          <Typography
-            variant="subtitle2"
-            sx={{
-              fontWeight: "bold",
-              marginBottom: "8px",
-              userSelect: "text",
-            }}
-          >
-            USER
-          </Typography>
-          <Typography variant="body1" sx={{ userSelect: "text" }}>
-            {currentUserMessage}
-          </Typography>
-        </Box>
-      )}
-      <ErroMessage
+      {loading && <MessageBox onlyUser currentMessage={currentUserMessage} />}
+      <ErrorMessage
         show={error.status}
         content={error.content}
         type={error.type}
