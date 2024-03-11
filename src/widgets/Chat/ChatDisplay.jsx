@@ -9,7 +9,6 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  Typography,
   useTheme,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
@@ -98,7 +97,7 @@ const ChatDisplay = ({
       >
         Scroll to Bottom
       </Button>
-      {loading && <CircularProgress />}
+      <CircularProgress show={loading} />
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
