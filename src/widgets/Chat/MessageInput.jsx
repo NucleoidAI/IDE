@@ -36,6 +36,8 @@ const MessageInput = forwardRef((props, ref) => {
     clear: () => {
       inputRef.current.value = "";
       setIsInputEmpty(true);
+      setShowProjectIcon(!showProjectIcon);
+    },
     },
   }));
 
@@ -46,10 +48,7 @@ const MessageInput = forwardRef((props, ref) => {
   const onSend = () => {
     const message = inputRef.current.value;
     if (message.trim()) {
-      handleSendMessage(message);
-      inputRef.current.value = "";
-      setIsInputEmpty(true);
-      setShowProjectIcon(!showProjectIcon);
+      handleSendMessage();
     }
   };
 

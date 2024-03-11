@@ -45,11 +45,12 @@ const Chat = () => {
     }
   }, [chatId, navigate]);
 
-  const handleSendMessage = async (message) => {
+  const handleSendMessage = async () => {
     setLoading(true);
     const first = !chat.messages.length;
+    const value = messageInputRef.current.getValue();
 
-    await sendMessage(message, setLoading);
+    await sendMessage(value, setLoading);
 
     if (first) {
       publish("CHAT_INITIATED", chat.id);
