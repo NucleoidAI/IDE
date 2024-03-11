@@ -95,16 +95,18 @@ const Editor = React.forwardRef((props, ref) => {
   }
 
   const setLogicModel = useCallback(() => {
-    monaco?.editor.getModels().forEach((model) => model.dispose());
-    const definition = selectedLogic.definition.trim();
-    const uniquePath = `/tmp/${uuidv4()}.ts`;
-    const model = monaco?.editor.createModel(
-      definition,
-      "typescript",
-      monaco.Uri.file(uniquePath)
-    );
-    editorRef?.current.editor.setModel(model);
-    setLogicPath(uniquePath);
+    if (selectedLogic && monaco?.editor) {
+      monaco?.editor.getModels().forEach((model) => model.dispose());
+      const definition = selectedLogic.definition.trim();
+      const uniquePath = `/tmp/${uuidv4()}.ts`;
+      const model = monaco?.editor.createModel(
+        definition,
+        "typescript",
+        monaco.Uri.file(uniquePath)
+      );
+      editorRef?.current.editor.setModel(model);
+      setLogicPath(uniquePath);
+    }
   }, [selectedLogic, monaco?.editor, editorRef]);
 
   const setQueryModel = useCallback(() => {
