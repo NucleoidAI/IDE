@@ -32,7 +32,7 @@ import {
   alpha,
 } from "@mui/material";
 import { storage, useStorage } from "@nucleoidjs/webstorage";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export function applyFilter({ inputData, query }) {
   if (query) {
@@ -267,6 +267,7 @@ const NewProjectForm = ({ formArea, setFormArea, createProject }) => {
 function NewProjectDialog({ handleClose, open }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [formArea, setFormArea] = useState("button");
+  const [projects, setProjects] = useState([]);
 
   const getProjectsFromLocalStorage = () => {
     const projects = [];
@@ -287,7 +288,7 @@ function NewProjectDialog({ handleClose, open }) {
   }, []);
 
   const dataFiltered = applyFilter({
-    inputData: getProjectsFromLocalStorage(),
+    inputData: projects,
     query: searchQuery,
   });
 
@@ -327,8 +328,13 @@ function NewProjectDialog({ handleClose, open }) {
     } else if (template === "blank") {
       //initVfs(State.withBlank());
     }
+    setProjects(getProjectsFromLocalStorage());
   };
 
+  useEffect(() => {
+    setProjects(getProjectsFromLocalStorage());
+  }, []);
+  console.log("render");
   const onDialogClose = () => {
     handleClose();
     setSearchQuery("");
