@@ -1,4 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
+import ChatHistory from "./ChatHistory";
 import Drawer from "@mui/material/Drawer";
 import LgDrawerStyled from "../../components/LgDrawerStyled";
 import Logo from "../../components/Logo";
@@ -6,10 +7,8 @@ import React from "react";
 import Settings from "../../components/Settings";
 import SmallLogo from "../../components/SmallLogo";
 import { drawerWidth } from "../../config";
-import { publish } from "@nucleoidjs/react-event";
-import styles from "./styles";
+import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
-
 import { ArrowForwardIos, DensityMedium } from "@mui/icons-material/";
 import {
   Box,
@@ -18,24 +17,18 @@ import {
   IconButton,
   List,
   ListItem,
-  ListItemButton,
-  ListItemText,
   useMediaQuery,
 } from "@mui/material";
 
 function ChatMenu(props) {
+  const theme = useTheme();
+  const navigate = useNavigate();
   const [openMd, setOpenMd] = React.useState(false);
   const [openLg, setOpenLg] = React.useState(true);
-  const theme = useTheme();
   const matchDownMD = useMediaQuery(theme.breakpoints.down("lg"));
 
-  const handleClose = () => {
-    setOpenMd(false);
-  };
-
-  const handleCreateNewChat = () => {
-    publish("CHAT_ID_CHANGED", -1);
-  };
+  const handleCreateNewChat = () => navigate("/chat");
+  const handleClose = () => setOpenMd(false);
 
   return (
     <Box component="nav" sx={{ flexShrink: { md: 0 } }}>
@@ -230,44 +223,5 @@ function ChatMenu(props) {
     </Box>
   );
 }
-
-const ChatHistory = () => {
-  const chats = [
-    { chatId: "0", chatTitle: "What is the circumference of the Earth?" },
-    { chatId: "1", chatTitle: "How to center a div?" },
-    { chatId: "2", chatTitle: "What do blind people see in their dreams?" },
-    { chatId: "3", chatTitle: "Problem of criterion" },
-  ];
-
-  const handleChatClick = (chatId) => {
-    publish("CHAT_ID_CHANGED", chatId);
-    console.debug(`Chat clicked: ${chatId}`);
-  };
-
-  return (
-    <Box sx={{ marginTop: "10px" }}>
-      {chats.map((chat) => (
-        <React.Fragment key={chat.chatId}>
-          <ListItemButton
-            onClick={() => handleChatClick(chat.chatId)}
-            sx={styles.listItem}
-          >
-            <ListItemText
-              primary={chat.chatTitle}
-              sx={{
-                ".MuiListItemText-primary": {
-                  position: "relative",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                },
-              }}
-            />
-          </ListItemButton>
-        </React.Fragment>
-      ))}
-    </Box>
-  );
-};
 
 export default ChatMenu;

@@ -40,17 +40,16 @@ function APIDialogAction({
             setAlignment(newAlignment);
             setApiDialogView(newAlignment);
           }}
+          sx={{
+            "& .MuiToggleButton-root": {
+              borderRadius: 1,
+              textTransform: "none",
+              fontWeight: "normal",
+            },
+          }}
         >
-          <ToggleButton
-            color={"primary"}
-            variant={"contained"}
-            value={"PARAMS"}
-          >
-            Params
-          </ToggleButton>
-          <ToggleButton color={"primary"} variant={"contained"} value={"BODY"}>
-            Body
-          </ToggleButton>
+          <ToggleButton value={"PARAMS"}>PARAMS</ToggleButton>
+          <ToggleButton value={"BODY"}>BODY</ToggleButton>
         </ToggleButtonGroup>
       </Box>
       <Box sx={{ display: "flex", gap: 1 }}>
@@ -61,19 +60,24 @@ function APIDialogAction({
           message={
             <>
               This method will be <b>deleted.</b>
-              <br /> Do you want to continue ?
+              <br /> Do you want to continue?
             </>
           }
           footer={
-            <Button color={"warning"} onClick={deleteMethod}>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={deleteMethod}
+              startIcon={<DeleteIcon />}
+            >
               Delete
             </Button>
           }
           handleTooltipClose={handleTooltipClose}
         >
           <Button
-            variant={"outlined"}
-            color={"warning"}
+            variant="outlined"
+            color="error"
             onClick={handleTooltipOpen}
             disabled={deleteDisable}
             startIcon={<DeleteIcon />}
@@ -82,7 +86,8 @@ function APIDialogAction({
           </Button>
         </DialogTooltip>
         <Button
-          variant={"outlined"}
+          variant="contained"
+          color="primary"
           onClick={saveApiDialog}
           disabled={saveDisable}
           startIcon={<SaveIcon />}

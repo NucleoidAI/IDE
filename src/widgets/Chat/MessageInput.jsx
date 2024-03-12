@@ -23,6 +23,7 @@ const MessageInput = forwardRef((props, ref) => {
   const theme = useTheme();
   const [showProjectIcon, setShowProjectIcon] = useState(false);
   const [playAnimation, setPlayAnimation] = useState(true);
+  const [isInputEmpty, setIsInputEmpty] = useState(true);
 
   const inputRef = useRef(null);
 
@@ -34,6 +35,12 @@ const MessageInput = forwardRef((props, ref) => {
     getValue: () => inputRef.current.value,
     clear: () => {
       inputRef.current.value = "";
+      setIsInputEmpty(true);
+      setShowProjectIcon(!showProjectIcon);
+    },
+    setValue: (value) => {
+      inputRef.current.value = value;
+      setIsInputEmpty(false);
     },
   }));
 
@@ -41,19 +48,20 @@ const MessageInput = forwardRef((props, ref) => {
     console.log("Project icon clicked");
   };
 
-  const onSend = () => {
-    const message = inputRef.current.value;
-    if (message.trim()) {
-      handleSendMessage(message);
-      inputRef.current.value = "";
-      setShowProjectIcon(!showProjectIcon);
-    }
+  const onSend = (event) => {
+    event.preventDefault();
+
+    handleSendMessage();
+  };
+
+  const handleInputChange = (event) => {
+    setIsInputEmpty(!event.target.value.trim());
   };
 
   return (
     <Box
       component="form"
-      onSubmit={onSend}
+      onSubmit={(event) => onSend(event)}
       sx={{
         display: "flex",
         justifyContent: "center",
@@ -77,10 +85,10 @@ const MessageInput = forwardRef((props, ref) => {
         <TextField
           fullWidth
           variant="standard"
+          onChange={handleInputChange}
           onKeyPress={(event) => {
             if (event.key === "Enter") {
-              event.preventDefault();
-              onSend();
+              onSend(event);
             }
           }}
           disabled={loading}
@@ -121,7 +129,7 @@ const MessageInput = forwardRef((props, ref) => {
         )}
         <IconButton
           type="submit"
-          disabled={loading}
+          disabled={loading || isInputEmpty}
           sx={{ color: theme.palette.grey[500], ml: 1 }}
         >
           <SendIcon />

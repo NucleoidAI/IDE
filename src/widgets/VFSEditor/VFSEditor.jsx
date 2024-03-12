@@ -5,7 +5,6 @@ import Path from "../../utils/Path";
 import axios from "axios";
 import config from "../../../config";
 import { contextToMap } from "../../utils/Parser";
-import { parser } from "react-nucleoid";
 import { publish } from "@nucleoidjs/react-event";
 import rules from "./rules";
 import { useContext } from "../../context/context";
@@ -39,12 +38,10 @@ const VFSEditor = React.forwardRef((props, ref) => {
   const checkFunction = React.useCallback(() => {
     const editor = editorRef?.current?.editor;
     const monaco = editorRef?.current?.monaco;
-    const value = editor?.getValue();
+
     if (!api) return true;
 
     try {
-      parser.fn(value);
-
       monaco.editor.setModelMarkers(editor?.getModel(), "action", []);
       return true;
     } catch (err) {
@@ -188,6 +185,7 @@ const VFSEditor = React.forwardRef((props, ref) => {
         onMount={handleEditorDidMount}
         onCodeEditorChange={handleChange}
         onSave={handleSave}
+        ref={ref}
         options={{
           tabSize: 2,
           minimap: {
