@@ -1,8 +1,5 @@
 import { AutoAwesome } from "@mui/icons-material";
 import LensBlurIcon from "@mui/icons-material/LensBlur";
-import LogicTreeItem from "./LogicTreeItem";
-import { TreeView } from "@mui/lab";
-import { alpha } from "@mui/material/styles";
 import { useContext } from "../../context/context";
 
 import {
@@ -16,7 +13,33 @@ import {
 } from "@mui/material";
 import { CloseSquare, MinusSquare, PlusSquare } from "./TreeIcons/TreeIcons";
 import React, { useEffect, useState } from "react";
+import { TreeItem, TreeView, treeItemClasses } from "@mui/lab";
+import { alpha, styled } from "@mui/material/styles";
 import { publish, useEvent } from "@nucleoidjs/react-event";
+
+const StyledTreeItem = styled(TreeItem)(({ theme }) => ({
+  [`& .${treeItemClasses.content}`]: {
+    margin: 2,
+    height: 40,
+    width: "100%",
+  },
+  [`& .${treeItemClasses.label}`]: {
+    width: "100%",
+  },
+  [`& .${treeItemClasses.expanded}`]: {
+    backgroundColor: alpha(theme.palette.primary.main, 0.3),
+    borderRadius: theme.shape.borderRadius,
+  },
+  [`& .${treeItemClasses.focused}`]: {
+    borderRadius: theme.shape.borderRadius,
+  },
+  [`& .${treeItemClasses.selected}`]: {
+    backgroundColor: alpha(theme.palette.primary.main, 0.1),
+    borderRight: `2px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+    borderBottom: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+    borderRadius: theme.shape.borderRadius,
+  },
+}));
 
 function LogicTree({ openLogicDialog }) {
   const [newDeclaration] = useEvent("LOGIC_ADDED", false);
@@ -34,27 +57,25 @@ function LogicTree({ openLogicDialog }) {
   }
 
   function select(value) {
-    const logicClass = value.split("-")[0];
-    const logicIndex = value.split("-")[1];
+    const [logicClass, logicIndex] = value.split("-");
 
     if (logicIndex === undefined) {
       setNodeKey((oldNodeKey) => {
         if (oldNodeKey.includes(logicClass)) {
           return oldNodeKey.filter((item) => item !== logicClass);
         } else {
-          return [...oldNodeKey, `${logicClass}`];
+          return [...oldNodeKey, logicClass];
         }
       });
       return;
     }
 
     const index = findIndexInObject(logicClass);
-    setNodeKey([`${index}`]);
+    setNodeKey([index.toString()]);
 
     setSelectedKey([`${logicClass}-${logicIndex}`]);
 
     const selectedSummary = treeData[logicClass][logicIndex];
-
     const item = declarations.find((item) => item.summary === selectedSummary);
 
     if (item) {
@@ -68,7 +89,7 @@ function LogicTree({ openLogicDialog }) {
   useEffect(() => {
     const treeData = {};
 
-    declarations.map((dec) => {
+    declarations.forEach((dec) => {
       const decSummary = dec.summary;
       const decClass = dec?.definition?.split("$")[1]?.match(/\b(\w+)\b/)[0];
       if (!treeData[decClass]) {
@@ -107,29 +128,31 @@ function LogicTree({ openLogicDialog }) {
   }, [newDeclaration]);
 
   return (
-    <>
-      <Card sx={{ width: "100%", height: "100%" }}>
-        <CardHeader avatar={<LensBlurIcon variant="pageIcon" />} />
+    <Card sx={{ width: "100%", height: "100%" }}>
+      <CardHeader avatar={<LensBlurIcon variant="pageIcon" />} />
 
-        <CardContent sx={{ width: "100%", height: "100%" }}>
-          <TreeView
-            aria-label="controlled"
-            defaultCollapseIcon={<MinusSquare />}
-            defaultExpandIcon={<PlusSquare />}
-            defaultEndIcon={<CloseSquare />}
-            sx={{ overflowX: "hidden" }}
-            onNodeSelect={(event, value) => select(value)}
-            expanded={nodeKey}
-            selected={selectedKey}
-          >
-            {Object.entries(treeData).map(([nodeId, labels], index) => (
-              <LogicTreeItem
-                key={nodeId}
-                nodeId={index.toString()}
-                label={nodeId}
-              >
-                {labels.map((label, index) => (
-                  <Stack key={index} direction="row" sx={{ width: 1 }}>
+      <CardContent sx={{ width: "100%", height: "100%" }}>
+        <TreeView
+          aria-label="controlled"
+          defaultCollapseIcon={<MinusSquare />}
+          defaultExpandIcon={<PlusSquare />}
+          defaultEndIcon={<CloseSquare />}
+          sx={{ overflowX: "hidden" }}
+          onNodeSelect={(event, value) => select(value)}
+          expanded={nodeKey}
+          selected={selectedKey}
+        >
+          {Object.entries(treeData).map(([nodeId, labels], index) => (
+            <StyledTreeItem
+              key={nodeId}
+              nodeId={index.toString()}
+              label={nodeId}
+            >
+              {labels.map((label, innerIndex) => {
+                const formattedLabel =
+                  label.length > 30 ? `${label.substring(0, 30)}..` : label;
+                return (
+                  <Stack key={innerIndex} direction="row" sx={{ width: 1 }}>
                     <Box
                       sx={{
                         display: "flex",
@@ -143,27 +166,29 @@ function LogicTree({ openLogicDialog }) {
                         borderWidth: "2px",
                         borderStyle: "none none solid none",
                         borderRadius: "30px 30px 30px 80px",
-                        borderColor: alpha("#209958", 0.5),
+                        borderColor: (theme) =>
+                          alpha(theme.palette.primary.main, 0.5),
                       }}
-                    ></Box>
-                    <LogicTreeItem
-                      key={index}
-                      nodeId={`${nodeId}-${index}`}
-                      label={label}
+                    />
+                    <StyledTreeItem
+                      key={innerIndex}
+                      nodeId={`${nodeId}-${innerIndex}`}
+                      label={formattedLabel}
+                      title={label}
                     />
                   </Stack>
-                ))}
-              </LogicTreeItem>
-            ))}
-          </TreeView>
-        </CardContent>
-        <CardActions>
-          <Fab size="medium" onClick={openLogicDialog}>
-            <AutoAwesome />
-          </Fab>
-        </CardActions>
-      </Card>
-    </>
+                );
+              })}
+            </StyledTreeItem>
+          ))}
+        </TreeView>
+      </CardContent>
+      <CardActions>
+        <Fab size="medium" onClick={openLogicDialog}>
+          <AutoAwesome />
+        </Fab>
+      </CardActions>
+    </Card>
   );
 }
 
