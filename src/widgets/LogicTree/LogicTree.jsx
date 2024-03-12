@@ -50,12 +50,6 @@ function LogicTree({ openLogicDialog }) {
 
   const declarations = state.nucleoid.declarations;
 
-  function findIndexInObject(key) {
-    const keys = Object.keys(treeData);
-    const index = keys.indexOf(key);
-    return index;
-  }
-
   function select(value) {
     const [logicClass, logicIndex] = value.split("-");
 
@@ -69,9 +63,6 @@ function LogicTree({ openLogicDialog }) {
       });
       return;
     }
-
-    const index = findIndexInObject(logicClass);
-    setNodeKey([index.toString()]);
 
     setSelectedKey([`${logicClass}-${logicIndex}`]);
 
