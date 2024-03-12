@@ -1,5 +1,5 @@
 import expert from "../../http/expert.js";
-import { useEvent } from "@nucleoidjs/react-event";
+import { publish, useEvent } from "@nucleoidjs/react-event";
 import { useEffect, useState } from "react";
 
 const useChat = () => {
@@ -11,31 +11,39 @@ const useChat = () => {
   }, [selectedChat]);
 
   const sendMessage = async (message) => {
-    const { data } = await expert.post(
-      `https://nuc.land/ide/api/expert/chat/sessions/${chat.id}`,
-      {
-        role: "USER",
-        content: message,
-      }
-    );
+    try {
+      const { data } = await expert.post(
+        `https://nuc.land/ide/api/expert/chat/sessions/${chat.id}`,
+        {
+          role: "USER",
+          content: message,
+        }
+      );
 
-    const assistantMessage = {
-      role: "assistant",
-      ...data,
-    };
+      const assistantMessage = {
+        role: "assistant",
+        ...data,
+      };
 
-    const updatedMessages = [
-      ...chat.messages,
-      { role: "USER", content: message },
-      assistantMessage,
-    ];
-    const updatedChat = { ...chat, messages: updatedMessages };
-    localStorage.setItem(
-      `ide.chat.sessions.${chat.id}`,
-      JSON.stringify(updatedChat)
-    );
+      const updatedMessages = [
+        ...chat.messages,
+        { role: "USER", content: message },
+        assistantMessage,
+      ];
+      const updatedChat = { ...chat, messages: updatedMessages };
+      localStorage.setItem(
+        `ide.chat.sessions.${chat.id}`,
+        JSON.stringify(updatedChat)
+      );
 
-    setChat(updatedChat);
+      setChat(updatedChat);
+    } catch ({ response }) {
+      publish("EXPERT_ERROR_OCCURRED", {
+        status: true,
+        type: response.data.type,
+        content: response.data.content,
+      });
+    }
   };
 
   return [chat, sendMessage];
