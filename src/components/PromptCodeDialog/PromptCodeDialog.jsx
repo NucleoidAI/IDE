@@ -7,6 +7,7 @@ import Slide from "@mui/material/Slide";
 import { useContext } from "../../context/context";
 
 import { Box, Card, CardContent, CardHeader, Fab, Stack } from "@mui/material";
+import React, { useRef } from "react";
 
 function PromptCodeDialog({
   handleSendAIClick,
@@ -23,6 +24,7 @@ function PromptCodeDialog({
   handleClose,
 }) {
   const [context] = useContext();
+  const editorRef = useRef(null);
   return (
     <Dialog
       open={Boolean(context.get(`pages.${page}.AIDialog.open`))}
@@ -68,7 +70,7 @@ function PromptCodeDialog({
                       width: 1,
                     }}
                   >
-                    <NucEditor onMount={onMount} />
+                    <NucEditor onMount={onMount} ref={editorRef} />
                   </Stack>
                   <Fab
                     variant="button"

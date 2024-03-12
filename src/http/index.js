@@ -1,5 +1,6 @@
 import Settings from "../settings.js";
 import axios from "axios";
+import axiosRetry from "axios-retry";
 import config from "../../config.js";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
 import { publish } from "@nucleoidjs/react-event";
@@ -8,6 +9,31 @@ import { storage } from "@nucleoidjs/webstorage";
 const instance = axios.create({
   baseURL: config.api,
 });
+
+const refreshAuthLogic = async (failedRequest) => {
+  const refreshToken = storage.get("refreshToken");
+  const accessToken = storage.get("accessToken");
+
+  let tokenRefreshResponse;
+
+  if (!refreshToken && !accessToken) {
+    const code = await getCodeFromGithub();
+
+    tokenRefreshResponse = await oauth({ code: code });
+  } else {
+    tokenRefreshResponse = await oauth({ refreshToken: refreshToken });
+  }
+
+  storage.set("accessToken", tokenRefreshResponse.accessToken);
+  storage.set("refreshToken", tokenRefreshResponse.refreshToken);
+
+  failedRequest.response.config.headers["Authorization"] =
+    "Bearer " + tokenRefreshResponse.accessToken;
+};
+
+axiosRetry(instance, { retries: 3 });
+createAuthRefreshInterceptor(instance, refreshAuthLogic);
+axios.defaults.headers.common["Content-Type"] = "application/json";
 
 const oauth = (body) =>
   fetch(Settings.service.auth, {
@@ -39,51 +65,18 @@ const getCodeFromGithub = () => {
   });
 };
 
-const refreshAuthLogic = async (failedRequest) => {
-  const refreshToken = storage.get("refreshToken");
-  const accessToken = storage.get("accessToken");
-
-  let tokenRefreshResponse;
-
-  if (!refreshToken && !accessToken) {
-    const code = await getCodeFromGithub();
-
-    tokenRefreshResponse = await oauth({ code: code });
-  } else {
-    tokenRefreshResponse = await oauth({ refreshToken: refreshToken });
-  }
-  storage.set("accessToken", tokenRefreshResponse.accessToken);
-  storage.set("refreshToken", tokenRefreshResponse.refreshToken);
-
-  failedRequest.response.config.headers["Authorization"] =
-    "Bearer " + tokenRefreshResponse.accessToken;
-};
-
-createAuthRefreshInterceptor(instance, refreshAuthLogic);
-
-instance.interceptors.response.use((response) => {
-  JSON.parse(response.data);
-  return response;
-});
-
 instance.interceptors.response.use(
-  (response) => {
-    if (response.headers["content-type"] === "application/json") {
-      response.data = JSON.parse(response.data);
-    }
-    return response;
-  },
-  async (error) => {
-    const statusCode = error.response.status;
-
-    if (statusCode === 500) {
+  (res) => res,
+  (err) => {
+    if (err.response.status === 500) {
       publish("GLOBAL_MESSAGE", {
         status: true,
-        message: error.message,
+        message: err.message,
         severity: "error",
       });
     }
-    return Promise.reject(error);
+
+    return Promise.reject(err);
   }
 );
 

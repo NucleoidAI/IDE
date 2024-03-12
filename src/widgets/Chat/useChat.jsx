@@ -12,13 +12,10 @@ const useChat = () => {
 
   const sendMessage = async (message) => {
     try {
-      const { data } = await expert.post(
-        `https://nuc.land/ide/api/expert/chat/sessions/${chat.id}`,
-        {
-          role: "USER",
-          content: message,
-        }
-      );
+      const { data } = await expert.post(`/chat/sessions/${chat.id}`, {
+        role: "USER",
+        content: message,
+      });
 
       const assistantMessage = {
         role: "assistant",

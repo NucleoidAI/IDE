@@ -11,7 +11,7 @@ axiosRetry(instance, { retries: 3 });
 axios.defaults.headers.common["Content-Type"] = "application/json";
 
 instance.interceptors.response.use(
-  () => {},
+  (res) => res,
   (err) => {
     if (err.response.status === 500) {
       publish("GLOBAL_MESSAGE", {
