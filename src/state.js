@@ -9,6 +9,7 @@ function init() {
       types: {},
       functions: [],
       project: {
+        type: "LOCAL",
         name: "Sample",
         id: "Sample",
         description:
