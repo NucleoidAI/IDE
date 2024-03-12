@@ -88,18 +88,21 @@ function LogicTree({ openLogicDialog }) {
 
   useEffect(() => {
     const treeData = {};
+    const initialExpandedNodes = [];
 
     declarations.forEach((dec) => {
       const decSummary = dec.summary;
       const decClass = dec?.definition?.split("$")[1]?.match(/\b(\w+)\b/)[0];
       if (!treeData[decClass]) {
         treeData[decClass] = [];
+        initialExpandedNodes.push(decClass);
       }
 
       treeData[decClass].push(decSummary);
     });
 
     setTreeData(treeData);
+    setNodeKey(initialExpandedNodes);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -143,11 +146,7 @@ function LogicTree({ openLogicDialog }) {
           selected={selectedKey}
         >
           {Object.entries(treeData).map(([nodeId, labels], index) => (
-            <StyledTreeItem
-              key={nodeId}
-              nodeId={index.toString()}
-              label={nodeId}
-            >
+            <StyledTreeItem key={nodeId} nodeId={nodeId} label={nodeId}>
               {labels.map((label, innerIndex) => {
                 const formattedLabel =
                   label.length > 30 ? `${label.substring(0, 30)}..` : label;
