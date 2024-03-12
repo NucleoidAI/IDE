@@ -4,9 +4,12 @@ import InputBase from "@mui/material/InputBase";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import React from "react";
 import SearchIcon from "@mui/icons-material/Search";
+import State from "../state";
 import WorkspacesIcon from "@mui/icons-material/Workspaces";
+import { contextToMap } from "../utils/Parser";
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
+import vfs from "../vfs";
 
 import {
   Box,
@@ -28,6 +31,7 @@ import {
   Typography,
   alpha,
 } from "@mui/material";
+import { storage, useStorage } from "@nucleoidjs/webstorage";
 import { useCallback, useState } from "react";
 
 export function applyFilter({ inputData, query }) {
@@ -174,7 +178,6 @@ const AddNewButton = ({ formArea, setFormArea }) => {
       <DialogActions disableSpacing>
         <Button
           fullWidth={true}
-          variant="pageIcon"
           onClick={() => setFormArea("add")}
           sx={{
             width: "100%",
@@ -201,16 +204,24 @@ const AddNewButton = ({ formArea, setFormArea }) => {
   );
 };
 
-const NewProjectForm = ({ formArea, setFormArea }) => {
-  const [projectName, setProjectName] = React.useState("");
-  const [template, setTemplate] = React.useState("");
+const NewProjectForm = ({ formArea, setFormArea, createProject }) => {
+  const [newProject, setNewProject] = React.useState({
+    name: "",
+    template: "",
+  });
 
   const handleProjectNameChange = (event) => {
-    setProjectName(event.target.value);
+    setNewProject((prevState) => ({
+      ...prevState,
+      name: event.target.value,
+    }));
   };
 
   const handleTemplateChange = (event) => {
-    setTemplate(event.target.value);
+    setNewProject((prevState) => ({
+      ...prevState,
+      template: event.target.value,
+    }));
   };
 
   return (
@@ -231,21 +242,21 @@ const NewProjectForm = ({ formArea, setFormArea }) => {
           <TextField
             label="Project Name"
             variant="standard"
-            value={projectName}
+            value={newProject.projectName}
             onChange={handleProjectNameChange}
           />
           <FormControl sx={{ minWidth: 120, ml: 2 }} size="medium">
             <InputLabel>Template</InputLabel>
             <Select
-              value={template}
+              value={newProject.template}
               onChange={handleTemplateChange}
               variant="standard"
             >
-              <MenuItem value={"template1"}>Sample</MenuItem>
-              <MenuItem value={"template2"}>Blank</MenuItem>
+              <MenuItem value={"sample"}>Sample</MenuItem>
+              <MenuItem value={"blank"}>Blank</MenuItem>
             </Select>
           </FormControl>
-          <Button>Save</Button>
+          <Button onClick={() => createProject(newProject)}>Create</Button>
           <Button onClick={() => setFormArea("button")}>Cancel</Button>
         </Stack>
       </DialogContent>
@@ -256,6 +267,7 @@ const NewProjectForm = ({ formArea, setFormArea }) => {
 function NewProjectDialog({ handleClose, open }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [formArea, setFormArea] = useState("button");
+
   const getProjectsFromLocalStorage = () => {
     const projects = [];
     for (let i = 0; i < localStorage.length; i++) {
@@ -284,10 +296,36 @@ function NewProjectDialog({ handleClose, open }) {
   };
 
   const onMenuItemClick = (selectedMenuItem, projectId) => {
-    setFormArea(selectedMenuItem);
-
     if (selectedMenuItem === "Delete") {
       deleteProject(projectId);
+    }
+    if (selectedMenuItem === "Edit") {
+      setFormArea(selectedMenuItem);
+    }
+  };
+
+  const initVfs = (context) => {
+    const files = contextToMap(context.nucleoid);
+    vfs.init(files);
+  };
+
+  function createWithSampleTemplate(name) {
+    const context = State.withSample();
+    context.get = (prop) => State.resolve(context, prop);
+    context.nucleoid.project.name = name;
+    storage.set("ide", "projects", context.nucleoid.project.id, context);
+
+    return context;
+  }
+
+  const createProject = (newProject) => {
+    const { name, template } = newProject;
+
+    if (template === "sample") {
+      const context = createWithSampleTemplate(name);
+      initVfs(context);
+    } else if (template === "blank") {
+      //initVfs(State.withBlank());
     }
   };
 
@@ -324,7 +362,11 @@ function NewProjectDialog({ handleClose, open }) {
         />
       </DialogContent>
       <AddNewButton formArea={formArea} setFormArea={setFormArea} />
-      <NewProjectForm formArea={formArea} setFormArea={setFormArea} />
+      <NewProjectForm
+        formArea={formArea}
+        setFormArea={setFormArea}
+        createProject={(newProject) => createProject(newProject)}
+      />
     </Dialog>
   );
 }
