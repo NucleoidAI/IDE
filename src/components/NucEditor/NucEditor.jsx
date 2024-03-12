@@ -17,13 +17,9 @@ import * as prettierStandalone from "prettier/standalone";
 import * as typescriptPlugin from "prettier/parser-typescript";
 import * as yamlPlugin from "prettier/parser-yaml";
 
-function NucEditor({
-  onCodeEditorChange,
-  defaultValue,
-  path,
-  onMount,
-  onSave,
-}) {
+const NucEditor = React.forwardRef((props, ref) => {
+  const { onCodeEditorChange, defaultValue, path, onMount, onSave } = props;
+
   const plugins = [
     angularPlugin,
     babelPlugin,
@@ -173,8 +169,6 @@ function NucEditor({
       }
     );
 
-    lint();
-
     editor.addAction({
       id: "saveEvent",
       label: "Save Project",
@@ -188,6 +182,9 @@ function NucEditor({
         editorRef.current && formatDocument();
       },
     });
+    lint();
+    lintWithCustomLinter();
+    formatDocument();
     onMount && onMount(editor, monaco);
   }
 
@@ -207,7 +204,7 @@ function NucEditor({
   return (
     <Editor
       data-cy="codeEditor-editor"
-      ref={editorRef}
+      ref={ref}
       key={themeStorage}
       defaultValue={defaultValue}
       path={path}
@@ -229,6 +226,6 @@ function NucEditor({
       }}
     />
   );
-}
+});
 
 export default NucEditor;
