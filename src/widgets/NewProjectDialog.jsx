@@ -9,6 +9,7 @@ import WorkspacesIcon from "@mui/icons-material/Workspaces";
 import { contextToMap } from "../utils/Parser";
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
+import { useParams } from "react-router";
 import vfs from "../vfs";
 
 import {
@@ -86,6 +87,8 @@ const ProjectList = ({
 };
 
 const ProjectListItem = ({ project, handleSelectedItem, searchQuery }) => {
+  const { id: activeProjectId } = useParams("id");
+  console.log(activeProjectId);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -133,6 +136,13 @@ const ProjectListItem = ({ project, handleSelectedItem, searchQuery }) => {
         }
         key={project.id}
         sx={{
+          ...(project.id === activeProjectId
+            ? {
+                borderRadius: 1,
+                backgroundColor: (theme) =>
+                  alpha(theme.palette.primary.main, 0.2),
+              }
+            : {}),
           borderWidth: 1,
           borderStyle: "solid",
           borderColor: "transparent",
@@ -312,7 +322,7 @@ function NewProjectDialog({ handleClose, open }) {
   const [formArea, setFormArea] = useState("button");
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState();
-  const [loading, setLoading] = useState(false);
+
   const getProjectsFromLocalStorage = () => {
     const projects = [];
     for (let i = 0; i < localStorage.length; i++) {
