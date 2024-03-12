@@ -1,4 +1,6 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CloudOffIcon from "@mui/icons-material/CloudOff";
+import CloudQueueIcon from "@mui/icons-material/CloudQueue";
 //eslint-disable-next-line
 import { DataGrid } from "@mui/x-data-grid";
 import Delete from "@mui/icons-material/Delete";
@@ -81,12 +83,18 @@ const ListProjectsScreen = ({ handleClose }) => {
     );
   };
 
+  const TypeButton = ({ type }) => {
+    return type === "LOCAL" ? <CloudOffIcon /> : <CloudQueueIcon />;
+  };
+
   const handleCloseDialog = () => {
     setDialog(false);
   };
+  const deleteProject = () => {
+    console.log(select);
+  };
 
-  const handleOpenDialog = (params) => {
-    select.current = params.id;
+  const handleOpenDialog = () => {
     setDialog(true);
   };
 
@@ -95,6 +103,14 @@ const ListProjectsScreen = ({ handleClose }) => {
       field: "name",
       headerName: "Project name",
       flex: 5,
+    },
+    {
+      field: "type",
+      headerName: "Type",
+      flex: 2,
+      renderCell: (params) => {
+        return <TypeButton type={params.row.type} />;
+      },
     },
     {
       field: "actions",
@@ -110,7 +126,21 @@ const ListProjectsScreen = ({ handleClose }) => {
     },
   ];
 
-  const rows = [];
+  const getProjectsFromLocalStorage = () => {
+    const projects = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith("ide.projects.")) {
+        const context = JSON.parse(localStorage.getItem(key));
+        if (context.nucleoid && context.nucleoid.project) {
+          projects.push(context.nucleoid.project);
+        }
+      }
+    }
+    return projects;
+  };
+
+  const rows = getProjectsFromLocalStorage();
 
   return (
     <>
@@ -136,7 +166,7 @@ const ListProjectsScreen = ({ handleClose }) => {
             columns={columns}
             hideFooter={true}
             onRowClick={(e) => {
-              select.current = e.row.project;
+              select.current = e;
             }}
           />
         </DialogContent>
@@ -169,7 +199,7 @@ const ListProjectsScreen = ({ handleClose }) => {
               <Button autoFocus onClick={handleCloseDialog}>
                 Cancel
               </Button>
-              <Button autoFocus>Delete</Button>
+              <Button onClick={deleteProject}>Delete</Button>
             </DialogActions>
           </Dialog>
         </DialogActions>
