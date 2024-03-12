@@ -1,6 +1,7 @@
 import { BrowserRouter } from "react-router-dom";
 import ContextProvider from "./context/context";
 import EventRegistry from "./EventRegistry";
+import GlobalSnackMessage from "./components/GlobalSnackMessage/GlobalSnackMessage";
 import Path from "./utils/Path";
 import React from "react";
 import RouteManager from "./RouteManager";
@@ -178,6 +179,7 @@ function App() {
           <ContextProvider state={context} reducer={contextReducer}>
             <EventRegistry />
             <RouteManager routes={routes} mode={Path.getMode()} />
+            <GlobalSnackMessage />
           </ContextProvider>
         </BrowserRouter>
       </ThemeProvider>

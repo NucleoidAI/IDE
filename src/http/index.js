@@ -2,6 +2,7 @@ import Settings from "../settings.js";
 import axios from "axios";
 import config from "../../config.js";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
+import { publish } from "@nucleoidjs/react-event";
 import { storage } from "@nucleoidjs/webstorage";
 
 const instance = axios.create({
@@ -60,13 +61,30 @@ const refreshAuthLogic = async (failedRequest) => {
 
 createAuthRefreshInterceptor(instance, refreshAuthLogic);
 
-instance.interceptors.request.use((request) => {
-  request.headers["Content-Type"] = "application/json";
-});
-
 instance.interceptors.response.use((response) => {
   JSON.parse(response.data);
   return response;
 });
+
+instance.interceptors.response.use(
+  (response) => {
+    if (response.headers["content-type"] === "application/json") {
+      response.data = JSON.parse(response.data);
+    }
+    return response;
+  },
+  async (error) => {
+    const statusCode = error.response.status;
+
+    if (statusCode === 500) {
+      publish("GLOBAL_MESSAGE", {
+        status: true,
+        message: error.message,
+        severity: "error",
+      });
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default instance;
