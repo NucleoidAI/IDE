@@ -1,5 +1,5 @@
 import { FileOpen } from "@mui/icons-material/";
-import ProjectDialog from "../../widgets/ProjectDialog";
+import ProjectDialog from "../../widgets/NewProjectDialog";
 import React from "react";
 import { useContext } from "../../context/context";
 
@@ -30,7 +30,7 @@ export default function ProjectSelectSmall() {
         >
           <FileOpen sx={{ color: "#343a43" }} />
         </Button>
-        {open && <ProjectDialog handleClose={handleClose} />}
+        <ProjectDialog open={open} handleClose={handleClose} />
       </Box>
     </Tooltip>
   );
