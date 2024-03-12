@@ -264,11 +264,55 @@ const NewProjectForm = ({ formArea, setFormArea, createProject }) => {
   );
 };
 
+const EditProjectForm = ({
+  selectedProjectName,
+  formArea,
+  setFormArea,
+  editProject,
+}) => {
+  const [projectName, setProjectName] = React.useState(selectedProjectName);
+
+  const handleProjectNameChange = (event) => {
+    setProjectName(event.target.value);
+  };
+
+  return (
+    formArea === "Edit" && (
+      <DialogContent disableSpacing>
+        <Stack
+          spacing={2}
+          direction={"row"}
+          sx={{
+            border: "0.1px solid gray",
+            width: "100%",
+            p: 1.5,
+            borderRadius: 1,
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <TextField
+            label="Project Name"
+            variant="standard"
+            value={projectName}
+            onChange={handleProjectNameChange}
+          />
+          <Stack direction={"row"} spacing={2}>
+            <Button onClick={() => editProject(projectName)}>Save</Button>
+            <Button onClick={() => setFormArea("button")}>Cancel</Button>
+          </Stack>
+        </Stack>
+      </DialogContent>
+    )
+  );
+};
+
 function NewProjectDialog({ handleClose, open }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [formArea, setFormArea] = useState("button");
   const [projects, setProjects] = useState([]);
-
+  const [selectedProject, setSelectedProject] = useState();
+  const [loading, setLoading] = useState(false);
   const getProjectsFromLocalStorage = () => {
     const projects = [];
     for (let i = 0; i < localStorage.length; i++) {
@@ -297,6 +341,11 @@ function NewProjectDialog({ handleClose, open }) {
   };
 
   const onMenuItemClick = (selectedMenuItem, projectId) => {
+    const project = projects.find((project) => project.id === projectId);
+    setSelectedProject(project);
+
+    console.log(selectedProject);
+
     if (selectedMenuItem === "Delete") {
       deleteProject(projectId);
     }
@@ -329,12 +378,24 @@ function NewProjectDialog({ handleClose, open }) {
       //initVfs(State.withBlank());
     }
     setProjects(getProjectsFromLocalStorage());
+    setFormArea("button");
   };
 
   useEffect(() => {
     setProjects(getProjectsFromLocalStorage());
   }, []);
-  console.log("render");
+
+  const editProject = (newProjectName) => {
+    const context = storage.get("ide", "projects", selectedProject.id);
+    context.nucleoid.project.name = newProjectName;
+    storage.remove("ide", "projects", selectedProject.id);
+    //PUBLISH CONTEXT CHANGED EVENT
+    initVfs(context);
+    storage.set("ide", "projects", selectedProject.id, context);
+    setProjects(getProjectsFromLocalStorage());
+    setFormArea("button");
+  };
+
   const onDialogClose = () => {
     handleClose();
     setSearchQuery("");
@@ -373,6 +434,14 @@ function NewProjectDialog({ handleClose, open }) {
         setFormArea={setFormArea}
         createProject={(newProject) => createProject(newProject)}
       />
+      {formArea === "Edit" && (
+        <EditProjectForm
+          selectedProjectName={selectedProject?.name}
+          formArea={formArea}
+          setFormArea={setFormArea}
+          editProject={(newProjectName) => editProject(newProjectName)}
+        />
+      )}
     </Dialog>
   );
 }
