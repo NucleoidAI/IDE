@@ -63,6 +63,11 @@ const Chat = () => {
     setLoading(false);
   };
 
+  const handleConvertProject = () => {
+    const snippets = extractCodeSnippets(chat.messages);
+    console.log(snippets);
+  };
+
   const refreshChat = () => {
     messageInputRef.current.setValue(userMessageRef.current);
     publish("EXPERT_ERROR_OCCURRED", {
