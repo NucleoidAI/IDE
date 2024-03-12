@@ -1,11 +1,14 @@
 import "./ChatMainArea.css";
+
 import ChatDisplay from "./ChatDisplay";
 import MessageInput from "./MessageInput";
 // import SuggestionsOverlay from "./SuggestionsOverlay";
 import { publish } from "@nucleoidjs/react-event";
 import { storage } from "@nucleoidjs/webstorage";
 import useChat from "./useChat";
+import { useEvent } from "@nucleoidjs/react-event";
 import { v4 as uuid } from "uuid";
+
 import { Box, useTheme } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,7 +19,13 @@ const Chat = () => {
   const { chatId } = useParams("chatId");
   const [loading, setLoading] = useState(false);
   const messageInputRef = useRef();
+  const userMessageRef = useRef("");
   const [chat, sendMessage] = useChat();
+  const [error] = useEvent("EXPERT_ERROR_OCCURRED", {
+    status: false,
+    type: "",
+    content: "",
+  });
 
   useEffect(() => {
     if (!chatId) {
@@ -37,19 +46,36 @@ const Chat = () => {
     }
   }, [chatId, navigate]);
 
-  const handleSendMessage = async (message) => {
+  const handleSendMessage = async () => {
     setLoading(true);
     const first = !chat.messages.length;
+    const userMessage = messageInputRef.current.getValue();
+    userMessageRef.current = userMessage;
+    messageInputRef.current.clear();
 
-    await sendMessage(message, setLoading);
+    await sendMessage(userMessage, setLoading);
 
     if (first) {
       publish("CHAT_INITIATED", chat.id);
     }
 
     setLoading(false);
-    messageInputRef.current.clear();
   };
+
+  const refreshChat = () => {
+    messageInputRef.current.setValue(userMessageRef.current);
+    publish("EXPERT_ERROR_OCCURRED", {
+      status: false,
+      type: "",
+      content: "",
+    });
+  };
+
+  useEffect(() => {
+    if (error.status) {
+      setLoading(false);
+    }
+  }, [error.status]);
 
   return (
     <Box
@@ -62,7 +88,13 @@ const Chat = () => {
         paddingBottom: "10px",
       }}
     >
-      <ChatDisplay chat={chat} loading={loading} />
+      <ChatDisplay
+        currentUserMessage={userMessageRef.current}
+        chat={chat}
+        loading={loading}
+        error={error}
+        refreshChat={refreshChat}
+      />
       <MessageInput
         handleSendMessage={handleSendMessage}
         ref={messageInputRef}

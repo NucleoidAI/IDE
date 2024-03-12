@@ -1,6 +1,6 @@
 import ChatEditor from "./ChatEditor";
-import EditIcon from "@mui/icons-material/Edit";
-import ReadOnlyEditor from "../../components/ReadOnlyEditor";
+import ErrorMessage from "./components/ErrorMessage";
+import MessageBox from "./components/MessageBox";
 
 import {
   Box,
@@ -9,12 +9,17 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  Typography,
   useTheme,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
-const ChatDisplay = ({ chat, loading }) => {
+const ChatDisplay = ({
+  chat,
+  loading,
+  error,
+  refreshChat,
+  currentUserMessage,
+}) => {
   const theme = useTheme();
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedCode, setSelectedCode] = useState("");
@@ -55,6 +60,13 @@ const ChatDisplay = ({ chat, loading }) => {
     setTimeout(scrollToBottom, 10);
   }, [chat]);
 
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
+    }
+  }, [currentUserMessage]);
+
   return (
     <Box
       sx={{
@@ -71,57 +83,19 @@ const ChatDisplay = ({ chat, loading }) => {
     >
       {chat &&
         chat.messages.map((message, index) => (
-          <Box
+          <MessageBox
             key={index}
-            sx={{
-              width: "60%",
-              marginBottom: "20px",
-              padding: "10px",
-              borderRadius: "10px",
-              textAlign: "left",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              userSelect: "text",
-            }}
-          >
-            <Typography
-              variant="subtitle2"
-              sx={{
-                fontWeight: "bold",
-                marginBottom: "8px",
-                userSelect: "text",
-              }}
-            >
-              {message.role}
-            </Typography>
-            <Typography variant="body1" sx={{ userSelect: "text" }}>
-              {message.content}
-            </Typography>
-            {message.code && (
-              <Box
-                component="pre"
-                sx={{
-                  overflowX: "auto",
-                  justifyContent: "center",
-                  marginTop: "8px",
-                  backgroundColor: theme.palette.grey[100],
-                  borderRadius: "5px",
-                  padding: "0",
-                  userSelect: "text",
-                  width: "100%",
-                }}
-              >
-                <ReadOnlyEditor
-                  value={message.code}
-                  language="typescript"
-                  actionIcon={EditIcon}
-                  onActionClick={() => handleOpenDialog(message.code)}
-                />
-              </Box>
-            )}
-          </Box>
+            message={message}
+            handleOpenDialog={handleOpenDialog}
+          />
         ))}
+      {loading && <MessageBox onlyUser currentMessage={currentUserMessage} />}
+      <ErrorMessage
+        show={error.status}
+        content={error.content}
+        type={error.type}
+        refreshChat={refreshChat}
+      />
       <Button
         onClick={scrollToBottom}
         sx={{ position: "fixed", bottom: 20, right: 20 }}
@@ -130,7 +104,7 @@ const ChatDisplay = ({ chat, loading }) => {
       >
         Scroll to Bottom
       </Button>
-      {loading && <CircularProgress />}
+      <CircularProgress show={loading} />
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
