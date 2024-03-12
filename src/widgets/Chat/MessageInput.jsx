@@ -101,7 +101,7 @@ const MessageInput = forwardRef((props, ref) => {
           maxRows={4}
           sx={{ flexGrow: 1 }}
         />
-        {showProjectIcon && (
+        {true && (
           <Tooltip
             title={
               <Typography sx={{ fontSize: "1rem" }}>

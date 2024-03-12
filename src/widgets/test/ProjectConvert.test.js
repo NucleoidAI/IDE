@@ -1,4 +1,5 @@
 import {
+  createAPI,
   extractCodeSnippet,
   extractCodeSnippets,
   typeCheck,
@@ -169,18 +170,116 @@ describe("Project Converter", () => {
   });
 
   describe("createAPI", () => {
-    test("should create an API object using functions and declarations", () => {
-      const functions = [];
-      const declarations = {};
-      const api = createAPI(functions, declarations);
-      expect(typeof api).toBe("object");
-    });
+    test("should create an API object with the correct structure", () => {
+      const classDefinition = `
+        class Human {
+          name: string;
+          constructor(name: string) {
+            this.name = name;
+          }
+        }
+      `;
 
-    test("should handle empty functions and declarations", () => {
-      const functions = [];
-      const declarations = {};
+      const functions = [
+        {
+          path: "",
+          params: [],
+          type: "CLASS",
+          definition: classDefinition,
+        },
+      ];
+
+      const declarations = [];
+
+      const expectedAPI = [
+        {
+          path: "/humans",
+          method: "GET",
+          params: [],
+          response: {
+            type: "OPENAPI",
+            schema: {
+              name: "Human",
+              type: "object",
+              properties: [
+                {
+                  name: "name",
+                  type: "string",
+                },
+              ],
+            },
+          },
+          summary: "List humans",
+          description: "List humans",
+          "x-nuc-action": expect.any(String),
+        },
+        {
+          path: "/humans",
+          method: "POST",
+          params: [],
+          request: {
+            type: "OPENAPI",
+            schema: {
+              type: "object",
+              properties: [
+                {
+                  name: "name",
+                  type: "string",
+                },
+              ],
+            },
+          },
+          response: {
+            type: "OPENAPI",
+            schema: {
+              name: "Human",
+              type: "object",
+              properties: [
+                {
+                  name: "name",
+                  type: "string",
+                },
+              ],
+            },
+          },
+          summary: "Create a human",
+          description: "Create a human",
+          "x-nuc-action": expect.any(String),
+        },
+        {
+          path: "/humans/{humanId}",
+          method: "GET",
+          params: [
+            {
+              name: "humanId",
+              in: "path",
+              type: "string",
+              required: true,
+              description: "human ID",
+            },
+          ],
+          response: {
+            type: "OPENAPI",
+            schema: {
+              name: "Human",
+              type: "object",
+              properties: [
+                {
+                  name: "name",
+                  type: "string",
+                },
+              ],
+            },
+          },
+          summary: "Read a human",
+          description: "Read a human",
+          "x-nuc-action": expect.any(String),
+        },
+      ];
+
       const api = createAPI(functions, declarations);
-      expect(typeof api).toBe("object");
+
+      expect(api).toEqual(expectedAPI);
     });
   });
 
