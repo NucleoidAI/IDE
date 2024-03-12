@@ -22,8 +22,6 @@ import {
   ListItemText,
   Menu,
   MenuItem,
-  Modal,
-  Paper,
   Select,
   Stack,
   TextField,
@@ -48,20 +46,6 @@ const ProjectList = ({
   dataFiltered,
   handleSelectedItem,
 }) => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = (event, selectedMenuItem) => {
-    if (selectedMenuItem === "clickaway") {
-      return;
-    } else {
-      handleSelectedItem(selectedMenuItem);
-    }
-    setAnchorEl(null);
-  };
   return (
     <>
       <Box sx={{ p: 1, my: 2, borderBottom: `solid 1px gray` }}>
@@ -85,67 +69,101 @@ const ProjectList = ({
 
       <List disablePadding>
         {dataFiltered.map((project) => (
-          <ListItem
-            secondaryAction={
-              <>
-                <IconButton aria-haspopup="true" onClick={handleClick}>
-                  <MoreVertIcon />
-                </IconButton>
-                <Menu
-                  id="simple-menu"
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                >
-                  <MenuItem onClick={(event) => handleClose(event, "Edit")}>
-                    Edit
-                  </MenuItem>
-                  <MenuItem onClick={(event) => handleClose(event, "Delete")}>
-                    Delete
-                  </MenuItem>
-                </Menu>
-              </>
-            }
+          <ProjectListItem
             key={project.id}
-            sx={{
-              borderWidth: 1,
-              borderStyle: "solid",
-              borderColor: "transparent",
-              borderBottomColor: (theme) => theme.palette.divider,
-              "&:hover": {
-                borderRadius: 1,
-                borderColor: (theme) => theme.palette.primary.main,
-                backgroundColor: (theme) =>
-                  alpha(
-                    theme.palette.primary.main,
-                    theme.palette.action.hoverOpacity
-                  ),
-              },
-            }}
-          >
-            <ListItemText
-              primaryTypographyProps={{
-                typography: "h7",
-                sx: { textTransform: "capitalize" },
-              }}
-              primary={parse(
-                project.name,
-                match(project.name, searchQuery)
-              ).map((part, index) => (
-                <Box
-                  key={index}
-                  component="span"
-                  sx={{
-                    color: part.highlight ? "primary.main" : "text.primary",
-                  }}
-                >
-                  {part.text}
-                </Box>
-              ))}
-            />
-          </ListItem>
+            project={project}
+            handleSelectedItem={handleSelectedItem}
+            searchQuery={searchQuery}
+          />
         ))}
       </List>
+    </>
+  );
+};
+
+const ProjectListItem = ({ project, handleSelectedItem, searchQuery }) => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = (event, selectedMenuItem, projectId) => {
+    if (
+      selectedMenuItem === "clickaway" ||
+      selectedMenuItem === "backdropClick"
+    ) {
+      setAnchorEl(null);
+      return;
+    } else {
+      handleSelectedItem(selectedMenuItem, projectId);
+    }
+    setAnchorEl(null);
+  };
+  return (
+    <>
+      <ListItem
+        secondaryAction={
+          <>
+            <IconButton aria-haspopup="true" onClick={handleClick}>
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <MenuItem
+                onClick={(event) => handleClose(event, "Edit", project.id)}
+              >
+                Edit
+              </MenuItem>
+              <MenuItem
+                onClick={(event) => handleClose(event, "Delete", project.id)}
+              >
+                Delete
+              </MenuItem>
+            </Menu>
+          </>
+        }
+        key={project.id}
+        sx={{
+          borderWidth: 1,
+          borderStyle: "solid",
+          borderColor: "transparent",
+          borderBottomColor: (theme) => theme.palette.divider,
+          "&:hover": {
+            borderRadius: 1,
+            borderColor: (theme) => theme.palette.primary.main,
+            backgroundColor: (theme) =>
+              alpha(
+                theme.palette.primary.main,
+                theme.palette.action.hoverOpacity
+              ),
+          },
+        }}
+      >
+        <ListItemText
+          primaryTypographyProps={{
+            typography: "h7",
+            sx: { textTransform: "capitalize" },
+          }}
+          primary={parse(project.name, match(project.name, searchQuery)).map(
+            (part, index) => (
+              <Box
+                key={index}
+                component="span"
+                sx={{
+                  color: part.highlight ? "primary.main" : "text.primary",
+                }}
+              >
+                {part.text}
+              </Box>
+            )
+          )}
+        />
+      </ListItem>
     </>
   );
 };
@@ -255,15 +273,24 @@ function NewProjectDialog({ handleClose, open }) {
   const handleSearch = useCallback((event) => {
     setSearchQuery(event.target.value);
   }, []);
+
   const dataFiltered = applyFilter({
     inputData: getProjectsFromLocalStorage(),
     query: searchQuery,
   });
 
-  const onMenuItemClick = (selectedMenuItem) => {
-    console.log(selectedMenuItem);
-    setFormArea(selectedMenuItem);
+  const deleteProject = (projectId) => {
+    localStorage.removeItem(`ide.projects.${projectId}`);
   };
+
+  const onMenuItemClick = (selectedMenuItem, projectId) => {
+    setFormArea(selectedMenuItem);
+
+    if (selectedMenuItem === "Delete") {
+      deleteProject(projectId);
+    }
+  };
+
   const onDialogClose = () => {
     handleClose();
     setSearchQuery("");
@@ -288,8 +315,8 @@ function NewProjectDialog({ handleClose, open }) {
       </DialogTitle>
       <DialogContent>
         <ProjectList
-          handleSelectedItem={(selectedMenuItem) => {
-            onMenuItemClick(selectedMenuItem);
+          handleSelectedItem={(selectedMenuItem, projectId) => {
+            onMenuItemClick(selectedMenuItem, projectId);
           }}
           searchQuery={searchQuery}
           handleSearch={handleSearch}
