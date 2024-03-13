@@ -67,6 +67,13 @@ function copy(state) {
   return { ...state, get: (prop) => resolve(state, prop) };
 }
 
+function withBlank() {
+  const state = init();
+  state.nucleoid.project.id = uuidv4();
+
+  return state;
+}
+
 function withSample() {
   const state = init();
   state.nucleoid.api = api;
@@ -98,5 +105,5 @@ const resolve = (state, param) => {
   }
 };
 
-const State = { init, copy, withSample, resolve, withPages };
+const State = { init, copy, withSample, resolve, withPages, withBlank };
 export default State;
