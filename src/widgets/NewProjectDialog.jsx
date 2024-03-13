@@ -145,7 +145,6 @@ function NewProjectDialog({ handleClose, open }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [formArea, setFormArea] = useState("button");
   const [projects, setProjects] = useState([]);
-  const [selectedProject, setSelectedProject] = useState();
 
   const getProjectsFromLocalStorage = () => {
     const projects = [];
@@ -173,20 +172,6 @@ function NewProjectDialog({ handleClose, open }) {
   const deleteProject = (projectId) => {
     localStorage.removeItem(`ide.projects.${projectId}`);
     setProjects(getProjectsFromLocalStorage());
-  };
-
-  const onMenuItemClick = (selectedMenuItem, projectId) => {
-    const project = projects.find((project) => project.id === projectId);
-    setSelectedProject(project);
-
-    console.log(selectedProject);
-
-    if (selectedMenuItem === "Delete") {
-      deleteProject(projectId);
-    }
-    if (selectedMenuItem === "Edit") {
-      setFormArea(selectedMenuItem);
-    }
   };
 
   const initVfs = (context) => {
@@ -221,8 +206,6 @@ function NewProjectDialog({ handleClose, open }) {
   }, []);
 
   const editProject = (editedProjectName, editedProjectId) => {
-    console.log(editedProjectName);
-    console.log(editedProjectId);
     const context = storage.get("ide", "projects", editedProjectId);
     context.nucleoid.project.name = editedProjectName;
     storage.remove("ide", "projects", editedProjectId);
@@ -255,9 +238,6 @@ function NewProjectDialog({ handleClose, open }) {
       </DialogTitle>
       <DialogContent>
         <ProjectList
-          handleSelectedItem={(selectedMenuItem, projectId) => {
-            onMenuItemClick(selectedMenuItem, projectId);
-          }}
           searchQuery={searchQuery}
           handleSearch={handleSearch}
           dataFiltered={dataFiltered}
