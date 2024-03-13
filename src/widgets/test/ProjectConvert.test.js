@@ -242,12 +242,12 @@ describe("Project Converter", () => {
               ],
             },
           },
-          summary: "Create a human",
-          description: "Create a human",
+          summary: "Create a Human",
+          description: "Create a Human",
           "x-nuc-action": expect.any(String),
         },
         {
-          path: "/humans/{humanId}",
+          path: "/humans/{HumanId}",
           method: "GET",
           params: [
             {
@@ -255,7 +255,7 @@ describe("Project Converter", () => {
               in: "path",
               type: "string",
               required: true,
-              description: "human ID",
+              description: "Human ID",
             },
           ],
           response: {
@@ -271,8 +271,8 @@ describe("Project Converter", () => {
               ],
             },
           },
-          summary: "Read a human",
-          description: "Read a human",
+          summary: "Read a Human",
+          description: "Read a Human",
           "x-nuc-action": expect.any(String),
         },
       ];
