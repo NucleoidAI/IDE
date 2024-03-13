@@ -283,11 +283,12 @@ const ProjectList = ({
   searchQuery,
   handleSearch,
   dataFiltered,
-  handleSelectedItem,
   editProject,
   deleteProject,
   runProject,
 }) => {
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
+
   return (
     <>
       <Box sx={{ p: 1, my: 2, borderBottom: `solid 1px gray` }}>
@@ -312,17 +313,206 @@ const ProjectList = ({
       <List disablePadding>
         {dataFiltered.map((project) => (
           <ProjectListItem
+            setSelectedProjectId={setSelectedProjectId}
+            selectedProjectId={selectedProjectId}
             runProject={runProject}
             loading={loading}
             deleteProject={deleteProject}
             key={project.id}
             project={project}
-            handleSelectedItem={handleSelectedItem}
             searchQuery={searchQuery}
             editProject={editProject}
           />
         ))}
       </List>
+    </>
+  );
+};
+
+const ProjectListItem = ({
+  loading,
+  project,
+  deleteProject,
+  searchQuery,
+  editProject,
+  runProject,
+  selectedProjectId,
+  setSelectedProjectId,
+}) => {
+  const { id: activeProjectId } = useParams("id");
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [selectedAction, setSelectedAction] = useState("default");
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  useEffect(() => {
+    if (selectedProjectId !== project.id) {
+      setSelectedAction("default");
+    }
+  }, [selectedProjectId]);
+
+  useEffect(() => {
+    !loading && setSelectedAction("default");
+  }, [loading]);
+
+  const handleClose = (selectedMenuItem) => {
+    if (
+      selectedMenuItem === "clickaway" ||
+      selectedMenuItem === "backdropClick"
+    ) {
+      setAnchorEl(null);
+      return;
+    } else {
+      setSelectedAction(selectedMenuItem);
+    }
+    setAnchorEl(null);
+    setSelectedAction("default");
+  };
+
+  const Secondary = () => {
+    if (selectedAction === "Select" && selectedProjectId === project.id) {
+      return (
+        <Fab
+          variant={"button"}
+          size="small"
+          aria-haspopup="true"
+          sx={{
+            bgcolor: (theme) => alpha(theme.palette.primary.light, 0.8),
+          }}
+          onClick={() => runProject(project.id)}
+        >
+          <PlayArrowIcon />
+        </Fab>
+      );
+    } else if (selectedAction === "Delete") {
+      return (
+        <Fab
+          variant={"button"}
+          size="small"
+          aria-haspopup="true"
+          sx={{
+            bgcolor: (theme) => alpha(theme.palette.custom.error.light, 0.8),
+          }}
+          onClick={() => deleteProject(project.id)}
+        >
+          <DeleteIcon />
+        </Fab>
+      );
+    }
+  };
+
+  if (selectedAction === "Edit") {
+    return (
+      <ProjectEditItem
+        setSelectedAction={setSelectedAction}
+        selectedProject={project}
+        editProject={editProject}
+        loading={loading}
+      />
+    );
+  }
+
+  return (
+    <>
+      <ListItem
+        disablePadding
+        key={project.id}
+        secondaryAction={
+          selectedAction === "default" ? (
+            <>
+              <IconButton aria-haspopup="true" onClick={handleClick}>
+                <MoreVertIcon />
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={() => handleClose("Edit")}>Edit</MenuItem>
+                <MenuItem onClick={() => handleClose("Delete")}>
+                  Delete
+                </MenuItem>
+              </Menu>
+            </>
+          ) : (
+            <Secondary />
+          )
+        }
+        sx={{
+          borderWidth: 1,
+          borderStyle: "solid",
+          borderColor: "transparent",
+          ...(selectedAction === "Delete"
+            ? {
+                borderStyle: "solid",
+                borderWidth: 1,
+                borderRadius: 1,
+                borderColor: (theme) => theme.palette.custom.error.light,
+                backgroundColor: (theme) =>
+                  alpha(
+                    theme.palette.custom.error.main,
+                    theme.palette.action.hoverOpacity
+                  ),
+              }
+            : {}),
+          ...(selectedProjectId === project.id
+            ? {
+                borderRadius: 1,
+                borderColor: (theme) => theme.palette.primary.main,
+                backgroundColor: (theme) =>
+                  alpha(theme.palette.primary.main, 0.8),
+              }
+            : {}),
+          ...(project.id === activeProjectId
+            ? {
+                borderRadius: 1,
+                backgroundColor: (theme) =>
+                  alpha(theme.palette.primary.main, 0.4),
+              }
+            : {
+                "&:hover": {
+                  borderRadius: 1,
+                  borderColor: (theme) => theme.palette.primary.main,
+                  backgroundColor: (theme) =>
+                    alpha(
+                      theme.palette.primary.main,
+                      theme.palette.action.hoverOpacity
+                    ),
+                },
+              }),
+        }}
+      >
+        <ListItemButton
+          selected={selectedProjectId === project.id}
+          onClick={() => {
+            setSelectedAction("Select");
+            setSelectedProjectId(project.id);
+          }}
+          variant="transparent"
+        >
+          <ListItemText
+            primaryTypographyProps={{
+              typography: "h7",
+              sx: { textTransform: "capitalize" },
+            }}
+            primary={parse(project.name, match(project.name, searchQuery)).map(
+              (part, index) => (
+                <Box
+                  key={index}
+                  component="span"
+                  sx={{
+                    color: part.highlight ? "primary.main" : "text.primary",
+                  }}
+                >
+                  {part.text}
+                </Box>
+              )
+            )}
+          />
+        </ListItemButton>
+      </ListItem>
     </>
   );
 };
@@ -379,7 +569,7 @@ const ProjectEditItem = ({
         <Fab
           variant="button"
           size="small"
-          onClick={() => setSelectedAction("")}
+          onClick={() => setSelectedAction("default")}
         >
           <CloseIcon
             sx={{
@@ -389,196 +579,6 @@ const ProjectEditItem = ({
         </Fab>
       </Stack>
     </ListItem>
-  );
-};
-
-const ProjectListItem = ({
-  loading,
-  project,
-  deleteProject,
-  searchQuery,
-  editProject,
-  runProject,
-}) => {
-  const { id: activeProjectId } = useParams("id");
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [selectedAction, setSelectedAction] = useState("");
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  useEffect(() => {
-    !loading && setSelectedAction("");
-  }, [loading]);
-
-  const handleClose = (event, selectedMenuItem) => {
-    if (
-      selectedMenuItem === "clickaway" ||
-      selectedMenuItem === "backdropClick"
-    ) {
-      setAnchorEl(null);
-      return;
-    } else {
-      setSelectedAction(selectedMenuItem);
-    }
-    setAnchorEl(null);
-  };
-
-  if (selectedAction === "Edit") {
-    return (
-      <ProjectEditItem
-        setSelectedAction={setSelectedAction}
-        selectedProject={project}
-        editProject={editProject}
-        loading={loading}
-      />
-    );
-  }
-
-  return (
-    <>
-      <ListItem
-        disablePadding
-        secondaryAction={(() => {
-          switch (selectedAction) {
-            case "Select":
-              return (
-                <Fab
-                  variant={"button"}
-                  size="small"
-                  aria-haspopup="true"
-                  sx={{
-                    bgcolor: (theme) => alpha(theme.palette.primary.light, 0.8),
-                  }}
-                  onClick={() => runProject(project.id)}
-                >
-                  <PlayArrowIcon />
-                </Fab>
-              );
-            case "Delete":
-              return (
-                <Fab
-                  variant={"button"}
-                  size="small"
-                  aria-haspopup="true"
-                  sx={{
-                    bgcolor: (theme) =>
-                      alpha(theme.palette.custom.error.light, 0.8),
-                  }}
-                  onClick={() => deleteProject(project.id)}
-                >
-                  <DeleteIcon />
-                </Fab>
-              );
-            default:
-              return (
-                <>
-                  <IconButton aria-haspopup="true" onClick={handleClick}>
-                    <MoreVertIcon />
-                  </IconButton>
-                  <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                  >
-                    <MenuItem
-                      onClick={(event) =>
-                        handleClose(event, "Edit", project.id)
-                      }
-                    >
-                      Edit
-                    </MenuItem>
-                    <MenuItem
-                      onClick={(event) =>
-                        handleClose(event, "Delete", project.id)
-                      }
-                    >
-                      Delete
-                    </MenuItem>
-                  </Menu>
-                </>
-              );
-          }
-        })()}
-        key={project.id}
-        sx={{
-          borderWidth: 1,
-          borderStyle: "solid",
-          borderColor: "transparent",
-          ...(selectedAction === "Select"
-            ? {
-                borderRadius: 1,
-                borderColor: (theme) => theme.palette.primary.main,
-                backgroundColor: (theme) =>
-                  alpha(
-                    theme.palette.primary.main,
-                    theme.palette.action.hoverOpacity
-                  ),
-              }
-            : {}),
-          ...(selectedAction === "Delete"
-            ? {
-                borderStyle: "solid",
-                borderWidth: 1,
-                borderRadius: 1,
-                borderColor: (theme) => theme.palette.custom.error.light,
-                backgroundColor: (theme) =>
-                  alpha(
-                    theme.palette.custom.error.main,
-                    theme.palette.action.hoverOpacity
-                  ),
-              }
-            : {}),
-          ...(project.id === activeProjectId || selectedAction === "Select"
-            ? {
-                borderRadius: 1,
-                backgroundColor: (theme) =>
-                  selectedAction === "Select"
-                    ? alpha(theme.palette.primary.main, 0.8)
-                    : alpha(theme.palette.primary.main, 0.4),
-              }
-            : selectedAction === ""
-            ? {
-                "&:hover": {
-                  borderRadius: 1,
-                  borderColor: (theme) => theme.palette.primary.main,
-                  backgroundColor: (theme) =>
-                    alpha(
-                      theme.palette.primary.main,
-                      theme.palette.action.hoverOpacity
-                    ),
-                },
-              }
-            : {}),
-        }}
-      >
-        <ListItemButton
-          onClick={() => setSelectedAction("Select")}
-          variant="transparent"
-        >
-          <ListItemText
-            primaryTypographyProps={{
-              typography: "h7",
-              sx: { textTransform: "capitalize" },
-            }}
-            primary={parse(project.name, match(project.name, searchQuery)).map(
-              (part, index) => (
-                <Box
-                  key={index}
-                  component="span"
-                  sx={{
-                    color: part.highlight ? "primary.main" : "text.primary",
-                  }}
-                >
-                  {part.text}
-                </Box>
-              )
-            )}
-          />
-        </ListItemButton>
-      </ListItem>
-    </>
   );
 };
 
