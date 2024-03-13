@@ -57,7 +57,7 @@ export function applyFilter({ inputData, query }) {
 const AddNewButton = ({ formArea, setFormArea }) => {
   return (
     formArea === "button" && (
-      <DialogActions disableSpacing>
+      <Stack sx={{ p: 1.5, width: "100%" }}>
         <Button
           fullWidth={true}
           onClick={() => setFormArea("add")}
@@ -81,7 +81,7 @@ const AddNewButton = ({ formArea, setFormArea }) => {
         >
           Add New Item
         </Button>
-      </DialogActions>
+      </Stack>
     )
   );
 };
@@ -108,40 +108,67 @@ const NewProjectForm = ({ formArea, setFormArea, createProject }) => {
 
   return (
     formArea === "add" && (
-      <DialogContent disableSpacing>
+      <Stack
+        direction={"row"}
+        sx={{
+          borderTop: `solid 1px gray`,
+          width: "100%",
+          p: 1.5,
+          alignItems: "center",
+        }}
+      >
+        <TextField
+          variant="outlined"
+          placeholder="Project Name"
+          autoFocus
+          size="small"
+          sx={{ width: "100%" }}
+          value={newProject.projectName}
+          onChange={handleProjectNameChange}
+        />
+        <FormControl sx={{ minWidth: 120, ml: 2 }} size="small">
+          <InputLabel size="small" margin="dense">
+            Template
+          </InputLabel>
+          <Select
+            value={newProject.template}
+            onChange={handleTemplateChange}
+            variant="outlined"
+          >
+            <MenuItem value={"sample"}>Sample</MenuItem>
+            <MenuItem value={"blank"}>Blank</MenuItem>
+          </Select>
+        </FormControl>
         <Stack
-          spacing={2}
           direction={"row"}
-          sx={{
-            border: "0.1px solid gray",
-            width: "100%",
-            p: 1.5,
-            borderRadius: 1,
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
+          spacing={1}
+          width={"100%"}
+          justifyContent="end"
         >
-          <TextField
-            label="Project Name"
-            variant="standard"
-            value={newProject.projectName}
-            onChange={handleProjectNameChange}
-          />
-          <FormControl sx={{ minWidth: 120, ml: 2 }} size="medium">
-            <InputLabel>Template</InputLabel>
-            <Select
-              value={newProject.template}
-              onChange={handleTemplateChange}
-              variant="standard"
-            >
-              <MenuItem value={"sample"}>Sample</MenuItem>
-              <MenuItem value={"blank"}>Blank</MenuItem>
-            </Select>
-          </FormControl>
-          <Button onClick={() => createProject(newProject)}>Create</Button>
-          <Button onClick={() => setFormArea("button")}>Cancel</Button>
+          <Fab
+            variant="button"
+            size="small"
+            onClick={() => createProject(newProject)}
+          >
+            <DoneIcon
+              sx={{
+                color: (theme) => alpha(theme.palette.success.light, 0.5),
+              }}
+            />
+          </Fab>
+          <Fab
+            variant="button"
+            size="small"
+            onClick={() => setFormArea("button")}
+          >
+            <CloseIcon
+              sx={{
+                color: (theme) => alpha(theme.palette.error.light, 0.5),
+              }}
+            />
+          </Fab>
         </Stack>
-      </DialogContent>
+      </Stack>
     )
   );
 };
