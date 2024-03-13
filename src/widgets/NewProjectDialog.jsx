@@ -408,7 +408,6 @@ const ProjectListItem = ({
       return;
     } else {
       setSelectedAction(selectedMenuItem);
-      //handleSelectedItem(selectedMenuItem, projectId);
     }
     setAnchorEl(null);
   };
@@ -427,50 +426,85 @@ const ProjectListItem = ({
   return (
     <>
       <ListItem
-        secondaryAction={
-          selectedAction === "Delete" ? (
-            <Fab
-              variant={"button"}
-              size="small"
-              aria-haspopup="true"
-              sx={{
-                bgcolor: (theme) =>
-                  alpha(theme.palette.custom.error.light, 0.8),
-              }}
-              onClick={() => deleteProject(project.id)}
-            >
-              <DeleteIcon />
-            </Fab>
-          ) : (
-            <>
-              <IconButton aria-haspopup="true" onClick={handleClick}>
-                <MoreVertIcon />
-              </IconButton>
-              <Menu
-                id="simple-menu"
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem
-                  onClick={(event) => handleClose(event, "Edit", project.id)}
+        disablePadding
+        secondaryAction={(() => {
+          switch (selectedAction) {
+            case "Select":
+              return (
+                <Fab
+                  variant={"button"}
+                  size="small"
+                  aria-haspopup="true"
+                  sx={{
+                    bgcolor: (theme) => alpha(theme.palette.primary.light, 0.8),
+                  }}
+                  onClick={() => runProject(project.id)}
                 >
-                  Edit
-                </MenuItem>
-                <MenuItem
-                  onClick={(event) => handleClose(event, "Delete", project.id)}
+                  <PlayArrowIcon />
+                </Fab>
+              );
+            case "Delete":
+              return (
+                <Fab
+                  variant={"button"}
+                  size="small"
+                  aria-haspopup="true"
+                  sx={{
+                    bgcolor: (theme) =>
+                      alpha(theme.palette.custom.error.light, 0.8),
+                  }}
+                  onClick={() => deleteProject(project.id)}
                 >
-                  Delete
-                </MenuItem>
-              </Menu>
-            </>
-          )
-        }
+                  <DeleteIcon />
+                </Fab>
+              );
+            default:
+              return (
+                <>
+                  <IconButton aria-haspopup="true" onClick={handleClick}>
+                    <MoreVertIcon />
+                  </IconButton>
+                  <Menu
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    <MenuItem
+                      onClick={(event) =>
+                        handleClose(event, "Edit", project.id)
+                      }
+                    >
+                      Edit
+                    </MenuItem>
+                    <MenuItem
+                      onClick={(event) =>
+                        handleClose(event, "Delete", project.id)
+                      }
+                    >
+                      Delete
+                    </MenuItem>
+                  </Menu>
+                </>
+              );
+          }
+        })()}
         key={project.id}
         sx={{
           borderWidth: 1,
           borderStyle: "solid",
           borderColor: "transparent",
+          ...(selectedAction === "Select"
+            ? {
+                borderRadius: 1,
+                borderColor: (theme) => theme.palette.primary.main,
+                backgroundColor: (theme) =>
+                  alpha(
+                    theme.palette.primary.main,
+                    theme.palette.action.hoverOpacity
+                  ),
+              }
+            : {}),
           ...(selectedAction === "Delete"
             ? {
                 borderStyle: "solid",
@@ -483,14 +517,16 @@ const ProjectListItem = ({
                     theme.palette.action.hoverOpacity
                   ),
               }
-            : { borderBottomColor: (theme) => theme.palette.divider }),
-          ...(project.id === activeProjectId
+            : {}),
+          ...(project.id === activeProjectId || selectedAction === "Select"
             ? {
                 borderRadius: 1,
                 backgroundColor: (theme) =>
-                  alpha(theme.palette.primary.main, 0.2),
+                  selectedAction === "Select"
+                    ? alpha(theme.palette.primary.main, 0.8)
+                    : alpha(theme.palette.primary.main, 0.4),
               }
-            : selectedAction !== "Delete"
+            : selectedAction === ""
             ? {
                 "&:hover": {
                   borderRadius: 1,
@@ -505,25 +541,30 @@ const ProjectListItem = ({
             : {}),
         }}
       >
-        <ListItemText
-          primaryTypographyProps={{
-            typography: "h7",
-            sx: { textTransform: "capitalize" },
-          }}
-          primary={parse(project.name, match(project.name, searchQuery)).map(
-            (part, index) => (
-              <Box
-                key={index}
-                component="span"
-                sx={{
-                  color: part.highlight ? "primary.main" : "text.primary",
-                }}
-              >
-                {part.text}
-              </Box>
-            )
-          )}
-        />
+        <ListItemButton
+          onClick={() => setSelectedAction("Select")}
+          variant="transparent"
+        >
+          <ListItemText
+            primaryTypographyProps={{
+              typography: "h7",
+              sx: { textTransform: "capitalize" },
+            }}
+            primary={parse(project.name, match(project.name, searchQuery)).map(
+              (part, index) => (
+                <Box
+                  key={index}
+                  component="span"
+                  sx={{
+                    color: part.highlight ? "primary.main" : "text.primary",
+                  }}
+                >
+                  {part.text}
+                </Box>
+              )
+            )}
+          />
+        </ListItemButton>
       </ListItem>
     </>
   );
