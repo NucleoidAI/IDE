@@ -226,6 +226,15 @@ function NewProjectDialog({ handleClose, open }) {
 
     return context;
   }
+
+  function createBlankTemplate(name) {
+    const context = State.withBlank();
+    context.get = (prop) => State.resolve(context, prop);
+    context.nucleoid.project.name = name;
+    storage.set("ide", "projects", context.nucleoid.project.id, context);
+    return context;
+  }
+
   const createProject = (newProject) => {
     const { name, template } = newProject;
     setLoading(true);
@@ -234,7 +243,8 @@ function NewProjectDialog({ handleClose, open }) {
       const context = createWithSampleTemplate(name);
       initVfs(context);
     } else if (template === "blank") {
-      //initVfs(State.withBlank());
+      const context = createBlankTemplate(name);
+      initVfs(context);
     }
     setProjects(getProjectsFromLocalStorage());
     setFormArea("button");
