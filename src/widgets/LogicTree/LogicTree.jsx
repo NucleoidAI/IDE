@@ -1,6 +1,7 @@
 import { AutoAwesome } from "@mui/icons-material";
 import LensBlurIcon from "@mui/icons-material/LensBlur";
 import { useContext } from "../../context/context";
+import { useTheme } from "@mui/material/styles";
 
 import {
   Box,
@@ -9,9 +10,8 @@ import {
   CardContent,
   CardHeader,
   Fab,
-  Stack,
 } from "@mui/material";
-import { CloseSquare, MinusSquare, PlusSquare } from "./TreeIcons/TreeIcons";
+import { ChevronRight, ExpandMore } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import { TreeItem, TreeView, treeItemClasses } from "@mui/lab";
 import { alpha, styled } from "@mui/material/styles";
@@ -19,26 +19,33 @@ import { publish, useEvent } from "@nucleoidjs/react-event";
 
 const StyledTreeItem = styled(TreeItem)(({ theme }) => ({
   [`& .${treeItemClasses.content}`]: {
-    margin: 2,
-    height: 40,
-    width: "100%",
+    paddingY: theme.spacing(0.5),
+    paddingX: theme.spacing(1),
+    borderRadius: theme.shape.borderRadius,
+    "&:hover": {
+      backgroundColor: alpha(theme.palette.primary.main, 0.1),
+    },
   },
   [`& .${treeItemClasses.label}`]: {
-    width: "100%",
+    fontWeight: theme.typography.fontWeightMedium,
   },
-  [`& .${treeItemClasses.expanded}`]: {
-    backgroundColor: alpha(theme.palette.primary.main, 0.3),
-    borderRadius: theme.shape.borderRadius,
+  [`& .${treeItemClasses.group}`]: {
+    marginLeft: 0,
+    "& $content": {
+      paddingLeft: theme.spacing(2),
+    },
   },
-  [`& .${treeItemClasses.focused}`]: {
-    borderRadius: theme.shape.borderRadius,
-  },
-  [`& .${treeItemClasses.selected}`]: {
-    backgroundColor: alpha(theme.palette.primary.main, 0.1),
-    borderRight: `2px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-    borderBottom: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-    borderRadius: theme.shape.borderRadius,
-  },
+}));
+
+const GreenIcon = styled(Box)(({ theme, selected }) => ({
+  width: 12,
+  height: 12,
+  borderRadius: "50%",
+  backgroundColor: selected
+    ? theme.palette.success.main
+    : theme.palette.grey[400],
+  marginRight: theme.spacing(1),
+  transition: "background-color 0.2s",
 }));
 
 function LogicTree({ openLogicDialog }) {
@@ -47,6 +54,8 @@ function LogicTree({ openLogicDialog }) {
   const [treeData, setTreeData] = React.useState({});
   const [selectedKey, setSelectedKey] = useState([]);
   const [nodeKey, setNodeKey] = useState([]);
+
+  const theme = useTheme();
 
   const declarations = state.nucleoid.declarations;
 
@@ -128,45 +137,63 @@ function LogicTree({ openLogicDialog }) {
       <CardContent sx={{ width: "100%", height: "100%" }}>
         <TreeView
           aria-label="controlled"
-          defaultCollapseIcon={<MinusSquare />}
-          defaultExpandIcon={<PlusSquare />}
-          defaultEndIcon={<CloseSquare />}
-          sx={{ overflowX: "hidden" }}
+          defaultCollapseIcon={<ExpandMore />}
+          defaultExpandIcon={<ChevronRight />}
+          defaultEndIcon={<div style={{ width: 24 }} />}
+          sx={{
+            flexGrow: 1,
+            overflowY: "auto",
+            ".MuiTreeItem-root": {
+              alignItems: "center",
+            },
+            ".MuiTreeItem-content": {
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-between",
+              padding: "4px 8px",
+              borderRadius: "4px",
+              margin: "2px 0",
+            },
+            ".MuiTreeItem-label": {
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+            },
+            ".MuiTreeItem-group": {
+              marginLeft: "16px !important",
+              paddingLeft: "8px",
+              borderLeft: `1px solid ${alpha(theme.palette.primary.main, 0.3)}`,
+            },
+            ".MuiTreeItem-iconContainer": {
+              minWidth: "0",
+              marginRight: "0px",
+              padding: "0px",
+            },
+          }}
           onNodeSelect={(event, value) => select(value)}
           expanded={nodeKey}
           selected={selectedKey}
         >
-          {Object.entries(treeData).map(([nodeId, labels], index) => (
+          {Object.entries(treeData).map(([nodeId, labels]) => (
             <StyledTreeItem key={nodeId} nodeId={nodeId} label={nodeId}>
               {labels.map((label, innerIndex) => {
                 const formattedLabel =
                   label.length > 30 ? `${label.substring(0, 30)}..` : label;
+                const isSelected = selectedKey.includes(
+                  `${nodeId}-${innerIndex}`
+                );
                 return (
-                  <Stack key={innerIndex} direction="row" sx={{ width: 1 }}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        width: 1,
-                        alignSelf: "center",
-                        height: 10,
-                        marginTop: -0.8,
-                        marginLeft: -2.3,
-                        marginRight: -2.3,
-                        maxWidth: "6%",
-                        borderWidth: "2px",
-                        borderStyle: "none none solid none",
-                        borderRadius: "30px 30px 30px 80px",
-                        borderColor: (theme) =>
-                          alpha(theme.palette.primary.main, 0.5),
-                      }}
-                    />
-                    <StyledTreeItem
-                      key={innerIndex}
-                      nodeId={`${nodeId}-${innerIndex}`}
-                      label={formattedLabel}
-                      title={label}
-                    />
-                  </Stack>
+                  <StyledTreeItem
+                    key={innerIndex}
+                    nodeId={`${nodeId}-${innerIndex}`}
+                    label={
+                      <>
+                        <GreenIcon selected={isSelected} />
+                        {formattedLabel}
+                      </>
+                    }
+                    title={label}
+                  />
                 );
               })}
             </StyledTreeItem>

@@ -180,12 +180,7 @@ const Schema = ({ initialData = {}, customTypes = [] }) => {
           width: "100%",
           fontWeight: "bold",
         },
-        ".MuiTreeItem-group": {
-          marginLeft: "16px !important",
-          paddingLeft: "8px",
-          borderLeft: `1px solid`,
-          borderColor: (theme) => theme.palette.grey[400],
-        },
+
         ".MuiTreeItem-iconContainer": {
           minWidth: "0",
           marginRight: "0px",
