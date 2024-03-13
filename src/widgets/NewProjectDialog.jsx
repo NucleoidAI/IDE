@@ -5,6 +5,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import InputAdornment from "@mui/material/InputAdornment";
 import InputBase from "@mui/material/InputBase";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import SearchIcon from "@mui/icons-material/Search";
 import State from "../state";
 import WorkspacesIcon from "@mui/icons-material/Workspaces";
@@ -12,6 +13,7 @@ import { contextToMap } from "../utils/Parser";
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
 import { useEvent } from "@nucleoidjs/react-event";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 import vfs from "../vfs";
 
@@ -28,6 +30,7 @@ import {
   InputLabel,
   List,
   ListItem,
+  ListItemButton,
   ListItemText,
   Menu,
   MenuItem,
@@ -149,6 +152,7 @@ function NewProjectDialog({ handleClose, open }) {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
   const [vfsInit] = useEvent("DIAGNOSTICS_COMPLETED", { loading: true });
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(false);
@@ -195,7 +199,6 @@ function NewProjectDialog({ handleClose, open }) {
 
     return context;
   }
-
   const createProject = (newProject) => {
     const { name, template } = newProject;
     setLoading(true);
@@ -225,6 +228,12 @@ function NewProjectDialog({ handleClose, open }) {
     setProjects(getProjectsFromLocalStorage());
   };
 
+  const runProject = (projectId) => {
+    //TODO Remove mode
+    navigate(`/${projectId}/api?mode=local`);
+    navigate(0);
+  };
+
   const onDialogClose = () => {
     handleClose();
     setSearchQuery("");
@@ -249,6 +258,7 @@ function NewProjectDialog({ handleClose, open }) {
       <DialogContent>
         <ProjectList
           loading={loading}
+          runProject={(projectId) => runProject(projectId)}
           searchQuery={searchQuery}
           handleSearch={handleSearch}
           dataFiltered={dataFiltered}
@@ -276,6 +286,7 @@ const ProjectList = ({
   handleSelectedItem,
   editProject,
   deleteProject,
+  runProject,
 }) => {
   return (
     <>
@@ -301,6 +312,7 @@ const ProjectList = ({
       <List disablePadding>
         {dataFiltered.map((project) => (
           <ProjectListItem
+            runProject={runProject}
             loading={loading}
             deleteProject={deleteProject}
             key={project.id}
@@ -319,7 +331,6 @@ const ProjectEditItem = ({
   selectedProject,
   editProject,
   setSelectedAction,
-  loading,
 }) => {
   const [projectToEdit, setProjectToEdit] = React.useState({
     id: selectedProject.id,
@@ -387,6 +398,7 @@ const ProjectListItem = ({
   deleteProject,
   searchQuery,
   editProject,
+  runProject,
 }) => {
   const { id: activeProjectId } = useParams("id");
   const [anchorEl, setAnchorEl] = React.useState(null);
