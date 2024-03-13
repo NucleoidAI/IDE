@@ -6,6 +6,9 @@ Handlebars.registerHelper("camelCase", function (str) {
   return str.charAt(0).toLowerCase() + str.slice(1);
 });
 
+Handlebars.registerHelper("encloseBraces", function (str) {
+  return `{${str}Id}`;
+});
 function typeCheck(codeSnippet) {
   try {
     const sourceFile = ts.createSourceFile(
@@ -160,38 +163,38 @@ const apiTemplates = {
     }
   `,
   readObject: `
-    {
-      "path": "/{{pluralName}}/{{{&#8203}};{{singularName}}Id&#8203}",
-      "method": "GET",
-      "params": [
-        {
-          "name": "{{camelCase singularName}}Id",
-          "in": "path",
-          "type": "string",
-          "required": true,
-          "description": "{{singularName}} ID"
-        }
-      ],
-      "response": {
-        "type": "OPENAPI",
-        "schema": {
-          "name": "{{className}}",
-          "type": "object",
-          "properties": [
-            {{#each properties}}
-            {
-              "name": "{{name}}",
-              "type": "{{type}}"
-            }{{#unless @last}},{{/unless}}
-            {{/each}}
-          ]
-        }
-      },
-      "summary": "Read a {{singularName}}",
-      "description": "Read a {{singularName}}",
-      "x-nuc-action": "function action(req) { const {{camelCase singularName}}Id = req.params.{{camelCase singularName}}Id; return {{className}}[{{camelCase singularName}}Id]; }"
-    }
-  `,
+  {
+    "path": "/{{pluralName}}/{{encloseBraces singularName}}",
+    "method": "GET",
+    "params": [
+      {
+        "name": "{{camelCase singularName}}Id",
+        "in": "path",
+        "type": "string",
+        "required": true,
+        "description": "{{singularName}} ID"
+      }
+    ],
+    "response": {
+      "type": "OPENAPI",
+      "schema": {
+        "name": "{{className}}",
+        "type": "object",
+        "properties": [
+          {{#each properties}}
+          {
+            "name": "{{name}}",
+            "type": "{{type}}"
+          }{{#unless @last}},{{/unless}}
+          {{/each}}
+        ]
+      }
+    },
+    "summary": "Read a {{singularName}}",
+    "description": "Read a {{singularName}}",
+    "x-nuc-action": "function action(req) { const {{camelCase singularName}}Id = req.params.{{camelCase singularName}}Id; return {{className}}[{{camelCase singularName}}Id]; }"
+  }
+`,
 };
 
 function createAPI(functions, declarations) {
@@ -237,6 +240,7 @@ function extractClassName(classDefinition) {
 }
 
 function extractProperties(classDefinition) {
+  const propertySet = new Set();
   const properties = [];
   const lines = classDefinition.split("\n");
 
@@ -245,10 +249,15 @@ function extractProperties(classDefinition) {
     if (match) {
       const name = match[1];
       const type = match[2];
-      properties.push({ name, type });
+      const propertyString = `${name}:${type}`;
+      if (!propertySet.has(propertyString)) {
+        propertySet.add(propertyString);
+        properties.push({ name, type });
+      }
     }
   });
 
   return properties;
 }
+
 export { typeCheck, extractCodeSnippet, extractCodeSnippets, createAPI };
