@@ -140,6 +140,8 @@ const lightTheme = createTheme({
     secondary: {
       main: "#f4f4f4",
     },
+    error: { main: "#d32f2f", dark: "#c62828", light: "#ef5350" },
+
     custom: {
       grey: "rgba(255, 255, 255, 0.7)",
       fossil: "#747474",
@@ -301,6 +303,7 @@ const darkTheme = createTheme({
       main: base.secondary.dark,
     },
     custom: {
+      error: { main: "#d32f2f", dark: "#c62828", light: "#ef5350" },
       grey: base.grey[500],
       fossil: base.grey[500],
       darkDialogBg: "rgba(0,0,0,0.5)",
@@ -360,6 +363,23 @@ const darkTheme = createTheme({
     },
 
     MuiListItemButton: {
+      variants: [
+        {
+          props: { variant: "transparent" },
+          style: {
+            backgroundColor: `transparent !important`,
+            color: base.grey[500],
+            "&:hover": {
+              backgroundColor: base.grey[800],
+            },
+
+            "&.Mui-selected, &.Mui-selected:hover": {
+              backgroundColor: base.secondary.main,
+              color: base.common.white,
+            },
+          },
+        },
+      ],
       styleOverrides: {
         root: {
           backgroundColor: `${base.grey[900]} !important`,
