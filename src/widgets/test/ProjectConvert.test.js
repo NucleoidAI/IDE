@@ -189,8 +189,6 @@ describe("Project Converter", () => {
         },
       ];
 
-      const declarations = [];
-
       const expectedAPI = [
         {
           path: "/humans",
@@ -277,19 +275,9 @@ describe("Project Converter", () => {
         },
       ];
 
-      const api = createAPI(functions, declarations);
+      const api = createAPI(functions);
 
       expect(api).toEqual(expectedAPI);
-    });
-  });
-
-  describe("createProject", () => {
-    test("should create a project object with the provided API", () => {
-      const api = {};
-      const project = createProject(api);
-      expect(project).toHaveProperty("nucleoid");
-      expect(project.nucleoid).toHaveProperty("api");
-      expect(project.nucleoid.api).toEqual(api);
     });
   });
 });

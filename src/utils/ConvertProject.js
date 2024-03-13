@@ -20,7 +20,7 @@ function typeCheck(codeSnippet) {
 
     let result = null;
 
-    function visit(node) {
+    const visit = (node) => {
       if (ts.isFunctionDeclaration(node)) {
         result = "function";
       } else if (ts.isClassDeclaration(node)) {
@@ -38,7 +38,7 @@ function typeCheck(codeSnippet) {
       if (result === null) {
         ts.forEachChild(node, visit);
       }
-    }
+    };
 
     visit(sourceFile);
 
@@ -197,7 +197,7 @@ const apiTemplates = {
 `,
 };
 
-function createAPI(functions, declarations) {
+function createAPI(functions) {
   const api = [];
 
   functions.forEach((func) => {
