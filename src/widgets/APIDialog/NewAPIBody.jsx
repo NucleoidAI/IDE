@@ -1,4 +1,5 @@
 import React from "react";
+import Schema from "../../components/Schema/Schema";
 import SchemaEditor from "../../components/SchemaEditor";
 
 import { Box, Divider, Paper, Typography } from "@mui/material";
@@ -35,11 +36,15 @@ const NewAPIBody = ({ types, api, requestSchemaRef, responseSchemaRef }) => {
             alignItems: "center",
           }}
         >
-          <SchemaEditor
-            ref={requestSchemaRef}
-            initialData={api.request ? api.request.schema : ""}
-            customTypes={types}
-          />
+          {api.method === "GET" ? (
+            <Schema initialData={api.request ? api.request.schema : ""} />
+          ) : (
+            <SchemaEditor
+              ref={requestSchemaRef}
+              initialData={api.request ? api.request.schema : ""}
+              customTypes={types}
+            />
+          )}
           <Typography variant="h6" gutterBottom>
             Request
           </Typography>
