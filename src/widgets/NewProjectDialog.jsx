@@ -121,6 +121,7 @@ const NewProjectForm = ({ formArea, setFormArea, createProject }) => {
           variant="outlined"
           placeholder="Project Name"
           autoFocus
+          label="Project Name"
           size="small"
           sx={{ width: "100%" }}
           value={newProject.projectName}
@@ -213,11 +214,6 @@ function NewProjectDialog({ handleClose, open }) {
     setProjects(getProjectsFromLocalStorage());
   };
 
-  const initVfs = (context) => {
-    const files = contextToMap(context.nucleoid);
-    vfs.init(files);
-  };
-
   function createWithSampleTemplate(name) {
     const context = State.withSample();
     context.get = (prop) => State.resolve(context, prop);
@@ -243,8 +239,7 @@ function NewProjectDialog({ handleClose, open }) {
       const context = createWithSampleTemplate(name);
       initVfs(context);
     } else if (template === "blank") {
-      const context = createBlankTemplate(name);
-      initVfs(context);
+      createBlankTemplate(name);
     }
     setProjects(getProjectsFromLocalStorage());
     setFormArea("button");
@@ -405,7 +400,6 @@ const ProjectListItem = ({
       setSelectedAction(selectedMenuItem);
     }
     setAnchorEl(null);
-    setSelectedAction("default");
   };
 
   const Secondary = () => {
@@ -575,17 +569,12 @@ const ProjectEditItem = ({
     <ListItem
       sx={{
         borderWidth: 1,
-        borderStyle: "solid",
-
-        borderRadius: 1,
-        borderColor: (theme) => theme.palette.primary.main,
-        backgroundColor: (theme) =>
-          alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity),
       }}
     >
       <TextField
         variant="outlined"
         autoFocus
+        label="Project Name"
         size="small"
         value={projectToEdit.projectName}
         onChange={handleProjectNameChange}
