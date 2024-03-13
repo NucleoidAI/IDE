@@ -1,8 +1,10 @@
+import CloseIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Dialog from "@mui/material/Dialog";
+import DoneIcon from "@mui/icons-material/Done";
 import InputAdornment from "@mui/material/InputAdornment";
 import InputBase from "@mui/material/InputBase";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import React from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import State from "../state";
 import WorkspacesIcon from "@mui/icons-material/Workspaces";
@@ -18,6 +20,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Fab,
   FormControl,
   IconButton,
   InputLabel,
@@ -32,6 +35,7 @@ import {
   Typography,
   alpha,
 } from "@mui/material";
+import React, { useRef } from "react";
 import { storage, useStorage } from "@nucleoidjs/webstorage";
 import { useCallback, useEffect, useState } from "react";
 
@@ -44,143 +48,6 @@ export function applyFilter({ inputData, query }) {
 
   return inputData;
 }
-
-const ProjectList = ({
-  searchQuery,
-  handleSearch,
-  dataFiltered,
-  handleSelectedItem,
-}) => {
-  return (
-    <>
-      <Box sx={{ p: 1, my: 2, borderBottom: `solid 1px gray` }}>
-        <InputBase
-          data-cy="item-input"
-          fullWidth={true}
-          placeholder="Search Project..."
-          value={searchQuery}
-          onChange={handleSearch}
-          startAdornment={
-            <InputAdornment position="start">
-              <SearchIcon variant="pageIcon" />
-            </InputAdornment>
-          }
-          endAdornment={<></>}
-          inputProps={{
-            sx: { typography: "h6" },
-          }}
-        />
-      </Box>
-
-      <List disablePadding>
-        {dataFiltered.map((project) => (
-          <ProjectListItem
-            key={project.id}
-            project={project}
-            handleSelectedItem={handleSelectedItem}
-            searchQuery={searchQuery}
-          />
-        ))}
-      </List>
-    </>
-  );
-};
-
-const ProjectListItem = ({ project, handleSelectedItem, searchQuery }) => {
-  const { id: activeProjectId } = useParams("id");
-  console.log(activeProjectId);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = (event, selectedMenuItem, projectId) => {
-    if (
-      selectedMenuItem === "clickaway" ||
-      selectedMenuItem === "backdropClick"
-    ) {
-      setAnchorEl(null);
-      return;
-    } else {
-      handleSelectedItem(selectedMenuItem, projectId);
-    }
-    setAnchorEl(null);
-  };
-  return (
-    <>
-      <ListItem
-        secondaryAction={
-          <>
-            <IconButton aria-haspopup="true" onClick={handleClick}>
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              id="simple-menu"
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem
-                onClick={(event) => handleClose(event, "Edit", project.id)}
-              >
-                Edit
-              </MenuItem>
-              <MenuItem
-                onClick={(event) => handleClose(event, "Delete", project.id)}
-              >
-                Delete
-              </MenuItem>
-            </Menu>
-          </>
-        }
-        key={project.id}
-        sx={{
-          ...(project.id === activeProjectId
-            ? {
-                borderRadius: 1,
-                backgroundColor: (theme) =>
-                  alpha(theme.palette.primary.main, 0.2),
-              }
-            : {}),
-          borderWidth: 1,
-          borderStyle: "solid",
-          borderColor: "transparent",
-          borderBottomColor: (theme) => theme.palette.divider,
-          "&:hover": {
-            borderRadius: 1,
-            borderColor: (theme) => theme.palette.primary.main,
-            backgroundColor: (theme) =>
-              alpha(
-                theme.palette.primary.main,
-                theme.palette.action.hoverOpacity
-              ),
-          },
-        }}
-      >
-        <ListItemText
-          primaryTypographyProps={{
-            typography: "h7",
-            sx: { textTransform: "capitalize" },
-          }}
-          primary={parse(project.name, match(project.name, searchQuery)).map(
-            (part, index) => (
-              <Box
-                key={index}
-                component="span"
-                sx={{
-                  color: part.highlight ? "primary.main" : "text.primary",
-                }}
-              >
-                {part.text}
-              </Box>
-            )
-          )}
-        />
-      </ListItem>
-    </>
-  );
-};
 
 const AddNewButton = ({ formArea, setFormArea }) => {
   return (
@@ -274,49 +141,6 @@ const NewProjectForm = ({ formArea, setFormArea, createProject }) => {
   );
 };
 
-const EditProjectForm = ({
-  selectedProjectName,
-  formArea,
-  setFormArea,
-  editProject,
-}) => {
-  const [projectName, setProjectName] = React.useState(selectedProjectName);
-
-  const handleProjectNameChange = (event) => {
-    setProjectName(event.target.value);
-  };
-
-  return (
-    formArea === "Edit" && (
-      <DialogContent disableSpacing>
-        <Stack
-          spacing={2}
-          direction={"row"}
-          sx={{
-            border: "0.1px solid gray",
-            width: "100%",
-            p: 1.5,
-            borderRadius: 1,
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <TextField
-            label="Project Name"
-            variant="standard"
-            value={projectName}
-            onChange={handleProjectNameChange}
-          />
-          <Stack direction={"row"} spacing={2}>
-            <Button onClick={() => editProject(projectName)}>Save</Button>
-            <Button onClick={() => setFormArea("button")}>Cancel</Button>
-          </Stack>
-        </Stack>
-      </DialogContent>
-    )
-  );
-};
-
 function NewProjectDialog({ handleClose, open }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [formArea, setFormArea] = useState("button");
@@ -348,6 +172,7 @@ function NewProjectDialog({ handleClose, open }) {
 
   const deleteProject = (projectId) => {
     localStorage.removeItem(`ide.projects.${projectId}`);
+    setProjects(getProjectsFromLocalStorage());
   };
 
   const onMenuItemClick = (selectedMenuItem, projectId) => {
@@ -395,21 +220,21 @@ function NewProjectDialog({ handleClose, open }) {
     setProjects(getProjectsFromLocalStorage());
   }, []);
 
-  const editProject = (newProjectName) => {
-    const context = storage.get("ide", "projects", selectedProject.id);
-    context.nucleoid.project.name = newProjectName;
-    storage.remove("ide", "projects", selectedProject.id);
+  const editProject = (editedProjectName, editedProjectId) => {
+    console.log(editedProjectName);
+    console.log(editedProjectId);
+    const context = storage.get("ide", "projects", editedProjectId);
+    context.nucleoid.project.name = editedProjectName;
+    storage.remove("ide", "projects", editedProjectId);
     //PUBLISH CONTEXT CHANGED EVENT
     initVfs(context);
-    storage.set("ide", "projects", selectedProject.id, context);
+    storage.set("ide", "projects", editedProjectId, context);
     setProjects(getProjectsFromLocalStorage());
-    setFormArea("button");
   };
 
   const onDialogClose = () => {
     handleClose();
     setSearchQuery("");
-    setFormArea("button");
   };
 
   return (
@@ -436,6 +261,10 @@ function NewProjectDialog({ handleClose, open }) {
           searchQuery={searchQuery}
           handleSearch={handleSearch}
           dataFiltered={dataFiltered}
+          editProject={(editedProjectName, editedProjectId) =>
+            editProject(editedProjectName, editedProjectId)
+          }
+          deleteProject={(projectId) => deleteProject(projectId)}
         />
       </DialogContent>
       <AddNewButton formArea={formArea} setFormArea={setFormArea} />
@@ -444,16 +273,260 @@ function NewProjectDialog({ handleClose, open }) {
         setFormArea={setFormArea}
         createProject={(newProject) => createProject(newProject)}
       />
-      {formArea === "Edit" && (
-        <EditProjectForm
-          selectedProjectName={selectedProject?.name}
-          formArea={formArea}
-          setFormArea={setFormArea}
-          editProject={(newProjectName) => editProject(newProjectName)}
-        />
-      )}
     </Dialog>
   );
 }
+
+const ProjectList = ({
+  searchQuery,
+  handleSearch,
+  dataFiltered,
+  handleSelectedItem,
+  editProject,
+  deleteProject,
+}) => {
+  return (
+    <>
+      <Box sx={{ p: 1, my: 2, borderBottom: `solid 1px gray` }}>
+        <InputBase
+          data-cy="item-input"
+          fullWidth={true}
+          placeholder="Search Project..."
+          value={searchQuery}
+          onChange={handleSearch}
+          startAdornment={
+            <InputAdornment position="start">
+              <SearchIcon variant="pageIcon" />
+            </InputAdornment>
+          }
+          endAdornment={<></>}
+          inputProps={{
+            sx: { typography: "h6" },
+          }}
+        />
+      </Box>
+
+      <List disablePadding>
+        {dataFiltered.map((project) => (
+          <ProjectListItem
+            deleteProject={deleteProject}
+            key={project.id}
+            project={project}
+            handleSelectedItem={handleSelectedItem}
+            searchQuery={searchQuery}
+            editProject={editProject}
+          />
+        ))}
+      </List>
+    </>
+  );
+};
+
+const ProjectEditItem = ({
+  selectedProject,
+  editProject,
+  setSelectedAction,
+}) => {
+  const [projectToEdit, setProjectToEdit] = React.useState({
+    id: selectedProject.id,
+    projectName: selectedProject.name,
+  });
+
+  const handleProjectNameChange = (event) => {
+    setProjectToEdit((prevState) => ({
+      ...prevState,
+      projectName: event.target.value,
+    }));
+  };
+
+  return (
+    <ListItem
+      sx={{
+        borderWidth: 1,
+        borderStyle: "solid",
+
+        borderRadius: 1,
+        borderColor: (theme) => theme.palette.primary.main,
+        backgroundColor: (theme) =>
+          alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity),
+      }}
+    >
+      <TextField
+        variant="outlined"
+        autoFocus
+        size="small"
+        value={projectToEdit.projectName}
+        onChange={handleProjectNameChange}
+      />
+      <Stack direction={"row"} spacing={1} width={"100%"} justifyContent="end">
+        <Fab
+          variant="button"
+          size="small"
+          sx={{
+            color: (theme) => alpha(theme.palette.success.light, 0.5),
+          }}
+          onClick={() =>
+            editProject(projectToEdit.projectName, projectToEdit.id)
+          }
+        >
+          <DoneIcon />
+        </Fab>
+        <Fab
+          variant="button"
+          size="small"
+          onClick={() => setSelectedAction("")}
+        >
+          <CloseIcon
+            sx={{
+              color: (theme) => alpha(theme.palette.custom.error.light, 0.5),
+            }}
+          />
+        </Fab>
+      </Stack>
+    </ListItem>
+  );
+};
+
+const ProjectListItem = ({
+  project,
+  deleteProject,
+  searchQuery,
+  editProject,
+}) => {
+  const { id: activeProjectId } = useParams("id");
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [selectedAction, setSelectedAction] = useState("");
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = (event, selectedMenuItem) => {
+    if (
+      selectedMenuItem === "clickaway" ||
+      selectedMenuItem === "backdropClick"
+    ) {
+      setAnchorEl(null);
+      return;
+    } else {
+      setSelectedAction(selectedMenuItem);
+      //handleSelectedItem(selectedMenuItem, projectId);
+    }
+    setAnchorEl(null);
+  };
+
+  if (selectedAction === "Edit") {
+    return (
+      <ProjectEditItem
+        setSelectedAction={setSelectedAction}
+        selectedProject={project}
+        editProject={editProject}
+      />
+    );
+  }
+
+  return (
+    <>
+      <ListItem
+        secondaryAction={
+          selectedAction === "Delete" ? (
+            <Fab
+              variant={"button"}
+              size="small"
+              aria-haspopup="true"
+              sx={{
+                bgcolor: (theme) =>
+                  alpha(theme.palette.custom.error.light, 0.8),
+              }}
+              onClick={() => deleteProject(project.id)}
+            >
+              <DeleteIcon />
+            </Fab>
+          ) : (
+            <>
+              <IconButton aria-haspopup="true" onClick={handleClick}>
+                <MoreVertIcon />
+              </IconButton>
+              <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem
+                  onClick={(event) => handleClose(event, "Edit", project.id)}
+                >
+                  Edit
+                </MenuItem>
+                <MenuItem
+                  onClick={(event) => handleClose(event, "Delete", project.id)}
+                >
+                  Delete
+                </MenuItem>
+              </Menu>
+            </>
+          )
+        }
+        key={project.id}
+        sx={{
+          borderWidth: 1,
+          borderStyle: "solid",
+          borderColor: "transparent",
+          ...(selectedAction === "Delete"
+            ? {
+                borderStyle: "solid",
+                borderWidth: 1,
+                borderRadius: 1,
+                borderColor: (theme) => theme.palette.custom.error.light,
+                backgroundColor: (theme) =>
+                  alpha(
+                    theme.palette.custom.error.main,
+                    theme.palette.action.hoverOpacity
+                  ),
+              }
+            : { borderBottomColor: (theme) => theme.palette.divider }),
+          ...(project.id === activeProjectId
+            ? {
+                borderRadius: 1,
+                backgroundColor: (theme) =>
+                  alpha(theme.palette.primary.main, 0.2),
+              }
+            : selectedAction !== "Delete"
+            ? {
+                "&:hover": {
+                  borderRadius: 1,
+                  borderColor: (theme) => theme.palette.primary.main,
+                  backgroundColor: (theme) =>
+                    alpha(
+                      theme.palette.primary.main,
+                      theme.palette.action.hoverOpacity
+                    ),
+                },
+              }
+            : {}),
+        }}
+      >
+        <ListItemText
+          primaryTypographyProps={{
+            typography: "h7",
+            sx: { textTransform: "capitalize" },
+          }}
+          primary={parse(project.name, match(project.name, searchQuery)).map(
+            (part, index) => (
+              <Box
+                key={index}
+                component="span"
+                sx={{
+                  color: part.highlight ? "primary.main" : "text.primary",
+                }}
+              >
+                {part.text}
+              </Box>
+            )
+          )}
+        />
+      </ListItem>
+    </>
+  );
+};
 
 export default NewProjectDialog;
