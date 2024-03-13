@@ -11,12 +11,14 @@ import WorkspacesIcon from "@mui/icons-material/Workspaces";
 import { contextToMap } from "../utils/Parser";
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
+import { useEvent } from "@nucleoidjs/react-event";
 import { useParams } from "react-router";
 import vfs from "../vfs";
 
 import {
   Box,
   Button,
+  CircularProgress,
   DialogActions,
   DialogContent,
   DialogTitle,
@@ -145,6 +147,12 @@ function NewProjectDialog({ handleClose, open }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [formArea, setFormArea] = useState("button");
   const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [vfsInit] = useEvent("DIAGNOSTICS_COMPLETED", { loading: true });
+
+  useEffect(() => {
+    setLoading(false);
+  }, [vfsInit]);
 
   const getProjectsFromLocalStorage = () => {
     const projects = [];
@@ -190,6 +198,7 @@ function NewProjectDialog({ handleClose, open }) {
 
   const createProject = (newProject) => {
     const { name, template } = newProject;
+    setLoading(true);
 
     if (template === "sample") {
       const context = createWithSampleTemplate(name);
@@ -206,6 +215,7 @@ function NewProjectDialog({ handleClose, open }) {
   }, []);
 
   const editProject = (editedProjectName, editedProjectId) => {
+    setLoading(true);
     const context = storage.get("ide", "projects", editedProjectId);
     context.nucleoid.project.name = editedProjectName;
     storage.remove("ide", "projects", editedProjectId);
@@ -238,6 +248,7 @@ function NewProjectDialog({ handleClose, open }) {
       </DialogTitle>
       <DialogContent>
         <ProjectList
+          loading={loading}
           searchQuery={searchQuery}
           handleSearch={handleSearch}
           dataFiltered={dataFiltered}
@@ -258,6 +269,7 @@ function NewProjectDialog({ handleClose, open }) {
 }
 
 const ProjectList = ({
+  loading,
   searchQuery,
   handleSearch,
   dataFiltered,
@@ -289,6 +301,7 @@ const ProjectList = ({
       <List disablePadding>
         {dataFiltered.map((project) => (
           <ProjectListItem
+            loading={loading}
             deleteProject={deleteProject}
             key={project.id}
             project={project}
@@ -306,6 +319,7 @@ const ProjectEditItem = ({
   selectedProject,
   editProject,
   setSelectedAction,
+  loading,
 }) => {
   const [projectToEdit, setProjectToEdit] = React.useState({
     id: selectedProject.id,
@@ -368,6 +382,7 @@ const ProjectEditItem = ({
 };
 
 const ProjectListItem = ({
+  loading,
   project,
   deleteProject,
   searchQuery,
@@ -379,6 +394,10 @@ const ProjectListItem = ({
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
+  useEffect(() => {
+    !loading && setSelectedAction("");
+  }, [loading]);
 
   const handleClose = (event, selectedMenuItem) => {
     if (
@@ -400,6 +419,7 @@ const ProjectListItem = ({
         setSelectedAction={setSelectedAction}
         selectedProject={project}
         editProject={editProject}
+        loading={loading}
       />
     );
   }
