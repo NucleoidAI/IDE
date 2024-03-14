@@ -6,21 +6,19 @@ import InputAdornment from "@mui/material/InputAdornment";
 import InputBase from "@mui/material/InputBase";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import React from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import State from "../state";
 import WorkspacesIcon from "@mui/icons-material/Workspaces";
-import { contextToMap } from "../utils/Parser";
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
+import { storage } from "@nucleoidjs/webstorage";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
-import vfs from "../vfs";
 
 import {
   Box,
   Button,
-  CircularProgress,
-  DialogActions,
   DialogContent,
   DialogTitle,
   Fab,
@@ -39,9 +37,7 @@ import {
   Typography,
   alpha,
 } from "@mui/material";
-import React, { useRef } from "react";
 import { publish, useEvent } from "@nucleoidjs/react-event";
-import { storage, useStorage } from "@nucleoidjs/webstorage";
 import { useCallback, useEffect, useState } from "react";
 
 export function applyFilter({ inputData, query }) {
@@ -427,11 +423,24 @@ const ProjectListItem = ({
     );
   }
 
+  const variant = () => {
+    if (selectedProjectId === project.id) {
+      return "select";
+    } else if (activeProjectId === project.id) {
+      return "current";
+    }
+    if (selectedAction === "Delete") {
+      return "delete";
+    }
+    return "default";
+  };
+
   return (
     <>
       <ListItem
         disablePadding
         key={project.id}
+        variant={variant()}
         secondaryAction={
           selectedAction === "default" ? (
             <>
@@ -453,49 +462,6 @@ const ProjectListItem = ({
             <Secondary />
           )
         }
-        sx={{
-          borderWidth: 1,
-          borderStyle: "solid",
-          borderColor: "transparent",
-          ...(selectedAction === "Delete"
-            ? {
-                borderStyle: "solid",
-                borderWidth: 1,
-                borderRadius: 1,
-                borderColor: (theme) => theme.palette.custom.error.light,
-                backgroundColor: (theme) =>
-                  alpha(
-                    theme.palette.custom.error.main,
-                    theme.palette.action.hoverOpacity
-                  ),
-              }
-            : {}),
-          ...(selectedProjectId === project.id
-            ? {
-                borderRadius: 1,
-                borderColor: (theme) => theme.palette.primary.main,
-                backgroundColor: (theme) =>
-                  alpha(theme.palette.primary.main, 0.8),
-              }
-            : {}),
-          ...(project.id === activeProjectId
-            ? {
-                borderRadius: 1,
-                backgroundColor: (theme) =>
-                  alpha(theme.palette.primary.main, 0.4),
-              }
-            : {
-                "&:hover": {
-                  borderRadius: 1,
-                  borderColor: (theme) => theme.palette.primary.main,
-                  backgroundColor: (theme) =>
-                    alpha(
-                      theme.palette.primary.main,
-                      theme.palette.action.hoverOpacity
-                    ),
-                },
-              }),
-        }}
       >
         <ListItemButton
           selected={selectedProjectId === project.id}

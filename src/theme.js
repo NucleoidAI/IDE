@@ -1,6 +1,7 @@
 import { alpha } from "@mui/material/styles";
-import { base } from "./palette";
 import { createTheme } from "@mui/material";
+
+import { action, base, error, palette, primary, success } from "./palette";
 
 const micAnimation = {
   "& span": {
@@ -109,6 +110,60 @@ const commonThemeProperties = {
       defaultProps: {
         variant: "standard",
       },
+    },
+    MuiListItem: {
+      variants: [
+        {
+          props: { variant: "default" },
+          style: {
+            borderWidth: 1,
+            borderStyle: "solid",
+            borderRadius: "2px",
+            borderColor: "transparent",
+            "&:hover": {
+              borderWidth: 1,
+              borderStyle: "solid",
+              borderRadius: "5px",
+              borderColor: primary.main,
+              backgroundColor: alpha(primary.main, action.hoverOpacity),
+            },
+          },
+        },
+        {
+          props: { variant: "current" },
+          borderWidth: 1,
+          borderStyle: "solid",
+          borderRadius: "2px",
+          style: {
+            borderRadius: "5px",
+            backgroundColor: alpha(primary.main, 0.4),
+          },
+        },
+        {
+          props: { variant: "select" },
+          borderWidth: 1,
+          borderStyle: "solid",
+          borderRadius: "2px",
+          style: {
+            borderRadius: "5px",
+            borderColor: primary.main,
+            backgroundColor: alpha(primary.main, 0.8),
+          },
+        },
+        {
+          props: { variant: "delete" },
+          borderWidth: 1,
+          borderStyle: "solid",
+          borderRadius: "2px",
+          style: {
+            borderStyle: "solid",
+            borderWidth: 1,
+            borderRadius: "5px",
+            borderColor: error.main,
+            backgroundColor: alpha(error.main, action.hoverOpacity),
+          },
+        },
+      ],
     },
     MuiSvgIcon: {
       variants: [
