@@ -1,7 +1,7 @@
 import { alpha } from "@mui/material/styles";
 import { createTheme } from "@mui/material";
 
-import { action, base, error, palette, primary, success } from "./palette";
+import { action, base, error, primary, success } from "./palette";
 
 const micAnimation = {
   "& span": {
@@ -196,7 +196,8 @@ const lightTheme = createTheme({
       main: "#f4f4f4",
     },
     error: { main: "#d32f2f", dark: "#c62828", light: "#ef5350" },
-
+    doneIcon: alpha(success.main, 0.5),
+    cancelIcon: alpha(error.main, 0.5),
     custom: {
       grey: "rgba(255, 255, 255, 0.7)",
       fossil: "#747474",
@@ -369,6 +370,8 @@ const darkTheme = createTheme({
       textGray: base.grey[500],
       messageBG: base.grey[700],
     },
+    doneIcon: alpha(success.main, 0.5),
+    cancelIcon: alpha(error.main, 0.5),
     chat: {
       inputBorderRadius: "15px",
     },
