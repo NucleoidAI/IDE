@@ -9,7 +9,7 @@ import { publish } from "@nucleoidjs/react-event";
 import { storage } from "@nucleoidjs/webstorage";
 import { useNavigate } from "react-router-dom";
 
-import { DialogContent, DialogTitle, Typography } from "@mui/material";
+import { DialogContent, DialogTitle } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 
 function applyFilter({ inputData, query }) {
