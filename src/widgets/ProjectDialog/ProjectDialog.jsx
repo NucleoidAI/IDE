@@ -139,10 +139,8 @@ function ProjectDialog({ handleClose, open }) {
           justifyContent: "start",
         }}
       >
-        <WorkspacesIcon />
-        <Typography mx={1} variant="h5">
-          Projects
-        </Typography>
+        <WorkspacesIcon sx={{ mx: 1 }} />
+        Projects
       </DialogTitle>
       <DialogContent>
         <ProjectList
