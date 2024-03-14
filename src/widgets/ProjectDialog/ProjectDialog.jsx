@@ -8,7 +8,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import React from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import State from "../state";
+import State from "../../state";
 import WorkspacesIcon from "@mui/icons-material/Workspaces";
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
@@ -170,7 +170,7 @@ const NewProjectForm = ({ formArea, setFormArea, createProject }) => {
   );
 };
 
-function NewProjectDialog({ handleClose, open }) {
+function ProjectDialog({ handleClose, open }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [formArea, setFormArea] = useState("button");
   const [projects, setProjects] = useState([]);
@@ -556,4 +556,4 @@ const ProjectEditItem = ({
   );
 };
 
-export default NewProjectDialog;
+export default ProjectDialog;
