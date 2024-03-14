@@ -155,11 +155,9 @@ function App() {
           return setContext(initContext(result));
         });
       } else if (mode === "chat" || mode === "local") {
-        //FOR TESTING
-        //storage.set("ide", "projects", "1", JSON.stringify(exampleContext));
-
         const context = getContextFromStorage(projectId);
         initVfs(context);
+
         return setContext(initContext(context));
       } else if (mode === "mobile") {
         return setContext("mobile");
