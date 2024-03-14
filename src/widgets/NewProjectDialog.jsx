@@ -12,7 +12,6 @@ import WorkspacesIcon from "@mui/icons-material/Workspaces";
 import { contextToMap } from "../utils/Parser";
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
-import { useEvent } from "@nucleoidjs/react-event";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 import vfs from "../vfs";
@@ -41,6 +40,7 @@ import {
   alpha,
 } from "@mui/material";
 import React, { useRef } from "react";
+import { publish, useEvent } from "@nucleoidjs/react-event";
 import { storage, useStorage } from "@nucleoidjs/webstorage";
 import { useCallback, useEffect, useState } from "react";
 
@@ -60,6 +60,7 @@ const AddNewButton = ({ formArea, setFormArea }) => {
       <Stack sx={{ p: 1.5, width: "100%" }}>
         <Button
           fullWidth={true}
+          variant="contained"
           onClick={() => setFormArea("add")}
           sx={{
             width: "100%",
@@ -178,13 +179,7 @@ function NewProjectDialog({ handleClose, open }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [formArea, setFormArea] = useState("button");
   const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [vfsInit] = useEvent("DIAGNOSTICS_COMPLETED", { loading: true });
   const navigate = useNavigate();
-
-  useEffect(() => {
-    setLoading(false);
-  }, [vfsInit]);
 
   const getProjectsFromLocalStorage = () => {
     const projects = [];
@@ -233,15 +228,14 @@ function NewProjectDialog({ handleClose, open }) {
 
   const createProject = (newProject) => {
     const { name, template } = newProject;
-    setLoading(true);
 
     if (template === "sample") {
-      const context = createWithSampleTemplate(name);
-      initVfs(context);
+      createWithSampleTemplate(name);
     } else if (template === "blank") {
       createBlankTemplate(name);
     }
     setProjects(getProjectsFromLocalStorage());
+
     setFormArea("button");
   };
 
@@ -250,16 +244,13 @@ function NewProjectDialog({ handleClose, open }) {
   }, []);
 
   const editProject = (editedProjectName, editedProjectId) => {
-    setLoading(true);
     const context = storage.get("ide", "projects", editedProjectId);
     context.nucleoid.project.name = editedProjectName;
     storage.remove("ide", "projects", editedProjectId);
-    //PUBLISH CONTEXT CHANGED EVENT
-    initVfs(context);
     storage.set("ide", "projects", editedProjectId, context);
+
     setProjects(getProjectsFromLocalStorage());
   };
-
   const runProject = (projectId) => {
     //TODO Remove mode
     navigate(`/${projectId}/api?mode=local`);
@@ -289,7 +280,6 @@ function NewProjectDialog({ handleClose, open }) {
       </DialogTitle>
       <DialogContent>
         <ProjectList
-          loading={loading}
           runProject={(projectId) => runProject(projectId)}
           searchQuery={searchQuery}
           handleSearch={handleSearch}
@@ -311,7 +301,6 @@ function NewProjectDialog({ handleClose, open }) {
 }
 
 const ProjectList = ({
-  loading,
   searchQuery,
   handleSearch,
   dataFiltered,
@@ -348,7 +337,6 @@ const ProjectList = ({
             setSelectedProjectId={setSelectedProjectId}
             selectedProjectId={selectedProjectId}
             runProject={runProject}
-            loading={loading}
             deleteProject={deleteProject}
             key={project.id}
             project={project}
@@ -362,7 +350,6 @@ const ProjectList = ({
 };
 
 const ProjectListItem = ({
-  loading,
   project,
   deleteProject,
   searchQuery,
@@ -384,10 +371,6 @@ const ProjectListItem = ({
       setSelectedAction("default");
     }
   }, [selectedProjectId]);
-
-  useEffect(() => {
-    !loading && setSelectedAction("default");
-  }, [loading]);
 
   const handleClose = (selectedMenuItem) => {
     if (
@@ -440,7 +423,6 @@ const ProjectListItem = ({
         setSelectedAction={setSelectedAction}
         selectedProject={project}
         editProject={editProject}
-        loading={loading}
       />
     );
   }
@@ -586,9 +568,10 @@ const ProjectEditItem = ({
           sx={{
             color: (theme) => alpha(theme.palette.success.light, 0.5),
           }}
-          onClick={() =>
-            editProject(projectToEdit.projectName, projectToEdit.id)
-          }
+          onClick={() => {
+            editProject(projectToEdit.projectName, projectToEdit.id);
+            setSelectedAction("default");
+          }}
         >
           <DoneIcon />
         </Fab>
