@@ -57,7 +57,7 @@ const InlineEditForm = ({
         >
           <CloseIcon
             sx={{
-              color: (theme) => alpha(theme.palette.custom.error.light, 0.5),
+              color: (theme) => alpha(theme.palette.error.light, 0.5),
             }}
           />
         </Fab>

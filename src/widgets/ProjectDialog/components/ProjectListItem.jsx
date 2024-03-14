@@ -47,7 +47,7 @@ const ActionButton = ({
         size="small"
         aria-haspopup="true"
         sx={{
-          bgcolor: (theme) => alpha(theme.palette.custom.error.light, 0.8),
+          bgcolor: (theme) => alpha(theme.palette.error.light, 0.8),
         }}
         onClick={() => deleteProject(project.id)}
       >
