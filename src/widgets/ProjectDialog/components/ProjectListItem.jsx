@@ -1,25 +1,23 @@
-import DeleteIcon from "@mui/icons-material/Delete";
+import ActionButton from "../../../components/ActionButton/ActionButton";
 import InlineEditForm from "./InlineEditForm";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
 import { useParams } from "react-router-dom";
-
 import {
   Box,
-  Fab,
   IconButton,
   ListItem,
   ListItemButton,
   ListItemText,
   Menu,
   MenuItem,
-  alpha,
+  Stack,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
-const ActionButton = ({
+const SecondaryAction = ({
+  setSelectedAction,
   selectedAction,
   selectedProjectId,
   project,
@@ -27,32 +25,20 @@ const ActionButton = ({
   deleteProject,
 }) => {
   if (selectedAction === "Select" && selectedProjectId === project.id) {
-    return (
-      <Fab
-        variant={"button"}
-        size="small"
-        aria-haspopup="true"
-        sx={{
-          bgcolor: (theme) => alpha(theme.palette.primary.light, 0.8),
-        }}
-        onClick={() => runProject(project.id)}
-      >
-        <PlayArrowIcon />
-      </Fab>
-    );
+    return <ActionButton onClick={() => runProject(project.id)} type="play" />;
   } else if (selectedAction === "Delete") {
     return (
-      <Fab
-        variant={"button"}
-        size="small"
-        aria-haspopup="true"
-        sx={{
-          bgcolor: (theme) => alpha(theme.palette.error.light, 0.8),
-        }}
-        onClick={() => deleteProject(project.id)}
-      >
-        <DeleteIcon />
-      </Fab>
+      <Stack direction={"row"} spacing={1} width={"100%"} justifyContent="end">
+        <ActionButton
+          onClick={() => deleteProject(project.id)}
+          type="delete"
+          color={(theme) => theme.palette.doneIcon}
+        />
+        <ActionButton
+          onClick={() => setSelectedAction("default")}
+          type="close"
+        />
+      </Stack>
     );
   }
 };
@@ -142,12 +128,13 @@ const ProjectListItem = ({
               </Menu>
             </>
           ) : (
-            <ActionButton
+            <SecondaryAction
               selectedAction={selectedAction}
               selectedProjectId={selectedProjectId}
               project={project}
               runProject={runProject}
               deleteProject={deleteProject}
+              setSelectedAction={setSelectedAction}
             />
           )
         }

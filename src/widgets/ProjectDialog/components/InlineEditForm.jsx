@@ -1,9 +1,7 @@
-import CloseIcon from "@mui/icons-material/Close";
-import DoneIcon from "@mui/icons-material/Done";
-import { alpha } from "@mui/material/styles";
+import ActionButton from "../../../components/ActionButton/ActionButton";
 import { useState } from "react";
 
-import { Fab, ListItem, Stack, TextField } from "@mui/material";
+import { ListItem, Stack, TextField } from "@mui/material";
 
 const InlineEditForm = ({
   selectedProject,
@@ -37,30 +35,17 @@ const InlineEditForm = ({
         onChange={handleProjectNameChange}
       />
       <Stack direction={"row"} spacing={1} width={"100%"} justifyContent="end">
-        <Fab
-          variant="button"
-          size="small"
-          sx={{
-            color: (theme) => alpha(theme.palette.success.light, 0.5),
-          }}
+        <ActionButton
           onClick={() => {
             editProject(projectToEdit.projectName, projectToEdit.id);
             setSelectedAction("default");
           }}
-        >
-          <DoneIcon />
-        </Fab>
-        <Fab
-          variant="button"
-          size="small"
+          type="done"
+        />
+        <ActionButton
           onClick={() => setSelectedAction("default")}
-        >
-          <CloseIcon
-            sx={{
-              color: (theme) => alpha(theme.palette.error.light, 0.5),
-            }}
-          />
-        </Fab>
+          type="close"
+        />
       </Stack>
     </ListItem>
   );

@@ -1,10 +1,7 @@
-import CloseIcon from "@mui/icons-material/Close";
-import DoneIcon from "@mui/icons-material/Done";
-import { alpha } from "@mui/material/styles";
+import ActionButton from "../../../components/ActionButton/ActionButton";
 import { useState } from "react";
 
 import {
-  Fab,
   FormControl,
   InputLabel,
   MenuItem,
@@ -16,7 +13,7 @@ import {
 const InlineCreationForm = ({ formArea, setFormArea, createProject }) => {
   const [newProject, setNewProject] = useState({
     name: "",
-    template: "",
+    template: "sample",
   });
 
   const handleProjectNameChange = (event) => {
@@ -59,11 +56,13 @@ const InlineCreationForm = ({ formArea, setFormArea, createProject }) => {
             Template
           </InputLabel>
           <Select
-            value={newProject.template}
+            value={newProject.template || "sample"}
             onChange={handleTemplateChange}
             variant="outlined"
           >
-            <MenuItem value={"sample"}>Sample</MenuItem>
+            <MenuItem value={"sample"} selected>
+              Sample
+            </MenuItem>
             <MenuItem value={"blank"}>Blank</MenuItem>
           </Select>
         </FormControl>
@@ -73,28 +72,8 @@ const InlineCreationForm = ({ formArea, setFormArea, createProject }) => {
           width={"100%"}
           justifyContent="end"
         >
-          <Fab
-            variant="button"
-            size="small"
-            onClick={() => createProject(newProject)}
-          >
-            <DoneIcon
-              sx={{
-                color: (theme) => alpha(theme.palette.success.light, 0.5),
-              }}
-            />
-          </Fab>
-          <Fab
-            variant="button"
-            size="small"
-            onClick={() => setFormArea("button")}
-          >
-            <CloseIcon
-              sx={{
-                color: (theme) => alpha(theme.palette.error.light, 0.5),
-              }}
-            />
-          </Fab>
+          <ActionButton onClick={() => createProject(newProject)} type="done" />
+          <ActionButton onClick={() => setFormArea("button")} type="close" />
         </Stack>
       </Stack>
     )
