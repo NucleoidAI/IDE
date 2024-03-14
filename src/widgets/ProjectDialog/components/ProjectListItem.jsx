@@ -29,11 +29,7 @@ const SecondaryAction = ({
   } else if (selectedAction === "Delete") {
     return (
       <Stack direction={"row"} spacing={1} width={"100%"} justifyContent="end">
-        <ActionButton
-          onClick={() => deleteProject(project.id)}
-          type="delete"
-          color={(theme) => theme.palette.doneIcon}
-        />
+        <ActionButton onClick={() => deleteProject(project.id)} type="delete" />
         <ActionButton
           onClick={() => setSelectedAction("default")}
           type="close"

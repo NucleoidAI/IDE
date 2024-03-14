@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 import { DialogContent, DialogTitle, Typography } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
+import { publish } from "@nucleoidjs/react-event";
 
 function applyFilter({ inputData, query }) {
   if (query) {
@@ -53,6 +54,8 @@ function ProjectDialog({ handleClose, open }) {
   const deleteProject = (projectId) => {
     localStorage.removeItem(`ide.projects.${projectId}`);
     setProjects(getProjectsFromLocalStorage());
+
+    publish("PROJECT_DELETED", { id: projectId });
   };
 
   function createWithSampleTemplate(name) {
@@ -60,6 +63,10 @@ function ProjectDialog({ handleClose, open }) {
     context.get = (prop) => State.resolve(context, prop);
     context.nucleoid.project.name = name;
     storage.set("ide", "projects", context.nucleoid.project.id, context);
+    publish("PROJECT_CREATED", {
+      id: context.nucleoid.project.id,
+      template: "SAMPLE",
+    });
 
     return context;
   }
@@ -69,6 +76,11 @@ function ProjectDialog({ handleClose, open }) {
     context.get = (prop) => State.resolve(context, prop);
     context.nucleoid.project.name = name;
     storage.set("ide", "projects", context.nucleoid.project.id, context);
+    publish("PROJECT_CREATED", {
+      id: context.nucleoid.project.id,
+      template: "BLANK",
+    });
+
     return context;
   }
 
@@ -95,12 +107,20 @@ function ProjectDialog({ handleClose, open }) {
     storage.remove("ide", "projects", editedProjectId);
     storage.set("ide", "projects", editedProjectId, context);
 
+    publish("PROJECT_UPDATED", {
+      id: context.nucleoid.project.id,
+    });
+
     setProjects(getProjectsFromLocalStorage());
   };
   const runProject = (projectId) => {
     //TODO Remove mode
     navigate(`/${projectId}/api?mode=local`);
     navigate(0);
+
+    publish("PROJECT_CHANGED", {
+      id: projectId,
+    });
   };
 
   const onDialogClose = () => {
