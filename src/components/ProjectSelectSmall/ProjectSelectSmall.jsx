@@ -1,5 +1,5 @@
 import { FileOpen } from "@mui/icons-material/";
-import ProjectDialog from "../../widgets/ProjectDialog";
+import ProjectDialog from "../../widgets/ProjectDialog/ProjectDialog";
 import React from "react";
 import { useContext } from "../../context/context";
 

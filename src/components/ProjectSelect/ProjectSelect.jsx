@@ -1,5 +1,5 @@
 import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
-import ProjectDialog from "../../widgets/ProjectDialog";
+import ProjectDialog from "../../widgets/ProjectDialog/ProjectDialog";
 import React from "react";
 
 import { Box, Button } from "@mui/material/";
