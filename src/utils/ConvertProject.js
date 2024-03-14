@@ -1,5 +1,7 @@
 import Handlebars from "handlebars";
+import { v4 as uuidv4 } from "uuid";
 
+import * as fs from "fs";
 import * as ts from "typescript";
 
 Handlebars.registerHelper("camelCase", function (str) {
@@ -11,8 +13,9 @@ Handlebars.registerHelper("encloseBraces", function (str) {
 });
 function typeCheck(codeSnippet) {
   try {
+    const fileName = "snippet_" + uuidv4() + ".ts";
     const sourceFile = ts.createSourceFile(
-      "snippet.ts",
+      fileName,
       codeSnippet,
       ts.ScriptTarget.Latest,
       true
@@ -41,6 +44,9 @@ function typeCheck(codeSnippet) {
     };
 
     visit(sourceFile);
+    setTimeout(() => {
+      fs.unlink(fileName);
+    }, 0);
 
     return result;
   } catch (error) {
