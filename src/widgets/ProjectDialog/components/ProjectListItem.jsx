@@ -80,12 +80,13 @@ const ProjectListItem = ({
     }
   }, [selectedProjectId]);
 
-  const handleClose = (selectedMenuItem) => {
+  const handleClose = (event, selectedMenuItem) => {
     if (
       selectedMenuItem === "clickaway" ||
       selectedMenuItem === "backdropClick"
     ) {
       setAnchorEl(null);
+      setSelectedAction("default");
       return;
     } else {
       setSelectedAction(selectedMenuItem);
@@ -132,8 +133,10 @@ const ProjectListItem = ({
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={() => handleClose("Edit")}>Edit</MenuItem>
-                <MenuItem onClick={() => handleClose("Delete")}>
+                <MenuItem onClick={(event) => handleClose(event, "Edit")}>
+                  Edit
+                </MenuItem>
+                <MenuItem onClick={(event) => handleClose(event, "Delete")}>
                   Delete
                 </MenuItem>
               </Menu>
