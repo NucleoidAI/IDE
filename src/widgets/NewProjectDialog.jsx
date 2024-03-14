@@ -37,7 +37,6 @@ import {
   Typography,
   alpha,
 } from "@mui/material";
-import { publish, useEvent } from "@nucleoidjs/react-event";
 import { useCallback, useEffect, useState } from "react";
 
 export function applyFilter({ inputData, query }) {
