@@ -25,7 +25,13 @@ const SecondaryAction = ({
   deleteProject,
 }) => {
   if (selectedAction === "Select" && selectedProjectId === project.id) {
-    return <ActionButton onClick={() => runProject(project.id)} type="play" />;
+    return (
+      <ActionButton
+        onClick={() => runProject(project.id)}
+        type="play"
+        color={(theme) => theme.palette.highlight}
+      />
+    );
   } else if (selectedAction === "Delete") {
     return (
       <Stack direction={"row"} spacing={1} width={"100%"} justifyContent="end">

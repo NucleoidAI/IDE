@@ -136,7 +136,7 @@ const commonThemeProperties = {
           borderRadius: "2px",
           style: {
             borderRadius: "5px",
-            backgroundColor: alpha(primary.main, 0.4),
+            backgroundColor: alpha(action.highlight, action.hoverOpacity),
           },
         },
         {
@@ -147,7 +147,7 @@ const commonThemeProperties = {
           style: {
             borderRadius: "5px",
             borderColor: primary.main,
-            backgroundColor: alpha(primary.main, 0.8),
+            backgroundColor: alpha(action.highlight, 0.6),
           },
         },
         {
@@ -198,6 +198,7 @@ const lightTheme = createTheme({
     error: { main: "#d32f2f", dark: "#c62828", light: "#ef5350" },
     doneIcon: alpha(success.main, 0.5),
     cancelIcon: alpha(error.main, 0.5),
+    highlight: "#007867",
     custom: {
       grey: "rgba(255, 255, 255, 0.7)",
       fossil: "#747474",
@@ -372,6 +373,7 @@ const darkTheme = createTheme({
     },
     doneIcon: alpha(success.main, 0.5),
     cancelIcon: alpha(error.main, 0.5),
+    highlight: "#007867",
     chat: {
       inputBorderRadius: "15px",
     },
