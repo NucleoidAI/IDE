@@ -5,12 +5,12 @@ import ProjectList from "./components/ProjectList";
 import React from "react";
 import State from "../../state";
 import WorkspacesIcon from "@mui/icons-material/Workspaces";
+import { publish } from "@nucleoidjs/react-event";
 import { storage } from "@nucleoidjs/webstorage";
 import { useNavigate } from "react-router-dom";
 
 import { DialogContent, DialogTitle, Typography } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
-import { publish } from "@nucleoidjs/react-event";
 
 function applyFilter({ inputData, query }) {
   if (query) {

@@ -9,7 +9,6 @@ import State from "./state";
 import config from "../config";
 import { contextReducer } from "./context/reducer";
 import { contextToMap } from "./utils/Parser";
-import exampleContext from "./lib/context.json";
 import http from "./http";
 import routes from "./routes";
 import { subscribe } from "@nucleoidjs/react-event";

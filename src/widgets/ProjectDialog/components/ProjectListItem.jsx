@@ -66,6 +66,7 @@ const ProjectListItem = ({
     if (selectedProjectId !== project.id) {
       setSelectedAction("default");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedProjectId]);
 
   const handleClose = (event, selectedMenuItem) => {
