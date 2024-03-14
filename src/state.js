@@ -85,12 +85,10 @@ function withSample() {
   return state;
 }
 
-function withPages({ context }) {
+function withPages(context) {
   const state = init();
 
-  const { nucleoid, pages } = context;
-  state.nucleoid = nucleoid;
-  state.pages = pages;
+  state.nucleoid = context;
 
   return state;
 }

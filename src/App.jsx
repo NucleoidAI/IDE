@@ -56,7 +56,7 @@ function App() {
   function getContextFromStorage(projectId) {
     const context = storage.get("ide", "projects", projectId);
 
-    const nucContext = State.withPages({ context });
+    const nucContext = State.withPages(context);
     nucContext.get = (prop) => State.resolve(nucContext, prop);
 
     return nucContext;
@@ -84,7 +84,12 @@ function App() {
   function sampleProject() {
     const context = State.withSample();
     context.get = (prop) => State.resolve(context, prop);
-    storage.set("ide", "projects", context.nucleoid.project.id, context);
+    storage.set(
+      "ide",
+      "projects",
+      context.nucleoid.project.id,
+      context.nucleoid
+    );
 
     navigate(`${context.nucleoid.project.id}/api?mode=local`);
 

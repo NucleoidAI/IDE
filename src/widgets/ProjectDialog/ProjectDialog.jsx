@@ -34,8 +34,9 @@ function ProjectDialog({ handleClose, open }) {
       const key = localStorage.key(i);
       if (key.startsWith("ide.projects.")) {
         const context = JSON.parse(localStorage.getItem(key));
-        if (context.nucleoid && context.nucleoid.project) {
-          projects.push(context.nucleoid.project);
+
+        if (context.project) {
+          projects.push(context.project);
         }
       }
     }
@@ -62,7 +63,13 @@ function ProjectDialog({ handleClose, open }) {
     const context = State.withSample();
     context.get = (prop) => State.resolve(context, prop);
     context.nucleoid.project.name = name;
-    storage.set("ide", "projects", context.nucleoid.project.id, context);
+    console.log("context", context.nucleoid);
+    storage.set(
+      "ide",
+      "projects",
+      context.nucleoid.project.id,
+      context.nucleoid
+    );
     publish("PROJECT_CREATED", {
       id: context.nucleoid.project.id,
       template: "SAMPLE",
@@ -75,7 +82,12 @@ function ProjectDialog({ handleClose, open }) {
     const context = State.withBlank();
     context.get = (prop) => State.resolve(context, prop);
     context.nucleoid.project.name = name;
-    storage.set("ide", "projects", context.nucleoid.project.id, context);
+    storage.set(
+      "ide",
+      "projects",
+      context.nucleoid.project.id,
+      context.nucleoid
+    );
     publish("PROJECT_CREATED", {
       id: context.nucleoid.project.id,
       template: "BLANK",
