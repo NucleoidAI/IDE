@@ -129,6 +129,9 @@ const NucEditor = React.forwardRef((props, ref) => {
       themeStorage === "light" ? "vs-light" : "custom-dark-theme"
     );
 
+    if (!editor.getModel()) {
+      editor.setValue("");
+    }
     monaco.languages.registerDocumentFormattingEditProvider("typescript", {
       provideDocumentFormattingEdits(model) {
         const text = model.getValue();

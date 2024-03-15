@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { api, declarations, functions, project, types } from "./sample";
 
@@ -59,7 +59,7 @@ function copy(state) {
 
 function withBlank() {
   const state = init();
-  state.nucleoid.project.id = uuidv4();
+  state.nucleoid.project.id = uuid();
 
   return state;
 }
@@ -72,7 +72,7 @@ function withSample() {
   state.nucleoid.declarations = declarations;
   state.nucleoid.project = project;
 
-  state.nucleoid.project.id = uuidv4();
+  state.nucleoid.project.id = uuid();
   return state;
 }
 
