@@ -2,6 +2,7 @@ import "./ChatMainArea.css";
 
 import ChatDisplay from "./ChatDisplay";
 import MessageInput from "./MessageInput";
+import { exportProject } from "../../utils/ConvertProject";
 // import SuggestionsOverlay from "./SuggestionsOverlay";
 import { publish } from "@nucleoidjs/react-event";
 import { storage } from "@nucleoidjs/webstorage";
@@ -11,7 +12,6 @@ import { v4 as uuid } from "uuid";
 
 import { Box, useTheme } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-import { createAPI, extractCodeSnippets } from "../../utils/ConvertProject";
 import { useNavigate, useParams } from "react-router-dom";
 
 const Chat = () => {
@@ -64,10 +64,7 @@ const Chat = () => {
   };
 
   const handleConvertProject = () => {
-    const snippets = extractCodeSnippets(chat.messages);
-    const api = createAPI(snippets.functions, snippets.declarations);
-    console.log(snippets);
-    console.log(api);
+    exportProject(chat);
   };
 
   const refreshChat = () => {

@@ -292,4 +292,28 @@ function extractProperties(classDefinition) {
   return properties;
 }
 
-export { typeCheck, extractCodeSnippet, extractCodeSnippets, createAPI };
+function exportProject(chat) {
+  const { id, messages } = chat;
+  const { functions, declarations } = extractCodeSnippets(messages);
+  const api = createAPI(functions);
+
+  const project = {
+    functions,
+    declarations,
+    api,
+  };
+
+  const projectJSON = JSON.stringify(project);
+
+  const key = `project.${id}`;
+
+  localStorage.setItem(key, projectJSON);
+}
+
+export {
+  typeCheck,
+  extractCodeSnippet,
+  extractCodeSnippets,
+  createAPI,
+  exportProject,
+};
