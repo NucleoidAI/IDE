@@ -13,9 +13,8 @@ Handlebars.registerHelper("encloseBraces", function (str) {
 });
 function typeCheck(codeSnippet) {
   try {
-    const fileName = "snippet_" + uuidv4() + ".ts";
     const sourceFile = ts.createSourceFile(
-      fileName,
+      "temp.ts",
       codeSnippet,
       ts.ScriptTarget.Latest,
       true
@@ -44,13 +43,6 @@ function typeCheck(codeSnippet) {
     };
 
     visit(sourceFile);
-    setTimeout(() => {
-      fs.unlink(fileName, (err) => {
-        if (err) {
-          console.error(`Error deleting file ${fileName}:`, err);
-        }
-      });
-    }, 0);
 
     return result;
   } catch (error) {
