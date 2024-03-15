@@ -63,7 +63,6 @@ function ProjectDialog({ handleClose, open }) {
     const context = State.withSample();
     context.get = (prop) => State.resolve(context, prop);
     context.nucleoid.project.name = name;
-    console.log("context", context.nucleoid);
     storage.set(
       "ide",
       "projects",
@@ -115,12 +114,13 @@ function ProjectDialog({ handleClose, open }) {
 
   const editProject = (editedProjectName, editedProjectId) => {
     const context = storage.get("ide", "projects", editedProjectId);
-    context.nucleoid.project.name = editedProjectName;
+    const { project } = context;
+    project.name = editedProjectName;
     storage.remove("ide", "projects", editedProjectId);
     storage.set("ide", "projects", editedProjectId, context);
 
     publish("PROJECT_UPDATED", {
-      id: context.nucleoid.project.id,
+      id: project.id,
     });
 
     setProjects(getProjectsFromLocalStorage());

@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { api, declarations, functions, types } from "./sample";
+import { api, declarations, functions, project, types } from "./sample";
 
 function init() {
   const state = {
@@ -8,13 +8,7 @@ function init() {
       api: {},
       types: {},
       functions: [],
-      project: {
-        type: "LOCAL",
-        name: "Sample",
-        id: "Sample",
-        description:
-          "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore",
-      },
+      project: {},
       declarations: {},
     },
     pages: {
@@ -49,11 +43,7 @@ function init() {
         AIDialog: {
           open: false,
         },
-        selected: {
-          description: "All Orders barcode string starts with NUC",
-          summary: "All orders barcode start with NUC prefix",
-          definition: '{\n      $Order.barcode.include("NUC")\n    }\n    ',
-        },
+        selected: {},
       },
       branches: {},
     },
@@ -80,8 +70,9 @@ function withSample() {
   state.nucleoid.types = types;
   state.nucleoid.functions = functions;
   state.nucleoid.declarations = declarations;
-  state.nucleoid.project.id = uuidv4();
+  state.nucleoid.project = project;
 
+  state.nucleoid.project.id = uuidv4();
   return state;
 }
 

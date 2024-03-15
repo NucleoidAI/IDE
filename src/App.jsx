@@ -150,9 +150,7 @@ function App() {
       const projectId = Path.getProjectId();
 
       if (mode === "sample") {
-        const context = sampleProject();
-        initVfs(context);
-        return setContext(initContext(context));
+        sampleProject();
       } else if (mode === "cloud") {
         project(projectId).then((result) => {
           initVfs(result);
@@ -160,6 +158,7 @@ function App() {
         });
       } else if (mode === "chat" || mode === "local") {
         const context = getContextFromStorage(projectId);
+
         initVfs(context);
 
         return setContext(initContext(context));
