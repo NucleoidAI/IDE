@@ -197,14 +197,22 @@ function exportProject(chat) {
   const api = createAPI(functions);
 
   const project = {
-    functions,
-    declarations,
-    api,
+    context: {
+      project: {
+        type: "chat",
+        id: id,
+        name: "Chat Project",
+        description: "This project has been converted from chat",
+      },
+      api: api,
+      functions: functions,
+      declarations: declarations,
+    },
   };
 
   const projectJSON = JSON.stringify(project);
 
-  const key = `project.${id}`;
+  const key = `ide.projects.${id}`;
 
   localStorage.setItem(key, projectJSON);
 }
