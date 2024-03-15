@@ -179,7 +179,7 @@ export const types = [
 export const functions = [
   {
     path: "/Order",
-    params: [],
+    params: ["name: string", "barcode: string"],
     type: "CLASS",
     definition: `class Order {
       name: string;
@@ -192,7 +192,7 @@ export const functions = [
   },
   {
     path: "/Item",
-    params: [],
+    params: ["name: string", "barcode: string"],
     type: "CLASS",
     definition: `class Item {
       name: string;
@@ -205,7 +205,7 @@ export const functions = [
   },
   {
     path: "/Human",
-    params: [],
+    params: ["name: string", "barcode: string"],
     type: "CLASS",
     definition: `class Human {
       name: string;

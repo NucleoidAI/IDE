@@ -10,6 +10,8 @@ import {
   CardContent,
   CardHeader,
   Fab,
+  Grid,
+  Typography,
 } from "@mui/material";
 import { ChevronRight, ExpandMore } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
@@ -40,6 +42,8 @@ const StyledTreeItem = styled(TreeItem)(({ theme }) => ({
 const GreenIcon = styled(Box)(({ theme, selected }) => ({
   width: 12,
   height: 12,
+  minWidth: 12,
+  minHeight: 12,
   borderRadius: "50%",
   backgroundColor: selected
     ? theme.palette.success.main
@@ -47,6 +51,18 @@ const GreenIcon = styled(Box)(({ theme, selected }) => ({
   marginRight: theme.spacing(1),
   transition: "background-color 0.2s",
 }));
+
+const styles = {
+  treeItem: {
+    display: "flex",
+    alignItems: "center",
+    flexWrap: "wrap",
+  },
+  classIndicator: {
+    marginRight: "4px",
+    color: "#c3c5c8",
+  },
+};
 
 function LogicTree({ openLogicDialog }) {
   const [newDeclaration] = useEvent("LOGIC_ADDED", false);
@@ -58,6 +74,7 @@ function LogicTree({ openLogicDialog }) {
   const theme = useTheme();
 
   const declarations = state.nucleoid.declarations;
+  const functions = state.nucleoid.functions;
 
   function select(value) {
     const [logicClass, logicIndex] = value.split("-");
@@ -93,12 +110,23 @@ function LogicTree({ openLogicDialog }) {
     declarations.forEach((dec) => {
       const decSummary = dec.summary;
       const decClass = dec?.definition?.split("$")[1]?.match(/\b(\w+)\b/)[0];
+
       if (!treeData[decClass]) {
-        treeData[decClass] = [];
+        treeData[decClass] = {
+          summaries: [],
+          params: [],
+        };
         initialExpandedNodes.push(decClass);
       }
 
-      treeData[decClass].push(decSummary);
+      treeData[decClass].summaries.push(decSummary);
+
+      const matchingFunction = functions.find(
+        (func) => func.path === `/${decClass}`
+      );
+      if (matchingFunction) {
+        treeData[decClass].params = matchingFunction.params;
+      }
     });
 
     setTreeData(treeData);
@@ -174,11 +202,37 @@ function LogicTree({ openLogicDialog }) {
           expanded={nodeKey}
           selected={selectedKey}
         >
-          {Object.entries(treeData).map(([nodeId, labels]) => (
-            <StyledTreeItem key={nodeId} nodeId={nodeId} label={nodeId}>
-              {labels.map((label, innerIndex) => {
+          {Object.entries(treeData).map(([nodeId, { summaries, params }]) => (
+            <StyledTreeItem
+              key={nodeId}
+              nodeId={nodeId}
+              label={
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Grid sx={styles.treeItem}>
+                    <Typography style={{ font: "9px sans-serif" }}>
+                      class
+                    </Typography>
+                    &nbsp;
+                    {nodeId}{" "}
+                    <Typography style={{ font: "9px sans-serif" }}>
+                      ({params.join(", ")})
+                    </Typography>
+                  </Grid>
+                </Box>
+              }
+            >
+              {summaries.map((summary, innerIndex) => {
                 const formattedLabel =
-                  label.length > 30 ? `${label.substring(0, 30)}..` : label;
+                  summary.length > 30
+                    ? `${summary.substring(0, 30)}..`
+                    : summary;
                 const isSelected = selectedKey.includes(
                   `${nodeId}-${innerIndex}`
                 );
@@ -186,13 +240,8 @@ function LogicTree({ openLogicDialog }) {
                   <StyledTreeItem
                     key={innerIndex}
                     nodeId={`${nodeId}-${innerIndex}`}
-                    label={
-                      <>
-                        <GreenIcon selected={isSelected} />
-                        {formattedLabel}
-                      </>
-                    }
-                    title={label}
+                    label={<>{formattedLabel}</>}
+                    title={summary}
                   />
                 );
               })}
