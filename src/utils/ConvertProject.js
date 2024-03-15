@@ -45,7 +45,11 @@ function typeCheck(codeSnippet) {
 
     visit(sourceFile);
     setTimeout(() => {
-      fs.unlink(fileName);
+      fs.unlink(fileName, (err) => {
+        if (err) {
+          console.error(`Error deleting file ${fileName}:`, err);
+        }
+      });
     }, 0);
 
     return result;
@@ -66,9 +70,11 @@ function extractCodeSnippet(codeSnippet, messageContent) {
     };
   } else if (codeType === "class") {
     const className = extractClassName(codeSnippet);
+    const constructorParams = extractConstructorParams(codeSnippet);
+
     return {
       path: className,
-      params: [],
+      params: constructorParams,
       type: "CLASS",
       definition: codeSnippet,
     };
@@ -81,6 +87,34 @@ function extractCodeSnippet(codeSnippet, messageContent) {
   }
 
   return null;
+}
+
+function extractConstructorParams(classDefinition) {
+  const sourceFile = ts.createSourceFile(
+    "temp.ts",
+    classDefinition,
+    ts.ScriptTarget.Latest,
+    true
+  );
+
+  let constructorParams = [];
+
+  function visit(node) {
+    if (ts.isConstructorDeclaration(node)) {
+      const params = node.parameters.map((param) => {
+        const name = param.name.getText(sourceFile);
+        const type = param.type ? param.type.getText(sourceFile) : "any";
+        return `${name}: ${type}`;
+      });
+      constructorParams = params;
+    }
+
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
+
+  return constructorParams;
 }
 
 function extractCodeSnippets(messages) {
