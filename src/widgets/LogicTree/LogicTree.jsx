@@ -39,19 +39,6 @@ const StyledTreeItem = styled(TreeItem)(({ theme }) => ({
   },
 }));
 
-const GreenIcon = styled(Box)(({ theme, selected }) => ({
-  width: 12,
-  height: 12,
-  minWidth: 12,
-  minHeight: 12,
-  borderRadius: "50%",
-  backgroundColor: selected
-    ? theme.palette.success.main
-    : theme.palette.grey[400],
-  marginRight: theme.spacing(1),
-  transition: "background-color 0.2s",
-}));
-
 const styles = {
   treeItem: {
     display: "flex",
@@ -70,6 +57,7 @@ function LogicTree({ openLogicDialog }) {
   const [treeData, setTreeData] = React.useState({});
   const [selectedKey, setSelectedKey] = useState([]);
   const [nodeKey, setNodeKey] = useState([]);
+  const [hoveredNodeId, setHoveredNodeId] = useState(null);
 
   const theme = useTheme();
 
@@ -91,8 +79,7 @@ function LogicTree({ openLogicDialog }) {
     }
 
     setSelectedKey([`${logicClass}-${logicIndex}`]);
-
-    const selectedSummary = treeData[logicClass][logicIndex];
+    const selectedSummary = treeData[logicClass].summaries[logicIndex];
     const item = declarations.find((item) => item.summary === selectedSummary);
 
     if (item) {
@@ -206,6 +193,8 @@ function LogicTree({ openLogicDialog }) {
             <StyledTreeItem
               key={nodeId}
               nodeId={nodeId}
+              onMouseEnter={() => setHoveredNodeId(nodeId)}
+              onMouseLeave={() => setHoveredNodeId(null)}
               label={
                 <Box
                   sx={{
@@ -220,9 +209,16 @@ function LogicTree({ openLogicDialog }) {
                       class
                     </Typography>
                     &nbsp;
-                    {nodeId}{" "}
-                    <Typography style={{ font: "9px sans-serif" }}>
-                      ({params.join(", ")})
+                    {nodeId}
+                    <Typography
+                      style={{
+                        font: "9px sans-serif",
+                        marginLeft: "4px",
+                        opacity: hoveredNodeId === nodeId ? 1 : 0,
+                        transition: "opacity 0.5s ease-in-out",
+                      }}
+                    >
+                      {`(${params.join(", ")})`}
                     </Typography>
                   </Grid>
                 </Box>
@@ -233,9 +229,7 @@ function LogicTree({ openLogicDialog }) {
                   summary.length > 30
                     ? `${summary.substring(0, 30)}..`
                     : summary;
-                const isSelected = selectedKey.includes(
-                  `${nodeId}-${innerIndex}`
-                );
+
                 return (
                   <StyledTreeItem
                     key={innerIndex}
