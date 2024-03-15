@@ -1,9 +1,7 @@
 import Handlebars from "handlebars";
 import apiTemplates from "../templates/apiTemplates";
 
-//import * as fs from "fs";
 import * as ts from "typescript";
-//import { v4 as uuidv4 } from "uuid";
 
 Handlebars.registerHelper("camelCase", function (str) {
   return str.charAt(0).toLowerCase() + str.slice(1);

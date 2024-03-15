@@ -1,6 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
-
-import * as fs from "fs";
 import * as ts from "typescript";
 
 export class NucLinter {
@@ -8,12 +5,11 @@ export class NucLinter {
     this.code = code;
     this.diagnostics = [];
     this.ast = null;
-    this.fileName = "code_" + uuidv4() + ".ts";
   }
 
   parseCodeToAST() {
     this.ast = ts.createSourceFile(
-      this.fileName,
+      "code.ts",
       this.code,
       ts.ScriptTarget.Latest,
       true
@@ -32,15 +28,12 @@ export class NucLinter {
         severity: "warning",
       });
     }
+
     node.forEachChild((child) => this.findInlineFunctions(child));
   }
 
   lint() {
     this.parseCodeToAST();
-
-    setTimeout(() => {
-      fs.unlink(this.fileName);
-    }, 0);
 
     return this.diagnostics;
   }
