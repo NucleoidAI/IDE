@@ -53,7 +53,7 @@ describe("Project Converter", () => {
       );
     });
 
-    test("should extract a class code snippet", () => {
+    test("should extract a class code snippet with constructor params", () => {
       const classSnippet = `class Human {
         name: string;
         constructor(name: string) {
@@ -63,7 +63,7 @@ describe("Project Converter", () => {
       const messageContent = "Here's a class definition for Human:";
       const expectedClass = {
         path: "Human",
-        params: [],
+        params: ["name: string"],
         type: "CLASS",
         definition: classSnippet,
       };
@@ -71,7 +71,6 @@ describe("Project Converter", () => {
         expectedClass
       );
     });
-
     test("should extract a declaration code snippet", () => {
       const declarationSnippet = `use declarative;
       $Human.mortal = true;`;
@@ -129,7 +128,7 @@ describe("Project Converter", () => {
         },
         {
           path: "Human",
-          params: [],
+          params: ["name: string"],
           type: "CLASS",
           definition: expect.stringContaining("class Human"),
         },
@@ -170,7 +169,7 @@ describe("Project Converter", () => {
   });
 
   describe("createAPI", () => {
-    test("should create an API object with the correct structure", () => {
+    test("should create an API object with the correct structure and constructor params", () => {
       const classDefinition = `
         class Human {
           name: string;
@@ -183,7 +182,7 @@ describe("Project Converter", () => {
       const functions = [
         {
           path: "",
-          params: [],
+          params: ["name: string"],
           type: "CLASS",
           definition: classDefinition,
         },
