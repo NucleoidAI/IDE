@@ -76,9 +76,8 @@ function withSample() {
   return state;
 }
 
-function withPages(context) {
+function withPages({ context }) {
   const state = init();
-
   state.nucleoid = context;
 
   return state;

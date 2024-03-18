@@ -56,29 +56,38 @@ function App() {
   function getContextFromStorage(projectId) {
     const context = storage.get("ide", "projects", projectId);
 
-    const nucContext = State.withPages(context);
+    const nucContext = State.withPages({ context });
     nucContext.get = (prop) => State.resolve(nucContext, prop);
 
     return nucContext;
   }
 
-  function project(projectId) {
-    return Promise.all([
-      http.get(`${config.api}/api/services/${projectId}/context`),
-      http.get(`${config.api}/api/services/${projectId}`),
-    ]).then(([nucContextResult, serviceResult]) => {
-      const context = nucContextResult.data;
-      const service = serviceResult.data;
-      const nucContext = State.withPages(context);
-      nucContext.get = (prop) => State.resolve(nucContext, prop);
-      nucContext.nucleoid.project = {
-        type: "CLOUD",
-        name: service.name,
-        id: projectId,
-        description: service.description,
-      };
-      return nucContext;
-    });
+  async function project(contextId) {
+    const contextPath = `${config.api}/api/services/${contextId}/context`;
+    const servicePath = `${config.api}/api/services/context/${contextId}`;
+
+    const [nucContextResult, serviceResult] = await Promise.all([
+      http.get(contextPath),
+      http.get(servicePath),
+    ]);
+
+    const projectId = serviceResult.data.projectId;
+    const projectPath = `${config.api}/api/projects/${projectId}`;
+    const projectResult = await http.get(projectPath);
+
+    const context = nucContextResult.data;
+    const service = serviceResult.data;
+    const project = projectResult.data;
+    const nucContext = State.withPages({ context });
+    nucContext.get = (prop) => State.resolve(nucContext, prop);
+    nucContext.nucleoid.project = {
+      type: "CLOUD",
+      name: project.name,
+      id: service.contextId,
+      description: service.description,
+    };
+
+    return nucContext;
   }
 
   function sampleProject() {
