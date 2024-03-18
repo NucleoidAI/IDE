@@ -5,6 +5,8 @@ import ProjectList from "./components/ProjectList";
 import React from "react";
 import State from "../../state";
 import WorkspacesIcon from "@mui/icons-material/Workspaces";
+import config from "../../../config";
+import http from "../../http";
 import { publish } from "@nucleoidjs/react-event";
 import { storage } from "@nucleoidjs/webstorage";
 import { useNavigate } from "react-router-dom";
@@ -99,13 +101,65 @@ function ProjectDialog({ handleClose, open }) {
     const { name, template } = newProject;
 
     if (template === "sample") {
-      createWithSampleTemplate(name);
+      createProjectOnCloud(newProject);
     } else if (template === "blank") {
       createBlankTemplate(name);
     }
     setProjects(getProjectsFromLocalStorage());
 
     setFormArea("button");
+  };
+
+  const setContextForCloud = (context) => {
+    console.log(context);
+    const { project, api, declarations, functions, types } = context;
+
+    const createdProject = {
+      name: project.name,
+      serviceType: "single",
+    };
+
+    const service = {
+      description: project.description,
+      contextId: project.id,
+    };
+    createdProject.service = service;
+
+    const nucContext = { api, declarations, functions, types };
+
+    createdProject.service.context = nucContext;
+
+    return createdProject;
+  };
+
+  const createProjectOnCloud = (newProject) => {
+    const { name, template } = newProject;
+    const context = State.withSample();
+    context.get = (prop) => State.resolve(context, prop);
+    context.nucleoid.project.name = name;
+
+    const createContext = setContextForCloud(context.nucleoid);
+
+    http.post(`${config.api}/api/projects`, createContext).then((response) => {
+      const { data } = response;
+
+      publish("PROJECT_CREATED", {
+        id: data.service.contextId,
+      });
+    });
+  };
+
+  const uploadToCloud = (projectId) => {
+    const project = storage.get("ide", "projects", projectId);
+    const context = setContextForCloud(project);
+
+    http.post(`${config.api}/api/projects`, context).then((response) => {
+      const { data } = response;
+
+      publish("PROJECT_UPLOADED", {
+        id: data.service.contextId,
+      });
+    });
   };
 
   useEffect(() => {
@@ -164,6 +218,7 @@ function ProjectDialog({ handleClose, open }) {
             editProject(editedProjectName, editedProjectId)
           }
           deleteProject={(projectId) => deleteProject(projectId)}
+          uploadToCloud={(projectId) => uploadToCloud(projectId)}
         />
       </DialogContent>
       <AddNewButton formArea={formArea} setFormArea={setFormArea} />

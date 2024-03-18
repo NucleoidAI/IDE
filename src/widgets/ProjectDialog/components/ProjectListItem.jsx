@@ -4,6 +4,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
 import { useParams } from "react-router-dom";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import {
   Box,
   IconButton,
@@ -53,6 +54,7 @@ const ProjectListItem = ({
   runProject,
   selectedProjectId,
   setSelectedProjectId,
+  uploadToCloud,
 }) => {
   const { id: activeProjectId } = useParams("id");
   const [anchorEl, setAnchorEl] = useState(null);
@@ -104,7 +106,6 @@ const ProjectListItem = ({
     }
     return "default";
   };
-
   return (
     <>
       <ListItem
@@ -114,6 +115,16 @@ const ProjectListItem = ({
         secondaryAction={
           selectedAction === "default" ? (
             <>
+              {project.type === "LOCAL" && (
+                <IconButton
+                  aria-haspopup="true"
+                  onClick={() => {
+                    uploadToCloud(project.id);
+                  }}
+                >
+                  <CloudUploadIcon />
+                </IconButton>
+              )}
               <IconButton aria-haspopup="true" onClick={handleClick}>
                 <MoreVertIcon />
               </IconButton>

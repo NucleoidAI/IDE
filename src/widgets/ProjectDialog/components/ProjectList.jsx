@@ -11,6 +11,7 @@ const ProjectList = ({
   editProject,
   deleteProject,
   runProject,
+  uploadToCloud,
 }) => {
   const [selectedProjectId, setSelectedProjectId] = useState(null);
 
@@ -43,6 +44,7 @@ const ProjectList = ({
             deleteProject={deleteProject}
             key={project.id}
             project={project}
+            uploadToCloud={uploadToCloud}
             searchQuery={searchQuery}
             editProject={editProject}
           />
