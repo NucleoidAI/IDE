@@ -25,6 +25,7 @@ import { TreeItem, TreeView } from "@mui/lab";
 function FunctionTree({ openFunctionDialog }) {
   const [selected, setSelected] = React.useState(null);
   const [contextMenu, setContextMenu] = React.useState(null);
+  const [hoveredNodeId, setHoveredNodeId] = React.useState(null);
   const [state, dispatch] = useContext();
   const functions = state.get("nucleoid.functions");
   const graph = { "": { name: "", subs: [], path: "", functions: [] } };
@@ -112,7 +113,14 @@ function FunctionTree({ openFunctionDialog }) {
         onNodeSelect={(event, value) => select(value)}
         selected={selected}
       >
-        {compile([graph[""]], handleContextMenu, errors)}
+        {compile(
+          [graph[""]],
+          handleContextMenu,
+          errors,
+          hoveredNodeId,
+          setHoveredNodeId,
+          selected
+        )}
       </TreeView>
       <Menu
         open={contextMenu !== null}
@@ -135,12 +143,26 @@ function FunctionTree({ openFunctionDialog }) {
   );
 }
 
-const compile = (folders, handleContextMenu, errors) =>
+const compile = (
+  folders,
+  handleContextMenu,
+  errors,
+  hoveredNodeId,
+  setHoveredNodeId,
+  selected
+) =>
   folders.map((folder) => {
     let children = [];
 
     if (folder.subs && folder.subs.length > 0) {
-      children = compile(folder.subs, handleContextMenu, errors);
+      children = compile(
+        folder.subs,
+        handleContextMenu,
+        errors,
+        hoveredNodeId,
+        setHoveredNodeId,
+        selected
+      );
     }
 
     children = children.concat(
@@ -156,13 +178,17 @@ const compile = (folders, handleContextMenu, errors) =>
             }
           });
 
+          const nodeId = `${root(folder.path)}${fn.name}`;
+          const isHovered = hoveredNodeId === nodeId;
+          const isSelected = selected === nodeId;
+
           return (
             <TreeItem
-              key={`${root(folder.path)}${fn.name}`}
-              nodeId={`${root(folder.path)}${fn.name}`}
-              onContextMenu={(event) =>
-                handleContextMenu(event, `${root(folder.path)}${fn.name}`)
-              }
+              key={nodeId}
+              nodeId={nodeId}
+              onContextMenu={(event) => handleContextMenu(event, nodeId)}
+              onMouseEnter={() => setHoveredNodeId(nodeId)}
+              onMouseLeave={() => setHoveredNodeId(null)}
               label={
                 <Box
                   sx={{
@@ -181,7 +207,19 @@ const compile = (folders, handleContextMenu, errors) =>
                       )}
                     </Typography>
                     &nbsp;
-                    {`${fn.name} (${fn.params.join(", ")})`}
+                    {`${fn.name}`}
+                    <Typography
+                      style={{
+                        font: "9px sans-serif",
+                        marginLeft: "4px",
+                        opacity: isHovered || isSelected ? 1 : 0,
+                        transition: "opacity 0.5s ease-in-out",
+                      }}
+                    >
+                      {fn.type === "FUNCTION"
+                        ? ""
+                        : `(${fn.params.join(", ")})`}
+                    </Typography>
                   </Grid>
                   {error && (
                     <Tooltip title={error.messageText} placement={"right"}>
