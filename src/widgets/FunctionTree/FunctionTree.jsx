@@ -112,6 +112,9 @@ function FunctionTree({ openFunctionDialog }) {
         defaultExpanded={["/", "/classes/"]}
         onNodeSelect={(event, value) => select(value)}
         selected={selected}
+        sx={{
+          marginTop: "10px",
+        }}
       >
         {compile(
           [graph[""]],
