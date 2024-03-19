@@ -457,6 +457,23 @@ function contextReducer(state, { type, payload }) {
       }
       break;
     }
+    case "ADD_TYPE": {
+      const { typeName } = payload;
+      const newType = {
+        name: typeName,
+        type: "OPENAPI",
+        schema: {
+          name: typeName,
+          type: "object",
+          properties: [
+            { type: "string", name: "id" },
+            { type: "string", name: "name" },
+          ],
+        },
+      };
+      nucleoid.types.push(newType);
+      break;
+    }
     case "SAVE_API_PARAMS": {
       console.log("SAVE_API_PARAMS", payload);
       const { path, method, params } = payload;
