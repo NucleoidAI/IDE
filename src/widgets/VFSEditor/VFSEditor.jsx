@@ -109,7 +109,7 @@ const VFSEditor = React.forwardRef((props, ref) => {
       const {
         project: { id },
       } = context.nucleoid;
-      const url = `${config.api}/api/services/${id}/context`;
+      const url = `/services/${id}/context`;
       axios.put(url, context.nucleoid);
     }
 
