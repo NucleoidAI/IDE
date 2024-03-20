@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Check, Close, Delete, Edit, MoreVert } from "@mui/icons-material";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const TypeEditor = ({ initialValue = "", onConfirm, onCancel }) => {
   const [typeName, setTypeName] = useState(initialValue);
@@ -50,45 +50,32 @@ const TypeEditor = ({ initialValue = "", onConfirm, onCancel }) => {
   );
 };
 
-const APITypes = ({ tstypes, nuctypes, typesRef }) => {
-  const [state, dispatch] = useContext();
+const TypeList = ({
+  combinedData,
+  selectedType,
+  onTypeSelect,
+  onAddType,
+  onUpdateType,
+  onDeleteType,
+}) => {
   const [isAddingType, setIsAddingType] = useState(false);
   const [showOptions, setShowOptions] = useState(null);
   const [editingType, setEditingType] = useState(null);
-
-  const combinedData = [
-    ...tstypes.map((item) => ({ ...item, isTypeScript: true })),
-    ...nuctypes.map((item) => ({ ...item, isTypeScript: false })),
-  ];
-
-  const [selectedType, setSelectedType] = useState(
-    combinedData.length > 0 ? combinedData[0].name : null
-  );
-
-  const preloaded = {};
-  combinedData.forEach((item) => {
-    preloaded[item.name] = true;
-  });
+  const optionsRef = useRef(null);
 
   const handleAddTypeClick = () => {
     setIsAddingType(true);
   };
 
   const handleAddTypeConfirm = (typeName) => {
-    dispatch({
-      type: "ADD_TYPE",
-      payload: { typeName },
-    });
+    onAddType(typeName);
     setIsAddingType(false);
   };
 
-  const isTypeScriptType = (typeName) => {
-    return tstypes.some((type) => type.name === typeName);
-  };
-
   const handleMoreClick = (event, typeName) => {
-    event.stopPropagation();
-    setShowOptions(typeName);
+    if (event.target.closest(".more-button")) {
+      setShowOptions(typeName);
+    }
   };
 
   const handleCloseOptions = () => {
@@ -101,19 +88,168 @@ const APITypes = ({ tstypes, nuctypes, typesRef }) => {
   };
 
   const handleDeleteType = () => {
-    dispatch({
-      type: "DELETE_TYPE",
-      payload: { typeName: showOptions },
-    });
+    onDeleteType(showOptions);
     handleCloseOptions();
   };
 
   const handleUpdateType = (updatedTypeName) => {
+    onUpdateType(editingType, updatedTypeName);
+    setEditingType(null);
+  };
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (
+        showOptions &&
+        optionsRef.current &&
+        !optionsRef.current.contains(event.target)
+      ) {
+        setShowOptions(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [showOptions]);
+
+  return (
+    <Box sx={{ width: "100%", overflowY: "auto" }}>
+      {combinedData.map((item) => (
+        <Box
+          key={item.name}
+          onClick={() => onTypeSelect(item.name)}
+          sx={{
+            padding: "8px 16px",
+            cursor: "pointer",
+            bgcolor:
+              selectedType === item.name ? "primary.light" : "background.paper",
+            "&:hover": {
+              bgcolor: "primary.light",
+            },
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          {editingType === item.name ? (
+            <TypeEditor
+              initialValue={item.name}
+              onConfirm={handleUpdateType}
+              onCancel={() => setEditingType(null)}
+            />
+          ) : (
+            <>
+              <Typography variant="body1" style={{ textAlign: "left" }}>
+                {item.name}
+              </Typography>
+              <Box
+                ref={optionsRef}
+                sx={{ display: "flex", alignItems: "center" }}
+              >
+                {item.isTypeScript && (
+                  <span
+                    style={{
+                      marginRight: "4px",
+                      color: "#808080",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    TS
+                  </span>
+                )}
+                {!item.isTypeScript &&
+                  (showOptions === item.name ? (
+                    <>
+                      <IconButton
+                        size="small"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleEditType();
+                        }}
+                      >
+                        <Edit />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleDeleteType();
+                        }}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </>
+                  ) : (
+                    <IconButton
+                      className="more-button"
+                      size="small"
+                      onClick={(event) => handleMoreClick(event, item.name)}
+                    >
+                      <MoreVert />
+                    </IconButton>
+                  ))}
+              </Box>
+            </>
+          )}
+        </Box>
+      ))}
+      {isAddingType && (
+        <TypeEditor
+          onConfirm={handleAddTypeConfirm}
+          onCancel={() => setIsAddingType(false)}
+        />
+      )}
+      <Box sx={{ width: "100%", mt: 2 }}>
+        {!isAddingType && (
+          <Button onClick={handleAddTypeClick} fullWidth>
+            Add Type
+          </Button>
+        )}
+      </Box>
+    </Box>
+  );
+};
+
+const APITypes = ({ tstypes, nuctypes, typesRef }) => {
+  const [state, dispatch] = useContext();
+  const combinedData = [
+    ...tstypes.map((item) => ({ ...item, isTypeScript: true })),
+    ...nuctypes.map((item) => ({ ...item, isTypeScript: false })),
+  ];
+  const [selectedType, setSelectedType] = useState(
+    combinedData.length > 0 ? combinedData[0].name : null
+  );
+  const preloaded = {};
+  combinedData.forEach((item) => {
+    preloaded[item.name] = true;
+  });
+
+  const isTypeScriptType = (typeName) => {
+    return tstypes.some((type) => type.name === typeName);
+  };
+
+  const handleAddType = (typeName) => {
+    dispatch({
+      type: "ADD_TYPE",
+      payload: { typeName },
+    });
+  };
+
+  const handleDeleteType = (typeName) => {
+    dispatch({
+      type: "DELETE_TYPE",
+      payload: { typeName },
+    });
+  };
+
+  const handleUpdateType = (oldTypeName, newTypeName) => {
     dispatch({
       type: "UPDATE_TYPE_NAME",
-      payload: { oldTypeName: editingType, newTypeName: updatedTypeName },
+      payload: { oldTypeName, newTypeName },
     });
-    setEditingType(null);
   };
 
   const renderRightPanel = () => {
@@ -172,101 +308,14 @@ const APITypes = ({ tstypes, nuctypes, typesRef }) => {
             alignItems: "center",
           }}
         >
-          <Box sx={{ width: "100%", overflowY: "auto" }}>
-            {combinedData.map((item) => (
-              <Box
-                key={item.name}
-                onClick={() => handleTypeSelect(item.name)}
-                sx={{
-                  padding: "8px 16px",
-                  cursor: "pointer",
-                  bgcolor:
-                    selectedType === item.name
-                      ? "primary.light"
-                      : "background.paper",
-                  "&:hover": {
-                    bgcolor: "primary.light",
-                  },
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                {editingType === item.name ? (
-                  <TypeEditor
-                    initialValue={item.name}
-                    onConfirm={handleUpdateType}
-                    onCancel={() => setEditingType(null)}
-                  />
-                ) : (
-                  <>
-                    <Typography variant="body1" style={{ textAlign: "left" }}>
-                      {item.name}
-                    </Typography>
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
-                      {item.isTypeScript && (
-                        <span
-                          style={{
-                            marginRight: "4px",
-                            color: "#808080",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          TS
-                        </span>
-                      )}
-                      {!item.isTypeScript &&
-                        (showOptions === item.name ? (
-                          <>
-                            <IconButton
-                              size="small"
-                              onClick={(event) => {
-                                event.stopPropagation();
-                                handleEditType();
-                              }}
-                            >
-                              <Edit />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              onClick={(event) => {
-                                event.stopPropagation();
-                                handleDeleteType();
-                              }}
-                            >
-                              <Delete />
-                            </IconButton>
-                          </>
-                        ) : (
-                          <IconButton
-                            size="small"
-                            onClick={(event) =>
-                              handleMoreClick(event, item.name)
-                            }
-                          >
-                            <MoreVert />
-                          </IconButton>
-                        ))}
-                    </Box>
-                  </>
-                )}
-              </Box>
-            ))}
-            {isAddingType && (
-              <TypeEditor
-                onConfirm={handleAddTypeConfirm}
-                onCancel={() => setIsAddingType(false)}
-              />
-            )}
-          </Box>
-          <Box sx={{ width: "100%", mt: 2 }}>
-            {!isAddingType && (
-              <Button onClick={handleAddTypeClick} fullWidth>
-                Add Type
-              </Button>
-            )}
-          </Box>
+          <TypeList
+            combinedData={combinedData}
+            selectedType={selectedType}
+            onTypeSelect={handleTypeSelect}
+            onAddType={handleAddType}
+            onUpdateType={handleUpdateType}
+            onDeleteType={handleDeleteType}
+          />
         </Paper>
       </Box>
       <Divider orientation="vertical" flexItem sx={{ width: "1rem" }} />
