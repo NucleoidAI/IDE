@@ -11,11 +11,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Check, Close } from "@mui/icons-material";
+import { Check, Close, Delete, Edit, MoreVert } from "@mui/icons-material";
 import React, { useState } from "react";
 
-const TypeEditor = ({ onConfirm, onCancel }) => {
-  const [typeName, setTypeName] = useState("");
+const TypeEditor = ({ initialValue = "", onConfirm, onCancel }) => {
+  const [typeName, setTypeName] = useState(initialValue);
 
   const handleConfirm = () => {
     onConfirm(typeName);
@@ -53,6 +53,8 @@ const TypeEditor = ({ onConfirm, onCancel }) => {
 const APITypes = ({ tstypes, nuctypes, typesRef }) => {
   const [state, dispatch] = useContext();
   const [isAddingType, setIsAddingType] = useState(false);
+  const [showOptions, setShowOptions] = useState(null);
+  const [editingType, setEditingType] = useState(null);
 
   const combinedData = [
     ...tstypes.map((item) => ({ ...item, isTypeScript: true })),
@@ -82,6 +84,36 @@ const APITypes = ({ tstypes, nuctypes, typesRef }) => {
 
   const isTypeScriptType = (typeName) => {
     return tstypes.some((type) => type.name === typeName);
+  };
+
+  const handleMoreClick = (event, typeName) => {
+    event.stopPropagation();
+    setShowOptions(typeName);
+  };
+
+  const handleCloseOptions = () => {
+    setShowOptions(null);
+  };
+
+  const handleEditType = () => {
+    setEditingType(showOptions);
+    handleCloseOptions();
+  };
+
+  const handleDeleteType = () => {
+    dispatch({
+      type: "DELETE_TYPE",
+      payload: { typeName: showOptions },
+    });
+    handleCloseOptions();
+  };
+
+  const handleUpdateType = (updatedTypeName) => {
+    dispatch({
+      type: "UPDATE_TYPE_NAME",
+      payload: { oldTypeName: editingType, newTypeName: updatedTypeName },
+    });
+    setEditingType(null);
   };
 
   const renderRightPanel = () => {
@@ -161,19 +193,63 @@ const APITypes = ({ tstypes, nuctypes, typesRef }) => {
                   justifyContent: "space-between",
                 }}
               >
-                <Typography variant="body1" style={{ textAlign: "left" }}>
-                  {item.name}
-                </Typography>
-                {item.isTypeScript && (
-                  <span
-                    style={{
-                      marginRight: "4px",
-                      color: "#808080",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    TS
-                  </span>
+                {editingType === item.name ? (
+                  <TypeEditor
+                    initialValue={item.name}
+                    onConfirm={handleUpdateType}
+                    onCancel={() => setEditingType(null)}
+                  />
+                ) : (
+                  <>
+                    <Typography variant="body1" style={{ textAlign: "left" }}>
+                      {item.name}
+                    </Typography>
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      {item.isTypeScript && (
+                        <span
+                          style={{
+                            marginRight: "4px",
+                            color: "#808080",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          TS
+                        </span>
+                      )}
+                      {!item.isTypeScript &&
+                        (showOptions === item.name ? (
+                          <>
+                            <IconButton
+                              size="small"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                handleEditType();
+                              }}
+                            >
+                              <Edit />
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                handleDeleteType();
+                              }}
+                            >
+                              <Delete />
+                            </IconButton>
+                          </>
+                        ) : (
+                          <IconButton
+                            size="small"
+                            onClick={(event) =>
+                              handleMoreClick(event, item.name)
+                            }
+                          >
+                            <MoreVert />
+                          </IconButton>
+                        ))}
+                    </Box>
+                  </>
                 )}
               </Box>
             ))}
