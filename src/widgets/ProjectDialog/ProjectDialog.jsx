@@ -167,7 +167,35 @@ function ProjectDialog({ handleClose, open }) {
       });
   };
 
-    const createContext = setContextForCloud(context.nucleoid);
+  const editProject = (projectToEdit) => {
+    const { name, type, id } = projectToEdit;
+    if (type === "LOCAL") {
+      const context = storage.get("ide", "projects", id);
+      const { project } = context;
+      project.name = name;
+      storage.remove("ide", "projects", id);
+      storage.set("ide", "projects", id, context);
+
+      publish("PROJECT_UPDATED", {
+        id: project.id,
+      });
+      getLocalProjects();
+    } else if (type === "CLOUD") {
+      setLoading(true);
+
+      service
+        .updateProject(projectToEdit.id, projectToEdit.name)
+        .then(() => {
+          publish("PROJECT_UPDATED", {
+            id: projectToEdit.id,
+          });
+          getCloudProjects();
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  };
 
   const getCloudProjects = async () => {
     const projects = await cloudToContext();
