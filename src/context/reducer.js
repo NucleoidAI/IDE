@@ -457,6 +457,47 @@ function contextReducer(state, { type, payload }) {
       }
       break;
     }
+    case "ADD_TYPE": {
+      const { typeName } = payload;
+      const newType = {
+        name: typeName,
+        type: "OPENAPI",
+        schema: {
+          name: typeName,
+          type: "object",
+          properties: [
+            { type: "string", name: "id" },
+            { type: "string", name: "name" },
+          ],
+        },
+      };
+      nucleoid.types.push(newType);
+      break;
+    }
+    case "DELETE_TYPE": {
+      const { typeName } = payload;
+      const typeIndex = nucleoid.types.findIndex(
+        (type) => type.name === typeName
+      );
+
+      if (typeIndex !== -1) {
+        nucleoid.types.splice(typeIndex, 1);
+      }
+      break;
+    }
+
+    case "UPDATE_TYPE_NAME": {
+      const { oldTypeName, newTypeName } = payload;
+      const typeIndex = nucleoid.types.findIndex(
+        (type) => type.name === oldTypeName
+      );
+
+      if (typeIndex !== -1) {
+        nucleoid.types[typeIndex].name = newTypeName;
+        nucleoid.types[typeIndex].schema.name = newTypeName;
+      }
+      break;
+    }
     case "SAVE_API_PARAMS": {
       console.log("SAVE_API_PARAMS", payload);
       const { path, method, params } = payload;
