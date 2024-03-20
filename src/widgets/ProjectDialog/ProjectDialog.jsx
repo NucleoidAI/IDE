@@ -56,14 +56,24 @@ function ProjectDialog({ handleClose, open }) {
     query: searchQuery,
   });
 
-  const deleteProject = (projectId) => {
-    localStorage.removeItem(`ide.projects.${projectId}`);
-    setProjects(getProjectsFromLocalStorage());
-
+  const deleteProject = (project) => {
+    if (project.type === "CLOUD") {
+      setLoading(true);
+      service
+        .deleteProject(project.id)
+        .then(() => {
+          publish("PROJECT_DELETED", { id: project.id });
+        })
+        .finally(() => {
+          getCloudProjects();
+          setLoading(false);
+        });
+    } else {
+      localStorage.removeItem(`ide.projects.${project.id}`);
+      getLocalProjects();
+    }
     publish("PROJECT_DELETED", { id: projectId });
   };
-
-
 
   const createProject = (newProject) => {
     const { name, template } = newProject;
@@ -80,6 +90,19 @@ function ProjectDialog({ handleClose, open }) {
 
   const setContextForCloud = (context) => {
     console.log(context);
+  useEffect(() => {
+    if (!login) {
+      getLocalProjects();
+    } else if (login) {
+      getLocalProjects();
+      getCloudProjects();
+    }
+  }, [login]);
+
+  useEffect(() => {
+    setProjects([...cloudProjects, ...localProjects]);
+  }, [cloudProjects, localProjects]);
+
   const cloudToContext = async () => {
     const response = await service.getProjects();
     const projects = response.data;
@@ -110,7 +133,6 @@ function ProjectDialog({ handleClose, open }) {
 
     const createdProject = {
       name: project.name,
-      serviceType: "single",
       serviceType: "SINGLE",
     };
 
