@@ -2,16 +2,17 @@ import Schema from "../Schema/Schema";
 import SchemaEditor from "../SchemaEditor";
 import { useContext } from "../../context/context";
 
+import { Add, Check, Close, Delete, Edit, MoreVert } from "@mui/icons-material";
 import {
   Box,
-  Button,
   Divider,
+  Fab,
+  Fade,
   IconButton,
   Paper,
   TextField,
   Typography,
 } from "@mui/material";
-import { Check, Close, Delete, Edit, MoreVert } from "@mui/icons-material";
 import React, { useEffect, useRef, useState } from "react";
 
 const TypeEditor = ({ initialValue = "", onConfirm, onCancel }) => {
@@ -36,7 +37,7 @@ const TypeEditor = ({ initialValue = "", onConfirm, onCancel }) => {
         onChange={(e) => setTypeName(e.target.value)}
         variant="outlined"
         size="small"
-        sx={{ width: "70%", marginRight: 1 }}
+        sx={{ width: "60%", marginRight: 1 }}
       />
       <Box>
         <IconButton onClick={handleConfirm} size="small">
@@ -131,13 +132,21 @@ const TypeList = ({
   }, [showOptions]);
 
   return (
-    <Box sx={{ width: "100%", overflowY: "auto" }}>
+    <Box
+      sx={{
+        width: "100%",
+        overflowY: "auto",
+        position: "relative",
+        height: "100%",
+      }}
+    >
       {combinedData.map((item) => (
         <Box
           key={item.name}
           onClick={() => onTypeSelect(item.name)}
           sx={{
-            padding: "8px 16px",
+            padding: "6px 16px",
+            height: "40px",
             cursor: "pointer",
             bgcolor:
               selectedType === item.name ? "primary.light" : "background.paper",
@@ -176,37 +185,41 @@ const TypeList = ({
                     TS
                   </span>
                 )}
-                {!item.isTypeScript &&
-                  (showOptions === item.name ? (
-                    <>
+                {!item.isTypeScript && (
+                  <>
+                    <Fade in={showOptions === item.name}>
+                      <Box>
+                        <IconButton
+                          size="small"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            handleEditType();
+                          }}
+                        >
+                          <Edit />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            handleDeleteType();
+                          }}
+                        >
+                          <Delete />
+                        </IconButton>
+                      </Box>
+                    </Fade>
+                    <Fade in={showOptions !== item.name}>
                       <IconButton
+                        className="more-button"
                         size="small"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          handleEditType();
-                        }}
+                        onClick={(event) => handleMoreClick(event, item.name)}
                       >
-                        <Edit />
+                        <MoreVert />
                       </IconButton>
-                      <IconButton
-                        size="small"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          handleDeleteType();
-                        }}
-                      >
-                        <Delete />
-                      </IconButton>
-                    </>
-                  ) : (
-                    <IconButton
-                      className="more-button"
-                      size="small"
-                      onClick={(event) => handleMoreClick(event, item.name)}
-                    >
-                      <MoreVert />
-                    </IconButton>
-                  ))}
+                    </Fade>
+                  </>
+                )}
               </Box>
             </>
           )}
@@ -218,12 +231,17 @@ const TypeList = ({
           onCancel={() => setIsAddingType(false)}
         />
       )}
-      <Box sx={{ width: "100%", mt: 2 }}>
-        {!isAddingType && (
-          <Button onClick={handleAddTypeClick} fullWidth>
-            Add Type
-          </Button>
-        )}
+      <Box
+        sx={{
+          position: "absolute",
+          bottom: 16,
+          left: "50%",
+          transform: "translateX(-50%)",
+        }}
+      >
+        <Fab color="primary" onClick={handleAddTypeClick} size="small">
+          <Add />
+        </Fab>
       </Box>
     </Box>
   );
