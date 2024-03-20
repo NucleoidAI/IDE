@@ -211,14 +211,22 @@ function ProjectDialog({ handleClose, open }) {
   };
 
   const uploadToCloud = (projectId) => {
+    setLoading(true);
     const project = storage.get("ide", "projects", projectId);
-    const context = setContextForCloud(project);
+    const context = contextToCloud(project);
 
-    http.post(`${config.api}/api/projects`, context).then((response) => {
-      const { data } = response;
-
-      publish("PROJECT_UPLOADED", {
-        id: data.service.contextId,
+    service
+      .addProject(context)
+      .then((response) => {
+        publish("PROJECT_UPLOADED", {
+          id: response.data.id,
+        });
+        storage.remove("ide", "projects", projectId);
+        getLocalProjects();
+        getCloudProjects();
+      })
+      .finally(() => {
+        setLoading(false);
       });
     });
   };
