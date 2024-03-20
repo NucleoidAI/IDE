@@ -59,54 +59,6 @@ function ProjectDialog({ handleClose, open }) {
     query: searchQuery,
   });
 
-  const deleteProject = (project) => {
-    if (project.type === "CLOUD") {
-      setLoading(true);
-      service
-        .deleteProject(project.id)
-        .then(() => {
-          publish("PROJECT_DELETED", { id: project.id });
-        })
-        .finally(() => {
-          getCloudProjects();
-          setLoading(false);
-        });
-    } else {
-      localStorage.removeItem(`ide.projects.${project.id}`);
-      getLocalProjects();
-    }
-    publish("PROJECT_DELETED", { id: projectId });
-  };
-
-  const createProject = (newProject) => {
-    const { name, template } = newProject;
-    const context =
-      template === "sample" ? State.withSample() : State.withBlank();
-    context.get = (prop) => State.resolve(context, prop);
-
-    if (login) {
-      createProjectOnCloud(name, context);
-    } else {
-      createProjetOnLocal(name, context);
-    }
-
-    setFormArea("button");
-  };
-
-  useEffect(() => {
-    if (!login) {
-      getLocalProjects();
-    } else if (login) {
-      getLocalProjects();
-      getCloudProjects();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [login]);
-
-  useEffect(() => {
-    setProjects([...cloudProjects, ...localProjects]);
-  }, [cloudProjects, localProjects]);
-
   const cloudToContext = async () => {
     const response = await service.getProjects();
     const projects = response.data;
@@ -153,6 +105,29 @@ function ProjectDialog({ handleClose, open }) {
     return createdProject;
   };
 
+  const getCloudProjects = async () => {
+    const projects = await cloudToContext();
+    setCloudProjects(projects);
+  };
+
+  const getLocalProjects = () => {
+    setLocalProjects(getProjectsFromLocalStorage());
+  };
+
+  useEffect(() => {
+    if (!login) {
+      getLocalProjects();
+    } else if (login) {
+      getLocalProjects();
+      getCloudProjects();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [login]);
+
+  useEffect(() => {
+    setProjects([...cloudProjects, ...localProjects]);
+  }, [cloudProjects, localProjects]);
+
   const createProjectOnCloud = (name, context) => {
     setLoading(true);
     context.nucleoid.project.name = name;
@@ -165,6 +140,58 @@ function ProjectDialog({ handleClose, open }) {
         publish("PROJECT_CREATED", {
           id: response.data.id,
         });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  function createProjetOnLocal(name, context) {
+    context.nucleoid.project.name = name;
+
+    storage.set(
+      "ide",
+      "projects",
+      context.nucleoid.project.id,
+      context.nucleoid
+    );
+
+    publish("PROJECT_CREATED", {
+      id: context.nucleoid.project.id,
+    });
+
+    return context;
+  }
+
+  const createProject = (newProject) => {
+    const { name, template } = newProject;
+    const context =
+      template === "sample" ? State.withSample() : State.withBlank();
+    context.get = (prop) => State.resolve(context, prop);
+
+    if (login) {
+      createProjectOnCloud(name, context);
+    } else {
+      createProjetOnLocal(name, context);
+    }
+
+    setFormArea("button");
+  };
+
+  const uploadToCloud = (projectId) => {
+    setLoading(true);
+    const project = storage.get("ide", "projects", projectId);
+    const context = contextToCloud(project);
+
+    service
+      .addProject(context)
+      .then((response) => {
+        publish("PROJECT_UPLOADED", {
+          id: response.data.id,
+        });
+        storage.remove("ide", "projects", projectId);
+        getLocalProjects();
+        getCloudProjects();
       })
       .finally(() => {
         setLoading(false);
@@ -201,51 +228,24 @@ function ProjectDialog({ handleClose, open }) {
     }
   };
 
-  const getCloudProjects = async () => {
-    const projects = await cloudToContext();
-    setCloudProjects(projects);
-  };
-
-  const getLocalProjects = () => {
-    setLocalProjects(getProjectsFromLocalStorage());
-  };
-
-  const uploadToCloud = (projectId) => {
-    setLoading(true);
-    const project = storage.get("ide", "projects", projectId);
-    const context = contextToCloud(project);
-
-    service
-      .addProject(context)
-      .then((response) => {
-        publish("PROJECT_UPLOADED", {
-          id: response.data.id,
+  const deleteProject = (project) => {
+    if (project.type === "CLOUD") {
+      setLoading(true);
+      service
+        .deleteProject(project.id)
+        .then(() => {
+          publish("PROJECT_DELETED", { id: project.id });
+        })
+        .finally(() => {
+          getCloudProjects();
+          setLoading(false);
         });
-        storage.remove("ide", "projects", projectId);
-        getLocalProjects();
-        getCloudProjects();
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    } else {
+      localStorage.removeItem(`ide.projects.${project.id}`);
+      getLocalProjects();
+    }
+    publish("PROJECT_DELETED", { id: projectId });
   };
-
-  function createProjetOnLocal(name, context) {
-    context.nucleoid.project.name = name;
-
-    storage.set(
-      "ide",
-      "projects",
-      context.nucleoid.project.id,
-      context.nucleoid
-    );
-
-    publish("PROJECT_CREATED", {
-      id: context.nucleoid.project.id,
-    });
-
-    return context;
-  }
 
   const runProject = (project) => {
     const { type, id } = project;
