@@ -11,6 +11,7 @@ import { contextReducer } from "./context/reducer";
 import { contextToMap } from "./utils/Parser";
 import http from "./http";
 import routes from "./routes";
+import service from "./service";
 import { subscribe } from "@nucleoidjs/react-event";
 import { useNavigate } from "react-router-dom";
 import vfs from "./vfs";
@@ -63,21 +64,16 @@ function App() {
   }
 
   async function project(projectId) {
-    const projectPath = `${config.api}/projects/${projectId}`;
-    const servicePath = `${config.api}/projects/${projectId}/services`;
-
     const [projectResult, serviceResult] = await Promise.all([
-      http.get(projectPath),
-      http.get(servicePath),
+      service.getProject(projectId),
+      service.getProjectServices(projectId),
     ]);
 
     const contextId = serviceResult.data[0].contextId;
-    const contextPath = `${config.api}/services/${contextId}/context`;
-
-    const contextResult = await http.get(contextPath);
+    const contextResult = await service.getContext(contextId);
 
     const context = contextResult.data;
-    const service = serviceResult.data;
+    const projectService = serviceResult.data;
     const project = projectResult.data;
 
     const nucContext = State.withPages({ context });
@@ -86,8 +82,8 @@ function App() {
     nucContext.nucleoid.project = {
       type: "CLOUD",
       name: project.name,
-      id: service.contextId,
-      description: service.description,
+      id: projectService.contextId,
+      description: projectService.description,
     };
 
     return nucContext;
