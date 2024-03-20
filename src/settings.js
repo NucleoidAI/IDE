@@ -1,4 +1,3 @@
-import config from "../config";
 import { storage } from "@nucleoidjs/webstorage";
 const Settings = {
   projects: [],

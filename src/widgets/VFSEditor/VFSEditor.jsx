@@ -3,7 +3,6 @@ import ApiAIButton from "../../components/ApiAIButton";
 import NucEditor from "../../components/NucEditor/NucEditor";
 import Path from "../../utils/Path";
 import axios from "axios";
-import config from "../../../config";
 import { contextToMap } from "../../utils/Parser";
 import { publish } from "@nucleoidjs/react-event";
 import rules from "./rules";

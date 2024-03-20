@@ -100,6 +100,7 @@ function ProjectDialog({ handleClose, open }) {
       getLocalProjects();
       getCloudProjects();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [login]);
 
   useEffect(() => {
