@@ -32,6 +32,7 @@ function ProjectDialog({ handleClose, open }) {
   const [localProjects, setLocalProjects] = useState([]);
   const [cloudProjects, setCloudProjects] = useState([]);
   const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const getProjectsFromLocalStorage = () => {
@@ -291,10 +292,12 @@ function ProjectDialog({ handleClose, open }) {
           }
           deleteProject={(project) => deleteProject(project)}
           uploadToCloud={(projectId) => uploadToCloud(projectId)}
+          loading={loading}
         />
       </DialogContent>
       <AddNewButton formArea={formArea} setFormArea={setFormArea} />
       <InlineCreationForm
+        loading={loading}
         formArea={formArea}
         setFormArea={setFormArea}
         createProject={(newProject) => createProject(newProject)}

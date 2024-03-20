@@ -1,22 +1,26 @@
 import ActionButton from "../../../components/ActionButton/ActionButton";
 import { useState } from "react";
 
-import { ListItem, Stack, TextField } from "@mui/material";
+import { CircularProgress, ListItem, Stack, TextField } from "@mui/material";
 
 const InlineEditForm = ({
+  loading,
   selectedProject,
   editProject,
   setSelectedAction,
 }) => {
+  console.log(selectedProject);
   const [projectToEdit, setProjectToEdit] = useState({
     id: selectedProject.id,
-    projectName: selectedProject.name,
+    name: selectedProject.name,
+    type: selectedProject.type,
+    serviceType: selectedProject?.serviceType,
   });
 
   const handleProjectNameChange = (event) => {
     setProjectToEdit((prevState) => ({
       ...prevState,
-      projectName: event.target.value,
+      name: event.target.value,
     }));
   };
 
@@ -31,21 +35,27 @@ const InlineEditForm = ({
         autoFocus
         label="Project Name"
         size="small"
-        value={projectToEdit.projectName}
+        value={projectToEdit.name}
         onChange={handleProjectNameChange}
       />
       <Stack direction={"row"} spacing={1} width={"100%"} justifyContent="end">
-        <ActionButton
-          onClick={() => {
-            editProject(projectToEdit.projectName, projectToEdit.id);
-            setSelectedAction("default");
-          }}
-          type="done"
-        />
-        <ActionButton
-          onClick={() => setSelectedAction("default")}
-          type="close"
-        />
+        {!loading ? (
+          <>
+            <ActionButton
+              onClick={() => {
+                editProject(projectToEdit);
+                setSelectedAction("default");
+              }}
+              type="done"
+            />
+            <ActionButton
+              onClick={() => setSelectedAction("default")}
+              type="close"
+            />
+          </>
+        ) : (
+          <CircularProgress />
+        )}
       </Stack>
     </ListItem>
   );

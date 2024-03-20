@@ -2,6 +2,7 @@ import ActionButton from "../../../components/ActionButton/ActionButton";
 import { useState } from "react";
 
 import {
+  CircularProgress,
   FormControl,
   InputLabel,
   MenuItem,
@@ -10,7 +11,12 @@ import {
   TextField,
 } from "@mui/material";
 
-const InlineCreationForm = ({ formArea, setFormArea, createProject }) => {
+const InlineCreationForm = ({
+  formArea,
+  setFormArea,
+  createProject,
+  loading,
+}) => {
   const [newProject, setNewProject] = useState({
     name: "",
     template: "sample",
@@ -29,7 +35,6 @@ const InlineCreationForm = ({ formArea, setFormArea, createProject }) => {
       template: event.target.value,
     }));
   };
-
   return (
     formArea === "add" && (
       <Stack
@@ -66,14 +71,27 @@ const InlineCreationForm = ({ formArea, setFormArea, createProject }) => {
             <MenuItem value={"blank"}>Blank</MenuItem>
           </Select>
         </FormControl>
+
         <Stack
           direction={"row"}
           spacing={1}
           width={"100%"}
           justifyContent="end"
         >
-          <ActionButton onClick={() => createProject(newProject)} type="done" />
-          <ActionButton onClick={() => setFormArea("button")} type="close" />
+          {!loading ? (
+            <>
+              <ActionButton
+                onClick={() => createProject(newProject)}
+                type="done"
+              />
+              <ActionButton
+                onClick={() => setFormArea("button")}
+                type="close"
+              />
+            </>
+          ) : (
+            <CircularProgress color="error" />
+          )}
         </Stack>
       </Stack>
     )

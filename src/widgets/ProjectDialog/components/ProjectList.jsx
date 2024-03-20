@@ -12,6 +12,7 @@ const ProjectList = ({
   deleteProject,
   runProject,
   uploadToCloud,
+  loading,
 }) => {
   const [selectedProjectId, setSelectedProjectId] = useState(null);
 
@@ -38,6 +39,7 @@ const ProjectList = ({
       <List disablePadding>
         {dataFiltered.map((project) => (
           <ProjectListItem
+            loading={loading}
             setSelectedProjectId={setSelectedProjectId}
             selectedProjectId={selectedProjectId}
             runProject={runProject}

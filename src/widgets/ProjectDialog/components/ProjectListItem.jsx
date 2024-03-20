@@ -1,12 +1,14 @@
 import ActionButton from "../../../components/ActionButton/ActionButton";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import InlineEditForm from "./InlineEditForm";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
 import { useParams } from "react-router-dom";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+
 import {
   Box,
+  CircularProgress,
   IconButton,
   ListItem,
   ListItemButton,
@@ -24,11 +26,12 @@ const SecondaryAction = ({
   project,
   runProject,
   deleteProject,
+  loading,
 }) => {
   if (selectedAction === "Select" && selectedProjectId === project.id) {
     return (
       <ActionButton
-        onClick={() => runProject(project.id)}
+        onClick={() => runProject(project)}
         type="play"
         color={(theme) => theme.palette.highlight}
       />
@@ -36,17 +39,27 @@ const SecondaryAction = ({
   } else if (selectedAction === "Delete") {
     return (
       <Stack direction={"row"} spacing={1} width={"100%"} justifyContent="end">
-        <ActionButton onClick={() => deleteProject(project.id)} type="delete" />
-        <ActionButton
-          onClick={() => setSelectedAction("default")}
-          type="close"
-        />
+        {!loading ? (
+          <>
+            <ActionButton
+              onClick={() => deleteProject(project)}
+              type="delete"
+            />
+            <ActionButton
+              onClick={() => setSelectedAction("default")}
+              type="close"
+            />
+          </>
+        ) : (
+          <CircularProgress color="error" />
+        )}
       </Stack>
     );
   }
 };
 
 const ProjectListItem = ({
+  loading,
   project,
   deleteProject,
   searchQuery,
@@ -88,6 +101,7 @@ const ProjectListItem = ({
   if (selectedAction === "Edit") {
     return (
       <InlineEditForm
+        loading={loading}
         setSelectedAction={setSelectedAction}
         selectedProject={project}
         editProject={editProject}
@@ -98,7 +112,7 @@ const ProjectListItem = ({
   const variant = () => {
     if (selectedProjectId === project.id) {
       return "select";
-    } else if (activeProjectId === project.id) {
+    } else if (activeProjectId === project.id.toString()) {
       return "current";
     }
     if (selectedAction === "Delete") {
@@ -122,7 +136,7 @@ const ProjectListItem = ({
                     uploadToCloud(project.id);
                   }}
                 >
-                  <CloudUploadIcon />
+                  {!loading ? <CloudUploadIcon /> : <CircularProgress />}
                 </IconButton>
               )}
               <IconButton aria-haspopup="true" onClick={handleClick}>
@@ -143,6 +157,7 @@ const ProjectListItem = ({
             </>
           ) : (
             <SecondaryAction
+              loading={loading}
               selectedAction={selectedAction}
               selectedProjectId={selectedProjectId}
               project={project}
