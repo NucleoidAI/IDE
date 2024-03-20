@@ -146,6 +146,9 @@ function APITree() {
           expanded={expanded}
           onNodeSelect={(event, value) => select(value)}
           selected={selected}
+          sx={{
+            marginTop: "10px",
+          }}
         >
           {compile(
             api,
