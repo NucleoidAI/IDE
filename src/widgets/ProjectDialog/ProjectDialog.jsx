@@ -61,41 +61,7 @@ function ProjectDialog({ handleClose, open }) {
     publish("PROJECT_DELETED", { id: projectId });
   };
 
-  function createWithSampleTemplate(name) {
-    const context = State.withSample();
-    context.get = (prop) => State.resolve(context, prop);
-    context.nucleoid.project.name = name;
-    storage.set(
-      "ide",
-      "projects",
-      context.nucleoid.project.id,
-      context.nucleoid
-    );
-    publish("PROJECT_CREATED", {
-      id: context.nucleoid.project.id,
-      template: "SAMPLE",
-    });
 
-    return context;
-  }
-
-  function createBlankTemplate(name) {
-    const context = State.withBlank();
-    context.get = (prop) => State.resolve(context, prop);
-    context.nucleoid.project.name = name;
-    storage.set(
-      "ide",
-      "projects",
-      context.nucleoid.project.id,
-      context.nucleoid
-    );
-    publish("PROJECT_CREATED", {
-      id: context.nucleoid.project.id,
-      template: "BLANK",
-    });
-
-    return context;
-  }
 
   const createProject = (newProject) => {
     const { name, template } = newProject;
