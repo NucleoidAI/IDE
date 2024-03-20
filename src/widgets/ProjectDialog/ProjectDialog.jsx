@@ -5,14 +5,14 @@ import ProjectList from "./components/ProjectList";
 import React from "react";
 import State from "../../state";
 import WorkspacesIcon from "@mui/icons-material/Workspaces";
-import config from "../../../config";
 import http from "../../http";
 import { publish } from "@nucleoidjs/react-event";
+import service from "../../service";
 import { storage } from "@nucleoidjs/webstorage";
-import { useNavigate } from "react-router-dom";
 
 import { DialogContent, DialogTitle } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 function applyFilter({ inputData, query }) {
   if (query) {
@@ -25,6 +25,8 @@ function applyFilter({ inputData, query }) {
 }
 
 function ProjectDialog({ handleClose, open }) {
+  const login = true;
+  const { id: projectId } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [formArea, setFormArea] = useState("button");
   const [localProjects, setLocalProjects] = useState([]);
@@ -77,13 +79,15 @@ function ProjectDialog({ handleClose, open }) {
 
   const createProject = (newProject) => {
     const { name, template } = newProject;
+    const context =
+      template === "sample" ? State.withSample() : State.withBlank();
+    context.get = (prop) => State.resolve(context, prop);
 
-    if (template === "sample") {
-      createProjectOnCloud(newProject);
-    } else if (template === "blank") {
-      createBlankTemplate(name);
+    if (login) {
+      createProjectOnCloud(name, context);
+    } else {
+      createProjetOnLocal(name, context);
     }
-    setProjects(getProjectsFromLocalStorage());
 
     setFormArea("button");
   };
@@ -278,14 +282,14 @@ function ProjectDialog({ handleClose, open }) {
       </DialogTitle>
       <DialogContent>
         <ProjectList
-          runProject={(projectId) => runProject(projectId)}
+          runProject={(project) => runProject(project)}
           searchQuery={searchQuery}
           handleSearch={handleSearch}
           dataFiltered={dataFiltered}
           editProject={(editedProjectName, editedProjectId) =>
             editProject(editedProjectName, editedProjectId)
           }
-          deleteProject={(projectId) => deleteProject(projectId)}
+          deleteProject={(project) => deleteProject(project)}
           uploadToCloud={(projectId) => uploadToCloud(projectId)}
         />
       </DialogContent>
