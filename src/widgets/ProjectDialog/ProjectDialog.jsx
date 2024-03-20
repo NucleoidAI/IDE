@@ -27,6 +27,8 @@ function applyFilter({ inputData, query }) {
 function ProjectDialog({ handleClose, open }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [formArea, setFormArea] = useState("button");
+  const [localProjects, setLocalProjects] = useState([]);
+  const [cloudProjects, setCloudProjects] = useState([]);
   const [projects, setProjects] = useState([]);
   const navigate = useNavigate();
 
@@ -135,11 +137,17 @@ function ProjectDialog({ handleClose, open }) {
 
     http.post(`${config.api}/api/projects`, createContext).then((response) => {
       const { data } = response;
+  const getCloudProjects = async () => {
+    const projects = await cloudToContext();
+    setCloudProjects(projects);
+  };
 
       publish("PROJECT_CREATED", {
         id: data.service.contextId,
       });
     });
+  const getLocalProjects = () => {
+    setLocalProjects(getProjectsFromLocalStorage());
   };
 
   const uploadToCloud = (projectId) => {
