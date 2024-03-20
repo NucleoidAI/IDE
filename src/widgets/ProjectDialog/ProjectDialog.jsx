@@ -149,16 +149,26 @@ function ProjectDialog({ handleClose, open }) {
     return createdProject;
   };
 
-  const createProjectOnCloud = (newProject) => {
-    const { name, template } = newProject;
-    const context = State.withSample();
-    context.get = (prop) => State.resolve(context, prop);
+  const createProjectOnCloud = (name, context) => {
+    setLoading(true);
     context.nucleoid.project.name = name;
+    const createdContext = contextToCloud(context.nucleoid);
+
+    service
+      .addProject(createdContext)
+      .then((response) => {
+        getCloudProjects();
+        publish("PROJECT_CREATED", {
+          id: response.data.id,
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
     const createContext = setContextForCloud(context.nucleoid);
 
-    http.post(`${config.api}/api/projects`, createContext).then((response) => {
-      const { data } = response;
   const getCloudProjects = async () => {
     const projects = await cloudToContext();
     setCloudProjects(projects);
