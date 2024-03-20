@@ -84,22 +84,27 @@ const TypeList = ({
     setShowOptions(null);
   };
 
-  const handleEditType = () => {
-    setEditingType(showOptions);
+  const handleEditType = (item) => {
+    setEditingType(item);
     handleCloseOptions();
   };
 
-  const handleDeleteType = () => {
+  const handleDeleteType = (item) => {
     const deletedIndex = combinedData.findIndex(
       (item) => item.name === showOptions
     );
-    onDeleteType(showOptions);
+
+    onDeleteType(item);
     handleCloseOptions();
 
     if (deletedIndex > 0) {
-      onTypeSelect(combinedData[deletedIndex - 1].name);
+      setTimeout(() => {
+        onTypeSelect(combinedData[deletedIndex - 1].name);
+      }, 0);
     } else if (deletedIndex < combinedData.length - 1) {
-      onTypeSelect(combinedData[deletedIndex + 1].name);
+      setTimeout(() => {
+        onTypeSelect(combinedData[deletedIndex + 1].name);
+      }, 0);
     } else {
       onTypeSelect(null);
     }
@@ -115,19 +120,34 @@ const TypeList = ({
   };
 
   useEffect(() => {
-    const handleOutsideClick = (event) => {
-      if (
-        showOptions &&
-        optionsRef.current &&
-        !optionsRef.current.contains(event.target)
-      ) {
+    function handleClickOutside(event) {
+      let targetElement = event.target;
+      let shouldCloseOptions = true;
+
+      while (targetElement) {
+        if (
+          targetElement.className &&
+          typeof targetElement.className === "string" &&
+          (targetElement.className.includes("more-button") ||
+            targetElement.className.includes("ignore-outside-click"))
+        ) {
+          shouldCloseOptions = false;
+          break;
+        }
+        targetElement = targetElement.parentElement;
+      }
+
+      if (shouldCloseOptions) {
         setShowOptions(null);
       }
-    };
+    }
 
-    document.addEventListener("mousedown", handleOutsideClick);
+    if (showOptions !== null) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
     return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showOptions]);
 
@@ -143,7 +163,9 @@ const TypeList = ({
       {combinedData.map((item) => (
         <Box
           key={item.name}
-          onClick={() => onTypeSelect(item.name)}
+          onClick={() => {
+            onTypeSelect(item.name);
+          }}
           sx={{
             padding: "6px 16px",
             height: "40px",
@@ -187,29 +209,28 @@ const TypeList = ({
                 )}
                 {!item.isTypeScript && (
                   <>
-                    <Fade in={showOptions === item.name}>
+                    {showOptions === item.name ? (
                       <Box>
                         <IconButton
                           size="small"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            handleEditType();
+                          className="ignore-outside-click"
+                          onClick={() => {
+                            handleEditType(item.name);
                           }}
                         >
                           <Edit />
                         </IconButton>
                         <IconButton
                           size="small"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            handleDeleteType();
+                          className="ignore-outside-click"
+                          onClick={() => {
+                            handleDeleteType(item.name);
                           }}
                         >
                           <Delete />
                         </IconButton>
                       </Box>
-                    </Fade>
-                    <Fade in={showOptions !== item.name}>
+                    ) : (
                       <IconButton
                         className="more-button"
                         size="small"
@@ -217,7 +238,7 @@ const TypeList = ({
                       >
                         <MoreVert />
                       </IconButton>
-                    </Fade>
+                    )}
                   </>
                 )}
               </Box>
