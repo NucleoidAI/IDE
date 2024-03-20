@@ -1,3 +1,4 @@
+import config from "../config";
 import { storage } from "@nucleoidjs/webstorage";
 const Settings = {
   projects: [],
@@ -33,10 +34,6 @@ const Settings = {
     client_id: "6a44f854367bd3fb5f13",
     token_url: "https://github.com/login/oauth/access_token",
     user: "https://api.github.com/user",
-  },
-  service: {
-    auth: "https://nucleoid.com/oauth",
-    projects: "https://nucleoid.com/projects",
   },
 
   connection: true,
