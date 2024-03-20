@@ -70,6 +70,7 @@ const TypeList = ({
   const handleAddTypeConfirm = (typeName) => {
     onAddType(typeName);
     setIsAddingType(false);
+    onTypeSelect(typeName);
   };
 
   const handleMoreClick = (event, typeName) => {
@@ -88,13 +89,28 @@ const TypeList = ({
   };
 
   const handleDeleteType = () => {
+    const deletedIndex = combinedData.findIndex(
+      (item) => item.name === showOptions
+    );
     onDeleteType(showOptions);
     handleCloseOptions();
+
+    if (deletedIndex > 0) {
+      onTypeSelect(combinedData[deletedIndex - 1].name);
+    } else if (deletedIndex < combinedData.length - 1) {
+      onTypeSelect(combinedData[deletedIndex + 1].name);
+    } else {
+      onTypeSelect(null);
+    }
   };
 
   const handleUpdateType = (updatedTypeName) => {
+    onTypeSelect(null);
     onUpdateType(editingType, updatedTypeName);
     setEditingType(null);
+    setTimeout(() => {
+      onTypeSelect(updatedTypeName);
+    }, 0);
   };
 
   useEffect(() => {
