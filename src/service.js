@@ -46,8 +46,8 @@ const getProjects = () => {
   return http.get("/projects");
 };
 
-const getProject = (project) => {
-  return http.get(Settings.service.projects + "/" + project);
+const getProject = (projectId) => {
+  return http.get("/projects/" + projectId);
 };
 
 const addProject = (project) => {
@@ -68,6 +68,14 @@ const deleteProject = (projectId) => {
   return http("projects/" + projectId, {
     method: "DELETE",
   });
+};
+
+const getProjectServices = (projectId) => {
+  return http.get("projects/" + projectId + "/services");
+};
+
+const getContext = (contextId) => {
+  return http.get("services/" + contextId + "/context");
 };
 
 const getGraph = () => {
@@ -100,6 +108,8 @@ const service = {
   addProject,
   updateProject,
   deleteProject,
+  getProjectServices,
+  getContext,
   createSandbox,
   getGraph,
   getConfig,
