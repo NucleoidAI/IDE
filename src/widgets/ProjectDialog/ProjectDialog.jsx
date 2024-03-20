@@ -78,11 +78,38 @@ function ProjectDialog({ handleClose, open }) {
 
   const setContextForCloud = (context) => {
     console.log(context);
+  const cloudToContext = async () => {
+    const response = await service.getProjects();
+    const projects = response.data;
+
+    const projectPromises = projects.map(async (project) => {
+      if (project.serviceType === "SINGLE") {
+        const servicesResponse = await http.get(
+          `/projects/${project.id}/services`
+        );
+
+        project.description = servicesResponse.data[0].description;
+        project.type = "CLOUD";
+        return project;
+      }
+
+      if (project.serviceType === "MULTIPLE") {
+        console.log("Multiple services not supported yet");
+      }
+
+      return null;
+    });
+
+    return await Promise.all(projectPromises);
+  };
+
+  const contextToCloud = (context) => {
     const { project, api, declarations, functions, types } = context;
 
     const createdProject = {
       name: project.name,
       serviceType: "single",
+      serviceType: "SINGLE",
     };
 
     const service = {
