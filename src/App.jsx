@@ -62,23 +62,26 @@ function App() {
     return nucContext;
   }
 
-  async function project(contextId) {
-    const contextPath = `${config.api}/api/services/${contextId}/context`;
-    const servicePath = `${config.api}/api/services/context/${contextId}`;
+  async function project(projectId) {
+    const projectPath = `${config.api}/projects/${projectId}`;
+    const servicePath = `${config.api}/projects/${projectId}/services`;
 
-    const [nucContextResult, serviceResult] = await Promise.all([
-      http.get(contextPath),
+    const [projectResult, serviceResult] = await Promise.all([
+      http.get(projectPath),
       http.get(servicePath),
     ]);
 
-    const projectId = serviceResult.data.projectId;
-    const projectPath = `${config.api}/api/projects/${projectId}`;
-    const projectResult = await http.get(projectPath);
+    const contextId = serviceResult.data[0].contextId;
+    const contextPath = `${config.api}/services/${contextId}/context`;
 
-    const context = nucContextResult.data;
+    const contextResult = await http.get(contextPath);
+
+    const context = contextResult.data;
     const service = serviceResult.data;
     const project = projectResult.data;
+
     const nucContext = State.withPages({ context });
+
     nucContext.get = (prop) => State.resolve(nucContext, prop);
     nucContext.nucleoid.project = {
       type: "CLOUD",
@@ -101,6 +104,7 @@ function App() {
     );
 
     navigate(`${context.nucleoid.project.id}/api?mode=local`);
+    navigate(0);
 
     return context;
   }
@@ -142,6 +146,7 @@ function App() {
     }
     if (checkMobileSize()) {
       navigate("/mobile");
+      navigate(0);
       Settings.plugin(" ");
       Settings.landing({ level: Number.MAX_SAFE_INTEGER });
     }
@@ -175,6 +180,7 @@ function App() {
         return setContext("mobile");
       } else {
         navigate("/sample/api");
+        navigate(0);
       }
     }
 
