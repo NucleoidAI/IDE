@@ -1,222 +1,310 @@
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-//eslint-disable-next-line
-import { DataGrid } from "@mui/x-data-grid";
-import Delete from "@mui/icons-material/Delete";
-import NucDialog from "../../components/core/NucDialog/NucDialog";
+import AddNewButton from "./components/AddNewButton";
+import Dialog from "@mui/material/Dialog";
+import InlineCreationForm from "./components/InlineCreationForm";
+import ProjectList from "./components/ProjectList";
 import React from "react";
-import styles from "./styles";
+import State from "../../state";
+import WorkspacesIcon from "@mui/icons-material/Workspaces";
+import http from "../../http";
+import { publish } from "@nucleoidjs/react-event";
+import service from "../../service";
+import { storage } from "@nucleoidjs/webstorage";
 
-import { Backdrop, CircularProgress } from "@mui/material";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Grid,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mui/material/";
+import { DialogContent, DialogTitle } from "@mui/material";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-const NewProjectScreen = ({ setScreen, handleClose }) => {
-  const [open] = React.useState(false);
+function applyFilter({ inputData, query }) {
+  if (query) {
+    inputData = inputData.filter(
+      (item) => item.name.toLowerCase().indexOf(query.toLowerCase()) !== -1
+    );
+  }
+
+  return inputData;
+}
+
+function ProjectDialog({ handleClose, open }) {
+  const login = true;
+  const { id: projectId } = useParams();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [formArea, setFormArea] = useState("button");
+  const [localProjects, setLocalProjects] = useState([]);
+  const [cloudProjects, setCloudProjects] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const getProjectsFromLocalStorage = () => {
+    const projects = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith("ide.projects.")) {
+        const context = JSON.parse(localStorage.getItem(key));
+
+        if (context.project) {
+          projects.push(context.project);
+        }
+      }
+    }
+    return projects;
+  };
+
+  const handleSearch = useCallback((event) => {
+    setSearchQuery(event.target.value);
+  }, []);
+
+  const dataFiltered = applyFilter({
+    inputData: projects,
+    query: searchQuery,
+  });
+
+  const cloudToContext = async () => {
+    const response = await service.getProjects();
+    const projects = response.data;
+
+    const projectPromises = projects.map(async (project) => {
+      if (project.serviceType === "SINGLE") {
+        const servicesResponse = await http.get(
+          `/projects/${project.id}/services`
+        );
+
+        project.description = servicesResponse.data[0].description;
+        project.type = "CLOUD";
+        return project;
+      }
+
+      if (project.serviceType === "MULTIPLE") {
+        console.log("Multiple services not supported yet");
+      }
+
+      return null;
+    });
+
+    return await Promise.all(projectPromises);
+  };
+
+  const contextToCloud = (context) => {
+    const { project, api, declarations, functions, types } = context;
+
+    const createdProject = {
+      name: project.name,
+      serviceType: "SINGLE",
+    };
+
+    const service = {
+      description: project.description,
+      contextId: project.id,
+    };
+    createdProject.service = service;
+
+    const nucContext = { api, declarations, functions, types };
+
+    createdProject.service.context = nucContext;
+
+    return createdProject;
+  };
+
+  const getCloudProjects = async () => {
+    const projects = await cloudToContext();
+    setCloudProjects(projects);
+  };
+
+  const getLocalProjects = () => {
+    setLocalProjects(getProjectsFromLocalStorage());
+  };
+
+  useEffect(() => {
+    if (!login) {
+      getLocalProjects();
+    } else if (login) {
+      getLocalProjects();
+      getCloudProjects();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [login]);
+
+  useEffect(() => {
+    setProjects([...cloudProjects, ...localProjects]);
+  }, [cloudProjects, localProjects]);
+
+  const createProjectOnCloud = (name, context) => {
+    setLoading(true);
+    context.nucleoid.project.name = name;
+    const createdContext = contextToCloud(context.nucleoid);
+
+    service
+      .addProject(createdContext)
+      .then((response) => {
+        getCloudProjects();
+        publish("PROJECT_CREATED", {
+          id: response.data.id,
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  function createProjetOnLocal(name, context) {
+    context.nucleoid.project.name = name;
+
+    storage.set(
+      "ide",
+      "projects",
+      context.nucleoid.project.id,
+      context.nucleoid
+    );
+
+    publish("PROJECT_CREATED", {
+      id: context.nucleoid.project.id,
+    });
+
+    return context;
+  }
+
+  const createProject = (newProject) => {
+    const { name, template } = newProject;
+    const context =
+      template === "sample" ? State.withSample() : State.withBlank();
+    context.get = (prop) => State.resolve(context, prop);
+
+    if (login) {
+      createProjectOnCloud(name, context);
+    } else {
+      createProjetOnLocal(name, context);
+    }
+
+    setFormArea("button");
+  };
+
+  const uploadToCloud = (projectId) => {
+    setLoading(true);
+    const project = storage.get("ide", "projects", projectId);
+    const context = contextToCloud(project);
+
+    service
+      .addProject(context)
+      .then((response) => {
+        publish("PROJECT_UPLOADED", {
+          id: response.data.id,
+        });
+        storage.remove("ide", "projects", projectId);
+        getLocalProjects();
+        getCloudProjects();
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const editProject = (projectToEdit) => {
+    const { name, type, id } = projectToEdit;
+    if (type === "LOCAL") {
+      const context = storage.get("ide", "projects", id);
+      const { project } = context;
+      project.name = name;
+      storage.remove("ide", "projects", id);
+      storage.set("ide", "projects", id, context);
+
+      publish("PROJECT_UPDATED", {
+        id: project.id,
+      });
+      getLocalProjects();
+    } else if (type === "CLOUD") {
+      setLoading(true);
+
+      service
+        .updateProject(projectToEdit.id, projectToEdit.name)
+        .then(() => {
+          publish("PROJECT_UPDATED", {
+            id: projectToEdit.id,
+          });
+          getCloudProjects();
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  };
+
+  const deleteProject = (project) => {
+    if (project.type === "CLOUD") {
+      setLoading(true);
+      service
+        .deleteProject(project.id)
+        .then(() => {
+          publish("PROJECT_DELETED", { id: project.id });
+        })
+        .finally(() => {
+          getCloudProjects();
+          setLoading(false);
+        });
+    } else {
+      localStorage.removeItem(`ide.projects.${project.id}`);
+      getLocalProjects();
+    }
+    publish("PROJECT_DELETED", { id: projectId });
+  };
+
+  const runProject = (project) => {
+    const { type, id } = project;
+
+    if (type === "LOCAL") {
+      navigate(`/${id}/api?mode=local`);
+      navigate(0);
+    } else if (type === "CLOUD") {
+      navigate(`/${id}/api`);
+      navigate(0);
+    }
+
+    publish("PROJECT_CHANGED", {
+      id: projectId,
+    });
+  };
+
+  const onDialogClose = () => {
+    handleClose();
+    setSearchQuery("");
+  };
 
   return (
-    <>
-      <DialogTitle>
-        <Grid
-          container
-          sx={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <IconButton onClick={() => setScreen("ListProjects")}>
-            <ArrowBackIcon />
-          </IconButton>
-          <Typography variant="h6">New Project</Typography>
-          <Grid />
-        </Grid>
+    <Dialog open={open} fullWidth={true} onClose={onDialogClose}>
+      <DialogTitle
+        m={1}
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "start",
+        }}
+      >
+        <WorkspacesIcon sx={{ mx: 1 }} />
+        Projects
       </DialogTitle>
-      <DialogContent sx={styles.content}>
-        <TextField
-          label="Project Name"
-          variant="outlined"
-          sx={{ width: "100%", marginTop: 1 }}
+      <DialogContent>
+        <ProjectList
+          runProject={(project) => runProject(project)}
+          searchQuery={searchQuery}
+          handleSearch={handleSearch}
+          dataFiltered={dataFiltered}
+          editProject={(editedProjectName, editedProjectId) =>
+            editProject(editedProjectName, editedProjectId)
+          }
+          deleteProject={(project) => deleteProject(project)}
+          uploadToCloud={(projectId) => uploadToCloud(projectId)}
+          loading={loading}
         />
       </DialogContent>
-      <DialogActions>
-        <Grid
-          container
-          sx={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Grid />
-          <Grid>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button>Save</Button>
-          </Grid>
-          <ProgressBackDrop open={open} />
-        </Grid>
-      </DialogActions>
-    </>
+      <AddNewButton formArea={formArea} setFormArea={setFormArea} />
+      <InlineCreationForm
+        loading={loading}
+        formArea={formArea}
+        setFormArea={setFormArea}
+        createProject={(newProject) => createProject(newProject)}
+      />
+    </Dialog>
   );
-};
-
-const ListProjectsScreen = ({ handleClose }) => {
-  const [open] = React.useState(false);
-  const select = React.useRef();
-  const [dialog, setDialog] = React.useState(false);
-
-  const DeleteButton = ({ params, handleDelete }) => {
-    return (
-      <IconButton onClick={() => handleDelete(params)}>
-        <Delete />
-      </IconButton>
-    );
-  };
-
-  const handleCloseDialog = () => {
-    setDialog(false);
-  };
-
-  const handleOpenDialog = (params) => {
-    select.current = params.id;
-    setDialog(true);
-  };
-
-  const columns = [
-    {
-      field: "name",
-      headerName: "Project name",
-      flex: 5,
-    },
-    {
-      field: "actions",
-      headerName: "Action",
-      flex: 1,
-      renderCell: (params) =>
-        params.id !== "" ? (
-          <DeleteButton
-            params={params}
-            handleDelete={(params) => handleOpenDialog(params)}
-          />
-        ) : null,
-    },
-  ];
-
-  const rows = [];
-
-  return (
-    <>
-      <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-        {" "}
-        {/* Full height and flex container */}
-        <DialogTitle>
-          <Grid
-            container
-            sx={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Typography variant="h6">Select a project</Typography>
-            <Button variant="text">NEW PROJECT</Button>
-          </Grid>
-        </DialogTitle>
-        <DialogContent sx={styles.content}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            hideFooter={true}
-            onRowClick={(e) => {
-              select.current = e.row.project;
-            }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Grid
-            container
-            sx={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Grid />
-            <Grid>
-              <Button onClick={handleClose}>Cancel</Button>
-              <Button>Select</Button>
-            </Grid>
-          </Grid>
-          <ProgressBackDrop open={open} />
-          <Dialog
-            open={dialog}
-            onClose={handleClose}
-            aria-labelledby="responsive-dialog-title"
-          >
-            <DialogTitle id="responsive-dialog-title">
-              Delete resource
-            </DialogTitle>
-            <DialogContent>The selected project will be deleted.</DialogContent>
-            <DialogActions>
-              <Button autoFocus onClick={handleCloseDialog}>
-                Cancel
-              </Button>
-              <Button autoFocus>Delete</Button>
-            </DialogActions>
-          </Dialog>
-        </DialogActions>
-      </div>
-    </>
-  );
-};
-
-const ProgressBackDrop = ({ open }) => {
-  return (
-    <Backdrop
-      sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      open={open}
-    >
-      <CircularProgress color="inherit" />
-    </Backdrop>
-  );
-};
-
-const ScreenManager = ({ handleClose }) => {
-  const [screen, setScreen] = React.useState("ListProjects");
-
-  switch (screen) {
-    case "ListProjects":
-      return (
-        <ListProjectsScreen setScreen={setScreen} handleClose={handleClose} />
-      );
-    case "NewProject":
-      return (
-        <NewProjectScreen setScreen={setScreen} handleClose={handleClose} />
-      );
-    default:
-      return null;
-  }
-};
-
-const ProjectDialog = ({ handleClose }) => {
-  return (
-    <NucDialog
-      open={true}
-      handleClose={handleClose}
-      maximizedDimensions={{ width: "50rem", height: "50rem" }}
-      minimizedDimensions={{ width: "40rem", height: "40rem" }}
-    >
-      <ScreenManager handleClose={handleClose} />
-    </NucDialog>
-  );
-};
+}
 
 export default ProjectDialog;

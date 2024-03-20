@@ -251,3 +251,11 @@ export const declarations = [
     `,
   },
 ];
+
+export const project = {
+  type: "LOCAL",
+  name: "Sample",
+  id: "Sample",
+  description:
+    "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore",
+};

@@ -1,6 +1,7 @@
 import { alpha } from "@mui/material/styles";
-import { base } from "./palette";
 import { createTheme } from "@mui/material";
+
+import { action, base, error, primary, success } from "./palette";
 
 const micAnimation = {
   "& span": {
@@ -110,6 +111,60 @@ const commonThemeProperties = {
         variant: "standard",
       },
     },
+    MuiListItem: {
+      variants: [
+        {
+          props: { variant: "default" },
+          style: {
+            borderWidth: 1,
+            borderStyle: "solid",
+            borderRadius: "2px",
+            borderColor: "transparent",
+            "&:hover": {
+              borderWidth: 1,
+              borderStyle: "solid",
+              borderRadius: "5px",
+              borderColor: primary.main,
+              backgroundColor: alpha(primary.main, action.hoverOpacity),
+            },
+          },
+        },
+        {
+          props: { variant: "current" },
+          borderWidth: 1,
+          borderStyle: "solid",
+          borderRadius: "2px",
+          style: {
+            borderRadius: "5px",
+            backgroundColor: alpha(action.highlight, action.hoverOpacity),
+          },
+        },
+        {
+          props: { variant: "select" },
+          borderWidth: 1,
+          borderStyle: "solid",
+          borderRadius: "2px",
+          style: {
+            borderRadius: "5px",
+            borderColor: primary.main,
+            backgroundColor: alpha(action.highlight, 0.6),
+          },
+        },
+        {
+          props: { variant: "delete" },
+          borderWidth: 1,
+          borderStyle: "solid",
+          borderRadius: "2px",
+          style: {
+            borderStyle: "solid",
+            borderWidth: 1,
+            borderRadius: "5px",
+            borderColor: error.main,
+            backgroundColor: alpha(error.main, action.hoverOpacity),
+          },
+        },
+      ],
+    },
     MuiSvgIcon: {
       variants: [
         {
@@ -140,6 +195,10 @@ const lightTheme = createTheme({
     secondary: {
       main: "#f4f4f4",
     },
+    error: { main: "#d32f2f", dark: "#c62828", light: "#ef5350" },
+    doneIcon: alpha(success.main, 0.5),
+    cancelIcon: alpha(error.main, 0.5),
+    highlight: "#007867",
     custom: {
       grey: "rgba(255, 255, 255, 0.7)",
       fossil: "#747474",
@@ -301,6 +360,7 @@ const darkTheme = createTheme({
       main: base.secondary.dark,
     },
     custom: {
+      error: { main: "#d32f2f", dark: "#c62828", light: "#ef5350" },
       grey: base.grey[500],
       fossil: base.grey[500],
       darkDialogBg: "rgba(0,0,0,0.5)",
@@ -311,6 +371,9 @@ const darkTheme = createTheme({
       textGray: base.grey[500],
       messageBG: base.grey[700],
     },
+    doneIcon: alpha(success.main, 0.5),
+    cancelIcon: alpha(error.main, 0.5),
+    highlight: "#007867",
     chat: {
       inputBorderRadius: "15px",
     },
@@ -360,6 +423,23 @@ const darkTheme = createTheme({
     },
 
     MuiListItemButton: {
+      variants: [
+        {
+          props: { variant: "transparent" },
+          style: {
+            backgroundColor: `transparent !important`,
+            color: base.grey[500],
+            "&:hover": {
+              backgroundColor: base.grey[800],
+            },
+
+            "&.Mui-selected, &.Mui-selected:hover": {
+              backgroundColor: base.secondary.main,
+              color: base.common.white,
+            },
+          },
+        },
+      ],
       styleOverrides: {
         root: {
           backgroundColor: `${base.grey[900]} !important`,

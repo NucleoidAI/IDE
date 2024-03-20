@@ -11,11 +11,15 @@ import Settings from "../../settings";
 import SwaggerDialog from "../../components/SwaggerDialog";
 import routes from "../../routes";
 import styles from "./styles";
+import { useLocation } from "react-router-dom";
 
 function IDE() {
+  const location = useLocation();
+  const modeQuery = location.search;
+
   return (
     <Box sx={styles.root}>
-      <Menu list={routes} title="IDE" />
+      <Menu list={routes} query={modeQuery} title="IDE" />
       <EducationDrawer />
       <Box sx={styles.content}>
         <Outlet />

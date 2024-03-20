@@ -33,7 +33,7 @@ import {
 const withFilter = (Component) => {
   return (props) => {
     let list;
-
+    const { query } = props;
     if (!settings.plugin()) {
       list = props.list[0].pages.filter(
         (item) => item.link !== "/dashboard" && item.link !== "/businessflow"
@@ -42,7 +42,7 @@ const withFilter = (Component) => {
       list = [...props.list];
     }
 
-    return <Component {...{ title: "IDE", list }} />;
+    return <Component {...{ title: "IDE", list, query }} />;
   };
 };
 
@@ -204,6 +204,9 @@ const MenuLinks = (props) => {
       free: 50,
     },
   });
+
+  const { query } = props;
+
   return (
     <>
       {props.list.map(({ title, link, anchor, icon }) => {
@@ -216,7 +219,7 @@ const MenuLinks = (props) => {
               }
               sx={styles.listItem}
               component={Link}
-              to={`../${link}`}
+              to={`../${link}/${query}`}
               state={{ anchor }}
               relative="path"
             >
@@ -234,13 +237,13 @@ const SmallMenuLinks = (props) => {
   return (
     <>
       {props.list.map((item, key) => (
-        <MenuItem {...item} key={key} />
+        <MenuItem {...item} query={props.query} key={key} />
       ))}
     </>
   );
 };
 
-const MenuItem = ({ title, link, anchor, icon }) => {
+const MenuItem = ({ title, link, anchor, icon, query }) => {
   const [runtimeConnection] = useEvent("RUNTIME_CONNECTION", {
     status: false,
     metrics: {
@@ -248,7 +251,6 @@ const MenuItem = ({ title, link, anchor, icon }) => {
       free: 50,
     },
   });
-
   return (
     <ListItemButton
       disabled={
@@ -257,7 +259,7 @@ const MenuItem = ({ title, link, anchor, icon }) => {
       }
       key={title}
       component={Link}
-      to={`../${link}`}
+      to={`../${link}/${query}`}
       state={{ anchor }}
       relative="path"
     >
