@@ -169,16 +169,19 @@ const TypeList = ({
           sx={{
             padding: "6px 16px",
             height: "40px",
-            cursor: "pointer",
-            bgcolor:
-              selectedType === item.name ? "primary.light" : "background.paper",
-            "&:hover": {
-              bgcolor: "primary.light",
-            },
             width: "100%",
+            borderRadius: 2,
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            cursor: "pointer",
+            bgcolor: (theme) =>
+              selectedType === item.name
+                ? theme.palette.action.selected
+                : theme.palette.background.paper,
+            "&:hover": {
+              bgcolor: (theme) => theme.palette.action.hover,
+            },
           }}
         >
           {editingType === item.name ? (
