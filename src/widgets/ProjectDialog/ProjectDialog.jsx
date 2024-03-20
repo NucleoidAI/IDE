@@ -88,8 +88,6 @@ function ProjectDialog({ handleClose, open }) {
     setFormArea("button");
   };
 
-  const setContextForCloud = (context) => {
-    console.log(context);
   useEffect(() => {
     if (!login) {
       getLocalProjects();
@@ -202,10 +200,6 @@ function ProjectDialog({ handleClose, open }) {
     setCloudProjects(projects);
   };
 
-      publish("PROJECT_CREATED", {
-        id: data.service.contextId,
-      });
-    });
   const getLocalProjects = () => {
     setLocalProjects(getProjectsFromLocalStorage());
   };
@@ -228,30 +222,35 @@ function ProjectDialog({ handleClose, open }) {
       .finally(() => {
         setLoading(false);
       });
-    });
   };
 
-  useEffect(() => {
-    setProjects(getProjectsFromLocalStorage());
-  }, []);
+  function createProjetOnLocal(name, context) {
+    context.nucleoid.project.name = name;
 
-  const editProject = (editedProjectName, editedProjectId) => {
-    const context = storage.get("ide", "projects", editedProjectId);
-    const { project } = context;
-    project.name = editedProjectName;
-    storage.remove("ide", "projects", editedProjectId);
-    storage.set("ide", "projects", editedProjectId, context);
+    storage.set(
+      "ide",
+      "projects",
+      context.nucleoid.project.id,
+      context.nucleoid
+    );
 
-    publish("PROJECT_UPDATED", {
-      id: project.id,
+    publish("PROJECT_CREATED", {
+      id: context.nucleoid.project.id,
     });
 
-    setProjects(getProjectsFromLocalStorage());
-  };
-  const runProject = (projectId) => {
-    //TODO Remove mode
-    navigate(`/${projectId}/api?mode=local`);
-    navigate(0);
+    return context;
+  }
+
+  const runProject = (project) => {
+    const { type, id } = project;
+
+    if (type === "LOCAL") {
+      navigate(`/${id}/api?mode=local`);
+      navigate(0);
+    } else if (type === "CLOUD") {
+      navigate(`/${id}/api`);
+      navigate(0);
+    }
 
     publish("PROJECT_CHANGED", {
       id: projectId,
