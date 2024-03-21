@@ -10,7 +10,7 @@ import styles from "../../layouts/HorizontalSplitLayout/styles";
 import { useContext } from "../../context/context";
 import { useMonaco } from "@monaco-editor/react";
 import { v4 as uuidv4 } from "uuid";
-
+import { storage } from "@nucleoidjs/webstorage";
 import { CircularProgress, Fab, Grid } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 
@@ -20,17 +20,17 @@ const Editor = React.forwardRef((props, ref) => {
   const [logicPath, setLogicPath] = React.useState("");
   const [queryPath, setQueryPath] = React.useState("");
 
-  const [state, distpach] = useContext();
+  const [context, distpach] = useContext();
   const { setLoading, logic, query, loading } = props;
-  const selectedLogic = state.get("pages.logic.selected");
-  const nucFuncs = state.nucleoid.functions;
+  const selectedLogic = context.get("pages.logic.selected");
+  const nucFuncs = context.nucleoid.functions;
 
   useEffect(() => {
     if (query) {
       setTimeout(() => {
         if (editorRef?.current) {
           editorRef.current.editor.focus();
-          editorRef.current.editor.setValue(state.get("pages.query.text"));
+          editorRef.current.editor.setValue(context.get("pages.query.text"));
           editorRef.current.editor.setPosition({ lineNumber: 1, column: 1000 });
           editorRef.current.editor.addAction({
             id: "lintEvent",
@@ -42,7 +42,7 @@ const Editor = React.forwardRef((props, ref) => {
             run: () => handleQuery(),
           });
 
-          const query = state.get("pages.query");
+          const query = context.get("pages.query");
           editorRef?.current.editor.onKeyUp(() => {
             query.text = editorRef?.current?.editor.getValue();
           });
@@ -95,8 +95,8 @@ const Editor = React.forwardRef((props, ref) => {
   }
 
   const setLogicModel = useCallback(() => {
-    if (selectedLogic && monaco?.editor) {
-      monaco?.editor.getModels().forEach((model) => model.dispose());
+    if (selectedLogic && monaco) {
+      monaco.editor.getModels().forEach((model) => model.dispose());
       const definition = selectedLogic.definition?.trim();
       const uniquePath = `/tmp/${uuidv4()}.ts`;
       const model = monaco?.editor.createModel(
@@ -112,29 +112,31 @@ const Editor = React.forwardRef((props, ref) => {
   const setQueryModel = useCallback(() => {
     const uniquePath = `/tmp/${uuidv4()}.ts`;
     const model = monaco?.editor.createModel(
-      state.get("pages.query.text"),
+      context.get("pages.query.text"),
       "javascript",
       monaco.Uri.file(uniquePath)
     );
     editorRef?.current.editor.setModel(model);
     setQueryPath(uniquePath);
-  }, [monaco?.editor, editorRef, state]);
+  }, [monaco?.editor, editorRef, context]);
 
   function handleChange(e) {
     if (logic) {
-      state.nucleoid.declarations = state.nucleoid.declarations.map((item) => {
-        if (item.summary === selectedLogic?.summary) {
-          return { ...item, definition: e };
+      context.nucleoid.declarations = context.nucleoid.declarations.map(
+        (item) => {
+          if (item.summary === selectedLogic?.summary) {
+            return { ...item, definition: e };
+          }
+          return item;
         }
-        return item;
-      });
+      );
     }
     if (query) {
-      state.pages.query.text = e;
+      context.pages.query.text = e;
     }
   }
 
-  console.debug("Current Query:" + state?.pages?.query?.text);
+  console.debug("Current Query:" + context?.pages?.query?.text);
 
   const addFunctionsModels = () => {
     nucFuncs.forEach((item) => {
@@ -155,7 +157,7 @@ const Editor = React.forwardRef((props, ref) => {
     if (editorRef.current && query) {
       setQueryModel();
     }
-  }, [state, logic, query, setLogicModel, setQueryModel]);
+  }, [context, logic, query, setLogicModel, setQueryModel]);
 
   return (
     <>
