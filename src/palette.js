@@ -84,6 +84,7 @@ export const action = {
   focus: alpha(grey[500], 0.24),
   hoverOpacity: 0.08,
   disabledOpacity: 0.48,
+  highlight: "#007867",
 };
 
 export const base = {

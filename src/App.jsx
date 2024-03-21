@@ -1,4 +1,3 @@
-import { BrowserRouter } from "react-router-dom";
 import ContextProvider from "./context/context";
 import EventRegistry from "./EventRegistry";
 import GlobalSnackMessage from "./components/GlobalSnackMessage/GlobalSnackMessage";
@@ -7,13 +6,12 @@ import React from "react";
 import RouteManager from "./RouteManager";
 import Settings from "./settings";
 import State from "./state";
-import config from "../config";
 import { contextReducer } from "./context/reducer";
 import { contextToMap } from "./utils/Parser";
-import http from "./http";
 import routes from "./routes";
+import service from "./service";
 import { subscribe } from "@nucleoidjs/react-event";
-import { useStorage } from "@nucleoidjs/webstorage";
+import { useNavigate } from "react-router-dom";
 import vfs from "./vfs";
 
 import {
@@ -22,20 +20,19 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { darkTheme, lightTheme } from "./theme";
+import { storage, useStorage } from "@nucleoidjs/webstorage";
 
 function App() {
   const [context, setContext] = React.useState();
-
+  const navigate = useNavigate();
   const prefersLightMode = window.matchMedia(
     "(prefers-color-scheme: light)"
   ).matches;
-
   const [theme] = useStorage(
     "platform",
     "theme",
     prefersLightMode ? "light" : "dark"
   );
-
   const progressElement = document.getElementById("nuc-progress-indicator");
 
   function checkMobileSize() {
@@ -55,33 +52,54 @@ function App() {
     const progressElement = document.getElementById("nuc-progress-indicator");
   }, [delay, progressElement]);
 
-  function project(id) {
-    return Promise.all([
-      http.get(`${config.api}/api/services/${id}/context`),
-      http.get(`${config.api}/api/services/${id}`),
-    ]).then(([nucContextResult, serviceResult]) => {
-      const context = nucContextResult.data;
-      const service = serviceResult.data;
-      const nucContext = State.withPages(context);
-      nucContext.get = (prop) => State.resolve(nucContext, prop);
-      nucContext.nucleoid.project = {
-        name: service.name,
-        id: id,
-        description: service.description,
-      };
-      return nucContext;
-    });
+  function getContextFromStorage(projectId) {
+    const context = storage.get("ide", "projects", projectId);
+
+    const nucContext = State.withPages({ context });
+    nucContext.get = (prop) => State.resolve(nucContext, prop);
+
+    return nucContext;
+  }
+
+  async function project(projectId) {
+    const [projectResult, serviceResult] = await Promise.all([
+      service.getProject(projectId),
+      service.getProjectServices(projectId),
+    ]);
+
+    const contextId = serviceResult.data[0].contextId;
+    const contextResult = await service.getContext(contextId);
+
+    const context = contextResult.data;
+    const projectService = serviceResult.data;
+    const project = projectResult.data;
+
+    const nucContext = State.withPages({ context });
+
+    nucContext.get = (prop) => State.resolve(nucContext, prop);
+    nucContext.nucleoid.project = {
+      type: "CLOUD",
+      name: project.name,
+      id: projectService.contextId,
+      description: projectService.description,
+    };
+
+    return nucContext;
   }
 
   function sampleProject() {
     const context = State.withSample();
     context.get = (prop) => State.resolve(context, prop);
-    context.nucleoid.project = {
-      name: "Sample",
-      id: "Sample",
-      description:
-        "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore",
-    };
+    storage.set(
+      "ide",
+      "projects",
+      context.nucleoid.project.id,
+      context.nucleoid
+    );
+
+    navigate(`${context.nucleoid.project.id}/api?mode=local`);
+    navigate(0);
+
     return context;
   }
 
@@ -121,7 +139,8 @@ function App() {
       Settings.landing({ level: 0 });
     }
     if (checkMobileSize()) {
-      window.location.assign(`${window.location.origin}/ide/mobile`);
+      navigate("/mobile");
+      navigate(0);
       Settings.plugin(" ");
       Settings.landing({ level: Number.MAX_SAFE_INTEGER });
     }
@@ -133,40 +152,35 @@ function App() {
     const files = contextToMap(context.nucleoid);
     vfs.init(files);
   };
-
   React.useEffect(() => {
     async function initMode() {
-      const id = window.location.pathname.split("/")[2];
       const mode = Path.getMode();
+      const projectId = Path.getProjectId();
 
       if (mode === "sample") {
-        const context = sampleProject();
-        initVfs(context);
-        return setContext(initContext(context));
-      }
-      if (mode === "cloud") {
-        project(id).then((result) => {
+        sampleProject();
+      } else if (mode === "cloud") {
+        project(projectId).then((result) => {
           initVfs(result);
           return setContext(initContext(result));
         });
-      }
-      if (mode === "chat") {
-        const context = sampleProject();
+      } else if (mode === "chat" || mode === "local") {
+        const context = getContextFromStorage(projectId);
+
         initVfs(context);
+
         return setContext(initContext(context));
-      }
-      if (mode === "mobile") {
+      } else if (mode === "mobile") {
         return setContext("mobile");
       } else {
-        window.location.assign(`${window.location.origin}/ide/sample/api`);
+        navigate("/sample/api");
+        navigate(0);
       }
     }
 
     initMode();
     // eslint-disable-next-line
   }, [progressElement.classList]);
-
-  React.useEffect(() => {}, []);
 
   if (!context) return null;
   if (context === "error") return "forbidden";
@@ -175,13 +189,11 @@ function App() {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
         <CssBaseline />
-        <BrowserRouter basename="ide">
-          <ContextProvider state={context} reducer={contextReducer}>
-            <EventRegistry />
-            <RouteManager routes={routes} mode={Path.getMode()} />
-            <GlobalSnackMessage />
-          </ContextProvider>
-        </BrowserRouter>
+        <ContextProvider state={context} reducer={contextReducer}>
+          <EventRegistry />
+          <RouteManager routes={routes} mode={Path.getMode()} />
+          <GlobalSnackMessage />
+        </ContextProvider>
       </ThemeProvider>
     </StyledEngineProvider>
   );

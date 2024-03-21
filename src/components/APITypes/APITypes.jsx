@@ -1,19 +1,20 @@
 import Schema from "../Schema/Schema";
 import SchemaEditor from "../SchemaEditor";
+import TypeList from "./TypeList";
+import { useContext } from "../../context/context";
 
-import { Box, Divider, Paper, Typography } from "@mui/material";
+import { Box, Divider, Paper } from "@mui/material";
 import React, { useState } from "react";
 
 const APITypes = ({ tstypes, nuctypes, typesRef }) => {
+  const [, dispatch] = useContext();
   const combinedData = [
     ...tstypes.map((item) => ({ ...item, isTypeScript: true })),
     ...nuctypes.map((item) => ({ ...item, isTypeScript: false })),
   ];
-
   const [selectedType, setSelectedType] = useState(
     combinedData.length > 0 ? combinedData[0].name : null
   );
-
   const preloaded = {};
   combinedData.forEach((item) => {
     preloaded[item.name] = true;
@@ -22,6 +23,28 @@ const APITypes = ({ tstypes, nuctypes, typesRef }) => {
   const isTypeScriptType = (typeName) => {
     return tstypes.some((type) => type.name === typeName);
   };
+
+  const handleAddType = (typeName) => {
+    dispatch({
+      type: "ADD_TYPE",
+      payload: { typeName },
+    });
+  };
+
+  const handleDeleteType = (typeName) => {
+    dispatch({
+      type: "DELETE_TYPE",
+      payload: { typeName },
+    });
+  };
+
+  const handleUpdateType = (oldTypeName, newTypeName) => {
+    dispatch({
+      type: "UPDATE_TYPE_NAME",
+      payload: { oldTypeName, newTypeName },
+    });
+  };
+
   const renderRightPanel = () => {
     if (!selectedType) return null;
 
@@ -74,47 +97,18 @@ const APITypes = ({ tstypes, nuctypes, typesRef }) => {
             boxSizing: "border-box",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "start",
+            justifyContent: "space-between",
             alignItems: "center",
           }}
         >
-          {combinedData.map((item) => (
-            <Box
-              key={item.name}
-              onClick={() => handleTypeSelect(item.name)}
-              sx={{
-                padding: "8px 16px",
-                cursor: "pointer",
-                bgcolor:
-                  selectedType === item.name
-                    ? "primary.light"
-                    : "background.paper",
-                "&:hover": {
-                  bgcolor: "primary.light",
-                },
-                width: "100%",
-
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Typography variant="body1" style={{ textAlign: "left" }}>
-                {item.name}
-              </Typography>
-              {item.isTypeScript && (
-                <span
-                  style={{
-                    marginRight: "4px",
-                    color: "#808080",
-                    fontWeight: "bold",
-                  }}
-                >
-                  TS
-                </span>
-              )}
-            </Box>
-          ))}
+          <TypeList
+            combinedData={combinedData}
+            selectedType={selectedType}
+            onTypeSelect={handleTypeSelect}
+            onAddType={handleAddType}
+            onUpdateType={handleUpdateType}
+            onDeleteType={handleDeleteType}
+          />
         </Paper>
       </Box>
       <Divider orientation="vertical" flexItem sx={{ width: "1rem" }} />

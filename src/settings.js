@@ -34,10 +34,6 @@ const Settings = {
     token_url: "https://github.com/login/oauth/access_token",
     user: "https://api.github.com/user",
   },
-  service: {
-    auth: "https://nucleoid.com/oauth",
-    projects: "https://nucleoid.com/projects",
-  },
 
   connection: true,
   beta: (status) => {

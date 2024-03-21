@@ -2,9 +2,8 @@ import AIDialog from "../AIDialog/AIDialog";
 import ApiAIButton from "../../components/ApiAIButton";
 import NucEditor from "../../components/NucEditor/NucEditor";
 import Path from "../../utils/Path";
-import axios from "axios";
-import config from "../../../config";
 import { contextToMap } from "../../utils/Parser";
+import http from "../../http";
 import { publish } from "@nucleoidjs/react-event";
 import rules from "./rules";
 import { useContext } from "../../context/context";
@@ -109,8 +108,8 @@ const VFSEditor = React.forwardRef((props, ref) => {
       const {
         project: { id },
       } = context.nucleoid;
-      const url = `${config.api}/api/services/${id}/context`;
-      axios.put(url, context.nucleoid);
+      const url = `/services/${id}/context`;
+      http.put(url, context.nucleoid);
     }
 
     publish("CONTEXT_CHANGED", {

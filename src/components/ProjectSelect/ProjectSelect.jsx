@@ -1,5 +1,5 @@
 import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
-import ProjectDialog from "../../widgets/ProjectDialog";
+import ProjectDialog from "../../widgets/ProjectDialog/ProjectDialog";
 import React from "react";
 
 import { Box, Button } from "@mui/material/";
@@ -21,7 +21,7 @@ export default function ProjectSelect({ title }) {
       >
         {title}
       </Button>
-      {open && <ProjectDialog handleClose={handleClose} />}
+      <ProjectDialog handleClose={handleClose} open={open} />
     </Box>
   );
 }

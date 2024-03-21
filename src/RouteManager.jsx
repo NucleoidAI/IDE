@@ -1,3 +1,5 @@
+import App from "./App";
+
 import { Navigate, Route, Routes } from "react-router-dom";
 import React, { Suspense } from "react";
 
@@ -14,9 +16,10 @@ const RouteManager = ({ routes }) => {
   return (
     <Suspense fallback={<LoadingIndicator />}>
       <Routes>
+        <Route element={<App />} />
         {routes.map((route, i) =>
           route.container ? (
-            <Route key={i} path={"/"} element={route.container.element}>
+            <Route key={i} path="/" element={route.container.element}>
               <Route
                 index
                 element={<Navigate to={route.container?.indexPath} />}

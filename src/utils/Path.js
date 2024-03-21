@@ -21,17 +21,29 @@ const addSlashMark = (path) => {
   return path?.substring(path.length - 1) !== "/" ? "/" : "";
 };
 
-const getMode = () => {
+const getProjectId = () => {
   const id = window.location.pathname.split("/")[2];
+  return id;
+};
 
-  if (id === "sample") {
-    return "sample";
-  } else if (Number(id)) {
-    return "cloud";
-  } else if (id === "chat") {
-    return "chat";
-  } else if (id === "mobile") {
-    return "mobile";
+const getMode = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const mode = urlParams.get("mode");
+
+  const id = getProjectId();
+
+  if (mode) {
+    return mode;
+  } else {
+    if (id === "sample") {
+      return "sample";
+    } else if (id === "mobile") {
+      return "mobile";
+    } else if (id) {
+      return "cloud";
+    } else {
+      return "undefined";
+    }
   }
 };
 
@@ -40,6 +52,7 @@ const Path = {
   split,
   addSlashMark,
   getMode,
+  getProjectId,
 };
 
 export default Path;

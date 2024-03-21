@@ -97,7 +97,7 @@ const Editor = React.forwardRef((props, ref) => {
   const setLogicModel = useCallback(() => {
     if (selectedLogic && monaco?.editor) {
       monaco?.editor.getModels().forEach((model) => model.dispose());
-      const definition = selectedLogic.definition.trim();
+      const definition = selectedLogic.definition?.trim();
       const uniquePath = `/tmp/${uuidv4()}.ts`;
       const model = monaco?.editor.createModel(
         definition,
