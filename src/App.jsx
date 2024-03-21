@@ -164,7 +164,7 @@ function App() {
           initVfs(result);
           return setContext(initContext(result));
         });
-      } else if (mode === "chat" || mode === "local") {
+      } else if (mode === "local") {
         const context = getContextFromStorage(projectId);
 
         initVfs(context);
@@ -172,6 +172,8 @@ function App() {
         return setContext(initContext(context));
       } else if (mode === "mobile") {
         return setContext("mobile");
+      } else if (mode === "chat") {
+        setContext("chat");
       } else {
         navigate("/sample/api");
         navigate(0);
