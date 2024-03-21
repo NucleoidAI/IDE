@@ -2,10 +2,21 @@ import APIDialog from "../../../widgets/APIDialog";
 import APISettings from "../../../widgets/APISettings";
 import APITree from "../../../widgets/APITree";
 import Page from "../../../components/Page";
-import React from "react";
 import VFSEditor from "../../../widgets/VFSEditor";
 import VerticalSplitLayout from "../../../layouts/VerticalSplitLayout";
+import { publish } from "@nucleoidjs/react-event";
+import { useEvent } from "@nucleoidjs/react-event";
+
+import React, { useEffect } from "react";
+
 function API() {
+  const [event] = useEvent("WIDGET_LOADED", { name: "" });
+
+  useEffect(() => {
+    if (event.name) {
+      publish("PAGE_LOADED", { name: "API" });
+    }
+  }, [event.name]);
   return (
     <Page title={"API"}>
       <VerticalSplitLayout

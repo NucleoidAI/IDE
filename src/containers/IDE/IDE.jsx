@@ -13,7 +13,6 @@ import State from "../../state";
 import SwaggerDialog from "../../components/SwaggerDialog";
 import { contextReducer } from "../../context/reducer";
 import { contextToMap } from "../../utils/Parser";
-import { publish } from "@nucleoidjs/react-event";
 import routes from "../../routes";
 import service from "../../service";
 import { storage } from "@nucleoidjs/webstorage";
@@ -23,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import vfs from "../../vfs";
 
 import React, { useEffect } from "react";
+import { publish, useEvent } from "@nucleoidjs/react-event";
 
 function IDE() {
   const [context, setContext] = React.useState();
@@ -30,6 +30,10 @@ function IDE() {
   const navigate = useNavigate();
   const location = useLocation();
   const modeQuery = location.search;
+
+  const [event] = useEvent("PAGE_LOADED", {
+    name: "",
+  });
 
   function checkMobileSize() {
     return window.innerWidth < 600;
@@ -167,10 +171,12 @@ function IDE() {
   }, [progressElement.classList]);
 
   useEffect(() => {
-    if (context) {
-      publish("CONTAINER_LOADING_COMPLETED");
+    if (context && event.name) {
+      publish("CONTAINER_LOADED", {
+        name: "IDE",
+      });
     }
-  }, [context]);
+  }, [context, event.name]);
 
   if (!context) return null;
   if (context === "error") return "forbidden";

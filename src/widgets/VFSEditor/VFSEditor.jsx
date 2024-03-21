@@ -140,6 +140,7 @@ const VFSEditor = React.forwardRef((props, ref) => {
     });
 
     checkFunction();
+    publish("WIDGET_LOADED", { name: "VFSEditor" });
 
     if (ref) ref.current = editor;
   }
