@@ -47,7 +47,7 @@ const getProjects = () => {
 };
 
 const getProject = (projectId) => {
-  return http.get("/projects/" + projectId);
+  return http.get(`/projects/${projectId}`);
 };
 
 const addProject = (project) => {
@@ -58,28 +58,28 @@ const addProject = (project) => {
 };
 
 const updateProject = (projectId, name) => {
-  return http("/projects/" + projectId, {
+  return http(`/projects/${projectId}`, {
     method: "PUT",
     data: { name },
   });
 };
 
 const deleteProject = (projectId) => {
-  return http("projects/" + projectId, {
+  return http(`/projects/${projectId}`, {
     method: "DELETE",
   });
 };
 
 const getProjectServices = (projectId) => {
-  return http.get("projects/" + projectId + "/services");
+  return http.get(`/projects/${projectId}/services`);
 };
 
 const getContext = (contextId) => {
-  return http.get("services/" + contextId + "/context");
+  return http.get(`services/${contextId}/context`);
 };
 
 const saveContext = (contextId, context) => {
-  return http.put("services/" + contextId + "/context", context);
+  return http.put(`services/${contextId}/context`, context);
 };
 
 const getGraph = () => {
