@@ -13,13 +13,14 @@ import { v4 as uuidv4 } from "uuid";
 import { storage } from "@nucleoidjs/webstorage";
 import { CircularProgress, Fab, Grid } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
+import Path from "../../utils/Path";
 
 const Editor = React.forwardRef((props, ref) => {
   const monaco = useMonaco();
   const editorRef = React.useRef(null);
   const [logicPath, setLogicPath] = React.useState("");
   const [queryPath, setQueryPath] = React.useState("");
-
+  const mode = Path.getMode();
   const [context, distpach] = useContext();
   const { setLoading, logic, query, loading } = props;
   const selectedLogic = context.get("pages.logic.selected");
@@ -122,6 +123,10 @@ const Editor = React.forwardRef((props, ref) => {
 
   function handleChange(e) {
     if (logic) {
+      const {
+        project: { id },
+      } = context.nucleoid;
+
       context.nucleoid.declarations = context.nucleoid.declarations.map(
         (item) => {
           if (item.summary === selectedLogic?.summary) {
@@ -130,6 +135,16 @@ const Editor = React.forwardRef((props, ref) => {
           return item;
         }
       );
+
+      if (mode === "cloud") {
+        service.saveContext(id, context.nucleoid);
+      } else if (mode === "local") {
+        storage.set("ide", "projects", id, context.nucleoid);
+      } else if (mode === "terminal") {
+        console.log("Terminal mode is not supported yet.");
+      }
+
+      publish("CONTEXT_SAVED", { contextId: id, to: mode });
     }
     if (query) {
       context.pages.query.text = e;
