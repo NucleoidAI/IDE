@@ -39,6 +39,8 @@ const getMode = () => {
       return "sample";
     } else if (id === "mobile") {
       return "mobile";
+    } else if (id === "chat") {
+      return "chat";
     } else if (id) {
       return "cloud";
     } else {
