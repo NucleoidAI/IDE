@@ -34,6 +34,7 @@ function App() {
       setTimeout(() => {
         progressElement.classList.add("hidden");
       }, delay);
+    console.log("CONTAINER_LOADED", event.name);
 
     const progressElement = document.getElementById("nuc-progress-indicator");
   }, [event.name]);

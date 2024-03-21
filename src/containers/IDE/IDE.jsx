@@ -175,6 +175,7 @@ function IDE() {
       publish("CONTAINER_LOADED", {
         name: "IDE",
       });
+      console.log("PAGE_LOADED", event.name);
     }
   }, [context, event.name]);
 
