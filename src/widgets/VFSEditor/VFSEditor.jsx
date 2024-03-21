@@ -6,11 +6,11 @@ import { contextToMap } from "../../utils/Parser";
 import http from "../../http";
 import { publish } from "@nucleoidjs/react-event";
 import rules from "./rules";
+import service from "../../service";
 import { useContext } from "../../context/context";
 
 import { Box, Grid } from "@mui/material";
 import React, { useCallback } from "react";
-
 const options = {
   env: {
     es6: true,
@@ -103,13 +103,12 @@ const VFSEditor = React.forwardRef((props, ref) => {
     } else {
       key = context.get("pages.functions.selected") + ".ts";
     }
-
     if (mode === "cloud") {
       const {
         project: { id },
       } = context.nucleoid;
-      const url = `/services/${id}/context`;
-      http.put(url, context.nucleoid);
+
+      service.saveContext(id, context.nucleoid);
     }
 
     publish("CONTEXT_CHANGED", {
