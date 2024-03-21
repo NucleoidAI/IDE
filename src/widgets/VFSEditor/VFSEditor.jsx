@@ -116,6 +116,7 @@ const VFSEditor = React.forwardRef((props, ref) => {
     } else if (mode === "terminal") {
       console.log("Terminal mode is not supported yet.");
     }
+    publish("CONTEXT_SAVED", { contextId: id, to: mode });
     publish("CONTEXT_CHANGED", {
       // TODO Optimize preparing files
       files: contextToMap(context.nucleoid).filter((item) => item.key === key),
