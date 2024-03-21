@@ -75,13 +75,12 @@ function App() {
     const project = projectResult.data;
 
     const nucContext = State.withPages({ context });
-
     nucContext.get = (prop) => State.resolve(nucContext, prop);
     nucContext.nucleoid.project = {
       type: "CLOUD",
       name: project.name,
-      id: projectService.contextId,
-      description: projectService.description,
+      id: projectService[0].contextId,
+      description: projectService[0].description,
     };
 
     return nucContext;
