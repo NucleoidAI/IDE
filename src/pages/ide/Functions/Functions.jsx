@@ -5,13 +5,19 @@ import VFSEditor from "../../../widgets/VFSEditor";
 import VerticalSplitLayout from "../../../layouts/VerticalSplitLayout";
 import { publish } from "@nucleoidjs/react-event";
 import { useContext } from "../../../context/context";
+import { useEvent } from "@nucleoidjs/react-event";
 
 import React, { useEffect } from "react";
 
 function Functions() {
+  const [event] = useEvent("WIDGET_LOADED", { name: "" });
   const [, dispatch] = useContext();
+
   useEffect(() => {
-    publish("PAGE_LOADED", { name: "Functions" });
+    if (event.name) {
+      publish("PAGE_LOADED", { name: "Functions" });
+      console.log("WIDGET_LOADED", event.name);
+    }
   }, []);
 
   function openFunctionDialog(item) {
