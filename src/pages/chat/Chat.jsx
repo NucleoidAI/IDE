@@ -7,7 +7,7 @@ import React, { useEffect } from "react";
 
 function Chat() {
   useEffect(() => {
-    publish("IDE_LOADING_COMPLETED", true);
+    publish("CONTAINER_LOADING_COMPLETED");
   }, []);
   return (
     <Page title="Chat">

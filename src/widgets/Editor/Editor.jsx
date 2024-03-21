@@ -90,8 +90,6 @@ const Editor = React.forwardRef((props, ref) => {
       addFunctionsModels();
       setQueryModel();
     }
-
-    publish("IDE_LOADING_COMPLETED", true);
   }
 
   const setLogicModel = useCallback(() => {
