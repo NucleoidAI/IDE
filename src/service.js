@@ -78,6 +78,10 @@ const getContext = (contextId) => {
   return http.get("services/" + contextId + "/context");
 };
 
+const saveContext = (contextId, context) => {
+  return http.put("services/" + contextId + "/context", context);
+};
+
 const getGraph = () => {
   return http.get(Settings.url.terminal() + "/graph");
 };
@@ -110,6 +114,7 @@ const service = {
   deleteProject,
   getProjectServices,
   getContext,
+  saveContext,
   createSandbox,
   getGraph,
   getConfig,
