@@ -16,7 +16,6 @@ const RouteManager = ({ routes }) => {
   return (
     <Suspense fallback={<LoadingIndicator />}>
       <Routes>
-        <Route element={<App />} />
         {routes.map((route, i) =>
           route.container ? (
             <Route key={i} path="/" element={route.container.element}>
