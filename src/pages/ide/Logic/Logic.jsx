@@ -5,10 +5,15 @@ import Page from "../../../components/Page";
 import React from "react";
 import VerticalSplitLayout from "../../../layouts/VerticalSplitLayout";
 import actions from "../../../actions";
+import { publish } from "@nucleoidjs/react-event";
 import { useContext } from "../../../context/context";
+import { useEffect } from "react";
 
 function Logic() {
   const [, dispatch] = useContext();
+  useEffect(() => {
+    publish("PAGE_LOADED", { name: "Logic" });
+  }, []);
 
   function openAIDialog() {
     dispatch({

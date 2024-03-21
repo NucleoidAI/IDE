@@ -31,7 +31,7 @@ const Mobile = () => {
   });
 
   useEffect(() => {
-    publish("IDE_LOADING_COMPLETED", true);
+    publish("PAGE_LOADED", { name: "Mobile" });
     const timer = setTimeout(() => {
       window.location.href = "https://nucleoid.com/docs";
     }, 5000);

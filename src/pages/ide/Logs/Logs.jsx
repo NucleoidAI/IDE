@@ -1,6 +1,7 @@
 import BlankLayout from "../../../layouts/BlankLayout";
 import Page from "../../../components/Page";
 import moment from "moment";
+import { publish } from "@nucleoidjs/react-event";
 import service from "../../../service";
 import styles from "./styles";
 import { useEvent } from "@nucleoidjs/react-event";
@@ -27,6 +28,7 @@ function Logs() {
     service.logs().then((logs) => {
       setLogs([...logs.slice(0, 25)]);
       setLoading(false);
+      publish("PAGE_LOADED", { name: "Logs" });
     });
   }, []);
 
