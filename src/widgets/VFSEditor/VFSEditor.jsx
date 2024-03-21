@@ -3,14 +3,15 @@ import ApiAIButton from "../../components/ApiAIButton";
 import NucEditor from "../../components/NucEditor/NucEditor";
 import Path from "../../utils/Path";
 import { contextToMap } from "../../utils/Parser";
-import http from "../../http";
 import { publish } from "@nucleoidjs/react-event";
 import rules from "./rules";
 import service from "../../service";
+import { storage } from "@nucleoidjs/webstorage";
 import { useContext } from "../../context/context";
 
 import { Box, Grid } from "@mui/material";
 import React, { useCallback } from "react";
+
 const options = {
   env: {
     es6: true,
@@ -103,14 +104,18 @@ const VFSEditor = React.forwardRef((props, ref) => {
     } else {
       key = context.get("pages.functions.selected") + ".ts";
     }
+
+    const {
+      project: { id },
+    } = context.nucleoid;
+
     if (mode === "cloud") {
-      const {
-        project: { id },
-      } = context.nucleoid;
-
       service.saveContext(id, context.nucleoid);
+    } else if (mode === "local") {
+      storage.set("ide", "projects", id, context.nucleoid);
+    } else if (mode === "terminal") {
+      console.log("Terminal mode is not supported yet.");
     }
-
     publish("CONTEXT_CHANGED", {
       // TODO Optimize preparing files
       files: contextToMap(context.nucleoid).filter((item) => item.key === key),
