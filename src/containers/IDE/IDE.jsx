@@ -166,6 +166,11 @@ function IDE() {
     // eslint-disable-next-line
   }, [progressElement.classList]);
 
+  useEffect(() => {
+    if (context) {
+      publish("CONTAINER_LOADING_COMPLETED");
+    }
+  }, [context]);
 
   if (!context) return null;
   if (context === "error") return "forbidden";
