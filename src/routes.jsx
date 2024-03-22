@@ -1,5 +1,5 @@
 import API from "./pages/ide/API";
-import Chat from "./pages/chat";
+import Chat from "./pages/Chat";
 import Functions from "./pages/ide/Functions";
 import Logic from "./pages/ide/Logic";
 import Logs from "./pages/ide/Logs";
@@ -15,7 +15,7 @@ import {
 } from "@mui/icons-material";
 import React, { lazy } from "react";
 
-const ChatContainer = lazy(() => import("./containers/Chat/Chat"));
+const ChatContainer = lazy(() => import("./containers/Chat/ChatContainer"));
 const IDE = lazy(() => import("./containers/IDE"));
 
 const routes = [
@@ -65,13 +65,8 @@ const routes = [
     ],
   },
   {
-    container: { element: <ChatContainer /> },
+    container: { element: <ChatContainer />, path: "/chat" },
     pages: [
-      {
-        title: "Chat",
-        path: "/chat",
-        element: <Chat />,
-      },
       {
         title: "Chat",
         path: "/chat/:chatId",
