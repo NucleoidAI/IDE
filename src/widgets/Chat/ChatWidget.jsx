@@ -25,14 +25,20 @@ const ChatWidget = () => {
     type: "",
     content: "",
   });
-
-  useEffect(() => {
+  const loadChat = async () => {
     if (chatId) {
       // TODO Verify chat is valid in local storage
-      const session = storage.get("ide", "chat", "sessions", chatId);
+      const session = await storage.get("ide", "chat", "sessions", chatId);
       publish("CHAT_SELECTED", session);
-      publish("WIDGET_LOADED", { name: "ChatWidget" });
+
+      publish("WIDGET_LOADED", {
+        name: "ChatWidget",
+      });
     }
+  };
+
+  useEffect(() => {
+    loadChat();
   }, [chatId]);
 
   const handleSendMessage = async () => {
