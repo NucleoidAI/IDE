@@ -4,7 +4,7 @@ import Path from "./utils/Path";
 import React from "react";
 import RouteManager from "./RouteManager";
 import routes from "./routes";
-import { useEvent } from "@nucleoidjs/react-event";
+import { useEvent } from "@nucleoidai/react-event";
 import { useStorage } from "@nucleoidjs/webstorage";
 
 import {
@@ -30,13 +30,13 @@ function App() {
     window.location.hostname === "nucleoid.com" ? 1000 - elapsed : 0;
 
   React.useEffect(() => {
-    if (event.name)
+    if (event.name) {
       setTimeout(() => {
         progressElement.classList.add("hidden");
       }, delay);
-    console.log("CONTAINER_LOADED", event.name);
 
-    const progressElement = document.getElementById("nuc-progress-indicator");
+      const progressElement = document.getElementById("nuc-progress-indicator");
+    }
   }, [event.name]);
 
   return (

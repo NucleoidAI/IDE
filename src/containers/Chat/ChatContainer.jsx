@@ -17,10 +17,12 @@ function ChatContainer() {
   const { chatId } = useParams("chatId");
 
   useEffect(() => {
-    publish("CONTAINER_LOADED", {
-      name: "ChatContainer",
-    });
-  }, []);
+    if (event.name) {
+      publish("CONTAINER_LOADED", {
+        name: "ChatContainer",
+      });
+    }
+  }, [event.name]);
 
   useEffect(() => {
     if (!chatId) {
