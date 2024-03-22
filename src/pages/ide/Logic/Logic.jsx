@@ -5,9 +5,10 @@ import Page from "../../../components/Page";
 import React from "react";
 import VerticalSplitLayout from "../../../layouts/VerticalSplitLayout";
 import actions from "../../../actions";
-import { publish, useEvent } from "@nucleoidjs/react-event";
 import { useContext } from "../../../context/context";
 import { useEffect } from "react";
+
+import { publish, useEvent } from "@nucleoidjs/react-event";
 
 function Logic() {
   const [event] = useEvent("WIDGET_LOADED", { name: "" });
@@ -17,7 +18,7 @@ function Logic() {
       publish("WIDGET_LOADED", { name: "Logic" });
       console.log("WIDGET_LOADED", event.name);
     }
-  }, []);
+  }, [event.name]);
 
   function openAIDialog() {
     dispatch({
