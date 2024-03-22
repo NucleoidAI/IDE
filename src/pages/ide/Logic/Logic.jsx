@@ -8,7 +8,7 @@ import actions from "../../../actions";
 import { useContext } from "../../../context/context";
 import { useEffect } from "react";
 
-import { publish, useEvent } from "@nucleoidjs/react-event";
+import { publish, useEvent } from "@nucleoidai/react-event";
 
 function Logic() {
   const [event] = useEvent("WIDGET_LOADED", { name: "" });
@@ -16,7 +16,6 @@ function Logic() {
   useEffect(() => {
     if (event.name) {
       publish("PAGE_LOADED", { name: "Logic" });
-      console.log("PAGE_LOADED", event.name);
     }
   }, [event.name]);
 
