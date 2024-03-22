@@ -90,6 +90,8 @@ const Editor = React.forwardRef((props, ref) => {
       addFunctionsModels();
       setQueryModel();
     }
+
+    publish("WIDGET_LOADED", { name: "Editor" });
   }
 
   const setLogicModel = useCallback(() => {
