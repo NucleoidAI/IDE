@@ -18,7 +18,7 @@ function Functions() {
       publish("PAGE_LOADED", { name: "Functions" });
       console.log("WIDGET_LOADED", event.name);
     }
-  }, []);
+  }, [event.name]);
 
   function openFunctionDialog(item) {
     dispatch({
