@@ -179,7 +179,7 @@ export const types = [
 export const functions = [
   {
     path: "/Order",
-    params: [],
+    params: ["name: string", "barcode: string"],
     type: "CLASS",
     definition: `class Order {
       name: string;
@@ -192,7 +192,7 @@ export const functions = [
   },
   {
     path: "/Item",
-    params: [],
+    params: ["name: string", "barcode: string"],
     type: "CLASS",
     definition: `class Item {
       name: string;
@@ -205,7 +205,7 @@ export const functions = [
   },
   {
     path: "/Human",
-    params: [],
+    params: ["name: string", "barcode: string"],
     type: "CLASS",
     definition: `class Human {
       name: string;
@@ -251,3 +251,11 @@ export const declarations = [
     `,
   },
 ];
+
+export const project = {
+  type: "LOCAL",
+  name: "Sample",
+  id: "Sample",
+  description:
+    "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore",
+};

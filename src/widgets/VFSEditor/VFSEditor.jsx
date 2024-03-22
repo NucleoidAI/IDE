@@ -2,11 +2,11 @@ import AIDialog from "../AIDialog/AIDialog";
 import ApiAIButton from "../../components/ApiAIButton";
 import NucEditor from "../../components/NucEditor/NucEditor";
 import Path from "../../utils/Path";
-import axios from "axios";
-import config from "../../../config";
 import { contextToMap } from "../../utils/Parser";
 import { publish } from "@nucleoidjs/react-event";
 import rules from "./rules";
+import service from "../../service";
+import { storage } from "@nucleoidjs/webstorage";
 import { useContext } from "../../context/context";
 
 import { Box, Grid } from "@mui/material";
@@ -105,14 +105,18 @@ const VFSEditor = React.forwardRef((props, ref) => {
       key = context.get("pages.functions.selected") + ".ts";
     }
 
-    if (mode === "cloud") {
-      const {
-        project: { id },
-      } = context.nucleoid;
-      const url = `${config.api}/api/services/${id}/context`;
-      axios.put(url, context.nucleoid);
-    }
+    const {
+      project: { id },
+    } = context.nucleoid;
 
+    if (mode === "cloud") {
+      service.saveContext(id, context.nucleoid);
+    } else if (mode === "local") {
+      storage.set("ide", "projects", id, context.nucleoid);
+    } else if (mode === "terminal") {
+      console.log("Terminal mode is not supported yet.");
+    }
+    publish("CONTEXT_SAVED", { contextId: id, to: mode });
     publish("CONTEXT_CHANGED", {
       // TODO Optimize preparing files
       files: contextToMap(context.nucleoid).filter((item) => item.key === key),

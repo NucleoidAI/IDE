@@ -43,31 +43,43 @@ const getUserFromGit = (token) =>
   }).then((response) => response.json());
 
 const getProjects = () => {
-  return http.get(Settings.service.projects);
+  return http.get("/projects");
 };
 
-const getProject = (project) => {
-  return http.get(Settings.service.projects + "/" + project);
+const getProject = (projectId) => {
+  return http.get(`/projects/${projectId}`);
 };
 
-const addProject = (name, context) => {
-  return http(Settings.service.projects, {
+const addProject = (project) => {
+  return http("/projects", {
     method: "POST",
-    data: { name: name, context: context },
+    data: project,
   });
 };
 
-const updateProject = (project, name, context) => {
-  return http(Settings.service.projects + "/" + project, {
-    method: "POST",
-    data: { name: name, context: context },
+const updateProject = (projectId, name) => {
+  return http(`/projects/${projectId}`, {
+    method: "PUT",
+    data: { name },
   });
 };
 
-const deleteProject = (project) => {
-  return http(Settings.service.projects + "/" + project, {
+const deleteProject = (projectId) => {
+  return http(`/projects/${projectId}`, {
     method: "DELETE",
   });
+};
+
+const getProjectServices = (projectId) => {
+  return http.get(`/projects/${projectId}/services`);
+};
+
+const getContext = (contextId) => {
+  return http.get(`services/${contextId}/context`);
+};
+
+const saveContext = (contextId, context) => {
+  return http.put(`services/${contextId}/context`, context);
 };
 
 const getGraph = () => {
@@ -100,6 +112,9 @@ const service = {
   addProject,
   updateProject,
   deleteProject,
+  getProjectServices,
+  getContext,
+  saveContext,
   createSandbox,
   getGraph,
   getConfig,

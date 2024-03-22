@@ -1,4 +1,6 @@
-import { api, declarations, functions, types } from "./sample";
+import { v4 as uuid } from "uuid";
+
+import { api, declarations, functions, project, types } from "./sample";
 
 function init() {
   const state = {
@@ -41,11 +43,7 @@ function init() {
         AIDialog: {
           open: false,
         },
-        selected: {
-          description: "All Orders barcode string starts with NUC",
-          summary: "All orders barcode start with NUC prefix",
-          definition: '{\n      $Order.barcode.include("NUC")\n    }\n    ',
-        },
+        selected: {},
       },
       branches: {},
     },
@@ -59,19 +57,29 @@ function copy(state) {
   return { ...state, get: (prop) => resolve(state, prop) };
 }
 
+function withBlank() {
+  const state = init();
+  state.nucleoid.project.id = uuid();
+
+  return state;
+}
+
 function withSample() {
   const state = init();
   state.nucleoid.api = api;
   state.nucleoid.types = types;
   state.nucleoid.functions = functions;
   state.nucleoid.declarations = declarations;
+  state.nucleoid.project = project;
 
+  state.nucleoid.project.id = uuid();
   return state;
 }
 
-function withPages({ api, types, functions, logic }) {
+function withPages({ context }) {
   const state = init();
-  state.nucleoid = { api, types, functions, logic };
+  state.nucleoid = context;
+
   return state;
 }
 
@@ -85,5 +93,5 @@ const resolve = (state, param) => {
   }
 };
 
-const State = { init, copy, withSample, resolve, withPages };
+const State = { init, copy, withSample, resolve, withPages, withBlank };
 export default State;

@@ -1,22 +1,45 @@
 import { AutoAwesome } from "@mui/icons-material";
-import LensBlurIcon from "@mui/icons-material/LensBlur";
-import LogicTreeItem from "./LogicTreeItem";
-import { TreeView } from "@mui/lab";
-import { alpha } from "@mui/material/styles";
 import { useContext } from "../../context/context";
+import { useTheme } from "@mui/material/styles";
 
-import {
-  Box,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Fab,
-  Stack,
-} from "@mui/material";
-import { CloseSquare, MinusSquare, PlusSquare } from "./TreeIcons/TreeIcons";
+import { Box, Card, CardActions, Fab, Grid, Typography } from "@mui/material";
+import { ChevronRight, ExpandMore } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
+import { TreeItem, TreeView, treeItemClasses } from "@mui/lab";
+import { alpha, styled } from "@mui/material/styles";
 import { publish, useEvent } from "@nucleoidjs/react-event";
+
+const StyledTreeItem = styled(TreeItem)(({ theme }) => ({
+  [`& .${treeItemClasses.content}`]: {
+    paddingY: theme.spacing(0.5),
+    paddingX: theme.spacing(1),
+    borderRadius: theme.shape.borderRadius,
+    "&:hover": {
+      backgroundColor: alpha(theme.palette.primary.main, 0.1),
+    },
+  },
+  [`& .${treeItemClasses.label}`]: {
+    fontWeight: theme.typography.fontWeightMedium,
+  },
+  [`& .${treeItemClasses.group}`]: {
+    marginLeft: 0,
+    "& $content": {
+      paddingLeft: theme.spacing(2),
+    },
+  },
+}));
+
+const styles = {
+  treeItem: {
+    display: "flex",
+    alignItems: "center",
+    flexWrap: "wrap",
+  },
+  classIndicator: {
+    marginRight: "4px",
+    color: "#c3c5c8",
+  },
+};
 
 function LogicTree({ openLogicDialog }) {
   const [newDeclaration] = useEvent("LOGIC_ADDED", false);
@@ -24,37 +47,29 @@ function LogicTree({ openLogicDialog }) {
   const [treeData, setTreeData] = React.useState({});
   const [selectedKey, setSelectedKey] = useState([]);
   const [nodeKey, setNodeKey] = useState([]);
+  const [hoveredNodeId, setHoveredNodeId] = useState(null);
+
+  const theme = useTheme();
 
   const declarations = state.nucleoid.declarations;
-
-  function findIndexInObject(key) {
-    const keys = Object.keys(treeData);
-    const index = keys.indexOf(key);
-    return index;
-  }
+  const functions = state.nucleoid.functions;
 
   function select(value) {
-    const logicClass = value.split("-")[0];
-    const logicIndex = value.split("-")[1];
+    const [logicClass, logicIndex] = value.split("-");
 
     if (logicIndex === undefined) {
       setNodeKey((oldNodeKey) => {
         if (oldNodeKey.includes(logicClass)) {
           return oldNodeKey.filter((item) => item !== logicClass);
         } else {
-          return [...oldNodeKey, `${logicClass}`];
+          return [...oldNodeKey, logicClass];
         }
       });
       return;
     }
 
-    const index = findIndexInObject(logicClass);
-    setNodeKey([`${index}`]);
-
-    setSelectedKey([`${logicClass}-${logicIndex}`]);
-
-    const selectedSummary = treeData[logicClass][logicIndex];
-
+    setSelectedKey([logicClass]);
+    const selectedSummary = treeData[logicClass].summaries[logicIndex];
     const item = declarations.find((item) => item.summary === selectedSummary);
 
     if (item) {
@@ -67,18 +82,32 @@ function LogicTree({ openLogicDialog }) {
 
   useEffect(() => {
     const treeData = {};
+    const initialExpandedNodes = [];
 
-    declarations.map((dec) => {
+    declarations.forEach((dec) => {
       const decSummary = dec.summary;
       const decClass = dec?.definition?.split("$")[1]?.match(/\b(\w+)\b/)[0];
+
       if (!treeData[decClass]) {
-        treeData[decClass] = [];
+        treeData[decClass] = {
+          summaries: [],
+          params: [],
+        };
+        initialExpandedNodes.push(decClass);
       }
 
-      treeData[decClass].push(decSummary);
+      treeData[decClass].summaries.push(decSummary);
+
+      const matchingFunction = functions.find(
+        (func) => func.path === `/${decClass}`
+      );
+      if (matchingFunction) {
+        treeData[decClass].params = matchingFunction.params;
+      }
     });
 
     setTreeData(treeData);
+    setNodeKey(initialExpandedNodes);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -107,63 +136,107 @@ function LogicTree({ openLogicDialog }) {
   }, [newDeclaration]);
 
   return (
-    <>
-      <Card sx={{ width: "100%", height: "100%" }}>
-        <CardHeader avatar={<LensBlurIcon variant="pageIcon" />} />
-
-        <CardContent sx={{ width: "100%", height: "100%" }}>
-          <TreeView
-            aria-label="controlled"
-            defaultCollapseIcon={<MinusSquare />}
-            defaultExpandIcon={<PlusSquare />}
-            defaultEndIcon={<CloseSquare />}
-            sx={{ overflowX: "hidden" }}
-            onNodeSelect={(event, value) => select(value)}
-            expanded={nodeKey}
-            selected={selectedKey}
-          >
-            {Object.entries(treeData).map(([nodeId, labels], index) => (
-              <LogicTreeItem
-                key={nodeId}
-                nodeId={index.toString()}
-                label={nodeId}
+    <Card sx={{ width: "100%", height: "100%" }}>
+      <TreeView
+        aria-label="controlled"
+        defaultCollapseIcon={<ExpandMore />}
+        defaultExpandIcon={<ChevronRight />}
+        defaultEndIcon={<div style={{ width: 24 }} />}
+        sx={{
+          flexGrow: 1,
+          overflowY: "auto",
+          ".MuiTreeItem-root": {
+            alignItems: "center",
+          },
+          ".MuiTreeItem-content": {
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "4px 8px",
+            borderRadius: "4px",
+            margin: "2px 0",
+          },
+          ".MuiTreeItem-label": {
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+          },
+          ".MuiTreeItem-group": {
+            marginLeft: "16px !important",
+            paddingLeft: "8px",
+            borderLeft: `1px solid ${alpha(theme.palette.primary.main, 0.3)}`,
+          },
+          ".MuiTreeItem-iconContainer": {
+            minWidth: "0",
+            marginRight: "0px",
+            padding: "0px",
+          },
+        }}
+        onNodeSelect={(event, value) => select(value)}
+        expanded={nodeKey}
+        selected={selectedKey}
+      >
+        {Object.entries(treeData).map(([nodeId, { summaries, params }]) => (
+          <StyledTreeItem
+            key={nodeId}
+            nodeId={nodeId}
+            onMouseEnter={() => setHoveredNodeId(nodeId)}
+            onMouseLeave={() => setHoveredNodeId(null)}
+            label={
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
               >
-                {labels.map((label, index) => (
-                  <Stack key={index} direction="row" sx={{ width: 1 }}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        width: 1,
-                        alignSelf: "center",
-                        height: 10,
-                        marginTop: -0.8,
-                        marginLeft: -2.3,
-                        marginRight: -2.3,
-                        maxWidth: "6%",
-                        borderWidth: "2px",
-                        borderStyle: "none none solid none",
-                        borderRadius: "30px 30px 30px 80px",
-                        borderColor: alpha("#209958", 0.5),
-                      }}
-                    ></Box>
-                    <LogicTreeItem
-                      key={index}
-                      nodeId={`${nodeId}-${index}`}
-                      label={label}
-                    />
-                  </Stack>
-                ))}
-              </LogicTreeItem>
-            ))}
-          </TreeView>
-        </CardContent>
-        <CardActions>
-          <Fab size="medium" onClick={openLogicDialog}>
-            <AutoAwesome />
-          </Fab>
-        </CardActions>
-      </Card>
-    </>
+                <Grid sx={styles.treeItem}>
+                  <Typography style={{ font: "9px sans-serif" }}>
+                    class
+                  </Typography>
+                  &nbsp;
+                  {nodeId}
+                  <Typography
+                    style={{
+                      font: "9px sans-serif",
+                      marginLeft: "4px",
+                      opacity:
+                        hoveredNodeId === nodeId || selectedKey.includes(nodeId)
+                          ? 1
+                          : 0,
+                      transition: "opacity 0.5s ease-in-out",
+                    }}
+                  >
+                    {`(${params.join(", ")})`}
+                  </Typography>
+                </Grid>
+              </Box>
+            }
+          >
+            {summaries.map((summary, innerIndex) => {
+              const formattedLabel =
+                summary.length > 30 ? `${summary.substring(0, 30)}..` : summary;
+
+              return (
+                <StyledTreeItem
+                  key={innerIndex}
+                  nodeId={`${nodeId}-${innerIndex}`}
+                  label={<>{formattedLabel}</>}
+                  title={summary}
+                />
+              );
+            })}
+          </StyledTreeItem>
+        ))}
+      </TreeView>
+
+      <CardActions>
+        <Fab size="medium" onClick={openLogicDialog}>
+          <AutoAwesome />
+        </Fab>
+      </CardActions>
+    </Card>
   );
 }
 
