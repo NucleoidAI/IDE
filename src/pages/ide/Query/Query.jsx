@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 
 function Query() {
+  const [event] = useEvent("WIDGET_LOADED", { name: "" });
+
   const [state] = useContext();
   const result = state.get("pages.query.results");
   const [outputRatio, setOutputRatio] = React.useState(
@@ -25,6 +27,13 @@ function Query() {
       navigate("/");
     }
   }, [runtimeConnection, navigate]);
+
+  useEffect(() => {
+    if (event.name) {
+      publish("PAGE_LOADED", { name: "Query" });
+      console.log("WIDGET_LOADED", event.name);
+    }
+  }, [event.name]);
 
   const [loading, setLoading] = useState(false);
 
