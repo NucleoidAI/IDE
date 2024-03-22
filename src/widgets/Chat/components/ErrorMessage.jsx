@@ -9,8 +9,16 @@ const ErrorMessage = ({ show, content, type, refreshChat }) => {
         sx={{
           backgroundColor: alpha("#f44336", 0.1),
           border: "1px solid #f44336",
-          width: "60%",
-          marginBottom: "20px",
+          width: {
+            xs: "100%",
+            sm: "90%",
+            md: "80%",
+          },
+          marginBottom: {
+            xs: "12px",
+            sm: "16px",
+            md: "20px",
+          },
           padding: "10px",
           borderRadius: "10px",
           textAlign: "left",
@@ -31,10 +39,7 @@ const ErrorMessage = ({ show, content, type, refreshChat }) => {
         >
           <Typography
             variant="subtitle1"
-            sx={{
-              fontWeight: "bold",
-              userSelect: "text",
-            }}
+            sx={{ fontWeight: "bold", userSelect: "text" }}
           >
             EXPERT ERROR
           </Typography>
@@ -51,11 +56,7 @@ const ErrorMessage = ({ show, content, type, refreshChat }) => {
         </Stack>
         <Typography
           variant="subtitle2"
-          sx={{
-            fontWeight: "bold",
-            my: "8px",
-            userSelect: "text",
-          }}
+          sx={{ fontWeight: "bold", my: "8px", userSelect: "text" }}
         >
           {type}
         </Typography>
