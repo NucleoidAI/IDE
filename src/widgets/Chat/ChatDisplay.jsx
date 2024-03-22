@@ -9,6 +9,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Grid,
   useTheme,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
@@ -72,11 +73,16 @@ const ChatDisplay = ({
       sx={{
         overflow: "auto",
         flex: 1,
-        padding: "20px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         backgroundColor: theme.palette.background.paper,
+        paddingX: {
+          xs: "8px",
+          sm: "16px",
+          md: "20px",
+        },
+        paddingY: "20px",
       }}
       ref={messagesContainerRef}
       onScroll={handleScroll}
@@ -98,25 +104,36 @@ const ChatDisplay = ({
       />
       <Button
         onClick={scrollToBottom}
-        sx={{ position: "fixed", bottom: 20, right: 20 }}
+        variant="contained"
+        sx={{
+          position: "absolute",
+          bottom: {
+            xs: 8,
+            sm: 16,
+            md: 86,
+          },
+          right: {
+            xs: 8,
+            sm: 16,
+            md: 16,
+          },
+          zIndex: 1,
+          display: {
+            xs: "none",
+            sm: "block",
+          },
+        }}
         id="scrollToBottomButton"
-        style={{ display: "none" }}
       >
         Scroll to Bottom
       </Button>
+
       <CircularProgress show={loading} />
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
         maxWidth="md"
-        fullWidth={true}
-        sx={{
-          "& .MuiDialog-paper": {
-            minHeight: "30vh",
-            maxHeight: "60vh",
-            width: "60%",
-          },
-        }}
+        fullWidth
       >
         <DialogTitle>Code Analysis</DialogTitle>
         <DialogContent dividers>

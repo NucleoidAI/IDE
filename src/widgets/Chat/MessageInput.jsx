@@ -4,6 +4,7 @@ import codeImage from "../../images/code.png";
 import {
   Box,
   Fab,
+  Grid,
   IconButton,
   TextField,
   Tooltip,
@@ -74,7 +75,7 @@ const MessageInput = forwardRef((props, ref) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          width: "70%",
+          width: { xs: "100%", sm: "90%", md: "80%" },
           borderRadius: theme.custom.chat.inputBorderRadius,
           padding: "10px",
           border: `1px solid `,
@@ -117,7 +118,6 @@ const MessageInput = forwardRef((props, ref) => {
               onMouseEnter={handleHover}
               sx={{
                 backgroundColor: theme.palette.grey[600],
-
                 animation: playAnimation
                   ? "pulseAnimationWithColor 2s infinite"
                   : "none",
