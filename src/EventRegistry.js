@@ -1,5 +1,5 @@
 import React from "react";
-import { subscribe } from "@nucleoidjs/react-event";
+import { subscribe } from "@nucleoidai/react-event";
 import vfs from "./vfs";
 //import { useContext } from "Context/context";
 import Settings from "./settings"; //eslint-disable-line

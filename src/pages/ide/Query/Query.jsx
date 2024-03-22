@@ -2,10 +2,10 @@ import Editor from "../../../widgets/Editor";
 import HorizontalSplitLayout from "../../../layouts/HorizontalSplitLayout";
 import Page from "../../../components/Page";
 import QueryResultWidget from "../../../widgets/QueryResultWidget/QueryResultWidget";
-import { publish } from "@nucleoidjs/react-event";
+import { publish } from "@nucleoidai/react-event";
 import { useContext } from "../../../context/context";
 import { useEffect } from "react";
-import { useEvent } from "@nucleoidjs/react-event";
+import { useEvent } from "@nucleoidai/react-event";
 import { useNavigate } from "react-router-dom";
 
 import React, { useState } from "react";

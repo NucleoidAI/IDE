@@ -4,7 +4,7 @@ import NucEditor from "../../components/NucEditor/NucEditor";
 import Path from "../../utils/Path";
 import { contextToMap } from "../../utils/Parser";
 import http from "../../http";
-import { publish } from "@nucleoidjs/react-event";
+import { publish } from "@nucleoidai/react-event";
 import rules from "./rules";
 import { useContext } from "../../context/context";
 

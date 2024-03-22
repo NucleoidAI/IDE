@@ -4,8 +4,8 @@ import APITree from "../../../widgets/APITree";
 import Page from "../../../components/Page";
 import VFSEditor from "../../../widgets/VFSEditor";
 import VerticalSplitLayout from "../../../layouts/VerticalSplitLayout";
-import { publish } from "@nucleoidjs/react-event";
-import { useEvent } from "@nucleoidjs/react-event";
+import { publish } from "@nucleoidai/react-event";
+import { useEvent } from "@nucleoidai/react-event";
 
 import React, { useEffect } from "react";
 

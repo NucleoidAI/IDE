@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 import vfs from "../../vfs";
 
 import React, { useEffect } from "react";
-import { publish, useEvent } from "@nucleoidjs/react-event";
+import { publish, useEvent } from "@nucleoidai/react-event";
 
 function IDE() {
   const [context, setContext] = React.useState();

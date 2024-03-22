@@ -3,9 +3,9 @@ import FunctionTree from "../../../widgets/FunctionTree";
 import Page from "../../../components/Page";
 import VFSEditor from "../../../widgets/VFSEditor";
 import VerticalSplitLayout from "../../../layouts/VerticalSplitLayout";
-import { publish } from "@nucleoidjs/react-event";
+import { publish } from "@nucleoidai/react-event";
 import { useContext } from "../../../context/context";
-import { useEvent } from "@nucleoidjs/react-event";
+import { useEvent } from "@nucleoidai/react-event";
 
 import React, { useEffect } from "react";
 

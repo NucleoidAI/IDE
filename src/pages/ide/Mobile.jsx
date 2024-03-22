@@ -1,6 +1,6 @@
 import CardMedia from "@mui/material/CardMedia";
 import React from "react";
-import { publish } from "@nucleoidjs/react-event";
+import { publish } from "@nucleoidai/react-event";
 import { useEffect } from "react";
 
 import {

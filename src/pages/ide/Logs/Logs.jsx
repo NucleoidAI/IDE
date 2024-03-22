@@ -1,10 +1,10 @@
 import BlankLayout from "../../../layouts/BlankLayout";
 import Page from "../../../components/Page";
 import moment from "moment";
-import { publish } from "@nucleoidjs/react-event";
+import { publish } from "@nucleoidai/react-event";
 import service from "../../../service";
 import styles from "./styles";
-import { useEvent } from "@nucleoidjs/react-event";
+import { useEvent } from "@nucleoidai/react-event";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 
