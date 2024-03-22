@@ -16,7 +16,6 @@ function ChatContainer() {
       publish("CONTAINER_LOADED", {
         name: "ChatContainer",
       });
-      console.log("CONTAINER_LOADED", "ChatContainer");
     }
   }, [event.name]);
 

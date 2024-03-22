@@ -31,7 +31,6 @@ function Query() {
   useEffect(() => {
     if (event.name) {
       publish("PAGE_LOADED", { name: "Query" });
-      console.log("WIDGET_LOADED", event.name);
     }
   }, [event.name]);
 

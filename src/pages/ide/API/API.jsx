@@ -15,7 +15,6 @@ function API() {
   useEffect(() => {
     if (event.name) {
       publish("PAGE_LOADED", { name: "API" });
-      console.log("WIDGET_LOADED", event.name);
     }
   }, [event.name]);
   return (

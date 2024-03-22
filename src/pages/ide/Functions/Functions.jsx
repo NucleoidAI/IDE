@@ -16,7 +16,6 @@ function Functions() {
   useEffect(() => {
     if (event.name) {
       publish("PAGE_LOADED", { name: "Functions" });
-      console.log("WIDGET_LOADED", event.name);
     }
   }, [event.name]);
 
