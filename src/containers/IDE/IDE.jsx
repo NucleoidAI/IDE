@@ -39,6 +39,11 @@ function IDE() {
   const theme = useTheme();
   const mobileSize = useMediaQuery(theme.breakpoints.down("sm"));
 
+  useEffect(() => {
+    if (mobileSize) {
+      navigate("/mobile");
+    }
+  }, [mobileSize]);
 
   function getContextFromStorage(projectId) {
     const context = storage.get("ide", "projects", projectId);
