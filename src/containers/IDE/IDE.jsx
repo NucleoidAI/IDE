@@ -42,7 +42,9 @@ function IDE() {
   useEffect(() => {
     if (mobileSize) {
       navigate("/mobile");
+      Settings.landing({ level: Number.MAX_SAFE_INTEGER });
     }
+    // eslint-disable-next-line
   }, [mobileSize]);
 
   function getContextFromStorage(projectId) {

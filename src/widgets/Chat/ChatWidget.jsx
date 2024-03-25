@@ -39,6 +39,7 @@ const ChatWidget = () => {
 
   useEffect(() => {
     loadChat();
+    // eslint-disable-next-line
   }, [chatId]);
 
   const handleSendMessage = async () => {
