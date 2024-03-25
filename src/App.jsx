@@ -1,8 +1,8 @@
 import EventRegistry from "./EventRegistry";
 import GlobalSnackMessage from "./components/GlobalSnackMessage/GlobalSnackMessage";
 import Path from "./utils/Path";
-import React from "react";
 import RouteManager from "./RouteManager";
+import Settings from "./settings";
 import routes from "./routes";
 import { useEvent } from "@nucleoidai/react-event";
 import { useStorage } from "@nucleoidjs/webstorage";
@@ -12,6 +12,7 @@ import {
   StyledEngineProvider,
   ThemeProvider,
 } from "@mui/material";
+import React, { useEffect } from "react";
 import { darkTheme, lightTheme } from "./theme";
 
 function App() {
@@ -29,7 +30,33 @@ function App() {
   const delay =
     window.location.hostname === "nucleoid.com" ? 1000 - elapsed : 0;
 
-  React.useEffect(() => {
+  function initSettings() {
+    if (!Settings.beta()) {
+      Settings.beta(false);
+    }
+
+    if (!Settings.debug()) {
+      Settings.debug(false);
+    }
+
+    if (!Settings.url.app()) {
+      Settings.url.app("http://localhost:3000");
+    }
+
+    if (!Settings.url.terminal()) {
+      Settings.url.terminal("http://localhost:8448");
+    }
+
+    if (!Settings.runtime()) {
+      Settings.runtime("sandbox");
+    }
+  }
+
+  useEffect(() => {
+    initSettings();
+  }, []);
+
+  useEffect(() => {
     if (event.name) {
       setTimeout(() => {
         progressElement.classList.add("hidden");
@@ -37,6 +64,7 @@ function App() {
 
       const progressElement = document.getElementById("nuc-progress-indicator");
     }
+    // eslint-disable-next-line
   }, [event.name]);
 
   return (
