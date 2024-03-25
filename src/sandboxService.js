@@ -58,6 +58,16 @@ const get = async (endpoint) => {
   }
 };
 
+const query = async (body) => {
+  try {
+    const response = await http.post(`${terminalUrl}`, body);
+    return response.data;
+  } catch (error) {
+    console.error("Error querying:", error);
+    throw error;
+  }
+};
+
 const checkLandingLevel = () => {
   setTimeout(() => {
     if (landingLevel < 2) {
@@ -76,6 +86,7 @@ const sandboxService = {
   getAppUrl,
   getTerminalUrl,
   get,
+  query,
 };
 
 export default sandboxService;
