@@ -10,22 +10,20 @@ Handlebars.registerHelper("camelCase", function (str) {
 Handlebars.registerHelper("encloseBraces", function (str) {
   return `{${str}Id}`;
 });
+
+function createASTFromCode(code) {
+  return ts.createSourceFile("temp.ts", code, ts.ScriptTarget.Latest, true);
+}
+
 function typeCheck(codeSnippet) {
   try {
-    const sourceFile = ts.createSourceFile(
-      "temp.ts",
-      codeSnippet,
-      ts.ScriptTarget.Latest,
-      true
-    );
-
-    let result = null;
+    const sourceFile = createASTFromCode(codeSnippet);
 
     const visit = (node) => {
       if (ts.isFunctionDeclaration(node)) {
-        result = "function";
+        return "function";
       } else if (ts.isClassDeclaration(node)) {
-        result = "class";
+        return "class";
       } else if (
         ts.isVariableStatement(node) ||
         (ts.isExpressionStatement(node) &&
@@ -33,17 +31,13 @@ function typeCheck(codeSnippet) {
             node.expression.expression.text === "use") ||
             ts.isBinaryExpression(node.expression)))
       ) {
-        result = "declaration";
+        return "declaration";
       }
 
-      if (result === null) {
-        ts.forEachChild(node, visit);
-      }
+      return ts.forEachChild(node, visit);
     };
 
-    visit(sourceFile);
-
-    return result;
+    return visit(sourceFile);
   } catch (error) {
     return null;
   }
@@ -81,12 +75,7 @@ function extractCodeSnippet(codeSnippet, messageContent) {
 }
 
 function extractConstructorParams(classDefinition) {
-  const sourceFile = ts.createSourceFile(
-    "temp.ts",
-    classDefinition,
-    ts.ScriptTarget.Latest,
-    true
-  );
+  const sourceFile = createASTFromCode(classDefinition);
 
   let constructorParams = [];
 
@@ -166,27 +155,39 @@ function createAPI(functions) {
 }
 
 function extractClassName(classDefinition) {
-  const match = classDefinition.match(/class\s+(\w+)/);
-  return match ? match[1] : "";
+  const sourceFile = createASTFromCode(classDefinition);
+
+  let className = "";
+
+  function visit(node) {
+    if (ts.isClassDeclaration(node)) {
+      className = node.name.getText(sourceFile);
+    }
+
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
+
+  return className;
 }
 
 function extractProperties(classDefinition) {
-  const propertySet = new Set();
-  const properties = [];
-  const lines = classDefinition.split("\n");
+  const sourceFile = createASTFromCode(classDefinition);
 
-  lines.forEach((line) => {
-    const match = line.match(/(\w+):\s*(\w+)/);
-    if (match) {
-      const name = match[1];
-      const type = match[2];
-      const propertyString = `${name}:${type}`;
-      if (!propertySet.has(propertyString)) {
-        propertySet.add(propertyString);
-        properties.push({ name, type });
-      }
+  const properties = [];
+
+  function visit(node) {
+    if (ts.isPropertyDeclaration(node)) {
+      const name = node.name.getText(sourceFile);
+      const type = node.type ? node.type.getText(sourceFile) : "any";
+      properties.push({ name, type });
     }
-  });
+
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
 
   return properties;
 }
