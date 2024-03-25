@@ -23,6 +23,7 @@ import vfs from "../../vfs";
 
 import React, { useEffect } from "react";
 import { publish, useEvent } from "@nucleoidai/react-event";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 function IDE() {
   const [context, setContext] = React.useState();
@@ -35,9 +36,9 @@ function IDE() {
     name: "",
   });
 
-  function checkMobileSize() {
-    return window.innerWidth < 600;
-  }
+  const theme = useTheme();
+  const mobileSize = useMediaQuery(theme.breakpoints.down("sm"));
+
 
   function getContextFromStorage(projectId) {
     const context = storage.get("ide", "projects", projectId);
@@ -125,7 +126,7 @@ function IDE() {
     if (!Settings.landing()) {
       Settings.landing({ level: 0 });
     }
-    if (checkMobileSize()) {
+    if (mobileSize) {
       navigate("/mobile");
       navigate(0);
       Settings.plugin(" ");
