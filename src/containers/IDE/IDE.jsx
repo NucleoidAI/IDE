@@ -134,7 +134,6 @@ function IDE() {
     if (mobileSize) {
       navigate("/mobile");
       navigate(0);
-      Settings.plugin(" ");
       Settings.landing({ level: Number.MAX_SAFE_INTEGER });
     }
 
