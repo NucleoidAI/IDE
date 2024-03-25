@@ -279,12 +279,6 @@ function ApiButton() {
       await sandboxService.createSandbox(openapi);
 
       setLoading(false);
-      setTimeout(() => {
-        if (sandboxService.getLandingLevel() < 2) {
-          onboardDispatcher({ level: 2 });
-        }
-      }, 0);
-
       gtag("event", "run_sandbox");
       publish("SWAGGER_DIALOG", { open: true });
     } catch {

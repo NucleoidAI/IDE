@@ -1,13 +1,15 @@
 import config from "../config";
 import http from "./http";
+import onboardDispatcher from "./components/Onboard/onboardDispatcher";
+import { publish } from "@nucleoidjs/react-event";
 import scheduler from "./connectionScheduler";
 
 let sandboxId = null;
 let appUrl = "";
 let terminalUrl = "";
+let landingLevel = 0;
 
 const createSandbox = async (context) => {
-  console.log(context.openapi);
   try {
     const response = await http(`${config.sandbox}/openapi`, {
       method: "POST",
@@ -22,6 +24,7 @@ const createSandbox = async (context) => {
     setAppUrl();
     setTerminalUrl();
     scheduler.start();
+    checkLandingLevel();
     return response.data.id;
   } catch (error) {
     console.error("Error creating sandbox:", error);
@@ -38,17 +41,41 @@ const getAppUrl = () => {
 };
 
 const setTerminalUrl = () => {
-  terminalUrl = `${config.sandbox}terminal/${sandboxId}`;
+  terminalUrl = `${config.sandbox}/terminal/${sandboxId}`;
 };
 
 const getTerminalUrl = () => {
   return terminalUrl;
 };
 
+const get = async (endpoint) => {
+  try {
+    const response = await http.get(`${terminalUrl}/${endpoint}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error getting ${endpoint}:`, error);
+    throw error;
+  }
+};
+
+const checkLandingLevel = () => {
+  setTimeout(() => {
+    if (landingLevel < 2) {
+      onboardDispatcher({ level: 2 });
+      setLandingLevel(2);
+    }
+  }, 0);
+};
+
+const setLandingLevel = (level) => {
+  landingLevel = level;
+};
+
 const sandboxService = {
   createSandbox,
   getAppUrl,
   getTerminalUrl,
+  get,
 };
 
 export default sandboxService;
