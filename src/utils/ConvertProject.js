@@ -37,7 +37,9 @@ function typeCheck(codeSnippet) {
       return ts.forEachChild(node, visit);
     };
 
-    return visit(sourceFile);
+    const result = visit(sourceFile);
+
+    return result !== undefined ? result : null;
   } catch (error) {
     return null;
   }
