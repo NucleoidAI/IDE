@@ -170,15 +170,12 @@ const Editor = React.forwardRef((props, ref) => {
         <Grid container item sx={styles.runButton}>
           <QueryAIButton />
           <AIDialog imperative page={"query"} editor={editorRef} />
-          <Fab
-            variant="button"
-            hide={loading}
-            size={"small"}
-            onClick={() => handleQuery()}
-          >
-            <PlayArrowIcon />
-          </Fab>
-          <CircularProgress show={loading} />
+          {!loading && (
+            <Fab variant="button" size={"small"} onClick={() => handleQuery()}>
+              <PlayArrowIcon />
+            </Fab>
+          )}
+          {loading && <CircularProgress />}
         </Grid>
       )}
     </>
