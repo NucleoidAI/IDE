@@ -183,7 +183,7 @@ return num * 2;
       expect(createCodeSnippets(codeBlock)).toEqual(expectedResult);
     });
 
-    test("should correctly extract code blocks from messages, fixing whitespace issues", () => {
+    test("should correctly extract code blocks from messages", () => {
       const messages = [
         {
           content: "Here's a code block:",
