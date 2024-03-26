@@ -1,7 +1,6 @@
 import config from "../config";
 import http from "./http";
 import onboardDispatcher from "./components/Onboard/onboardDispatcher";
-import { publish } from "@nucleoidjs/react-event";
 import scheduler from "./connectionScheduler";
 
 let sandboxId = null;
@@ -33,7 +32,7 @@ const createSandbox = async (context) => {
 };
 
 const setAppUrl = () => {
-  appUrl = `${config.sandbox}${sandboxId}/api/openapi.json/`;
+  appUrl = `${config.sandbox}/${sandboxId}/`;
 };
 
 const getAppUrl = () => {
