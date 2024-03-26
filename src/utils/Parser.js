@@ -19,7 +19,6 @@ const contextToMap = (files) => {
   const fileNames = ["// @nuc-imports\n"];
   // TODO: add @nuc-definitions and remove static before giving to sandbox
   // TODO : clear this method
-
   files.functions.map((func) => {
     const className = func.path.split("/").pop();
     const importStatement = `import ${className} from "${func.path}"\n`;
@@ -48,17 +47,18 @@ const contextToMap = (files) => {
 
   fileNames.push(`import _ from "lodash/index";\n`);
   const imports = fileNames.join("");
-
-  files.api.forEach((apiItem) => {
-    fileContents.push({
-      key: apiItem.path + "." + apiItem.method + ".ts",
-      value:
-        imports +
-        "// @nuc-action\n" +
-        apiItem["x-nuc-action"] +
-        "// @nuc-exports\n",
+  if (files.api && files.api.length > 0) {
+    files.api.forEach((apiItem) => {
+      fileContents.push({
+        key: apiItem.path + "." + apiItem.method + ".ts",
+        value:
+          imports +
+          "// @nuc-action\n" +
+          apiItem["x-nuc-action"] +
+          "// @nuc-exports\n",
+      });
     });
-  });
+  }
 
   return fileContents;
 };
