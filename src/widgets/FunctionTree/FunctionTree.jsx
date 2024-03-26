@@ -61,7 +61,7 @@ function FunctionTree({ openFunctionDialog }) {
 
   useEffect(() => {
     if (!selected) {
-      select(functions[0].path);
+      select(functions[0]?.path);
     }
     //eslint-disable-next-line
   }, []);
