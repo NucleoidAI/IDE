@@ -1,6 +1,7 @@
 import BlankLayout from "../../../layouts/BlankLayout";
 import Page from "../../../components/Page";
 import moment from "moment";
+import sandboxService from "../../../sandboxService";
 import service from "../../../service";
 import styles from "./styles";
 import { useEvent } from "@nucleoidjs/react-event";
@@ -24,7 +25,7 @@ function Logs() {
 
   useEffect(() => {
     setLoading(true);
-    service.logs().then((logs) => {
+    sandboxService.get("logs").then((logs) => {
       setLogs([...logs.slice(0, 25)]);
       setLoading(false);
     });
