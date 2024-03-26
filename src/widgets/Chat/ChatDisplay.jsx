@@ -90,12 +90,13 @@ const ChatDisplay = ({
           />
         ))}
       {loading && <MessageBox onlyUser currentMessage={currentUserMessage} />}
-      <ErrorMessage
-        show={error.status}
-        content={error.content}
-        type={error.type}
-        refreshChat={refreshChat}
-      />
+      {error.status && (
+        <ErrorMessage
+          content={error.content}
+          type={error.type}
+          refreshChat={refreshChat}
+        />
+      )}
       <Button
         onClick={scrollToBottom}
         sx={{ position: "fixed", bottom: 20, right: 20 }}
@@ -104,7 +105,7 @@ const ChatDisplay = ({
       >
         Scroll to Bottom
       </Button>
-      <CircularProgress show={loading} />
+      {loading && <CircularProgress />}
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}

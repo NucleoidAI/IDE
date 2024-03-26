@@ -2,6 +2,7 @@ import "./ChatMainArea.css";
 
 import ChatDisplay from "./ChatDisplay";
 import MessageInput from "./MessageInput";
+import { exportProject } from "../../utils/ConvertProject";
 // import SuggestionsOverlay from "./SuggestionsOverlay";
 import { publish } from "@nucleoidjs/react-event";
 import { storage } from "@nucleoidjs/webstorage";
@@ -62,6 +63,10 @@ const Chat = () => {
     setLoading(false);
   };
 
+  const handleConvertProject = () => {
+    exportProject(chat);
+  };
+
   const refreshChat = () => {
     messageInputRef.current.setValue(userMessageRef.current);
     publish("EXPERT_ERROR_OCCURRED", {
@@ -96,6 +101,7 @@ const Chat = () => {
         refreshChat={refreshChat}
       />
       <MessageInput
+        handleConvertProject={handleConvertProject}
         handleSendMessage={handleSendMessage}
         ref={messageInputRef}
         loading={loading}
