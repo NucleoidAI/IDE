@@ -67,24 +67,28 @@ function App() {
       service.getProjectServices(projectId),
     ]);
 
-    const contextId = serviceResult.data[0].contextId;
-    const contextResult = await service.getContext(contextId);
-
-    const context = contextResult.data;
     const projectService = serviceResult.data;
     const project = projectResult.data;
 
-    const nucContext = State.withPages({ context });
+    if (project.serviceType === "SINGLE") {
+      const contextId = projectService.contextId;
+      const contextResult = await service.getContext(contextId);
 
-    nucContext.get = (prop) => State.resolve(nucContext, prop);
-    nucContext.nucleoid.project = {
-      type: "CLOUD",
-      name: project.name,
-      id: projectService.contextId,
-      description: projectService.description,
-    };
+      const context = contextResult.data;
 
-    return nucContext;
+      const nucContext = State.withPages({ context });
+      nucContext.get = (prop) => State.resolve(nucContext, prop);
+      nucContext.nucleoid.project = {
+        type: "CLOUD",
+        name: project.name,
+        id: projectService[0].contextId,
+        description: projectService[0].description,
+      };
+
+      return nucContext;
+    } else {
+      console.log("Multiple services not supported yet");
+    }
   }
 
   function sampleProject() {
@@ -164,7 +168,7 @@ function App() {
           initVfs(result);
           return setContext(initContext(result));
         });
-      } else if (mode === "chat" || mode === "local") {
+      } else if (mode === "local") {
         const context = getContextFromStorage(projectId);
 
         initVfs(context);
@@ -172,6 +176,8 @@ function App() {
         return setContext(initContext(context));
       } else if (mode === "mobile") {
         return setContext("mobile");
+      } else if (mode === "chat") {
+        setContext("chat");
       } else {
         navigate("/sample/api");
         navigate(0);
