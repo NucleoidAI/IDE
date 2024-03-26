@@ -71,7 +71,7 @@ function App() {
     const project = projectResult.data;
 
     if (project.serviceType === "SINGLE") {
-      const contextId = projectService.contextId;
+      const contextId = projectService[0].contextId;
       const contextResult = await service.getContext(contextId);
 
       const context = contextResult.data;
