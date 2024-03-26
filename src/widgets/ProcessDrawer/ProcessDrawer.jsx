@@ -261,8 +261,8 @@ function ApiButton() {
     }
   }, [run.status]); //eslint-disable-line
 
-  const runSandbox = async (context) => {
-    const types = [...(context?.types || []), ...getTypes(context?.functions)];
+  const runSandbox = async (context, state) => {
+    const types = [...(context?.types || []), ...getTypes(state.functions)];
 
     setLoading(true);
     try {
