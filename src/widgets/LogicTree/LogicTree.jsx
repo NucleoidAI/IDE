@@ -83,28 +83,29 @@ function LogicTree({ openLogicDialog }) {
   useEffect(() => {
     const treeData = {};
     const initialExpandedNodes = [];
+    if (Object.keys(declarations).length !== 0) {
+      declarations.forEach((dec) => {
+        const decSummary = dec.summary;
+        const decClass = dec?.definition?.split("$")[1]?.match(/\b(\w+)\b/)[0];
 
-    declarations.forEach((dec) => {
-      const decSummary = dec.summary;
-      const decClass = dec?.definition?.split("$")[1]?.match(/\b(\w+)\b/)[0];
+        if (!treeData[decClass]) {
+          treeData[decClass] = {
+            summaries: [],
+            params: [],
+          };
+          initialExpandedNodes.push(decClass);
+        }
 
-      if (!treeData[decClass]) {
-        treeData[decClass] = {
-          summaries: [],
-          params: [],
-        };
-        initialExpandedNodes.push(decClass);
-      }
+        treeData[decClass].summaries.push(decSummary);
 
-      treeData[decClass].summaries.push(decSummary);
-
-      const matchingFunction = functions.find(
-        (func) => func.path === `/${decClass}`
-      );
-      if (matchingFunction) {
-        treeData[decClass].params = matchingFunction.params;
-      }
-    });
+        const matchingFunction = functions.find(
+          (func) => func.path === `/${decClass}`
+        );
+        if (matchingFunction) {
+          treeData[decClass].params = matchingFunction.params;
+        }
+      });
+    }
 
     setTreeData(treeData);
     setNodeKey(initialExpandedNodes);
