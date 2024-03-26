@@ -45,7 +45,7 @@ function typeCheck(codeSnippet) {
   }
 }
 
-function extractCodeSnippet(codeSnippet, messageContent) {
+function createObject(codeSnippet) {
   const codeType = typeCheck(codeSnippet);
 
   if (codeType === "function") {
@@ -67,8 +67,8 @@ function extractCodeSnippet(codeSnippet, messageContent) {
     };
   } else if (codeType === "declaration") {
     return {
-      description: messageContent,
-      summary: messageContent,
+      description: "",
+      summary: "",
       definition: codeSnippet,
     };
   }
@@ -76,19 +76,28 @@ function extractCodeSnippet(codeSnippet, messageContent) {
   return null;
 }
 
-function extractConstructorParams(classDefinition) {
-  const sourceFile = createASTFromCode(classDefinition);
+function createCodeSnippets(codeBlock) {
+  const declarationSnippets = [];
+  const functionSnippets = [];
 
-  let constructorParams = [];
+  const sourceFile = createASTFromCode(codeBlock);
+
+  const firstLine = sourceFile.getChildAt(0).getFullText(sourceFile).trim();
+  const isDeclarative = firstLine.includes("declarative");
 
   function visit(node) {
-    if (ts.isConstructorDeclaration(node)) {
-      const params = node.parameters.map((param) => {
-        const name = param.name.getText(sourceFile);
-        const type = param.type ? param.type.getText(sourceFile) : "any";
-        return `${name}: ${type}`;
-      });
-      constructorParams = params;
+    if (isDeclarative && ts.isExpressionStatement(node)) {
+      const expression = node.expression;
+      if (
+        ts.isBinaryExpression(expression) &&
+        expression.left.getText(sourceFile).startsWith("$")
+      ) {
+        declarationSnippets.push(node.getText(sourceFile));
+      }
+    } else {
+      if (ts.isFunctionDeclaration(node) || ts.isClassDeclaration(node)) {
+        functionSnippets.push(node.getText(sourceFile));
+      }
     }
 
     ts.forEachChild(node, visit);
@@ -96,27 +105,22 @@ function extractConstructorParams(classDefinition) {
 
   visit(sourceFile);
 
-  return constructorParams;
+  return {
+    declarationSnippets,
+    functionSnippets,
+  };
 }
 
-function extractCodeSnippets(messages) {
-  const functions = [];
-  const declarations = [];
+function extractCodeBlocks(messages) {
+  const codeBlocks = [];
 
   messages.forEach((message) => {
     if (message.code) {
-      const codeSnippet = extractCodeSnippet(message.code, message.content);
-      if (codeSnippet) {
-        if (codeSnippet.type === "FUNCTION" || codeSnippet.type === "CLASS") {
-          functions.push(codeSnippet);
-        } else {
-          declarations.push(codeSnippet);
-        }
-      }
+      codeBlocks.push(message.code);
     }
   });
 
-  return { functions, declarations };
+  return codeBlocks;
 }
 
 function createAPI(functions) {
@@ -174,6 +178,29 @@ function extractClassName(classDefinition) {
   return className;
 }
 
+function extractConstructorParams(classDefinition) {
+  const sourceFile = createASTFromCode(classDefinition);
+
+  let constructorParams = [];
+
+  function visit(node) {
+    if (ts.isConstructorDeclaration(node)) {
+      const params = node.parameters.map((param) => {
+        const name = param.name.getText(sourceFile);
+        const type = param.type ? param.type.getText(sourceFile) : "any";
+        return `${name}: ${type}`;
+      });
+      constructorParams = params;
+    }
+
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
+
+  return constructorParams;
+}
+
 function extractProperties(classDefinition) {
   const sourceFile = createASTFromCode(classDefinition);
 
@@ -196,7 +223,24 @@ function extractProperties(classDefinition) {
 
 function exportProject(chat) {
   const { id, messages } = chat;
-  const { functions, declarations } = extractCodeSnippets(messages);
+
+  const codeBlocks = extractCodeBlocks(messages);
+
+  const functionSnippets = [];
+  const declarationSnippets = [];
+
+  codeBlocks.forEach((codeBlock) => {
+    const { functionSnippets: functions, declarationSnippets: declarations } =
+      createCodeSnippets(codeBlock);
+    functionSnippets.push(...functions);
+    declarationSnippets.push(...declarations);
+  });
+
+  const functions = functionSnippets.map((snippet) => createObject(snippet));
+  const declarations = declarationSnippets.map((snippet) =>
+    createObject(snippet)
+  );
+
   const api = createAPI(functions);
 
   const project = {
@@ -222,8 +266,9 @@ function exportProject(chat) {
 
 export {
   typeCheck,
-  extractCodeSnippet,
-  extractCodeSnippets,
+  createObject,
+  createCodeSnippets,
+  extractCodeBlocks,
   createAPI,
   exportProject,
 };
