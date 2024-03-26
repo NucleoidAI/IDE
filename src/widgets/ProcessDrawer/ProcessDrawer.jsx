@@ -13,7 +13,6 @@ import { deepCopy } from "../../utils/DeepCopy";
 import { getTypes } from "../../lib/TypeScript";
 import gtag from "../../gtag";
 import { mapToContext } from "../../utils/Parser";
-import onboardDispatcher from "../../components/Onboard/onboardDispatcher";
 import sandboxService from "../../sandboxService";
 import scheduler from "../../connectionScheduler";
 import service from "../../service";
