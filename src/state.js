@@ -59,6 +59,7 @@ function copy(state) {
 
 function withBlank() {
   const state = init();
+  state.nucleoid.project = project;
   state.nucleoid.project.id = uuid();
 
   return state;
