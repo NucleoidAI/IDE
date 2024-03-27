@@ -1,6 +1,6 @@
 import CardMedia from "@mui/material/CardMedia";
 import React from "react";
-import { publish } from "@nucleoidjs/react-event";
+import { publish } from "@nucleoidai/react-event";
 import { useEffect } from "react";
 
 import {
@@ -31,7 +31,7 @@ const Mobile = () => {
   });
 
   useEffect(() => {
-    publish("IDE_LOADING_COMPLETED", true);
+    publish("CONTAINER_LOADED", { name: "Mobile" });
     const timer = setTimeout(() => {
       window.location.href = "https://nucleoid.com/docs";
     }, 5000);

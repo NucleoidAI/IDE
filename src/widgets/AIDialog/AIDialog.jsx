@@ -5,7 +5,7 @@ import PromptCodeDialog from "../../components/PromptCodeDialog";
 import actions from "../../actions";
 import expert from "../../http/expert.js";
 import { deepCopy } from "../../utils/DeepCopy";
-import { publish } from "@nucleoidjs/react-event";
+import { publish } from "@nucleoidai/react-event";
 import service from "../../service";
 import { useContext } from "../../context/context";
 
