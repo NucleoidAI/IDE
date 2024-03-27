@@ -1,5 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import ArrowIcon from "../../icons/Arrow";
+import BlankTreeMessage from "../../components/BlankTreeMessage/BlankTreeMessage";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteMethodDialog from "../../components/DeleteMethodDialog";
 import EditIcon from "@mui/icons-material/Edit";
@@ -19,7 +20,6 @@ import {
   Grid,
   Menu,
   MenuItem,
-  Stack,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -206,19 +206,7 @@ function APITree() {
           </CardActions>
         </>
       ) : (
-        <Stack
-          sx={{ height: "100%", display: "flex", justifyContent: "center" }}
-        >
-          <Typography
-            sx={{
-              color: "text.secondary",
-              textAlign: "center",
-              textJustify: "center",
-            }}
-          >
-            No API defined yet
-          </Typography>
-        </Stack>
+        <BlankTreeMessage item={"API"} />
       )}
     </Card>
   );

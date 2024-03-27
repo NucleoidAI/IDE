@@ -1,16 +1,9 @@
 import { AutoAwesome } from "@mui/icons-material";
+import BlankTreeMessage from "../../components/BlankTreeMessage/BlankTreeMessage";
 import { useContext } from "../../context/context";
 import { useTheme } from "@mui/material/styles";
 
-import {
-  Box,
-  Card,
-  CardActions,
-  Fab,
-  Grid,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Card, CardActions, Fab, Grid, Typography } from "@mui/material";
 import { ChevronRight, ExpandMore } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import { TreeItem, TreeView, treeItemClasses } from "@mui/lab";
@@ -259,19 +252,7 @@ function LogicTree({ openLogicDialog }) {
           </CardActions>
         </>
       ) : (
-        <Stack
-          sx={{ height: "100%", display: "flex", justifyContent: "center" }}
-        >
-          <Typography
-            sx={{
-              color: "text.secondary",
-              textAlign: "center",
-              textJustify: "center",
-            }}
-          >
-            No Logic defined yet
-          </Typography>
-        </Stack>
+        <BlankTreeMessage item={"Logic"} />
       )}
     </Card>
   );

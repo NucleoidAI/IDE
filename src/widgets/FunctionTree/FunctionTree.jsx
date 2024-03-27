@@ -1,5 +1,6 @@
 import AddList from "../../components/AddList";
 import Arrow from "../../icons/Arrow";
+import BlankTreeMessage from "../../components/BlankTreeMessage/BlankTreeMessage";
 import Error from "@mui/icons-material/Error";
 import Fade from "@mui/material/Fade";
 import FolderIcon from "@mui/icons-material/FolderRounded";
@@ -16,7 +17,6 @@ import {
   Grid,
   Menu,
   MenuItem,
-  Stack,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -154,19 +154,7 @@ function FunctionTree({ openFunctionDialog }) {
           </CardActions>
         </>
       ) : (
-        <Stack
-          sx={{ height: "100%", display: "flex", justifyContent: "center" }}
-        >
-          <Typography
-            sx={{
-              color: "text.secondary",
-              textAlign: "center",
-              textJustify: "center",
-            }}
-          >
-            No Function defined yet
-          </Typography>
-        </Stack>
+        <BlankTreeMessage item={"Function"} />
       )}
     </Card>
   );
