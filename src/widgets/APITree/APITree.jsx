@@ -327,7 +327,15 @@ export const compile = (
 
     return renderTree(groupedByPath);
   } else {
-    return null;
+    return (
+      <TreeItem
+        key={"/"}
+        nodeId={"/"}
+        label={<div className="path">/</div>}
+        collapseIcon={<ArrowIcon down />}
+        expandIcon={<ArrowIcon right />}
+      />
+    );
   }
 };
 
