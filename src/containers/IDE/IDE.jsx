@@ -33,7 +33,7 @@ function IDE() {
   const modeQuery = location.search;
 
   const [event] = useEvent("PAGE_LOADED", {
-    name: "",
+    name: null,
   });
 
   const theme = useTheme();
@@ -113,6 +113,7 @@ function IDE() {
     if (!Settings.landing()) {
       Settings.landing({ level: 0 });
     }
+
     if (mobileSize) {
       navigate("/mobile");
       navigate(0);

@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 
 function Query() {
-  const [event] = useEvent("WIDGET_LOADED", { name: "" });
+  const [event] = useEvent("WIDGET_LOADED", { name: null });
 
   const [state] = useContext();
   const result = state.get("pages.query.results");
