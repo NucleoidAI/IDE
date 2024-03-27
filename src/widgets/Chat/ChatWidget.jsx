@@ -25,10 +25,12 @@ const ChatWidget = () => {
     type: "",
     content: "",
   });
-  const loadChat = () => {
+  const loadChat = async () => {
     if (chatId) {
       // TODO Verify chat is valid in local storage
-      const session = storage.get("ide", "chat", "sessions", chatId);
+
+      // Requires async call
+      const session = await storage.get("ide", "chat", "sessions", chatId);
       publish("CHAT_SELECTED", session);
 
       publish("WIDGET_LOADED", {

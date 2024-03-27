@@ -6,7 +6,7 @@ import React, { useEffect } from "react";
 import { publish, useEvent } from "@nucleoidai/react-event";
 
 function Chat() {
-  const [event] = useEvent("WIDGET_LOADED", { name: "" });
+  const [event] = useEvent("WIDGET_LOADED", { name: null });
 
   useEffect(() => {
     if (event.name) {

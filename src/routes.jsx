@@ -1,5 +1,5 @@
 import API from "./pages/ide/API";
-import Chat from "./pages/Chat";
+import Chat from "./pages/chat";
 import Functions from "./pages/ide/Functions";
 import Logic from "./pages/ide/Logic";
 import Logs from "./pages/ide/Logs";
