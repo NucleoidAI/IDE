@@ -3,7 +3,7 @@ import React from "react";
 import Snackbar from "@mui/material/Snackbar";
 import { Stack } from "@mui/material";
 
-import { publish, useEvent } from "@nucleoidjs/react-event";
+import { publish, useEvent } from "@nucleoidai/react-event";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;

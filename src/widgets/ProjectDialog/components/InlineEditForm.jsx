@@ -9,7 +9,6 @@ const InlineEditForm = ({
   editProject,
   setSelectedAction,
 }) => {
-  console.log(selectedProject);
   const [projectToEdit, setProjectToEdit] = useState({
     id: selectedProject.id,
     name: selectedProject.name,

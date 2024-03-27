@@ -6,9 +6,18 @@ import React from "react";
 import VerticalSplitLayout from "../../../layouts/VerticalSplitLayout";
 import actions from "../../../actions";
 import { useContext } from "../../../context/context";
+import { useEffect } from "react";
+
+import { publish, useEvent } from "@nucleoidai/react-event";
 
 function Logic() {
+  const [event] = useEvent("WIDGET_LOADED", { name: "" });
   const [, dispatch] = useContext();
+  useEffect(() => {
+    if (event.name) {
+      publish("PAGE_LOADED", { name: "Logic" });
+    }
+  }, [event.name]);
 
   function openAIDialog() {
     dispatch({

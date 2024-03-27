@@ -1,7 +1,7 @@
 import State from "../state";
 import { contextReducer } from "../context/reducer";
 
-jest.mock("@nucleoidjs/react-event", () => {});
+jest.mock("@nucleoidai/react-event", () => {});
 
 test("Resolve context with property", () => {
   const state = contextReducer(State.init(), {
