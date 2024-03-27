@@ -49,7 +49,6 @@ function IDE() {
 
   function getContextFromStorage(projectId) {
     const context = storage.get("ide", "projects", projectId);
-
     const nucContext = State.withPages({ context });
     nucContext.get = (prop) => State.resolve(nucContext, prop);
 
@@ -94,6 +93,13 @@ function IDE() {
 
     navigate(`${context.nucleoid.project.id}/api?mode=local`);
     navigate(0);
+
+    return context;
+  }
+
+  function blankProject() {
+    const context = State.withBlank();
+    context.get = (prop) => State.resolve(context, prop);
 
     return context;
   }
@@ -154,9 +160,20 @@ function IDE() {
         return setContext(initContext(context));
       } else if (mode === "mobile") {
         return setContext("mobile");
+      } else if (mode === "recentProject") {
+        const recentProject = storage.get("ide", "selected", "project");
+
+        if (recentProject.type === "CLOUD") {
+          navigate(`${recentProject.id}/api`);
+          navigate(0);
+        } else if (recentProject.type === "LOCAL") {
+          navigate(`${recentProject.id}/api?mode=local`);
+          navigate(0);
+        }
+        //const blankContext = blankProject();
+        //setContext(initContext(blankContext));
       } else {
-        navigate("/sample/api");
-        navigate(0);
+        console.log("mode not found");
       }
     }
 
