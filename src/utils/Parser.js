@@ -47,7 +47,7 @@ const contextToMap = (files) => {
 
   fileNames.push(`import _ from "lodash/index";\n`);
   const imports = fileNames.join("");
-  if (files.api && files.api.length > 0) {
+  if (files?.api.length > 0) {
     files.api.forEach((apiItem) => {
       fileContents.push({
         key: apiItem.path + "." + apiItem.method + ".ts",

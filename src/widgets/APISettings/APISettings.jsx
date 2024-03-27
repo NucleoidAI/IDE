@@ -39,13 +39,13 @@ function APISettings() {
       );
     }
 
-    const tstypes = getTypes(state.get("nucleoid.functions"));
-    const nuctypes = state.get.nucleoid?.types;
+    const tsTypes = getTypes(state.get("nucleoid.functions"));
+    const nucTypes = state.get.nucleoid?.types;
 
-    if (Array.isArray(nuctypes)) {
-      customTypes = [...nuctypes, ...tstypes];
+    if (Array.isArray(nucTypes)) {
+      customTypes = [...nucTypes, ...tsTypes];
     } else {
-      customTypes = [...tstypes];
+      customTypes = [...tsTypes];
     }
 
     const api = state.get("nucleoid.api");

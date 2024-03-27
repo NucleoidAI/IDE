@@ -42,7 +42,7 @@ function APITree() {
 
   const api = state.get("nucleoid.api");
   //eslint-disable-next-line
-  const [apiExists, setApiExists] = useState(Boolean(Object.keys(api).length));
+  const [apiExists, setApiExists] = useState(Boolean(api.length));
 
   const expandList = [];
 
@@ -219,7 +219,7 @@ export const compile = (
   rightClickMethod,
   errors
 ) => {
-  if (Object.keys(apiData).length !== 0) {
+  if (apiData.length !== 0) {
     const groupedByPath = apiData.reduce((acc, endpoint) => {
       const parts = endpoint.path.split("/");
       let currentLevel = acc;

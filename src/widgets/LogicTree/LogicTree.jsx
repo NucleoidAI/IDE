@@ -55,9 +55,7 @@ function LogicTree({ openLogicDialog }) {
   const declarations = state.nucleoid.declarations;
   const functions = state.nucleoid.functions;
   //eslint-disable-next-line
-  const [logicExist, setLogicExist] = useState(
-    Boolean(Object.keys(declarations).length)
-  );
+  const [logicExist, setLogicExist] = useState(Boolean(declarations.length));
 
   function select(value) {
     const [logicClass, logicIndex] = value.split("-");
@@ -88,7 +86,8 @@ function LogicTree({ openLogicDialog }) {
   useEffect(() => {
     const treeData = {};
     const initialExpandedNodes = [];
-    if (Object.keys(declarations).length !== 0) {
+    console.log(declarations);
+    if (declarations.length !== 0) {
       declarations.forEach((dec) => {
         const decSummary = dec.summary;
         const decClass = dec?.definition?.split("$")[1]?.match(/\b(\w+)\b/)[0];

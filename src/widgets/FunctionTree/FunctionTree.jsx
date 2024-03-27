@@ -31,7 +31,7 @@ function FunctionTree({ openFunctionDialog }) {
   const functions = state.get("nucleoid.functions");
   //eslint-disable-next-line
   const [functionExist, setFunctionExist] = React.useState(
-    Boolean(Object.keys(functions).length)
+    Boolean(functions.length)
   );
   const graph = { "": { name: "", subs: [], path: "", functions: [] } };
   const [errors] = useEvent("DIAGNOSTICS_COMPLETED", []);
