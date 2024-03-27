@@ -23,12 +23,16 @@ function APIDialog() {
 
   const { open, view } = context.get("pages.api.dialog");
 
-  const selected = context.get("pages.api.selected");
-  const selectedApi = context
-    .get("nucleoid.api")
-    .find(
+  const selected = context.pages.api?.selected;
+  const contextApis = context.nucleoid.api;
+
+  let selectedApi = null;
+
+  if (Array.isArray(contextApis)) {
+    selectedApi = contextApis.find(
       (api) => api.path === selected?.path && api.method === selected.method
     );
+  }
 
   useEffect(() => {
     if (selectedApi?.params) {
@@ -42,8 +46,14 @@ function APIDialog() {
   }, [selectedApi]);
 
   const tstypes = getTypes(context.get("nucleoid.functions"));
-  const nuctypes = context.get("nucleoid.types");
-  const types = [...nuctypes, ...tstypes];
+  const nuctypes = context.get.nucleoid?.types;
+
+  let types;
+  if (Array.isArray(nuctypes)) {
+    types = [...nuctypes, ...tstypes];
+  } else {
+    types = [tstypes];
+  }
 
   const saveApiDialog = () => {
     switch (view) {

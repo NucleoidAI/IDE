@@ -5,11 +5,11 @@ import { api, declarations, functions, project, types } from "./sample";
 function init() {
   const state = {
     nucleoid: {
-      api: {},
-      types: {},
+      api: [],
+      types: [],
       functions: [],
       project: {},
-      declarations: {},
+      declarations: [],
     },
     pages: {
       started: false,
@@ -59,6 +59,7 @@ function copy(state) {
 
 function withBlank() {
   const state = init();
+  state.nucleoid.project = project;
   state.nucleoid.project.id = uuid();
 
   return state;
