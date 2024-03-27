@@ -1,7 +1,7 @@
 import { DialogContent } from "@mui/material";
 import NucDialog from "../core/NucDialog/NucDialog";
 import sandboxService from "../../sandboxService";
-import { useEvent } from "@nucleoidjs/react-event";
+import { useEvent } from "@nucleoidai/react-event";
 
 import React, { useEffect, useState } from "react";
 

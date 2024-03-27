@@ -1,4 +1,4 @@
-import { publish } from "@nucleoidjs/react-event";
+import { publish } from "@nucleoidai/react-event";
 import sandboxService from "./sandboxService";
 
 // TODO refactor this file
