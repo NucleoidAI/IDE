@@ -16,6 +16,7 @@ import {
   Grid,
   Menu,
   MenuItem,
+  Stack,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -28,6 +29,10 @@ function FunctionTree({ openFunctionDialog }) {
   const [hoveredNodeId, setHoveredNodeId] = React.useState(null);
   const [state, dispatch] = useContext();
   const functions = state.get("nucleoid.functions");
+  //eslint-disable-next-line
+  const [functionExist, setFunctionExist] = React.useState(
+    Boolean(Object.keys(functions).length)
+  );
   const graph = { "": { name: "", subs: [], path: "", functions: [] } };
   const [errors] = useEvent("DIAGNOSTICS_COMPLETED", []);
 
@@ -106,42 +111,63 @@ function FunctionTree({ openFunctionDialog }) {
 
   return (
     <Card sx={{ width: "100%", height: "100%" }}>
-      <TreeView
-        defaultCollapseIcon={<Arrow down />}
-        defaultExpandIcon={<Arrow right />}
-        defaultExpanded={["/", "/classes/"]}
-        onNodeSelect={(event, value) => select(value)}
-        selected={selected}
-        sx={{
-          marginTop: "10px",
-        }}
-      >
-        {compile(
-          [graph[""]],
-          handleContextMenu,
-          errors,
-          hoveredNodeId,
-          setHoveredNodeId,
-          selected
-        )}
-      </TreeView>
-      <Menu
-        open={contextMenu !== null}
-        onClose={handleClose}
-        onContextMenu={(event) => event.preventDefault()}
-        anchorReference="anchorPosition"
-        anchorPosition={
-          contextMenu !== null
-            ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-            : undefined
-        }
-        TransitionComponent={Fade}
-      >
-        <MenuItem onClick={deleteFunction}>Delete</MenuItem>
-      </Menu>
-      <CardActions>
-        <AddList clickEvent={openFunctionDialog} list={["Class", "Function"]} />
-      </CardActions>
+      {functionExist ? (
+        <>
+          <TreeView
+            defaultCollapseIcon={<Arrow down />}
+            defaultExpandIcon={<Arrow right />}
+            defaultExpanded={["/", "/classes/"]}
+            onNodeSelect={(event, value) => select(value)}
+            selected={selected}
+            sx={{
+              marginTop: "10px",
+            }}
+          >
+            {compile(
+              [graph[""]],
+              handleContextMenu,
+              errors,
+              hoveredNodeId,
+              setHoveredNodeId,
+              selected
+            )}
+          </TreeView>
+          <Menu
+            open={contextMenu !== null}
+            onClose={handleClose}
+            onContextMenu={(event) => event.preventDefault()}
+            anchorReference="anchorPosition"
+            anchorPosition={
+              contextMenu !== null
+                ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+                : undefined
+            }
+            TransitionComponent={Fade}
+          >
+            <MenuItem onClick={deleteFunction}>Delete</MenuItem>
+          </Menu>
+          <CardActions>
+            <AddList
+              clickEvent={openFunctionDialog}
+              list={["Class", "Function"]}
+            />
+          </CardActions>
+        </>
+      ) : (
+        <Stack
+          sx={{ height: "100%", display: "flex", justifyContent: "center" }}
+        >
+          <Typography
+            sx={{
+              color: "text.secondary",
+              textAlign: "center",
+              textJustify: "center",
+            }}
+          >
+            No Function defined yet
+          </Typography>
+        </Stack>
+      )}
     </Card>
   );
 }

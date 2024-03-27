@@ -19,6 +19,7 @@ import {
   Grid,
   Menu,
   MenuItem,
+  Stack,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -38,7 +39,10 @@ function APITree() {
   const [expanded, setExpanded] = useState([]);
   const [errors] = useEvent("DIAGNOSTICS_COMPLETED", []);
   const [state, dispatch] = useContext();
+
   const api = state.get("nucleoid.api");
+  //eslint-disable-next-line
+  const [apiExists, setApiExists] = useState(Boolean(Object.keys(api).length));
 
   const expandList = [];
 
@@ -135,65 +139,87 @@ function APITree() {
 
   return (
     <Card sx={{ height: "100%" }}>
-      <Grid sx={styles.apiTreeGrid}>
-        {open && (
-          <DeleteMethodDialog setOpen={setOpen} deleteMethod={deleteMethod} />
-        )}
-        <TreeView
-          defaultCollapseIcon={<ArrowIcon down />}
-          defaultExpandIcon={<ArrowIcon right />}
-          onNodeToggle={handleToggle}
-          expanded={expanded}
-          onNodeSelect={(event, value) => select(value)}
-          selected={selected}
-          sx={{
-            marginTop: "10px",
-          }}
-        >
-          {compile(
-            api,
-            handleContextMenu,
-            expandList,
-            rightClickMethod,
-            errors
-          )}
-        </TreeView>
+      {apiExists ? (
+        <>
+          <Grid sx={styles.apiTreeGrid}>
+            {open && (
+              <DeleteMethodDialog
+                setOpen={setOpen}
+                deleteMethod={deleteMethod}
+              />
+            )}
+            <TreeView
+              defaultCollapseIcon={<ArrowIcon down />}
+              defaultExpandIcon={<ArrowIcon right />}
+              onNodeToggle={handleToggle}
+              expanded={expanded}
+              onNodeSelect={(event, value) => select(value)}
+              selected={selected}
+              sx={{
+                marginTop: "10px",
+              }}
+            >
+              {compile(
+                api,
+                handleContextMenu,
+                expandList,
+                rightClickMethod,
+                errors
+              )}
+            </TreeView>
 
-        <Menu
-          open={contextMenu !== null}
-          onClose={handleClose}
-          anchorReference="anchorPosition"
-          anchorPosition={
-            contextMenu !== null
-              ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-              : undefined
-          }
-          TransitionComponent={Fade}
+            <Menu
+              open={contextMenu !== null}
+              onClose={handleClose}
+              anchorReference="anchorPosition"
+              anchorPosition={
+                contextMenu !== null
+                  ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+                  : undefined
+              }
+              TransitionComponent={Fade}
+            >
+              <MenuItem
+                onClick={() => {
+                  editMethod();
+                }}
+              >
+                <EditIcon />
+                <Typography sx={styles.menuItemText}>Edit</Typography>
+              </MenuItem>
+              <MenuItem onClick={handleDeleteMethod} disabled={methodDisabled}>
+                <DeleteIcon />
+                <Typography sx={styles.menuItemText}>Delete</Typography>
+              </MenuItem>
+            </Menu>
+            <ResourceMenu
+              anchor={anchor}
+              openMenu={resourceMenu}
+              handleClose={handleCloseResourceMenu}
+            />
+          </Grid>
+
+          <CardActions>
+            <Fab variant="button" size={"small"} onClick={handleResourceMenu}>
+              <AddIcon />
+            </Fab>
+          </CardActions>
+        </>
+      ) : (
+        <Stack
+          sx={{ height: "100%", display: "flex", justifyContent: "center" }}
         >
-          <MenuItem
-            onClick={() => {
-              editMethod();
+          <Typography
+            sx={{
+              color: "text.secondary",
+              textAlign: "center",
+              textJustify: "center",
             }}
           >
-            <EditIcon />
-            <Typography sx={styles.menuItemText}>Edit</Typography>
-          </MenuItem>
-          <MenuItem onClick={handleDeleteMethod} disabled={methodDisabled}>
-            <DeleteIcon />
-            <Typography sx={styles.menuItemText}>Delete</Typography>
-          </MenuItem>
-        </Menu>
-        <ResourceMenu
-          anchor={anchor}
-          openMenu={resourceMenu}
-          handleClose={handleCloseResourceMenu}
-        />
-      </Grid>
-      <CardActions>
-        <Fab variant="button" size={"small"} onClick={handleResourceMenu}>
-          <AddIcon />
-        </Fab>
-      </CardActions>
+            No API defined yet
+          </Typography>
+        </Stack>
+      )}
     </Card>
   );
 }
@@ -327,15 +353,7 @@ export const compile = (
 
     return renderTree(groupedByPath);
   } else {
-    return (
-      <TreeItem
-        key={"/"}
-        nodeId={"/"}
-        label={<div className="path">/</div>}
-        collapseIcon={<ArrowIcon down />}
-        expandIcon={<ArrowIcon right />}
-      />
-    );
+    return null;
   }
 };
 
