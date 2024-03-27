@@ -31,7 +31,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import React, { useState } from "react"; //eslint-disable-line
-import { publish, useEvent } from "@nucleoidjs/react-event";
+import { publish, useEvent } from "@nucleoidai/react-event";
 
 const ProcessDrawer = () => {
   const theme = useTheme();

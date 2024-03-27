@@ -3,7 +3,7 @@ import Page from "../../../components/Page";
 import moment from "moment";
 import sandboxService from "../../../sandboxService";
 import styles from "./styles";
-import { useEvent } from "@nucleoidjs/react-event";
+import { useEvent } from "@nucleoidai/react-event";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 
@@ -27,6 +27,7 @@ function Logs() {
     sandboxService.get("logs").then((logs) => {
       setLogs([...logs.slice(0, 25)]);
       setLoading(false);
+      publish("PAGE_LOADED", { name: "Logs" });
     });
   }, []);
 

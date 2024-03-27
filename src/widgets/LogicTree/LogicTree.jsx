@@ -7,7 +7,7 @@ import { ChevronRight, ExpandMore } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import { TreeItem, TreeView, treeItemClasses } from "@mui/lab";
 import { alpha, styled } from "@mui/material/styles";
-import { publish, useEvent } from "@nucleoidjs/react-event";
+import { publish, useEvent } from "@nucleoidai/react-event";
 
 const StyledTreeItem = styled(TreeItem)(({ theme }) => ({
   [`& .${treeItemClasses.content}`]: {

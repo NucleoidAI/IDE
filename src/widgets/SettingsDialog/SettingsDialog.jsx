@@ -2,7 +2,7 @@ import ClosableDialogTitle from "../../components/ClosableDialogTitle";
 import React from "react";
 import Settings from "../../settings";
 import SettingsDialogTabs from "../../components/SettingsDialogTabs";
-import { publish } from "@nucleoidjs/react-event";
+import { publish } from "@nucleoidai/react-event";
 import { useTheme } from "@mui/material/styles";
 
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";

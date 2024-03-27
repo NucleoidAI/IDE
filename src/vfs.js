@@ -1,6 +1,6 @@
 import { FileWatcherEventKind } from "typescript/lib/tsserverlibrary";
 import { createDefaultMap } from "./dist/defaultMap";
-import { publish } from "@nucleoidjs/react-event";
+import { publish } from "@nucleoidai/react-event";
 import typescript from "typescript";
 
 let host, program, timeout;

@@ -3,7 +3,8 @@ import ApiAIButton from "../../components/ApiAIButton";
 import NucEditor from "../../components/NucEditor/NucEditor";
 import Path from "../../utils/Path";
 import { contextToMap } from "../../utils/Parser";
-import { publish } from "@nucleoidjs/react-event";
+import { publish } from "@nucleoidai/react-event";
+
 import rules from "./rules";
 import service from "../../service";
 import { storage } from "@nucleoidjs/webstorage";
@@ -17,7 +18,6 @@ const options = {
     es6: true,
     node: true,
   },
-
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: "module",
@@ -145,10 +145,9 @@ const VFSEditor = React.forwardRef((props, ref) => {
     });
 
     checkFunction();
+    publish("WIDGET_LOADED", { name: "VFSEditor" });
 
     if (ref) ref.current = editor;
-
-    publish("IDE_LOADING_COMPLETED", true);
   }
 
   const clearModels = useCallback(() => {

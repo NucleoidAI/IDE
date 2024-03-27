@@ -2,7 +2,7 @@ import React from "react";
 import Settings from "../../settings";
 import service from "../../service";
 import { useContext } from "../../context/context";
-import { useEvent } from "@nucleoidjs/react-event";
+import { useEvent } from "@nucleoidai/react-event";
 
 import { ChatWindow, handleAddResponseMessage } from "@nucleoidjs/components";
 

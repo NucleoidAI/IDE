@@ -1,14 +1,21 @@
 import ChatContent from "../../widgets/Chat";
 import ChatLayout from "../../layouts/ChatLayout";
 import Page from "../../components/Page";
-import { publish } from "@nucleoidjs/react-event";
 
 import React, { useEffect } from "react";
+import { publish, useEvent } from "@nucleoidai/react-event";
 
 function Chat() {
+  const [event] = useEvent("WIDGET_LOADED", { name: null });
+
   useEffect(() => {
-    publish("IDE_LOADING_COMPLETED", true);
-  }, []);
+    if (event.name) {
+      publish("PAGE_LOADED", {
+        name: "Chat",
+      });
+    }
+  }, [event.name]);
+
   return (
     <Page title="Chat">
       <ChatLayout content={<ChatContent />} />

@@ -1,5 +1,5 @@
 import State from "../state";
-import { publish } from "@nucleoidjs/react-event";
+import { publish } from "@nucleoidai/react-event";
 import { v4 as uuid } from "uuid";
 
 function contextReducer(state, { type, payload }) {

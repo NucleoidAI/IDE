@@ -104,7 +104,7 @@ const ChatDisplay = ({
       >
         Scroll to Bottom
       </Button>
-      <CircularProgress show={loading} />
+      {loading && <CircularProgress />}
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
