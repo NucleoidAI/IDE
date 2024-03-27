@@ -15,12 +15,12 @@ import {
 } from "@mui/icons-material";
 import React, { lazy } from "react";
 
-const ChatContainer = lazy(() => import("./containers/Chat/ChatContainer"));
-const IDE = lazy(() => import("./containers/IDE"));
+const ChatContainer = lazy(() => import("./containers/Chat"));
+const IDEContainer = lazy(() => import("./containers/IDE"));
 
 const routes = [
   {
-    container: { element: <IDE /> },
+    container: { element: <IDEContainer /> },
     pages: [
       {
         title: "API",
@@ -70,7 +70,7 @@ const routes = [
       {
         title: "Chat",
         path: "/chat/:chatId",
-        element: <Chat />,
+        element: <ChatContainer />,
       },
     ],
   },

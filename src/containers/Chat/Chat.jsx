@@ -11,7 +11,7 @@ import { v4 as uuid } from "uuid";
 import { publish, useEvent } from "@nucleoidai/react-event";
 import { useNavigate, useParams } from "react-router-dom";
 
-function ChatContainer() {
+function Chat() {
   const [event] = useEvent("PAGE_LOADED", { name: "" });
   const navigate = useNavigate();
   const { chatId } = useParams("chatId");
@@ -49,4 +49,4 @@ function ChatContainer() {
   );
 }
 
-export default ChatContainer;
+export default Chat;
