@@ -20,7 +20,9 @@ const IDEContainer = lazy(() => import("./containers/IDE"));
 
 const routes = [
   {
-    container: { element: <IDEContainer /> },
+    container: {
+      element: <IDEContainer />,
+    },
     pages: [
       {
         title: "API",
@@ -65,12 +67,15 @@ const routes = [
     ],
   },
   {
-    container: { element: <ChatContainer />, path: "/chat" },
+    container: {
+      element: <ChatContainer />,
+      path: "/chat",
+    },
     pages: [
       {
         title: "Chat",
         path: "/chat/:chatId",
-        element: <ChatContainer />,
+        element: <Chat />,
       },
     ],
   },
