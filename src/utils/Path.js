@@ -1,3 +1,5 @@
+import { storage } from "@nucleoidjs/webstorage";
+
 const isUsed = (paths, prefix, suffix, value) => {
   if (value === "" && paths.includes(prefix.charAt(0, prefix.length - 1)))
     return true;
@@ -31,6 +33,7 @@ const getMode = () => {
   const mode = urlParams.get("mode");
 
   const id = getProjectId();
+  const selectedProject = storage.get("ide", "selected", "project");
 
   if (mode) {
     return mode;
@@ -44,6 +47,9 @@ const getMode = () => {
     } else if (id) {
       return "cloud";
     } else {
+      if (selectedProject) {
+        return "recentProject";
+      }
       return "undefined";
     }
   }
