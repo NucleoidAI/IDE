@@ -3,7 +3,6 @@ import ApiAIButton from "../../components/ApiAIButton";
 import NucEditor from "../../components/NucEditor/NucEditor";
 import Path from "../../utils/Path";
 import { contextToMap } from "../../utils/Parser";
-import http from "../../http";
 import { publish } from "@nucleoidai/react-event";
 
 import rules from "./rules";
@@ -19,7 +18,6 @@ const options = {
     es6: true,
     node: true,
   },
-
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: "module",
