@@ -119,6 +119,12 @@ function IDE() {
       navigate(0);
       Settings.landing({ level: Number.MAX_SAFE_INTEGER });
     }
+    if (context.nucleoid.project.id) {
+      const id = context.nucleoid.project.id;
+      const type = context.nucleoid.project.type;
+
+      storage.set("ide", "selected", "project", { id, type });
+    }
 
     return context;
   };
