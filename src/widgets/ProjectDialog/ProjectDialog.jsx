@@ -262,8 +262,10 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   };
 
   const onDialogClose = () => {
-    handleClose();
-    setSearchQuery("");
+    if (!event.status) {
+      handleClose();
+      setSearchQuery("");
+    }
   };
 
   return (
