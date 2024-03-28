@@ -67,13 +67,13 @@ const mapToContext = (fsMap, context) => {
   const tmpContext = deepCopy(context);
   tmpContext?.functions?.forEach((func) => {
     func.definition = parser.parse(
-      fsMap.get(`/build${func?.path}.ts`)
+      fsMap.get(`/build${func?.path}.js`)
     ).result[0];
   });
 
   tmpContext?.api?.forEach((api) => {
     api["x-nuc-action"] = parser
-      .parse(fsMap.get(`/build${api?.path}.${api?.method}.ts`))
+      .parse(fsMap.get(`/build${api?.path}.${api?.method}.js`))
       .action()
       .replace("export {};\n", "");
   });
