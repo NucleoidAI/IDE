@@ -212,7 +212,13 @@ function IDE() {
   }, [context, event.name]);
 
   if (!context) return null;
-  if (context === "error") return "forbidden";
+
+  if (context === "error") {
+    const blankContext = blankProject();
+    setContext(initContext(blankContext));
+    publish("PROJECT_NOT_FOUND", { status: true });
+    navigate("/error/api");
+  }
 
   return (
     <ContextProvider state={context} reducer={contextReducer}>
