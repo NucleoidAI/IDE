@@ -1,6 +1,8 @@
 import ChatEditor from "./ChatEditor";
 import ErrorMessage from "./components/ErrorMessage";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import MessageBox from "./components/MessageBox";
+import WelcomeMessage from "./components/WelcomeMessage";
 
 import {
   Box,
@@ -9,6 +11,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Fab,
   useTheme,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
@@ -51,7 +54,10 @@ const ChatDisplay = ({
         "scrollToBottomButton"
       );
       if (scrollToBottomButton) {
-        scrollToBottomButton.style.display = atBottom ? "none" : "block";
+        scrollToBottomButton.style.display =
+          atBottom || window.innerWidth < 960 || chat.messages.length === 0
+            ? "none"
+            : "block";
       }
     }
   };
@@ -86,14 +92,18 @@ const ChatDisplay = ({
       ref={messagesContainerRef}
       onScroll={handleScroll}
     >
-      {chat &&
+      {chat && chat.messages.length === 0 ? (
+        <WelcomeMessage />
+      ) : (
+        chat &&
         chat.messages.map((message, index) => (
           <MessageBox
             key={index}
             message={message}
             handleOpenDialog={handleOpenDialog}
           />
-        ))}
+        ))
+      )}
       {loading && <MessageBox onlyUser currentMessage={currentUserMessage} />}
       <ErrorMessage
         show={error.status}
@@ -101,31 +111,29 @@ const ChatDisplay = ({
         type={error.type}
         refreshChat={refreshChat}
       />
-      <Button
+
+      <Fab
         onClick={scrollToBottom}
-        variant="contained"
+        variant="button"
+        size="small"
         sx={{
           position: "absolute",
-          bottom: {
-            xs: 8,
-            sm: 16,
-            md: 86,
-          },
-          right: {
-            xs: 8,
-            sm: 16,
-            md: 16,
-          },
+          bottom: { xs: 8, sm: 16, md: 86 },
+          left: "50%",
+          transform: "translateX(-50%)",
           zIndex: 1,
-          display: {
-            xs: "none",
-            sm: "block",
+          display: { xs: "none", md: "block" },
+          "& > *": {
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
           },
         }}
         id="scrollToBottomButton"
       >
-        Scroll to Bottom
-      </Button>
+        <KeyboardArrowDownIcon />
+      </Fab>
 
       <CircularProgress show={loading} />
       <Dialog
