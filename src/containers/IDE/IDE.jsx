@@ -49,6 +49,11 @@ function IDE() {
 
   function getContextFromStorage(projectId) {
     const context = storage.get("ide", "projects", projectId);
+
+    if (!context) {
+      return setContext("error");
+    }
+
     const nucContext = State.withPages({ context });
     nucContext.get = (prop) => State.resolve(nucContext, prop);
 
