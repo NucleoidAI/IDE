@@ -26,6 +26,8 @@ const ChatDisplay = ({
   const theme = useTheme();
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedCode, setSelectedCode] = useState("");
+  const [showScrollToBottomButton, setShowScrollToBottomButton] =
+    useState(false);
   const messagesContainerRef = useRef(null);
 
   const handleOpenDialog = (code) => {
@@ -49,16 +51,9 @@ const ChatDisplay = ({
       const { scrollTop, scrollHeight, clientHeight } =
         messagesContainerRef.current;
       const atBottom = Math.abs(scrollTop + clientHeight - scrollHeight) < 1;
-
-      const scrollToBottomButton = document.getElementById(
-        "scrollToBottomButton"
+      setShowScrollToBottomButton(
+        !atBottom && window.innerWidth >= 960 && chat.messages.length > 0
       );
-      if (scrollToBottomButton) {
-        scrollToBottomButton.style.display =
-          atBottom || window.innerWidth < 960 || chat.messages.length === 0
-            ? "none"
-            : "block";
-      }
     }
   };
 
@@ -82,11 +77,7 @@ const ChatDisplay = ({
         flexDirection: "column",
         alignItems: "center",
         backgroundColor: theme.palette.background.paper,
-        paddingX: {
-          xs: "8px",
-          sm: "16px",
-          md: "20px",
-        },
+        paddingX: { xs: "8px", sm: "16px", md: "20px" },
         paddingY: "20px",
       }}
       ref={messagesContainerRef}
@@ -111,30 +102,29 @@ const ChatDisplay = ({
         type={error.type}
         refreshChat={refreshChat}
       />
-
-      <Fab
-        onClick={scrollToBottom}
-        variant="button"
-        size="small"
-        sx={{
-          position: "absolute",
-          bottom: { xs: 8, sm: 16, md: 86 },
-          left: "50%",
-          transform: "translateX(-50%)",
-          zIndex: 1,
-          display: { xs: "none", md: "block" },
-          "& > *": {
+      {showScrollToBottomButton && (
+        <Fab
+          onClick={scrollToBottom}
+          variant="transparent"
+          size="small"
+          sx={{
             position: "absolute",
-            top: "50%",
+            bottom: { xs: 16, sm: 24, md: 94 },
             left: "50%",
-            transform: "translate(-50%, -50%)",
-          },
-        }}
-        id="scrollToBottomButton"
-      >
-        <KeyboardArrowDownIcon />
-      </Fab>
-
+            transform: "translateX(-50%)",
+            zIndex: 1,
+            display: { xs: "none", md: "block" },
+            "& > *": {
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+            },
+          }}
+        >
+          <KeyboardArrowDownIcon />
+        </Fab>
+      )}
       <CircularProgress show={loading} />
       <Dialog
         open={openDialog}
@@ -153,4 +143,5 @@ const ChatDisplay = ({
     </Box>
   );
 };
+
 export default ChatDisplay;
