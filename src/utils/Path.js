@@ -28,12 +28,21 @@ const getProjectId = () => {
   return id;
 };
 
+const getRecentProject = () => {
+  const recentProject = storage.get("ide", "selected", "project");
+
+  if (recentProject) {
+    return recentProject;
+  }
+
+  return false;
+};
+
 const getMode = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const mode = urlParams.get("mode");
 
   const id = getProjectId();
-  const selectedProject = storage.get("ide", "selected", "project");
 
   if (mode) {
     return mode;
@@ -47,10 +56,7 @@ const getMode = () => {
     } else if (id) {
       return "cloud";
     } else {
-      if (selectedProject) {
-        return "recentProject";
-      }
-      return "undefined";
+      return "main";
     }
   }
 };
@@ -61,6 +67,7 @@ const Path = {
   addSlashMark,
   getMode,
   getProjectId,
+  getRecentProject,
 };
 
 export default Path;
