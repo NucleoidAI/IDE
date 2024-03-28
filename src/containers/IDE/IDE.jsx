@@ -110,16 +110,6 @@ function IDE() {
     const context = State.withBlank();
     context.get = (prop) => State.resolve(context, prop);
 
-    storage.set(
-      "ide",
-      "projects",
-      context.nucleoid.project.id,
-      context.nucleoid
-    );
-
-    navigate(`${context.nucleoid.project.id}/api?mode=local`);
-    navigate(0);
-
     return context;
   }
 
@@ -145,7 +135,10 @@ function IDE() {
       Settings.landing({ level: Number.MAX_SAFE_INTEGER });
     }
 
-    if (context.nucleoid.project.type === "LOCAL") {
+    if (
+      context.nucleoid.project.type === "LOCAL" &&
+      storage.get("ide", "projects", context.nucleoid.project.id)
+    ) {
       storage.set("ide", "selected", "project", {
         id: context.nucleoid.project.id,
         type: "LOCAL",
@@ -164,6 +157,7 @@ function IDE() {
     async function initMode() {
       const mode = Path.getMode();
       const projectId = Path.getProjectId();
+      const recentProject = Path.getRecentProject();
 
       if (mode === "sample") {
         sampleProject();
@@ -178,30 +172,28 @@ function IDE() {
         return setContext(initContext(context));
       } else if (mode === "mobile") {
         return setContext("mobile");
-      } else if (mode === "recentProject") {
-        const recentProject = storage.get("ide", "selected", "project");
+      } else if (mode === "main") {
+        if (recentProject) {
+          if (recentProject.type === "CLOUD") {
+            navigate(`${recentProject.id}/api`);
+            navigate(0);
+          } else if (recentProject.type === "LOCAL") {
+            navigate(`${recentProject.id}/api?mode=local`);
+            navigate(0);
+          }
+        } else {
+          publish("RECENT_PROJECT_NOT_FOUND", { status: true });
+          const blankContext = blankProject();
+          setContext(initContext(blankContext));
 
-        if (storage.get("ide", "selected", "project")) {
-          publish("RECENT_PROJECT_FOUND", { found: true });
+          navigate("/new/api");
         }
-
-        if (recentProject.type === "CLOUD") {
-          navigate(`${recentProject.id}/api`);
-          navigate(0);
-        } else if (recentProject.type === "LOCAL") {
-          navigate(`${recentProject.id}/api?mode=local`);
-          navigate(0);
-        }
-      } else {
-        blankProject();
-        publish("RECENT_PROJECT_FOUND", { found: false });
       }
     }
 
     initMode();
     // eslint-disable-next-line
   }, [progressElement.classList]);
-
   useEffect(() => {
     if (context && event.name) {
       publish("CONTAINER_LOADED", {
