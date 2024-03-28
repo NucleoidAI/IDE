@@ -33,6 +33,8 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
   const [event] = useEvent("RECENT_PROJECT_NOT_FOUND", { status: false });
+  const [projectNotFound] = useEvent("PROJECT_NOT_FOUND", { status: false });
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,6 +42,17 @@ function ProjectDialog({ handleClose, open, setOpen }) {
       setOpen(true);
     }
   }, [event.status]);
+
+  useEffect(() => {
+    if (projectNotFound.status) {
+      setOpen(true);
+      publish("GLOBAL_MESSAGE", {
+        status: true,
+        message: "Project not found",
+        severity: "error",
+      });
+    }
+  }, [projectNotFound.status]);
 
   const getProjectsFromLocalStorage = () => {
     const projects = [];
@@ -262,9 +275,20 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   };
 
   const onDialogClose = () => {
-    if (!event.status) {
+    const projectExist = Boolean(projects.length);
+    const message = `To proceed, ${
+      projectExist ? "please select a project" : "create a new project"
+    }.`;
+
+    if (!event.status && !projectNotFound.status) {
       handleClose();
       setSearchQuery("");
+    } else {
+      publish("GLOBAL_MESSAGE", {
+        status: true,
+        message,
+        severity: "info",
+      });
     }
   };
 
