@@ -124,7 +124,6 @@ function IDE() {
   }
 
   const initContext = (context) => {
-    console.log(context);
     if (
       !Settings.description() ||
       Settings.description() !== context.nucleoid.project.description
@@ -182,6 +181,10 @@ function IDE() {
       } else if (mode === "recentProject") {
         const recentProject = storage.get("ide", "selected", "project");
 
+        if (storage.get("ide", "selected", "project")) {
+          publish("RECENT_PROJECT_FOUND", { found: true });
+        }
+
         if (recentProject.type === "CLOUD") {
           navigate(`${recentProject.id}/api`);
           navigate(0);
@@ -191,6 +194,7 @@ function IDE() {
         }
       } else {
         blankProject();
+        publish("RECENT_PROJECT_FOUND", { found: false });
       }
     }
 
