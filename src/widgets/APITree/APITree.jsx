@@ -1,5 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import ArrowIcon from "../../icons/Arrow";
+import BlankTreeMessage from "../../components/BlankTreeMessage/BlankTreeMessage";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteMethodDialog from "../../components/DeleteMethodDialog";
 import EditIcon from "@mui/icons-material/Edit";
@@ -38,7 +39,10 @@ function APITree() {
   const [expanded, setExpanded] = useState([]);
   const [errors] = useEvent("DIAGNOSTICS_COMPLETED", []);
   const [state, dispatch] = useContext();
+
   const api = state.get("nucleoid.api");
+  //eslint-disable-next-line
+  const [apiExists, setApiExists] = useState(Boolean(api.length));
 
   const expandList = [];
 
@@ -135,65 +139,75 @@ function APITree() {
 
   return (
     <Card sx={{ height: "100%" }}>
-      <Grid sx={styles.apiTreeGrid}>
-        {open && (
-          <DeleteMethodDialog setOpen={setOpen} deleteMethod={deleteMethod} />
-        )}
-        <TreeView
-          defaultCollapseIcon={<ArrowIcon down />}
-          defaultExpandIcon={<ArrowIcon right />}
-          onNodeToggle={handleToggle}
-          expanded={expanded}
-          onNodeSelect={(event, value) => select(value)}
-          selected={selected}
-          sx={{
-            marginTop: "10px",
-          }}
-        >
-          {compile(
-            api,
-            handleContextMenu,
-            expandList,
-            rightClickMethod,
-            errors
-          )}
-        </TreeView>
+      {apiExists ? (
+        <>
+          <Grid sx={styles.apiTreeGrid}>
+            {open && (
+              <DeleteMethodDialog
+                setOpen={setOpen}
+                deleteMethod={deleteMethod}
+              />
+            )}
+            <TreeView
+              defaultCollapseIcon={<ArrowIcon down />}
+              defaultExpandIcon={<ArrowIcon right />}
+              onNodeToggle={handleToggle}
+              expanded={expanded}
+              onNodeSelect={(event, value) => select(value)}
+              selected={selected}
+              sx={{
+                marginTop: "10px",
+              }}
+            >
+              {compile(
+                api,
+                handleContextMenu,
+                expandList,
+                rightClickMethod,
+                errors
+              )}
+            </TreeView>
 
-        <Menu
-          open={contextMenu !== null}
-          onClose={handleClose}
-          anchorReference="anchorPosition"
-          anchorPosition={
-            contextMenu !== null
-              ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-              : undefined
-          }
-          TransitionComponent={Fade}
-        >
-          <MenuItem
-            onClick={() => {
-              editMethod();
-            }}
-          >
-            <EditIcon />
-            <Typography sx={styles.menuItemText}>Edit</Typography>
-          </MenuItem>
-          <MenuItem onClick={handleDeleteMethod} disabled={methodDisabled}>
-            <DeleteIcon />
-            <Typography sx={styles.menuItemText}>Delete</Typography>
-          </MenuItem>
-        </Menu>
-        <ResourceMenu
-          anchor={anchor}
-          openMenu={resourceMenu}
-          handleClose={handleCloseResourceMenu}
-        />
-      </Grid>
-      <CardActions>
-        <Fab variant="button" size={"small"} onClick={handleResourceMenu}>
-          <AddIcon />
-        </Fab>
-      </CardActions>
+            <Menu
+              open={contextMenu !== null}
+              onClose={handleClose}
+              anchorReference="anchorPosition"
+              anchorPosition={
+                contextMenu !== null
+                  ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+                  : undefined
+              }
+              TransitionComponent={Fade}
+            >
+              <MenuItem
+                onClick={() => {
+                  editMethod();
+                }}
+              >
+                <EditIcon />
+                <Typography sx={styles.menuItemText}>Edit</Typography>
+              </MenuItem>
+              <MenuItem onClick={handleDeleteMethod} disabled={methodDisabled}>
+                <DeleteIcon />
+                <Typography sx={styles.menuItemText}>Delete</Typography>
+              </MenuItem>
+            </Menu>
+            <ResourceMenu
+              anchor={anchor}
+              openMenu={resourceMenu}
+              handleClose={handleCloseResourceMenu}
+            />
+          </Grid>
+
+          <CardActions>
+            <Fab variant="button" size={"small"} onClick={handleResourceMenu}>
+              <AddIcon />
+            </Fab>
+          </CardActions>
+        </>
+      ) : (
+        <BlankTreeMessage item={"API"} />
+      )}
     </Card>
   );
 }
@@ -205,126 +219,130 @@ export const compile = (
   rightClickMethod,
   errors
 ) => {
-  const groupedByPath = apiData.reduce((acc, endpoint) => {
-    const parts = endpoint.path.split("/");
-    let currentLevel = acc;
+  if (apiData.length !== 0) {
+    const groupedByPath = apiData.reduce((acc, endpoint) => {
+      const parts = endpoint.path.split("/");
+      let currentLevel = acc;
 
-    if (endpoint.path === "/") {
-      if (!currentLevel["/"]) {
-        currentLevel["/"] = {
-          methods: [],
-          children: {},
-        };
-      }
-      currentLevel["/"].methods.push(endpoint);
-    } else {
-      currentLevel = currentLevel["/"].children;
-
-      parts.forEach((part, idx, arr) => {
-        if (idx !== 0) {
-          const currentPart = "/" + part;
-
-          if (!currentLevel[currentPart]) {
-            currentLevel[currentPart] = {
-              methods: [],
-              children: {},
-            };
-          }
-
-          if (idx === arr.length - 1) {
-            currentLevel[currentPart].methods.push(endpoint);
-          } else {
-            currentLevel = currentLevel[currentPart].children;
-          }
+      if (endpoint.path === "/") {
+        if (!currentLevel["/"]) {
+          currentLevel["/"] = {
+            methods: [],
+            children: {},
+          };
         }
-      });
-    }
+        currentLevel["/"].methods.push(endpoint);
+      } else {
+        currentLevel = currentLevel["/"].children;
 
-    return acc;
-  }, {});
+        parts.forEach((part, idx, arr) => {
+          if (idx !== 0) {
+            const currentPart = "/" + part;
 
-  const renderTree = (data) => {
-    // eslint-disable-next-line
-    let resourceHash;
-    // eslint-disable-next-line
-    const theme = useTheme();
+            if (!currentLevel[currentPart]) {
+              currentLevel[currentPart] = {
+                methods: [],
+                children: {},
+              };
+            }
 
-    return Object.keys(data).map((path) => {
-      const { methods, children } = data[path];
-
-      const methodItems = methods.map((method) => {
-        const payload = { path: method.path, method: method.method };
-        const hash = (resourceHash = window.btoa(JSON.stringify(payload)));
-        map[hash] = payload;
-
-        const error = errors.find((item) => {
-          const [errPath, errMethod] = item.file.fileName.split(".", 2);
-          if (errPath === method.path && errMethod === method.method) {
-            return item;
-          } else {
-            return null;
+            if (idx === arr.length - 1) {
+              currentLevel[currentPart].methods.push(endpoint);
+            } else {
+              currentLevel = currentLevel[currentPart].children;
+            }
           }
         });
+      }
+
+      return acc;
+    }, {});
+
+    const renderTree = (data) => {
+      // eslint-disable-next-line
+      let resourceHash;
+      // eslint-disable-next-line
+      const theme = useTheme();
+
+      return Object.keys(data).map((path) => {
+        const { methods, children } = data[path];
+
+        const methodItems = methods.map((method) => {
+          const payload = { path: method.path, method: method.method };
+          const hash = (resourceHash = window.btoa(JSON.stringify(payload)));
+          map[hash] = payload;
+
+          const error = errors.find((item) => {
+            const [errPath, errMethod] = item.file.fileName.split(".", 2);
+            if (errPath === method.path && errMethod === method.method) {
+              return item;
+            } else {
+              return null;
+            }
+          });
+
+          return (
+            <TreeItem
+              key={hash}
+              nodeId={hash}
+              onContextMenu={(event) => handleContextMenu(event, hash)}
+              sx={{
+                bgcolor:
+                  hash === rightClickMethod &&
+                  theme.palette.custom.apiTreeRightClick,
+              }}
+              label={
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Box sx={theme.custom.apiTreeItem}>
+                    <span
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {method.method.toUpperCase()}
+                    </span>
+                  </Box>
+                  {error && (
+                    <Tooltip title={error.messageText} placement={"right"}>
+                      <Error sx={{ color: "#8f8f91" }} />
+                    </Tooltip>
+                  )}
+                </Box>
+              }
+            />
+          );
+        });
+
+        const childItems = children ? renderTree(children) : [];
+        expandList.push(path);
 
         return (
           <TreeItem
-            key={hash}
-            nodeId={hash}
-            onContextMenu={(event) => handleContextMenu(event, hash)}
-            sx={{
-              bgcolor:
-                hash === rightClickMethod &&
-                theme.palette.custom.apiTreeRightClick,
-            }}
-            label={
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Box sx={theme.custom.apiTreeItem}>
-                  <span
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {method.method.toUpperCase()}
-                  </span>
-                </Box>
-                {error && (
-                  <Tooltip title={error.messageText} placement={"right"}>
-                    <Error sx={{ color: "#8f8f91" }} />
-                  </Tooltip>
-                )}
-              </Box>
-            }
+            key={path}
+            nodeId={path}
+            label={<div className="path">{path}</div>}
+            children={[...methodItems, ...childItems]}
+            collapseIcon={<ArrowIcon down />}
+            expandIcon={<ArrowIcon right />}
           />
         );
       });
+    };
 
-      const childItems = children ? renderTree(children) : [];
-      expandList.push(path);
-
-      return (
-        <TreeItem
-          key={path}
-          nodeId={path}
-          label={<div className="path">{path}</div>}
-          children={[...methodItems, ...childItems]}
-          collapseIcon={<ArrowIcon down />}
-          expandIcon={<ArrowIcon right />}
-        />
-      );
-    });
-  };
-
-  return renderTree(groupedByPath);
+    return renderTree(groupedByPath);
+  } else {
+    return null;
+  }
 };
 
 export default APITree;

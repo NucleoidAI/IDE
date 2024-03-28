@@ -1,10 +1,14 @@
 import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
 import ProjectDialog from "../../widgets/ProjectDialog/ProjectDialog";
 import React from "react";
+import { useContext } from "../../context/context";
 
-import { Box, Button } from "@mui/material/";
+import { Box, Button, Typography } from "@mui/material/";
 
-export default function ProjectSelect({ title }) {
+export default function ProjectSelect() {
+  const [context] = useContext();
+
+  const projectName = context.nucleoid.project.name;
   const [open, setOpen] = React.useState(false);
   const handleClose = () => {
     setOpen(!open);
@@ -19,7 +23,12 @@ export default function ProjectSelect({ title }) {
         onClick={() => setOpen(true)}
         endIcon={<ArrowDropDown sx={{ color: "#121212" }} />}
       >
-        {title}
+        <Typography
+          variant="caption"
+          style={{ fontWeight: "bold", color: "#121212" }}
+        >
+          {projectName}
+        </Typography>
       </Button>
       <ProjectDialog handleClose={handleClose} open={open} />
     </Box>

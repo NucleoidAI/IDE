@@ -29,16 +29,25 @@ function APISettings() {
 
   useEffect(() => {
     const selected = state.get("pages.api.selected");
-    const selectApi = state
-      .get("nucleoid.api")
-      .find(
+    const contextApis = state.nucleoid.api;
+
+    let selectApi = null;
+
+    if (Array.isArray(contextApis)) {
+      selectApi = contextApis.find(
         (api) => api.path === selected?.path && api.method === selected.method
       );
+    }
 
-    customTypes = [
-      ...(state?.nucleoid?.types || []),
-      ...getTypes(state.get("nucleoid.functions")),
-    ];
+    const tsTypes = getTypes(state.get("nucleoid.functions"));
+    const nucTypes = state.get.nucleoid?.types;
+
+    if (Array.isArray(nucTypes)) {
+      customTypes = [...nucTypes, ...tsTypes];
+    } else {
+      customTypes = [...tsTypes];
+    }
+
     const api = state.get("nucleoid.api");
 
     if (selected) {
