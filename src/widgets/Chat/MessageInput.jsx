@@ -1,9 +1,8 @@
+import CodeIcon from "@mui/icons-material/Code";
 import SendIcon from "@mui/icons-material/Send";
-import codeImage from "../../images/code.png";
 
 import {
   Box,
-  Fab,
   IconButton,
   TextField,
   Tooltip,
@@ -110,20 +109,19 @@ const MessageInput = forwardRef((props, ref) => {
             }
             placement="top"
           >
-            <Fab
-              color="primary"
-              size="small"
+            <IconButton
+              type="submit"
               onClick={handleProjectIconClick}
               onMouseEnter={handleHover}
               sx={{
-                backgroundColor: theme.palette.grey[600],
+                ml: 1,
                 animation: playAnimation
                   ? "pulseAnimationWithColor 2s infinite"
                   : "none",
               }}
             >
-              <img src={codeImage} alt={"Code"} style={{ width: "100%" }} />
-            </Fab>
+              <CodeIcon />
+            </IconButton>
           </Tooltip>
         )}
         <IconButton

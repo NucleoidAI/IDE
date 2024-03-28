@@ -12,3 +12,7 @@
     background-color: initial;
   }
 }
+
+.pulse-animation {
+  animation: pulseAnimationWithColor 1s ease-in-out;
+}
