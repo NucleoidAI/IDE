@@ -125,7 +125,7 @@ const ChatDisplay = ({
           <KeyboardArrowDownIcon />
         </Fab>
       )}
-      <CircularProgress show={loading} />
+      {loading && <CircularProgress />}
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
