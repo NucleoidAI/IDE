@@ -1,7 +1,7 @@
 const config = {
   name: "IDE",
   base: "/ide",
-  api: "http://localhost:3000",
+  api: "https://nuc.land/ide/api/",
   expert: "https://nuc.land/ide/api/expert",
 };
 
