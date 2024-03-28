@@ -110,10 +110,21 @@ function IDE() {
     const context = State.withBlank();
     context.get = (prop) => State.resolve(context, prop);
 
+    storage.set(
+      "ide",
+      "projects",
+      context.nucleoid.project.id,
+      context.nucleoid
+    );
+
+    navigate(`${context.nucleoid.project.id}/api?mode=local`);
+    navigate(0);
+
     return context;
   }
 
   const initContext = (context) => {
+    console.log(context);
     if (
       !Settings.description() ||
       Settings.description() !== context.nucleoid.project.description
@@ -178,10 +189,8 @@ function IDE() {
           navigate(`${recentProject.id}/api?mode=local`);
           navigate(0);
         }
-        //const blankContext = blankProject();
-        //setContext(initContext(blankContext));
       } else {
-        console.log("mode not found");
+        blankProject();
       }
     }
 
