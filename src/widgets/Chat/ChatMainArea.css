@@ -14,5 +14,5 @@
 }
 
 .pulse-animation {
-  animation: pulseAnimationWithColor 1s ease-in-out;
+  animation: pulseAnimationWithColor 2s ease-in-out;
 }
