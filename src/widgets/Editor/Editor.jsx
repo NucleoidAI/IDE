@@ -2,18 +2,19 @@
 
 import AIDialog from "../AIDialog/AIDialog";
 import NucEditor from "../../components/NucEditor/NucEditor";
+import Path from "../../utils/Path";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import QueryAIButton from "../../components/QueryAIButton";
 import { publish } from "@nucleoidai/react-event";
 import service from "../../service";
+import { storage } from "@nucleoidjs/webstorage";
 import styles from "../../layouts/HorizontalSplitLayout/styles";
 import { useContext } from "../../context/context";
 import { useMonaco } from "@monaco-editor/react";
 import { v4 as uuidv4 } from "uuid";
-import { storage } from "@nucleoidjs/webstorage";
+
 import { CircularProgress, Fab, Grid } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
-import Path from "../../utils/Path";
 
 const Editor = React.forwardRef((props, ref) => {
   const monaco = useMonaco();
@@ -137,7 +138,10 @@ const Editor = React.forwardRef((props, ref) => {
       );
 
       if (mode === "cloud") {
-        service.saveContext(id, context.nucleoid);
+        const nucContext = { ...context.nucleoid };
+        delete nucContext.project;
+
+        service.saveContext(id, nucContext);
       } else if (mode === "local") {
         storage.set("ide", "projects", id, context.nucleoid);
       } else if (mode === "terminal") {
