@@ -61,24 +61,33 @@ function IDE() {
       service.getProjectServices(projectId),
     ]);
 
-    const contextId = serviceResult.data[0].contextId;
-    const contextResult = await service.getContext(contextId);
-
-    const context = contextResult.data;
     const projectService = serviceResult.data;
     const project = projectResult.data;
 
-    const nucContext = State.withPages({ context });
+    if (project.type === "SINGLE") {
+      const contextId = projectService[0].id;
+      const contextResult = await service.getContext(contextId);
 
-    nucContext.get = (prop) => State.resolve(nucContext, prop);
-    nucContext.nucleoid.project = {
-      type: "CLOUD",
-      name: project.name,
-      id: projectService.contextId,
-      description: projectService.description,
-    };
+      const context = contextResult.data;
 
-    return nucContext;
+      const nucContext = State.withPages({ context });
+      nucContext.get = (prop) => State.resolve(nucContext, prop);
+      nucContext.nucleoid.project = {
+        type: "CLOUD",
+        name: project.name,
+        id: contextId,
+        description: project.description,
+      };
+
+      storage.set("ide", "selected", "project", {
+        id: project.id,
+        type: "CLOUD",
+      });
+
+      return nucContext;
+    } else {
+      console.log("Multiple projects not supported yet.");
+    }
   }
 
   function sampleProject() {
@@ -125,11 +134,12 @@ function IDE() {
       navigate(0);
       Settings.landing({ level: Number.MAX_SAFE_INTEGER });
     }
-    if (context.nucleoid.project.id) {
-      const id = context.nucleoid.project.id;
-      const type = context.nucleoid.project.type;
 
-      storage.set("ide", "selected", "project", { id, type });
+    if (context.nucleoid.project.type === "LOCAL") {
+      storage.set("ide", "selected", "project", {
+        id: context.nucleoid.project.id,
+        type: "LOCAL",
+      });
     }
 
     return context;
@@ -154,8 +164,6 @@ function IDE() {
         });
       } else if (mode === "local") {
         const context = getContextFromStorage(projectId);
-
-        initVfs(context);
 
         return setContext(initContext(context));
       } else if (mode === "mobile") {
