@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 const RouteManager = ({ routes }) => {
   return (
@@ -15,6 +15,14 @@ const RouteManager = ({ routes }) => {
             {route.pages &&
               route.pages.map((page, j) => (
                 <Route key={j} path={page.path} element={page.element} />
+              ))}
+            {route.rules &&
+              route.rules.map((rule, k) => (
+                <Route
+                  key={k}
+                  path={rule.path}
+                  element={<Navigate to={rule.to} />}
+                />
               ))}
           </Route>
         ) : (

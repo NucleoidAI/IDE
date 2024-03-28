@@ -4,6 +4,7 @@ import Functions from "./pages/ide/Functions";
 import Logic from "./pages/ide/Logic";
 import Logs from "./pages/ide/Logs";
 import Mobile from "./pages/ide/Mobile";
+import { Navigate } from "react-router-dom";
 import Query from "./pages/ide/Query";
 
 import {
@@ -63,6 +64,13 @@ const routes = [
         anchor: false,
         element: <Logs />,
         icon: <ViewCarousel />,
+      },
+    ],
+    rules: [
+      {
+        title: "Sample Redirect",
+        path: "/sample",
+        to: "/sample/api",
       },
     ],
   },
