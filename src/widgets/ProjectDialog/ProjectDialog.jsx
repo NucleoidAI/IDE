@@ -24,7 +24,7 @@ function applyFilter({ inputData, query }) {
   return inputData;
 }
 
-function ProjectDialog({ handleClose, open }) {
+function ProjectDialog({ handleClose, open, setOpen }) {
   const login = true;
   const { id: projectId } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
