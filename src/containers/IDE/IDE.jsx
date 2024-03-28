@@ -59,7 +59,11 @@ function IDE() {
     const [projectResult, serviceResult] = await Promise.all([
       service.getProject(projectId),
       service.getProjectServices(projectId),
-    ]);
+    ]).catch((error) => {
+      if (error.response.status === 404) {
+        setContext("error");
+      }
+    });
 
     const projectService = serviceResult.data;
     const project = projectResult.data;
