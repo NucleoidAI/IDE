@@ -1,36 +1,13 @@
 import { DialogContent } from "@mui/material";
 import NucDialog from "../core/NucDialog/NucDialog";
-import sandboxService from "../../sandboxService";
-import { useEvent } from "@nucleoidai/react-event";
-
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useEvent } from "@nucleoidjs/react-event"; //eslint-disable-line
 
 const GraphDialog = () => {
   const [event, publish] = useEvent("GRAPH_DIALOG", { open: false });
-  const [graphUrl, setGraphUrl] = useState("");
-
-  useEffect(() => {
-    const fetchGraphUrl = async () => {
-      try {
-        const graphData = await sandboxService.get("graph");
-        const blob = new Blob([JSON.stringify(graphData)], {
-          type: "application/json",
-        });
-        const url = URL.createObjectURL(blob);
-        setGraphUrl(url);
-      } catch (error) {
-        console.error("Error fetching graph data:", error);
-      }
-    };
-
-    if (event.open) {
-      fetchGraphUrl();
-    }
-  }, [event.open]);
 
   const handleClose = () => {
     publish("GRAPH_DIALOG", { open: false });
-    URL.revokeObjectURL(graphUrl);
   };
 
   if (event.open) {
@@ -51,15 +28,13 @@ const GraphDialog = () => {
             alignItems: "center",
           }}
         >
-          {graphUrl && (
-            <iframe
-              title="graph"
-              width={"100%"}
-              height={"100%"}
-              style={{ border: "none" }}
-              src={graphUrl}
-            ></iframe>
-          )}
+          <iframe
+            title="graph"
+            width={"100%"}
+            height={"100%"}
+            style={{ border: "none" }}
+            src={"/ide/graph"}
+          ></iframe>
         </DialogContent>
       </NucDialog>
     );
