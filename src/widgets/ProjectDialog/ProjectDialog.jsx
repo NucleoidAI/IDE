@@ -41,6 +41,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     if (event.status) {
       setOpen(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [event.status]);
 
   useEffect(() => {
@@ -52,6 +53,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
         severity: "error",
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectNotFound.status]);
 
   const getProjectsFromLocalStorage = () => {
