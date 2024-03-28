@@ -1,6 +1,7 @@
 const styles = {
   dialog: {
     bgcolor: "custom.darkDialogBg",
+    zIndex: 999999999,
   },
   welcome: {
     width: "100%",
