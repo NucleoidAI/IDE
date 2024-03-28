@@ -3,7 +3,7 @@ import axios from "axios";
 import axiosRetry from "axios-retry";
 import config from "../../config.js";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
-import { publish } from "@nucleoidjs/react-event";
+import { publish } from "@nucleoidai/react-event";
 import { storage } from "@nucleoidjs/webstorage";
 
 const instance = axios.create({

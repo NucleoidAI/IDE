@@ -1,5 +1,5 @@
 import styles from "./styles.js";
-import { useEvent } from "@nucleoidjs/react-event";
+import { useEvent } from "@nucleoidai/react-event";
 import { useNavigate } from "react-router-dom";
 import { Box, ListItemButton, ListItemText } from "@mui/material";
 import React, { useEffect, useState } from "react";

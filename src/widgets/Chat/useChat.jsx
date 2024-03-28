@@ -1,5 +1,5 @@
 import expert from "../../http/expert.js";
-import { publish, useEvent } from "@nucleoidjs/react-event";
+import { publish, useEvent } from "@nucleoidai/react-event";
 import { useEffect, useState } from "react";
 
 const useChat = () => {
