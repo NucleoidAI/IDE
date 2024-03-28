@@ -6,11 +6,11 @@ import React from "react";
 import State from "../../state";
 import WorkspacesIcon from "@mui/icons-material/Workspaces";
 import http from "../../http";
-import { publish } from "@nucleoidai/react-event";
 import service from "../../service";
 import { storage } from "@nucleoidjs/webstorage";
 
 import { DialogContent, DialogTitle } from "@mui/material";
+import { publish, useEvent } from "@nucleoidai/react-event";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -33,7 +33,14 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   const [cloudProjects, setCloudProjects] = useState([]);
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [event] = useEvent("RECENT_PROJECT_FOUND", { found: true });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!event.found) {
+      setOpen(true);
+    }
+  }, [event.found]);
 
   const getProjectsFromLocalStorage = () => {
     const projects = [];
