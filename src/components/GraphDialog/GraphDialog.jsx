@@ -1,7 +1,7 @@
 import { DialogContent } from "@mui/material";
 import NucDialog from "../core/NucDialog/NucDialog";
 import React from "react";
-import { useEvent } from "@nucleoidjs/react-event"; //eslint-disable-line
+import { useEvent } from "@nucleoidai/react-event"; //eslint-disable-line
 
 const GraphDialog = () => {
   const [event, publish] = useEvent("GRAPH_DIALOG", { open: false });
