@@ -1,6 +1,8 @@
 import ChatEditor from "./ChatEditor";
 import ErrorMessage from "./components/ErrorMessage";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import MessageBox from "./components/MessageBox";
+import WelcomeMessage from "./components/WelcomeMessage";
 
 import {
   Box,
@@ -9,6 +11,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Fab,
   useTheme,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
@@ -23,6 +26,8 @@ const ChatDisplay = ({
   const theme = useTheme();
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedCode, setSelectedCode] = useState("");
+  const [showScrollToBottomButton, setShowScrollToBottomButton] =
+    useState(false);
   const messagesContainerRef = useRef(null);
 
   const handleOpenDialog = (code) => {
@@ -46,13 +51,9 @@ const ChatDisplay = ({
       const { scrollTop, scrollHeight, clientHeight } =
         messagesContainerRef.current;
       const atBottom = Math.abs(scrollTop + clientHeight - scrollHeight) < 1;
-
-      const scrollToBottomButton = document.getElementById(
-        "scrollToBottomButton"
+      setShowScrollToBottomButton(
+        !atBottom && window.innerWidth >= 960 && chat.messages.length > 0
       );
-      if (scrollToBottomButton) {
-        scrollToBottomButton.style.display = atBottom ? "none" : "block";
-      }
     }
   };
 
@@ -72,23 +73,28 @@ const ChatDisplay = ({
       sx={{
         overflow: "auto",
         flex: 1,
-        padding: "20px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         backgroundColor: theme.palette.background.paper,
+        paddingX: { xs: "8px", sm: "16px", md: "20px" },
+        paddingY: "20px",
       }}
       ref={messagesContainerRef}
       onScroll={handleScroll}
     >
-      {chat &&
+      {chat && chat.messages.length === 0 ? (
+        <WelcomeMessage />
+      ) : (
+        chat &&
         chat.messages.map((message, index) => (
           <MessageBox
             key={index}
             message={message}
             handleOpenDialog={handleOpenDialog}
           />
-        ))}
+        ))
+      )}
       {loading && <MessageBox onlyUser currentMessage={currentUserMessage} />}
       <ErrorMessage
         show={error.status}
@@ -96,27 +102,35 @@ const ChatDisplay = ({
         type={error.type}
         refreshChat={refreshChat}
       />
-      <Button
-        onClick={scrollToBottom}
-        sx={{ position: "fixed", bottom: 20, right: 20 }}
-        id="scrollToBottomButton"
-        style={{ display: "none" }}
-      >
-        Scroll to Bottom
-      </Button>
+      {showScrollToBottomButton && (
+        <Fab
+          onClick={scrollToBottom}
+          variant="transparent"
+          size="small"
+          sx={{
+            position: "absolute",
+            bottom: { xs: 16, sm: 24, md: 94 },
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 1,
+            display: { xs: "none", md: "block" },
+            "& > *": {
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+            },
+          }}
+        >
+          <KeyboardArrowDownIcon />
+        </Fab>
+      )}
       {loading && <CircularProgress />}
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
         maxWidth="md"
-        fullWidth={true}
-        sx={{
-          "& .MuiDialog-paper": {
-            minHeight: "30vh",
-            maxHeight: "60vh",
-            width: "60%",
-          },
-        }}
+        fullWidth
       >
         <DialogTitle>Code Analysis</DialogTitle>
         <DialogContent dividers>
@@ -129,4 +143,5 @@ const ChatDisplay = ({
     </Box>
   );
 };
+
 export default ChatDisplay;

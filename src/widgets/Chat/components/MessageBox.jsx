@@ -12,11 +12,20 @@ function MessageBox({
   if (onlyUser) {
     message.content = currentMessage;
   }
+
   return (
     <Box
       sx={{
-        width: "60%",
-        marginBottom: "20px",
+        width: {
+          xs: "100%",
+          sm: "90%",
+          md: "80%",
+        },
+        marginBottom: {
+          xs: "12px",
+          sm: "16px",
+          md: "20px",
+        },
         padding: "10px",
         borderRadius: "10px",
         textAlign: "left",
@@ -28,11 +37,7 @@ function MessageBox({
     >
       <Typography
         variant="subtitle2"
-        sx={{
-          fontWeight: "bold",
-          marginBottom: "8px",
-          userSelect: "text",
-        }}
+        sx={{ fontWeight: "bold", marginBottom: "8px", userSelect: "text" }}
       >
         {message.role}
       </Typography>

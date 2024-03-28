@@ -1,9 +1,8 @@
+import CodeIcon from "@mui/icons-material/Code";
 import SendIcon from "@mui/icons-material/Send";
-import codeImage from "../../images/code.png";
 
 import {
   Box,
-  Fab,
   IconButton,
   TextField,
   Tooltip,
@@ -12,6 +11,7 @@ import {
 } from "@mui/material";
 import React, {
   forwardRef,
+  useEffect,
   useImperativeHandle,
   useRef,
   useState,
@@ -22,14 +22,19 @@ const MessageInput = forwardRef((props, ref) => {
   const { loading } = props;
   const theme = useTheme();
   const [showProjectIcon, setShowProjectIcon] = useState(false);
-  const [playAnimation, setPlayAnimation] = useState(true);
+  const [isAnimating, setIsAnimating] = useState(false);
   const [isInputEmpty, setIsInputEmpty] = useState(true);
-
   const inputRef = useRef(null);
 
-  const handleHover = () => {
-    setPlayAnimation(false);
-  };
+  useEffect(() => {
+    if (showProjectIcon) {
+      setIsAnimating(true);
+      const timer = setTimeout(() => {
+        setIsAnimating(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [showProjectIcon]);
 
   useImperativeHandle(ref, () => ({
     getValue: () => inputRef.current.value,
@@ -50,7 +55,6 @@ const MessageInput = forwardRef((props, ref) => {
 
   const onSend = (event) => {
     event.preventDefault();
-
     handleSendMessage();
   };
 
@@ -74,10 +78,10 @@ const MessageInput = forwardRef((props, ref) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          width: "70%",
+          width: { xs: "100%", sm: "90%", md: "80%" },
           borderRadius: theme.custom.chat.inputBorderRadius,
           padding: "10px",
-          border: `1px solid `,
+          border: `1px solid`,
           borderColor: theme.palette.grey[500],
           backgroundColor: theme.palette.background.default,
         }}
@@ -110,21 +114,14 @@ const MessageInput = forwardRef((props, ref) => {
             }
             placement="top"
           >
-            <Fab
-              color="primary"
-              size="small"
+            <IconButton
+              type="submit"
               onClick={handleProjectIconClick}
-              onMouseEnter={handleHover}
-              sx={{
-                backgroundColor: theme.palette.grey[600],
-
-                animation: playAnimation
-                  ? "pulseAnimationWithColor 2s infinite"
-                  : "none",
-              }}
+              className={isAnimating ? "pulse-animation" : ""}
+              sx={{ ml: 1 }}
             >
-              <img src={codeImage} alt={"Code"} style={{ width: "100%" }} />
-            </Fab>
+              <CodeIcon />
+            </IconButton>
           </Tooltip>
         )}
         <IconButton
@@ -138,4 +135,5 @@ const MessageInput = forwardRef((props, ref) => {
     </Box>
   );
 });
+
 export default MessageInput;

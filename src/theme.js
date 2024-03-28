@@ -263,6 +263,20 @@ const lightTheme = createTheme({
             ...(props.type === "mic" && props.activate ? micAnimation : {}),
           }),
         },
+        {
+          props: { variant: "transparent" },
+          style: {
+            backgroundColor: alpha(base.grey[300], 0.8),
+            color: base.grey[900],
+            "&:hover": {
+              backgroundColor: alpha(base.grey[700], 0.8),
+              color: base.grey[200],
+            },
+            "&:disabled": {
+              color: base.grey[700],
+            },
+          },
+        },
       ],
       styleOverrides: {
         root: {
@@ -538,6 +552,21 @@ const darkTheme = createTheme({
             display: props.hide || props.loading ? "none" : "flex",
             ...(props.type === "mic" && props.activate ? micAnimation : {}),
           }),
+        },
+        {
+          props: { variant: "transparent" },
+          style: {
+            backgroundColor: alpha(base.grey[900], 0.8),
+            color: base.grey[400],
+            "&:hover": {
+              backgroundColor: alpha(base.grey[400], 0.8),
+              color: base.grey[900],
+            },
+            "&.Mui-disabled": {
+              backgroundColor: base.grey[900],
+              color: base.grey[700],
+            },
+          },
         },
       ],
       styleOverrides: {
