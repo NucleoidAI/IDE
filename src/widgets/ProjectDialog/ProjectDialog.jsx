@@ -64,17 +64,12 @@ function ProjectDialog({ handleClose, open }) {
     const projects = response.data;
 
     const projectPromises = projects.map(async (project) => {
-      if (project.serviceType === "SINGLE") {
-        const servicesResponse = await http.get(
-          `/projects/${project.id}/services`
-        );
-
-        project.description = servicesResponse.data[0].description;
+      if (project.type === "SINGLE") {
         project.type = "CLOUD";
         return project;
       }
 
-      if (project.serviceType === "MULTIPLE") {
+      if (project.type === "MULTIPLE") {
         console.log("Multiple services not supported yet");
       }
 
@@ -89,13 +84,10 @@ function ProjectDialog({ handleClose, open }) {
 
     const createdProject = {
       name: project.name,
-      serviceType: "SINGLE",
+      type: "SINGLE",
+      description: project.description,
     };
 
-    const service = {
-      description: project.description,
-      contextId: project.id,
-    };
     createdProject.service = service;
 
     const nucContext = { api, declarations, functions, types };
