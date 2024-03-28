@@ -72,6 +72,14 @@ const ProjectListItem = ({
   const { id: activeProjectId } = useParams("id");
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedAction, setSelectedAction] = useState("default");
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleUpload = (projectId) => {
+    setIsUploading(true);
+    uploadToCloud(projectId).finally(() => {
+      setIsUploading(false);
+    });
+  };
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -133,10 +141,10 @@ const ProjectListItem = ({
                 <IconButton
                   aria-haspopup="true"
                   onClick={() => {
-                    uploadToCloud(project.id);
+                    handleUpload(project.id);
                   }}
                 >
-                  {!loading ? <CloudUploadIcon /> : <CircularProgress />}
+                  {!isUploading ? <CloudUploadIcon /> : <CircularProgress />}
                 </IconButton>
               )}
               <IconButton aria-haspopup="true" onClick={handleClick}>
