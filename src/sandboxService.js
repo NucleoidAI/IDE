@@ -8,6 +8,10 @@ let appUrl = "";
 let terminalUrl = "";
 let landingLevel = 0;
 
+const getLandingLevel = () => {
+  return landingLevel;
+};
+
 const createSandbox = async (context) => {
   try {
     const response = await http(`${config.sandbox}/openapi`, {
@@ -82,6 +86,7 @@ const setLandingLevel = (level) => {
 
 const sandboxService = {
   createSandbox,
+  getLandingLevel,
   getAppUrl,
   getTerminalUrl,
   get,
