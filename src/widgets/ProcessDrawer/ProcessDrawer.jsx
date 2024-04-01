@@ -13,7 +13,7 @@ import { deepCopy } from "../../utils/DeepCopy";
 import { getTypes } from "../../lib/TypeScript";
 import gtag from "../../gtag";
 import { mapToContext } from "../../utils/Parser";
-import onboardDispatcher from "../../components/Onboard/onboardDispatcher";
+import sandboxService from "../../sandboxService";
 import scheduler from "../../connectionScheduler";
 import service from "../../service";
 import { toOpenApi } from "../../adapters/openapi/adapter";
@@ -261,42 +261,30 @@ function ApiButton() {
     }
   }, [run.status]); //eslint-disable-line
 
-  const runSandbox = async (context) => {
-    const types = [...(context?.types || []), ...getTypes(context?.functions)];
+  const runSandbox = async (context, state) => {
+    const types = [...(context?.types || []), ...getTypes(state.functions)];
 
     setLoading(true);
     try {
       const openapi = {
         openapi: {
           ...toOpenApi({ api: context.api, types }),
-          functions: context.functions,
+          "x-nuc-functions": context.functions,
+          "x-nuc-declerations": context.declarations,
+          "x-nuc-action": "start",
         },
       };
-      console.log(openapi);
-      const { data } = await service.createSandbox(openapi);
+
+      await sandboxService.createSandbox(openapi);
+
       setLoading(false);
-      setTimeout(() => {
-        if (Settings.landing().level < 2) {
-          onboardDispatcher({ level: 2 });
-        }
-      }, 0);
-
       gtag("event", "run_sandbox");
-
-      if (data.id) {
-        Settings.sandbox.sandboxID(data.id);
-        Settings.url.app(`https://nucleoid.com/sandbox/${data.id}/`);
-        Settings.url.terminal(
-          `https://nucleoid.com/sandbox/terminal/${data.id}`
-        );
-        scheduler.start();
-        publish("SWAGGER_DIALOG", { open: true });
-      }
+      publish("SWAGGER_DIALOG", { open: true });
     } catch {
       setLoading(false);
       publish("GLOBAL_MESSAGE", {
         status: true,
-        message: "There is a problem communicating the sandbox",
+        message: "There is a problem communicating with the sandbox",
         severity: "info",
       });
     }
