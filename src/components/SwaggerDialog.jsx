@@ -44,6 +44,11 @@ export default function SwaggerDialog() {
       open={swagger.open || false}
       onClose={handleClose}
       TransitionComponent={Transition}
+      PaperProps={{
+        sx: {
+          borderRadius: "0 !important",
+        },
+      }}
     >
       <AppBar
         sx={{
