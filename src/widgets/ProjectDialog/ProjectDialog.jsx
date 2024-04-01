@@ -1,16 +1,23 @@
 import AddNewButton from "./components/AddNewButton";
-import Dialog from "@mui/material/Dialog";
 import InlineCreationForm from "./components/InlineCreationForm";
 import ProjectList from "./components/ProjectList";
 import React from "react";
 import State from "../../state";
 import WorkspacesIcon from "@mui/icons-material/Workspaces";
+import config from "../../../config";
 import http from "../../http";
 import { publish } from "@nucleoidai/react-event";
 import service from "../../service";
 import { storage } from "@nucleoidjs/webstorage";
 
-import { DialogContent, DialogTitle } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Typography,
+} from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -263,6 +270,63 @@ function ProjectDialog({ handleClose, open }) {
     });
   };
 
+  const getCodeFromGithub = () => {
+    const popup = window.open(
+      `${config.oauth.oauthUrl}?scope=user&client_id=${config.oauth.clientId}&redirect_uri=${config.oauth.redirectUri}`,
+      "target_blank",
+      "toolbar=yes,scrollbars=yes,resizable=yes,top=50,left=50,width=650,height=750"
+    );
+
+    return new Promise((resolve, reject) => {
+      const timer = setInterval(function () {
+        if (popup.closed) {
+          clearInterval(timer);
+          if (popup.location.href) {
+            resolve(popup.location.href.split("?code=")[1]);
+          } else {
+            reject({ error: "POPUP_FORCE_CLOSED" });
+          }
+        }
+      }, 700);
+    });
+  };
+
+  const oauth = async (body) => {
+    try {
+      const response = await fetch(config.oauth.accessTokenUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          code: body.code,
+        }),
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("OAuth error:", error);
+      throw error;
+    }
+  };
+
+  const handleLogin = async () => {
+    try {
+      const code = await getCodeFromGithub();
+      console.log("Code:", code);
+      const tokenRefreshResponse = await oauth({
+        code: code,
+        grant_type: "authorization_code",
+        redirect_uri: config.oauth.redirectUri,
+      });
+      const accessToken = tokenRefreshResponse.accessToken;
+      storage.set("accessToken", accessToken);
+      console.log("Login successful: ", accessToken);
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
+
   const onDialogClose = () => {
     handleClose();
     setSearchQuery("");
@@ -276,11 +340,18 @@ function ProjectDialog({ handleClose, open }) {
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
-          justifyContent: "start",
+          justifyContent: "space-between",
         }}
       >
-        <WorkspacesIcon sx={{ mx: 1 }} />
-        Projects
+        <Box display="flex" alignItems="center">
+          <WorkspacesIcon sx={{ mx: 1 }} />
+          <Typography variant="h6" component="div">
+            Projects
+          </Typography>
+        </Box>
+        <Button variant="contained" onClick={handleLogin}>
+          Login
+        </Button>
       </DialogTitle>
       <DialogContent>
         <ProjectList
