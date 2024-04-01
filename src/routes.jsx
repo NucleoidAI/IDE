@@ -2,6 +2,7 @@ import API from "./pages/ide/API";
 import Chat from "./pages/chat";
 import Functions from "./pages/ide/Functions";
 import Logic from "./pages/ide/Logic";
+import Login from "./pages/ide/login";
 import Logs from "./pages/ide/Logs";
 import Mobile from "./pages/ide/Mobile";
 import Query from "./pages/ide/Query";
@@ -84,6 +85,7 @@ const routes = [
     element: <Mobile />,
   },
   { path: "/graph" },
+  { path: "/login", element: <Login /> },
 ];
 
 export default routes;
