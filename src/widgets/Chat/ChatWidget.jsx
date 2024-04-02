@@ -2,6 +2,7 @@ import "./ChatMainArea.css";
 
 import ChatDisplay from "./ChatDisplay";
 import MessageInput from "./MessageInput";
+import Settings from "../../settings";
 // import SuggestionsOverlay from "./SuggestionsOverlay";
 import { publish } from "@nucleoidai/react-event";
 import { storage } from "@nucleoidjs/webstorage";
@@ -17,6 +18,7 @@ const ChatWidget = () => {
   const { chatId } = useParams("chatId");
 
   const [loading, setLoading] = useState(false);
+  const [showConvertToProject, setShowConvertToProject] = useState(false);
   const messageInputRef = useRef();
   const userMessageRef = useRef("");
   const [chat, sendMessage] = useChat();
@@ -43,6 +45,17 @@ const ChatWidget = () => {
     loadChat();
     // eslint-disable-next-line
   }, [chatId]);
+
+  useEffect(() => {
+    if (
+      Settings.landing().level === 0 &&
+      chat &&
+      chat.messages.filter((message) => message.code).length >= 3
+    ) {
+      setShowConvertToProject(true);
+      Settings.landing({ level: 1 });
+    }
+  }, [chat]);
 
   const handleSendMessage = async () => {
     setLoading(true);
@@ -96,6 +109,7 @@ const ChatWidget = () => {
       <MessageInput
         handleSendMessage={handleSendMessage}
         ref={messageInputRef}
+        showConvertToProject={showConvertToProject}
         loading={loading}
       />
     </Box>
