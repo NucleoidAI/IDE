@@ -18,8 +18,7 @@ const ChatWidget = () => {
   const { chatId } = useParams("chatId");
 
   const [loading, setLoading] = useState(false);
-  const [showConvertToProject, setShowConvertToProject] = useState(false);
-  const landingLevel = useEvent("LANDING_LEVEL_ACHIEVED", 0);
+  const [landingLevel] = useEvent("LANDING_LEVEL_ACHIEVED", { level: 0 });
   const messageInputRef = useRef();
   const userMessageRef = useRef("");
   const [chat, sendMessage] = useChat();
@@ -28,6 +27,7 @@ const ChatWidget = () => {
     type: "",
     content: "",
   });
+
   const loadChat = async () => {
     if (chatId) {
       // TODO Verify chat is valid in local storage
@@ -99,7 +99,7 @@ const ChatWidget = () => {
       <MessageInput
         handleSendMessage={handleSendMessage}
         ref={messageInputRef}
-        showConvertToProject={landingLevel === 1}
+        showConvertToProject={landingLevel.level === 1}
         loading={loading}
       />
     </Box>

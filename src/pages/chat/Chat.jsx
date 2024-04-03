@@ -9,7 +9,8 @@ import { publish, useEvent } from "@nucleoidai/react-event";
 function Chat() {
   const [event] = useEvent("WIDGET_LOADED", { name: null });
 
-  onboardingModule();
+  const onboarding = onboardingModule();
+  onboarding.init();
 
   useEffect(() => {
     if (event.name) {
