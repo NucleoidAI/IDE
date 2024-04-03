@@ -1,7 +1,15 @@
+import CodeIcon from "@mui/icons-material/Code";
 import styles from "./styles.js";
 import { useEvent } from "@nucleoidai/react-event";
 import { useNavigate } from "react-router-dom";
-import { Box, ListItemButton, ListItemText } from "@mui/material";
+
+import {
+  Box,
+  IconButton,
+  ListItemButton,
+  ListItemText,
+  Tooltip,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 function ChatHistory() {
@@ -12,12 +20,15 @@ function ChatHistory() {
 
   const handleChatClick = (chatId) => navigate(`/chat/${chatId}`);
 
+  const handleConvertToProject = (chatId) => {
+    console.log(`Converting chat ${chatId} to a project`);
+  };
+
   useEffect(() => {
     const menu = [];
 
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-
       if (key.startsWith("ide.chat.sessions.")) {
         try {
           const { id, title, created, messages } = JSON.parse(
@@ -53,6 +64,14 @@ function ChatHistory() {
                   },
                 }}
               />
+              <Tooltip title="Convert to Project">
+                <IconButton
+                  size="small"
+                  onClick={() => handleConvertToProject(chat.id)}
+                >
+                  <CodeIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
             </ListItemButton>
           </React.Fragment>
         ))}
