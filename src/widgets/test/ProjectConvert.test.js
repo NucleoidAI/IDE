@@ -1,7 +1,8 @@
 import {
   createAPI,
-  extractCodeSnippet,
-  extractCodeSnippets,
+  createCodeSnippets,
+  createObject,
+  extractCodeBlocks,
   typeCheck,
 } from "../../utils/ConvertProject";
 
@@ -36,135 +37,252 @@ describe("Project Converter", () => {
     });
   });
 
-  describe("extractCodeSnippet", () => {
-    test("should extract a function code snippet", () => {
+  describe("createObject", () => {
+    test("should create a declaration object from a declaration snippet", () => {
+      const declarationSnippet = `$Human.mortal = true;`;
+      const expectedDeclaration = {
+        description: "",
+        summary: "",
+        definition: declarationSnippet,
+      };
+      expect(createObject(declarationSnippet)).toEqual(expectedDeclaration);
+    });
+
+    test("should create a function object from a function snippet", () => {
       const functionSnippet = `function greet(name: string) {
         return \`Hello, \${name}!\`;
       }`;
-      const messageContent = "Here's a function to greet someone:";
       const expectedFunction = {
         path: "",
         params: [],
         type: "FUNCTION",
         definition: functionSnippet,
       };
-      expect(extractCodeSnippet(functionSnippet, messageContent)).toEqual(
-        expectedFunction
-      );
+      expect(createObject(functionSnippet)).toEqual(expectedFunction);
     });
 
-    test("should extract a class code snippet with constructor params", () => {
-      const classSnippet = `class Human {
-        name: string;
-        constructor(name: string) {
-          this.name = name;
+    test("should handle a function snippet with a class definition", () => {
+      const functionSnippet = `
+        class Human {
+          name: string;
+          constructor(name: string) {
+            this.name = name;
+          }
         }
-      }`;
-      const messageContent = "Here's a class definition for Human:";
-      const expectedClass = {
+      `;
+      const expectedFunction = {
         path: "Human",
         params: ["name: string"],
         type: "CLASS",
-        definition: classSnippet,
+        definition: functionSnippet,
       };
-      expect(extractCodeSnippet(classSnippet, messageContent)).toEqual(
-        expectedClass
-      );
-    });
-    test("should extract a declaration code snippet", () => {
-      const declarationSnippet = `use declarative;
-      $Human.mortal = true;`;
-      const messageContent = "And here's a declaration:";
-      const expectedDeclaration = {
-        description: messageContent,
-        summary: messageContent,
-        definition: declarationSnippet,
-      };
-      expect(extractCodeSnippet(declarationSnippet, messageContent)).toEqual(
-        expectedDeclaration
-      );
+      expect(createObject(functionSnippet)).toEqual(expectedFunction);
     });
 
-    test("should return null for an unknown code snippet type", () => {
-      const unknownSnippet = "invalid code snippet";
-      const messageContent = "An unknown code snippet:";
-      expect(extractCodeSnippet(unknownSnippet, messageContent)).toBeNull();
+    test("should handle a function snippet with a regular function definition", () => {
+      const functionSnippet = `
+        function sayHello(name: string) {
+          console.log(\`Hello, \${name}!\`);
+        }
+      `;
+      const expectedFunction = {
+        path: "",
+        params: [],
+        type: "FUNCTION",
+        definition: functionSnippet,
+      };
+      expect(createObject(functionSnippet)).toEqual(expectedFunction);
+    });
+
+    test("should handle an invalid code snippet", () => {
+      const invalidSnippet = "invalid code";
+      expect(createObject(invalidSnippet)).toBeNull();
     });
   });
 
-  describe("extractCodeSnippets", () => {
-    test("should extract functions, classes, and declarations from messages", () => {
-      const messages = [
-        {
-          role: "ASSISTANT",
-          content: "Here's a function to greet someone:",
-          code: `function greet(name: string) {
-            return \`Hello, \${name}!\`;
-          }`,
-        },
-        {
-          role: "ASSISTANT",
-          content: "And here's a declaration:",
-          code: `use declarative;
-          $Human.mortal = true;`,
-        },
-        {
-          role: "ASSISTANT",
-          content: "Finally, here's a class definition:",
-          code: `class Human {
-            name: string;
-            constructor(name: string) {
-              this.name = name;
-            }
-          }`,
-        },
-      ];
-      const expectedFunctions = [
-        {
-          path: "",
-          params: [],
-          type: "FUNCTION",
-          definition: expect.stringContaining("function greet(name: string)"),
-        },
-        {
-          path: "Human",
-          params: ["name: string"],
-          type: "CLASS",
-          definition: expect.stringContaining("class Human"),
-        },
-      ];
-      const expectedDeclarations = [
-        {
-          description: "And here's a declaration:",
-          summary: "And here's a declaration:",
-          definition: expect.stringContaining("use declarative;"),
-        },
-      ];
-      const result = extractCodeSnippets(messages);
-      expect(result.functions).toEqual(
-        expect.arrayContaining(expectedFunctions)
-      );
-      expect(result.declarations).toEqual(
-        expect.arrayContaining(expectedDeclarations)
-      );
+  describe("createCodeSnippets", () => {
+    test("should correctly separate declaration snippets and function snippets from a code block with the 'use declarative' directive", () => {
+      const codeBlock = `use declarative;
+$Human.mortal = true;
+function greet(name: string) {
+return \`Hello, \${name}!\`;
+}`;
+      const expectedResult = {
+        declarationSnippets: ["$Human.mortal = true;"],
+        functionSnippets: [
+          `function greet(name: string) {
+return \`Hello, \${name}!\`;
+}`,
+        ],
+      };
+      expect(createCodeSnippets(codeBlock)).toEqual(expectedResult);
     });
 
-    test("should handle messages with no code snippets", () => {
+    test("should correctly separate declaration snippets and function snippets from a code block with the 'use imperative' directive or no directive", () => {
+      const codeBlock = `
+use imperative;
+let x = 10;
+function double(num: number) {
+return num * 2;
+}`;
+      const expectedResult = {
+        declarationSnippets: [],
+        functionSnippets: [
+          `function double(num: number) {
+return num * 2;
+}`,
+        ],
+      };
+      expect(createCodeSnippets(codeBlock)).toEqual(expectedResult);
+    });
+
+    test("should handle a code block with only function snippets", () => {
+      const codeBlock = `
+function greet(name: string) {
+return \`Hello, \${name}!\`;
+}
+function double(num: number) {
+return num * 2;
+}`;
+      const expectedResult = {
+        declarationSnippets: [],
+        functionSnippets: [
+          `function greet(name: string) {
+return \`Hello, \${name}!\`;
+}`,
+          `function double(num: number) {
+return num * 2;
+}`,
+        ],
+      };
+      expect(createCodeSnippets(codeBlock)).toEqual(expectedResult);
+    });
+
+    test("should handle a code block with both declaration snippets and function snippets", () => {
+      const codeBlock = `
+use declarative;
+$Human.mortal = true;
+function greet(name: string) {
+return \`Hello, \${name}!\`;
+}
+$Human.age = 0;
+function double(num: number) {
+return num * 2;
+}`;
+      const expectedResult = {
+        declarationSnippets: ["$Human.mortal = true;", "$Human.age = 0;"],
+        functionSnippets: [
+          `function greet(name: string) {
+return \`Hello, \${name}!\`;
+}`,
+          `function double(num: number) {
+return num * 2;
+}`,
+        ],
+      };
+      expect(createCodeSnippets(codeBlock)).toEqual(expectedResult);
+    });
+
+    test("should correctly extract code blocks from messages", () => {
       const messages = [
         {
-          role: "USER",
-          content: "Hello!",
+          content: "Here's a code block:",
+          code: `
+use declarative;
+$Human.mortal = true;
+function greet(name: string) {
+return \`Hello, \${name}!\`;
+}`,
         },
         {
-          role: "ASSISTANT",
-          content: "Hi there!",
+          content: "Message block without code",
+        },
+        {
+          content: "Another code block:",
+          code: `
+use imperative;
+let x = 10;
+function double(num: number) {
+return num * 2;
+}`,
         },
       ];
-      const expectedResult = {
-        functions: [],
-        declarations: [],
-      };
-      expect(extractCodeSnippets(messages)).toEqual(expectedResult);
+      const expectedCodeBlocks = [
+        `use declarative;
+$Human.mortal = true;
+function greet(name: string) {
+return \`Hello, \${name}!\`;
+}`,
+        `use imperative;
+let x = 10;
+function double(num: number) {
+return num * 2;
+}`,
+      ];
+
+      const actualCodeBlocks = extractCodeBlocks(messages).map((code) =>
+        code.trim()
+      );
+
+      expect(actualCodeBlocks).toEqual(expectedCodeBlocks);
+    });
+  });
+
+  describe("extractCodeBlocks", () => {
+    test("should correctly extract code blocks from messages", () => {
+      const messages = [
+        {
+          content: "Here's a code block:",
+          code: `
+  use declarative;
+  $Human.mortal = true;
+  function greet(name: string) {
+    return \`Hello, \${name}!\`;
+  }
+          `,
+        },
+        {
+          content: "Message block without code",
+        },
+        {
+          content: "Another code block:",
+          code: `
+  use imperative;
+  let x = 10;
+  function double(num: number) {
+    return num * 2;
+  }
+          `,
+        },
+      ];
+      const expectedCodeBlocks = [
+        `use declarative;
+  $Human.mortal = true;
+  function greet(name: string) {
+    return \`Hello, \${name}!\`;
+  }`,
+        `use imperative;
+  let x = 10;
+  function double(num: number) {
+    return num * 2;
+  }`,
+      ];
+
+      const actualCodeBlocks = extractCodeBlocks(messages).map((code) =>
+        code.trim()
+      );
+
+      expect(actualCodeBlocks).toEqual(expectedCodeBlocks);
+    });
+
+    test("should handle messages with no code blocks", () => {
+      const messages = [
+        {
+          content: "Just a regular message",
+        },
+      ];
+      const expectedResult = [];
+      expect(extractCodeBlocks(messages)).toEqual(expectedResult);
     });
   });
 

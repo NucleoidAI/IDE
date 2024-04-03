@@ -10,22 +10,20 @@ Handlebars.registerHelper("camelCase", function (str) {
 Handlebars.registerHelper("encloseBraces", function (str) {
   return `{${str}Id}`;
 });
+
+function createASTFromCode(code) {
+  return ts.createSourceFile("temp.ts", code, ts.ScriptTarget.Latest, true);
+}
+
 function typeCheck(codeSnippet) {
   try {
-    const sourceFile = ts.createSourceFile(
-      "temp.ts",
-      codeSnippet,
-      ts.ScriptTarget.Latest,
-      true
-    );
-
-    let result = null;
+    const sourceFile = createASTFromCode(codeSnippet);
 
     const visit = (node) => {
       if (ts.isFunctionDeclaration(node)) {
-        result = "function";
+        return "function";
       } else if (ts.isClassDeclaration(node)) {
-        result = "class";
+        return "class";
       } else if (
         ts.isVariableStatement(node) ||
         (ts.isExpressionStatement(node) &&
@@ -33,23 +31,21 @@ function typeCheck(codeSnippet) {
             node.expression.expression.text === "use") ||
             ts.isBinaryExpression(node.expression)))
       ) {
-        result = "declaration";
+        return "declaration";
       }
 
-      if (result === null) {
-        ts.forEachChild(node, visit);
-      }
+      return ts.forEachChild(node, visit);
     };
 
-    visit(sourceFile);
+    const result = visit(sourceFile);
 
-    return result;
+    return result !== undefined ? result : null;
   } catch (error) {
     return null;
   }
 }
 
-function extractCodeSnippet(codeSnippet, messageContent) {
+function createObject(codeSnippet) {
   const codeType = typeCheck(codeSnippet);
 
   if (codeType === "function") {
@@ -71,8 +67,8 @@ function extractCodeSnippet(codeSnippet, messageContent) {
     };
   } else if (codeType === "declaration") {
     return {
-      description: messageContent,
-      summary: messageContent,
+      description: "",
+      summary: "",
       definition: codeSnippet,
     };
   }
@@ -80,24 +76,28 @@ function extractCodeSnippet(codeSnippet, messageContent) {
   return null;
 }
 
-function extractConstructorParams(classDefinition) {
-  const sourceFile = ts.createSourceFile(
-    "temp.ts",
-    classDefinition,
-    ts.ScriptTarget.Latest,
-    true
-  );
+function createCodeSnippets(codeBlock) {
+  const declarationSnippets = [];
+  const functionSnippets = [];
 
-  let constructorParams = [];
+  const sourceFile = createASTFromCode(codeBlock);
+
+  const firstLine = sourceFile.getChildAt(0).getFullText(sourceFile).trim();
+  const isDeclarative = firstLine.includes("declarative");
 
   function visit(node) {
-    if (ts.isConstructorDeclaration(node)) {
-      const params = node.parameters.map((param) => {
-        const name = param.name.getText(sourceFile);
-        const type = param.type ? param.type.getText(sourceFile) : "any";
-        return `${name}: ${type}`;
-      });
-      constructorParams = params;
+    if (isDeclarative && ts.isExpressionStatement(node)) {
+      const expression = node.expression;
+      if (
+        ts.isBinaryExpression(expression) &&
+        expression.left.getText(sourceFile).startsWith("$")
+      ) {
+        declarationSnippets.push(node.getText(sourceFile));
+      }
+    } else {
+      if (ts.isFunctionDeclaration(node) || ts.isClassDeclaration(node)) {
+        functionSnippets.push(node.getText(sourceFile));
+      }
     }
 
     ts.forEachChild(node, visit);
@@ -105,27 +105,22 @@ function extractConstructorParams(classDefinition) {
 
   visit(sourceFile);
 
-  return constructorParams;
+  return {
+    declarationSnippets,
+    functionSnippets,
+  };
 }
 
-function extractCodeSnippets(messages) {
-  const functions = [];
-  const declarations = [];
+function extractCodeBlocks(messages) {
+  const codeBlocks = [];
 
   messages.forEach((message) => {
     if (message.code) {
-      const codeSnippet = extractCodeSnippet(message.code, message.content);
-      if (codeSnippet) {
-        if (codeSnippet.type === "FUNCTION" || codeSnippet.type === "CLASS") {
-          functions.push(codeSnippet);
-        } else {
-          declarations.push(codeSnippet);
-        }
-      }
+      codeBlocks.push(message.code);
     }
   });
 
-  return { functions, declarations };
+  return codeBlocks;
 }
 
 function createAPI(functions) {
@@ -166,34 +161,86 @@ function createAPI(functions) {
 }
 
 function extractClassName(classDefinition) {
-  const match = classDefinition.match(/class\s+(\w+)/);
-  return match ? match[1] : "";
+  const sourceFile = createASTFromCode(classDefinition);
+
+  let className = "";
+
+  function visit(node) {
+    if (ts.isClassDeclaration(node)) {
+      className = node.name.getText(sourceFile);
+    }
+
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
+
+  return className;
+}
+
+function extractConstructorParams(classDefinition) {
+  const sourceFile = createASTFromCode(classDefinition);
+
+  let constructorParams = [];
+
+  function visit(node) {
+    if (ts.isConstructorDeclaration(node)) {
+      const params = node.parameters.map((param) => {
+        const name = param.name.getText(sourceFile);
+        const type = param.type ? param.type.getText(sourceFile) : "any";
+        return `${name}: ${type}`;
+      });
+      constructorParams = params;
+    }
+
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
+
+  return constructorParams;
 }
 
 function extractProperties(classDefinition) {
-  const propertySet = new Set();
-  const properties = [];
-  const lines = classDefinition.split("\n");
+  const sourceFile = createASTFromCode(classDefinition);
 
-  lines.forEach((line) => {
-    const match = line.match(/(\w+):\s*(\w+)/);
-    if (match) {
-      const name = match[1];
-      const type = match[2];
-      const propertyString = `${name}:${type}`;
-      if (!propertySet.has(propertyString)) {
-        propertySet.add(propertyString);
-        properties.push({ name, type });
-      }
+  const properties = [];
+
+  function visit(node) {
+    if (ts.isPropertyDeclaration(node)) {
+      const name = node.name.getText(sourceFile);
+      const type = node.type ? node.type.getText(sourceFile) : "any";
+      properties.push({ name, type });
     }
-  });
+
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
 
   return properties;
 }
 
 function exportProject(chat) {
   const { id, messages } = chat;
-  const { functions, declarations } = extractCodeSnippets(messages);
+
+  const codeBlocks = extractCodeBlocks(messages);
+
+  const functionSnippets = [];
+  const declarationSnippets = [];
+
+  codeBlocks.forEach((codeBlock) => {
+    const { functionSnippets: functions, declarationSnippets: declarations } =
+      createCodeSnippets(codeBlock);
+    functionSnippets.push(...functions);
+    declarationSnippets.push(...declarations);
+  });
+
+  const functions = functionSnippets.map((snippet) => createObject(snippet));
+  const declarations = declarationSnippets.map((snippet) =>
+    createObject(snippet)
+  );
+
   const api = createAPI(functions);
 
   const project = {
@@ -219,8 +266,9 @@ function exportProject(chat) {
 
 export {
   typeCheck,
-  extractCodeSnippet,
-  extractCodeSnippets,
+  createObject,
+  createCodeSnippets,
+  extractCodeBlocks,
   createAPI,
   exportProject,
 };
