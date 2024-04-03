@@ -1,7 +1,5 @@
 import expert from "../../http/expert.js";
-import { storage } from "@nucleoidjs/webstorage";
-
-import { publish, useEvent } from "@nucleoidjs/react-event";
+import { publish, useEvent } from "@nucleoidai/react-event";
 import { useEffect, useState } from "react";
 
 const useChat = () => {
@@ -30,12 +28,10 @@ const useChat = () => {
         assistantMessage,
       ];
       const updatedChat = { ...chat, messages: updatedMessages };
-
-      if (chat.messages.length === 0) {
-        updatedChat.title = assistantMessage.content;
-      }
-
-      storage.set("ide", "chat", "sessions", chat.id, updatedChat);
+      localStorage.setItem(
+        `ide.chat.sessions.${chat.id}`,
+        JSON.stringify(updatedChat)
+      );
 
       setChat(updatedChat);
     } catch ({ response }) {

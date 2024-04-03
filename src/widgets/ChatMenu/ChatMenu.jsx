@@ -9,7 +9,8 @@ import SmallLogo from "../../components/SmallLogo";
 import { drawerWidth } from "../../config";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
-import { ArrowForwardIos, DensityMedium } from "@mui/icons-material/";
+
+import { ArrowForwardIos, DensityMedium, Menu } from "@mui/icons-material/";
 import {
   Box,
   Button,
@@ -26,13 +27,77 @@ function ChatMenu(props) {
   const [openMd, setOpenMd] = React.useState(false);
   const [openLg, setOpenLg] = React.useState(true);
   const matchDownMD = useMediaQuery(theme.breakpoints.down("lg"));
+  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleCreateNewChat = () => navigate("/chat");
   const handleClose = () => setOpenMd(false);
 
   return (
     <Box component="nav" sx={{ flexShrink: { md: 0 } }}>
-      {matchDownMD ? (
+      {matchDownSM ? (
+        <>
+          <Fab
+            variant="button"
+            onClick={() => setOpenMd(true)}
+            sx={{ position: "fixed", top: 16, left: 16, zIndex: 1200 }}
+          >
+            <Menu />
+          </Fab>
+          <Drawer
+            open={openMd}
+            onClose={handleClose}
+            ModalProps={{ keepMounted: true }}
+            variant="temporary"
+            sx={{
+              display: { xs: "block", sm: "none" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+                borderRight: `1px solid ${theme.palette.divider}`,
+                backgroundImage: "none",
+                boxShadow: "inherit",
+              },
+            }}
+          >
+            <List>
+              <ListItem>
+                <Logo title={props.title} />
+                <IconButton
+                  variant={"contained"}
+                  onClick={() => setOpenMd(false)}
+                >
+                  <DensityMedium
+                    fontSize="medium"
+                    sx={{ fill: theme.palette.custom.grey }}
+                  />
+                </IconButton>
+              </ListItem>
+              <br />
+            </List>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Fab
+                variant="button"
+                edge="start"
+                size="small"
+                onClick={handleCreateNewChat}
+                sx={{ alignSelf: "center", my: 2 }}
+              >
+                <AddIcon />
+              </Fab>
+            </Box>
+            <ChatHistory />
+            <Box sx={{ height: "100%" }} />
+
+            <Settings size={"large"} />
+          </Drawer>
+        </>
+      ) : matchDownMD ? (
         <>
           {!openMd && (
             <Drawer

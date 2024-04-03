@@ -4,20 +4,19 @@ import ChatDisplay from "./ChatDisplay";
 import MessageInput from "./MessageInput";
 import { exportProject } from "../../utils/ConvertProject";
 // import SuggestionsOverlay from "./SuggestionsOverlay";
-import { publish } from "@nucleoidjs/react-event";
+import { publish } from "@nucleoidai/react-event";
 import { storage } from "@nucleoidjs/webstorage";
 import useChat from "./useChat";
-import { useEvent } from "@nucleoidjs/react-event";
-import { v4 as uuid } from "uuid";
+import { useEvent } from "@nucleoidai/react-event";
+import { useParams } from "react-router-dom";
 
 import { Box, useTheme } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 
-const Chat = () => {
+const ChatWidget = () => {
   const theme = useTheme();
-  const navigate = useNavigate();
   const { chatId } = useParams("chatId");
+
   const [loading, setLoading] = useState(false);
   const messageInputRef = useRef();
   const userMessageRef = useRef("");
@@ -27,25 +26,24 @@ const Chat = () => {
     type: "",
     content: "",
   });
+  const loadChat = async () => {
+    if (chatId) {
+      // TODO Verify chat is valid in local storage
+
+      // Requires async call
+      const session = await storage.get("ide", "chat", "sessions", chatId);
+      publish("CHAT_SELECTED", session);
+
+      publish("WIDGET_LOADED", {
+        name: "ChatWidget",
+      });
+    }
+  };
 
   useEffect(() => {
-    if (!chatId) {
-      const chatId = uuid();
-
-      storage.set("ide", "chat", "sessions", chatId, {
-        id: chatId,
-        title: "New Chat",
-        messages: [],
-        created: Date.now(),
-      });
-
-      navigate(`/chat/${chatId}`);
-    } else {
-      // TODO Verify chat is valid in local storage
-      const session = storage.get("ide", "chat", "sessions", chatId);
-      publish("CHAT_SELECTED", session);
-    }
-  }, [chatId, navigate]);
+    loadChat();
+    // eslint-disable-next-line
+  }, [chatId]);
 
   const handleSendMessage = async () => {
     setLoading(true);
@@ -110,4 +108,4 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default ChatWidget;

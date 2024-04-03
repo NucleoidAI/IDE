@@ -5,7 +5,7 @@ function ChatLayout({ content }) {
   return (
     <Box
       sx={{
-        height: "100vh",
+        height: "100%",
         display: "flex",
         overflow: "hidden",
         position: "relative",

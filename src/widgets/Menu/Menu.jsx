@@ -13,7 +13,7 @@ import Status from "../Status";
 import { drawerWidth } from "../../config";
 import settings from "../../settings";
 import styles from "./styles";
-import { useEvent } from "@nucleoidjs/react-event";
+import { useEvent } from "@nucleoidai/react-event";
 import { useTheme } from "@mui/material/styles";
 
 import { ArrowForwardIos, DensityMedium } from "@mui/icons-material/";
