@@ -2,7 +2,7 @@ import "./ChatMainArea.css";
 
 import ChatDisplay from "./ChatDisplay";
 import MessageInput from "./MessageInput";
-// import SuggestionsOverlay from "./SuggestionsOverlay";
+import SuggestionsOverlay from "./SuggestionsOverlay";
 import { publish } from "@nucleoidai/react-event";
 import { storage } from "@nucleoidjs/webstorage";
 import useChat from "./useChat";
@@ -51,12 +51,18 @@ const ChatWidget = () => {
     userMessageRef.current = userMessage;
     messageInputRef.current.clear();
 
-    await sendMessage(userMessage, setLoading);
+    await sendMessage(userMessage);
 
     if (first) {
       publish("CHAT_INITIATED", chat.id);
     }
 
+    setLoading(false);
+  };
+  const handleSuggestionClick = async (suggestion) => {
+    setLoading(true);
+    userMessageRef.current = suggestion.summary;
+    await sendMessage(suggestion.summary);
     setLoading(false);
   };
 
@@ -93,6 +99,13 @@ const ChatWidget = () => {
         error={error}
         refreshChat={refreshChat}
       />
+
+      <SuggestionsOverlay
+        onSuggestionClick={handleSuggestionClick}
+        chat={chat}
+        loading={loading}
+      />
+
       <MessageInput
         handleSendMessage={handleSendMessage}
         ref={messageInputRef}

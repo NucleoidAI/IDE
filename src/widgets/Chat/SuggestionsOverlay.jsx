@@ -1,24 +1,89 @@
-import React from "react";
+import getSuggestions from "../../lib/SuggestionHelper";
 
 import { Box, Button, Stack, Typography, useTheme } from "@mui/material";
+import React, { useEffect, useState } from "react";
 
-const suggestions = [
+const initialSuggestions = [
   {
-    summary: "Define a new rule",
-    description: "Define a new rule for user authentication",
+    summary: "Option 1",
+    description: "Description for Option 1",
+    children: [
+      {
+        summary: "Option 1.1",
+        description: "Description for Option 1.1",
+        children: [
+          {
+            summary: "Option 1.1.1",
+            description: "Description for Option 1.1.1",
+          },
+          {
+            summary: "Option 1.1.2",
+            description: "Description for Option 1.1.2",
+          },
+        ],
+      },
+      {
+        summary: "Option 1.2",
+        description: "Description for Option 1.2",
+        children: [
+          {
+            summary: "Option 1.2.1",
+            description: "Description for Option 1.2.1",
+          },
+          {
+            summary: "Option 1.2.2",
+            description: "Description for Option 1.2.2",
+          },
+        ],
+      },
+    ],
   },
   {
-    summary: "Test the logic",
-    description: "Test the logic for the shopping cart discount",
+    summary: "Option 2",
+    description: "Description for Option 2",
+    children: [
+      {
+        summary: "Option 2.1",
+        description: "Description for Option 2.1",
+        children: [
+          {
+            summary: "Option 2.1.1",
+            description: "Description for Option 2.1.1",
+          },
+          {
+            summary: "Option 2.1.2",
+            description: "Description for Option 2.1.2",
+          },
+        ],
+      },
+      {
+        summary: "Option 2.2",
+        description: "Description for Option 2.2",
+        children: [
+          {
+            summary: "Option 2.2.1",
+            description: "Description for Option 2.2.1",
+          },
+          {
+            summary: "Option 2.2.2",
+            description: "Description for Option 2.2.2",
+          },
+        ],
+      },
+    ],
   },
 ];
 
-const SuggestionsOverlay = ({ setInputValue }) => {
+const SuggestionsOverlay = ({ onSuggestionClick, loading, chat }) => {
   const theme = useTheme();
+  const [suggestions, setSuggestions] = useState([]);
 
-  const handleSuggestionClick = (suggestion) => {
-    setInputValue(suggestion);
-  };
+  useEffect(() => {
+    if (initialSuggestions && chat) {
+      const currentSuggestions = getSuggestions(initialSuggestions, chat);
+      setSuggestions(currentSuggestions);
+    }
+  }, [initialSuggestions, chat]);
 
   return (
     <Box
@@ -33,47 +98,49 @@ const SuggestionsOverlay = ({ setInputValue }) => {
         zIndex: 1201,
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-          width: "70%",
-          gap: "10px",
-        }}
-      >
-        {suggestions.map((suggestion, index) => (
-          <Button
-            key={index}
-            variant="outlined"
-            sx={{
-              flexGrow: 1,
-              minHeight: "100px",
-              backgroundColor: theme.palette.background.default,
-              borderColor: theme.palette.grey[600],
-              "&:hover": {
-                backgroundColor: theme.palette.grey[200],
-                borderColor: theme.palette.primary.main,
-              },
-              textAlign: "left",
-              justifyContent: "flex-start",
-              borderRadius: "8px",
-              textTransform: "none",
-              fontSize: "0.875rem",
-              fontWeight: "medium",
-              width: "calc(50% - 30px)",
-            }}
-            onClick={() => handleSuggestionClick(suggestion)}
-          >
-            <Stack direction={"column"}>
-              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                {suggestion.summary}
-              </Typography>
-              <Typography>{suggestion.description}</Typography>
-            </Stack>
-          </Button>
-        ))}
-      </Box>
+      {!loading && suggestions && (
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            width: "70%",
+            gap: "10px",
+          }}
+        >
+          {suggestions.map((suggestion, index) => (
+            <Button
+              key={index}
+              variant="outlined"
+              sx={{
+                flexGrow: 1,
+                minHeight: "100px",
+                backgroundColor: theme.palette.background.default,
+                borderColor: theme.palette.grey[600],
+                "&:hover": {
+                  backgroundColor: theme.palette.grey[200],
+                  borderColor: theme.palette.primary.main,
+                },
+                textAlign: "left",
+                justifyContent: "flex-start",
+                borderRadius: "8px",
+                textTransform: "none",
+                fontSize: "0.875rem",
+                fontWeight: "medium",
+                width: "calc(50% - 30px)",
+              }}
+              onClick={() => onSuggestionClick(suggestion)}
+            >
+              <Stack direction={"column"}>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                  {suggestion.summary}
+                </Typography>
+                <Typography>{suggestion.description}</Typography>
+              </Stack>
+            </Button>
+          ))}
+        </Box>
+      )}
     </Box>
   );
 };
