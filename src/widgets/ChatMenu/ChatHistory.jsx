@@ -1,4 +1,7 @@
 import CodeIcon from "@mui/icons-material/Code";
+import DeleteIcon from "@mui/icons-material/Delete";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import ToggleableMenu from "../../components/ToggleableMenu";
 import styles from "./styles.js";
 import { useEvent } from "@nucleoidai/react-event";
 import { useNavigate } from "react-router-dom";
@@ -19,9 +22,11 @@ function ChatHistory() {
   const [chats, setChats] = useState([]);
 
   const handleChatClick = (chatId) => navigate(`/chat/${chatId}`);
-
   const handleConvertToProject = (chatId) => {
     console.log(`Converting chat ${chatId} to a project`);
+  };
+  const handleDeleteChat = (chatId) => {
+    console.log(`Deleting chat ${chatId}`);
   };
 
   useEffect(() => {
@@ -64,14 +69,24 @@ function ChatHistory() {
                   },
                 }}
               />
-              <Tooltip title="Convert to Project">
-                <IconButton
-                  size="small"
-                  onClick={() => handleConvertToProject(chat.id)}
-                >
-                  <CodeIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
+              <ToggleableMenu defaultIcon={<MoreVertIcon fontSize="small" />}>
+                <Tooltip title="Convert to Project">
+                  <IconButton
+                    size="small"
+                    onClick={() => handleConvertToProject(chat.id)}
+                  >
+                    <CodeIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Delete Chat">
+                  <IconButton
+                    size="small"
+                    onClick={() => handleDeleteChat(chat.id)}
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+              </ToggleableMenu>
             </ListItemButton>
           </React.Fragment>
         ))}
