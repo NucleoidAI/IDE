@@ -298,18 +298,17 @@ function ProjectDialog({ handleClose, open }) {
   const handleLogin = async () => {
     try {
       const code = await http.getCodeFromGithub();
-
-      const tokenRefreshResponse = await http.oauth({
+      const response = await http.oauth({
         code: code,
         grant_type: "authorization_code",
         redirect_uri: config.oauth.redirectUri,
       });
-      console.log("tokenRefreshResponse", tokenRefreshResponse);
-      const accessToken = tokenRefreshResponse.accessToken;
-      const refreshToken = tokenRefreshResponse.refreshToken;
-      storage.set("accessToken", accessToken);
-      storage.set("refreshToken", refreshToken);
-      console.log("Login successful: ", accessToken);
+      const accessToken = response.accessToken;
+      const refreshToken = response.refreshToken;
+      storage.set("oauth.token", {
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      });
       setLogin(true);
       fetchUserDetails();
     } catch (error) {

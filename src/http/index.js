@@ -10,8 +10,8 @@ const instance = axios.create({
 });
 
 const refreshAuthLogic = async (failedRequest) => {
-  const refreshToken = storage.get("refreshToken");
-  const accessToken = storage.get("accessToken");
+  const refreshToken = storage.get("oauth.token").refreshToken;
+  const accessToken = storage.get("oauth.token").accessToken;
   let tokenRefreshResponse;
   if (!refreshToken && !accessToken) {
     const code = await instance.getCodeFromGithub();
@@ -19,8 +19,10 @@ const refreshAuthLogic = async (failedRequest) => {
   } else {
     tokenRefreshResponse = await instance.oauth({ refreshToken: refreshToken });
   }
-  storage.set("accessToken", tokenRefreshResponse.accessToken);
-  storage.set("refreshToken", tokenRefreshResponse.refreshToken);
+  storage.set("oauth.token", {
+    accessToken: tokenRefreshResponse.accessToken,
+    refreshToken: tokenRefreshResponse.refreshToken,
+  });
   failedRequest.response.config.headers["Authorization"] =
     "Bearer " + tokenRefreshResponse.accessToken;
 };
@@ -67,7 +69,7 @@ instance.getCodeFromGithub = () => {
 };
 
 instance.getUserDetails = async () => {
-  const refreshToken = storage.get("refreshToken");
+  const refreshToken = storage.get("oauth.token").refreshToken;
   if (refreshToken) {
     try {
       const response = await axios.get("https://api.github.com/user", {
