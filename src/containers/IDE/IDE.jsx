@@ -181,7 +181,7 @@ function IDE() {
         return setContext(initContext(context));
       } else if (mode === "mobile") {
         return setContext("mobile");
-      } else if (mode === "main") {
+      } else {
         if (recentProject) {
           if (recentProject.type === "CLOUD") {
             navigate(`${recentProject.id}/api`);

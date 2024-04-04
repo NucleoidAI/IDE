@@ -56,7 +56,7 @@ const getMode = () => {
     } else if (id) {
       return "cloud";
     } else {
-      return "main";
+      return null;
     }
   }
 };
