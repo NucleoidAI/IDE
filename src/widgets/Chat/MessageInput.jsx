@@ -114,7 +114,7 @@ const MessageInput = forwardRef((props, ref) => {
             placement="top"
           >
             <IconButton
-              type="submit"
+              type="button"
               onClick={handleProjectIconClick}
               className={isAnimating ? "pulse-animation" : ""}
               sx={{ ml: 1 }}
