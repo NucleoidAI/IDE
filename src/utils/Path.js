@@ -35,7 +35,7 @@ const getRecentProject = () => {
     return recentProject;
   }
 
-  return false;
+  return null;
 };
 
 const getMode = () => {

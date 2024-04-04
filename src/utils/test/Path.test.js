@@ -1,6 +1,7 @@
+jest.mock("@nucleoidjs/webstorage", () => jest.fn());
 import Path from "../Path.js";
 
-test("Split Path prefix, suffix", () => {
+test("splits prefix and suffix", () => {
   const { prefix, suffix } = Path.split("/questions/reviews/{rev3}/items");
   expect(prefix).toEqual("/questions/reviews/{rev3}");
   expect(suffix).toEqual("items");
