@@ -270,51 +270,11 @@ function ProjectDialog({ handleClose, open }) {
     });
   };
 
-  const getCodeFromGithub = () => {
-    const popup = window.open(
-      `${config.oauth.oauthUrl}?scope=user&client_id=${config.oauth.clientId}&redirect_uri=${config.oauth.redirectUri}`,
-      "target_blank",
-      "toolbar=yes,scrollbars=yes,resizable=yes,top=50,left=50,width=650,height=750"
-    );
-
-    return new Promise((resolve, reject) => {
-      const timer = setInterval(function () {
-        if (popup.closed) {
-          clearInterval(timer);
-          if (popup.location.href) {
-            resolve(popup.location.href.split("?code=")[1]);
-          } else {
-            reject({ error: "POPUP_FORCE_CLOSED" });
-          }
-        }
-      }, 700);
-    });
-  };
-
-  const oauth = async (body) => {
-    try {
-      const response = await fetch(config.oauth.accessTokenUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          code: body.code,
-        }),
-      });
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("OAuth error:", error);
-      throw error;
-    }
-  };
-
   const handleLogin = async () => {
     try {
-      const code = await getCodeFromGithub();
+      const code = await http.getCodeFromGithub();
       console.log("Code:", code);
-      const tokenRefreshResponse = await oauth({
+      const tokenRefreshResponse = await http.oauth({
         code: code,
         grant_type: "authorization_code",
         redirect_uri: config.oauth.redirectUri,

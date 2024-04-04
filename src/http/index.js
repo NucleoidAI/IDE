@@ -1,4 +1,3 @@
-import Settings from "../settings.js";
 import axios from "axios";
 import axiosRetry from "axios-retry";
 import config from "../../config.js";
@@ -17,11 +16,10 @@ const refreshAuthLogic = async (failedRequest) => {
   let tokenRefreshResponse;
 
   if (!refreshToken && !accessToken) {
-    const code = await getCodeFromGithub();
-
-    tokenRefreshResponse = await oauth({ code: code });
+    const code = await instance.getCodeFromGithub();
+    tokenRefreshResponse = await instance.oauth({ code: code });
   } else {
-    tokenRefreshResponse = await oauth({ refreshToken: refreshToken });
+    tokenRefreshResponse = await instance.oauth({ refreshToken: refreshToken });
   }
 
   storage.set("accessToken", tokenRefreshResponse.accessToken);
@@ -33,10 +31,11 @@ const refreshAuthLogic = async (failedRequest) => {
 
 axiosRetry(instance, { retries: 3 });
 createAuthRefreshInterceptor(instance, refreshAuthLogic);
-axios.defaults.headers.common["Content-Type"] = "application/json";
 
-const oauth = (body) =>
-  fetch(Settings.service.auth, {
+instance.defaults.headers.common["Content-Type"] = "application/json";
+
+instance.oauth = (body) =>
+  fetch(config.oauth.accessTokenUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -44,9 +43,9 @@ const oauth = (body) =>
     body: JSON.stringify(body),
   }).then((response) => response.json());
 
-const getCodeFromGithub = () => {
+instance.getCodeFromGithub = () => {
   const popup = window.open(
-    `https://github.com/login/oauth/authorize?scope=user&client_id=${Settings.github.client_id}`,
+    `${config.oauth.oauthUrl}?scope=user&client_id=${config.oauth.clientId}`,
     "target_blank",
     "toolbar=yes,scrollbars=yes,resizable=yes,top=50,left=50,width=650,height=750"
   );
