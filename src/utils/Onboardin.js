@@ -19,7 +19,6 @@ const onboardingModule = () => {
       subscription.unsubscribe();
     }
   };
-
   const handleNewMessage = (chat) => {
     checkOnboardingStatus(chat);
   };
