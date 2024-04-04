@@ -12,19 +12,15 @@ const instance = axios.create({
 const refreshAuthLogic = async (failedRequest) => {
   const refreshToken = storage.get("refreshToken");
   const accessToken = storage.get("accessToken");
-
   let tokenRefreshResponse;
-
   if (!refreshToken && !accessToken) {
     const code = await instance.getCodeFromGithub();
     tokenRefreshResponse = await instance.oauth({ code: code });
   } else {
     tokenRefreshResponse = await instance.oauth({ refreshToken: refreshToken });
   }
-
   storage.set("accessToken", tokenRefreshResponse.accessToken);
   storage.set("refreshToken", tokenRefreshResponse.refreshToken);
-
   failedRequest.response.config.headers["Authorization"] =
     "Bearer " + tokenRefreshResponse.accessToken;
 };
@@ -41,7 +37,14 @@ instance.oauth = (body) =>
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
-  }).then((response) => response.json());
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return {
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken,
+      };
+    });
 
 instance.getCodeFromGithub = () => {
   const popup = window.open(
@@ -49,7 +52,6 @@ instance.getCodeFromGithub = () => {
     "target_blank",
     "toolbar=yes,scrollbars=yes,resizable=yes,top=50,left=50,width=650,height=750"
   );
-
   return new Promise((resolve, reject) => {
     const timer = setInterval(function () {
       if (popup.closed) {
@@ -64,6 +66,24 @@ instance.getCodeFromGithub = () => {
   });
 };
 
+instance.getUserDetails = async () => {
+  const refreshToken = storage.get("refreshToken");
+  if (refreshToken) {
+    try {
+      const response = await axios.get("https://api.github.com/user", {
+        headers: {
+          Authorization: `token ${refreshToken}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Failed to fetch user details:", error);
+      throw error;
+    }
+  }
+  return null;
+};
+
 instance.interceptors.response.use(
   (res) => res,
   (err) => {
@@ -74,7 +94,6 @@ instance.interceptors.response.use(
         severity: "error",
       });
     }
-
     return Promise.reject(err);
   }
 );

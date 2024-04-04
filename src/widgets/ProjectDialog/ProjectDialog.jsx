@@ -32,7 +32,8 @@ function applyFilter({ inputData, query }) {
 }
 
 function ProjectDialog({ handleClose, open }) {
-  const login = true;
+  const [login, setLogin] = useState(false);
+  const [user, setUser] = useState(null);
   const { id: projectId } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [formArea, setFormArea] = useState("button");
@@ -41,6 +42,30 @@ function ProjectDialog({ handleClose, open }) {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const fetchUserDetails = async () => {
+    try {
+      const userDetails = await http.getUserDetails();
+      setUser(userDetails);
+    } catch (error) {
+      console.error("Failed to fetch user details:", error);
+    }
+  };
+
+  useEffect(() => {
+    const accessToken = storage.get("accessToken");
+    if (accessToken) {
+      setLogin(true);
+      fetchUserDetails();
+    }
+  }, []);
+
+  const handleLogout = () => {
+    storage.remove("accessToken");
+    storage.remove("refreshToken");
+    setLogin(false);
+    setUser(null);
+  };
 
   const getProjectsFromLocalStorage = () => {
     const projects = [];
@@ -273,15 +298,20 @@ function ProjectDialog({ handleClose, open }) {
   const handleLogin = async () => {
     try {
       const code = await http.getCodeFromGithub();
-      console.log("Code:", code);
+
       const tokenRefreshResponse = await http.oauth({
         code: code,
         grant_type: "authorization_code",
         redirect_uri: config.oauth.redirectUri,
       });
+      console.log("tokenRefreshResponse", tokenRefreshResponse);
       const accessToken = tokenRefreshResponse.accessToken;
+      const refreshToken = tokenRefreshResponse.refreshToken;
       storage.set("accessToken", accessToken);
+      storage.set("refreshToken", refreshToken);
       console.log("Login successful: ", accessToken);
+      setLogin(true);
+      fetchUserDetails();
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -309,9 +339,20 @@ function ProjectDialog({ handleClose, open }) {
             Projects
           </Typography>
         </Box>
-        <Button variant="contained" onClick={handleLogin}>
-          Login
-        </Button>
+        {login ? (
+          <Box display="flex" alignItems="center">
+            <Typography variant="subtitle1" sx={{ mr: 1 }}>
+              {user?.name}
+            </Typography>
+            <Button variant="contained" onClick={handleLogout}>
+              Logout
+            </Button>
+          </Box>
+        ) : (
+          <Button variant="contained" onClick={handleLogin}>
+            Login
+          </Button>
+        )}
       </DialogTitle>
       <DialogContent>
         <ProjectList
@@ -319,9 +360,7 @@ function ProjectDialog({ handleClose, open }) {
           searchQuery={searchQuery}
           handleSearch={handleSearch}
           dataFiltered={dataFiltered}
-          editProject={(editedProjectName, editedProjectId) =>
-            editProject(editedProjectName, editedProjectId)
-          }
+          editProject={(projectToEdit) => editProject(projectToEdit)}
           deleteProject={(project) => deleteProject(project)}
           uploadToCloud={(projectId) => uploadToCloud(projectId)}
           loading={loading}
