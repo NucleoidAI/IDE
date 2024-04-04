@@ -21,7 +21,7 @@
     "@mui/lab": "^5.0.0-alpha.92",
     "@mui/material": "^5.9.2",
     "@mui/x-data-grid": "^5.5.0",
-    "@nucleoidai/react-event": "^1.1.0",
+    "@nucleoidai/react-event": "^1.1.1",
     "@nucleoidjs/components": "^1.2.0",
     "@nucleoidjs/webstorage": "^1.0.5",
     "@types/react": "^17.0.2",

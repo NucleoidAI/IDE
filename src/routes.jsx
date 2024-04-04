@@ -93,10 +93,13 @@ const routes = [
       element: <Blank />,
     },
     pages: [
-      { path: "*", element: <NotFound /> },
       {
         path: "/mobile",
         element: <Mobile />,
+      },
+      {
+        path: "*",
+        element: <NotFound />,
       },
     ],
   },

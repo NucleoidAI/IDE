@@ -5,9 +5,7 @@ import React, { useEffect } from "react";
 
 function NotFound() {
   useEffect(() => {
-    setTimeout(() => {
-      publish("PAGE_LOADED", { name: "NotFound" });
-    }, 5000);
+    publish("PAGE_LOADED", { name: "NotFound" });
   }, []);
 
   return (
