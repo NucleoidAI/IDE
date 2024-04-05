@@ -2,8 +2,8 @@ import CodeIcon from "@mui/icons-material/Code";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ToggleableMenu from "../../components/ToggleableMenu";
+import { storage } from "@nucleoidjs/webstorage";
 import styles from "./styles.js";
-import { useEvent } from "@nucleoidai/react-event";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -14,6 +14,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { publish, useEvent } from "@nucleoidai/react-event";
 
 function ChatHistory() {
   const navigate = useNavigate();
@@ -23,7 +24,9 @@ function ChatHistory() {
 
   const handleChatClick = (chatId) => navigate(`/chat/${chatId}`);
   const handleConvertToProject = (chatId) => {
-    console.log(`Converting chat ${chatId} to a project`);
+    publish("CONVERT_TO_PROJECT", chatId);
+    storage.set("ide", "landing", { level: 2 });
+    publish("LANDING_LEVEL_ACHIEVED", { level: 2 });
   };
   const handleDeleteChat = (chatId) => {
     console.log(`Deleting chat ${chatId}`);

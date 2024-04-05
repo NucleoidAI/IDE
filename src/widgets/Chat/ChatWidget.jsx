@@ -41,6 +41,12 @@ const ChatWidget = () => {
     }
   };
 
+  const handleConvertToProject = () => {
+    publish("CONVERT_TO_PROJECT", chatId);
+    storage.set("ide", "landing", { level: 2 });
+    publish("LANDING_LEVEL_ACHIEVED", { level: 2 });
+  };
+
   useEffect(() => {
     loadChat();
     // eslint-disable-next-line
@@ -99,6 +105,7 @@ const ChatWidget = () => {
         handleSendMessage={handleSendMessage}
         ref={messageInputRef}
         showConvertToProject={landingLevel.level === 1}
+        onConvertToProject={handleConvertToProject}
         loading={loading}
       />
     </Box>

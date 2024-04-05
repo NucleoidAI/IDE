@@ -21,6 +21,7 @@ const MessageInput = forwardRef((props, ref) => {
   const { handleSendMessage } = props;
   const { loading } = props;
   const { showConvertToProject } = props;
+  const { onConvertToProject } = props;
   const theme = useTheme();
   const [isAnimating, setIsAnimating] = useState(false);
   const [isInputEmpty, setIsInputEmpty] = useState(true);
@@ -49,7 +50,7 @@ const MessageInput = forwardRef((props, ref) => {
   }));
 
   const handleProjectIconClick = () => {
-    console.log("Project icon clicked");
+    onConvertToProject();
   };
 
   const onSend = (event) => {
