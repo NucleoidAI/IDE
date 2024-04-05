@@ -95,7 +95,6 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat }) => {
         bottom: "10%",
         width: "100%",
         padding: "10px",
-        zIndex: 1201,
       }}
     >
       {!loading && suggestions && (
