@@ -83,7 +83,7 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat }) => {
       const currentSuggestions = getSuggestions(initialSuggestions, chat);
       setSuggestions(currentSuggestions);
     }
-  }, [initialSuggestions, chat]);
+  }, [chat]);
 
   return (
     <Box
