@@ -17,6 +17,7 @@ const ChatWidget = () => {
   const { chatId } = useParams("chatId");
 
   const [loading, setLoading] = useState(false);
+  const [landingLevel] = useEvent("LANDING_LEVEL_ACHIEVED", { level: 0 });
   const messageInputRef = useRef();
   const userMessageRef = useRef("");
   const [chat, sendMessage] = useChat();
@@ -25,6 +26,7 @@ const ChatWidget = () => {
     type: "",
     content: "",
   });
+
   const loadChat = async () => {
     if (chatId) {
       // TODO Verify chat is valid in local storage
@@ -37,6 +39,10 @@ const ChatWidget = () => {
         name: "ChatWidget",
       });
     }
+  };
+
+  const handleConvertToProject = () => {
+    publish("CHAT_CONVERTED", chat);
   };
 
   useEffect(() => {
@@ -96,6 +102,8 @@ const ChatWidget = () => {
       <MessageInput
         handleSendMessage={handleSendMessage}
         ref={messageInputRef}
+        showConvertToProject={landingLevel.level === 1}
+        onConvertToProject={handleConvertToProject}
         loading={loading}
       />
     </Box>

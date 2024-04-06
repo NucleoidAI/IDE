@@ -1,4 +1,5 @@
 import expert from "../../http/expert.js";
+
 import { publish, useEvent } from "@nucleoidai/react-event";
 import { useEffect, useState } from "react";
 
@@ -33,6 +34,7 @@ const useChat = () => {
         JSON.stringify(updatedChat)
       );
 
+      publish("CHAT_MESSAGE_RESPONDED", updatedChat);
       setChat(updatedChat);
     } catch ({ response }) {
       publish("EXPERT_ERROR_OCCURRED", {
