@@ -42,9 +42,7 @@ const ChatWidget = () => {
   };
 
   const handleConvertToProject = () => {
-    publish("CONVERT_TO_PROJECT", chatId);
-    storage.set("ide", "landing", { level: 2 });
-    publish("LANDING_LEVEL_ACHIEVED", { level: 2 });
+    publish("CHAT_CONVERTED", chat);
   };
 
   useEffect(() => {
