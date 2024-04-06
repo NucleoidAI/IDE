@@ -4,7 +4,7 @@ import React from "react";
 import Settings from "../settings";
 import StarUsOnGithub from "./StarUsOnGithub";
 import Swagger from "../icons/Swagger";
-import onboardDispatcher from "./Onboard/onboardDispatcher";
+import onboardDispatcher from "../containers/IDE/Onboarding/onboardDispatcher";
 import { useTheme } from "@mui/material/styles";
 
 import {
