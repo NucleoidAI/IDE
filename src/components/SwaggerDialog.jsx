@@ -1,10 +1,10 @@
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import React from "react";
-import Settings from "../settings";
 import StarUsOnGithub from "./StarUsOnGithub";
 import Swagger from "../icons/Swagger";
 import onboardDispatcher from "../containers/IDE/Onboarding/onboardDispatcher";
+import sandboxService from "../sandboxService";
 import { useTheme } from "@mui/material/styles";
 
 import {
@@ -29,7 +29,7 @@ export default function SwaggerDialog() {
   function handleClose() {
     publish("SWAGGER_DIALOG", { open: false });
 
-    if (Settings.landing().level < 3) {
+    if (sandboxService.getLandingLevel() < 3) {
       setTimeout(() => {
         onboardDispatcher({ level: 3 });
       }, 1000);
@@ -44,6 +44,11 @@ export default function SwaggerDialog() {
       open={swagger.open || false}
       onClose={handleClose}
       TransitionComponent={Transition}
+      PaperProps={{
+        sx: {
+          borderRadius: "0 !important",
+        },
+      }}
     >
       <AppBar
         sx={{
@@ -79,22 +84,11 @@ export default function SwaggerDialog() {
                   justifyContent: "center",
                 }}
               >
-                {Settings.runtime() === "custom" ? (
-                  <>
-                    <Swagger fill={theme.palette.custom.grey} />
-                    <Typography sx={{ pl: 3 / 2 }} variant="h6" component="div">
-                      Swagger
-                    </Typography>
-                  </>
-                ) : (
-                  <>
-                    <Swagger fill={theme.palette.custom.grey} />
-                    <Typography sx={{ pl: 3 / 2 }} variant="h6">
-                      Sandbox
-                    </Typography>
-                    <OpenSwaggerNewTabButton url={Settings.url.app()} />
-                  </>
-                )}
+                <Swagger fill={theme.palette.custom.grey} />
+                <Typography sx={{ pl: 3 / 2 }} variant="h6">
+                  Sandbox
+                </Typography>
+                <OpenSwaggerNewTabButton />
               </Box>
             </Box>
             <Box
@@ -111,7 +105,7 @@ export default function SwaggerDialog() {
       </AppBar>
       <iframe
         title="Swagger"
-        src={Settings.url.app()}
+        src={sandboxService.getAppUrl()}
         style={{ width: "100%", height: "100%", border: 0 }}
         allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
         sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
@@ -120,14 +114,13 @@ export default function SwaggerDialog() {
   );
 }
 
-function OpenSwaggerNewTabButton(props) {
+function OpenSwaggerNewTabButton() {
   const theme = useTheme();
-  const { url } = props;
 
   function handleClick() {
     publish("SWAGGER_DIALOG", { open: false });
     setTimeout(() => {
-      window.open(url, "_blank");
+      window.open(sandboxService.getAppUrl(), "_blank");
     }, 300);
   }
 

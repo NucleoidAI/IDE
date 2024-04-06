@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import ChatMenu from "../../widgets/ChatMenu";
-import { Outlet } from "react-router-dom"; // eslint-disable-line
 import Onboarding from "./Onboarding";
+import { Outlet } from "react-router-dom"; // eslint-disable-line
 import React from "react";
 import routes from "../../routes";
 import { storage } from "@nucleoidjs/webstorage";
