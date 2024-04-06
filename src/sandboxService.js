@@ -1,6 +1,6 @@
 import config from "../config";
 import http from "./http";
-import onboardDispatcher from "./components/Onboard/onboardDispatcher";
+import onboardDispatcher from "./containers/IDE/Onboarding/onboardDispatcher";
 import scheduler from "./connectionScheduler";
 
 let sandboxId = null;
