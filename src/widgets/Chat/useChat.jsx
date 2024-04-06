@@ -34,7 +34,7 @@ const useChat = () => {
         JSON.stringify(updatedChat)
       );
 
-      publish("NEW_MESSAGE_RECEIVED", updatedChat);
+      publish("CHAT_MESSAGE_RESPONDED", updatedChat);
       setChat(updatedChat);
     } catch ({ response }) {
       publish("EXPERT_ERROR_OCCURRED", {
