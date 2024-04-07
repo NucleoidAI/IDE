@@ -1,5 +1,3 @@
-import getSuggestions from "../../lib/SuggestionHelper";
-
 import { Box, Button, Stack, Typography, useTheme } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
@@ -79,9 +77,30 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat }) => {
   const [suggestions, setSuggestions] = useState([]);
 
   useEffect(() => {
-    if (initialSuggestions && chat) {
-      const currentSuggestions = getSuggestions(initialSuggestions, chat);
-      setSuggestions(currentSuggestions);
+    if (chat) {
+      const userMessages = chat.messages.filter(
+        (message) => message.role === "USER"
+      );
+
+      let index = initialSuggestions;
+
+      for (const message of userMessages) {
+        const matchedSuggestion = index.find(
+          (suggestion) => suggestion.summary === message.content
+        );
+
+        if (matchedSuggestion) {
+          if (matchedSuggestion.children) {
+            index = matchedSuggestion.children;
+          } else {
+            return null;
+          }
+        } else {
+          return null;
+        }
+      }
+
+      setSuggestions(index);
     }
   }, [chat]);
 
