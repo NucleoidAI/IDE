@@ -5,7 +5,6 @@ import APITypes from "../../components/APITypes";
 // import AdressTree from "./Test";
 import NewAPIBody from "./NewAPIBody";
 import NucDialog from "../../components/core/NucDialog/NucDialog";
-//BasicDialog
 import React from "react";
 import { getTypes } from "../../lib/TypeScript";
 import { useContext } from "../../context/context";
@@ -46,7 +45,7 @@ function APIDialog() {
   }, [selectedApi]);
 
   const tstypes = getTypes(context.get("nucleoid.functions"));
-  const nuctypes = context.get.nucleoid?.types;
+  const nuctypes = context.nucleoid.types;
 
   let types;
   if (Array.isArray(nuctypes)) {
