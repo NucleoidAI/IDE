@@ -18,30 +18,30 @@ import React, {
 } from "react";
 
 const MessageInput = forwardRef((props, ref) => {
-  const { handleConvertProject, handleSendMessage } = props;
+  const { handleSendMessage } = props;
   const { loading } = props;
+  const { showConvertToProject } = props;
+  const { onConvertToProject } = props;
   const theme = useTheme();
-  const [showProjectIcon, setShowProjectIcon] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isInputEmpty, setIsInputEmpty] = useState(true);
   const inputRef = useRef(null);
 
   useEffect(() => {
-    if (showProjectIcon) {
+    if (showConvertToProject) {
       setIsAnimating(true);
       const timer = setTimeout(() => {
         setIsAnimating(false);
       }, 2000);
       return () => clearTimeout(timer);
     }
-  }, [showProjectIcon]);
+  }, [showConvertToProject]);
 
   useImperativeHandle(ref, () => ({
     getValue: () => inputRef.current.value,
     clear: () => {
       inputRef.current.value = "";
       setIsInputEmpty(true);
-      setShowProjectIcon(!showProjectIcon);
     },
     setValue: (value) => {
       inputRef.current.value = value;
@@ -50,7 +50,7 @@ const MessageInput = forwardRef((props, ref) => {
   }));
 
   const handleProjectIconClick = () => {
-    handleConvertProject();
+    onConvertToProject();
   };
 
   const onSend = (event) => {
@@ -105,7 +105,7 @@ const MessageInput = forwardRef((props, ref) => {
           maxRows={4}
           sx={{ flexGrow: 1 }}
         />
-        {true && (
+        {showConvertToProject && (
           <Tooltip
             title={
               <Typography sx={{ fontSize: "1rem" }}>
@@ -115,7 +115,7 @@ const MessageInput = forwardRef((props, ref) => {
             placement="top"
           >
             <IconButton
-              type="submit"
+              type="button"
               onClick={handleProjectIconClick}
               className={isAnimating ? "pulse-animation" : ""}
               sx={{ ml: 1 }}

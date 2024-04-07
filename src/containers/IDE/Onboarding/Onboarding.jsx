@@ -1,14 +1,14 @@
-import Confetti from "../Confetti";
-import LandingDialog from "../LandingDialog";
-import MessageDialog from "../MessageDialog";
-import MessagePopper from "../MessagePopper";
+import Confetti from "../../../components/Confetti/index.js";
+import LandingDialog from "../../../components/LandingDialog/index.js";
+import MessageDialog from "../../../components/MessageDialog/index.js";
+import MessagePopper from "../../../components/MessagePopper/index.js";
 import React from "react";
-import Settings from "../../settings";
-import StarUsMessageDialog from "../StarUsMessageDialog/StarUsMessageDialog";
-import gtag from "../../gtag";
+import Settings from "../../../settings.js";
+import StarUsMessageDialog from "../../../components/StarUsMessageDialog/StarUsMessageDialog.jsx";
+import gtag from "../../../gtag.js";
 import { v4 as uuid } from "uuid";
 
-const Onboard = () => {
+const Onboarding = () => {
   const [state, setState] = React.useState(Settings.landing());
 
   const event = ({ detail }) => {
@@ -71,4 +71,4 @@ const Onboard = () => {
   }
 };
 
-export default Onboard;
+export default Onboarding;
