@@ -74,7 +74,7 @@ const initialSuggestions = [
 
 const SuggestionsOverlay = ({ onSuggestionClick, loading, chat }) => {
   const theme = useTheme();
-  const [suggestions, setSuggestions] = useState([]);
+  const [suggestions, setSuggestions] = useState(null);
 
   useEffect(() => {
     if (chat) {
@@ -93,10 +93,12 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat }) => {
           if (matchedSuggestion.children) {
             index = matchedSuggestion.children;
           } else {
-            return null;
+            setSuggestions(null);
+            return;
           }
         } else {
-          return null;
+          setSuggestions(null);
+          return;
         }
       }
 
