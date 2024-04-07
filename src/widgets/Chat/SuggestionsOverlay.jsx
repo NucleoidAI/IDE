@@ -77,33 +77,31 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat }) => {
   const [suggestions, setSuggestions] = useState(null);
 
   useEffect(() => {
-    if (chat) {
-      const userMessages = chat.messages.filter(
-        (message) => message.role === "USER"
+    const userMessages = chat.messages.filter(
+      (message) => message.role === "USER"
+    );
+
+    let index = initialSuggestions;
+
+    for (const message of userMessages) {
+      const matchedSuggestion = index.find(
+        (suggestion) => suggestion.summary === message.content
       );
 
-      let index = initialSuggestions;
-
-      for (const message of userMessages) {
-        const matchedSuggestion = index.find(
-          (suggestion) => suggestion.summary === message.content
-        );
-
-        if (matchedSuggestion) {
-          if (matchedSuggestion.children) {
-            index = matchedSuggestion.children;
-          } else {
-            setSuggestions(null);
-            return;
-          }
+      if (matchedSuggestion) {
+        if (matchedSuggestion.children) {
+          index = matchedSuggestion.children;
         } else {
           setSuggestions(null);
           return;
         }
+      } else {
+        setSuggestions(null);
+        return;
       }
-
-      setSuggestions(index);
     }
+
+    setSuggestions(index);
   }, [chat]);
 
   return (
