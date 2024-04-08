@@ -2,6 +2,7 @@ import "./ChatMainArea.css";
 
 import ChatDisplay from "./ChatDisplay";
 import MessageInput from "./MessageInput";
+import Settings from "../../settings";
 import SuggestionsOverlay from "./SuggestionsOverlay";
 import { publish } from "@nucleoidai/react-event";
 import { storage } from "@nucleoidjs/webstorage";
@@ -104,6 +105,7 @@ const ChatWidget = () => {
         loading={loading}
         error={error}
         refreshChat={refreshChat}
+        codeCollapsed={Settings.collapseCodeBlocks}
       />
 
       <SuggestionsOverlay

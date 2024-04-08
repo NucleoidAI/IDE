@@ -22,6 +22,7 @@ const ChatDisplay = ({
   error,
   refreshChat,
   currentUserMessage,
+  codeCollapsed,
 }) => {
   const theme = useTheme();
   const [openDialog, setOpenDialog] = useState(false);
@@ -92,6 +93,7 @@ const ChatDisplay = ({
             key={index}
             message={message}
             handleOpenDialog={handleOpenDialog}
+            isCodeCollapsed={codeCollapsed}
           />
         ))
       )}

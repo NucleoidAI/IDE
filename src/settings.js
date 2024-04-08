@@ -94,11 +94,9 @@ const Settings = {
   },
   collapseCodeBlocks: function (value) {
     if (value !== undefined) {
-      localStorage.setItem("ide", "collapseCodeBlocks", JSON.stringify(value));
+      storage.set("ide", "collapseCodeBlocks", value);
     }
-    return (
-      JSON.parse(localStorage.getItem("ide", "collapseCodeBlocks")) || false
-    );
+    return storage.get("ide", "collapseCodeBlocks") || false;
   },
 };
 

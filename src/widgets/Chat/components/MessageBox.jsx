@@ -63,7 +63,7 @@ function MessageBox({
             value={message.code}
             language="typescript"
             onActionClick={() => handleOpenDialog(message.code)}
-            isCollapsed={false}
+            isCollapsed={isCodeCollapsed}
           />
         </Box>
       )}
