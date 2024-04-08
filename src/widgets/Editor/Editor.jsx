@@ -5,7 +5,7 @@ import NucEditor from "../../components/NucEditor/NucEditor";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import QueryAIButton from "../../components/QueryAIButton";
 import { publish } from "@nucleoidai/react-event";
-import service from "../../service";
+import sandboxService from "../../sandboxService";
 import styles from "../../layouts/HorizontalSplitLayout/styles";
 import { useContext } from "../../context/context";
 import { useMonaco } from "@monaco-editor/react";
@@ -55,7 +55,7 @@ const Editor = React.forwardRef((props, ref) => {
 
   const handleQuery = () => {
     setLoading(true);
-    service
+    sandboxService
       .query(editorRef ? editorRef.current.editor.getValue() : null)
       .then((data) => {
         try {
@@ -187,15 +187,12 @@ const Editor = React.forwardRef((props, ref) => {
         <Grid container item sx={styles.runButton}>
           <QueryAIButton />
           <AIDialog imperative page={"query"} editor={editorRef} />
-          <Fab
-            variant="button"
-            hide={loading}
-            size={"small"}
-            onClick={() => handleQuery()}
-          >
-            <PlayArrowIcon />
-          </Fab>
-          <CircularProgress show={loading} />
+          {!loading && (
+            <Fab variant="button" size={"small"} onClick={() => handleQuery()}>
+              <PlayArrowIcon />
+            </Fab>
+          )}
+          {loading && <CircularProgress />}
         </Grid>
       )}
     </>

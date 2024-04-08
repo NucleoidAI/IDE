@@ -1,10 +1,17 @@
 import expert from "../../http/expert.js";
+import { v4 as uuid } from "uuid";
 import { publish, useEvent } from "@nucleoidai/react-event";
 import { useEffect, useState } from "react";
 
+const initChat = {
+  id: uuid(),
+  title: "New Chat",
+  messages: [],
+};
+
 const useChat = () => {
-  const [selectedChat] = useEvent("CHAT_SELECTED");
-  const [chat, setChat] = useState();
+  const [selectedChat] = useEvent("CHAT_SELECTED", initChat);
+  const [chat, setChat] = useState(initChat);
 
   useEffect(() => {
     setChat(selectedChat);
@@ -33,6 +40,7 @@ const useChat = () => {
         JSON.stringify(updatedChat)
       );
 
+      publish("CHAT_MESSAGE_RESPONDED", updatedChat);
       setChat(updatedChat);
     } catch ({ response }) {
       publish("EXPERT_ERROR_OCCURRED", {

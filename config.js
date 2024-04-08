@@ -9,6 +9,7 @@ const config = {
     redirectUri: "http://localhost:5173/ide/login",
     oauthUrl: "https://github.com/login/oauth/authorize",
   },
+  sandbox: "https://nuc.land/sandbox",
 };
 
 export default config;

@@ -1,7 +1,7 @@
 import Close from "@mui/icons-material/Close";
 import React from "react";
 import Snackbar from "@mui/material/Snackbar";
-import onboardDispatcher from "../Onboard/onboardDispatcher";
+import onboardDispatcher from "../../containers/IDE/Onboarding/onboardDispatcher";
 import styles from "./styles";
 import {
   Box,

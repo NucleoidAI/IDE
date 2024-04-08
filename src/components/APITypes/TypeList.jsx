@@ -1,8 +1,9 @@
+import ToggleableMenu from "../ToggleableMenu";
 import TypeEditor from "./TypeEditor";
 
 import { Add, Delete, Edit, MoreVert } from "@mui/icons-material";
 import { Box, Fab, IconButton, Typography } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 
 const TypeList = ({
   combinedData,
@@ -13,9 +14,7 @@ const TypeList = ({
   onDeleteType,
 }) => {
   const [isAddingType, setIsAddingType] = useState(false);
-  const [showOptions, setShowOptions] = useState(null);
   const [editingType, setEditingType] = useState(null);
-  const optionsRef = useRef(null);
 
   const handleAddTypeClick = () => {
     setIsAddingType(true);
@@ -27,28 +26,16 @@ const TypeList = ({
     onTypeSelect(typeName);
   };
 
-  const handleMoreClick = (event, typeName) => {
-    if (event.target.closest(".more-button")) {
-      setShowOptions(typeName);
-    }
-  };
-
-  const handleCloseOptions = () => {
-    setShowOptions(null);
-  };
-
   const handleEditType = (item) => {
     setEditingType(item);
-    handleCloseOptions();
   };
 
   const handleDeleteType = (item) => {
     const deletedIndex = combinedData.findIndex(
-      (item) => item.name === showOptions
+      (item) => item.name === editingType
     );
 
     onDeleteType(item);
-    handleCloseOptions();
 
     if (deletedIndex > 0) {
       setTimeout(() => {
@@ -61,6 +48,8 @@ const TypeList = ({
     } else {
       onTypeSelect(null);
     }
+
+    setEditingType(null);
   };
 
   const handleUpdateType = (updatedTypeName) => {
@@ -71,38 +60,6 @@ const TypeList = ({
       onTypeSelect(updatedTypeName);
     }, 0);
   };
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      let targetElement = event.target;
-      let shouldCloseOptions = true;
-
-      while (targetElement) {
-        if (
-          targetElement.className &&
-          typeof targetElement.className === "string" &&
-          (targetElement.className.includes("more-button") ||
-            targetElement.className.includes("ignore-outside-click"))
-        ) {
-          shouldCloseOptions = false;
-          break;
-        }
-        targetElement = targetElement.parentElement;
-      }
-
-      if (shouldCloseOptions) {
-        setShowOptions(null);
-      }
-    }
-
-    if (showOptions !== null) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showOptions]);
 
   return (
     <Box
@@ -148,10 +105,7 @@ const TypeList = ({
               <Typography variant="body1" style={{ textAlign: "left" }}>
                 {item.name}
               </Typography>
-              <Box
-                ref={optionsRef}
-                sx={{ display: "flex", alignItems: "center" }}
-              >
+              <Box sx={{ display: "flex", alignItems: "center" }}>
                 {item.isTypeScript && (
                   <span
                     style={{
@@ -164,38 +118,20 @@ const TypeList = ({
                   </span>
                 )}
                 {!item.isTypeScript && (
-                  <>
-                    {showOptions === item.name ? (
-                      <Box>
-                        <IconButton
-                          size="small"
-                          className="ignore-outside-click"
-                          onClick={() => {
-                            handleEditType(item.name);
-                          }}
-                        >
-                          <Edit />
-                        </IconButton>
-                        <IconButton
-                          size="small"
-                          className="ignore-outside-click"
-                          onClick={() => {
-                            handleDeleteType(item.name);
-                          }}
-                        >
-                          <Delete />
-                        </IconButton>
-                      </Box>
-                    ) : (
-                      <IconButton
-                        className="more-button"
-                        size="small"
-                        onClick={(event) => handleMoreClick(event, item.name)}
-                      >
-                        <MoreVert />
-                      </IconButton>
-                    )}
-                  </>
+                  <ToggleableMenu defaultIcon={<MoreVert />}>
+                    <IconButton
+                      size="small"
+                      onClick={() => handleEditType(item.name)}
+                    >
+                      <Edit />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      onClick={() => handleDeleteType(item.name)}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </ToggleableMenu>
                 )}
               </Box>
             </>
@@ -223,4 +159,5 @@ const TypeList = ({
     </Box>
   );
 };
+
 export default TypeList;
