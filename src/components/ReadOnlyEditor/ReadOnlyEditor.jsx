@@ -14,7 +14,7 @@ const ReadOnlyEditor = ({ language, value, onActionClick, isCollapsed }) => {
 
   useEffect(() => {
     if (codeRef.current) {
-      hljs.highlightBlock(codeRef.current);
+      hljs.highlightElement(codeRef.current);
     }
   }, [language, value, collapsed]);
 
