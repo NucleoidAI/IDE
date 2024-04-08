@@ -31,18 +31,18 @@ const SettingsDialogTabs = forwardRef((props, urlRef) => {
         sx={styles.tabs}
       >
         <Tab sx={styles.tab} label="Runtime" {...tabProps(0)} />
-        <Tab sx={styles.tab} label="Dev" {...tabProps(1)} />
-        <Tab sx={styles.tab} label="Chat" {...tabProps(2)} />
+        <Tab sx={styles.tab} label="Chat" {...tabProps(1)} />
+        <Tab sx={styles.tab} label="Dev" {...tabProps(2)} />
       </Tabs>
       <Box sx={{ width: "100%" }}>
         <TabPanel value={value} index={0}>
           <SettingsDialogUrl ref={urlRef} />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <SettingsDialogDev />
+          <SettingsDialogChat />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <SettingsDialogChat />
+          <SettingsDialogDev />
         </TabPanel>
       </Box>
     </Grid>
