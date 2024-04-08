@@ -31,6 +31,12 @@ function App() {
     window.location.hostname === "nucleoid.com" ? 1000 - elapsed : 0;
 
   function initSettings() {
+    const isMobile = window.innerWidth <= 768;
+
+    if (isMobile && Settings.collapseCodeBlocks() !== true) {
+      Settings.collapseCodeBlocks(true);
+    }
+
     if (!Settings.beta()) {
       Settings.beta(false);
     }
