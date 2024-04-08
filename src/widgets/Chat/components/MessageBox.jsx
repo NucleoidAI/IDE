@@ -52,7 +52,6 @@ function MessageBox({
             overflowX: "auto",
             justifyContent: "center",
             marginTop: "8px",
-            backgroundColor: (theme) => theme.palette.grey[100],
             borderRadius: "5px",
             padding: "0",
             userSelect: "text",

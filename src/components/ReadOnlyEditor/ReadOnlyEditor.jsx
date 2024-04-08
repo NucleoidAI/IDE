@@ -42,24 +42,14 @@ const ReadOnlyEditor = ({ language, value, onActionClick, isCollapsed }) => {
           Code
         </Typography>
         <Box>
-          <IconButton
-            onClick={toggleCollapse}
-            sx={{ "&:hover": { color: "gray" } }}
-          >
+          <IconButton onClick={toggleCollapse}>
             {collapsed ? (
               <ExpandMoreIcon fontSize="small" />
             ) : (
               <ExpandLessIcon fontSize="small" />
             )}
           </IconButton>
-          <IconButton
-            onClick={onActionClick}
-            sx={{
-              "&:hover": {
-                color: "gray",
-              },
-            }}
-          >
+          <IconButton onClick={onActionClick}>
             <EditIcon fontSize="small" />
           </IconButton>
         </Box>
