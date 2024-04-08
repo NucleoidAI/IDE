@@ -99,7 +99,7 @@ const ChatDisplay = ({
       )}
       {loading && <MessageBox onlyUser currentMessage={currentUserMessage} />}
       <ErrorMessage
-        show={error.status}
+        show={error.status && error.chatId === chat.id}
         content={error.content}
         type={error.type}
         refreshChat={refreshChat}

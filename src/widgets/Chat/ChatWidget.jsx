@@ -23,6 +23,7 @@ const ChatWidget = () => {
   const userMessageRef = useRef("");
   const [chat, sendMessage] = useChat();
   const [error] = useEvent("EXPERT_ERROR_OCCURRED", {
+    chatId: "",
     status: false,
     type: "",
     content: "",
