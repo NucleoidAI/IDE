@@ -2,6 +2,8 @@ import expert from "../../http/expert.js";
 import { v4 as uuid } from "uuid";
 import { publish, useEvent } from "@nucleoidai/react-event";
 import { useEffect, useState } from "react";
+import Project from "../../lib/Project";
+import { useNavigate } from "react-router-dom";
 
 const initChat = {
   id: uuid(),
@@ -12,6 +14,7 @@ const initChat = {
 const useChat = () => {
   const [selectedChat] = useEvent("CHAT_SELECTED", initChat);
   const [chat, setChat] = useState(initChat);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setChat(selectedChat);
@@ -52,7 +55,37 @@ const useChat = () => {
   };
 
   const convertChat = () => {
+    const { id, messages } = chat;
+
+    const blocks = [];
+
+    messages.forEach((message) => {
+      if (message.code) {
+        blocks.push(message.code);
+      }
+    });
+
+    const { api, functions, declarations } = Project.compile(blocks);
+
+    // TODO Restructure project context
+    const project = {
+      context: {
+        project: {
+          id,
+          type: "chat",
+          name: "Chat Project",
+          description: "This project has been converted from chat",
+        },
+        api,
+        functions,
+        declarations,
+      },
+    };
+
+    localStorage.setItem(`ide.projects.${id}`, JSON.stringify(project));
     publish("CHAT_CONVERTED", chat);
+    navigate(`/${id}/api?mode=local`);
+    navigate(0);
   };
 
   const deleteChat = () => {

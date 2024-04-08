@@ -111,18 +111,6 @@ function createCodeSnippets(codeBlock) {
   };
 }
 
-function extractCodeBlocks(messages) {
-  const codeBlocks = [];
-
-  messages.forEach((message) => {
-    if (message.code) {
-      codeBlocks.push(message.code);
-    }
-  });
-
-  return codeBlocks;
-}
-
 function createAPI(functions) {
   const api = [];
 
@@ -221,15 +209,11 @@ function extractProperties(classDefinition) {
   return properties;
 }
 
-function exportProject(chat) {
-  const { id, messages } = chat;
-
-  const codeBlocks = extractCodeBlocks(messages);
-
+function compile(blocks) {
   const functionSnippets = [];
   const declarationSnippets = [];
 
-  codeBlocks.forEach((codeBlock) => {
+  blocks.forEach((codeBlock) => {
     const { functionSnippets: functions, declarationSnippets: declarations } =
       createCodeSnippets(codeBlock);
     functionSnippets.push(...functions);
@@ -243,35 +227,7 @@ function exportProject(chat) {
 
   const api = createAPI(functions);
 
-  const project = {
-    context: {
-      project: {
-        type: "chat",
-        id: id,
-        name: "Chat Project",
-        description: "This project has been converted from chat",
-      },
-      api: api,
-      functions: functions,
-      declarations: declarations,
-    },
-  };
-
-  const projectJSON = JSON.stringify(project);
-
-  const key = `ide.projects.${id}`;
-
-  localStorage.setItem(key, projectJSON);
+  return { api, functions, declarations };
 }
 
-function compile() {}
-
-export {
-  typeCheck,
-  createObject,
-  createCodeSnippets,
-  extractCodeBlocks,
-  createAPI,
-  exportProject,
-  compile,
-};
+export default { compile };

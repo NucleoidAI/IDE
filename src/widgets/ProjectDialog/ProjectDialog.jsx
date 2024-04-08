@@ -251,6 +251,7 @@ function ProjectDialog({ handleClose, open }) {
     const { type, id } = project;
 
     if (type === "LOCAL") {
+      // https://github.com/reach/router/issues/504
       navigate(`/${id}/api?mode=local`);
       navigate(0);
     } else if (type === "CLOUD") {
