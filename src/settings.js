@@ -92,6 +92,14 @@ const Settings = {
       return false;
     }
   },
+  collapseCodeBlocks: function (value) {
+    if (value !== undefined) {
+      localStorage.setItem("ide", "collapseCodeBlocks", JSON.stringify(value));
+    }
+    return (
+      JSON.parse(localStorage.getItem("ide", "collapseCodeBlocks")) || false
+    );
+  },
 };
 
 export default Settings;
