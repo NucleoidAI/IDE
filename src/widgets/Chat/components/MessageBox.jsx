@@ -1,4 +1,4 @@
-import EditIcon from "@mui/icons-material/Edit";
+import React from "react";
 import ReadOnlyEditor from "../../../components/ReadOnlyEditor";
 
 import { Box, Typography } from "@mui/material";
@@ -8,6 +8,7 @@ function MessageBox({
   handleOpenDialog,
   onlyUser,
   currentMessage,
+  isCodeCollapsed = true,
 }) {
   if (onlyUser) {
     message.content = currentMessage;
@@ -61,8 +62,8 @@ function MessageBox({
           <ReadOnlyEditor
             value={message.code}
             language="typescript"
-            actionIcon={EditIcon}
             onActionClick={() => handleOpenDialog(message.code)}
+            isCollapsed={false}
           />
         </Box>
       )}
