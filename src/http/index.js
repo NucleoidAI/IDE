@@ -77,7 +77,11 @@ instance.getUserDetails = async () => {
           Authorization: `token ${refreshToken}`,
         },
       });
-      return response.data;
+
+      return {
+        name: response.data.name,
+        avatarUrl: response.data.avatar_url,
+      };
     } catch (error) {
       console.error("Failed to fetch user details:", error);
       throw error;

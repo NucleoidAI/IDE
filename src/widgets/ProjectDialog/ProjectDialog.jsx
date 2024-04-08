@@ -60,13 +60,6 @@ function ProjectDialog({ handleClose, open }) {
     }
   }, []);
 
-  const handleLogout = () => {
-    storage.remove("accessToken");
-    storage.remove("refreshToken");
-    setLogin(false);
-    setUser(null);
-  };
-
   const getProjectsFromLocalStorage = () => {
     const projects = [];
     for (let i = 0; i < localStorage.length; i++) {
@@ -343,9 +336,18 @@ function ProjectDialog({ handleClose, open }) {
             <Typography variant="subtitle1" sx={{ mr: 1 }}>
               {user?.name}
             </Typography>
-            <Button variant="contained" onClick={handleLogout}>
-              Logout
-            </Button>
+            {user?.avatarUrl && (
+              <img
+                src={user.avatarUrl}
+                alt="User Avatar"
+                style={{
+                  width: 30,
+                  height: 30,
+                  borderRadius: "50%",
+                  marginRight: 8,
+                }}
+              />
+            )}
           </Box>
         ) : (
           <Button variant="contained" onClick={handleLogin}>
