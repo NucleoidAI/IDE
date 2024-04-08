@@ -1,6 +1,6 @@
 import CodeIcon from "@mui/icons-material/Code";
 import SendIcon from "@mui/icons-material/Send";
-
+import useChat from "./useChat";
 import {
   Box,
   IconButton,
@@ -18,11 +18,9 @@ import React, {
 } from "react";
 
 const MessageInput = forwardRef((props, ref) => {
-  const { handleSendMessage } = props;
-  const { loading } = props;
-  const { showConvertToProject } = props;
-  const { onConvertToProject } = props;
+  const { loading, handleSendMessage, showConvertToProject } = props;
   const theme = useTheme();
+  const [, , convertChat] = useChat();
   const [isAnimating, setIsAnimating] = useState(false);
   const [isInputEmpty, setIsInputEmpty] = useState(true);
   const inputRef = useRef(null);
@@ -50,12 +48,12 @@ const MessageInput = forwardRef((props, ref) => {
   }));
 
   const handleProjectIconClick = () => {
-    onConvertToProject();
+    convertChat();
   };
 
-  const onSend = (event) => {
+  const onSend = async (event) => {
     event.preventDefault();
-    handleSendMessage();
+    await handleSendMessage();
   };
 
   const handleInputChange = (event) => {

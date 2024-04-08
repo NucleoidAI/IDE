@@ -16,15 +16,15 @@ function init() {
     }
 
     if (!level && chat.messages.filter((message) => message.code).length >= 3) {
-      storage.set("ide", "onboarding", { level: 1 });
-      publish("LANDING_LEVEL_ACHIEVED", { level: 1 });
+      storage.set("chat", "onboarding", { level: 1 });
+      publish("ONBOARDING_LEVEL_ACHIEVED", { level: 1 });
       level0.unsubscribe();
     }
   });
 
   const level1 = subscribe("CHAT_CONVERTED", () => {
-    storage.set("ide", "onboarding", { level: 2 });
-    publish("LANDING_LEVEL_ACHIEVED", { level: 2 });
+    storage.set("chat", "onboarding", { level: 2 });
+    publish("ONBOARDING_LEVEL_ACHIEVED", { level: 2 });
     level1.unsubscribe();
   });
 }

@@ -4,7 +4,7 @@ import {
   createObject,
   extractCodeBlocks,
   typeCheck,
-} from "../../utils/ConvertProject";
+} from "../Project.js";
 
 describe("Project Converter", () => {
   describe("typeCheck", () => {

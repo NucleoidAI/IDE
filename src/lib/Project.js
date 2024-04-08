@@ -264,6 +264,8 @@ function exportProject(chat) {
   localStorage.setItem(key, projectJSON);
 }
 
+function compile() {}
+
 export {
   typeCheck,
   createObject,
@@ -271,4 +273,5 @@ export {
   extractCodeBlocks,
   createAPI,
   exportProject,
+  compile,
 };

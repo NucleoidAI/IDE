@@ -51,7 +51,15 @@ const useChat = () => {
     }
   };
 
-  return [chat, sendMessage];
+  const convertChat = () => {
+    publish("CHAT_CONVERTED", chat);
+  };
+
+  const deleteChat = () => {
+    publish("CHAT_DELETED", chat);
+  };
+
+  return [chat, sendMessage, convertChat, deleteChat];
 };
 
 export default useChat;
