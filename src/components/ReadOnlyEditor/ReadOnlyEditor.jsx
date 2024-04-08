@@ -5,7 +5,7 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import hljs from "highlight.js";
 
-import { Box, IconButton, Stack, Typography } from "@mui/material";
+import { Box, Collapse, IconButton, Stack, Typography } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
 const ReadOnlyEditor = ({ language, value, onActionClick, isCollapsed }) => {
@@ -16,7 +16,7 @@ const ReadOnlyEditor = ({ language, value, onActionClick, isCollapsed }) => {
     if (codeRef.current) {
       hljs.highlightElement(codeRef.current);
     }
-  }, [language, value, collapsed]);
+  }, [language, value]);
 
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
@@ -54,11 +54,11 @@ const ReadOnlyEditor = ({ language, value, onActionClick, isCollapsed }) => {
           </IconButton>
         </Box>
       </Stack>
-      {!collapsed && (
+      <Collapse in={!collapsed}>
         <Stack component="code" ref={codeRef} className={language}>
           {value}
         </Stack>
-      )}
+      </Collapse>
     </Stack>
   );
 };
