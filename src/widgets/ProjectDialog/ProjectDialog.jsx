@@ -53,8 +53,8 @@ function ProjectDialog({ handleClose, open }) {
   };
 
   useEffect(() => {
-    const accessToken = storage.get("oauth.token").accessToken;
-    if (accessToken) {
+    const oauthToken = storage.get("oauth.token");
+    if (oauthToken) {
       setLogin(true);
       fetchUserDetails();
     }
