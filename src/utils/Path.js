@@ -53,6 +53,8 @@ const getMode = () => {
       return "mobile";
     } else if (id === "chat") {
       return "chat";
+    } else if (id === "new") {
+      return "new";
     } else if (id) {
       return "cloud";
     } else {

@@ -176,11 +176,9 @@ function IDE() {
         navigate(`/${recentProject.id}?mode=local`);
       }
     } else {
+      console.log("recent project not found");
       publish("RECENT_PROJECT_NOT_FOUND", { status: true });
-      const blankContext = blankProject();
-      setContext(initContext(blankContext));
-
-      navigate("/new/api");
+      navigate("/new");
     }
   };
 
@@ -202,6 +200,9 @@ function IDE() {
         return setContext(initContext(context));
       } else if (mode === "mobile") {
         return setContext("mobile");
+      } else if (mode === "new") {
+        const blankContext = blankProject();
+        setContext(initContext(blankContext));
       } else {
         checkRecentProject(recentProject);
       }
