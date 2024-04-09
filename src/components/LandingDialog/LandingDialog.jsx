@@ -6,7 +6,7 @@ import NumberTwo from "../../images/number-two.png";
 import React from "react";
 import { Switch } from "@mui/material";
 import codeImage from "../../images/code.png";
-import onboardDispatcher from "../Onboard/onboardDispatcher";
+import onboardDispatcher from "../../containers/IDE/Onboarding/onboardDispatcher";
 import styles from "./styles";
 import { useTheme } from "@mui/material/styles";
 

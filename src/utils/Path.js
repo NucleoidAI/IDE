@@ -24,8 +24,8 @@ const addSlashMark = (path) => {
 };
 
 const getProjectId = () => {
-  const id = window.location.pathname.split("/")[2];
-  return id;
+  const parts = window.location.pathname.split("/");
+  return parts.length >= 3 ? parts[2] : null;
 };
 
 const getRecentProject = () => {

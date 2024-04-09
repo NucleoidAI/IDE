@@ -2,7 +2,7 @@ import GlobalMessageBox from "../GlobalMessageBox";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import React from "react";
 import Settings from "../../settings";
-import onboardDispatcher from "../Onboard/onboardDispatcher";
+import onboardDispatcher from "../../containers/IDE/Onboarding/onboardDispatcher";
 import { publish } from "@nucleoidai/react-event";
 import { Box, IconButton, Popper, Typography } from "@mui/material";
 

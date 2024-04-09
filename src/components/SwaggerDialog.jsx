@@ -3,7 +3,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import React from "react";
 import StarUsOnGithub from "./StarUsOnGithub";
 import Swagger from "../icons/Swagger";
-import onboardDispatcher from "./Onboard/onboardDispatcher";
+import onboardDispatcher from "../containers/IDE/Onboarding/onboardDispatcher";
 import sandboxService from "../sandboxService";
 import { useTheme } from "@mui/material/styles";
 
