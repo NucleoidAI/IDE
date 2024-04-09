@@ -24,7 +24,7 @@ const routes = [
   {
     container: {
       element: <IDEContainer />,
-      path: "/:id/",
+      path: ["/", "/:id"],
     },
     pages: [
       {
