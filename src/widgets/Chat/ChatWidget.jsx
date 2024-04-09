@@ -2,7 +2,7 @@ import "./ChatMainArea.css";
 
 import ChatDisplay from "./ChatDisplay";
 import MessageInput from "./MessageInput";
-// import SuggestionsOverlay from "./SuggestionsOverlay";
+import SuggestionsOverlay from "./SuggestionsOverlay";
 import { publish } from "@nucleoidai/react-event";
 import { storage } from "@nucleoidjs/webstorage";
 import useChat from "./useChat";
@@ -17,6 +17,7 @@ const ChatWidget = () => {
   const { chatId } = useParams("chatId");
 
   const [loading, setLoading] = useState(false);
+  const [landingLevel] = useEvent("LANDING_LEVEL_ACHIEVED", { level: 0 });
   const messageInputRef = useRef();
   const userMessageRef = useRef("");
   const [chat, sendMessage] = useChat();
@@ -25,6 +26,7 @@ const ChatWidget = () => {
     type: "",
     content: "",
   });
+
   const loadChat = async () => {
     if (chatId) {
       // TODO Verify chat is valid in local storage
@@ -39,6 +41,10 @@ const ChatWidget = () => {
     }
   };
 
+  const handleConvertToProject = () => {
+    publish("CHAT_CONVERTED", chat);
+  };
+
   useEffect(() => {
     loadChat();
     // eslint-disable-next-line
@@ -51,12 +57,18 @@ const ChatWidget = () => {
     userMessageRef.current = userMessage;
     messageInputRef.current.clear();
 
-    await sendMessage(userMessage, setLoading);
+    await sendMessage(userMessage);
 
     if (first) {
       publish("CHAT_INITIATED", chat.id);
     }
 
+    setLoading(false);
+  };
+  const handleSuggestionClick = async (suggestion) => {
+    setLoading(true);
+    userMessageRef.current = suggestion.summary;
+    await sendMessage(suggestion.summary);
     setLoading(false);
   };
 
@@ -93,9 +105,18 @@ const ChatWidget = () => {
         error={error}
         refreshChat={refreshChat}
       />
+
+      <SuggestionsOverlay
+        onSuggestionClick={handleSuggestionClick}
+        chat={chat}
+        loading={loading}
+      />
+
       <MessageInput
         handleSendMessage={handleSendMessage}
         ref={messageInputRef}
+        showConvertToProject={landingLevel.level === 1}
+        onConvertToProject={handleConvertToProject}
         loading={loading}
       />
     </Box>

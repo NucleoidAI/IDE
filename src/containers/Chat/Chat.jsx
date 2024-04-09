@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import ChatMenu from "../../widgets/ChatMenu";
+import Onboarding from "./Onboarding";
 import { Outlet } from "react-router-dom"; // eslint-disable-line
 import React from "react";
 import routes from "../../routes";
@@ -10,6 +11,8 @@ import { v4 as uuid } from "uuid";
 
 import { publish, useEvent } from "@nucleoidai/react-event";
 import { useNavigate, useParams } from "react-router-dom";
+
+Onboarding.init();
 
 function Chat() {
   const [event] = useEvent("PAGE_LOADED", { name: "" });

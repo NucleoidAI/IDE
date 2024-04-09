@@ -3,7 +3,7 @@ import ContextProvider from "../../context/context";
 import EducationDrawer from "../../components/EducationDrawer/EducationDrawer";
 import GraphDialog from "../../components/GraphDialog/GraphDialog";
 import Menu from "../../widgets/Menu";
-import Onboard from "../../components/Onboard";
+import Onboard from "./Onboarding";
 import { Outlet } from "react-router-dom"; // eslint-disable-line
 import Path from "../../utils/Path";
 import PopChat from "../../widgets/PopChat";
@@ -228,7 +228,7 @@ function IDE() {
         <Box sx={styles.content}>
           <Outlet />
         </Box>
-        {Settings.landing().level < 5 && <Onboard />}
+        <Onboard />
         <ProcessDrawer />
         <SwaggerDialog />
 
