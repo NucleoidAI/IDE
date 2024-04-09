@@ -31,6 +31,7 @@ function IDE() {
   const navigate = useNavigate();
   const location = useLocation();
   const modeQuery = location.search;
+  const page = location.pathname.split("/")[2];
 
   const [event] = useEvent("PAGE_LOADED", {
     name: null,
@@ -152,6 +153,12 @@ function IDE() {
         id: context.nucleoid.project.id,
         type: "LOCAL",
       });
+    }
+
+    if (!page) {
+      context.nucleoid.project.type === "CLOUD"
+        ? navigate("api")
+        : navigate("api?mode=local");
     }
 
     return context;

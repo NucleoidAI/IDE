@@ -264,11 +264,9 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     const { type, id } = project;
 
     if (type === "LOCAL") {
-      navigate(`/${id}/api?mode=local`);
-      navigate(0);
+      navigate(`/${id}?mode=local`);
     } else if (type === "CLOUD") {
-      navigate(`/${id}/api`);
-      navigate(0);
+      navigate(`/${id}`);
     }
 
     publish("PROJECT_CHANGED", {
