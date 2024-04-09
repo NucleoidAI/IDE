@@ -100,7 +100,6 @@ function IDE() {
       console.log("Multiple projects not supported yet.");
     }
   }
-
   function sampleProject() {
     const context = State.withSample();
     context.get = (prop) => State.resolve(context, prop);
@@ -111,8 +110,7 @@ function IDE() {
       context.nucleoid
     );
 
-    navigate(`${context.nucleoid.project.id}/api?mode=local`);
-    navigate(0);
+    navigate(`/${context.nucleoid.project.id}/api?mode=local`);
 
     return context;
   }
@@ -170,45 +168,47 @@ function IDE() {
     vfs.init(files);
   };
 
+  const checkRecentProject = (recentProject) => {
+    if (recentProject) {
+      if (recentProject.type === "CLOUD") {
+        navigate(`/${recentProject.id}`);
+      } else if (recentProject.type === "LOCAL") {
+        navigate(`/${recentProject.id}?mode=local`);
+      }
+    } else {
+      publish("RECENT_PROJECT_NOT_FOUND", { status: true });
+      const blankContext = blankProject();
+      setContext(initContext(blankContext));
+
+      navigate("/new/api");
+    }
+  };
+
   React.useEffect(() => {
     async function initMode() {
       const mode = Path.getMode();
       const projectId = Path.getProjectId();
       const recentProject = Path.getRecentProject();
-
       if (mode === "sample") {
         sampleProject();
       } else if (mode === "cloud") {
         project(projectId).then((result) => {
           initVfs(result);
+          console.log(result);
           return setContext(initContext(result));
         });
       } else if (mode === "local") {
         const context = getContextFromStorage(projectId);
-
         return setContext(initContext(context));
       } else if (mode === "mobile") {
         return setContext("mobile");
       } else {
-        if (recentProject) {
-          if (recentProject.type === "CLOUD") {
-            navigate(`${recentProject.id}/api`);
-            navigate(0);
-          } else if (recentProject.type === "LOCAL") {
-            navigate(`${recentProject.id}/api?mode=local`);
-            navigate(0);
-          }
-        } else {
-          publish("RECENT_PROJECT_NOT_FOUND", { status: true });
-          const blankContext = blankProject();
-          setContext(initContext(blankContext));
-
-          navigate("/new/api");
-        }
+        checkRecentProject(recentProject);
       }
     }
 
     initMode();
+
     // eslint-disable-next-line
   }, [progressElement.classList, id]);
   useEffect(() => {
