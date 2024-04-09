@@ -24,12 +24,13 @@ const routes = [
   {
     container: {
       element: <IDEContainer />,
+      path: "/:id/",
     },
     pages: [
       {
         title: "API",
         link: "api",
-        path: ":id/api",
+        path: "/:id/api",
         anchor: true,
         element: <API />,
         icon: <Send />,
@@ -37,7 +38,7 @@ const routes = [
       {
         title: "Functions",
         link: "functions",
-        path: ":id/functions",
+        path: "/:id/functions",
         anchor: true,
         element: <Functions />,
         icon: <Folder />,
@@ -45,7 +46,7 @@ const routes = [
       {
         title: "Logic",
         link: "logic",
-        path: ":id/logic",
+        path: "/:id/logic",
         anchor: false,
         element: <Logic />,
         icon: <LensBlur />,
@@ -53,7 +54,7 @@ const routes = [
       {
         title: "Query",
         link: "query",
-        path: ":id/query",
+        path: "/:id/query",
         anchor: false,
         element: <Query />,
         icon: <Storage />,
@@ -61,17 +62,10 @@ const routes = [
       {
         title: "Logs",
         link: "logs",
-        path: ":id/logs",
+        path: "/:id/logs",
         anchor: false,
         element: <Logs />,
         icon: <ViewCarousel />,
-      },
-    ],
-    rules: [
-      {
-        title: "Sample Redirect",
-        path: "/sample",
-        to: "/sample/api",
       },
     ],
   },
