@@ -4,7 +4,7 @@ import EducationDrawer from "../../components/EducationDrawer/EducationDrawer";
 import GraphDialog from "../../components/GraphDialog/GraphDialog";
 import Menu from "../../widgets/Menu";
 import Onboard from "../../components/Onboard";
-import { Outlet } from "react-router-dom"; // eslint-disable-line
+import { Outlet, useParams } from "react-router-dom"; // eslint-disable-line
 import Path from "../../utils/Path";
 import PopChat from "../../widgets/PopChat";
 import ProcessDrawer from "../../widgets/ProcessDrawer/ProcessDrawer";
@@ -31,6 +31,7 @@ function IDE() {
   const navigate = useNavigate();
   const location = useLocation();
   const modeQuery = location.search;
+  const { id } = useParams();
   const page = location.pathname.split("/")[2];
 
   const [event] = useEvent("PAGE_LOADED", {
@@ -209,7 +210,7 @@ function IDE() {
 
     initMode();
     // eslint-disable-next-line
-  }, [progressElement.classList]);
+  }, [progressElement.classList, id]);
   useEffect(() => {
     if (context && event.name) {
       publish("CONTAINER_LOADED", {
