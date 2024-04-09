@@ -4,7 +4,6 @@ import EducationDrawer from "../../components/EducationDrawer/EducationDrawer";
 import GraphDialog from "../../components/GraphDialog/GraphDialog";
 import Menu from "../../widgets/Menu";
 import Onboard from "./Onboarding";
-import { Outlet, useParams } from "react-router-dom"; // eslint-disable-line
 import Path from "../../utils/Path";
 import PopChat from "../../widgets/PopChat";
 import ProcessDrawer from "../../widgets/ProcessDrawer/ProcessDrawer";
@@ -21,6 +20,7 @@ import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import vfs from "../../vfs";
 
+import { Outlet, useParams } from "react-router-dom"; // eslint-disable-line
 import React, { useEffect } from "react";
 import { publish, useEvent } from "@nucleoidai/react-event";
 import { useMediaQuery, useTheme } from "@mui/material";
