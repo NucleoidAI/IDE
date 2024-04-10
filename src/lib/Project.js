@@ -81,8 +81,8 @@ function createObject(codeSnippet) {
 }
 
 function createCodeSnippets(codeBlock) {
-  const declarationSnippets = [];
-  const functionSnippets = [];
+  const declerativeSnippets = [];
+  const imperativeSnippets = [];
 
   const sourceFile = createASTFromCode(codeBlock);
 
@@ -100,11 +100,11 @@ function createCodeSnippets(codeBlock) {
         ts.isBinaryExpression(expression) &&
         expression.left.getText(sourceFile).startsWith("$")
       ) {
-        declarationSnippets.push(node.getText(sourceFile));
+        declerativeSnippets.push(node.getText(sourceFile));
       }
     } else {
       if (ts.isFunctionDeclaration(node) || ts.isClassDeclaration(node)) {
-        functionSnippets.push(node.getText(sourceFile));
+        imperativeSnippets.push(node.getText(sourceFile));
       }
     }
 
@@ -114,8 +114,8 @@ function createCodeSnippets(codeBlock) {
   visit(sourceFile);
 
   return {
-    declarationSnippets,
-    functionSnippets,
+    declerativeSnippets,
+    imperativeSnippets,
   };
 }
 
@@ -233,18 +233,20 @@ function extractProperties(classDefinition) {
 }
 
 function compile(blocks) {
-  const functionSnippets = [];
-  const declarationSnippets = [];
+  const imperativeSnippets = [];
+  const declerativeSnippets = [];
 
   blocks.forEach((codeBlock) => {
-    const { functionSnippets: functions, declarationSnippets: declarations } =
-      createCodeSnippets(codeBlock);
-    functionSnippets.push(...functions);
-    declarationSnippets.push(...declarations);
+    const {
+      imperativeSnippets: imperatives,
+      declerativeSnippets: decleratives,
+    } = createCodeSnippets(codeBlock);
+    imperativeSnippets.push(...imperatives);
+    declerativeSnippets.push(...decleratives);
   });
 
-  const functions = functionSnippets.map((snippet) => createObject(snippet));
-  const declarations = declarationSnippets.map((snippet) =>
+  const functions = imperativeSnippets.map((snippet) => createObject(snippet));
+  const declarations = declerativeSnippets.map((snippet) =>
     createObject(snippet)
   );
 
