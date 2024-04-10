@@ -29,7 +29,9 @@ function typeCheck(codeSnippet) {
         (ts.isExpressionStatement(node) &&
           ((ts.isCallExpression(node.expression) &&
             node.expression.expression.text === "use") ||
-            ts.isBinaryExpression(node.expression)))
+            ts.isBinaryExpression(node.expression))) ||
+        (ts.isIfStatement(node) &&
+          node.expression.getText(sourceFile).includes("$"))
       ) {
         return "declaration";
       }
@@ -41,6 +43,7 @@ function typeCheck(codeSnippet) {
 
     return result !== undefined ? result : null;
   } catch (error) {
+    console.error("Error in typeCheck:", error);
     return null;
   }
 }
@@ -49,8 +52,9 @@ function createObject(codeSnippet) {
   const codeType = typeCheck(codeSnippet);
 
   if (codeType === "function") {
+    const functionName = extractFunctionName(codeSnippet);
     return {
-      path: "",
+      path: "/" + functionName,
       params: [],
       type: "FUNCTION",
       definition: codeSnippet,
@@ -60,7 +64,7 @@ function createObject(codeSnippet) {
     const constructorParams = extractConstructorParams(codeSnippet);
 
     return {
-      path: className,
+      path: "/" + className,
       params: constructorParams,
       type: "CLASS",
       definition: codeSnippet,
@@ -86,7 +90,11 @@ function createCodeSnippets(codeBlock) {
   const isDeclarative = firstLine.includes("declarative");
 
   function visit(node) {
-    if (isDeclarative && ts.isExpressionStatement(node)) {
+    if (
+      isDeclarative ||
+      ts.isExpressionStatement(node) ||
+      ts.isIfStatement(node)
+    ) {
       const expression = node.expression;
       if (
         ts.isBinaryExpression(expression) &&
@@ -166,6 +174,22 @@ function extractClassName(classDefinition) {
   return className;
 }
 
+function extractFunctionName(functionDefinition) {
+  const sourceFile = createASTFromCode(functionDefinition);
+  let functionName = "";
+
+  function visit(node) {
+    if (ts.isFunctionDeclaration(node)) {
+      functionName = node.name.getText(sourceFile);
+    }
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
+
+  return functionName;
+}
+
 function extractConstructorParams(classDefinition) {
   const sourceFile = createASTFromCode(classDefinition);
 
@@ -185,7 +209,6 @@ function extractConstructorParams(classDefinition) {
   }
 
   visit(sourceFile);
-
   return constructorParams;
 }
 
