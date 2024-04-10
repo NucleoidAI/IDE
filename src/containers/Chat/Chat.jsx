@@ -23,10 +23,11 @@ function Chat() {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
-    if (isMobile && Settings.collapseCodeBlocks() !== true) {
+    if (isMobile) {
       Settings.collapseCodeBlocks(true);
     }
-  }, [isMobile]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (event.name) {
