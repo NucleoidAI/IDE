@@ -18,7 +18,9 @@ const ChatWidget = () => {
   const { chatId } = useParams("chatId");
 
   const [loading, setLoading] = useState(false);
-  const [landingLevel] = useEvent("LANDING_LEVEL_ACHIEVED", { level: 0 });
+  const [landingLevel] = useEvent("ONBOARDING_LEVEL_ACHIEVED", {
+    level: Number.MAX_SAFE_INTEGER,
+  });
   const messageInputRef = useRef();
   const userMessageRef = useRef("");
   const [chat, sendMessage] = useChat();
@@ -43,12 +45,8 @@ const ChatWidget = () => {
     }
   };
 
-  const handleConvertToProject = () => {
-    publish("CHAT_CONVERTED", chat);
-  };
-
   useEffect(() => {
-    loadChat();
+    loadChat().then();
     // eslint-disable-next-line
   }, [chatId]);
 
@@ -67,6 +65,7 @@ const ChatWidget = () => {
 
     setLoading(false);
   };
+
   const handleSuggestionClick = async (suggestion) => {
     setLoading(true);
     userMessageRef.current = suggestion.summary;
@@ -118,9 +117,8 @@ const ChatWidget = () => {
       <MessageInput
         handleSendMessage={handleSendMessage}
         ref={messageInputRef}
-        showConvertToProject={landingLevel.level === 1}
-        onConvertToProject={handleConvertToProject}
         loading={loading}
+        showConvertToProject={landingLevel.level === 1}
       />
     </Box>
   );

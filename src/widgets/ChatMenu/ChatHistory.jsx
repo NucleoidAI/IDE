@@ -2,8 +2,9 @@ import CodeIcon from "@mui/icons-material/Code";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ToggleableMenu from "../../components/ToggleableMenu";
-import { storage } from "@nucleoidjs/webstorage";
 import styles from "./styles.js";
+import useChat from "../Chat/useChat.jsx";
+import { useEvent } from "@nucleoidai/react-event";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -14,23 +15,15 @@ import {
   Tooltip,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { publish, useEvent } from "@nucleoidai/react-event";
 
 function ChatHistory() {
   const navigate = useNavigate();
   const [selectedChat] = useEvent("CHAT_SELECTED");
   const [initChat] = useEvent("CHAT_INITIATED");
   const [chats, setChats] = useState([]);
+  const [, , convertChat, deleteChat] = useChat();
 
   const handleChatClick = (chatId) => navigate(`/chat/${chatId}`);
-  const handleConvertToProject = (chatId) => {
-    publish("CONVERT_TO_PROJECT", chatId);
-    storage.set("ide", "landing", { level: 2 });
-    publish("LANDING_LEVEL_ACHIEVED", { level: 2 });
-  };
-  const handleDeleteChat = (chatId) => {
-    console.log(`Deleting chat ${chatId}`);
-  };
 
   useEffect(() => {
     const menu = [];
@@ -74,18 +67,12 @@ function ChatHistory() {
               />
               <ToggleableMenu defaultIcon={<MoreVertIcon fontSize="small" />}>
                 <Tooltip title="Convert to Project">
-                  <IconButton
-                    size="small"
-                    onClick={() => handleConvertToProject(chat.id)}
-                  >
+                  <IconButton size="small" onClick={() => convertChat()}>
                     <CodeIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>
                 <Tooltip title="Delete Chat">
-                  <IconButton
-                    size="small"
-                    onClick={() => handleDeleteChat(chat.id)}
-                  >
+                  <IconButton size="small" onClick={() => deleteChat()}>
                     <DeleteIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>
