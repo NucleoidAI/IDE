@@ -5,6 +5,7 @@ import ToggleableMenu from "../../components/ToggleableMenu";
 import { storage } from "@nucleoidjs/webstorage";
 import styles from "./styles.js";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import {
   Box,
@@ -20,6 +21,7 @@ function ChatHistory() {
   const navigate = useNavigate();
   const [selectedChat] = useEvent("CHAT_SELECTED");
   const [initChat] = useEvent("CHAT_INITIATED");
+  const { chatId } = useParams();
   const [chats, setChats] = useState([]);
 
   const handleChatClick = (chatId) => navigate(`/chat/${chatId}`);
@@ -28,8 +30,15 @@ function ChatHistory() {
     storage.set("ide", "landing", { level: 2 });
     publish("LANDING_LEVEL_ACHIEVED", { level: 2 });
   };
-  const handleDeleteChat = (chatId) => {
-    console.log(`Deleting chat ${chatId}`);
+  const handleDeleteChat = (deletedChatId) => {
+    storage.remove("ide", "chat", "sessions", deletedChatId);
+    setChats((prevChats) =>
+      prevChats.filter((chat) => chat.id !== deletedChatId)
+    );
+
+    if (chatId === deletedChatId) {
+      navigate("/chat/");
+    }
   };
 
   useEffect(() => {
