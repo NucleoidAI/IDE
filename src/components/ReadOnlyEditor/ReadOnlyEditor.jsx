@@ -1,16 +1,26 @@
 import "highlight.js/styles/github-dark.css";
 
+import EditIcon from "@mui/icons-material/Edit";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import hljs from "highlight.js";
 
-import { Box, Stack, Typography } from "@mui/material";
-import React, { useEffect, useRef } from "react";
+import { Box, Collapse, IconButton, Stack, Typography } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
 
-const ReadOnlyEditor = ({ language, value, onActionClick, actionIcon }) => {
+const ReadOnlyEditor = ({ language, value, onActionClick, isCollapsed }) => {
   const codeRef = useRef(null);
+  const [collapsed, setCollapsed] = useState(isCollapsed);
 
   useEffect(() => {
-    hljs.highlightBlock(codeRef.current);
+    if (codeRef.current) {
+      hljs.highlightElement(codeRef.current);
+    }
   }, [language, value]);
+
+  const toggleCollapse = () => {
+    setCollapsed(!collapsed);
+  };
 
   return (
     <Stack
@@ -31,20 +41,24 @@ const ReadOnlyEditor = ({ language, value, onActionClick, actionIcon }) => {
         <Typography m={0.4} variant="subtitle">
           Code
         </Typography>
-        <Box
-          component={actionIcon}
-          onClick={onActionClick}
-          sx={{
-            "&:hover": {
-              color: "gray",
-              cursor: "pointer",
-            },
-          }}
-        />{" "}
+        <Box>
+          <IconButton onClick={toggleCollapse}>
+            {collapsed ? (
+              <ExpandMoreIcon fontSize="small" />
+            ) : (
+              <ExpandLessIcon fontSize="small" />
+            )}
+          </IconButton>
+          <IconButton onClick={onActionClick}>
+            <EditIcon fontSize="small" />
+          </IconButton>
+        </Box>
       </Stack>
-      <Stack component="code" ref={codeRef} className={language}>
-        {value}
-      </Stack>
+      <Collapse in={!collapsed}>
+        <Stack component="code" ref={codeRef} className={language}>
+          {value}
+        </Stack>
+      </Collapse>
     </Stack>
   );
 };

@@ -2,6 +2,7 @@ import "./ChatMainArea.css";
 
 import ChatDisplay from "./ChatDisplay";
 import MessageInput from "./MessageInput";
+import Settings from "../../settings";
 import SuggestionsOverlay from "./SuggestionsOverlay";
 import { publish } from "@nucleoidai/react-event";
 import { storage } from "@nucleoidjs/webstorage";
@@ -22,6 +23,7 @@ const ChatWidget = () => {
   const userMessageRef = useRef("");
   const [chat, sendMessage] = useChat();
   const [error] = useEvent("EXPERT_ERROR_OCCURRED", {
+    chatId: "",
     status: false,
     type: "",
     content: "",
@@ -104,6 +106,7 @@ const ChatWidget = () => {
         loading={loading}
         error={error}
         refreshChat={refreshChat}
+        codeCollapsed={Settings.collapseCodeBlocks}
       />
 
       <SuggestionsOverlay

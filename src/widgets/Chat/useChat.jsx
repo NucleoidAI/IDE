@@ -1,5 +1,6 @@
 import expert from "../../http/expert.js";
 import { v4 as uuid } from "uuid";
+
 import { publish, useEvent } from "@nucleoidai/react-event";
 import { useEffect, useState } from "react";
 
@@ -44,6 +45,7 @@ const useChat = () => {
       setChat(updatedChat);
     } catch ({ response }) {
       publish("EXPERT_ERROR_OCCURRED", {
+        chatId: chat.id,
         status: true,
         type: response.data.type,
         content: response.data.content,
