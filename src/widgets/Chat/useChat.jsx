@@ -1,9 +1,10 @@
+import Project from "../../lib/Project";
 import expert from "../../http/expert.js";
+import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
+
 import { publish, useEvent } from "@nucleoidai/react-event";
 import { useEffect, useState } from "react";
-import Project from "../../lib/Project";
-import { useNavigate } from "react-router-dom";
 
 const initChat = {
   id: uuid(),
