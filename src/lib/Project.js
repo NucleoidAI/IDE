@@ -19,29 +19,27 @@ function typeCheck(codeSnippet) {
   try {
     const sourceFile = createASTFromCode(codeSnippet);
 
+    let result = null;
+
     const visit = (node) => {
       if (ts.isFunctionDeclaration(node)) {
-        return "function";
+        result = "function";
+        return;
       } else if (ts.isClassDeclaration(node)) {
-        return "class";
-      } else if (
-        ts.isVariableStatement(node) ||
-        (ts.isExpressionStatement(node) &&
-          ((ts.isCallExpression(node.expression) &&
-            node.expression.expression.text === "use") ||
-            ts.isBinaryExpression(node.expression))) ||
-        (ts.isIfStatement(node) &&
-          node.expression.getText(sourceFile).includes("$"))
-      ) {
-        return "declaration";
+        result = "class";
+        return;
       }
 
-      return ts.forEachChild(node, visit);
+      ts.forEachChild(node, visit);
     };
 
-    const result = visit(sourceFile);
+    visit(sourceFile);
 
-    return result !== undefined ? result : null;
+    if (result === null) {
+      result = "declaration";
+    }
+
+    return result;
   } catch (error) {
     console.error("Error in typeCheck:", error);
     return null;
