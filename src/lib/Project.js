@@ -81,27 +81,32 @@ function createObject(codeSnippet) {
 }
 
 function createCodeSnippets(codeBlock) {
-  const declerativeSnippets = [];
+  const declarativeSnippets = [];
   const imperativeSnippets = [];
 
-  const sourceFile = createASTFromCode(codeBlock);
+  let sourceFile = createASTFromCode(codeBlock);
 
-  const firstLine = sourceFile.getChildAt(0).getFullText(sourceFile).trim();
-  const isDeclarative = firstLine.includes("declarative");
+  const firstStatement = sourceFile.statements[0];
+  let isDeclarative = false;
+
+  if (
+    firstStatement &&
+    ts.isExpressionStatement(firstStatement) &&
+    ts.isStringLiteral(firstStatement.expression) &&
+    firstStatement.expression.text === "use declarative"
+  ) {
+    isDeclarative = true;
+
+    const start = firstStatement.getStart();
+    const end = firstStatement.getEnd();
+    codeBlock = codeBlock.slice(0, start) + codeBlock.slice(end);
+
+    sourceFile = createASTFromCode(codeBlock);
+  }
 
   function visit(node) {
-    if (
-      isDeclarative ||
-      ts.isExpressionStatement(node) ||
-      ts.isIfStatement(node)
-    ) {
-      const expression = node.expression;
-      if (
-        ts.isBinaryExpression(expression) &&
-        expression.left.getText(sourceFile).startsWith("$")
-      ) {
-        declerativeSnippets.push(node.getText(sourceFile));
-      }
+    if (isDeclarative) {
+      declarativeSnippets.push(node.getText(sourceFile));
     } else {
       if (ts.isFunctionDeclaration(node) || ts.isClassDeclaration(node)) {
         imperativeSnippets.push(node.getText(sourceFile));
@@ -114,7 +119,7 @@ function createCodeSnippets(codeBlock) {
   visit(sourceFile);
 
   return {
-    declerativeSnippets,
+    declarativeSnippets,
     imperativeSnippets,
   };
 }
@@ -234,19 +239,19 @@ function extractProperties(classDefinition) {
 
 function compile(blocks) {
   const imperativeSnippets = [];
-  const declerativeSnippets = [];
+  const declarativeSnippets = [];
 
   blocks.forEach((codeBlock) => {
     const {
       imperativeSnippets: imperatives,
-      declerativeSnippets: decleratives,
+      declarativeSnippets: declaratives,
     } = createCodeSnippets(codeBlock);
     imperativeSnippets.push(...imperatives);
-    declerativeSnippets.push(...decleratives);
+    declarativeSnippets.push(...declaratives);
   });
 
   const functions = imperativeSnippets.map((snippet) => createObject(snippet));
-  const declarations = declerativeSnippets.map((snippet) =>
+  const declarations = declarativeSnippets.map((snippet) =>
     createObject(snippet)
   );
 

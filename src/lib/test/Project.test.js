@@ -51,7 +51,8 @@ test("compiles declaration block", () => {
         this.barcode = barcode;
       }
     }`,
-    `if ($Item.name && $Item.barcode) {
+    `"use declarative"
+    if ($Item.name && $Item.barcode) {
        return ($Item.description = $Item.name + $Item.barcode);
      }`,
   ];
