@@ -19,6 +19,7 @@ import styles from "./styles";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import vfs from "../../vfs";
+import { v4 as uuid } from "uuid";
 
 import { Outlet, useParams } from "react-router-dom"; // eslint-disable-line
 import React, { useEffect } from "react";
@@ -33,6 +34,7 @@ function IDE() {
   const modeQuery = location.search;
   const { id } = useParams();
   const page = location.pathname.split("/")[2];
+  const [contextProviderKey, setContextProviderKey] = React.useState(uuid());
 
   const [event] = useEvent("PAGE_LOADED", {
     name: null,
@@ -176,7 +178,6 @@ function IDE() {
         navigate(`/${recentProject.id}?mode=local`);
       }
     } else {
-      console.log("recent project not found");
       publish("RECENT_PROJECT_NOT_FOUND", { status: true });
       navigate("/new");
     }
@@ -187,16 +188,17 @@ function IDE() {
       const mode = Path.getMode();
       const projectId = Path.getProjectId();
       const recentProject = Path.getRecentProject();
+
       if (mode === "sample") {
         sampleProject();
       } else if (mode === "cloud") {
         project(projectId).then((result) => {
           initVfs(result);
-          console.log(result);
           return setContext(initContext(result));
         });
       } else if (mode === "local") {
         const context = getContextFromStorage(projectId);
+        initVfs(context);
         return setContext(initContext(context));
       } else if (mode === "mobile") {
         return setContext("mobile");
@@ -206,6 +208,8 @@ function IDE() {
       } else {
         checkRecentProject(recentProject);
       }
+
+      setContextProviderKey(uuid());
     }
 
     initMode();
@@ -218,6 +222,8 @@ function IDE() {
         name: "IDE",
       });
     }
+
+    setContextProviderKey(uuid());
   }, [context, event.name]);
 
   if (!context) return null;
@@ -230,7 +236,11 @@ function IDE() {
   }
 
   return (
-    <ContextProvider state={context} reducer={contextReducer}>
+    <ContextProvider
+      key={contextProviderKey}
+      state={context}
+      reducer={contextReducer}
+    >
       <Box sx={styles.root}>
         <Menu list={routes} query={modeQuery} title="IDE" />
         <EducationDrawer />
