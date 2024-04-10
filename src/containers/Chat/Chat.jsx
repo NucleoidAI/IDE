@@ -20,7 +20,7 @@ function Chat() {
   const { chatId } = useParams("chatId");
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
     if (isMobile) {
