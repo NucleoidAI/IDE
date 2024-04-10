@@ -5,12 +5,11 @@ import ProjectList from "./components/ProjectList";
 import React from "react";
 import State from "../../state";
 import WorkspacesIcon from "@mui/icons-material/Workspaces";
-import http from "../../http";
-import { publish } from "@nucleoidai/react-event";
 import service from "../../service";
 import { storage } from "@nucleoidjs/webstorage";
 
 import { DialogContent, DialogTitle } from "@mui/material";
+import { publish, useEvent } from "@nucleoidai/react-event";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -24,7 +23,7 @@ function applyFilter({ inputData, query }) {
   return inputData;
 }
 
-function ProjectDialog({ handleClose, open }) {
+function ProjectDialog({ handleClose, open, setOpen }) {
   const login = true;
   const { id: projectId } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,7 +32,29 @@ function ProjectDialog({ handleClose, open }) {
   const [cloudProjects, setCloudProjects] = useState([]);
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [event] = useEvent("RECENT_PROJECT_NOT_FOUND", { status: false });
+  const [projectNotFound] = useEvent("PROJECT_NOT_FOUND", { status: false });
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (event.status) {
+      setOpen(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [event.status]);
+
+  useEffect(() => {
+    if (projectNotFound.status) {
+      setOpen(true);
+      publish("GLOBAL_MESSAGE", {
+        status: true,
+        message: "Project not found",
+        severity: "error",
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectNotFound.status]);
 
   const getProjectsFromLocalStorage = () => {
     const projects = [];
@@ -64,17 +85,12 @@ function ProjectDialog({ handleClose, open }) {
     const projects = response.data;
 
     const projectPromises = projects.map(async (project) => {
-      if (project.serviceType === "SINGLE") {
-        const servicesResponse = await http.get(
-          `/projects/${project.id}/services`
-        );
-
-        project.description = servicesResponse.data[0].description;
+      if (project.type === "SINGLE") {
         project.type = "CLOUD";
         return project;
       }
 
-      if (project.serviceType === "MULTIPLE") {
+      if (project.type === "MULTIPLE") {
         console.log("Multiple services not supported yet");
       }
 
@@ -89,13 +105,10 @@ function ProjectDialog({ handleClose, open }) {
 
     const createdProject = {
       name: project.name,
-      serviceType: "SINGLE",
+      type: "SINGLE",
+      description: project.description,
     };
 
-    const service = {
-      description: project.description,
-      contextId: project.id,
-    };
     createdProject.service = service;
 
     const nucContext = { api, declarations, functions, types };
@@ -251,12 +264,9 @@ function ProjectDialog({ handleClose, open }) {
     const { type, id } = project;
 
     if (type === "LOCAL") {
-      // https://github.com/reach/router/issues/504
-      navigate(`/${id}/api?mode=local`);
-      navigate(0);
+      navigate(`/${id}?mode=local`);
     } else if (type === "CLOUD") {
-      navigate(`/${id}/api`);
-      navigate(0);
+      navigate(`/${id}`);
     }
 
     publish("PROJECT_CHANGED", {
@@ -265,8 +275,21 @@ function ProjectDialog({ handleClose, open }) {
   };
 
   const onDialogClose = () => {
-    handleClose();
-    setSearchQuery("");
+    const projectExist = Boolean(projects.length);
+    const message = `To proceed, ${
+      projectExist ? "please select a project" : "create a new project"
+    }.`;
+
+    if (!event.status && !projectNotFound.status) {
+      handleClose();
+      setSearchQuery("");
+    } else {
+      publish("GLOBAL_MESSAGE", {
+        status: true,
+        message,
+        severity: "info",
+      });
+    }
   };
 
   return (

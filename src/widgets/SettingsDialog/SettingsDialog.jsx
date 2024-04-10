@@ -53,7 +53,7 @@ const SettingsDialog = ({ handleClose }) => {
       fullWidth
       maxWidth={"md"}
       onClose={(event) => (event.key === "Escape" ? handleClose() : null)}
-      sx={{ bgcolor: "custom.darkDialogBg", zIndex: 999999999 }}
+      sx={{ bgcolor: "custom.darkDialogBg", zIndex: 2147483647 }}
       PaperProps={{
         style: {
           backgroundColor: theme.palette.custom.darkDialog,

@@ -30,7 +30,11 @@ export default function ProjectSelectSmall() {
         >
           <FileOpen sx={{ color: "#343a43" }} />
         </Button>
-        <ProjectDialog open={open} handleClose={handleClose} />
+        <ProjectDialog
+          handleClose={handleClose}
+          open={open}
+          setOpen={setOpen}
+        />
       </Box>
     </Tooltip>
   );

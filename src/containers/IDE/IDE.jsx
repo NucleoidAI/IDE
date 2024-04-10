@@ -4,7 +4,6 @@ import EducationDrawer from "../../components/EducationDrawer/EducationDrawer";
 import GraphDialog from "../../components/GraphDialog/GraphDialog";
 import Menu from "../../widgets/Menu";
 import Onboard from "./Onboarding";
-import { Outlet } from "react-router-dom"; // eslint-disable-line
 import Path from "../../utils/Path";
 import PopChat from "../../widgets/PopChat";
 import ProcessDrawer from "../../widgets/ProcessDrawer/ProcessDrawer";
@@ -21,6 +20,7 @@ import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import vfs from "../../vfs";
 
+import { Outlet, useParams } from "react-router-dom"; // eslint-disable-line
 import React, { useEffect } from "react";
 import { publish, useEvent } from "@nucleoidai/react-event";
 import { useMediaQuery, useTheme } from "@mui/material";
@@ -31,6 +31,8 @@ function IDE() {
   const navigate = useNavigate();
   const location = useLocation();
   const modeQuery = location.search;
+  const { id } = useParams();
+  const page = location.pathname.split("/")[2];
 
   const [event] = useEvent("PAGE_LOADED", {
     name: null,
@@ -50,6 +52,10 @@ function IDE() {
   function getContextFromStorage(projectId) {
     const context = storage.get("ide", "projects", projectId);
 
+    if (!context) {
+      return setContext("error");
+    }
+
     const nucContext = State.withPages({ context });
     nucContext.get = (prop) => State.resolve(nucContext, prop);
 
@@ -60,13 +66,17 @@ function IDE() {
     const [projectResult, serviceResult] = await Promise.all([
       service.getProject(projectId),
       service.getProjectServices(projectId),
-    ]);
+    ]).catch((error) => {
+      if (error.response.status === 404) {
+        setContext("error");
+      }
+    });
 
     const projectService = serviceResult.data;
     const project = projectResult.data;
 
-    if (project.serviceType === "SINGLE") {
-      const contextId = projectService[0].contextId;
+    if (project.type === "SINGLE") {
+      const contextId = projectService[0].id;
       const contextResult = await service.getContext(contextId);
 
       const context = contextResult.data;
@@ -76,16 +86,20 @@ function IDE() {
       nucContext.nucleoid.project = {
         type: "CLOUD",
         name: project.name,
-        id: projectService[0].contextId,
-        description: projectService[0].description,
+        id: contextId,
+        description: project.description,
       };
+
+      storage.set("ide", "selected", "project", {
+        id: project.id,
+        type: "CLOUD",
+      });
 
       return nucContext;
     } else {
-      console.log("Multiple services not supported yet");
+      console.log("Multiple projects not supported yet.");
     }
   }
-
   function sampleProject() {
     const context = State.withSample();
     context.get = (prop) => State.resolve(context, prop);
@@ -96,8 +110,14 @@ function IDE() {
       context.nucleoid
     );
 
-    navigate(`${context.nucleoid.project.id}/api?mode=local`);
-    navigate(0);
+    navigate(`/${context.nucleoid.project.id}/api?mode=local`);
+
+    return context;
+  }
+
+  function blankProject() {
+    const context = State.withBlank();
+    context.get = (prop) => State.resolve(context, prop);
 
     return context;
   }
@@ -124,6 +144,22 @@ function IDE() {
       Settings.landing({ level: Number.MAX_SAFE_INTEGER });
     }
 
+    if (
+      context.nucleoid.project.type === "LOCAL" &&
+      storage.get("ide", "projects", context.nucleoid.project.id)
+    ) {
+      storage.set("ide", "selected", "project", {
+        id: context.nucleoid.project.id,
+        type: "LOCAL",
+      });
+    }
+
+    if (!page) {
+      context.nucleoid.project.type === "CLOUD"
+        ? navigate("api")
+        : navigate("api?mode=local");
+    }
+
     return context;
   };
 
@@ -132,36 +168,49 @@ function IDE() {
     vfs.init(files);
   };
 
+  const checkRecentProject = (recentProject) => {
+    if (recentProject) {
+      if (recentProject.type === "CLOUD") {
+        navigate(`/${recentProject.id}`);
+      } else if (recentProject.type === "LOCAL") {
+        navigate(`/${recentProject.id}?mode=local`);
+      }
+    } else {
+      publish("RECENT_PROJECT_NOT_FOUND", { status: true });
+      const blankContext = blankProject();
+      setContext(initContext(blankContext));
+
+      navigate("/new/api");
+    }
+  };
+
   React.useEffect(() => {
     async function initMode() {
       const mode = Path.getMode();
       const projectId = Path.getProjectId();
-
+      const recentProject = Path.getRecentProject();
       if (mode === "sample") {
         sampleProject();
       } else if (mode === "cloud") {
         project(projectId).then((result) => {
           initVfs(result);
+          console.log(result);
           return setContext(initContext(result));
         });
       } else if (mode === "local") {
         const context = getContextFromStorage(projectId);
-
-        initVfs(context);
-
         return setContext(initContext(context));
       } else if (mode === "mobile") {
         return setContext("mobile");
       } else {
-        navigate("/sample/api");
-        navigate(0);
+        checkRecentProject(recentProject);
       }
     }
 
     initMode();
-    // eslint-disable-next-line
-  }, [progressElement.classList]);
 
+    // eslint-disable-next-line
+  }, [progressElement.classList, id]);
   useEffect(() => {
     if (context && event.name) {
       publish("CONTAINER_LOADED", {
@@ -171,7 +220,13 @@ function IDE() {
   }, [context, event.name]);
 
   if (!context) return null;
-  if (context === "error") return "forbidden";
+
+  if (context === "error") {
+    const blankContext = blankProject();
+    setContext(initContext(blankContext));
+    publish("PROJECT_NOT_FOUND", { status: true });
+    navigate("/error/api");
+  }
 
   return (
     <ContextProvider state={context} reducer={contextReducer}>
