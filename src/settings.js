@@ -94,9 +94,10 @@ const Settings = {
   },
   collapseCodeBlocks: function (value) {
     if (value !== undefined) {
-      storage.set("ide", "collapseCodeBlocks", value);
+      storage.set("chat", "settings", "collapseCodeBlocks", value);
+    } else {
+      return storage.get("chat", "settings", "collapseCodeBlocks") || false;
     }
-    return storage.get("ide", "collapseCodeBlocks") || false;
   },
 };
 
