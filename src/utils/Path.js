@@ -55,6 +55,8 @@ const getMode = () => {
       return "chat";
     } else if (id === "new") {
       return "new";
+    } else if (id === "error") {
+      return "error";
     } else if (id) {
       return "cloud";
     } else {
