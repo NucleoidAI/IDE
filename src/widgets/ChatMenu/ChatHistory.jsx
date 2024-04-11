@@ -70,11 +70,8 @@ function ChatHistory() {
   const [initChat] = useEvent("CHAT_INITIATED");
   const { chatId } = useParams();
   const [chats, setChats] = useState([]);
-<<<<<<< Updated upstream
   const [, , convertChat, deleteChat] = useChat();
-=======
   const { showConfirmDialog, ConfirmDialog } = useConfirmDialog();
->>>>>>> Stashed changes
 
   const handleChatClick = (chatId) => navigate(`/chat/${chatId}`);
 
