@@ -2,6 +2,7 @@ import CodeIcon from "@mui/icons-material/Code";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ToggleableMenu from "../../components/ToggleableMenu";
+import { storage } from "@nucleoidjs/webstorage";
 import styles from "./styles.js";
 import useChat from "../Chat/useChat.jsx";
 import { useEvent } from "@nucleoidai/react-event";
@@ -83,6 +84,7 @@ function ChatHistory() {
         publish("CONVERT_TO_PROJECT", chatId);
         storage.set("ide", "landing", { level: 2 });
         publish("LANDING_LEVEL_ACHIEVED", { level: 2 });
+        convertChat();
       }
     );
   };
@@ -92,6 +94,7 @@ function ChatHistory() {
       "Are you sure you want to delete this chat?",
       () => {
         storage.remove("ide", "chat", "sessions", deletedChatId);
+        deleteChat(deletedChatId);
         setChats((prevChats) =>
           prevChats.filter((chat) => chat.id !== deletedChatId)
         );
@@ -142,12 +145,18 @@ function ChatHistory() {
               />
               <ToggleableMenu defaultIcon={<MoreVertIcon fontSize="small" />}>
                 <Tooltip title="Convert to Project">
-                  <IconButton size="small" onClick={() => convertChat()}>
+                  <IconButton
+                    size="small"
+                    onClick={() => handleConvertToProject(chat.id)}
+                  >
                     <CodeIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>
                 <Tooltip title="Delete Chat">
-                  <IconButton size="small" onClick={() => deleteChat()}>
+                  <IconButton
+                    size="small"
+                    onClick={() => handleDeleteChat(chat.id)}
+                  >
                     <DeleteIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>
