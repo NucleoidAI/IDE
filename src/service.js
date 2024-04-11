@@ -59,7 +59,7 @@ const addProject = (project) => {
 
 const updateProject = (projectId, name) => {
   return http(`/projects/${projectId}`, {
-    method: "PUT",
+    method: "PATCH",
     data: { name },
   });
 };

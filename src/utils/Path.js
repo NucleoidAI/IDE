@@ -1,3 +1,5 @@
+import { storage } from "@nucleoidjs/webstorage";
+
 const isUsed = (paths, prefix, suffix, value) => {
   if (value === "" && paths.includes(prefix.charAt(0, prefix.length - 1)))
     return true;
@@ -22,8 +24,18 @@ const addSlashMark = (path) => {
 };
 
 const getProjectId = () => {
-  const id = window.location.pathname.split("/")[2];
-  return id;
+  const parts = window.location.pathname.split("/");
+  return parts.length >= 3 ? parts[2] : null;
+};
+
+const getRecentProject = () => {
+  const recentProject = storage.get("ide", "selected", "project");
+
+  if (recentProject) {
+    return recentProject;
+  }
+
+  return null;
 };
 
 const getMode = () => {
@@ -44,7 +56,7 @@ const getMode = () => {
     } else if (id) {
       return "cloud";
     } else {
-      return "undefined";
+      return null;
     }
   }
 };
@@ -55,6 +67,7 @@ const Path = {
   addSlashMark,
   getMode,
   getProjectId,
+  getRecentProject,
 };
 
 export default Path;

@@ -4,7 +4,6 @@ import NucEditor from "../../components/NucEditor/NucEditor";
 import Path from "../../utils/Path";
 import { contextToMap } from "../../utils/Parser";
 import { publish } from "@nucleoidai/react-event";
-
 import rules from "./rules";
 import service from "../../service";
 import { storage } from "@nucleoidjs/webstorage";
@@ -110,7 +109,10 @@ const VFSEditor = React.forwardRef((props, ref) => {
     } = context.nucleoid;
 
     if (mode === "cloud") {
-      service.saveContext(id, context.nucleoid);
+      const nucContext = { ...context.nucleoid };
+      delete nucContext.project;
+
+      service.saveContext(id, nucContext);
     } else if (mode === "local") {
       storage.set("ide", "projects", id, context.nucleoid);
     } else if (mode === "terminal") {

@@ -5,6 +5,7 @@ import Logic from "./pages/ide/Logic";
 import Login from "./pages/ide/login";
 import Logs from "./pages/ide/Logs";
 import Mobile from "./pages/ide/Mobile";
+import NotFound from "./pages/NotFound";
 import Query from "./pages/ide/Query";
 
 import {
@@ -18,17 +19,19 @@ import React, { lazy } from "react";
 
 const ChatContainer = lazy(() => import("./containers/Chat"));
 const IDEContainer = lazy(() => import("./containers/IDE"));
+const Blank = lazy(() => import("./containers/Blank/Blank"));
 
 const routes = [
   {
     container: {
       element: <IDEContainer />,
+      path: ["/", "/:id"],
     },
     pages: [
       {
         title: "API",
         link: "api",
-        path: ":id/api",
+        path: "/:id/api",
         anchor: true,
         element: <API />,
         icon: <Send />,
@@ -36,7 +39,7 @@ const routes = [
       {
         title: "Functions",
         link: "functions",
-        path: ":id/functions",
+        path: "/:id/functions",
         anchor: true,
         element: <Functions />,
         icon: <Folder />,
@@ -44,7 +47,7 @@ const routes = [
       {
         title: "Logic",
         link: "logic",
-        path: ":id/logic",
+        path: "/:id/logic",
         anchor: false,
         element: <Logic />,
         icon: <LensBlur />,
@@ -52,7 +55,7 @@ const routes = [
       {
         title: "Query",
         link: "query",
-        path: ":id/query",
+        path: "/:id/query",
         anchor: false,
         element: <Query />,
         icon: <Storage />,
@@ -60,7 +63,7 @@ const routes = [
       {
         title: "Logs",
         link: "logs",
-        path: ":id/logs",
+        path: "/:id/logs",
         anchor: false,
         element: <Logs />,
         icon: <ViewCarousel />,
@@ -81,8 +84,19 @@ const routes = [
     ],
   },
   {
-    path: "/mobile",
-    element: <Mobile />,
+    container: {
+      element: <Blank />,
+    },
+    pages: [
+      {
+        path: "/mobile",
+        element: <Mobile />,
+      },
+      {
+        path: "*",
+        element: <NotFound />,
+      },
+    ],
   },
   { path: "/graph" },
   { path: "/login", element: <Login /> },

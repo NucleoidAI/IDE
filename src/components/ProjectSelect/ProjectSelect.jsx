@@ -30,7 +30,7 @@ export default function ProjectSelect() {
           {projectName}
         </Typography>
       </Button>
-      <ProjectDialog handleClose={handleClose} open={open} />
+      <ProjectDialog handleClose={handleClose} open={open} setOpen={setOpen} />
     </Box>
   );
 }

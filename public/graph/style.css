@@ -77,7 +77,7 @@ a:hover {
   margin: 0.2em;
   cursor: pointer;
   color: #fff;
-  z-index: 9999999;
+  z-index: 2147483647;
 }
 
 .config-closed .config {

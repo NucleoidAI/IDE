@@ -239,7 +239,6 @@ export const declarations = [
       {
         //do something
       }
-    
     `,
   },
   {
@@ -247,7 +246,6 @@ export const declarations = [
     summary: "All orders barcode start with NUC prefix",
     definition: `
       $Order.barcode.include("NUC")
-    
     `,
   },
 ];
