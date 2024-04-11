@@ -6,6 +6,7 @@ import { storage } from "@nucleoidjs/webstorage";
 import styles from "./styles.js";
 import useChat from "../Chat/useChat.jsx";
 import useConfirmDialog from "../../components/ConfirmDialog";
+import { useEvent } from "@nucleoidai/react-event";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
@@ -17,7 +18,6 @@ import {
   Tooltip,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { publish, useEvent } from "@nucleoidai/react-event";
 
 function ChatHistory() {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ function ChatHistory() {
 
   const handleChatClick = (chatId) => navigate(`/chat/${chatId}`);
 
-  const handleConvertToProject = (chatId) => {
+  const handleConvertToProject = () => {
     showConfirmDialog(
       "Convert to Project",
       "Are you sure you want to convert this chat to a project?",
@@ -98,7 +98,7 @@ function ChatHistory() {
                 <Tooltip title="Convert to Project">
                   <IconButton
                     size="small"
-                    onClick={() => handleConvertToProject(chat.id)}
+                    onClick={() => handleConvertToProject()}
                   >
                     <CodeIcon fontSize="small" />
                   </IconButton>
