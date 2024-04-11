@@ -10,6 +10,12 @@ import { useParams } from "react-router-dom";
 
 import {
   Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   IconButton,
   ListItemButton,
   ListItemText,
@@ -17,34 +23,90 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
+function useConfirmDialog() {
+  const [open, setOpen] = useState(false);
+  const [title, setTitle] = useState("");
+  const [message, setMessage] = useState("");
+  const [onConfirm, setOnConfirm] = useState(() => () => {});
+
+  const showConfirmDialog = (title, message, onConfirm) => {
+    setTitle(title);
+    setMessage(message);
+    setOnConfirm(() => onConfirm);
+    setOpen(true);
+  };
+
+  const hideConfirmDialog = () => {
+    setOpen(false);
+  };
+
+  const ConfirmDialog = () => (
+    <Dialog open={open} onClose={hideConfirmDialog}>
+      <DialogTitle>{title}</DialogTitle>
+      <DialogContent>
+        <DialogContentText>{message}</DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={hideConfirmDialog}>Cancel</Button>
+        <Button
+          onClick={() => {
+            onConfirm();
+            hideConfirmDialog();
+          }}
+          autoFocus
+        >
+          Confirm
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+
+  return { showConfirmDialog, ConfirmDialog };
+}
+
 function ChatHistory() {
   const navigate = useNavigate();
   const [selectedChat] = useEvent("CHAT_SELECTED");
   const [initChat] = useEvent("CHAT_INITIATED");
   const { chatId } = useParams();
   const [chats, setChats] = useState([]);
+<<<<<<< Updated upstream
   const [, , convertChat, deleteChat] = useChat();
+=======
+  const { showConfirmDialog, ConfirmDialog } = useConfirmDialog();
+>>>>>>> Stashed changes
 
   const handleChatClick = (chatId) => navigate(`/chat/${chatId}`);
+
   const handleConvertToProject = (chatId) => {
-    publish("CONVERT_TO_PROJECT", chatId);
-    storage.set("ide", "landing", { level: 2 });
-    publish("LANDING_LEVEL_ACHIEVED", { level: 2 });
+    showConfirmDialog(
+      "Convert to Project",
+      "Are you sure you want to convert this chat to a project?",
+      () => {
+        publish("CONVERT_TO_PROJECT", chatId);
+        storage.set("ide", "landing", { level: 2 });
+        publish("LANDING_LEVEL_ACHIEVED", { level: 2 });
+      }
+    );
   };
   const handleDeleteChat = (deletedChatId) => {
-    storage.remove("ide", "chat", "sessions", deletedChatId);
-    setChats((prevChats) =>
-      prevChats.filter((chat) => chat.id !== deletedChatId)
+    showConfirmDialog(
+      "Delete Chat",
+      "Are you sure you want to delete this chat?",
+      () => {
+        storage.remove("ide", "chat", "sessions", deletedChatId);
+        setChats((prevChats) =>
+          prevChats.filter((chat) => chat.id !== deletedChatId)
+        );
+        if (chatId === deletedChatId) {
+          navigate("/chat");
+        }
+      }
     );
-
-    if (chatId === deletedChatId) {
-      navigate("/chat/");
-    }
   };
 
   useEffect(() => {
     const menu = [];
-
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key.startsWith("ide.chat.sessions.")) {
@@ -57,7 +119,6 @@ function ChatHistory() {
         } catch (err) {}
       }
     }
-
     setChats(menu.sort((a, b) => b.created - a.created));
   }, [selectedChat, initChat]);
 
@@ -97,6 +158,7 @@ function ChatHistory() {
             </ListItemButton>
           </React.Fragment>
         ))}
+      <ConfirmDialog />
     </Box>
   );
 }
