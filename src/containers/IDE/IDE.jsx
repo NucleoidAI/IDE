@@ -18,8 +18,8 @@ import { storage } from "@nucleoidjs/webstorage";
 import styles from "./styles";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import vfs from "../../vfs";
 import { v4 as uuid } from "uuid";
+import vfs from "../../vfs";
 
 import { Outlet, useParams } from "react-router-dom"; // eslint-disable-line
 import React, { useEffect } from "react";
@@ -55,8 +55,10 @@ function IDE() {
     const context = storage.get("ide", "projects", projectId);
 
     if (!context) {
-      return setContext("error");
+      navigate("/error");
     }
+    publish("PROJECT_NOT_FOUND", { status: false });
+    publish("RECENT_PROJECT_NOT_FOUND", { status: false });
 
     const nucContext = State.withPages({ context });
     nucContext.get = (prop) => State.resolve(nucContext, prop);
@@ -70,12 +72,14 @@ function IDE() {
       service.getProjectServices(projectId),
     ]).catch((error) => {
       if (error.response.status === 404) {
-        setContext("error");
+        return [undefined, undefined];
       }
     });
 
     const projectService = serviceResult.data;
     const project = projectResult.data;
+    publish("PROJECT_NOT_FOUND", { status: false });
+    publish("RECENT_PROJECT_NOT_FOUND", { status: false });
 
     if (project.type === "SINGLE") {
       const contextId = projectService[0].id;
@@ -125,6 +129,7 @@ function IDE() {
   }
 
   const initContext = (context) => {
+    console.log(context);
     if (
       !Settings.description() ||
       Settings.description() !== context.nucleoid.project.description
@@ -166,12 +171,16 @@ function IDE() {
   };
 
   const initVfs = (context) => {
+    console.log(context);
     const files = contextToMap(context.nucleoid);
     vfs.init(files);
   };
 
   const checkRecentProject = (recentProject) => {
     if (recentProject) {
+      publish("PROJECT_NOT_FOUND", { status: false });
+      publish("RECENT_PROJECT_NOT_FOUND", { status: false });
+
       if (recentProject.type === "CLOUD") {
         navigate(`/${recentProject.id}`);
       } else if (recentProject.type === "LOCAL") {
@@ -192,10 +201,14 @@ function IDE() {
       if (mode === "sample") {
         sampleProject();
       } else if (mode === "cloud") {
-        project(projectId).then((result) => {
-          initVfs(result);
-          return setContext(initContext(result));
-        });
+        project(projectId)
+          .then((result) => {
+            initVfs(result);
+            return setContext(initContext(result));
+          })
+          .catch(() => {
+            navigate("/error/api");
+          });
       } else if (mode === "local") {
         const context = getContextFromStorage(projectId);
         initVfs(context);
@@ -205,6 +218,10 @@ function IDE() {
       } else if (mode === "new") {
         const blankContext = blankProject();
         setContext(initContext(blankContext));
+      } else if (mode === "error") {
+        const blankContext = blankProject();
+        setContext(initContext(blankContext));
+        publish("PROJECT_NOT_FOUND", { status: true });
       } else {
         checkRecentProject(recentProject);
       }
@@ -228,12 +245,7 @@ function IDE() {
 
   if (!context) return null;
 
-  if (context === "error") {
-    const blankContext = blankProject();
-    setContext(initContext(blankContext));
-    publish("PROJECT_NOT_FOUND", { status: true });
-    navigate("/error/api");
-  }
+  if (context === "error") return <div>forbiden</div>;
 
   return (
     <ContextProvider
