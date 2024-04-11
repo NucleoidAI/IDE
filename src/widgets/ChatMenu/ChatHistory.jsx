@@ -2,8 +2,9 @@ import CodeIcon from "@mui/icons-material/Code";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ToggleableMenu from "../../components/ToggleableMenu";
-import { storage } from "@nucleoidjs/webstorage";
 import styles from "./styles.js";
+import useChat from "../Chat/useChat.jsx";
+import { useEvent } from "@nucleoidai/react-event";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
@@ -15,7 +16,6 @@ import {
   Tooltip,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { publish, useEvent } from "@nucleoidai/react-event";
 
 function ChatHistory() {
   const navigate = useNavigate();
@@ -23,6 +23,7 @@ function ChatHistory() {
   const [initChat] = useEvent("CHAT_INITIATED");
   const { chatId } = useParams();
   const [chats, setChats] = useState([]);
+  const [, , convertChat, deleteChat] = useChat();
 
   const handleChatClick = (chatId) => navigate(`/chat/${chatId}`);
   const handleConvertToProject = (chatId) => {
@@ -83,18 +84,12 @@ function ChatHistory() {
               />
               <ToggleableMenu defaultIcon={<MoreVertIcon fontSize="small" />}>
                 <Tooltip title="Convert to Project">
-                  <IconButton
-                    size="small"
-                    onClick={() => handleConvertToProject(chat.id)}
-                  >
+                  <IconButton size="small" onClick={() => convertChat()}>
                     <CodeIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>
                 <Tooltip title="Delete Chat">
-                  <IconButton
-                    size="small"
-                    onClick={() => handleDeleteChat(chat.id)}
-                  >
+                  <IconButton size="small" onClick={() => deleteChat()}>
                     <DeleteIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>

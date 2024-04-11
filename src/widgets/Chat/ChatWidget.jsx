@@ -2,6 +2,7 @@ import "./ChatMainArea.css";
 
 import ChatDisplay from "./ChatDisplay";
 import MessageInput from "./MessageInput";
+import Settings from "../../settings";
 import SuggestionsOverlay from "./SuggestionsOverlay";
 import { publish } from "@nucleoidai/react-event";
 import { storage } from "@nucleoidjs/webstorage";
@@ -17,11 +18,14 @@ const ChatWidget = () => {
   const { chatId } = useParams("chatId");
 
   const [loading, setLoading] = useState(false);
-  const [landingLevel] = useEvent("LANDING_LEVEL_ACHIEVED", { level: 0 });
+  const [landingLevel] = useEvent("ONBOARDING_LEVEL_ACHIEVED", {
+    level: Number.MAX_SAFE_INTEGER,
+  });
   const messageInputRef = useRef();
   const userMessageRef = useRef("");
   const [chat, sendMessage] = useChat();
   const [error] = useEvent("EXPERT_ERROR_OCCURRED", {
+    chatId: "",
     status: false,
     type: "",
     content: "",
@@ -41,12 +45,8 @@ const ChatWidget = () => {
     }
   };
 
-  const handleConvertToProject = () => {
-    publish("CHAT_CONVERTED", chat);
-  };
-
   useEffect(() => {
-    loadChat();
+    loadChat().then();
     // eslint-disable-next-line
   }, [chatId]);
 
@@ -65,6 +65,7 @@ const ChatWidget = () => {
 
     setLoading(false);
   };
+
   const handleSuggestionClick = async (suggestion) => {
     setLoading(true);
     userMessageRef.current = suggestion.summary;
@@ -104,6 +105,7 @@ const ChatWidget = () => {
         loading={loading}
         error={error}
         refreshChat={refreshChat}
+        codeCollapsed={Settings.collapseCodeBlocks}
       />
 
       <SuggestionsOverlay
@@ -115,9 +117,8 @@ const ChatWidget = () => {
       <MessageInput
         handleSendMessage={handleSendMessage}
         ref={messageInputRef}
-        showConvertToProject={landingLevel.level === 1}
-        onConvertToProject={handleConvertToProject}
         loading={loading}
+        showConvertToProject={landingLevel.level === 1}
       />
     </Box>
   );

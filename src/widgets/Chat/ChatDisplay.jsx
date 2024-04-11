@@ -22,6 +22,7 @@ const ChatDisplay = ({
   error,
   refreshChat,
   currentUserMessage,
+  codeCollapsed,
 }) => {
   const theme = useTheme();
   const [openDialog, setOpenDialog] = useState(false);
@@ -92,12 +93,13 @@ const ChatDisplay = ({
             key={index}
             message={message}
             handleOpenDialog={handleOpenDialog}
+            isCodeCollapsed={codeCollapsed}
           />
         ))
       )}
       {loading && <MessageBox onlyUser currentMessage={currentUserMessage} />}
       <ErrorMessage
-        show={error.status}
+        show={error.status && error.chatId === chat.id}
         content={error.content}
         type={error.type}
         refreshChat={refreshChat}
