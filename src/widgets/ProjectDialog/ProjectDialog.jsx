@@ -6,7 +6,6 @@ import State from "../../state";
 import WorkspacesIcon from "@mui/icons-material/Workspaces";
 import config from "../../../config";
 import http from "../../http";
-import { publish } from "@nucleoidai/react-event";
 import service from "../../service";
 import { storage } from "@nucleoidjs/webstorage";
 
