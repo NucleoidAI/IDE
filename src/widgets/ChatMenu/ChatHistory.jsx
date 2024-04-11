@@ -5,65 +5,19 @@ import ToggleableMenu from "../../components/ToggleableMenu";
 import { storage } from "@nucleoidjs/webstorage";
 import styles from "./styles.js";
 import useChat from "../Chat/useChat.jsx";
-import { useEvent } from "@nucleoidai/react-event";
+import useConfirmDialog from "../../components/ConfirmDialog";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 import {
   Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   IconButton,
   ListItemButton,
   ListItemText,
   Tooltip,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-
-function useConfirmDialog() {
-  const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState("");
-  const [message, setMessage] = useState("");
-  const [onConfirm, setOnConfirm] = useState(() => () => {});
-
-  const showConfirmDialog = (title, message, onConfirm) => {
-    setTitle(title);
-    setMessage(message);
-    setOnConfirm(() => onConfirm);
-    setOpen(true);
-  };
-
-  const hideConfirmDialog = () => {
-    setOpen(false);
-  };
-
-  const ConfirmDialog = () => (
-    <Dialog open={open} onClose={hideConfirmDialog}>
-      <DialogTitle>{title}</DialogTitle>
-      <DialogContent>
-        <DialogContentText>{message}</DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={hideConfirmDialog}>Cancel</Button>
-        <Button
-          onClick={() => {
-            onConfirm();
-            hideConfirmDialog();
-          }}
-          autoFocus
-        >
-          Confirm
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-
-  return { showConfirmDialog, ConfirmDialog };
-}
+import { publish, useEvent } from "@nucleoidai/react-event";
 
 function ChatHistory() {
   const navigate = useNavigate();
