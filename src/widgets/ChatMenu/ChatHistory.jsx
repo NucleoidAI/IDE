@@ -35,9 +35,6 @@ function ChatHistory() {
       "Convert to Project",
       "Are you sure you want to convert this chat to a project?",
       () => {
-        publish("CONVERT_TO_PROJECT", chatId);
-        storage.set("ide", "landing", { level: 2 });
-        publish("LANDING_LEVEL_ACHIEVED", { level: 2 });
         convertChat();
       }
     );
