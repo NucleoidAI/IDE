@@ -16,6 +16,7 @@ function MessageBox({
 
   return (
     <Box
+      data-testid="message-box"
       sx={{
         width: {
           xs: "100%",
@@ -39,10 +40,15 @@ function MessageBox({
       <Typography
         variant="subtitle2"
         sx={{ fontWeight: "bold", marginBottom: "8px", userSelect: "text" }}
+        data-testid="message-role"
       >
         {message.role}
       </Typography>
-      <Typography variant="body1" sx={{ userSelect: "text" }}>
+      <Typography
+        variant="body1"
+        sx={{ userSelect: "text" }}
+        data-testid="message-content"
+      >
         {message.content}
       </Typography>
       {message.code && (
