@@ -26,7 +26,7 @@ function ChatHistory() {
   const { chatId } = useParams();
   const [chats, setChats] = useState([]);
   const [, , convertChat, deleteChat] = useChat();
-  const { showConfirmDialog, ConfirmDialog } = useConfirmDialog();
+  const [ConfirmDialog, showConfirmDialog] = useConfirmDialog();
 
   const handleChatClick = (chatId) => navigate(`/chat/${chatId}`);
 

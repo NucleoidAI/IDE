@@ -25,7 +25,7 @@ const MessageInput = forwardRef((props, ref) => {
   const [, , convertChat] = useChat();
   const [isAnimating, setIsAnimating] = useState(false);
   const [isInputEmpty, setIsInputEmpty] = useState(true);
-  const { showConfirmDialog, ConfirmDialog } = useConfirmDialog();
+  const [ConfirmDialog, showConfirmDialog] = useConfirmDialog();
   const inputRef = useRef(null);
 
   useEffect(() => {

@@ -46,7 +46,7 @@ function useConfirmDialog() {
     </Dialog>
   );
 
-  return { showConfirmDialog, ConfirmDialog };
+  return [ConfirmDialog, showConfirmDialog];
 }
 
 export default useConfirmDialog;
