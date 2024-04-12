@@ -2,10 +2,13 @@ import CodeIcon from "@mui/icons-material/Code";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ToggleableMenu from "../../components/ToggleableMenu";
+import { storage } from "@nucleoidjs/webstorage";
 import styles from "./styles.js";
 import useChat from "../Chat/useChat.jsx";
+import useConfirmDialog from "../../components/ConfirmDialog";
 import { useEvent } from "@nucleoidai/react-event";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import {
   Box,
@@ -20,14 +23,41 @@ function ChatHistory() {
   const navigate = useNavigate();
   const [selectedChat] = useEvent("CHAT_SELECTED");
   const [initChat] = useEvent("CHAT_INITIATED");
+  const { chatId } = useParams();
   const [chats, setChats] = useState([]);
   const [, , convertChat, deleteChat] = useChat();
+  const [ConfirmDialog, showConfirmDialog] = useConfirmDialog();
 
   const handleChatClick = (chatId) => navigate(`/chat/${chatId}`);
 
+  const handleConvertToProject = () => {
+    showConfirmDialog(
+      "Convert to Project",
+      "Are you sure you want to convert this chat to a project?",
+      () => {
+        convertChat();
+      }
+    );
+  };
+  const handleDeleteChat = (deletedChatId) => {
+    showConfirmDialog(
+      "Delete Chat",
+      "Are you sure you want to delete this chat?",
+      () => {
+        storage.remove("ide", "chat", "sessions", deletedChatId);
+        deleteChat(deletedChatId);
+        setChats((prevChats) =>
+          prevChats.filter((chat) => chat.id !== deletedChatId)
+        );
+        if (chatId === deletedChatId) {
+          navigate("/chat");
+        }
+      }
+    );
+  };
+
   useEffect(() => {
     const menu = [];
-
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key.startsWith("ide.chat.sessions.")) {
@@ -40,7 +70,6 @@ function ChatHistory() {
         } catch (err) {}
       }
     }
-
     setChats(menu.sort((a, b) => b.created - a.created));
   }, [selectedChat, initChat]);
 
@@ -67,12 +96,18 @@ function ChatHistory() {
               />
               <ToggleableMenu defaultIcon={<MoreVertIcon fontSize="small" />}>
                 <Tooltip title="Convert to Project">
-                  <IconButton size="small" onClick={() => convertChat()}>
+                  <IconButton
+                    size="small"
+                    onClick={() => handleConvertToProject()}
+                  >
                     <CodeIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>
                 <Tooltip title="Delete Chat">
-                  <IconButton size="small" onClick={() => deleteChat()}>
+                  <IconButton
+                    size="small"
+                    onClick={() => handleDeleteChat(chat.id)}
+                  >
                     <DeleteIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>
@@ -80,6 +115,7 @@ function ChatHistory() {
             </ListItemButton>
           </React.Fragment>
         ))}
+      <ConfirmDialog />
     </Box>
   );
 }

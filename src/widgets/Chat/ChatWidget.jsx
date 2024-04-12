@@ -67,9 +67,15 @@ const ChatWidget = () => {
   };
 
   const handleSuggestionClick = async (suggestion) => {
+    const first = !chat.messages.length;
     setLoading(true);
     userMessageRef.current = suggestion.summary;
+
     await sendMessage(suggestion.summary);
+
+    if (first) {
+      publish("CHAT_INITIATED", chat.id);
+    }
     setLoading(false);
   };
 
