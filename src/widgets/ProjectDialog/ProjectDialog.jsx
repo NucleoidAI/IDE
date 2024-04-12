@@ -1,14 +1,22 @@
 import AddNewButton from "./components/AddNewButton";
-import Dialog from "@mui/material/Dialog";
 import InlineCreationForm from "./components/InlineCreationForm";
 import ProjectList from "./components/ProjectList";
 import React from "react";
 import State from "../../state";
 import WorkspacesIcon from "@mui/icons-material/Workspaces";
+import config from "../../../config";
+import http from "../../http";
 import service from "../../service";
 import { storage } from "@nucleoidjs/webstorage";
 
-import { DialogContent, DialogTitle } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Typography,
+} from "@mui/material";
 import { publish, useEvent } from "@nucleoidai/react-event";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -24,7 +32,8 @@ function applyFilter({ inputData, query }) {
 }
 
 function ProjectDialog({ handleClose, open, setOpen }) {
-  const login = true;
+  const [login, setLogin] = useState(false);
+  const [user, setUser] = useState(null);
   const { id: projectId } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [formArea, setFormArea] = useState("button");
@@ -36,6 +45,23 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   const [projectNotFound] = useEvent("PROJECT_NOT_FOUND", { status: false });
 
   const navigate = useNavigate();
+
+  const fetchUserDetails = async () => {
+    try {
+      const userDetails = await http.getUserDetails();
+      setUser(userDetails);
+    } catch (error) {
+      console.error("Failed to fetch user details:", error);
+    }
+  };
+
+  useEffect(() => {
+    const oauthToken = storage.get("oauth.token");
+    if (oauthToken) {
+      setLogin(true);
+      fetchUserDetails();
+    }
+  }, []);
 
   useEffect(() => {
     if (event.status) {
@@ -274,6 +300,27 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     });
   };
 
+  const handleLogin = async () => {
+    try {
+      const code = await http.getCodeFromGithub();
+      const response = await http.oauth({
+        code: code,
+        grant_type: "authorization_code",
+        redirect_uri: config.oauth.redirectUri,
+      });
+      const accessToken = response.accessToken;
+      const refreshToken = response.refreshToken;
+      storage.set("oauth.token", {
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      });
+      setLogin(true);
+      fetchUserDetails();
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
+
   const onDialogClose = () => {
     const projectExist = Boolean(projects.length);
     const message = `To proceed, ${
@@ -300,11 +347,38 @@ function ProjectDialog({ handleClose, open, setOpen }) {
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
-          justifyContent: "start",
+          justifyContent: "space-between",
         }}
       >
-        <WorkspacesIcon sx={{ mx: 1 }} />
-        Projects
+        <Box display="flex" alignItems="center">
+          <WorkspacesIcon sx={{ mx: 1 }} />
+          <Typography variant="h6" component="div">
+            Projects
+          </Typography>
+        </Box>
+        {login ? (
+          <Box display="flex" alignItems="center">
+            <Typography variant="subtitle1" sx={{ mr: 1 }}>
+              {user?.name}
+            </Typography>
+            {user?.avatarUrl && (
+              <img
+                src={user.avatarUrl}
+                alt="User Avatar"
+                style={{
+                  width: 30,
+                  height: 30,
+                  borderRadius: "50%",
+                  marginRight: 8,
+                }}
+              />
+            )}
+          </Box>
+        ) : (
+          <Button variant="contained" onClick={handleLogin}>
+            Login
+          </Button>
+        )}
       </DialogTitle>
       <DialogContent>
         <ProjectList
@@ -312,9 +386,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
           searchQuery={searchQuery}
           handleSearch={handleSearch}
           dataFiltered={dataFiltered}
-          editProject={(editedProjectName, editedProjectId) =>
-            editProject(editedProjectName, editedProjectId)
-          }
+          editProject={(projectToEdit) => editProject(projectToEdit)}
           deleteProject={(project) => deleteProject(project)}
           uploadToCloud={(projectId) => uploadToCloud(projectId)}
           loading={loading}
