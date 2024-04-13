@@ -72,7 +72,7 @@ const initialSuggestions = [
   },
 ];
 
-const SuggestionsOverlay = ({ onSuggestionClick, loading, chat }) => {
+const SuggestionsOverlay = ({ onSuggestionClick, loading, chat, error }) => {
   const theme = useTheme();
   const [suggestions, setSuggestions] = useState(null);
 
@@ -116,7 +116,7 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat }) => {
         padding: "10px",
       }}
     >
-      {!loading && suggestions && (
+      {!loading && !error.status && suggestions && (
         <Box
           sx={{
             display: "flex",

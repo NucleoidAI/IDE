@@ -118,6 +118,7 @@ const ChatWidget = () => {
         onSuggestionClick={handleSuggestionClick}
         chat={chat}
         loading={loading}
+        error={error}
       />
 
       <MessageInput
