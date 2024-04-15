@@ -55,7 +55,12 @@ const ReadOnlyEditor = ({ language, value, onActionClick, isCollapsed }) => {
         </Box>
       </Stack>
       <Collapse in={!collapsed}>
-        <Stack component="code" ref={codeRef} className={language}>
+        <Stack
+          component="code"
+          ref={codeRef}
+          className={language}
+          data-cy="code-block"
+        >
           {value}
         </Stack>
       </Collapse>

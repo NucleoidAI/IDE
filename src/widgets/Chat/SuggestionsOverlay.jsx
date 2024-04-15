@@ -106,6 +106,7 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat }) => {
 
   return (
     <Box
+      data-cy="suggestions-overlay"
       sx={{
         display: "flex",
         flexWrap: "wrap",
@@ -115,10 +116,10 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat }) => {
         width: "100%",
         padding: "10px",
       }}
-      data-cy="suggestions-overlay"
     >
       {!loading && suggestions && (
         <Box
+          data-cy="suggestions-container"
           sx={{
             display: "flex",
             flexWrap: "wrap",
@@ -131,6 +132,7 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat }) => {
             <Button
               key={index}
               variant="outlined"
+              data-cy={`suggestion-button-${index}`}
               sx={{
                 flexGrow: 1,
                 minHeight: "100px",
@@ -149,7 +151,6 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat }) => {
                 width: "calc(50% - 30px)",
               }}
               onClick={() => onSuggestionClick(suggestion)}
-              data-cy={`suggestion-button-${index}`}
             >
               <Stack direction={"column"}>
                 <Typography
