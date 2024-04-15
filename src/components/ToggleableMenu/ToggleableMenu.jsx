@@ -4,7 +4,8 @@ import React, { useState } from "react";
 function ToggleableMenu({ defaultIcon, children }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleDefaultIconClick = () => {
+  const handleDefaultIconClick = (event) => {
+    event.stopPropagation();
     setIsOpen(!isOpen);
   };
 
@@ -12,11 +13,15 @@ function ToggleableMenu({ defaultIcon, children }) {
     setIsOpen(false);
   };
 
+  const handleMenuItemClick = (event) => {
+    event.stopPropagation();
+  };
+
   return (
     <ClickAwayListener onClickAway={handleClose}>
       <Box>
         {isOpen ? (
-          <Box>{children}</Box>
+          <Box onClick={handleMenuItemClick}>{children}</Box>
         ) : (
           <IconButton size="small" onClick={handleDefaultIconClick}>
             {defaultIcon}
