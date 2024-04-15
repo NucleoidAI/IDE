@@ -23,6 +23,7 @@ const Editor = React.forwardRef((props, ref) => {
   const [queryPath, setQueryPath] = React.useState("");
   const mode = Path.getMode();
   const [context, distpach] = useContext();
+  const [emptyEditor, setEmptyEditor] = useState(false);
   const { setLoading, logic, query, loading } = props;
   const selectedLogic = context.get("pages.logic.selected");
   const nucFuncs = context.nucleoid.functions;
@@ -86,18 +87,19 @@ const Editor = React.forwardRef((props, ref) => {
 
     if (logic) {
       setLogicModel(editor, monaco);
+      publish("WIDGET_LOADED", { name: "Editor" });
     }
 
     if (query) {
       addFunctionsModels();
       setQueryModel();
+      publish("WIDGET_LOADED", { name: "Editor" });
     }
-
-    publish("WIDGET_LOADED", { name: "Editor" });
   }
 
   const setLogicModel = useCallback(() => {
     if (selectedLogic && monaco) {
+      setEmptyEditor(false);
       monaco.editor.getModels().forEach((model) => model.dispose());
       const definition = selectedLogic.definition?.trim();
       const uniquePath = `/tmp/${uuidv4()}.ts`;
@@ -108,6 +110,8 @@ const Editor = React.forwardRef((props, ref) => {
       );
       editorRef?.current.editor.setModel(model);
       setLogicPath(uniquePath);
+    } else {
+      setEmptyEditor(true);
     }
   }, [selectedLogic, monaco?.editor, editorRef]);
 

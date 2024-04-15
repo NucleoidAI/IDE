@@ -26,6 +26,8 @@ import React, { useEffect } from "react";
 import { publish, useEvent } from "@nucleoidai/react-event";
 import { useMediaQuery, useTheme } from "@mui/material";
 
+let loaded = false;
+
 function IDE() {
   const [context, setContext] = React.useState();
   const progressElement = document.getElementById("nuc-progress-indicator");
@@ -171,7 +173,6 @@ function IDE() {
   };
 
   const initVfs = (context) => {
-    console.log(context);
     const files = contextToMap(context.nucleoid);
     vfs.init(files);
   };
@@ -230,17 +231,17 @@ function IDE() {
     }
 
     initMode();
-
+    loaded = false;
     // eslint-disable-next-line
-  }, [progressElement.classList, id]);
+  }, [id]);
+
   useEffect(() => {
-    if (context && event.name) {
+    if (context && event.name && !loaded) {
       publish("CONTAINER_LOADED", {
         name: "IDE",
       });
+      loaded = true;
     }
-
-    setContextProviderKey(uuid());
   }, [context, event.name]);
 
   if (!context) return null;
