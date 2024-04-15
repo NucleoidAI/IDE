@@ -7,6 +7,7 @@
   "homepage": "/ide",
   "type": "module",
   "scripts": {
+    "cypress:open": "cypress open",
     "test": "jest",
     "dev": "vite",
     "build": "vite build",
