@@ -42,4 +42,8 @@ Cypress.Commands.add("mount", (component, options) => {
   return mount(component, options);
 });
 
+Cypress.Commands.add("getBySel", (selector, ...args) => {
+  return cy.get(`[data-cy=${selector}]`, ...args);
+});
+
 /* eslint-enable */
