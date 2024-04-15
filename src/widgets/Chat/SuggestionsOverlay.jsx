@@ -115,7 +115,7 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat }) => {
         width: "100%",
         padding: "10px",
       }}
-      data-testid="suggestions-overlay"
+      data-cy="suggestions-overlay"
     >
       {!loading && suggestions && (
         <Box
@@ -149,17 +149,17 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat }) => {
                 width: "calc(50% - 30px)",
               }}
               onClick={() => onSuggestionClick(suggestion)}
-              data-testid={`suggestion-button-${index}`}
+              data-cy={`suggestion-button-${index}`}
             >
               <Stack direction={"column"}>
                 <Typography
                   variant="h6"
                   sx={{ fontWeight: "bold" }}
-                  data-testid="suggestion-summary"
+                  data-cy="suggestion-summary"
                 >
                   {suggestion.summary}
                 </Typography>
-                <Typography data-testid="suggestion-description">
+                <Typography data-cy="suggestion-description">
                   {suggestion.description}
                 </Typography>
               </Stack>

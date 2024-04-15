@@ -111,6 +111,7 @@ const MessageInput = forwardRef((props, ref) => {
           multiline
           maxRows={4}
           sx={{ flexGrow: 1 }}
+          data-cy="message-input"
         />
         {showConvertToProject && (
           <Tooltip
@@ -126,6 +127,7 @@ const MessageInput = forwardRef((props, ref) => {
               onClick={handleProjectIconClick}
               className={isAnimating ? "pulse-animation" : ""}
               sx={{ ml: 1 }}
+              data-cy="convert-to-project-button"
             >
               <CodeIcon />
             </IconButton>
@@ -135,6 +137,7 @@ const MessageInput = forwardRef((props, ref) => {
           type="submit"
           disabled={loading || isInputEmpty}
           sx={{ color: theme.palette.grey[500], ml: 1 }}
+          data-cy="send-button"
         >
           <SendIcon />
         </IconButton>
