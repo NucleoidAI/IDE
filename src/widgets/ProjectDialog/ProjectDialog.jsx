@@ -36,7 +36,6 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   const [projectNotFound] = useEvent("PROJECT_NOT_FOUND", { status: false });
 
   const navigate = useNavigate();
-
   useEffect(() => {
     if (event.status) {
       setOpen(true);
@@ -280,6 +279,9 @@ function ProjectDialog({ handleClose, open, setOpen }) {
       projectExist ? "please select a project" : "create a new project"
     }.`;
 
+    console.log(event.status, "recent project not found");
+    console.log(projectNotFound.status, "project not found");
+
     if (!event.status && !projectNotFound.status) {
       handleClose();
       setSearchQuery("");
@@ -293,7 +295,12 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   };
 
   return (
-    <Dialog open={open} fullWidth={true} onClose={onDialogClose}>
+    <Dialog
+      data-cy={"project-dialog"}
+      open={open}
+      fullWidth={true}
+      onClose={onDialogClose}
+    >
       <DialogTitle
         m={1}
         sx={{
@@ -306,7 +313,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
         <WorkspacesIcon sx={{ mx: 1 }} />
         Projects
       </DialogTitle>
-      <DialogContent>
+      <DialogContent data-cy="project-dialog-content">
         <ProjectList
           runProject={(project) => runProject(project)}
           searchQuery={searchQuery}
