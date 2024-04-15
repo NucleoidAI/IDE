@@ -46,4 +46,16 @@ Cypress.Commands.add("getBySel", (selector, ...args) => {
   return cy.get(`[data-cy=${selector}]`, ...args);
 });
 
+Cypress.Commands.add("storageSet", (key, value) => {
+  cy.window().then((win) => {
+    win.localStorage.setItem(key, JSON.stringify(value));
+  });
+});
+
+Cypress.Commands.add("storageGet", (key) => {
+  cy.window().then((win) => {
+    return JSON.parse(win.localStorage.getItem(key));
+  });
+});
+
 /* eslint-enable */
