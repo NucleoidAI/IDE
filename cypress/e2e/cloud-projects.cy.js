@@ -20,7 +20,7 @@ describe("local project spec", () => {
     const cloudProjectId = "a166cc16-5c76-4aac-819e-118207a5dfa9";
     let serviceId;
 
-    cy.visit(`http://localhost:5173/ide/${cloudProjectId}`);
+    cy.visit(`/ide/${cloudProjectId}`);
 
     cy.fixture("/GET/projects.json")
       .then((projects) => {

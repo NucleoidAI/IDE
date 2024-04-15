@@ -26,19 +26,19 @@ describe("project path spec", () => {
       cy.storageSet(["ide", "selected", "project"], selectedProject);
     });
 
-    cy.visit("http://localhost:5173/ide");
+    cy.visit("/ide");
 
     cy.url().should("include", `/${localProjectId}/api?mode=local`);
   });
 
   it("visit '/ide' without recent project and navigate new project page", () => {
-    cy.visit("http://localhost:5173/ide");
+    cy.visit("/ide");
 
     cy.url().should("include", "/new/api?mode=local");
   });
 
   it("visit '/ide/sample' and create sample project", () => {
-    cy.visit("http://localhost:5173/ide/sample");
+    cy.visit("/ide/sample");
 
     cy.url().should("contain", "/api");
 
@@ -63,7 +63,7 @@ describe("project path spec", () => {
     const cloudProjectId = "a166cc16-5c76-4aac-819e-118207a5dfa9";
     let serviceId;
 
-    cy.visit(`http://localhost:5173/ide/${cloudProjectId}`);
+    cy.visit(`/ide/${cloudProjectId}`);
 
     cy.fixture("/GET/projects.json")
       .then((projects) => {
@@ -123,7 +123,7 @@ describe("project path spec", () => {
       cy.storageSet(["ide", "projects", localProjectId], project);
     });
 
-    cy.visit(`http://localhost:5173/ide/${localProjectId}?mode=local`);
+    cy.visit(`/ide/${localProjectId}?mode=local`);
 
     cy.url().should("contain", `ide/${localProjectId}/api?mode=local`);
 
@@ -159,7 +159,7 @@ describe("project path spec", () => {
       }
     ).as("services");
 
-    cy.visit(`http://localhost:5173/ide/${invalidProjectId}`);
+    cy.visit(`/ide/${invalidProjectId}`);
 
     cy.url().should("contain", "/error");
 
@@ -195,7 +195,7 @@ describe("project path spec", () => {
       }
     ).as("services");
 
-    cy.visit(`http://localhost:5173/ide/${invalidProjectId}/?mode=local`);
+    cy.visit(`/ide/${invalidProjectId}/?mode=local`);
 
     cy.url().should("contain", "/error");
   });

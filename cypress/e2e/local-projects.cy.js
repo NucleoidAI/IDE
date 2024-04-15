@@ -23,7 +23,7 @@ describe("local project spec", () => {
       cy.storageSet(["ide", "projects", localProjectId], project);
     });
 
-    cy.visit(`http://localhost:5173/ide/${localProjectId}/?mode=local`);
+    cy.visit(`/ide/${localProjectId}/?mode=local`);
   });
 
   it("should save api editor changes in storage", () => {
