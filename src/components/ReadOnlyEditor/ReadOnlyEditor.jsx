@@ -1,12 +1,12 @@
 import "highlight.js/styles/github-dark.css";
-
 import EditIcon from "@mui/icons-material/Edit";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import hljs from "highlight.js";
-
 import { Box, Collapse, IconButton, Stack, Typography } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
+import * as prettierStandalone from "prettier/standalone";
+import * as typescriptPlugin from "prettier/parser-typescript";
 
 const ReadOnlyEditor = ({ language, value, onActionClick, isCollapsed }) => {
   const codeRef = useRef(null);
@@ -56,7 +56,11 @@ const ReadOnlyEditor = ({ language, value, onActionClick, isCollapsed }) => {
       </Stack>
       <Collapse in={!collapsed}>
         <Stack component="code" ref={codeRef} className={language}>
-          {value}
+          {prettierStandalone.format(value, {
+            parser: "typescript",
+            plugins: [typescriptPlugin],
+            singleQuote: true,
+          })}
         </Stack>
       </Collapse>
     </Stack>
