@@ -3,6 +3,7 @@ describe("project path spec", () => {
     cy.fixture("/GET/config.json").as("config");
     cy.fixture("/GET/projects.json").as("projects");
     cy.fixture("/LOCAL/project.json").as("localProject");
+    cy.fixture("/GET/single-project-service.json").as("service");
   });
 
   beforeEach(() => {
@@ -62,54 +63,14 @@ describe("project path spec", () => {
     });
   });
 
-  it.skip("visit '/ide/projectId and open cloud project'", () => {
+  it("visit '/ide/projectId and open cloud project'", () => {
     const cloudProjectId = "a166cc16-5c76-4aac-819e-118207a5dfa9";
-    let serviceId;
 
     cy.visit(`/ide/${cloudProjectId}`);
 
-    cy.fixture("/GET/projects.json")
-      .then((projects) => {
-        const cloudProject = projects.find((p) => p.id === cloudProjectId);
-        cy.intercept(
-          "GET",
-          `https://nuc.land/ide/api/projects/${cloudProjectId}`,
-          {
-            statusCode: 200,
-            body: cloudProject,
-          }
-        );
-      })
-      .as("project");
+    cy.cloudProjectIntercept(cloudProjectId).as("cloudProject");
 
-    cy.fixture("/GET/single-project-service.json")
-      .then((service) => {
-        cy.intercept(
-          "GET",
-          `https://nuc.land/ide/api/projects/${cloudProjectId}/services`,
-          {
-            statusCode: 200,
-            body: service,
-          }
-        );
-        serviceId = service[0].id;
-      })
-      .as("services");
-
-    cy.fixture("/GET/context.json")
-      .then((context) => {
-        cy.intercept(
-          "GET",
-          `https://nuc.land/ide/api/services/${serviceId}/context`,
-          {
-            statusCode: 200,
-            body: context,
-          }
-        );
-      })
-      .as("context");
-
-    cy.wait(["@project", "@services", "@context"]);
+    cy.wait("@cloudProject");
 
     cy.window().then((win) => {
       const recentProject = win.localStorage.getItem(`ide.selected.project`);
@@ -141,26 +102,14 @@ describe("project path spec", () => {
     });
   });
 
-  it.skip("invalid projectId for cloud mode", () => {
+  it.only("invalid projectId for cloud mode", () => {
     const invalidProjectId = "1111111111";
 
-    cy.intercept(
-      "GET",
-      `https://nuc.land/ide/api/projects/${invalidProjectId}`,
-      {
-        statusCode: 404,
-        body: "",
-      }
-    ).as("project");
+    cy.intercept(`https://nuc.land/ide/api/projects/${invalidProjectId}`);
 
     cy.intercept(
-      "GET",
-      `https://nuc.land/ide/api/projects/${invalidProjectId}/services`,
-      {
-        statusCode: 404,
-        body: "",
-      }
-    ).as("services");
+      `https://nuc.land/ide/api/projects/${invalidProjectId}/services`
+    );
 
     cy.visit(`/ide/${invalidProjectId}`);
 

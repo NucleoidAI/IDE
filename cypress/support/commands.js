@@ -58,4 +58,39 @@ Cypress.Commands.add("storageGet", (key) => {
   });
 });
 
+Cypress.Commands.add("cloudProjectIntercept", (projectId) => {
+  let serviceId;
+
+  cy.fixture("/GET/projects.json").then((projects) => {
+    const cloudProject = projects.find((p) => p.id === projectId);
+    cy.intercept("GET", `https://nuc.land/ide/api/projects/${projectId}`, {
+      statusCode: 200,
+      body: cloudProject,
+    });
+  });
+
+  cy.fixture("/GET/single-project-service.json").then((service) => {
+    cy.intercept(
+      "GET",
+      `https://nuc.land/ide/api/projects/${projectId}/services`,
+      {
+        statusCode: 200,
+        body: service,
+      }
+    );
+    serviceId = service[0].id;
+  });
+
+  cy.fixture("/GET/context.json").then((context) => {
+    cy.intercept(
+      "GET",
+      `https://nuc.land/ide/api/services/${serviceId}/context`,
+      {
+        statusCode: 200,
+        body: context,
+      }
+    );
+  });
+});
+
 /* eslint-enable */
