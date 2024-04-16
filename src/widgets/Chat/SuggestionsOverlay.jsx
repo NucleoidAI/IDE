@@ -3,68 +3,70 @@ import React, { useEffect, useState } from "react";
 
 const initialSuggestions = [
   {
-    summary: "Option 1",
-    description: "Description for Option 1",
+    summary: "Socrates Syllogism",
+    description: "Define human with a name",
     children: [
       {
-        summary: "Option 1.1",
-        description: "Description for Option 1.1",
+        summary: "Mortality of Humans",
+        description: "All humans are mortal",
         children: [
           {
-            summary: "Option 1.1.1",
-            description: "Description for Option 1.1.1",
+            summary: "Born of Socrates",
+            description: "Create a human with name 'Socrates'",
           },
           {
-            summary: "Option 1.1.2",
-            description: "Description for Option 1.1.2",
+            summary: "Born of Plato",
+            description: "Create a human with name 'Plato'",
           },
         ],
       },
       {
-        summary: "Option 1.2",
-        description: "Description for Option 1.2",
+        summary: "Born of Socrates",
+        description: "Create a human with name 'Socrates'",
         children: [
           {
-            summary: "Option 1.2.1",
-            description: "Description for Option 1.2.1",
+            summary: "Mortality of Humans",
+            description: "All humans are mortal",
           },
           {
-            summary: "Option 1.2.2",
-            description: "Description for Option 1.2.2",
+            summary: "Mortality of Socrates",
+            description: "Socrates is mortal",
           },
         ],
       },
     ],
   },
   {
-    summary: "Option 2",
-    description: "Description for Option 2",
+    summary: "User Flow",
+    description: "Define an user with first name and last name",
     children: [
       {
-        summary: "Option 2.1",
-        description: "Description for Option 2.1",
+        summary: "Definition of  Full Name",
+        description: "Full name of user is first name and last name",
         children: [
           {
-            summary: "Option 2.1.1",
-            description: "Description for Option 2.1.1",
+            summary: "Legend of John Doe",
+            description: "Create user with name 'John Doe'",
           },
           {
-            summary: "Option 2.1.2",
-            description: "Description for Option 2.1.2",
+            summary: "Initials",
+            description:
+              "Initials of user is first letter of first name and last name",
           },
         ],
       },
       {
-        summary: "Option 2.2",
-        description: "Description for Option 2.2",
+        summary: "Legend of John Doe",
+        description: "Create user with name 'John Doe'",
         children: [
           {
-            summary: "Option 2.2.1",
-            description: "Description for Option 2.2.1",
+            summary: "Definition of Full Name",
+            description: "Full name of user is first name and last name",
           },
           {
-            summary: "Option 2.2.2",
-            description: "Description for Option 2.2.2",
+            summary: "Initials",
+            description:
+              "Initials of user is first letter of first name and last name",
           },
         ],
       },
@@ -72,7 +74,7 @@ const initialSuggestions = [
   },
 ];
 
-const SuggestionsOverlay = ({ onSuggestionClick, loading, chat }) => {
+const SuggestionsOverlay = ({ onSuggestionClick, loading, chat, error }) => {
   const theme = useTheme();
   const [suggestions, setSuggestions] = useState(null);
 
@@ -85,7 +87,7 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat }) => {
 
     for (const message of userMessages) {
       const matchedSuggestion = index.find(
-        (suggestion) => suggestion.summary === message.content
+        (suggestion) => suggestion.description === message.content
       );
 
       if (matchedSuggestion) {
@@ -103,6 +105,10 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat }) => {
 
     setSuggestions(index);
   }, [chat]);
+
+  if (error.status && error.chatId === chat.id) {
+    return null;
+  }
 
   return (
     <Box
@@ -132,7 +138,7 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat }) => {
               variant="outlined"
               sx={{
                 flexGrow: 1,
-                minHeight: "100px",
+                minHeight: "80px",
                 backgroundColor: theme.palette.background.default,
                 borderColor: theme.palette.grey[600],
                 "&:hover": {
@@ -150,7 +156,7 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat }) => {
               onClick={() => onSuggestionClick(suggestion)}
             >
               <Stack direction={"column"}>
-                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                <Typography sx={{ fontWeight: "bold" }}>
                   {suggestion.summary}
                 </Typography>
                 <Typography>{suggestion.description}</Typography>
