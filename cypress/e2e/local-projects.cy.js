@@ -15,15 +15,7 @@ describe("local project spec", () => {
 
     const changedEditorValue = `function action(req: { params: { item: string } }): any {\n  const newItem = req.params.item;\n  return Item[newItem];`;
 
-    cy.get("section").should("be.visible");
-
-    cy.get('textarea[role="textbox"]').click();
-    cy.get('textarea[role="textbox"]').clear();
-    cy.get('textarea[role="textbox"]').type(changedEditorValue, {
-      parseSpecialCharSequences: false,
-    });
-
-    cy.wait(1000);
+    cy.typeEditor(changedEditorValue);
 
     cy.window()
       .its("localStorage")
@@ -44,16 +36,7 @@ describe("local project spec", () => {
 
     const changedEditorValue = `class NewOrder {\n      name: string;\n      barcode: string;\n      constructor(name: string, barcode: string) {\n  this.name = name;\nthis.barcode = barcode;\n`;
 
-    cy.get("section").should("be.visible");
-    cy.get(".monaco-editor").should("be.visible");
-
-    cy.get('textarea[role="textbox"]').click();
-    cy.get('textarea[role="textbox"]').clear();
-    cy.get('textarea[role="textbox"]').type(changedEditorValue, {
-      parseSpecialCharSequences: false,
-    });
-
-    cy.wait(1000);
+    cy.typeEditor(changedEditorValue);
 
     cy.window()
       .its("localStorage")
@@ -77,13 +60,7 @@ describe("local project spec", () => {
 
     cy.contains("All humans are mortal").click();
 
-    cy.get('textarea[role="textbox"]').click();
-    cy.get('textarea[role="textbox"]').clear();
-    cy.get('textarea[role="textbox"]').type(changedEditorValue, {
-      parseSpecialCharSequences: false,
-    });
-
-    cy.wait(1000);
+    cy.typeEditor(changedEditorValue);
 
     cy.window()
       .its("localStorage")
