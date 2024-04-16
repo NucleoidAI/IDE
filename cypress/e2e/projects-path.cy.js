@@ -1,22 +1,11 @@
 describe("project path spec", () => {
   before(() => {
-    cy.fixture("/GET/config.json").as("config");
-    cy.fixture("/GET/projects.json").as("projects");
     cy.fixture("/LOCAL/project.json").as("localProject");
+    cy.storageSet(`ide.landing`, { level: 2 });
   });
 
   beforeEach(() => {
-    cy.storageSet(`ide.landing`, { level: 2 });
-
-    cy.intercept("GET", "https://nuc.land/ide/api/projects", {
-      statusCode: 200,
-      body: "@projects",
-    });
-
-    cy.intercept("GET", "https://nucleoid.com/config", {
-      statusCode: 200,
-      body: "@config",
-    });
+    cy.IDEContainerIntercepts();
   });
 
   it("visit '/ide' with recent project and open recent project", () => {

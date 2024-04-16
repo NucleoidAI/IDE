@@ -93,4 +93,35 @@ Cypress.Commands.add("cloudProjectIntercept", (projectId) => {
   });
 });
 
+Cypress.Commands.add("IDEContainerIntercepts", () => {
+  cy.fixture("/GET/projects.json").then((projects) => {
+    cy.intercept("GET", "https://nuc.land/ide/api/projects", {
+      statusCode: 200,
+      body: projects,
+    }).as("getProjects");
+  });
+
+  cy.fixture("/GET/config.json")
+    .then((config) => {
+      cy.intercept("GET", "https://nucleoid.com/config", {
+        statusCode: 200,
+        body: config,
+      });
+    })
+    .as("getConfig");
+});
+
+Cypress.Commands.add("changeEditorValue", (changedEditorValue) => {
+  cy.get("section").should("be.visible");
+  cy.get(".monaco-editor").should("be.visible");
+
+  cy.get('textarea[role="textbox"]').click();
+  cy.get('textarea[role="textbox"]').clear();
+  cy.get('textarea[role="textbox"]').type(changedEditorValue, {
+    parseSpecialCharSequences: false,
+  });
+
+  cy.wait(1000);
+});
+
 /* eslint-enable */
