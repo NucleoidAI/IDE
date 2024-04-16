@@ -57,7 +57,9 @@ function IDE() {
     const context = storage.get("ide", "projects", projectId);
 
     if (!context) {
-      navigate("/error");
+      navigate("/error/api");
+      //null vs undefined
+      return null;
     }
     publish("PROJECT_NOT_FOUND", { status: false });
     publish("RECENT_PROJECT_NOT_FOUND", { status: false });
@@ -131,7 +133,6 @@ function IDE() {
   }
 
   const initContext = (context) => {
-    console.log(context);
     if (
       !Settings.description() ||
       Settings.description() !== context.nucleoid.project.description
@@ -212,6 +213,7 @@ function IDE() {
           });
       } else if (mode === "local") {
         const context = getContextFromStorage(projectId);
+        if (!context) return;
         initVfs(context);
         return setContext(initContext(context));
       } else if (mode === "mobile") {
