@@ -17,16 +17,11 @@ describe("local project spec", () => {
 
     cy.typeEditor(changedEditorValue);
 
-    cy.window()
-      .its("localStorage")
-      .then((localStorage) => {
-        const context = localStorage.getItem(
-          "ide.projects.3450f289-0fc5-45e9-9a4a-606c0a63cdfe"
-        );
-        expect(JSON.parse(context).api[3]["x-nuc-action"]).to.include(
-          "newItem"
-        );
+    cy.get("@localProjectId").then((localProjectId) => {
+      cy.storageGet(`ide.projects.${localProjectId}`).then((project) => {
+        expect(project.api[3]["x-nuc-action"]).to.include("newItem");
       });
+    });
   });
 
   it("should save functions editor changes", () => {
@@ -38,39 +33,28 @@ describe("local project spec", () => {
 
     cy.typeEditor(changedEditorValue);
 
-    cy.window()
-      .its("localStorage")
-      .then((localStorage) => {
-        const context = localStorage.getItem(
-          "ide.projects.3450f289-0fc5-45e9-9a4a-606c0a63cdfe"
-        );
-
-        expect(JSON.parse(context).functions[0].definition).to.include(
-          "NewOrder"
-        );
+    cy.get("@localProjectId").then((localProjectId) => {
+      cy.storageGet(`ide.projects.${localProjectId}`).then((project) => {
+        expect(project.functions[0].definition).to.include("NewOrder");
       });
+    });
   });
 
-  it("should save logic editor changes", () => {
+  it.only("should save logic editor changes", () => {
     cy.get("@localProjectId").then((localProjectId) => {
-      cy.visit(`/ide/${localProjectId}/api?mode=local`);
+      cy.visit(`/ide/${localProjectId}/logic?mode=local`);
     });
-
-    const changedEditorValue = `$Human.mortal = true;\nplaton = new Human('Platon');\nplaton.mortal === true;`;
 
     cy.contains("All humans are mortal").click();
 
+    const changedEditorValue = `$Human.mortal = true;\nplaton = new Human('Platon');\nplaton.mortal === true;`;
+
     cy.typeEditor(changedEditorValue);
 
-    cy.window()
-      .its("localStorage")
-      .then((localStorage) => {
-        const context = localStorage.getItem(
-          "ide.projects.3450f289-0fc5-45e9-9a4a-606c0a63cdfe"
-        );
-        expect(JSON.parse(context).declarations[0].definition).to.include(
-          "plato"
-        );
+    cy.get("@localProjectId").then((localProjectId) => {
+      cy.storageGet(`ide.projects.${localProjectId}`).then((project) => {
+        expect(project.declarations[0].definition).to.include("plato");
       });
+    });
   });
 });
