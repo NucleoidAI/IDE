@@ -2,7 +2,7 @@ import { chatData, chatDataKey, emptyChatData } from "../fixtures/seedData";
 
 describe("ChatWidget", () => {
   beforeEach(() => {
-    cy.visit("/ide/chat?clear=true");
+    cy.clearLocalStorage();
     cy.window().then((win) => {
       win.localStorage.setItem(chatDataKey, JSON.stringify(chatData));
     });
