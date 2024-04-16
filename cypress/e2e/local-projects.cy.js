@@ -1,13 +1,11 @@
 describe("local project spec", () => {
-  before(() => {
-    cy.fixture("/LOCAL/project.json").as("project");
-    cy.wrap("3450f289-0fc5-45e9-9a4a-606c0a63cdfe").as("localProjectId");
-  });
-
   beforeEach(() => {
     cy.IDEContainerIntercepts();
     cy.initLocalProject();
+
     cy.storageSet(`ide.landing`, { level: 2 });
+    cy.fixture("/LOCAL/project.json").as("project");
+    cy.wrap("3450f289-0fc5-45e9-9a4a-606c0a63cdfe").as("localProjectId");
   });
 
   it("should save api editor changes in storage", () => {
