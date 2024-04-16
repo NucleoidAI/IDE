@@ -111,6 +111,12 @@ Cypress.Commands.add("IDEContainerIntercepts", () => {
     .as("getConfig");
 });
 
+Cypress.Commands.add("initLocalProject", () => {
+  cy.fixture("/LOCAL/project").then((project) => {
+    cy.storageSet(`ide.projects.3450f289-0fc5-45e9-9a4a-606c0a63cdfe`, project);
+  });
+});
+
 Cypress.Commands.add("changeEditorValue", (changedEditorValue) => {
   cy.get("section").should("be.visible");
   cy.get(".monaco-editor").should("be.visible");
