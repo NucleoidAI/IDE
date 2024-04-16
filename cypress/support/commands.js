@@ -117,7 +117,7 @@ Cypress.Commands.add("initLocalProject", () => {
   });
 });
 
-Cypress.Commands.add("changeEditorValue", (changedEditorValue) => {
+Cypress.Commands.add("typeEditor", (changedEditorValue) => {
   cy.get("section").should("be.visible");
   cy.get(".monaco-editor").should("be.visible");
 
