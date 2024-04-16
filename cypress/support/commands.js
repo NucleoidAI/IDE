@@ -161,8 +161,6 @@ Cypress.Commands.add("initCloudProject", () => {
       );
     })
     .as("context");
-
-  cy.wait(["@project", "@services", "@context"]);
 });
 
 Cypress.Commands.add("typeEditor", (changedEditorValue) => {
@@ -176,6 +174,47 @@ Cypress.Commands.add("typeEditor", (changedEditorValue) => {
   });
 
   cy.wait(1000);
+});
+
+Cypress.Commands.add("saveContextIntercept", (serviceId) => {
+  cy.fixture("/PUT/changed-context.json")
+    .then((context) => {
+      cy.intercept(
+        "PUT",
+        `https://nuc.land/ide/api/services/${serviceId}/context`,
+        {
+          statusCode: 200,
+          body: context,
+        }
+      );
+    })
+    .as("contextPut");
+
+  cy.fixture("/PUT/changed-context.json")
+    .then((context) => {
+      cy.intercept(
+        "GET",
+        `https://nuc.land/ide/api/services/${serviceId}/context`,
+        {
+          statusCode: 200,
+          body: context,
+        }
+      );
+    })
+    .as("contextGet");
+});
+
+Cypress.Commands.add("checkEditorValue", (expectedValue) => {
+  cy.get("section").should("be.visible");
+  cy.get(".monaco-editor")
+    .should("be.visible")
+    .then(() => {
+      cy.get('textarea[role="textbox"]')
+        .invoke("val")
+        .then((val) => {
+          expect(val).to.include(expectedValue);
+        });
+    });
 });
 
 /* eslint-enable */
