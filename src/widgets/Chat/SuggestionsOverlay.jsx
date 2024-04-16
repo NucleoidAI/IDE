@@ -38,33 +38,35 @@ const initialSuggestions = [
   },
   {
     summary: "User Flow",
-    description: "Define user with first name and last name",
+    description: "Define an user with first name and last name",
     children: [
       {
-        summary: "Option 2.1",
-        description: "Description for Option 2.1",
+        summary: "Definition of  Full Name",
+        description: "Full name of user is first name and last name",
         children: [
           {
-            summary: "Option 2.1.1",
-            description: "Description for Option 2.1.1",
+            summary: "Legend of John Doe",
+            description: "Create user with name 'John Doe'",
           },
           {
-            summary: "Option 2.1.2",
-            description: "Description for Option 2.1.2",
+            summary: "Initials",
+            description:
+              "Initials of user is first letter of first name and last name",
           },
         ],
       },
       {
-        summary: "Option 2.2",
-        description: "Description for Option 2.2",
+        summary: "Legend of John Doe",
+        description: "Create user with name 'John Doe'",
         children: [
           {
-            summary: "Option 2.2.1",
-            description: "Description for Option 2.2.1",
+            summary: "Definition of Full Name",
+            description: "Full name of user is first name and last name",
           },
           {
-            summary: "Option 2.2.2",
-            description: "Description for Option 2.2.2",
+            summary: "Initials",
+            description:
+              "Initials of user is first letter of first name and last name",
           },
         ],
       },
