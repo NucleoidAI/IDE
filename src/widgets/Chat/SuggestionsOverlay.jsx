@@ -104,6 +104,10 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat, error }) => {
     setSuggestions(index);
   }, [chat]);
 
+  if (error.status && error.chatId === chat.id) {
+    return null;
+  }
+
   return (
     <Box
       sx={{
@@ -116,7 +120,7 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat, error }) => {
         padding: "10px",
       }}
     >
-      {!loading && !error.status && suggestions && (
+      {!loading && suggestions && (
         <Box
           sx={{
             display: "flex",
