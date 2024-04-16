@@ -1,69 +1,12 @@
-describe("local project spec", () => {
+describe("cloud project spec", () => {
   beforeEach(() => {
-    cy.window().then((win) => {
-      win.localStorage.setItem("ide.landing", JSON.stringify({ level: 2 }));
-    });
-    cy.fixture("/GET/projects.json").then((projects) => {
-      cy.intercept("GET", "https://nuc.land/ide/api/projects", {
-        statusCode: 200,
-        body: projects,
-      });
-    });
+    cy.IDEContainerIntercepts();
+    cy.initCloudProject();
 
-    cy.fixture("/GET/config.json").then((config) => {
-      cy.intercept("GET", "https://nucleoid.com/config", {
-        statusCode: 200,
-        body: config,
-      });
-    });
+    cy.storageSet(`ide.landing`, { level: 2 });
 
-    const cloudProjectId = "a166cc16-5c76-4aac-819e-118207a5dfa9";
-    let serviceId;
-
-    cy.visit(`/ide/${cloudProjectId}`);
-
-    cy.fixture("/GET/projects.json")
-      .then((projects) => {
-        const cloudProject = projects.find((p) => p.id === cloudProjectId);
-        cy.intercept(
-          "GET",
-          `https://nuc.land/ide/api/projects/${cloudProjectId}`,
-          {
-            statusCode: 200,
-            body: cloudProject,
-          }
-        );
-      })
-      .as("project");
-
-    cy.fixture("/GET/single-project-service.json")
-      .then((service) => {
-        cy.intercept(
-          "GET",
-          `https://nuc.land/ide/api/projects/${cloudProjectId}/services`,
-          {
-            statusCode: 200,
-            body: service,
-          }
-        );
-        serviceId = service[0].id;
-      })
-      .as("services");
-
-    cy.fixture("/GET/context.json")
-      .then((context) => {
-        cy.intercept(
-          "GET",
-          `https://nuc.land/ide/api/services/${serviceId}/context`,
-          {
-            statusCode: 200,
-            body: context,
-          }
-        );
-      })
-      .as("context");
-
-    cy.wait(["@project", "@services", "@context"]);
+    cy.wrap("a166cc16-5c76-4aac-819e-118207a5dfa9").as("cloudProjectId");
+    cy.wrap("06843e12-bc10-4648-99dc-85ad4be1cd09").as("serviceId");
   });
 
   it("should save api editor changes", () => {
