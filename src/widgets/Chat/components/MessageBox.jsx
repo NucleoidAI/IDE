@@ -59,6 +59,7 @@ function MessageBox({
           }}
         >
           <ReadOnlyEditor
+            title={"Ubiquitous Code"}
             value={message.code}
             language="typescript"
             onActionClick={() => handleOpenDialog(message.code)}

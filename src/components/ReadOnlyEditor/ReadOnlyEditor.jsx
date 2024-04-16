@@ -8,7 +8,13 @@ import React, { useEffect, useRef, useState } from "react";
 import * as prettierStandalone from "prettier/standalone";
 import * as typescriptPlugin from "prettier/parser-typescript";
 
-const ReadOnlyEditor = ({ language, value, onActionClick, isCollapsed }) => {
+const ReadOnlyEditor = ({
+  title = "Code",
+  language,
+  value,
+  onActionClick,
+  isCollapsed,
+}) => {
   const codeRef = useRef(null);
   const [collapsed, setCollapsed] = useState(isCollapsed);
 
@@ -39,7 +45,7 @@ const ReadOnlyEditor = ({ language, value, onActionClick, isCollapsed }) => {
         }}
       >
         <Typography m={0.4} variant="subtitle">
-          Code
+          {title}
         </Typography>
         <Box>
           <IconButton onClick={toggleCollapse}>
