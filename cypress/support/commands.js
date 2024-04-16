@@ -217,4 +217,10 @@ Cypress.Commands.add("checkEditorValue", (expectedValue) => {
     });
 });
 
+Cypress.Commands.add("waitLoading", () => {
+  cy.waitUntil(() => cy.get(".nuc-logo-frame").should("not.be.visible"), {
+    errorMsg: "Nuc Progress Indicator is still visible",
+  });
+});
+
 /* eslint-enable */
