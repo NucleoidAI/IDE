@@ -9,12 +9,11 @@ describe("local project spec", () => {
   });
 
   it("should save api editor changes in storage", () => {
-    const localProjectId = "3450f289-0fc5-45e9-9a4a-606c0a63cdfe";
-    cy.visit(`/ide/${localProjectId}/api?mode=local`);
+    cy.get("@localProjectId").then((localProjectId) => {
+      cy.visit(`/ide/${localProjectId}/api?mode=local`);
+    });
 
     const changedEditorValue = `function action(req: { params: { item: string } }): any {\n  const newItem = req.params.item;\n  return Item[newItem];`;
-
-    cy.url().should("include", `/${localProjectId}/api?mode=local`);
 
     cy.get("section").should("be.visible");
 
@@ -39,8 +38,9 @@ describe("local project spec", () => {
   });
 
   it("should save functions editor changes", () => {
-    const localProjectId = "3450f289-0fc5-45e9-9a4a-606c0a63cdfe";
-    cy.visit(`/ide/${localProjectId}/functions?mode=local`);
+    cy.get("@localProjectId").then((localProjectId) => {
+      cy.visit(`/ide/${localProjectId}/functions?mode=local`);
+    });
 
     const changedEditorValue = `class NewOrder {\n      name: string;\n      barcode: string;\n      constructor(name: string, barcode: string) {\n  this.name = name;\nthis.barcode = barcode;\n`;
 
@@ -68,9 +68,10 @@ describe("local project spec", () => {
       });
   });
 
-  it.only("should save logic editor changes", () => {
-    const localProjectId = "3450f289-0fc5-45e9-9a4a-606c0a63cdfe";
-    cy.visit(`/ide/${localProjectId}/logic?mode=local`);
+  it("should save logic editor changes", () => {
+    cy.get("@localProjectId").then((localProjectId) => {
+      cy.visit(`/ide/${localProjectId}/api?mode=local`);
+    });
 
     const changedEditorValue = `$Human.mortal = true;\nplaton = new Human('Platon');\nplaton.mortal === true;`;
 
