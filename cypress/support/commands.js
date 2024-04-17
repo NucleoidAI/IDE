@@ -226,14 +226,14 @@ Cypress.Commands.add("waitLoading", () => {
 });
 
 Cypress.Commands.add("waitEvent", (eventName) => {
-  return new Cypress.Promise((resolve) => {
-    const a = subscribe(eventName, () => {
-      console.log("CY_EVENT");
-      a.unsubscribe();
-      cy.log(`Event caught for widget: ${eventName}`);
-      resolve();
+  return cy.wrap(new Promise((resolve) => {
+    cy.window().then(({ nucleoid: { Event } }) => {
+      const registry = Event.subscribe(eventName, () => {
+        registry.unsubscribe();
+        resolve();
+      });
     });
-  });
+  }));
 });
 
 /* eslint-enable */

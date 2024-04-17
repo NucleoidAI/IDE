@@ -4,9 +4,7 @@ import Path from "./utils/Path";
 import RouteManager from "./RouteManager";
 import Settings from "./settings";
 import routes from "./routes";
-import { useEvent } from "@nucleoidai/react-event";
 import { useStorage } from "@nucleoidjs/webstorage";
-
 import {
   CssBaseline,
   StyledEngineProvider,
@@ -14,6 +12,11 @@ import {
 } from "@mui/material";
 import React, { useEffect } from "react";
 import { darkTheme, lightTheme } from "./theme";
+import { publish, subscribe, useEvent } from "@nucleoidai/react-event";
+
+window.nucleoid = {
+  Event: { publish, subscribe, useEvent },
+};
 
 function App() {
   const [event] = useEvent("CONTAINER_LOADED", { name: "" });

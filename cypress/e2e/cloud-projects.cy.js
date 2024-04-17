@@ -4,7 +4,8 @@ describe("cloud project spec", () => {
 
     cy.initCloudProject().as("initProject");
 
-    cy.storageSet(`ide.landing`, { level: 2 });
+    cy.storageSet(`debug`, true);
+    cy.storageSet(`ide.landing`, { level: Number.MAX_SAFE_INTEGER });
 
     cy.wrap("a166cc16-5c76-4aac-819e-118207a5dfa9").as("cloudProjectId");
     cy.wrap("06843e12-bc10-4648-99dc-85ad4be1cd09").as("serviceId");
@@ -23,7 +24,7 @@ describe("cloud project spec", () => {
       cy.visit(`/ide/${cloudProjectId}/api`);
     });
 
-    cy.waitLoading();
+    cy.waitEvent("CONTAINER_LOADED");
 
     const changedEditorValue = `function action(req: { params: { item: string } }): any {\n  const newItem = req.params.item;\n  return Item[newItem];`;
 
