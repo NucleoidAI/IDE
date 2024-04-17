@@ -39,6 +39,7 @@ import "cypress-wait-until";
 
 /* eslint-disable */
 import { mount } from "cypress/react18";
+import { subscribe } from "@nucleoidai/react-event";
 
 Cypress.Commands.add("mount", (component, options) => {
   return mount(component, options);
@@ -222,6 +223,17 @@ Cypress.Commands.add("waitLoading", () => {
     "have.class",
     "hidden"
   );
+});
+
+Cypress.Commands.add("waitEvent", (eventName) => {
+  return new Cypress.Promise((resolve) => {
+    const a = subscribe(eventName, () => {
+      console.log("CY_EVENT");
+      a.unsubscribe();
+      cy.log(`Event caught for widget: ${eventName}`);
+      resolve();
+    });
+  });
 });
 
 /* eslint-enable */

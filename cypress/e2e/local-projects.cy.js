@@ -40,7 +40,7 @@ describe("local project spec", () => {
     });
   });
 
-  it.only("should save logic editor changes", () => {
+  it("should save logic editor changes", () => {
     cy.get("@localProjectId").then((localProjectId) => {
       cy.visit(`/ide/${localProjectId}/logic?mode=local`);
     });
