@@ -140,24 +140,7 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat, error }) => {
           {suggestions.map((suggestion, index) => (
             <Button
               key={index}
-              variant="outlined"
-              sx={{
-                flexGrow: 1,
-                minHeight: "80px",
-                backgroundColor: theme.palette.background.default,
-                borderColor: theme.palette.grey[600],
-                "&:hover": {
-                  backgroundColor: theme.palette.grey[200],
-                  borderColor: theme.palette.primary.main,
-                },
-                textAlign: "left",
-                justifyContent: "flex-start",
-                borderRadius: "8px",
-                textTransform: "none",
-                fontSize: "0.875rem",
-                fontWeight: "medium",
-                width: "calc(50% - 30px)",
-              }}
+              variant="suggestion"
               onClick={() => onSuggestionClick(suggestion)}
             >
               <Stack direction={"column"}>
