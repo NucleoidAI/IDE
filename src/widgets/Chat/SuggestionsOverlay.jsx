@@ -13,10 +13,30 @@ const initialSuggestions = [
           {
             summary: "Born of Socrates",
             description: "Create a human with name 'Socrates'",
+            children: [
+              {
+                summary: "Finding Socrates",
+                description: "Find human with name 'Socrates'",
+              },
+              {
+                summary: "List of Mortals",
+                description: "List all humans who are mortal",
+              },
+            ],
           },
           {
             summary: "Born of Plato",
             description: "Create a human with name 'Plato'",
+            children: [
+              {
+                summary: "Finding Socrates",
+                description: "Find human with name 'Socrates'",
+              },
+              {
+                summary: "List of Mortals",
+                description: "List all humans who are mortal",
+              },
+            ],
           },
         ],
       },
@@ -27,10 +47,30 @@ const initialSuggestions = [
           {
             summary: "Mortality of Humans",
             description: "All humans are mortal",
+            children: [
+              {
+                summary: "Finding Socrates",
+                description: "Find human with name 'Socrates'",
+              },
+              {
+                summary: "List of Mortals",
+                description: "List all humans who are mortal",
+              },
+            ],
           },
           {
             summary: "Mortality of Socrates",
             description: "Socrates is mortal",
+            children: [
+              {
+                summary: "Finding Socrates",
+                description: "Find human with name 'Socrates'",
+              },
+              {
+                summary: "List of Mortals",
+                description: "List all humans who are mortal",
+              },
+            ],
           },
         ],
       },
@@ -47,11 +87,31 @@ const initialSuggestions = [
           {
             summary: "Legend of John Doe",
             description: "Create user with name 'John Doe'",
+            children: [
+              {
+                summary: "Finding John Doe",
+                description: "Find user with name 'John Doe'",
+              },
+              {
+                summary: "List of Does",
+                description: "List all users whose last name is 'Doe'",
+              },
+            ],
           },
           {
             summary: "Initials",
             description:
               "Initials of user is first letter of first name and last name",
+            children: [
+              {
+                summary: "Finding John Doe",
+                description: "Find user with name 'John Doe'",
+              },
+              {
+                summary: "List of Does",
+                description: "List all users whose last name is 'Doe'",
+              },
+            ],
           },
         ],
       },
@@ -62,11 +122,31 @@ const initialSuggestions = [
           {
             summary: "Definition of Full Name",
             description: "Full name of user is first name and last name",
+            children: [
+              {
+                summary: "Finding John Doe",
+                description: "Find user with name 'John Doe'",
+              },
+              {
+                summary: "List of Does",
+                description: "List all users whose last name is 'Doe'",
+              },
+            ],
           },
           {
             summary: "Initials",
             description:
               "Initials of user is first letter of first name and last name",
+            children: [
+              {
+                summary: "Finding John Doe",
+                description: "Find user with name 'John Doe'",
+              },
+              {
+                summary: "List of Does",
+                description: "List all users whose last name is 'Doe'",
+              },
+            ],
           },
         ],
       },

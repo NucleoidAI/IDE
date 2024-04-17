@@ -60,7 +60,13 @@ function MessageBox({
         >
           <ReadOnlyEditor
             title={"Ubiquitous Code"}
-            value={message.code}
+            value={
+              message.result
+                ? `${message.code}\n\n// Result: ${JSON.stringify(
+                    message.result
+                  )}`
+                : message.code
+            }
             language="typescript"
             onActionClick={() => handleOpenDialog(message.code)}
             isCollapsed={isCodeCollapsed}
