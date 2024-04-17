@@ -1,5 +1,3 @@
-import "cypress-wait-until";
-
 describe("cloud project spec", () => {
   beforeEach(() => {
     cy.IDEContainerIntercepts();
@@ -54,14 +52,12 @@ describe("cloud project spec", () => {
     });
   });
 
-  it.skip("should save logic editor changes", () => {
+  it("should save logic editor changes", () => {
     cy.get("@cloudProjectId").then((cloudProjectId) => {
       cy.visit(`/ide/${cloudProjectId}/logic`);
     });
 
     cy.waitLoading();
-
-    cy.contains("All humans are mortal").click();
 
     const changedEditorValue = `$Human.mortal = true;\nplaton = new Human('Platon');\nplaton.mortal === true;`;
 
@@ -69,8 +65,6 @@ describe("cloud project spec", () => {
 
     cy.reload().then(() => {
       cy.waitLoading();
-
-      cy.contains("All humans are mortal").click();
 
       cy.checkEditorValue("platon");
     });
