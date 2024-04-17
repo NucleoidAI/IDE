@@ -35,6 +35,8 @@
 //   }
 // }
 
+import "cypress-wait-until";
+
 /* eslint-disable */
 import { mount } from "cypress/react18";
 
@@ -216,12 +218,9 @@ Cypress.Commands.add("checkEditorValue", (expectedValue) => {
 });
 
 Cypress.Commands.add("waitLoading", () => {
-  cy.waitUntil(
-    () => cy.get(".nuc-logo-frame").should("not.be.visible"),
-    cy.getBySel("menu").should("be.visible"),
-    {
-      errorMsg: "Nuc Progress Indicator is still visible",
-    }
+  cy.get("#nuc-progress-indicator", { timeout: 10000 }).should(
+    "have.class",
+    "hidden"
   );
 });
 
