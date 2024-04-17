@@ -58,6 +58,7 @@ function LogicTree({ openLogicDialog }) {
   const [logicExist, setLogicExist] = useState(Boolean(declarations.length));
 
   function select(value) {
+    console.log(value);
     const [logicClass, logicIndex] = value.split("-");
 
     if (logicIndex === undefined) {
@@ -84,35 +85,43 @@ function LogicTree({ openLogicDialog }) {
   }
 
   useEffect(() => {
-    const treeData = {};
-    const initialExpandedNodes = [];
-    console.log(declarations);
     if (declarations.length !== 0) {
+      const tree = {};
+      const initialExpandedNodes = [];
       declarations.forEach((dec) => {
         const decSummary = dec.summary;
         const decClass = dec?.definition?.split("$")[1]?.match(/\b(\w+)\b/)[0];
 
-        if (!treeData[decClass]) {
-          treeData[decClass] = {
+        if (!tree[decClass]) {
+          tree[decClass] = {
             summaries: [],
             params: [],
           };
           initialExpandedNodes.push(decClass);
         }
 
-        treeData[decClass].summaries.push(decSummary);
+        tree[decClass].summaries.push(decSummary);
 
         const matchingFunction = functions.find(
           (func) => func.path === `/${decClass}`
         );
         if (matchingFunction) {
-          treeData[decClass].params = matchingFunction.params;
+          tree[decClass].params = matchingFunction.params;
         }
+
+        const firstSummary = tree[initialExpandedNodes[0]].summaries[0];
+        const item = declarations.find((item) => item.summary === firstSummary);
+        setSelectedKey([initialExpandedNodes[0]]);
+        dispatch({
+          type: "SET_SELECTED_LOGIC",
+          payload: { logic: item },
+        });
       });
+
+      setTreeData(tree);
+      setNodeKey(initialExpandedNodes);
     }
 
-    setTreeData(treeData);
-    setNodeKey(initialExpandedNodes);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
