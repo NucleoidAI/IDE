@@ -1,3 +1,5 @@
+import { publish } from "@nucleoidai/react-event";
+
 import { Box, Button, Stack, Typography, useTheme } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
@@ -95,15 +97,18 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat, error }) => {
           index = matchedSuggestion.children;
         } else {
           setSuggestions(null);
+          publish("SUGGESTIONS_OVERLAY_ACTIVE", false);
           return;
         }
       } else {
         setSuggestions(null);
+        publish("SUGGESTIONS_OVERLAY_ACTIVE", false);
         return;
       }
     }
 
     setSuggestions(index);
+    publish("SUGGESTIONS_OVERLAY_ACTIVE", true);
   }, [chat]);
 
   if (error.status && error.chatId === chat.id) {
