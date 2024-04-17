@@ -253,6 +253,20 @@ const lightTheme = createTheme({
       },
     },
 
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          color: base.grey[400],
+          "&:hover": {
+            backgroundColor: alpha(base.grey[500], 0.1),
+          },
+          "&.Mui-disabled": {
+            color: base.grey[700],
+          },
+        },
+      },
+    },
+
     MuiFab: {
       variants: [
         {
