@@ -49,12 +49,14 @@ describe("ChatWidget", () => {
     cy.sendMessage("hello", "MESSAGES/hello");
     const expectedRespnse =
       '"Nucleoid Chat" is a platform specifically designed for posing and discussing formal logic questions. Nucleoid Runtime is a software system that executes and manages logical rules and inferences.';
+    //eslint-disable-next-line
     cy.wait(2000);
     cy.checkMessageResponse("ASSISTANT", expectedRespnse, 5, false, "last");
   });
 
   it("should send a message and receive a response with code", () => {
     cy.sendMessage("define a human", "MESSAGES/define-human");
+    //eslint-disable-next-line
     cy.wait(2000);
     cy.checkMessageResponse(
       "ASSISTANT",
