@@ -14,8 +14,6 @@ import { getTypes } from "../../lib/TypeScript";
 import gtag from "../../gtag";
 import { mapToContext } from "../../utils/Parser";
 import sandboxService from "../../sandboxService";
-import scheduler from "../../connectionScheduler";
-import service from "../../service";
 import { toOpenApi } from "../../adapters/openapi/adapter";
 import { useContext } from "../../context/context";
 import { useLocation } from "react-router-dom";
