@@ -1,12 +1,25 @@
-import { chatData, chatDataKey, emptyChatData } from "../fixtures/seedData";
+let seedData;
+let messages;
+
+before(() => {
+  cy.fixture("seedData").then((data) => {
+    seedData = data;
+  });
+  cy.fixture("messages").then((data) => {
+    messages = data;
+  });
+});
 
 describe("ChatWidget", () => {
   beforeEach(() => {
     cy.clearLocalStorage();
     cy.window().then((win) => {
-      win.localStorage.setItem(chatDataKey, JSON.stringify(chatData));
+      win.localStorage.setItem(
+        `ide.chat.sessions.${seedData.chatData.id}`,
+        JSON.stringify(seedData.chatData)
+      );
     });
-    cy.visit(`/ide/chat/${chatData.id}`);
+    cy.visit(`/ide/chat/${seedData.chatData.id}`);
   });
 
   it("should display the initial chat messages from seed data", () => {
@@ -59,12 +72,7 @@ describe("ChatWidget", () => {
       if (req.body.content === "hello") {
         req.reply({
           statusCode: 200,
-          body: {
-            role: "ASSISTANT",
-            type: "EXCLAMATORY",
-            content:
-              '"Nucleoid Chat" is a platform specifically designed for posing and discussing formal logic questions. Nucleoid Runtime is a software system that executes and manages logical rules and inferences.',
-          },
+          body: messages.helloMessage,
         });
       }
     }).as("postMessage");
@@ -91,14 +99,7 @@ describe("ChatWidget", () => {
       if (req.body.content === "define a human") {
         req.reply({
           statusCode: 200,
-          body: {
-            role: "ASSISTANT",
-            mode: "IMPERATIVE",
-            type: "IMPERATIVE",
-            code: "class Human {\\n name: string;\\n constructor(name: string) {\\n this.name = name;\\n }\\n}",
-            content:
-              "Define a Human class with a name property and constructor",
-          },
+          body: messages.defineHumanMessage,
         });
       }
     }).as("postMessage");
@@ -126,12 +127,7 @@ describe("ChatWidget", () => {
       if (req.body.content === "trigger error") {
         req.reply({
           statusCode: 400,
-          body: {
-            error: "EXPERT_ERROR",
-            type: "CONVERSION_FAILED",
-            content:
-              '{ "code": "class Human {\\n name: string;\\n constructor(name: string) {\\n this.name = name;\\n }\\n}\\nvar user1 = new Human(\'Socrates\');",\n "description": "Define a class Human and create an instance of it named user1 with the name \'Socrates\'.",\n "summary": "Create Human instance"\n}\n\n{ "code": "if(user1.mortal) {\\n // some code\\n}\\n",\n "description": "Check if the instance user1 is mortal and execute some code if true.",\n "summary": "Check mortality"\n}',
-          },
+          body: messages.errorMessage,
         });
       }
     }).as("postMessage");
@@ -153,24 +149,12 @@ describe("ChatWidget", () => {
       if (req.body.content === "hello") {
         req.reply({
           statusCode: 200,
-          body: {
-            role: "ASSISTANT",
-            type: "EXCLAMATORY",
-            content:
-              '"Nucleoid Chat" is a platform specifically designed for posing and discussing formal logic questions. Nucleoid Runtime is a software system that executes and manages logical rules and inferences.',
-          },
+          body: messages.helloMessage,
         });
       } else if (req.body.content === "define a human") {
         req.reply({
           statusCode: 200,
-          body: {
-            role: "ASSISTANT",
-            mode: "IMPERATIVE",
-            type: "IMPERATIVE",
-            code: "class Human {\\n name: string;\\n constructor(name: string) {\\n this.name = name;\\n }\\n}",
-            content:
-              "Define a Human class with a name property and constructor",
-          },
+          body: messages.defineHumanMessage,
         });
       }
     }).as("postMessage");
@@ -208,10 +192,12 @@ describe("ChatWidget", () => {
 
   it("should handle suggestions and update the overlay", () => {
     cy.window().then((win) => {
-      win.localStorage.setItem(chatDataKey, JSON.stringify(emptyChatData));
+      win.localStorage.setItem(
+        `ide.chat.sessions.${seedData.emptyChatData.id}`,
+        JSON.stringify(seedData.emptyChatData)
+      );
     });
-
-    cy.visit(`/ide/chat/${emptyChatData.id}`);
+    cy.visit(`/ide/chat/${seedData.emptyChatData.id}`);
 
     cy.intercept("POST", "/ide/api/expert/chat/sessions/*", (req) => {
       if (req.body.content === "Option 1") {
