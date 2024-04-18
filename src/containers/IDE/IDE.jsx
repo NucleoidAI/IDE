@@ -30,7 +30,6 @@ let loaded = false;
 
 function IDE() {
   const [context, setContext] = React.useState();
-  const progressElement = document.getElementById("nuc-progress-indicator");
   const navigate = useNavigate();
   const location = useLocation();
   const modeQuery = location.search;

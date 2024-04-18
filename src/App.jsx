@@ -5,6 +5,7 @@ import RouteManager from "./RouteManager";
 import Settings from "./settings";
 import routes from "./routes";
 import { useStorage } from "@nucleoidjs/webstorage";
+
 import {
   CssBaseline,
   StyledEngineProvider,
@@ -17,6 +18,8 @@ import { publish, subscribe, useEvent } from "@nucleoidai/react-event";
 window.nucleoid = {
   Event: { publish, subscribe, useEvent },
 };
+
+let loaded = false;
 
 function App() {
   const [event] = useEvent("CONTAINER_LOADED", { name: "" });
@@ -57,14 +60,15 @@ function App() {
 
   useEffect(() => {
     initSettings();
+    loaded = false;
   }, []);
 
   useEffect(() => {
-    if (event.name) {
+    if (event.name && !loaded) {
       setTimeout(() => {
         progressElement.classList.add("hidden");
+        loaded = true;
       }, delay);
-
       const progressElement = document.getElementById("nuc-progress-indicator");
     }
     // eslint-disable-next-line
