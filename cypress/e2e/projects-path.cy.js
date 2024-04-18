@@ -71,7 +71,7 @@ describe("local project path spec", () => {
       cy.get("@project").should("exist");
 
       cy.storageGet(`ide.selected.project`).as("selectedProject");
-
+      //eslint-disable-next-line
       cy.wait(2000);
 
       cy.get("@selectedProject")
