@@ -42,4 +42,14 @@ Cypress.Commands.add("mount", (component, options) => {
   return mount(component, options);
 });
 
+Cypress.Commands.add("getBySel", (selector, ...args) => {
+  return cy.get(`[data-cy=${selector}]`, ...args);
+});
+
+Cypress.Commands.add("storageSet", (key, value) => {
+  cy.window().then((win) => {
+    win.localStorage.setItem(key, JSON.stringify(value));
+  });
+});
+
 /* eslint-enable */
