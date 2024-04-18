@@ -1,15 +1,49 @@
-describe("project path spec", () => {
-  before(() => {
+describe("cloud project path spec", () => {
   beforeEach(() => {
     cy.setup("IDE", "CLOUD", "SEED");
     cy.fixture("/LOCAL/project.json").as("localProject");
-    cy.storageSet(`ide.landing`, { level: 2 });
   });
 
+  it("visit '/ide' without recent project and navigate new project page", () => {
+    cy.visit("/ide");
+
+    cy.url().should("include", "/new/api?mode=local");
+  });
+
+  it("visit '/ide/projectId and open project'", () => {
+    const cloudProjectId = "a166cc16-5c76-4aac-819e-118207a5dfa9";
+
+    cy.visit(`/ide/${cloudProjectId}`);
+
+    cy.waitEvent("CONTAINER_LOADED");
+
+    cy.storageGet("ide.selected.project").then((project) => {
+      expect(project).to.exist;
+      expect(project).to.have.property("id", cloudProjectId);
+      expect(project).to.have.property("type", "CLOUD");
+    });
+  });
+
+  it("invalid projectId", () => {
+    const invalidProjectId = "1111111111";
+
+    cy.intercept(`https://nuc.land/ide/api/projects/${invalidProjectId}`);
+
+    cy.intercept(
+      `https://nuc.land/ide/api/projects/${invalidProjectId}/services`
+    );
+
+    cy.visit(`/ide/${invalidProjectId}`);
+
+    cy.url().should("contain", "/error");
+  });
+});
+
+describe("local project path spec", () => {
   beforeEach(() => {
-    cy.IDEContainerIntercepts();
+    cy.setup("IDE", "LOCAL", "SEED");
+    cy.fixture("/LOCAL/project.json").as("localProject");
   });
-
   it("visit '/ide' with recent project and open recent project", () => {
     const localProjectId = "3450f289-0fc5-45e9-9a4a-606c0a63cdfe";
     const selectedProject = { id: localProjectId, type: "LOCAL" };
@@ -24,13 +58,6 @@ describe("project path spec", () => {
 
     cy.url().should("include", `/${localProjectId}/api?mode=local`);
   });
-
-  it("visit '/ide' without recent project and navigate new project page", () => {
-    cy.visit("/ide");
-
-    cy.url().should("include", "/new/api?mode=local");
-  });
-
   it("visit '/ide/sample' and create sample project", () => {
     cy.visit("/ide/sample");
 
@@ -52,25 +79,7 @@ describe("project path spec", () => {
       });
     });
   });
-
-  it("visit '/ide/projectId and open cloud project'", () => {
-    const cloudProjectId = "a166cc16-5c76-4aac-819e-118207a5dfa9";
-
-    cy.visit(`/ide/${cloudProjectId}`);
-
-    cy.cloudProjectIntercept(cloudProjectId).as("cloudProject");
-
-    cy.wait("@cloudProject");
-
-    cy.window().then((win) => {
-      const recentProject = win.localStorage.getItem(`ide.selected.project`);
-
-      expect(JSON.parse(recentProject).id).to.equal(cloudProjectId);
-      expect(JSON.parse(recentProject).type).to.equal("CLOUD");
-    });
-  });
-
-  it("visit '/ide/projectId?mode=local' and open local project", () => {
+  it("visit '/ide/projectId?mode=local' and open project", () => {
     const localProjectId = "3450f289-0fc5-45e9-9a4a-606c0a63cdfe";
 
     cy.fixture("/LOCAL/project.json").then((localProject) => {
@@ -91,22 +100,7 @@ describe("project path spec", () => {
       });
     });
   });
-
-  it("invalid projectId for cloud mode", () => {
-    const invalidProjectId = "1111111111";
-
-    cy.intercept(`https://nuc.land/ide/api/projects/${invalidProjectId}`);
-
-    cy.intercept(
-      `https://nuc.land/ide/api/projects/${invalidProjectId}/services`
-    );
-
-    cy.visit(`/ide/${invalidProjectId}`);
-
-    cy.url().should("contain", "/error");
-  });
-
-  it("invalid projectId for local mode", () => {
+  it("invalid projectId", () => {
     const invalidProjectId = "1111111111";
 
     cy.visit(`/ide/${invalidProjectId}?mode=local`);
