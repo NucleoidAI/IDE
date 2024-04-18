@@ -50,7 +50,7 @@ describe("ChatWidget", () => {
     const expectedRespnse =
       '"Nucleoid Chat" is a platform specifically designed for posing and discussing formal logic questions. Nucleoid Runtime is a software system that executes and manages logical rules and inferences.';
 
-    cy.checkMessageResponse("ASSISTANT", expectedRespnse, 5);
+    cy.checkMessageResponse("ASSISTANT", expectedRespnse, 5, false, "last");
   });
 
   it("should send a message and receive a response with code", () => {
@@ -105,68 +105,52 @@ describe("ChatWidget", () => {
   });
 
   it("should handle suggestions and update the overlay", () => {
-    cy.setup("CHAT", "BLANK");
+    cy.fixture("MESSAGES/hello").then((hello) => {
+      cy.fixture("MESSAGES/define-human").then((defineHuman) => {
+        cy.intercept("POST", "/ide/api/expert/chat/sessions/*", (req) => {
+          if (req.body.content === "hello") {
+            req.reply({
+              statusCode: 200,
+              body: hello,
+            });
+          } else if (req.body.content === "define a human") {
+            req.reply({
+              statusCode: 200,
+              body: defineHuman,
+            });
+          }
+        }).as("postMessage");
+      });
+    });
 
-    cy.intercept("POST", "/ide/api/expert/chat/sessions/*", (req) => {
-      if (req.body.content === "Option 1") {
-        req.reply({
-          statusCode: 200,
-          body: {
-            role: "ASSISTANT",
-            content: "You selected Option 1",
-          },
-        });
-      } else if (req.body.content === "Option 1.1") {
-        req.reply({
-          statusCode: 200,
-          body: {
-            role: "ASSISTANT",
-            content: "You selected Option 1.1",
-          },
-        });
-      }
-    }).as("postMessage");
+    cy.getBySel("message-input").type("hello");
+    cy.getBySel("send-button").click();
+    cy.wait("@postMessage");
 
-    cy.getBySel("suggestions-overlay").should("be.visible");
+    cy.getBySel("message-input").type("define a human");
+    cy.getBySel("send-button").click();
+    cy.wait("@postMessage");
 
-    cy.getBySel("suggestion-button-0")
-      .find('[data-cy="suggestion-summary"]')
-      .invoke("text")
-      .then((firstSuggestionSummary) => {
-        cy.getBySel("suggestion-button-0").click();
-        cy.wait("@postMessage");
+    cy.getBySel("message-box")
+      .should("have.length.at.least", 8)
+      .eq(5)
+      .within(() => {
+        cy.getBySel("message-role").should("have.text", "ASSISTANT");
+        cy.getBySel("message-content").should(
+          "have.text",
+          '"Nucleoid Chat" is a platform specifically designed for posing and discussing formal logic questions. Nucleoid Runtime is a software system that executes and manages logical rules and inferences.'
+        );
+      });
 
-        cy.getBySel("message-box")
-          .should("have.length.at.least", 2)
-          .eq(-2)
-          .within(() => {
-            cy.getBySel("message-role").should("have.text", "USER");
-            cy.getBySel("message-content").should(
-              "have.text",
-              firstSuggestionSummary
-            );
-          });
-
-        cy.getBySel("suggestion-button-0")
-          .find('[data-cy="suggestion-summary"]')
-          .invoke("text")
-          .then((secondSuggestionSummary) => {
-            cy.getBySel("suggestion-button-0").click();
-            cy.wait("@postMessage");
-
-            cy.getBySel("message-box")
-              .should("have.length.at.least", 4)
-              .eq(-2)
-              .within(() => {
-                cy.getBySel("message-role").should("have.text", "USER");
-                cy.getBySel("message-content").should(
-                  "have.text",
-                  secondSuggestionSummary
-                );
-              });
-
-            cy.getBySel("message-box").should("have.length", 4);
-          });
+    cy.getBySel("message-box")
+      .eq(7)
+      .within(() => {
+        cy.getBySel("message-role").should("have.text", "ASSISTANT");
+        cy.getBySel("message-content").should(
+          "have.text",
+          "Define a Human class with a name property and constructor"
+        );
+        cy.getBySel("code-block").should("contain.text", "class Human");
       });
   });
 });
