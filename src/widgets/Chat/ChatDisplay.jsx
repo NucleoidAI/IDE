@@ -30,10 +30,9 @@ const ChatDisplay = ({
   const [selectedCode, setSelectedCode] = useState("");
   const [showScrollToBottomButton, setShowScrollToBottomButton] =
     useState(false);
-  const [suggestionsOverlayActive] = useEvent(
-    "SUGGESTIONS_OVERLAY_ACTIVE",
-    false
-  );
+  const [suggestionsOverlay] = useEvent("SUGGESTIONS_OVERLAY", {
+    active: false,
+  });
 
   const messagesContainerRef = useRef(null);
 
@@ -86,7 +85,7 @@ const ChatDisplay = ({
         backgroundColor: theme.palette.background.paper,
         paddingX: { xs: "8px", sm: "16px", md: "20px" },
         paddingTop: "20px",
-        paddingBottom: suggestionsOverlayActive ? "100px" : "20px",
+        paddingBottom: suggestionsOverlay.active ? "100px" : "20px",
       }}
       ref={messagesContainerRef}
       onScroll={handleScroll}

@@ -97,18 +97,18 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat, error }) => {
           index = matchedSuggestion.children;
         } else {
           setSuggestions(null);
-          publish("SUGGESTIONS_OVERLAY_ACTIVE", false);
+          publish("SUGGESTIONS_OVERLAY", { active: false });
           return;
         }
       } else {
         setSuggestions(null);
-        publish("SUGGESTIONS_OVERLAY_ACTIVE", false);
+        publish("SUGGESTIONS_OVERLAY", { active: false });
         return;
       }
     }
 
     setSuggestions(index);
-    publish("SUGGESTIONS_OVERLAY_ACTIVE", true);
+    publish("SUGGESTIONS_OVERLAY", { active: true });
   }, [chat]);
 
   if (error.status && error.chatId === chat.id) {
