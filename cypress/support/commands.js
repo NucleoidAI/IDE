@@ -22,7 +22,7 @@ Cypress.Commands.add("storageGet", (key) => {
   });
 });
 
-Cypress.Commands.add("setup", (container, type, fixtureType) => {
+Cypress.Commands.add("setup", (container, fixtureType, type) => {
   cy.clearLocalStorage();
   cy.storageSet(`debug`, true);
   cy.storageSet(`ide.landing`, { level: Number.MAX_SAFE_INTEGER });
@@ -99,16 +99,18 @@ Cypress.Commands.add("setup", (container, type, fixtureType) => {
       }
     }
   } else if (container === "CHAT") {
-    let seedData;
-    let messages;
-
-    cy.fixture("CHAT/chat-data.json").then((data) => {
-      cy.storageSet(`ide.chat.sessions.${data.id}`, data);
-      cy.visit(`/ide/chat/${data.id}`);
-    });
-    cy.fixture("messages").then((data) => {
-      messages = data;
-    });
+    if (fixtureType === "SEED" || "") {
+      cy.fixture("CHAT/chat-data.json").then((data) => {
+        cy.storageSet(`ide.chat.sessions.${data.id}`, data);
+        cy.visit(`/ide/chat/${data.id}`);
+      });
+    } else if (fixtureType === "BLANK") {
+      cy.storageSet(
+        `ide.chat.sessions.${seedData.emptyChatData.id}`,
+        seedData.emptyChatData
+      );
+      cy.visit(`/ide/chat/${seedData.emptyChatData.id}`);
+    }
   }
 });
 

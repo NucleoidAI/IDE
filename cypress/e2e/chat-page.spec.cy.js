@@ -1,6 +1,6 @@
 describe("ChatWidget", () => {
   beforeEach(() => {
-    cy.setup("CHAT");
+    cy.setup("CHAT", "SEED");
   });
 
   it("should display the initial chat messages from seed data", () => {
@@ -65,7 +65,7 @@ describe("ChatWidget", () => {
     );
   });
 
-  it.only("should handle error response", () => {
+  it("should handle error response", () => {
     cy.intercept("POST", "/ide/api/expert/chat/sessions/*", (req) => {
       if (req.body.content === "trigger error") {
         req.reply({
@@ -105,11 +105,7 @@ describe("ChatWidget", () => {
   });
 
   it("should handle suggestions and update the overlay", () => {
-    cy.storageSet(
-      `ide.chat.sessions.${seedData.emptyChatData.id}`,
-      seedData.emptyChatData
-    );
-    cy.visit(`/ide/chat/${seedData.emptyChatData.id}`);
+    cy.setup("CHAT", "BLANK");
 
     cy.intercept("POST", "/ide/api/expert/chat/sessions/*", (req) => {
       if (req.body.content === "Option 1") {

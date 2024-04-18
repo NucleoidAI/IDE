@@ -1,6 +1,6 @@
 describe("cloud project spec", () => {
   beforeEach(() => {
-    cy.setup("IDE", "CLOUD", "SEED");
+    cy.setup("IDE", "SEED", "CLOUD");
 
     cy.wrap("a166cc16-5c76-4aac-819e-118207a5dfa9").as("projectId");
     cy.wrap("06843e12-bc10-4648-99dc-85ad4be1cd09").as("serviceId");
