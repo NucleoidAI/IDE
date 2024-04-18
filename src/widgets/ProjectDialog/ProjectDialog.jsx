@@ -279,9 +279,6 @@ function ProjectDialog({ handleClose, open, setOpen }) {
       projectExist ? "please select a project" : "create a new project"
     }.`;
 
-    console.log(event.status, "recent project not found");
-    console.log(projectNotFound.status, "project not found");
-
     if (!event.status && !projectNotFound.status) {
       handleClose();
       setSearchQuery("");
