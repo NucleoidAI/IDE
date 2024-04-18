@@ -125,6 +125,45 @@ Cypress.Commands.add("typeEditor", (changedEditorValue) => {
   cy.wait(1000);
 });
 
+Cypress.Commands.add("sendMessage", (message, fixture) => {
+  cy.intercept("POST", "/ide/api/expert/chat/sessions/*", (req) => {
+    if (req.body.content === message) {
+      req.reply({
+        statusCode: 200,
+        fixture: fixture,
+      });
+    }
+  }).as("postMessage");
+
+  cy.getBySel("message-input").type(message);
+  cy.getBySel("send-button").click();
+
+  cy.wait("@postMessage");
+});
+
+Cypress.Commands.add(
+  "checkMessageResponse",
+  (role, content, length, codeContent, messageIndex) => {
+    cy.getBySel("message-box")
+      .should("have.length.at.least", length)
+      .as("messageBoxes");
+
+    if (messageIndex === "last" || !messageIndex) {
+      cy.get("@messageBoxes").last().as("messageBox");
+    } else if (typeof messageIndex === "number") {
+      cy.get("@messageBoxes").eq(messageIndex).as("messageBox");
+    }
+
+    cy.get("@messageBox").within(() => {
+      cy.getBySel("message-role").should("have.text", role);
+      cy.getBySel("message-content").should("have.text", content);
+      if (codeContent) {
+        cy.getBySel("code-block").should("contain.text", codeContent);
+      }
+    });
+  }
+);
+
 Cypress.Commands.add("saveContextIntercept", (serviceId) => {
   cy.fixture("/CONTEXT/changed-context.json")
     .then((context) => {
