@@ -247,7 +247,6 @@ function IDE() {
   if (!context) return null;
 
   if (context === "error") return <div>forbiden</div>;
-
   return (
     <ContextProvider
       key={contextProviderKey}
@@ -255,7 +254,7 @@ function IDE() {
       reducer={contextReducer}
     >
       <Box sx={styles.root}>
-        <Menu list={routes} query={modeQuery} title="IDE" />
+        <Menu list={routes} query={modeQuery} id={id} title="IDE" />
         <EducationDrawer />
         <Box sx={styles.content}>
           <Outlet />

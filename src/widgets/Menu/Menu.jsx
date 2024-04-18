@@ -33,7 +33,7 @@ import {
 const withFilter = (Component) => {
   return (props) => {
     let list;
-    const { query } = props;
+    const { query, id } = props;
     if (!settings.plugin()) {
       list = props.list[0].pages.filter(
         (item) => item.link !== "/dashboard" && item.link !== "/businessflow"
@@ -42,7 +42,7 @@ const withFilter = (Component) => {
       list = [...props.list];
     }
 
-    return <Component {...{ title: "IDE", list, query }} />;
+    return <Component {...{ title: "IDE", list, query, id }} />;
   };
 };
 
@@ -205,7 +205,7 @@ const MenuLinks = (props) => {
     },
   });
 
-  const { query } = props;
+  const { query, id } = props;
 
   return (
     <>
@@ -219,7 +219,7 @@ const MenuLinks = (props) => {
               }
               sx={styles.listItem}
               component={Link}
-              to={`../${link}${query}`}
+              to={`${id}/${link}${query}`}
               state={{ anchor }}
               relative="path"
             >
