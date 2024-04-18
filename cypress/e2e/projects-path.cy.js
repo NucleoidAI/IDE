@@ -62,11 +62,11 @@ describe.only("local project path spec", () => {
 
     cy.url().should("contain", "/api");
 
+    cy.waitEvent("CONTAINER_LOADED");
+
     cy.location("pathname").then((pathname) => {
       const pathParts = pathname.split("/");
       const projectId = pathParts[pathParts.length - 2];
-
-      cy.waitEvent("CONTAINER_LOADED");
 
       cy.storageGet(`ide.projects.${projectId}`).as("project");
 
