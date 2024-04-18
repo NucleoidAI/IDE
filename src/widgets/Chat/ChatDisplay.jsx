@@ -58,7 +58,10 @@ const ChatDisplay = ({
         messagesContainerRef.current;
       const atBottom = Math.abs(scrollTop + clientHeight - scrollHeight) < 1;
       setShowScrollToBottomButton(
-        !atBottom && window.innerWidth >= 960 && chat.messages.length > 0
+        !atBottom &&
+          window.innerWidth >= 960 &&
+          chat.messages.length > 0 &&
+          !suggestionsOverlay.active
       );
     }
   };
