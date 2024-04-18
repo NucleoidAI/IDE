@@ -2,6 +2,7 @@ import Editor from "@monaco-editor/react";
 import { NucLinter } from "./NucLinter";
 import React from "react";
 import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
+import { publish } from "@nucleoidai/react-event";
 import { useStorage } from "@nucleoidjs/webstorage";
 
 import { useEffect, useRef } from "react";
@@ -72,12 +73,14 @@ const NucEditor = React.forwardRef((props, ref) => {
   const lint = React.useCallback(async () => {
     const editor = editorRef?.current?.editor;
     const monaco = editorRef?.current?.monaco;
-    if (editor.getModel()) {
+
+    if (editor && editor.getModel()) {
       const worker = await monaco.languages.typescript.getTypeScriptWorker();
-      const ts = await worker(editor?.getModel()?.uri);
+      const ts = await worker(editor.getModel().uri);
       const diagnostics = await ts.getSemanticDiagnostics(
-        editor?.getModel()?.uri?.toString()
+        editor.getModel().uri.toString()
       );
+
       const text = editor.getValue();
 
       const markers = diagnostics.map((diagnostic) => {
@@ -185,11 +188,17 @@ const NucEditor = React.forwardRef((props, ref) => {
         editorRef.current && formatDocument();
       },
     });
-    lint();
-    lintWithCustomLinter();
-    formatDocument();
+    const model = editor.getModel();
+    if (model.uri.path !== "/empty") {
+      lint();
+      lintWithCustomLinter();
+      formatDocument();
+    }
+    publish("WIDGET_LOADED", { name: "NucEditor" });
     onMount && onMount(editor, monaco);
   }
+  // eslint-disable-next-line
+  const beforeMount = (monaco) => {};
 
   function handleChange(e) {
     clearTimeout(timerRef.current);
@@ -206,13 +215,14 @@ const NucEditor = React.forwardRef((props, ref) => {
 
   return (
     <Editor
-      data-cy="codeEditor-editor"
+      data-cy="nuc-editor"
       ref={ref}
       key={themeStorage}
       defaultValue={defaultValue}
-      path={path}
+      path={path || "empty"}
       onChange={handleChange}
       onMount={editorOnMount}
+      beforeMount={beforeMount}
       height={"96%"}
       defaultLanguage="typescript"
       options={{

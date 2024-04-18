@@ -340,7 +340,12 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   };
 
   return (
-    <Dialog open={open} fullWidth={true} onClose={onDialogClose}>
+    <Dialog
+      data-cy={"project-dialog"}
+      open={open}
+      fullWidth={true}
+      onClose={onDialogClose}
+    >
       <DialogTitle
         m={1}
         sx={{
@@ -380,7 +385,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
           </Button>
         )}
       </DialogTitle>
-      <DialogContent>
+      <DialogContent data-cy="project-dialog-content">
         <ProjectList
           runProject={(project) => runProject(project)}
           searchQuery={searchQuery}

@@ -41,6 +41,7 @@ export default function GlobalSnackMessage() {
           onClose={handleClose}
         >
           <Alert
+            data-cy="global-snack-message"
             onClose={handleClose}
             severity={globalMessage.severity}
             sx={{ width: "100%" }}

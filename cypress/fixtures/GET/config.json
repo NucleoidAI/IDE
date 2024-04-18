@@ -1,0 +1,24 @@
+{
+    "education": [
+        {
+            "type": "twitch",
+            "url": "https://player.twitch.tv/?channel=theprimeagen&parent=nucleoid.com&autoplay=false"
+        },
+        {
+            "type": "twitch",
+            "url": "https://player.twitch.tv/?channel=danielhe4rt&parent=nucleoid.com&autoplay=false"
+        },
+        {
+            "type": "youtube",
+            "url": "https://www.youtube.com/embed/W6NZfCO5SIk"
+        },
+        {
+            "type": "youtube",
+            "url": "https://www.youtube.com/embed/8dWL3wF_OMw"
+        },
+        {
+            "type": "twitch",
+            "url": "https://www.youtube.com/embed/nlc1gks2n9E"
+        }
+    ]
+}

@@ -5,6 +5,7 @@ const AddNewButton = ({ formArea, setFormArea }) => {
     formArea === "button" && (
       <Stack sx={{ p: 1.5, width: "100%" }}>
         <Button
+          data-cy="add-new-button"
           fullWidth={true}
           variant="contained"
           onClick={() => setFormArea("add")}
