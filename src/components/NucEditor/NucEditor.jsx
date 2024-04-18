@@ -122,7 +122,6 @@ const NucEditor = React.forwardRef((props, ref) => {
   }, [path]);
 
   function editorOnMount(editor, monaco) {
-    console.log("onMount");
     window.EditorInstance = editor;
 
     editorRef.current = { editor: editor, monaco: monaco };
@@ -190,7 +189,6 @@ const NucEditor = React.forwardRef((props, ref) => {
       },
     });
     const model = editor.getModel();
-    console.log(model);
     if (model.uri.path !== "/empty") {
       lint();
       lintWithCustomLinter();
@@ -199,10 +197,8 @@ const NucEditor = React.forwardRef((props, ref) => {
     publish("WIDGET_LOADED", { name: "NucEditor" });
     onMount && onMount(editor, monaco);
   }
-
-  const beforeMount = (monaco) => {
-    console.log("beforeMount");
-  };
+  // eslint-disable-next-line
+  const beforeMount = (monaco) => {};
 
   function handleChange(e) {
     clearTimeout(timerRef.current);

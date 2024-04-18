@@ -41,7 +41,6 @@ function PromptInput({
 
   const handleMicClick = () => {
     if (mic) {
-      console.log(transcript);
       setPromptValue(transcript);
     }
     setMic(!mic);
