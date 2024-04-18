@@ -261,7 +261,7 @@ function ApiButton() {
     }
   }, [run.status]); //eslint-disable-line
 
-  const runSandbox = async (context, state) => {
+  const runSandbox = async (context, state, runtime) => {
     const types = [...(context?.types || []), ...getTypes(state.functions)];
 
     setLoading(true);
@@ -275,7 +275,7 @@ function ApiButton() {
         },
       };
 
-      await sandboxService.createSandbox(openapi);
+      await sandboxService.createSandbox(openapi, runtime);
 
       setLoading(false);
       gtag("event", "run_sandbox");
@@ -324,11 +324,7 @@ function ApiButton() {
 
   const handleRun = () => {
     const context = mapToContext(vfs.fsMap, deepCopy(state.get("nucleoid")));
-    if (Settings.runtime() === "custom") {
-      runCustom(context, state.get("nucleoid.functions"));
-    } else {
-      runSandbox(context, state.get("nucleoid"));
-    }
+    runSandbox(context, state.get("nucleoid"), Settings.runtime());
   };
 
   return (
