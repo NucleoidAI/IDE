@@ -1,16 +1,32 @@
 import "highlight.js/styles/github-dark.css";
-
+import EditIcon from "@mui/icons-material/Edit";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import hljs from "highlight.js";
+import { Box, Collapse, IconButton, Stack, Typography } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
+import * as prettierStandalone from "prettier/standalone";
+import * as typescriptPlugin from "prettier/parser-typescript";
 
-import { Box, Stack, Typography } from "@mui/material";
-import React, { useEffect, useRef } from "react";
-
-const ReadOnlyEditor = ({ language, value, onActionClick, actionIcon }) => {
+const ReadOnlyEditor = ({
+  title = "Code",
+  language,
+  value,
+  onActionClick,
+  isCollapsed,
+}) => {
   const codeRef = useRef(null);
+  const [collapsed, setCollapsed] = useState(isCollapsed);
 
   useEffect(() => {
-    hljs.highlightBlock(codeRef.current);
+    if (codeRef.current) {
+      hljs.highlightElement(codeRef.current);
+    }
   }, [language, value]);
+
+  const toggleCollapse = () => {
+    setCollapsed(!collapsed);
+  };
 
   return (
     <Stack
@@ -29,22 +45,30 @@ const ReadOnlyEditor = ({ language, value, onActionClick, actionIcon }) => {
         }}
       >
         <Typography m={0.4} variant="subtitle">
-          Code
+          {title}
         </Typography>
-        <Box
-          component={actionIcon}
-          onClick={onActionClick}
-          sx={{
-            "&:hover": {
-              color: "gray",
-              cursor: "pointer",
-            },
-          }}
-        />{" "}
+        <Box>
+          <IconButton onClick={toggleCollapse}>
+            {collapsed ? (
+              <ExpandMoreIcon fontSize="small" />
+            ) : (
+              <ExpandLessIcon fontSize="small" />
+            )}
+          </IconButton>
+          <IconButton onClick={onActionClick}>
+            <EditIcon fontSize="small" />
+          </IconButton>
+        </Box>
       </Stack>
-      <Stack component="code" ref={codeRef} className={language}>
-        {value}
-      </Stack>
+      <Collapse in={!collapsed}>
+        <Stack component="code" ref={codeRef} className={language}>
+          {prettierStandalone.format(value, {
+            parser: "typescript",
+            plugins: [typescriptPlugin],
+            singleQuote: true,
+          })}
+        </Stack>
+      </Collapse>
     </Stack>
   );
 };

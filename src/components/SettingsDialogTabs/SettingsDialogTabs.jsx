@@ -1,8 +1,9 @@
+import SettingsDialogChat from "../SettingsDialogChat";
 import SettingsDialogDev from "../SettingsDialogDev";
 import SettingsDialogUrl from "../SettingsDialogRuntime";
-
 import TabPanel from "../TabPanel";
 import styles from "./styles";
+
 import { Box, Grid, Tab, Tabs } from "@mui/material";
 import React, { forwardRef, useState } from "react";
 
@@ -30,13 +31,17 @@ const SettingsDialogTabs = forwardRef((props, urlRef) => {
         sx={styles.tabs}
       >
         <Tab sx={styles.tab} label="Runtime" {...tabProps(0)} />
-        <Tab sx={styles.tab} label="Dev" {...tabProps(1)} />
+        <Tab sx={styles.tab} label="Chat" {...tabProps(1)} />
+        <Tab sx={styles.tab} label="Dev" {...tabProps(2)} />
       </Tabs>
       <Box sx={{ width: "100%" }}>
         <TabPanel value={value} index={0}>
           <SettingsDialogUrl ref={urlRef} />
         </TabPanel>
         <TabPanel value={value} index={1}>
+          <SettingsDialogChat />
+        </TabPanel>
+        <TabPanel value={value} index={2}>
           <SettingsDialogDev />
         </TabPanel>
       </Box>

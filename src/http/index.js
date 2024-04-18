@@ -1,4 +1,3 @@
-import Settings from "../settings.js";
 import axios from "axios";
 import axiosRetry from "axios-retry";
 import config from "../../config.js";
@@ -11,46 +10,50 @@ const instance = axios.create({
 });
 
 const refreshAuthLogic = async (failedRequest) => {
-  const refreshToken = storage.get("refreshToken");
-  const accessToken = storage.get("accessToken");
-
+  const refreshToken = storage.get("oauth.token").refreshToken;
+  const accessToken = storage.get("oauth.token").accessToken;
   let tokenRefreshResponse;
-
   if (!refreshToken && !accessToken) {
-    const code = await getCodeFromGithub();
-
-    tokenRefreshResponse = await oauth({ code: code });
+    const code = await instance.getCodeFromGithub();
+    tokenRefreshResponse = await instance.oauth({ code: code });
   } else {
-    tokenRefreshResponse = await oauth({ refreshToken: refreshToken });
+    tokenRefreshResponse = await instance.oauth({ refreshToken: refreshToken });
   }
-
-  storage.set("accessToken", tokenRefreshResponse.accessToken);
-  storage.set("refreshToken", tokenRefreshResponse.refreshToken);
-
+  storage.set("oauth.token", {
+    accessToken: tokenRefreshResponse.accessToken,
+    refreshToken: tokenRefreshResponse.refreshToken,
+  });
   failedRequest.response.config.headers["Authorization"] =
     "Bearer " + tokenRefreshResponse.accessToken;
 };
 
 axiosRetry(instance, { retries: 3 });
 createAuthRefreshInterceptor(instance, refreshAuthLogic);
-axios.defaults.headers.common["Content-Type"] = "application/json";
 
-const oauth = (body) =>
-  fetch(Settings.service.auth, {
+instance.defaults.headers.common["Content-Type"] = "application/json";
+
+instance.oauth = (body) =>
+  fetch(config.oauth.accessTokenUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
-  }).then((response) => response.json());
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return {
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken,
+      };
+    });
 
-const getCodeFromGithub = () => {
+instance.getCodeFromGithub = () => {
   const popup = window.open(
-    `https://github.com/login/oauth/authorize?scope=user&client_id=${Settings.github.client_id}`,
+    `${config.oauth.oauthUrl}?scope=user&client_id=${config.oauth.clientId}`,
     "target_blank",
     "toolbar=yes,scrollbars=yes,resizable=yes,top=50,left=50,width=650,height=750"
   );
-
   return new Promise((resolve, reject) => {
     const timer = setInterval(function () {
       if (popup.closed) {
@@ -65,6 +68,28 @@ const getCodeFromGithub = () => {
   });
 };
 
+instance.getUserDetails = async () => {
+  const refreshToken = storage.get("oauth.token").refreshToken;
+  if (refreshToken) {
+    try {
+      const response = await axios.get("https://api.github.com/user", {
+        headers: {
+          Authorization: `token ${refreshToken}`,
+        },
+      });
+      console.log("User details:", response.data);
+      return {
+        name: response.data.login,
+        avatarUrl: response.data.avatar_url,
+      };
+    } catch (error) {
+      console.error("Failed to fetch user details:", error);
+      throw error;
+    }
+  }
+  return null;
+};
+
 instance.interceptors.response.use(
   (res) => res,
   (err) => {
@@ -75,7 +100,6 @@ instance.interceptors.response.use(
         severity: "error",
       });
     }
-
     return Promise.reject(err);
   }
 );

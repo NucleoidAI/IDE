@@ -7,7 +7,7 @@ const instance = axios.create({
   baseURL: config.expert,
 });
 
-axiosRetry(instance, { retries: 3 });
+axiosRetry(instance, { retries: 0 });
 axios.defaults.headers.common["Content-Type"] = "application/json";
 
 instance.interceptors.response.use(

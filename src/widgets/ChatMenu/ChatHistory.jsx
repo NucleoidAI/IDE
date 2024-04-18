@@ -4,7 +4,11 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ToggleableMenu from "../../components/ToggleableMenu";
 import { storage } from "@nucleoidjs/webstorage";
 import styles from "./styles.js";
+import useChat from "../Chat/useChat.jsx";
+import useConfirmDialog from "../../components/ConfirmDialog";
+import { useEvent } from "@nucleoidai/react-event";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import {
   Box,
@@ -14,27 +18,46 @@ import {
   Tooltip,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { publish, useEvent } from "@nucleoidai/react-event";
 
 function ChatHistory() {
   const navigate = useNavigate();
   const [selectedChat] = useEvent("CHAT_SELECTED");
   const [initChat] = useEvent("CHAT_INITIATED");
+  const { chatId } = useParams();
   const [chats, setChats] = useState([]);
+  const [, , convertChat, deleteChat] = useChat();
+  const [ConfirmDialog, showConfirmDialog] = useConfirmDialog();
 
   const handleChatClick = (chatId) => navigate(`/chat/${chatId}`);
-  const handleConvertToProject = (chatId) => {
-    publish("CONVERT_TO_PROJECT", chatId);
-    storage.set("ide", "landing", { level: 2 });
-    publish("LANDING_LEVEL_ACHIEVED", { level: 2 });
+
+  const handleConvertToProject = () => {
+    showConfirmDialog(
+      "Convert to Project",
+      "Are you sure you want to convert this chat to a project?",
+      () => {
+        convertChat();
+      }
+    );
   };
-  const handleDeleteChat = (chatId) => {
-    console.log(`Deleting chat ${chatId}`);
+  const handleDeleteChat = (deletedChatId) => {
+    showConfirmDialog(
+      "Delete Chat",
+      "Are you sure you want to delete this chat?",
+      () => {
+        storage.remove("ide", "chat", "sessions", deletedChatId);
+        deleteChat(deletedChatId);
+        setChats((prevChats) =>
+          prevChats.filter((chat) => chat.id !== deletedChatId)
+        );
+        if (chatId === deletedChatId) {
+          navigate("/chat");
+        }
+      }
+    );
   };
 
   useEffect(() => {
     const menu = [];
-
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key.startsWith("ide.chat.sessions.")) {
@@ -47,7 +70,6 @@ function ChatHistory() {
         } catch (err) {}
       }
     }
-
     setChats(menu.sort((a, b) => b.created - a.created));
   }, [selectedChat, initChat]);
 
@@ -76,7 +98,7 @@ function ChatHistory() {
                 <Tooltip title="Convert to Project">
                   <IconButton
                     size="small"
-                    onClick={() => handleConvertToProject(chat.id)}
+                    onClick={() => handleConvertToProject()}
                   >
                     <CodeIcon fontSize="small" />
                   </IconButton>
@@ -93,6 +115,7 @@ function ChatHistory() {
             </ListItemButton>
           </React.Fragment>
         ))}
+      <ConfirmDialog />
     </Box>
   );
 }

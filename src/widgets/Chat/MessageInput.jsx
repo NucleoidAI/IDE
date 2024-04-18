@@ -1,5 +1,7 @@
 import CodeIcon from "@mui/icons-material/Code";
 import SendIcon from "@mui/icons-material/Send";
+import useChat from "./useChat";
+import useConfirmDialog from "../../components/ConfirmDialog";
 
 import {
   Box,
@@ -18,13 +20,12 @@ import React, {
 } from "react";
 
 const MessageInput = forwardRef((props, ref) => {
-  const { handleSendMessage } = props;
-  const { loading } = props;
-  const { showConvertToProject } = props;
-  const { onConvertToProject } = props;
+  const { loading, handleSendMessage, showConvertToProject } = props;
   const theme = useTheme();
+  const [, , convertChat] = useChat();
   const [isAnimating, setIsAnimating] = useState(false);
   const [isInputEmpty, setIsInputEmpty] = useState(true);
+  const [ConfirmDialog, showConfirmDialog] = useConfirmDialog();
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -50,12 +51,18 @@ const MessageInput = forwardRef((props, ref) => {
   }));
 
   const handleProjectIconClick = () => {
-    onConvertToProject();
+    showConfirmDialog(
+      "Convert to Project",
+      "Are you sure you want to convert this chat to a project?",
+      () => {
+        convertChat();
+      }
+    );
   };
 
-  const onSend = (event) => {
+  const onSend = async (event) => {
     event.preventDefault();
-    handleSendMessage();
+    await handleSendMessage();
   };
 
   const handleInputChange = (event) => {
@@ -132,6 +139,7 @@ const MessageInput = forwardRef((props, ref) => {
           <SendIcon />
         </IconButton>
       </Box>
+      <ConfirmDialog />
     </Box>
   );
 });
