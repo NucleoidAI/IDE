@@ -105,11 +105,10 @@ Cypress.Commands.add("setup", (container, fixtureType, type) => {
         cy.visit(`/ide/chat/${data.id}`);
       });
     } else if (fixtureType === "BLANK") {
-      cy.storageSet(
-        `ide.chat.sessions.${seedData.emptyChatData.id}`,
-        seedData.emptyChatData
-      );
-      cy.visit(`/ide/chat/${seedData.emptyChatData.id}`);
+      cy.fixture("CHAT/empty-chat-data.json").then((data) => {
+        cy.storageSet(`ide.chat.sessions.${data.id}`, data);
+        cy.visit(`/ide/chat/${data.id}`);
+      });
     }
   }
 });
@@ -150,10 +149,14 @@ Cypress.Commands.add(
       .should("have.length.at.least", length)
       .as("messageBoxes");
 
-    if (messageIndex === "last" || !messageIndex) {
-      cy.get("@messageBoxes").last().as("messageBox");
+    if (messageIndex === "last") {
+      cy.get("@messageBoxes").then(($boxes) => {
+        cy.wrap($boxes.last()).as("messageBox");
+      });
     } else if (typeof messageIndex === "number") {
-      cy.get("@messageBoxes").eq(messageIndex).as("messageBox");
+      cy.get("@messageBoxes").then(($boxes) => {
+        cy.wrap($boxes.eq(messageIndex)).as("messageBox");
+      });
     }
 
     cy.get("@messageBox").within(() => {
