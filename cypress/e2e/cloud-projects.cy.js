@@ -1,8 +1,8 @@
 describe("cloud project spec", () => {
   beforeEach(() => {
     cy.setup("IDE", "CLOUD", "SEED");
-    //projectID
-    cy.wrap("a166cc16-5c76-4aac-819e-118207a5dfa9").as("cloudProjectId");
+
+    cy.wrap("a166cc16-5c76-4aac-819e-118207a5dfa9").as("projectId");
     cy.wrap("06843e12-bc10-4648-99dc-85ad4be1cd09").as("serviceId");
 
     cy.get("@serviceId").then((serviceId) => {
@@ -11,8 +11,8 @@ describe("cloud project spec", () => {
   });
 
   it("should save api editor changes", () => {
-    cy.get("@cloudProjectId").then((cloudProjectId) => {
-      cy.visit(`/ide/${cloudProjectId}/api`);
+    cy.get("@projectId").then((projectId) => {
+      cy.visit(`/ide/${projectId}/api`);
     });
 
     cy.waitEvent("CONTAINER_LOADED");
@@ -29,8 +29,8 @@ describe("cloud project spec", () => {
   });
 
   it("should save functions editor changes", () => {
-    cy.get("@cloudProjectId").then((cloudProjectId) => {
-      cy.visit(`/ide/${cloudProjectId}/functions`);
+    cy.get("@projectId").then((projectId) => {
+      cy.visit(`/ide/${projectId}/functions`);
     });
 
     cy.waitEvent("CONTAINER_LOADED");
@@ -47,8 +47,8 @@ describe("cloud project spec", () => {
   });
 
   it("should save logic editor changes", () => {
-    cy.get("@cloudProjectId").then((cloudProjectId) => {
-      cy.visit(`/ide/${cloudProjectId}/logic`);
+    cy.get("@projectId").then((projectId) => {
+      cy.visit(`/ide/${projectId}/logic`);
     });
 
     cy.waitEvent("CONTAINER_LOADED");

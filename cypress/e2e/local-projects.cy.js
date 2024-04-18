@@ -2,12 +2,12 @@ describe("local project spec", () => {
   beforeEach(() => {
     cy.setup("IDE", "LOCAL", "SEED");
     cy.fixture("PROJECTS/LOCAL/project.json").as("project");
-    cy.wrap("3450f289-0fc5-45e9-9a4a-606c0a63cdfe").as("localProjectId");
+    cy.wrap("3450f289-0fc5-45e9-9a4a-606c0a63cdfe").as("projectId");
   });
 
   it("should save api editor changes in storage", () => {
-    cy.get("@localProjectId").then((localProjectId) => {
-      cy.visit(`/ide/${localProjectId}/api?mode=local`);
+    cy.get("@projectId").then((projectId) => {
+      cy.visit(`/ide/${projectId}/api?mode=local`);
     });
 
     cy.waitEvent("CONTAINER_LOADED");
@@ -16,16 +16,16 @@ describe("local project spec", () => {
 
     cy.typeEditor(changedEditorValue);
     //fullCheckEditorValue("newItem");
-    cy.get("@localProjectId").then((localProjectId) => {
-      cy.storageGet(`ide.projects.${localProjectId}`).then((project) => {
+    cy.get("@projectId").then((projectId) => {
+      cy.storageGet(`ide.projects.${projectId}`).then((project) => {
         expect(project.api[3]["x-nuc-action"]).to.include("newItem");
       });
     });
   });
 
   it("should save functions editor changes", () => {
-    cy.get("@localProjectId").then((localProjectId) => {
-      cy.visit(`/ide/${localProjectId}/functions?mode=local`);
+    cy.get("@projectId").then((projectId) => {
+      cy.visit(`/ide/${projectId}/functions?mode=local`);
     });
 
     cy.waitEvent("CONTAINER_LOADED");
@@ -34,16 +34,16 @@ describe("local project spec", () => {
 
     cy.typeEditor(changedEditorValue);
 
-    cy.get("@localProjectId").then((localProjectId) => {
-      cy.storageGet(`ide.projects.${localProjectId}`).then((project) => {
+    cy.get("@projectId").then((projectId) => {
+      cy.storageGet(`ide.projects.${projectId}`).then((project) => {
         expect(project.functions[0].definition).to.include("NewOrder");
       });
     });
   });
 
   it("should save logic editor changes", () => {
-    cy.get("@localProjectId").then((localProjectId) => {
-      cy.visit(`/ide/${localProjectId}/logic?mode=local`);
+    cy.get("@projectId").then((projectId) => {
+      cy.visit(`/ide/${projectId}/logic?mode=local`);
     });
 
     cy.waitEvent("CONTAINER_LOADED");
@@ -52,8 +52,8 @@ describe("local project spec", () => {
 
     cy.typeEditor(changedEditorValue);
 
-    cy.get("@localProjectId").then((localProjectId) => {
-      cy.storageGet(`ide.projects.${localProjectId}`).then((project) => {
+    cy.get("@projectId").then((projectId) => {
+      cy.storageGet(`ide.projects.${projectId}`).then((project) => {
         expect(project.declarations[0].definition).to.include("plato");
       });
     });
