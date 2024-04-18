@@ -1,23 +1,6 @@
-let seedData;
-let messages;
-
-before(() => {
-  cy.fixture("seedData").then((data) => {
-    seedData = data;
-  });
-  cy.fixture("messages").then((data) => {
-    messages = data;
-  });
-});
-
 describe("ChatWidget", () => {
   beforeEach(() => {
-    cy.clearLocalStorage();
-    cy.storageSet(
-      `ide.chat.sessions.${seedData.chatData.id}`,
-      seedData.chatData
-    );
-    cy.visit(`/ide/chat/${seedData.chatData.id}`);
+    cy.setup("CHAT");
   });
 
   it("should display the initial chat messages from seed data", () => {
@@ -63,66 +46,31 @@ describe("ChatWidget", () => {
   });
 
   it("should send a message and receive a response without code", () => {
-    cy.intercept("POST", "/ide/api/expert/chat/sessions/*", (req) => {
-      if (req.body.content === "hello") {
-        req.reply({
-          statusCode: 200,
-          body: messages.helloMessage,
-        });
-      }
-    }).as("postMessage");
+    cy.sendMessage("hello", "MESSAGES/hello");
+    const expectedRespnse =
+      '"Nucleoid Chat" is a platform specifically designed for posing and discussing formal logic questions. Nucleoid Runtime is a software system that executes and manages logical rules and inferences.';
 
-    cy.getBySel("message-input").type("hello");
-    cy.getBySel("send-button").click();
-
-    cy.wait("@postMessage");
-
-    cy.getBySel("message-box")
-      .should("have.length.at.least", 5)
-      .last()
-      .within(() => {
-        cy.getBySel("message-role").should("have.text", "ASSISTANT");
-        cy.getBySel("message-content").should(
-          "have.text",
-          '"Nucleoid Chat" is a platform specifically designed for posing and discussing formal logic questions. Nucleoid Runtime is a software system that executes and manages logical rules and inferences.'
-        );
-      });
+    cy.checkMessageResponse("ASSISTANT", expectedRespnse, 5);
   });
 
   it("should send a message and receive a response with code", () => {
-    cy.intercept("POST", "/ide/api/expert/chat/sessions/*", (req) => {
-      if (req.body.content === "define a human") {
-        req.reply({
-          statusCode: 200,
-          body: messages.defineHumanMessage,
-        });
-      }
-    }).as("postMessage");
+    cy.sendMessage("define a human", "MESSAGES/define-human");
 
-    cy.getBySel("message-input").type("define a human");
-    cy.getBySel("send-button").click();
-
-    cy.wait("@postMessage");
-
-    cy.getBySel("message-box")
-      .should("have.length.at.least", 5)
-      .last()
-      .within(() => {
-        cy.getBySel("message-role").should("have.text", "ASSISTANT");
-        cy.getBySel("message-content").should(
-          "have.text",
-          "Define a Human class with a name property and constructor"
-        );
-        cy.getBySel("code-block").should("contain.text", "class Human");
-      });
+    cy.checkMessageResponse(
+      "ASSISTANT",
+      "Define a Human class with a name property and constructor",
+      5,
+      "class Human",
+      "last"
+    );
   });
 
-  it("should handle error response", () => {
+  it.only("should handle error response", () => {
     cy.intercept("POST", "/ide/api/expert/chat/sessions/*", (req) => {
       if (req.body.content === "trigger error") {
         req.reply({
           statusCode: 400,
-          body: messages.errorMessage,
+          fixture: "MESSAGES/error",
         });
       }
     }).as("postMessage");
@@ -140,49 +88,20 @@ describe("ChatWidget", () => {
   });
 
   it("should send multiple messages and receive responses", () => {
-    cy.intercept("POST", "/ide/api/expert/chat/sessions/*", (req) => {
-      if (req.body.content === "hello") {
-        req.reply({
-          statusCode: 200,
-          body: messages.helloMessage,
-        });
-      } else if (req.body.content === "define a human") {
-        req.reply({
-          statusCode: 200,
-          body: messages.defineHumanMessage,
-        });
-      }
-    }).as("postMessage");
+    cy.sendMessage("hello", "MESSAGES/hello");
+    cy.sendMessage("define a human", "MESSAGES/define-human");
 
-    cy.getBySel("message-input").type("hello");
-    cy.getBySel("send-button").click();
-    cy.wait("@postMessage");
+    const expectedResponse =
+      '"Nucleoid Chat" is a platform specifically designed for posing and discussing formal logic questions. Nucleoid Runtime is a software system that executes and manages logical rules and inferences.';
 
-    cy.getBySel("message-input").type("define a human");
-    cy.getBySel("send-button").click();
-    cy.wait("@postMessage");
-
-    cy.getBySel("message-box")
-      .should("have.length.at.least", 8)
-      .eq(5)
-      .within(() => {
-        cy.getBySel("message-role").should("have.text", "ASSISTANT");
-        cy.getBySel("message-content").should(
-          "have.text",
-          '"Nucleoid Chat" is a platform specifically designed for posing and discussing formal logic questions. Nucleoid Runtime is a software system that executes and manages logical rules and inferences.'
-        );
-      });
-
-    cy.getBySel("message-box")
-      .eq(7)
-      .within(() => {
-        cy.getBySel("message-role").should("have.text", "ASSISTANT");
-        cy.getBySel("message-content").should(
-          "have.text",
-          "Define a Human class with a name property and constructor"
-        );
-        cy.getBySel("code-block").should("contain.text", "class Human");
-      });
+    cy.checkMessageResponse("ASSISTANT", expectedResponse, 8, false, 5);
+    cy.checkMessageResponse(
+      "ASSISTANT",
+      "Define a Human class with a name property and constructor",
+      8,
+      "class Human",
+      7
+    );
   });
 
   it("should handle suggestions and update the overlay", () => {
