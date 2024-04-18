@@ -1,5 +1,7 @@
 describe("project path spec", () => {
   before(() => {
+  beforeEach(() => {
+    cy.setup("IDE", "CLOUD", "SEED");
     cy.fixture("/LOCAL/project.json").as("localProject");
     cy.storageSet(`ide.landing`, { level: 2 });
   });
