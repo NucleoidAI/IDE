@@ -88,7 +88,7 @@ const ChatDisplay = ({
         backgroundColor: theme.palette.background.paper,
         paddingX: { xs: "8px", sm: "16px", md: "20px" },
         paddingTop: "20px",
-        paddingBottom: suggestionsOverlay.active ? "100px" : "20px",
+        paddingBottom: suggestionsOverlay.active ? 12.5 : 2.5,
       }}
       ref={messagesContainerRef}
       onScroll={handleScroll}
