@@ -1,7 +1,7 @@
 describe("local project spec", () => {
   beforeEach(() => {
     cy.setup("IDE", "LOCAL", "SEED");
-    cy.fixture("/LOCAL/project.json").as("project");
+    cy.fixture("PROJECTS/LOCAL/project.json").as("project");
     cy.wrap("3450f289-0fc5-45e9-9a4a-606c0a63cdfe").as("localProjectId");
   });
 

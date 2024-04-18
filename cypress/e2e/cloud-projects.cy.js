@@ -17,14 +17,14 @@ describe("cloud project spec", () => {
 
     cy.waitEvent("CONTAINER_LOADED");
 
-    const changedEditorValue = `function action(req: { params: { item: string } }): any {\n  const newItem = req.params.item;\n  return Item[newItem];`;
+    const changedEditorValue = `function action(req: { params: { item: string } }): any {\n  const newItem = req.params.item;\n  return Item[newItem];\n`;
 
     cy.typeEditor(changedEditorValue);
 
     cy.reload().then(() => {
       cy.waitEvent("CONTAINER_LOADED");
 
-      cy.checkEditorValue("newItem");
+      cy.checkEditorValue(changedEditorValue);
     });
   });
 
@@ -42,7 +42,7 @@ describe("cloud project spec", () => {
     cy.reload().then(() => {
       cy.waitEvent("CONTAINER_LOADED");
 
-      cy.checkEditorValue("NewOrder");
+      cy.checkEditorValue(changedEditorValue);
     });
   });
 

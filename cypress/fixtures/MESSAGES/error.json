@@ -1,0 +1,5 @@
+{
+    "error": "EXPERT_ERROR",
+    "type": "CONVERSION_FAILED",
+    "content": "{ \"code\": \"class Human {\\n name: string;\\n constructor(name: string) {\\n this.name = name;\\n }\\n}\\nvar user1 = new Human('Socrates');\",\n \"description\": \"Define a class Human and create an instance of it named user1 with the name 'Socrates'.\",\n \"summary\": \"Create Human instance\"\n}\n\n{ \"code\": \"if(user1.mortal) {\\n // some code\\n}\\n\",\n \"description\": \"Check if the instance user1 is mortal and execute some code if true.\",\n \"summary\": \"Check mortality\"\n}"
+}

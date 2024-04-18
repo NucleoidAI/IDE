@@ -1,7 +1,6 @@
 describe("cloud project path spec", () => {
   beforeEach(() => {
     cy.setup("IDE", "CLOUD", "SEED");
-    cy.fixture("/LOCAL/project.json").as("localProject");
   });
 
   it("visit '/ide' without recent project and navigate new project page", () => {
@@ -42,7 +41,7 @@ describe("cloud project path spec", () => {
 describe("local project path spec", () => {
   beforeEach(() => {
     cy.setup("IDE", "LOCAL", "SEED");
-    cy.fixture("/LOCAL/project.json").as("localProject");
+    cy.fixture("/PROJECTS/LOCAL/project.json").as("project");
   });
   it("visit '/ide' with recent project and open recent project", () => {
     const localProjectId = "3450f289-0fc5-45e9-9a4a-606c0a63cdfe";

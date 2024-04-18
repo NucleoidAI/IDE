@@ -28,14 +28,14 @@ Cypress.Commands.add("setup", (container, type, fixtureType) => {
   cy.storageSet(`ide.landing`, { level: Number.MAX_SAFE_INTEGER });
 
   if (container === "IDE") {
-    cy.fixture("/GET/projects.json").then((projects) => {
+    cy.fixture("/PROJECTS/projects.json").then((projects) => {
       cy.intercept("GET", "https://nuc.land/ide/api/projects", {
         statusCode: 200,
         body: fixtureType === "BLANK" ? {} : projects,
       }).as("getProjects");
     });
 
-    cy.fixture("/GET/config.json")
+    cy.fixture("config.json")
       .then((config) => {
         cy.intercept("GET", "https://nucleoid.com/config", {
           statusCode: 200,
@@ -48,7 +48,7 @@ Cypress.Commands.add("setup", (container, type, fixtureType) => {
       let serviceId;
       const cloudProjectId = "a166cc16-5c76-4aac-819e-118207a5dfa9";
 
-      cy.fixture("/GET/projects.json")
+      cy.fixture("/PROJECTS/projects.json")
         .then((projects) => {
           const cloudProject = projects.find((p) => p.id === cloudProjectId);
           cy.intercept(
@@ -62,7 +62,7 @@ Cypress.Commands.add("setup", (container, type, fixtureType) => {
         })
         .as("project");
 
-      cy.fixture("/GET/single-project-service.json")
+      cy.fixture("/SERVICE/single-project-service.json")
         .then((service) => {
           cy.intercept(
             "GET",
@@ -76,7 +76,7 @@ Cypress.Commands.add("setup", (container, type, fixtureType) => {
         })
         .as("services");
 
-      cy.fixture("/GET/context.json")
+      cy.fixture("/CONTEXT/context.json")
         .then((context) => {
           cy.intercept(
             "GET",
@@ -90,7 +90,7 @@ Cypress.Commands.add("setup", (container, type, fixtureType) => {
         .as("context");
     } else if (type === "LOCAL") {
       if (fixtureType === "SEED" || "") {
-        cy.fixture("/LOCAL/project").then((project) => {
+        cy.fixture("PROJECTS/LOCAL/project").then((project) => {
           cy.storageSet(
             `ide.projects.3450f289-0fc5-45e9-9a4a-606c0a63cdfe`,
             project
@@ -98,22 +98,17 @@ Cypress.Commands.add("setup", (container, type, fixtureType) => {
         });
       }
     }
-  } else if (container === "Chat") {
+  } else if (container === "CHAT") {
     let seedData;
     let messages;
 
-    cy.fixture("seedData").then((data) => {
-      seedData = data;
+    cy.fixture("CHAT/chat-data.json").then((data) => {
+      cy.storageSet(`ide.chat.sessions.${data.id}`, data);
+      cy.visit(`/ide/chat/${data.id}`);
     });
     cy.fixture("messages").then((data) => {
       messages = data;
     });
-
-    cy.storageSet(
-      `ide.chat.sessions.${seedData.chatData.id}`,
-      seedData.chatData
-    );
-    cy.visit(`/ide/chat/${seedData.chatData.id}`);
   }
 });
 
@@ -131,7 +126,7 @@ Cypress.Commands.add("typeEditor", (changedEditorValue) => {
 });
 
 Cypress.Commands.add("saveContextIntercept", (serviceId) => {
-  cy.fixture("/PUT/changed-context.json")
+  cy.fixture("/CONTEXT/changed-context.json")
     .then((context) => {
       cy.intercept(
         "PUT",
@@ -144,7 +139,7 @@ Cypress.Commands.add("saveContextIntercept", (serviceId) => {
     })
     .as("contextPut");
 
-  cy.fixture("/PUT/changed-context.json")
+  cy.fixture("/CONTEXT/changed-context.json")
     .then((context) => {
       cy.intercept(
         "GET",
@@ -158,7 +153,6 @@ Cypress.Commands.add("saveContextIntercept", (serviceId) => {
     .as("contextGet");
 });
 
-// fullcheck
 Cypress.Commands.add("checkEditorValue", (expectedValue) => {
   cy.get("section").should("be.visible");
   cy.get(".monaco-editor")
