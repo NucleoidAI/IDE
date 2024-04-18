@@ -3,7 +3,7 @@ describe("ChatWidget", () => {
     cy.setup("CHAT", "SEED");
   });
 
-  it.skip("should display the initial chat messages from seed data", () => {
+  it("should display the initial chat messages from seed data", () => {
     cy.getBySel("message-box").should("have.length", 4);
     cy.getBySel("message-box")
       .eq(0)

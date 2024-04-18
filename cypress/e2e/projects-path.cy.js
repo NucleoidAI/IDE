@@ -72,10 +72,15 @@ describe("local project path spec", () => {
 
       cy.storageGet(`ide.selected.project`).as("selectedProject");
 
-      cy.get("@selectedProject").should((selectedProject) => {
-        expect(selectedProject.id).to.equal(projectId);
-        expect(selectedProject.type).to.equal("LOCAL");
-      });
+      cy.get("@selectedProject")
+        .should((selectedProject) => {
+          expect(selectedProject).to.not.be.null;
+        })
+        .then((selectedProject) => {
+          cy.log(selectedProject);
+          expect(selectedProject.id).to.equal(projectId);
+          expect(selectedProject.type).to.equal("LOCAL");
+        });
     });
   });
   it("visit '/ide/projectId?mode=local' and open project", () => {
