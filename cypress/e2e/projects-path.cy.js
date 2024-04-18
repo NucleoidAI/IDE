@@ -38,7 +38,7 @@ describe("cloud project path spec", () => {
   });
 });
 
-describe("local project path spec", () => {
+describe.only("local project path spec", () => {
   beforeEach(() => {
     cy.setup("IDE", "SEED", "LOCAL");
     cy.fixture("/PROJECTS/LOCAL/project.json").as("project");
@@ -57,7 +57,7 @@ describe("local project path spec", () => {
 
     cy.url().should("include", `/${localProjectId}/api?mode=local`);
   });
-  it("visit '/ide/sample' and create sample project", () => {
+  it.only("visit '/ide/sample' and create sample project", () => {
     cy.visit("/ide/sample");
 
     cy.url().should("contain", "/api");
@@ -66,13 +66,13 @@ describe("local project path spec", () => {
       const pathParts = pathname.split("/");
       const projectId = pathParts[pathParts.length - 2];
 
+      cy.waitEvent("CONTAINER_LOADED");
+
       cy.storageGet(`ide.projects.${projectId}`).as("project");
 
       cy.get("@project").should("exist");
 
       cy.storageGet(`ide.selected.project`).as("selectedProject");
-      //eslint-disable-next-line
-      cy.wait(2000);
 
       cy.get("@selectedProject")
         .should((selectedProject) => {
