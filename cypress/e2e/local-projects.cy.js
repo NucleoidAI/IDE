@@ -13,6 +13,8 @@ describe("local project spec", () => {
       cy.visit(`/ide/${localProjectId}/api?mode=local`);
     });
 
+    cy.waitEvent("CONTAINER_LOADED");
+
     const changedEditorValue = `function action(req: { params: { item: string } }): any {\n  const newItem = req.params.item;\n  return Item[newItem];`;
 
     cy.typeEditor(changedEditorValue);
@@ -28,6 +30,8 @@ describe("local project spec", () => {
     cy.get("@localProjectId").then((localProjectId) => {
       cy.visit(`/ide/${localProjectId}/functions?mode=local`);
     });
+
+    cy.waitEvent("CONTAINER_LOADED");
 
     const changedEditorValue = `class NewOrder {\n      name: string;\n      barcode: string;\n      constructor(name: string, barcode: string) {\n  this.name = name;\nthis.barcode = barcode;\n`;
 
@@ -45,7 +49,7 @@ describe("local project spec", () => {
       cy.visit(`/ide/${localProjectId}/logic?mode=local`);
     });
 
-    cy.contains("All humans are mortal").click();
+    cy.waitEvent("CONTAINER_LOADED");
 
     const changedEditorValue = `$Human.mortal = true;\nplaton = new Human('Platon');\nplaton.mortal === true;`;
 

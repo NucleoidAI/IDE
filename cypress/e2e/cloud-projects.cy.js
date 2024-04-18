@@ -31,7 +31,8 @@ describe("cloud project spec", () => {
     cy.typeEditor(changedEditorValue);
 
     cy.reload().then(() => {
-      cy.waitLoading();
+      cy.waitEvent("CONTAINER_LOADED");
+
       cy.checkEditorValue("newItem");
     });
   });
@@ -41,14 +42,15 @@ describe("cloud project spec", () => {
       cy.visit(`/ide/${cloudProjectId}/functions`);
     });
 
-    cy.waitLoading();
+    cy.waitEvent("CONTAINER_LOADED");
 
     const changedEditorValue = `class NewOrder {\n      name: string;\n      barcode: string;\n      constructor(name: string, barcode: string) {\n  this.name = name;\nthis.barcode = barcode;\n`;
 
     cy.typeEditor(changedEditorValue);
 
     cy.reload().then(() => {
-      cy.waitLoading();
+      cy.waitEvent("CONTAINER_LOADED");
+
       cy.checkEditorValue("NewOrder");
     });
   });
@@ -58,14 +60,14 @@ describe("cloud project spec", () => {
       cy.visit(`/ide/${cloudProjectId}/logic`);
     });
 
-    cy.waitLoading();
+    cy.waitEvent("CONTAINER_LOADED");
 
     const changedEditorValue = `$Human.mortal = true;\nplaton = new Human('Platon');\nplaton.mortal === true;`;
 
     cy.typeEditor(changedEditorValue);
 
     cy.reload().then(() => {
-      cy.waitLoading();
+      cy.waitEvent("CONTAINER_LOADED");
 
       cy.checkEditorValue("platon");
     });

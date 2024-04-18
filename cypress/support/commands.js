@@ -175,6 +175,8 @@ Cypress.Commands.add("typeEditor", (changedEditorValue) => {
   cy.get('textarea[role="textbox"]').type(changedEditorValue, {
     parseSpecialCharSequences: false,
   });
+
+  cy.wait(1000);
 });
 
 Cypress.Commands.add("saveContextIntercept", (serviceId) => {
@@ -226,14 +228,18 @@ Cypress.Commands.add("waitLoading", () => {
 });
 
 Cypress.Commands.add("waitEvent", (eventName) => {
-  return cy.wrap(new Promise((resolve) => {
-    cy.window().then(({ nucleoid: { Event } }) => {
-      const registry = Event.subscribe(eventName, () => {
-        registry.unsubscribe();
-        resolve();
+  return cy.wrap(
+    new Promise((resolve) => {
+      cy.window().then(({ nucleoid: { Event } }) => {
+        const registry = Event.subscribe(eventName, () => {
+          registry.unsubscribe();
+
+          resolve();
+        });
       });
-    });
-  }));
+    }),
+    { timeout: 10000 }
+  );
 });
 
 /* eslint-enable */
