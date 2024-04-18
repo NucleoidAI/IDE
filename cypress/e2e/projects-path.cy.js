@@ -72,6 +72,8 @@ describe("local project path spec", () => {
 
       cy.storageGet(`ide.selected.project`).as("selectedProject");
 
+      cy.wait(2000);
+
       cy.get("@selectedProject")
         .should((selectedProject) => {
           expect(selectedProject).to.not.be.null;
