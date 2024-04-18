@@ -1,0 +1,9 @@
+[
+    {
+        "id": "a166cc16-5c76-4aac-819e-118207a5dfa9",
+        "name": "Single Project",
+        "description": "This is a project description.",
+        "icon": ":rocket:",
+        "type": "SINGLE"
+    }
+]
