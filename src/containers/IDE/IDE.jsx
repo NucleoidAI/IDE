@@ -57,7 +57,6 @@ function IDE() {
 
     if (!context) {
       navigate("/error/api");
-      //null vs undefined
       return null;
     }
     publish("PROJECT_NOT_FOUND", { status: false });

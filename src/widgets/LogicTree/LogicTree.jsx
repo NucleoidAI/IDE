@@ -58,7 +58,6 @@ function LogicTree({ openLogicDialog }) {
   const [logicExist, setLogicExist] = useState(Boolean(declarations.length));
 
   function select(value) {
-    console.log(value);
     const [logicClass, logicIndex] = value.split("-");
 
     if (logicIndex === undefined) {
