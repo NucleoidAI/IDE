@@ -1,6 +1,6 @@
 describe("cloud project path spec", () => {
   beforeEach(() => {
-    cy.setup("IDE", "CLOUD", "SEED");
+    cy.setup("IDE", "SEED", "CLOUD");
   });
 
   it("visit '/ide' without recent project and navigate new project page", () => {
@@ -40,14 +40,14 @@ describe("cloud project path spec", () => {
 
 describe("local project path spec", () => {
   beforeEach(() => {
-    cy.setup("IDE", "LOCAL", "SEED");
+    cy.setup("IDE", "SEED", "LOCAL");
     cy.fixture("/PROJECTS/LOCAL/project.json").as("project");
   });
   it("visit '/ide' with recent project and open recent project", () => {
     const localProjectId = "3450f289-0fc5-45e9-9a4a-606c0a63cdfe";
     const selectedProject = { id: localProjectId, type: "LOCAL" };
 
-    cy.get("@localProject").then((localProject) => {
+    cy.get("@project").then((localProject) => {
       cy.storageSet(`ide.projects.${localProjectId}`, localProject);
     });
 
@@ -81,7 +81,7 @@ describe("local project path spec", () => {
   it("visit '/ide/projectId?mode=local' and open project", () => {
     const localProjectId = "3450f289-0fc5-45e9-9a4a-606c0a63cdfe";
 
-    cy.fixture("/LOCAL/project.json").then((localProject) => {
+    cy.fixture("PROJECTS/LOCAL/project.json").then((localProject) => {
       cy.storageSet(`ide.projects.${localProjectId}`, localProject);
     });
 
