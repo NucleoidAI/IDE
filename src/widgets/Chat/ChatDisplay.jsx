@@ -59,7 +59,7 @@ const ChatDisplay = ({
   };
 
   useEffect(() => {
-    setTimeout(scrollToBottom, 10);
+    setTimeout(scrollToBottom, 0);
   }, [chat]);
 
   useEffect(() => {
