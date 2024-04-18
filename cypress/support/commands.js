@@ -167,9 +167,9 @@ Cypress.Commands.add("checkEditorValue", (expectedValue) => {
       cy.get('textarea[role="textbox"]')
         .invoke("val")
         .then((val) => {
-          console.log(expectedValue, "expectedValue");
+          let expected = expectedValue;
           console.log(val, "val");
-          expect(val).to.include(expectedValue);
+          expect(val.trim()).to.contain(expected.trim());
         });
     });
 });
