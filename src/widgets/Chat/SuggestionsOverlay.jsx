@@ -1,6 +1,6 @@
 import { publish } from "@nucleoidai/react-event";
 
-import { Box, Button, Stack, Typography, useTheme } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 const initialSuggestions = [
@@ -77,7 +77,6 @@ const initialSuggestions = [
 ];
 
 const SuggestionsOverlay = ({ onSuggestionClick, loading, chat, error }) => {
-  const theme = useTheme();
   const [suggestions, setSuggestions] = useState(null);
 
   useEffect(() => {
