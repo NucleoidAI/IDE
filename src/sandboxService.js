@@ -67,7 +67,7 @@ const setTerminalUrl = (sandboxUrl) => {
   if (sandboxId) {
     terminalUrl = `${sandboxUrl}/terminal/${sandboxId}`;
   } else {
-    terminalUrl = `${sandboxUrl}/terminal`;
+    terminalUrl = `${sandboxUrl}`;
   }
 };
 
@@ -76,13 +76,6 @@ const getTerminalUrl = () => {
 };
 
 const get = async (endpoint) => {
-  if (endpoint === "metrics") {
-    return {
-      free: 485306368,
-      total: 995356672,
-    };
-  }
-
   try {
     const response = await http.get(`${terminalUrl}/${endpoint}`);
     return response.data;
