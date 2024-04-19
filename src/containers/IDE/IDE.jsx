@@ -1,4 +1,5 @@
 import { Box } from "@mui/material";
+import Context from "../../context";
 import ContextProvider from "../../context/context";
 import EducationDrawer from "../../components/EducationDrawer/EducationDrawer";
 import GraphDialog from "../../components/GraphDialog/GraphDialog";
@@ -8,7 +9,6 @@ import Path from "../../utils/Path";
 import PopChat from "../../widgets/PopChat";
 import ProcessDrawer from "../../widgets/ProcessDrawer/ProcessDrawer";
 import Settings from "../../settings";
-import State from "../../state";
 import SwaggerDialog from "../../components/SwaggerDialog";
 import { contextReducer } from "../../context/reducer";
 import { contextToMap } from "../../utils/Parser";
@@ -62,8 +62,8 @@ function IDE() {
     publish("PROJECT_NOT_FOUND", { status: false });
     publish("RECENT_PROJECT_NOT_FOUND", { status: false });
 
-    const nucContext = State.withPages({ context });
-    nucContext.get = (prop) => State.resolve(nucContext, prop);
+    const nucContext = Context.withPages({ context });
+    nucContext.get = (prop) => Context.resolve(nucContext, prop);
 
     return nucContext;
   }
@@ -89,8 +89,8 @@ function IDE() {
 
       const context = contextResult.data;
 
-      const nucContext = State.withPages({ context });
-      nucContext.get = (prop) => State.resolve(nucContext, prop);
+      const nucContext = Context.withPages({ context });
+      nucContext.get = (prop) => Context.resolve(nucContext, prop);
       nucContext.nucleoid.project = {
         type: "CLOUD",
         name: project.name,
@@ -109,8 +109,8 @@ function IDE() {
     }
   }
   function sampleProject() {
-    const context = State.withSample();
-    context.get = (prop) => State.resolve(context, prop);
+    const context = Context.withSample();
+    context.get = (prop) => Context.resolve(context, prop);
     storage.set(
       "ide",
       "projects",
@@ -124,8 +124,8 @@ function IDE() {
   }
 
   function blankProject() {
-    const context = State.withBlank();
-    context.get = (prop) => State.resolve(context, prop);
+    const context = Context.withBlank();
+    context.get = (prop) => Context.resolve(context, prop);
 
     return context;
   }

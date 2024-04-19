@@ -1,12 +1,12 @@
 import APITree from "../../src/widgets/APITree/APITree";
+import Context from "../../src/context";
 import ContextProvider from "../../src/context/context";
 import React from "react";
-import State from "../../src/state";
 import cy from "cypress";
 
 describe("APITree Component", () => {
   it("should mount successfully", () => {
-    const initialState = State.init();
+    const initialState = Context.init();
     const mockReducer = (state) => {
       return state;
     };

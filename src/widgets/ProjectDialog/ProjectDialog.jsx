@@ -1,8 +1,8 @@
 import AddNewButton from "./components/AddNewButton";
+import Context from "../../context";
 import InlineCreationForm from "./components/InlineCreationForm";
 import ProjectList from "./components/ProjectList";
 import React from "react";
-import State from "../../state";
 import WorkspacesIcon from "@mui/icons-material/Workspaces";
 import config from "../../../config";
 import http from "../../http";
@@ -205,8 +205,8 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   const createProject = (newProject) => {
     const { name, template } = newProject;
     const context =
-      template === "sample" ? State.withSample() : State.withBlank();
-    context.get = (prop) => State.resolve(context, prop);
+      template === "sample" ? Context.withSample() : Context.withBlank();
+    context.get = (prop) => Context.resolve(context, prop);
 
     if (login) {
       createProjectOnCloud(name, context);

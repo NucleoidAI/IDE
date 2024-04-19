@@ -3,14 +3,14 @@ import { v4 as uuid } from "uuid";
 import { api, declarations, functions, project, types } from "./sample";
 
 function init() {
-  const state = {
-    nucleoid: {
+  const context = {
+    specifications: {
       api: [],
       types: [],
       functions: [],
-      project: {},
       declarations: [],
     },
+    project: {},
     pages: {
       started: false,
       opened: false,
@@ -47,52 +47,52 @@ function init() {
       },
       branches: {},
     },
-    get: (prop) => resolve(state, prop),
+    get: (prop) => resolve(context, prop),
   };
 
-  return state;
+  return context;
 }
 
-function copy(state) {
-  return { ...state, get: (prop) => resolve(state, prop) };
+function copy(context) {
+  return { ...context, get: (prop) => resolve(context, prop) };
 }
 
 function withBlank() {
-  const state = init();
-  state.nucleoid.project = project;
-  state.nucleoid.project.id = uuid();
+  const context = init();
+  context.project = project;
+  context.project.id = uuid();
 
-  return state;
+  return context;
 }
 
 function withSample() {
-  const state = init();
-  state.nucleoid.api = api;
-  state.nucleoid.types = types;
-  state.nucleoid.functions = functions;
-  state.nucleoid.declarations = declarations;
-  state.nucleoid.project = project;
+  const context = init();
+  context.specifications.api = api;
+  context.specifications.types = types;
+  context.specifications.functions = functions;
+  context.specifications.declarations = declarations;
+  context.specifications.project = project;
 
-  state.nucleoid.project.id = uuid();
-  return state;
+  context.project.id = uuid();
+  return context;
 }
 
-function withPages({ context }) {
-  const state = init();
-  state.nucleoid = context;
+function withPages({ specifications }) {
+  const context = init();
+  context.specifications = specifications;
 
-  return state;
+  return context;
 }
 
-const resolve = (state, param) => {
+const resolve = (context, param) => {
   try {
     const parts = param.split(".");
-    parts[0] = state[parts[0]];
+    parts[0] = context[parts[0]];
     return parts.reduce((obj, part) => obj[part]);
   } catch (error) {
     return undefined;
   }
 };
 
-const State = { init, copy, withSample, resolve, withPages, withBlank };
-export default State;
+const Context = { init, copy, withSample, resolve, withPages, withBlank };
+export default Context;
