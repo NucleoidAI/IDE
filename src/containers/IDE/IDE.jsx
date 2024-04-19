@@ -235,8 +235,6 @@ function IDE() {
       } else {
         checkRecentProject(recentProject);
       }
-
-      setContextProviderKey(uuid());
     }
 
     initMode();
@@ -250,6 +248,7 @@ function IDE() {
         name: "IDE",
       });
       loaded = true;
+      setContextProviderKey(uuid());
     }
   }, [ReactContext, event.name]);
 
