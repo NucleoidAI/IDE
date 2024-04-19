@@ -32,7 +32,7 @@ function applyFilter({ inputData, query }) {
 }
 
 function ProjectDialog({ handleClose, open, setOpen }) {
-  const [login, setLogin] = useState(false);
+  const [login, setLogin] = useState(true);
   const [user, setUser] = useState(null);
   const { id: projectId } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
@@ -126,8 +126,8 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     return await Promise.all(projectPromises);
   };
 
-  const contextToCloud = (context) => {
-    const { project, api, declarations, functions, types } = context;
+  const contextToCloud = (specifications, project) => {
+    const { api, declarations, functions, types } = specifications;
 
     const createdProject = {
       name: project.name,
@@ -168,9 +168,12 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   }, [cloudProjects, localProjects]);
 
   const createProjectOnCloud = (name, context) => {
+    const { specifications, project } = context;
+
     setLoading(true);
-    context.nucleoid.project.name = name;
-    const createdContext = contextToCloud(context.nucleoid);
+    context.project.name = name;
+
+    const createdContext = contextToCloud(specifications, project);
 
     service
       .addProject(createdContext)
@@ -186,17 +189,18 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   };
 
   function createProjetOnLocal(name, context) {
-    context.nucleoid.project.name = name;
+    context.project.name = name;
+    context.project.type = "LOCAL";
+    const { specifications, project } = context;
+    console.log(specifications);
 
-    storage.set(
-      "ide",
-      "projects",
-      context.nucleoid.project.id,
-      context.nucleoid
-    );
+    storage.set("ide", "projects", context.project.id, {
+      specifications,
+      project,
+    });
 
     publish("PROJECT_CREATED", {
-      id: context.nucleoid.project.id,
+      id: context.specifications.project.id,
     });
 
     return context;
