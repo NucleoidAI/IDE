@@ -56,7 +56,7 @@ function IDE() {
     console.log(projectId);
     const { specifications, project } = storage.get(
       "ide",
-      "projects",
+      "context",
       projectId
     );
 
@@ -105,7 +105,7 @@ function IDE() {
         description: project.description,
       };
 
-      storage.set("ide", "selected", "project", {
+      storage.set("ide", "selected", "context", {
         id: project.id,
         type: "CLOUD",
       });
@@ -120,7 +120,7 @@ function IDE() {
     const context = Context.withSample();
     context.get = (prop) => Context.resolve(context, prop);
     const { specifications, project } = context;
-    storage.set("ide", "projects", project.id, {
+    storage.set("ide", "context", project.id, {
       specifications: specifications,
       project: project,
     });
@@ -162,9 +162,9 @@ function IDE() {
 
     if (
       context.project.type === "LOCAL" &&
-      storage.get("ide", "projects", context.project.id)
+      storage.get("ide", "context", context.project.id)
     ) {
-      storage.set("ide", "selected", "project", {
+      storage.set("ide", "selected", "context", {
         id: context.project.id,
         type: "LOCAL",
       });

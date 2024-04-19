@@ -114,7 +114,7 @@ const VFSEditor = React.forwardRef((props, ref) => {
 
       service.saveContext(id, nucContext);
     } else if (mode === "local") {
-      storage.set("ide", "projects", id, {
+      storage.set("ide", "context", id, {
         specifications: context.specifications,
         project: context.project,
       });

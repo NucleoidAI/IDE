@@ -146,7 +146,7 @@ const Editor = React.forwardRef((props, ref) => {
       if (mode === "cloud") {
         service.saveContext(id, context.specifications);
       } else if (mode === "local") {
-        storage.set("ide", "projects", id, {
+        storage.set("ide", "context", id, {
           specifications: context.specifications,
           project: context.project,
         });

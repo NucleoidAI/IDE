@@ -86,7 +86,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     const projects = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (key.startsWith("ide.projects.")) {
+      if (key.startsWith("ide.context.")) {
         const context = JSON.parse(localStorage.getItem(key));
         if (context.project) {
           projects.push(context.project);
@@ -193,7 +193,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     const { specifications, project } = context;
     console.log(specifications);
 
-    storage.set("ide", "projects", context.project.id, {
+    storage.set("ide", "context", context.project.id, {
       specifications: specifications,
       project: project,
     });
@@ -222,7 +222,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
 
   const uploadToCloud = (projectId) => {
     setLoading(true);
-    const project = storage.get("ide", "projects", projectId);
+    const project = storage.get("ide", "context", projectId);
     const context = contextToCloud(project);
 
     service
@@ -231,7 +231,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
         publish("PROJECT_UPLOADED", {
           id: response.data.id,
         });
-        storage.remove("ide", "projects", projectId);
+        storage.remove("ide", "context", projectId);
         getLocalProjects();
         getCloudProjects();
       })
@@ -243,11 +243,11 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   const editProject = (projectToEdit) => {
     const { name, type, id } = projectToEdit;
     if (type === "LOCAL") {
-      const localContext = storage.get("ide", "projects", id);
+      const localContext = storage.get("ide", "context", id);
       const { project, specifications } = localContext;
       project.name = name;
-      storage.remove("ide", "projects", id);
-      storage.set("ide", "projects", id, {
+      storage.remove("ide", "context", id);
+      storage.set("ide", "context", id, {
         specifications: specifications,
         projcet: project,
       });
@@ -286,7 +286,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
           setLoading(false);
         });
     } else {
-      localStorage.removeItem(`ide.projects.${project.id}`);
+      localStorage.removeItem(`ide.context.${project.id}`);
       getLocalProjects();
     }
     publish("PROJECT_DELETED", { id: projectId });
