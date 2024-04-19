@@ -71,7 +71,7 @@ function withSample() {
   context.specifications.types = types;
   context.specifications.functions = functions;
   context.specifications.declarations = declarations;
-  context.specifications.project = project;
+  context.project = project;
 
   context.project.id = uuid();
   return context;
