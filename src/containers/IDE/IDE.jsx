@@ -120,10 +120,9 @@ function IDE() {
     const context = Context.withSample();
     context.get = (prop) => Context.resolve(context, prop);
     const { specifications, project } = context;
-    console.log(project.id);
     storage.set("ide", "projects", project.id, {
       specifications: specifications,
-      project,
+      project: project,
     });
 
     navigate(`/${project.id}/api?mode=local`);

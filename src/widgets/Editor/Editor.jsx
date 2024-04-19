@@ -147,8 +147,8 @@ const Editor = React.forwardRef((props, ref) => {
         service.saveContext(id, context.specifications);
       } else if (mode === "local") {
         storage.set("ide", "projects", id, {
-          specifications: specifications,
-          project,
+          specifications: context.specifications,
+          project: context.project,
         });
       } else if (mode === "terminal") {
         console.log("Terminal mode is not supported yet.");

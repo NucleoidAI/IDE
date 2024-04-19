@@ -88,7 +88,6 @@ function ProjectDialog({ handleClose, open, setOpen }) {
       const key = localStorage.key(i);
       if (key.startsWith("ide.projects.")) {
         const context = JSON.parse(localStorage.getItem(key));
-
         if (context.project) {
           projects.push(context.project);
         }
@@ -196,7 +195,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
 
     storage.set("ide", "projects", context.project.id, {
       specifications: specifications,
-      project,
+      project: project,
     });
 
     publish("PROJECT_CREATED", {
@@ -250,7 +249,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
       storage.remove("ide", "projects", id);
       storage.set("ide", "projects", id, {
         specifications: specifications,
-        project,
+        projcet: project,
       });
 
       publish("PROJECT_UPDATED", {
