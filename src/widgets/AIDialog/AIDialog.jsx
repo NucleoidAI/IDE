@@ -3,8 +3,8 @@
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import PromptCodeDialog from "../../components/PromptCodeDialog";
 import actions from "../../actions";
-import expert from "../../http/expert.js";
 import { deepCopy } from "../../utils/DeepCopy";
+import expert from "../../http/expert.js";
 import { publish } from "@nucleoidai/react-event";
 import service from "../../service";
 import { useContext } from "../../context/context";
@@ -41,8 +41,8 @@ function AIDialog({ editor, declarative, imperative, page }) {
     yamlPlugin,
   ];
 
-  const functions = context.nucleoid.functions;
-  const declarations = context.nucleoid.declarations;
+  const functions = context.specifications.functions;
+  const declarations = context.specifications.declarations;
 
   const editorRef = React.useRef(null);
 

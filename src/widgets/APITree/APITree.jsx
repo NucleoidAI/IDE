@@ -40,7 +40,7 @@ function APITree() {
   const [errors] = useEvent("DIAGNOSTICS_COMPLETED", []);
   const [state, dispatch] = useContext();
 
-  const api = state.get("nucleoid.api");
+  const api = state.get("specifications.api");
   //eslint-disable-next-line
   const [apiExists, setApiExists] = useState(Boolean(api.length));
 
@@ -113,8 +113,8 @@ function APITree() {
   };
 
   const checkMethodDeletable = () => {
-    const { pages, nucleoid } = state;
-    const { api } = nucleoid;
+    const { pages, specifications } = state;
+    const { api } = specifications;
 
     const countMethodsForPath = (path) => {
       return api.filter((endpoint) => endpoint.path === path).length;
