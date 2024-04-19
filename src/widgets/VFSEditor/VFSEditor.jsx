@@ -114,7 +114,10 @@ const VFSEditor = React.forwardRef((props, ref) => {
 
       service.saveContext(id, nucContext);
     } else if (mode === "local") {
-      storage.set("ide", "projects", id, context.specifications);
+      storage.set("ide", "projects", id, {
+        specifications: context.specifications,
+        project: context.project,
+      });
     } else if (mode === "terminal") {
       console.log("Terminal mode is not supported yet.");
     }

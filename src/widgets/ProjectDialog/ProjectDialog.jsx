@@ -195,7 +195,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     console.log(specifications);
 
     storage.set("ide", "projects", context.project.id, {
-      specifications,
+      specifications: specifications,
       project,
     });
 
@@ -244,11 +244,14 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   const editProject = (projectToEdit) => {
     const { name, type, id } = projectToEdit;
     if (type === "LOCAL") {
-      const context = storage.get("ide", "projects", id);
-      const { project } = context;
+      const localContext = storage.get("ide", "projects", id);
+      const { project, specifications } = localContext;
       project.name = name;
       storage.remove("ide", "projects", id);
-      storage.set("ide", "projects", id, context);
+      storage.set("ide", "projects", id, {
+        specifications: specifications,
+        project,
+      });
 
       publish("PROJECT_UPDATED", {
         id: project.id,

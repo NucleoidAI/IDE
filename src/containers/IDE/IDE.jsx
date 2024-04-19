@@ -53,19 +53,21 @@ function IDE() {
   }, [mobileSize]);
 
   function getContextFromStorage(projectId) {
+    console.log(projectId);
     const { specifications, project } = storage.get(
       "ide",
       "projects",
       projectId
     );
 
-    if (!specifications || !project) {
+    if (!specifications && !project) {
       navigate("/error/api");
       return null;
     }
     publish("PROJECT_NOT_FOUND", { status: false });
     publish("RECENT_PROJECT_NOT_FOUND", { status: false });
-
+    console.log(project);
+    console.log(specifications);
     const context = Context.withPages({ specifications, project });
     context.get = (prop) => Context.resolve(context, prop);
 
@@ -117,9 +119,14 @@ function IDE() {
   function sampleProject() {
     const context = Context.withSample();
     context.get = (prop) => Context.resolve(context, prop);
-    storage.set("ide", "projects", context.project.id, context.specifications);
+    const { specifications, project } = context;
+    console.log(project.id);
+    storage.set("ide", "projects", project.id, {
+      specifications: specifications,
+      project,
+    });
 
-    navigate(`/${context.project.id}/api?mode=local`);
+    navigate(`/${project.id}/api?mode=local`);
 
     return context;
   }
@@ -132,6 +139,7 @@ function IDE() {
   }
 
   const initContext = (context) => {
+    console.log(context);
     if (
       !Settings.description() ||
       Settings.description() !== context.project.description
@@ -173,7 +181,6 @@ function IDE() {
   };
 
   const initVfs = (context) => {
-    console.log(context);
     const files = contextToMap(context.specifications);
     vfs.init(files);
   };
@@ -201,6 +208,7 @@ function IDE() {
       const recentProject = Path.getRecentProject();
 
       if (mode === "sample") {
+        console.log("sample");
         sampleProject();
       } else if (mode === "cloud") {
         project(projectId)

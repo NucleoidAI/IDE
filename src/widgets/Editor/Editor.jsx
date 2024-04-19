@@ -83,7 +83,6 @@ const Editor = React.forwardRef((props, ref) => {
       });
   };
   function editorOnMount(editor, monaco) {
-
     editorRef.current = { editor: editor, monaco: monaco };
     if (logic) {
       setLogicModel(editor, monaco);
@@ -136,21 +135,21 @@ const Editor = React.forwardRef((props, ref) => {
         project: { id },
       } = context;
 
-      context.specifications.declarations = context.specifications.declarations.map(
-        (item) => {
+      context.specifications.declarations =
+        context.specifications.declarations.map((item) => {
           if (item.summary === selectedLogic?.summary) {
             return { ...item, definition: e };
           }
           return item;
-        }
-      );
+        });
 
       if (mode === "cloud") {
-        const nucContext = { ...context.specifications };
-        delete nucContext.project;
-        service.saveContext(id, nucContext);
+        service.saveContext(id, context.specifications);
       } else if (mode === "local") {
-        storage.set("ide", "projects", id, context.specifications);
+        storage.set("ide", "projects", id, {
+          specifications: specifications,
+          project,
+        });
       } else if (mode === "terminal") {
         console.log("Terminal mode is not supported yet.");
       }
