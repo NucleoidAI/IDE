@@ -77,9 +77,10 @@ function withSample() {
   return context;
 }
 
-function withPages({ specifications }) {
+function withPages({ specifications, project }) {
   const context = init();
   context.specifications = specifications;
+  context.project = project;
 
   return context;
 }
