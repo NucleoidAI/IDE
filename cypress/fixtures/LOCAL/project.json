@@ -1,0 +1,206 @@
+{
+    "api": [
+        {
+            "path": "/",
+            "method": "GET",
+            "params": [
+                {
+                    "name": "example",
+                    "in": "query",
+                    "type": "string",
+                    "required": false,
+                    "description": "example"
+                }
+            ],
+            "response": {
+                "type": "OPENAPI",
+                "schema": {
+                    "name": "User",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "name",
+                            "type": "string"
+                        },
+                        {
+                            "name": "age",
+                            "type": "number"
+                        }
+                    ]
+                }
+            },
+            "summary": "Get all users",
+            "description": "Get all users",
+            "x-nuc-action": "function action(req: any): { message: string } {\n        return { message: \"Hello World\" };\n      }"
+        },
+        {
+            "path": "/items",
+            "method": "GET",
+            "params": [
+                {
+                    "in": "query",
+                    "type": "string",
+                    "required": true,
+                    "name": "name"
+                }
+            ],
+            "response": {
+                "type": "OPENAPI",
+                "schema": {
+                    "type": "array",
+                    "properties": [
+                        {
+                            "type": "ref",
+                            "name": "item",
+                            "ref": "Item"
+                        }
+                    ]
+                }
+            },
+            "summary": "Get item by name",
+            "description": "Get item by name",
+            "x-nuc-action": "function action(req: { query: { name: string } }): any {\n        const name = req.query.name;\n        return (Item as any).filter(item => item.name === name);\n      }"
+        },
+        {
+            "path": "/items",
+            "method": "POST",
+            "request": {
+                "type": "OPENAPI",
+                "schema": {
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "name",
+                            "type": "string"
+                        },
+                        {
+                            "name": "barcode",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "response": {
+                "type": "OPENAPI",
+                "schema": {
+                    "type": "object",
+                    "properties": [
+                        {
+                            "type": "ref",
+                            "name": "item",
+                            "ref": "Item"
+                        }
+                    ]
+                }
+            },
+            "summary": "Create new item",
+            "description": "Create new item",
+            "x-nuc-action": "function action(req: { body: { name: string, barcode: string } }): any {\n        const name = req.body.name;\n        const barcode = req.body.barcode;\n        const check = (Item as any).find(i => i.barcode === barcode);\n        if(check) {\n          throw \"DUPLICATE_BARCODE\";\n        }\n        return new Item(name, barcode);\n      }"
+        },
+        {
+            "path": "/items/{item}",
+            "method": "GET",
+            "params": [
+                {
+                    "name": "item",
+                    "in": "path",
+                    "type": "string",
+                    "required": true,
+                    "description": "item"
+                }
+            ],
+            "response": {
+                "type": "OPENAPI",
+                "schema": {
+                    "type": "object",
+                    "properties": [
+                        {
+                            "type": "ref",
+                            "name": "item",
+                            "ref": "Item"
+                        }
+                    ]
+                }
+            },
+            "summary": "Get item by id",
+            "description": "Get item by id",
+            "x-nuc-action": "function action(req: { params: { item: string } }): any {\n  const item = req.params.item;\n  return Item[item];\n}\n"
+        }
+    ],
+    "types": [
+        {
+            "name": "Item",
+            "type": "OPENAPI",
+            "schema": {
+                "name": "Item",
+                "type": "object",
+                "properties": [
+                    {
+                        "type": "string",
+                        "name": "id"
+                    },
+                    {
+                        "type": "string",
+                        "name": "name"
+                    },
+                    {
+                        "type": "string",
+                        "name": "barcode"
+                    }
+                ]
+            }
+        }
+    ],
+    "functions": [
+        {
+            "path": "/Order",
+            "params": [
+                "name: string",
+                "barcode: string"
+            ],
+            "type": "CLASS",
+            "definition": "class Order {\n      name: string;\n      barcode: string;\n      constructor(name: string, barcode: string) {\n        this.name = name;\n        this.barcode = barcode;\n      }\n    }"
+        },
+        {
+            "path": "/Item",
+            "params": [
+                "name: string",
+                "barcode: string"
+            ],
+            "type": "CLASS",
+            "definition": "class Item {\n      name: string;\n      barcode: string;\n      constructor(name: string, barcode: string) {\n        this.name = name;\n        this.barcode = barcode;\n      }\n    }"
+        },
+        {
+            "path": "/Human",
+            "params": [
+                "name: string",
+                "barcode: string"
+            ],
+            "type": "CLASS",
+            "definition": "class Human {\n      name: string;\n      barcode: string;\n      constructor(name: string, barcode: string) {\n        this.name = name;\n        this.barcode = barcode;\n      }\n    }"
+        }
+    ],
+    "project": {
+        "type": "LOCAL",
+        "name": "Sample",
+        "id": "3450f289-0fc5-45e9-9a4a-606c0a63cdfe",
+        "description": "Nucleoid low-code framework lets you build your APIs with the help of AI and built-in datastore"
+    },
+    "declarations": [
+        {
+            "description": "All humans mortal property must be true",
+            "summary": "All humans are mortal",
+            "definition": "\n      $Human.mortal = true\n    \n      socrates = new Human('Socrates')\n    \n      socrates.mortal === true\n    \n    "
+        },
+        {
+            "description": "If the human is older than 18, do something",
+            "summary": "If The Human is Over 18 Years Old",
+            "definition": "\n      if( $Human.age > 18 )\n      {\n        //do something\n      }\n    \n    "
+        },
+        {
+            "description": "All Orders barcode string starts with NUC",
+            "summary": "All orders barcode start with NUC prefix",
+            "definition": "\n      $Order.barcode.include(\"NUC\")\n    \n    "
+        }
+    ]
+}

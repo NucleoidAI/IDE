@@ -18,6 +18,7 @@ import { storage } from "@nucleoidjs/webstorage";
 import styles from "./styles";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuid } from "uuid";
 import vfs from "../../vfs";
 
 import { Outlet, useParams } from "react-router-dom"; // eslint-disable-line
@@ -25,14 +26,16 @@ import React, { useEffect } from "react";
 import { publish, useEvent } from "@nucleoidai/react-event";
 import { useMediaQuery, useTheme } from "@mui/material";
 
+let loaded = false;
+
 function IDE() {
   const [context, setContext] = React.useState();
-  const progressElement = document.getElementById("nuc-progress-indicator");
   const navigate = useNavigate();
   const location = useLocation();
   const modeQuery = location.search;
   const { id } = useParams();
   const page = location.pathname.split("/")[2];
+  const [contextProviderKey, setContextProviderKey] = React.useState(uuid());
 
   const [event] = useEvent("PAGE_LOADED", {
     name: null,
@@ -53,8 +56,11 @@ function IDE() {
     const context = storage.get("ide", "projects", projectId);
 
     if (!context) {
-      return setContext("error");
+      navigate("/error/api");
+      return null;
     }
+    publish("PROJECT_NOT_FOUND", { status: false });
+    publish("RECENT_PROJECT_NOT_FOUND", { status: false });
 
     const nucContext = State.withPages({ context });
     nucContext.get = (prop) => State.resolve(nucContext, prop);
@@ -68,12 +74,14 @@ function IDE() {
       service.getProjectServices(projectId),
     ]).catch((error) => {
       if (error.response.status === 404) {
-        setContext("error");
+        return [undefined, undefined];
       }
     });
 
     const projectService = serviceResult.data;
     const project = projectResult.data;
+    publish("PROJECT_NOT_FOUND", { status: false });
+    publish("RECENT_PROJECT_NOT_FOUND", { status: false });
 
     if (project.type === "SINGLE") {
       const contextId = projectService[0].id;
@@ -170,6 +178,9 @@ function IDE() {
 
   const checkRecentProject = (recentProject) => {
     if (recentProject) {
+      publish("PROJECT_NOT_FOUND", { status: false });
+      publish("RECENT_PROJECT_NOT_FOUND", { status: false });
+
       if (recentProject.type === "CLOUD") {
         navigate(`/${recentProject.id}`);
       } else if (recentProject.type === "LOCAL") {
@@ -177,10 +188,7 @@ function IDE() {
       }
     } else {
       publish("RECENT_PROJECT_NOT_FOUND", { status: true });
-      const blankContext = blankProject();
-      setContext(initContext(blankContext));
-
-      navigate("/new/api");
+      navigate("/new");
     }
   };
 
@@ -189,49 +197,64 @@ function IDE() {
       const mode = Path.getMode();
       const projectId = Path.getProjectId();
       const recentProject = Path.getRecentProject();
+
       if (mode === "sample") {
         sampleProject();
       } else if (mode === "cloud") {
-        project(projectId).then((result) => {
-          initVfs(result);
-          console.log(result);
-          return setContext(initContext(result));
-        });
+        project(projectId)
+          .then((result) => {
+            initVfs(result);
+            return setContext(initContext(result));
+          })
+          .catch(() => {
+            navigate("/error/api");
+          });
       } else if (mode === "local") {
         const context = getContextFromStorage(projectId);
+        if (!context) return;
+        initVfs(context);
         return setContext(initContext(context));
       } else if (mode === "mobile") {
         return setContext("mobile");
+      } else if (mode === "new") {
+        const blankContext = blankProject();
+        setContext(initContext(blankContext));
+      } else if (mode === "error") {
+        const blankContext = blankProject();
+        setContext(initContext(blankContext));
+        publish("PROJECT_NOT_FOUND", { status: true });
       } else {
         checkRecentProject(recentProject);
       }
+
+      setContextProviderKey(uuid());
     }
 
     initMode();
-
+    loaded = false;
     // eslint-disable-next-line
-  }, [progressElement.classList, id]);
+  }, [id]);
+
   useEffect(() => {
-    if (context && event.name) {
+    if (context && event.name && !loaded) {
       publish("CONTAINER_LOADED", {
         name: "IDE",
       });
+      loaded = true;
     }
   }, [context, event.name]);
 
   if (!context) return null;
 
-  if (context === "error") {
-    const blankContext = blankProject();
-    setContext(initContext(blankContext));
-    publish("PROJECT_NOT_FOUND", { status: true });
-    navigate("/error/api");
-  }
-
+  if (context === "error") return <div>forbiden</div>;
   return (
-    <ContextProvider state={context} reducer={contextReducer}>
+    <ContextProvider
+      key={contextProviderKey}
+      state={context}
+      reducer={contextReducer}
+    >
       <Box sx={styles.root}>
-        <Menu list={routes} query={modeQuery} title="IDE" />
+        <Menu list={routes} query={modeQuery} id={id} title="IDE" />
         <EducationDrawer />
         <Box sx={styles.content}>
           <Outlet />

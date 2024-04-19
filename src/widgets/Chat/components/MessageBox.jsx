@@ -16,6 +16,7 @@ function MessageBox({
 
   return (
     <Box
+      data-cy="message-box"
       sx={{
         width: {
           xs: "100%",
@@ -39,10 +40,15 @@ function MessageBox({
       <Typography
         variant="subtitle2"
         sx={{ fontWeight: "bold", marginBottom: "8px", userSelect: "text" }}
+        data-cy="message-role"
       >
         {message.role}
       </Typography>
-      <Typography variant="body1" sx={{ userSelect: "text" }}>
+      <Typography
+        variant="body1"
+        sx={{ userSelect: "text" }}
+        data-cy="message-content"
+      >
         {message.content}
       </Typography>
       {message.code && (
@@ -60,7 +66,13 @@ function MessageBox({
         >
           <ReadOnlyEditor
             title={"Ubiquitous Code"}
-            value={message.code}
+            value={
+              message.result
+                ? `${message.code}\n\n// Result: ${JSON.stringify(
+                    message.result
+                  )}`
+                : message.code
+            }
             language="typescript"
             onActionClick={() => handleOpenDialog(message.code)}
             isCollapsed={isCodeCollapsed}

@@ -61,7 +61,12 @@ const ReadOnlyEditor = ({
         </Box>
       </Stack>
       <Collapse in={!collapsed}>
-        <Stack component="code" ref={codeRef} className={language}>
+        <Stack
+          component="code"
+          ref={codeRef}
+          className={language}
+          data-cy="code-block"
+        >
           {prettierStandalone.format(value, {
             parser: "typescript",
             plugins: [typescriptPlugin],

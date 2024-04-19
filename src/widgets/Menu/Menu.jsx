@@ -33,7 +33,7 @@ import {
 const withFilter = (Component) => {
   return (props) => {
     let list;
-    const { query } = props;
+    const { query, id } = props;
     if (!settings.plugin()) {
       list = props.list[0].pages.filter(
         (item) => item.link !== "/dashboard" && item.link !== "/businessflow"
@@ -42,7 +42,7 @@ const withFilter = (Component) => {
       list = [...props.list];
     }
 
-    return <Component {...{ title: "IDE", list, query }} />;
+    return <Component {...{ title: "IDE", list, query, id }} />;
   };
 };
 
@@ -61,7 +61,7 @@ function Menu(props) {
   const SmallMenuLinkWithFilter = () => withFilter(SmallMenuLinks)(props);
 
   return (
-    <Box component="nav" sx={{ flexShrink: { md: 0 } }}>
+    <Box data-cy="menu" component="nav" sx={{ flexShrink: { md: 0 } }}>
       {matchDownMD ? (
         <>
           {!openMd && (
@@ -205,7 +205,7 @@ const MenuLinks = (props) => {
     },
   });
 
-  const { query } = props;
+  const { query, id } = props;
 
   return (
     <>
@@ -219,7 +219,7 @@ const MenuLinks = (props) => {
               }
               sx={styles.listItem}
               component={Link}
-              to={`../${link}/${query}`}
+              to={`${id}/${link}${query}`}
               state={{ anchor }}
               relative="path"
             >
@@ -237,7 +237,12 @@ const SmallMenuLinks = (props) => {
   return (
     <>
       {props.list.map((item, key) => (
-        <MenuItem {...item} query={props.query} key={key} />
+        <MenuItem
+          data-cy={`menu-${item.title}`}
+          {...item}
+          query={props.query}
+          key={key}
+        />
       ))}
     </>
   );
@@ -253,13 +258,14 @@ const MenuItem = ({ title, link, anchor, icon, query }) => {
   });
   return (
     <ListItemButton
+      data-cy={`menu-${title}`}
       disabled={
         runtimeConnection.status === false &&
         (title === "Query" || title === "Logs")
       }
       key={title}
       component={Link}
-      to={`../${link}/${query}`}
+      to={`../${link}${query}`}
       state={{ anchor }}
       relative="path"
     >

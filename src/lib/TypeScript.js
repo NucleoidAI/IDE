@@ -61,7 +61,7 @@ const transformClassDefinitionUsingTS = (classDef) => {
   const sourceFile = ts.createSourceFile(
     "temp.ts",
     classDef,
-    ts.ScriptTarget.Latest,
+    ts.ScriptTarget.ES2015,
     false,
     ts.ScriptKind.TS
   );
