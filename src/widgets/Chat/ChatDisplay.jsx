@@ -3,6 +3,7 @@ import ErrorMessage from "./components/ErrorMessage";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import MessageBox from "./components/MessageBox";
 import WelcomeMessage from "./components/WelcomeMessage";
+import { useEvent } from "@nucleoidai/react-event";
 
 import {
   Box,
@@ -29,6 +30,10 @@ const ChatDisplay = ({
   const [selectedCode, setSelectedCode] = useState("");
   const [showScrollToBottomButton, setShowScrollToBottomButton] =
     useState(false);
+  const [suggestionsOverlay] = useEvent("SUGGESTIONS_OVERLAY", {
+    active: false,
+  });
+
   const messagesContainerRef = useRef(null);
 
   const handleOpenDialog = (code) => {
@@ -53,7 +58,10 @@ const ChatDisplay = ({
         messagesContainerRef.current;
       const atBottom = Math.abs(scrollTop + clientHeight - scrollHeight) < 1;
       setShowScrollToBottomButton(
-        !atBottom && window.innerWidth >= 960 && chat.messages.length > 0
+        !atBottom &&
+          window.innerWidth >= 960 &&
+          chat.messages.length > 0 &&
+          !suggestionsOverlay.active
       );
     }
   };
@@ -79,7 +87,8 @@ const ChatDisplay = ({
         alignItems: "center",
         backgroundColor: theme.palette.background.paper,
         paddingX: { xs: "8px", sm: "16px", md: "20px" },
-        paddingY: "20px",
+        paddingTop: "20px",
+        paddingBottom: suggestionsOverlay.active ? 12.5 : 2.5,
       }}
       ref={messagesContainerRef}
       onScroll={handleScroll}

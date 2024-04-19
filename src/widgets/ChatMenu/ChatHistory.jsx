@@ -39,6 +39,7 @@ function ChatHistory() {
       }
     );
   };
+
   const handleDeleteChat = (deletedChatId) => {
     showConfirmDialog(
       "Delete Chat",
@@ -74,47 +75,57 @@ function ChatHistory() {
   }, [selectedChat, initChat]);
 
   return (
-    <Box sx={{ marginTop: "10px" }}>
-      {chats
-        .filter((chat) => chat.length)
-        .map((chat) => (
-          <React.Fragment key={chat.id}>
-            <ListItemButton
-              onClick={() => handleChatClick(chat.id)}
-              sx={styles.listItem}
-            >
-              <ListItemText
-                primary={chat.title}
-                sx={{
-                  ".MuiListItemText-primary": {
-                    position: "relative",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  },
-                }}
-              />
-              <ToggleableMenu defaultIcon={<MoreVertIcon fontSize="small" />}>
-                <Tooltip title="Convert to Project">
-                  <IconButton
-                    size="small"
-                    onClick={() => handleConvertToProject()}
-                  >
-                    <CodeIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Delete Chat">
-                  <IconButton
-                    size="small"
-                    onClick={() => handleDeleteChat(chat.id)}
-                  >
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-              </ToggleableMenu>
-            </ListItemButton>
-          </React.Fragment>
-        ))}
+    <Box
+      sx={{
+        marginTop: "10px",
+        flexGrow: 1,
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+      }}
+    >
+      <Box sx={{ flexGrow: 1, overflow: "auto" }}>
+        {chats
+          .filter((chat) => chat.length)
+          .map((chat) => (
+            <React.Fragment key={chat.id}>
+              <ListItemButton
+                onClick={() => handleChatClick(chat.id)}
+                sx={styles.listItem}
+              >
+                <ListItemText
+                  primary={chat.title}
+                  sx={{
+                    ".MuiListItemText-primary": {
+                      position: "relative",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    },
+                  }}
+                />
+                <ToggleableMenu defaultIcon={<MoreVertIcon fontSize="small" />}>
+                  <Tooltip title="Convert to Project">
+                    <IconButton
+                      size="small"
+                      onClick={() => handleConvertToProject()}
+                    >
+                      <CodeIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Delete Chat">
+                    <IconButton
+                      size="small"
+                      onClick={() => handleDeleteChat(chat.id)}
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                </ToggleableMenu>
+              </ListItemButton>
+            </React.Fragment>
+          ))}
+      </Box>
       <ConfirmDialog />
     </Box>
   );

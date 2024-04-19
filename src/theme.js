@@ -253,6 +253,20 @@ const lightTheme = createTheme({
       },
     },
 
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          color: base.grey[400],
+          "&:hover": {
+            backgroundColor: alpha(base.grey[500], 0.1),
+          },
+          "&.Mui-disabled": {
+            color: base.grey[700],
+          },
+        },
+      },
+    },
+
     MuiFab: {
       variants: [
         {
@@ -291,6 +305,31 @@ const lightTheme = createTheme({
           },
         },
       },
+    },
+
+    MuiButton: {
+      variants: [
+        {
+          props: { variant: "suggestion" },
+          style: {
+            flexGrow: 1,
+            minHeight: "80px",
+            backgroundColor: base.grey[200],
+            border: `1px solid #9e9e9e`,
+            "&:hover": {
+              backgroundColor: base.grey[300],
+              border: `1px solid ${base.grey[300]}`,
+            },
+            textAlign: "left",
+            justifyContent: "flex-start",
+            borderRadius: "8px",
+            textTransform: "none",
+            fontSize: "0.875rem",
+            fontWeight: "medium",
+            width: "calc(50% - 30px)",
+          },
+        },
+      ],
     },
 
     MuiDrawer: {
@@ -492,6 +531,28 @@ const darkTheme = createTheme({
           color: "white",
         },
       },
+      variants: [
+        {
+          props: { variant: "suggestion" },
+          style: {
+            flexGrow: 1,
+            minHeight: "80px",
+            backgroundColor: base.grey[900],
+            border: `1px solid #9e9e9e`,
+            "&:hover": {
+              backgroundColor: base.grey[700],
+              border: `1px solid ${base.grey[700]}`,
+            },
+            textAlign: "left",
+            justifyContent: "flex-start",
+            borderRadius: "8px",
+            textTransform: "none",
+            fontSize: "0.875rem",
+            fontWeight: "medium",
+            width: "calc(50% - 30px)",
+          },
+        },
+      ],
     },
     MuiInputBase: {
       variants: [

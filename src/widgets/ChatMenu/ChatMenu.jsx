@@ -91,8 +91,9 @@ function ChatMenu(props) {
                 <AddIcon />
               </Fab>
             </Box>
-            <ChatHistory />
-            <Box sx={{ height: "100%" }} />
+            <Box sx={{ flexGrow: 1, overflow: "auto" }}>
+              <ChatHistory />
+            </Box>
 
             <Settings size={"large"} />
           </Drawer>
@@ -192,9 +193,9 @@ function ChatMenu(props) {
                 <AddIcon />
               </Fab>
             </Box>
-            <ChatHistory />
-            <Box sx={{ height: "100%" }} />
-
+            <Box sx={{ flexGrow: 1, overflow: "auto" }}>
+              <ChatHistory />
+            </Box>
             <Settings size={"large"} />
           </Drawer>
         </>
@@ -279,8 +280,9 @@ function ChatMenu(props) {
                 <AddIcon />
               </Fab>
             </Box>
-            <ChatHistory />
-            <Box sx={{ height: "100%" }} />
+            <Box sx={{ flexGrow: 1, overflow: "auto" }}>
+              <ChatHistory />
+            </Box>
             <Settings size={"large"} />
           </LgDrawerStyled>
         </>

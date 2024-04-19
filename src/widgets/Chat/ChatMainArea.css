@@ -1,18 +1,15 @@
-@keyframes pulseAnimationWithColor {
+@keyframes pulseAnimation {
   0% {
     transform: scale(1);
-    background-color: initial;
   }
   50% {
     transform: scale(1.2);
-    background-color: #209958;
   }
   100% {
     transform: scale(1);
-    background-color: initial;
   }
 }
 
 .pulse-animation {
-  animation: pulseAnimationWithColor 2s ease-in-out;
+  animation: pulseAnimation 2s ease-in-out;
 }

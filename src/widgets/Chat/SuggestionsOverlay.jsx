@@ -1,4 +1,6 @@
-import { Box, Button, Stack, Typography, useTheme } from "@mui/material";
+import { publish } from "@nucleoidai/react-event";
+
+import { Box, Button, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 const initialSuggestions = [
@@ -155,7 +157,6 @@ const initialSuggestions = [
 ];
 
 const SuggestionsOverlay = ({ onSuggestionClick, loading, chat, error }) => {
-  const theme = useTheme();
   const [suggestions, setSuggestions] = useState(null);
 
   useEffect(() => {
@@ -175,15 +176,18 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat, error }) => {
           index = matchedSuggestion.children;
         } else {
           setSuggestions(null);
+          publish("SUGGESTIONS_OVERLAY", { active: false });
           return;
         }
       } else {
         setSuggestions(null);
+        publish("SUGGESTIONS_OVERLAY", { active: false });
         return;
       }
     }
 
     setSuggestions(index);
+    publish("SUGGESTIONS_OVERLAY", { active: true });
   }, [chat]);
 
   if (error.status && error.chatId === chat.id) {
@@ -217,25 +221,8 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat, error }) => {
           {suggestions.map((suggestion, index) => (
             <Button
               key={index}
-              variant="outlined"
+              variant="suggestion"
               data-cy={`suggestion-button-${index}`}
-              sx={{
-                flexGrow: 1,
-                minHeight: "80px",
-                backgroundColor: theme.palette.background.default,
-                borderColor: theme.palette.grey[600],
-                "&:hover": {
-                  backgroundColor: theme.palette.grey[200],
-                  borderColor: theme.palette.primary.main,
-                },
-                textAlign: "left",
-                justifyContent: "flex-start",
-                borderRadius: "8px",
-                textTransform: "none",
-                fontSize: "0.875rem",
-                fontWeight: "medium",
-                width: "calc(50% - 30px)",
-              }}
               onClick={() => onSuggestionClick(suggestion)}
             >
               <Stack direction={"column"}>

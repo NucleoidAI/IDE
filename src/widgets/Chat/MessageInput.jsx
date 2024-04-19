@@ -126,10 +126,16 @@ const MessageInput = forwardRef((props, ref) => {
               type="button"
               onClick={handleProjectIconClick}
               className={isAnimating ? "pulse-animation" : ""}
-              sx={{ ml: 1 }}
+              sx={{
+                ml: 1,
+                backgroundColor: "#209958",
+                "&:hover": {
+                  backgroundColor: "#209958",
+                },
+              }}
               data-cy="convert-to-project-button"
             >
-              <CodeIcon />
+              <CodeIcon sx={{ color: "white" }} />{" "}
             </IconButton>
           </Tooltip>
         )}
