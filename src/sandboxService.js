@@ -1,3 +1,4 @@
+import Settings from "./settings";
 import config from "../config";
 import http from "./http";
 import onboardDispatcher from "./containers/IDE/Onboarding/onboardDispatcher";
@@ -9,12 +10,20 @@ let terminalUrl = "";
 let landingLevel = 0;
 
 const getLandingLevel = () => {
-  return landingLevel;
+  Settings.landing();
 };
 
-const createSandbox = async (context) => {
+const createSandbox = async (context, runtime) => {
   try {
-    const response = await http(`${config.sandbox}/openapi`, {
+    let sandboxUrl;
+    if (runtime === "custom") {
+      const url = new URL(Settings.url.terminal());
+      sandboxUrl = url.origin;
+    } else {
+      sandboxUrl = config.sandbox;
+    }
+
+    const response = await http(`${sandboxUrl}/openapi`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -23,28 +32,43 @@ const createSandbox = async (context) => {
       data: JSON.stringify(context.openapi),
     });
 
-    sandboxId = response.data.id;
-    setAppUrl();
-    setTerminalUrl();
+    if (runtime === "custom") {
+      sandboxId = null;
+      setAppUrl(sandboxUrl);
+      setTerminalUrl(sandboxUrl);
+    } else {
+      sandboxId = response.data.id;
+      setAppUrl(sandboxUrl);
+      setTerminalUrl(sandboxUrl);
+    }
+
     scheduler.start();
     checkLandingLevel();
-    return response.data.id;
+    return sandboxId;
   } catch (error) {
     console.error("Error creating sandbox:", error);
     throw error;
   }
 };
 
-const setAppUrl = () => {
-  appUrl = `${config.sandbox}/${sandboxId}/`;
+const setAppUrl = (sandboxUrl) => {
+  if (sandboxId) {
+    appUrl = `${sandboxUrl}/${sandboxId}/`;
+  } else {
+    appUrl = "http://localhost:3000";
+  }
 };
 
 const getAppUrl = () => {
   return appUrl;
 };
 
-const setTerminalUrl = () => {
-  terminalUrl = `${config.sandbox}/terminal/${sandboxId}`;
+const setTerminalUrl = (sandboxUrl) => {
+  if (sandboxId) {
+    terminalUrl = `${sandboxUrl}/terminal/${sandboxId}`;
+  } else {
+    terminalUrl = `${sandboxUrl}`;
+  }
 };
 
 const getTerminalUrl = () => {
@@ -60,7 +84,6 @@ const get = async (endpoint) => {
     throw error;
   }
 };
-
 const query = async (body) => {
   try {
     const response = await http.post(`${terminalUrl}`, body);

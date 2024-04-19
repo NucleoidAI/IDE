@@ -14,8 +14,6 @@ import { getTypes } from "../../lib/TypeScript";
 import gtag from "../../gtag";
 import { mapToContext } from "../../utils/Parser";
 import sandboxService from "../../sandboxService";
-import scheduler from "../../connectionScheduler";
-import service from "../../service";
 import { toOpenApi } from "../../adapters/openapi/adapter";
 import { useContext } from "../../context/context";
 import { useLocation } from "react-router-dom";
@@ -261,7 +259,7 @@ function ApiButton() {
     }
   }, [run.status]); //eslint-disable-line
 
-  const runSandbox = async (context, state) => {
+  const runSandbox = async (context, state, runtime) => {
     const types = [...(context?.types || []), ...getTypes(state.functions)];
 
     setLoading(true);
@@ -275,7 +273,7 @@ function ApiButton() {
         },
       };
 
-      await sandboxService.createSandbox(openapi);
+      await sandboxService.createSandbox(openapi, runtime);
 
       setLoading(false);
       gtag("event", "run_sandbox");
@@ -290,45 +288,9 @@ function ApiButton() {
     }
   };
 
-  const runCustom = (context, originalContext) => {
-    setLoading(true);
-    const types = [...(context?.types || []), ...getTypes(originalContext)];
-    const openapi = {
-      openapi: "3.0.1",
-      info: {
-        title: "nucleoid",
-        description: Settings.description(),
-      },
-      ...toOpenApi({ api: context.api, types }),
-    };
-    openapi["x-nuc-functions"] = context.functions;
-    openapi["x-nuc-action"] = "start";
-    openapi["x-nuc-prefix"] = "";
-
-    service
-      .openapi(openapi)
-      .then(() => {
-        publish("SWAGGER_DIALOG", { open: true });
-        scheduler.start();
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-        publish("GLOBAL_MESSAGE", {
-          status: true,
-          message: "Network error",
-          severity: "info",
-        });
-      });
-  };
-
   const handleRun = () => {
     const context = mapToContext(vfs.fsMap, deepCopy(state.get("nucleoid")));
-    if (Settings.runtime() === "custom") {
-      runCustom(context, state.get("nucleoid.functions"));
-    } else {
-      runSandbox(context, state.get("nucleoid"));
-    }
+    runSandbox(context, state.get("nucleoid"), Settings.runtime());
   };
 
   return (
