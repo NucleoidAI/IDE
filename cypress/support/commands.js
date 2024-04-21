@@ -90,11 +90,19 @@ Cypress.Commands.add("setup", (container, fixtureType, type) => {
         .as("context");
     } else if (type === "LOCAL") {
       if (fixtureType === "SEED" || "") {
-        cy.fixture("PROJECTS/LOCAL/project").then((project) => {
-          cy.storageSet(
-            `ide.projects.3450f289-0fc5-45e9-9a4a-606c0a63cdfe`,
-            project
-          );
+        cy.fixture("PROJECTS/LOCAL/project").then((context) => {
+          const { project, types, functions, logic, api, declarations } =
+            context;
+          cy.storageSet(`ide.context.3450f289-0fc5-45e9-9a4a-606c0a63cdfe`, {
+            project,
+            specifications: {
+              api,
+              logic,
+              functions,
+              types,
+              declarations,
+            },
+          });
         });
       }
     }
@@ -123,6 +131,7 @@ Cypress.Commands.add("typeEditor", (changedEditorValue) => {
     force: true,
   });
   cy.get('textarea[role="textbox"]').type(changedEditorValue, {
+    force: true,
     parseSpecialCharSequences: false,
   });
 
@@ -229,5 +238,7 @@ Cypress.Commands.add("waitEvent", (eventName) => {
     { timeout: 10000 }
   );
 });
+
+Cypress.Commands.add("normalizeString", (str) => str.replace(/\s/g, ""));
 
 /* eslint-enable */
