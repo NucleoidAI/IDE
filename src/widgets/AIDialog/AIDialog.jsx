@@ -80,12 +80,13 @@ function AIDialog({ editor, declarative, imperative, page }) {
     if (promptValue) {
       setLoading(true);
 
-      expert.post("/chat/completions", {
-        mode,
-        role: "USER",
-        context: generateContext(),
-        content: promptValue?.trim(),
-      } )
+      expert
+        .post("/chat/completions", {
+          mode,
+          role: "USER",
+          context: generateContext(),
+          content: promptValue?.trim(),
+        })
         .then((res) => {
           setSummary(res.data.summary);
           setDescription(res.data.description);
@@ -128,6 +129,7 @@ function AIDialog({ editor, declarative, imperative, page }) {
 
   function handleSaveDeclarative(generatedCode) {
     if (logicValidation(generatedCode)) {
+      publish("LOGIC_ADDED", { status: true });
       dispatch({
         type: "SAVE_LOGIC_DIALOG",
         payload: {
