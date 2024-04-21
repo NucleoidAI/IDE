@@ -14,8 +14,8 @@ function Logic() {
   const [event] = useEvent("WIDGET_LOADED", { name: "" });
   const [, dispatch] = useContext();
   useEffect(() => {
-    if (event.name) {
-      publish("PAGE_LOADED", { name: "Logic" });
+    if (event.name === "Editor") {
+      publish("PAGE_LOADED", { name: "LOGIC" });
     }
   }, [event.name]);
 

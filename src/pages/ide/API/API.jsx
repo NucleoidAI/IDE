@@ -13,7 +13,7 @@ function API() {
   const [event] = useEvent("WIDGET_LOADED", { name: "" });
 
   useEffect(() => {
-    if (event.name) {
+    if (event.name === "VFSEditor") {
       publish("PAGE_LOADED", { name: "API" });
     }
   }, [event.name]);

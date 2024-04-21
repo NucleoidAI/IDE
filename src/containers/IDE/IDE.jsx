@@ -243,7 +243,7 @@ function IDE() {
   }, [id]);
 
   useEffect(() => {
-    if (ReactContext && event.name && !loaded) {
+    if (ReactContext && event.name === page.toUpperCase() && !loaded) {
       publish("CONTAINER_LOADED", {
         name: "IDE",
       });
