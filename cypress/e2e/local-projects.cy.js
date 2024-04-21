@@ -1,11 +1,11 @@
-describe("local project spec", () => {
+describe("Local Project", () => {
   beforeEach(() => {
     cy.setup("IDE", "SEED", "LOCAL");
     cy.fixture("PROJECTS/LOCAL/project.json").as("project");
     cy.wrap("3450f289-0fc5-45e9-9a4a-606c0a63cdfe").as("projectId");
   });
 
-  it("should save api editor changes in storage", () => {
+  it("saves changes in API editor", () => {
     cy.get("@projectId").then((projectId) => {
       cy.visit(`/ide/${projectId}/api?mode=local`);
     });
@@ -16,6 +16,7 @@ describe("local project spec", () => {
 
     cy.typeEditor(changedEditorValue);
     //fullCheckEditorValue("newItem");
+
     cy.get("@projectId").then((projectId) => {
       cy.storageGet(`ide.projects.${projectId}`).then((project) => {
         expect(project.api[3]["x-nuc-action"]).to.include("newItem");
@@ -23,7 +24,7 @@ describe("local project spec", () => {
     });
   });
 
-  it("should save functions editor changes", () => {
+  it("saves changes in functions editor", () => {
     cy.get("@projectId").then((projectId) => {
       cy.visit(`/ide/${projectId}/functions?mode=local`);
     });
@@ -41,7 +42,7 @@ describe("local project spec", () => {
     });
   });
 
-  it("should save logic editor changes", () => {
+  it("saves changes in logic editor", () => {
     cy.get("@projectId").then((projectId) => {
       cy.visit(`/ide/${projectId}/logic?mode=local`);
     });

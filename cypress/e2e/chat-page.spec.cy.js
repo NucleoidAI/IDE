@@ -3,7 +3,7 @@ describe("ChatWidget", () => {
     cy.setup("CHAT", "SEED");
   });
 
-  it("should display the initial chat messages from seed data", () => {
+  it("displays existing messages", () => {
     cy.getBySel("message-box").should("have.length", 4);
     cy.getBySel("message-box")
       .eq(0)
@@ -45,7 +45,7 @@ describe("ChatWidget", () => {
       });
   });
 
-  it("should send a message and receive a response without code", () => {
+  it("displays message response without code", () => {
     cy.sendMessage("hello", "MESSAGES/hello");
     const expectedRespnse =
       '"Nucleoid Chat" is a platform specifically designed for posing and discussing formal logic questions. Nucleoid Runtime is a software system that executes and manages logical rules and inferences.';
@@ -54,7 +54,7 @@ describe("ChatWidget", () => {
     cy.checkMessageResponse("ASSISTANT", expectedRespnse, 5, false, "last");
   });
 
-  it("should send a message and receive a response with code", () => {
+  it("displays message response with code", () => {
     cy.sendMessage("define a human", "MESSAGES/define-human");
     //eslint-disable-next-line
     cy.wait(2000);
@@ -67,7 +67,7 @@ describe("ChatWidget", () => {
     );
   });
 
-  it("should handle error response", () => {
+  it("displays error message", () => {
     cy.intercept("POST", "/ide/api/expert/chat/sessions/*", (req) => {
       if (req.body.content === "trigger error") {
         req.reply({
@@ -89,6 +89,7 @@ describe("ChatWidget", () => {
     cy.getBySel("error-content").should("contain.text", "user1.mortal");
   });
 
+  // TODO Revisit this test
   it("should send multiple messages and receive responses", () => {
     cy.sendMessage("hello", "MESSAGES/hello");
     cy.sendMessage("define a human", "MESSAGES/define-human");
@@ -106,6 +107,7 @@ describe("ChatWidget", () => {
     );
   });
 
+  // TODO Revisit this test
   it("should handle suggestions and update the overlay", () => {
     cy.fixture("MESSAGES/hello").then((hello) => {
       cy.fixture("MESSAGES/define-human").then((defineHuman) => {

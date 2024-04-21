@@ -1,4 +1,4 @@
-describe("cloud project spec", () => {
+describe("Cloud Project", () => {
   beforeEach(() => {
     cy.setup("IDE", "SEED", "CLOUD");
 
@@ -10,7 +10,7 @@ describe("cloud project spec", () => {
     });
   });
 
-  it("should save api editor changes", () => {
+  it("saves changes in API editor", () => {
     cy.get("@projectId").then((projectId) => {
       cy.visit(`/ide/${projectId}/api`);
     });
@@ -28,7 +28,7 @@ describe("cloud project spec", () => {
     });
   });
 
-  it("should save functions editor changes", () => {
+  it("saves changes in functions editor", () => {
     cy.get("@projectId").then((projectId) => {
       cy.visit(`/ide/${projectId}/functions`);
     });
@@ -46,7 +46,7 @@ describe("cloud project spec", () => {
     });
   });
 
-  it("should save logic editor changes", () => {
+  it("saves changes in logic editor", () => {
     cy.get("@projectId").then((projectId) => {
       cy.visit(`/ide/${projectId}/logic`);
     });
