@@ -124,21 +124,13 @@ function ProjectDialog({ handleClose, open, setOpen }) {
 
     return await Promise.all(projectPromises);
   };
-
   const contextToCloud = (specifications, project) => {
-    const { api, declarations, functions, types } = specifications;
-
     const createdProject = {
       name: project.name,
       type: "SINGLE",
       description: project.description,
+      service: { specifications },
     };
-
-    createdProject.service = service;
-
-    const nucContext = { api, declarations, functions, types };
-
-    createdProject.service.context = nucContext;
 
     return createdProject;
   };
@@ -171,11 +163,10 @@ function ProjectDialog({ handleClose, open, setOpen }) {
 
     setLoading(true);
     context.project.name = name;
-
-    const createdContext = contextToCloud(specifications, project);
+    const createdProject = contextToCloud(specifications, project);
 
     service
-      .addProject(createdContext)
+      .addProject(createdProject)
       .then((response) => {
         getCloudProjects();
         publish("PROJECT_CREATED", {
@@ -191,7 +182,6 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     context.project.name = name;
     context.project.type = "LOCAL";
     const { specifications, project } = context;
-    console.log(specifications);
 
     storage.set("ide", "context", context.project.id, {
       specifications: specifications,
