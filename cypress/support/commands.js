@@ -1,42 +1,3 @@
-// ***********************************************
-// This example commands.ts shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-//
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
-
-import "cypress-wait-until";
-
 /* eslint-disable */
 import { mount } from "cypress/react18";
 import { subscribe } from "@nucleoidai/react-event";
@@ -61,109 +22,95 @@ Cypress.Commands.add("storageGet", (key) => {
   });
 });
 
-Cypress.Commands.add("cloudProjectIntercept", (projectId) => {
-  let serviceId;
+Cypress.Commands.add("setup", (container, fixtureType, type) => {
+  cy.clearLocalStorage();
+  cy.storageSet(`debug`, true);
+  cy.storageSet(`ide.landing`, { level: Number.MAX_SAFE_INTEGER });
 
-  cy.fixture("/GET/projects.json").then((projects) => {
-    const cloudProject = projects.find((p) => p.id === projectId);
-    cy.intercept("GET", `https://nuc.land/ide/api/projects/${projectId}`, {
-      statusCode: 200,
-      body: cloudProject,
+  if (container === "IDE") {
+    cy.fixture("/PROJECTS/projects.json").then((projects) => {
+      cy.intercept("GET", "https://nuc.land/ide/api/projects", {
+        statusCode: 200,
+        body: fixtureType === "BLANK" ? {} : projects,
+      }).as("getProjects");
     });
-  });
 
-  cy.fixture("/GET/single-project-service.json").then((service) => {
-    cy.intercept(
-      "GET",
-      `https://nuc.land/ide/api/projects/${projectId}/services`,
-      {
-        statusCode: 200,
-        body: service,
+    cy.fixture("config.json")
+      .then((config) => {
+        cy.intercept("GET", "https://nucleoid.com/config", {
+          statusCode: 200,
+          body: config,
+        });
+      })
+      .as("getConfig");
+
+    if (type === "CLOUD") {
+      let serviceId;
+      const cloudProjectId = "a166cc16-5c76-4aac-819e-118207a5dfa9";
+
+      cy.fixture("/PROJECTS/projects.json")
+        .then((projects) => {
+          const cloudProject = projects.find((p) => p.id === cloudProjectId);
+          cy.intercept(
+            "GET",
+            `https://nuc.land/ide/api/projects/${cloudProjectId}`,
+            {
+              statusCode: 200,
+              body: fixtureType === "BLANK" ? {} : cloudProject,
+            }
+          );
+        })
+        .as("project");
+
+      cy.fixture("/SERVICE/single-project-service.json")
+        .then((service) => {
+          cy.intercept(
+            "GET",
+            `https://nuc.land/ide/api/projects/${cloudProjectId}/services`,
+            {
+              statusCode: 200,
+              body: fixtureType === "BLANK" ? {} : service,
+            }
+          );
+          serviceId = service[0].id;
+        })
+        .as("services");
+
+      cy.fixture("/CONTEXT/context.json")
+        .then((context) => {
+          cy.intercept(
+            "GET",
+            `https://nuc.land/ide/api/services/${serviceId}/context`,
+            {
+              statusCode: 200,
+              body: fixtureType === "BLANK" ? {} : context,
+            }
+          );
+        })
+        .as("context");
+    } else if (type === "LOCAL") {
+      if (fixtureType === "SEED" || "") {
+        cy.fixture("PROJECTS/LOCAL/project").then((project) => {
+          cy.storageSet(
+            `ide.projects.3450f289-0fc5-45e9-9a4a-606c0a63cdfe`,
+            project
+          );
+        });
       }
-    );
-    serviceId = service[0].id;
-  });
-
-  cy.fixture("/GET/context.json").then((context) => {
-    cy.intercept(
-      "GET",
-      `https://nuc.land/ide/api/services/${serviceId}/context`,
-      {
-        statusCode: 200,
-        body: context,
-      }
-    );
-  });
-});
-
-Cypress.Commands.add("IDEContainerIntercepts", () => {
-  cy.fixture("/GET/projects.json").then((projects) => {
-    cy.intercept("GET", "https://nuc.land/ide/api/projects", {
-      statusCode: 200,
-      body: projects,
-    }).as("getProjects");
-  });
-
-  cy.fixture("/GET/config.json")
-    .then((config) => {
-      cy.intercept("GET", "https://nucleoid.com/config", {
-        statusCode: 200,
-        body: config,
+    }
+  } else if (container === "CHAT") {
+    if (fixtureType === "SEED" || "") {
+      cy.fixture("CHAT/chat-data.json").then((data) => {
+        cy.storageSet(`ide.chat.sessions.${data.id}`, data);
+        cy.visit(`/ide/chat/${data.id}`);
       });
-    })
-    .as("getConfig");
-});
-
-Cypress.Commands.add("initLocalProject", () => {
-  cy.fixture("/LOCAL/project").then((project) => {
-    cy.storageSet(`ide.projects.3450f289-0fc5-45e9-9a4a-606c0a63cdfe`, project);
-  });
-});
-
-Cypress.Commands.add("initCloudProject", () => {
-  let serviceId;
-  const cloudProjectId = "a166cc16-5c76-4aac-819e-118207a5dfa9";
-
-  cy.fixture("/GET/projects.json")
-    .then((projects) => {
-      const cloudProject = projects.find((p) => p.id === cloudProjectId);
-      cy.intercept(
-        "GET",
-        `https://nuc.land/ide/api/projects/${cloudProjectId}`,
-        {
-          statusCode: 200,
-          body: cloudProject,
-        }
-      );
-    })
-    .as("project");
-
-  cy.fixture("/GET/single-project-service.json")
-    .then((service) => {
-      cy.intercept(
-        "GET",
-        `https://nuc.land/ide/api/projects/${cloudProjectId}/services`,
-        {
-          statusCode: 200,
-          body: service,
-        }
-      );
-      serviceId = service[0].id;
-    })
-    .as("services");
-
-  cy.fixture("/GET/context.json")
-    .then((context) => {
-      cy.intercept(
-        "GET",
-        `https://nuc.land/ide/api/services/${serviceId}/context`,
-        {
-          statusCode: 200,
-          body: context,
-        }
-      );
-    })
-    .as("context");
+    } else if (fixtureType === "BLANK") {
+      cy.fixture("CHAT/empty-chat-data.json").then((data) => {
+        cy.storageSet(`ide.chat.sessions.${data.id}`, data);
+        cy.visit(`/ide/chat/${data.id}`);
+      });
+    }
+  }
 });
 
 Cypress.Commands.add("typeEditor", (changedEditorValue) => {
@@ -179,8 +126,51 @@ Cypress.Commands.add("typeEditor", (changedEditorValue) => {
   cy.wait(1000);
 });
 
+Cypress.Commands.add("sendMessage", (message, fixture) => {
+  cy.intercept("POST", "/ide/api/expert/chat/sessions/*", (req) => {
+    if (req.body.content === message) {
+      req.reply({
+        statusCode: 200,
+        fixture: fixture,
+      });
+    }
+  }).as("postMessage");
+
+  cy.getBySel("message-input").type(message);
+  cy.getBySel("send-button").click();
+
+  cy.wait("@postMessage");
+});
+
+Cypress.Commands.add(
+  "checkMessageResponse",
+  (role, content, length, codeContent, messageIndex) => {
+    cy.getBySel("message-box")
+      .should("have.length.at.least", length)
+      .as("messageBoxes");
+
+    if (messageIndex === "last") {
+      cy.get("@messageBoxes").then(($boxes) => {
+        cy.wrap($boxes.last()).as("messageBox");
+      });
+    } else if (typeof messageIndex === "number") {
+      cy.get("@messageBoxes").then(($boxes) => {
+        cy.wrap($boxes.eq(messageIndex)).as("messageBox");
+      });
+    }
+
+    cy.get("@messageBox").within(() => {
+      cy.getBySel("message-role").should("have.text", role);
+      cy.getBySel("message-content").should("have.text", content);
+      if (codeContent) {
+        cy.getBySel("code-block").should("contain.text", codeContent);
+      }
+    });
+  }
+);
+
 Cypress.Commands.add("saveContextIntercept", (serviceId) => {
-  cy.fixture("/PUT/changed-context.json")
+  cy.fixture("/CONTEXT/changed-context.json")
     .then((context) => {
       cy.intercept(
         "PUT",
@@ -193,7 +183,7 @@ Cypress.Commands.add("saveContextIntercept", (serviceId) => {
     })
     .as("contextPut");
 
-  cy.fixture("/PUT/changed-context.json")
+  cy.fixture("/CONTEXT/changed-context.json")
     .then((context) => {
       cy.intercept(
         "GET",
@@ -215,16 +205,11 @@ Cypress.Commands.add("checkEditorValue", (expectedValue) => {
       cy.get('textarea[role="textbox"]')
         .invoke("val")
         .then((val) => {
-          expect(val).to.include(expectedValue);
+          let expected = expectedValue;
+          console.log(val, "val");
+          expect(val.trim()).to.contain(expected.trim());
         });
     });
-});
-
-Cypress.Commands.add("waitLoading", () => {
-  cy.get("#nuc-progress-indicator", { timeout: 10000 }).should(
-    "have.class",
-    "hidden"
-  );
 });
 
 Cypress.Commands.add("waitEvent", (eventName) => {

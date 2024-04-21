@@ -4,6 +4,7 @@ import React from "react";
 import State from "../../src/state";
 import cy from "cypress";
 
+// TODO Revisit component tests
 describe("APITree Component", () => {
   it("should mount successfully", () => {
     const initialState = State.init();

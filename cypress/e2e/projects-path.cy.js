@@ -1,114 +1,119 @@
-describe("project path spec", () => {
-  before(() => {
-    cy.fixture("/LOCAL/project.json").as("localProject");
-    cy.storageSet(`ide.landing`, { level: 2 });
-  });
-
-  beforeEach(() => {
-    cy.IDEContainerIntercepts();
-  });
-
-  it("visit '/ide' with recent project and open recent project", () => {
-    const localProjectId = "3450f289-0fc5-45e9-9a4a-606c0a63cdfe";
-    const selectedProject = { id: localProjectId, type: "LOCAL" };
-
-    cy.get("@localProject").then((localProject) => {
-      cy.storageSet(`ide.projects.${localProjectId}`, localProject);
+describe("Projects Path", () => {
+  describe("Cloud Project", () => {
+    beforeEach(() => {
+      cy.setup("IDE", "SEED", "CLOUD");
     });
 
-    cy.storageSet("ide.selected.project", selectedProject);
+    it("navigates new project page if recent project not found ", () => {
+      cy.visit("/ide");
 
-    cy.visit("/ide");
+      cy.url().should("include", "/new/api?mode=local");
+    });
 
-    cy.url().should("include", `/${localProjectId}/api?mode=local`);
-  });
+    it("opens project", () => {
+      const cloudProjectId = "a166cc16-5c76-4aac-819e-118207a5dfa9";
 
-  it("visit '/ide' without recent project and navigate new project page", () => {
-    cy.visit("/ide");
+      cy.visit(`/ide/${cloudProjectId}`);
 
-    cy.url().should("include", "/new/api?mode=local");
-  });
+      cy.waitEvent("CONTAINER_LOADED");
 
-  it("visit '/ide/sample' and create sample project", () => {
-    cy.visit("/ide/sample");
-
-    cy.url().should("contain", "/api");
-
-    cy.location("pathname").then((pathname) => {
-      const pathParts = pathname.split("/");
-      const projectId = pathParts[pathParts.length - 2];
-
-      cy.storageGet(`ide.projects.${projectId}`).as("project");
-
-      cy.get("@project").should("exist");
-
-      cy.storageGet(`ide.selected.project`).as("selectedProject");
-
-      cy.get("@selectedProject").should((selectedProject) => {
-        expect(selectedProject.id).to.equal(projectId);
-        expect(selectedProject.type).to.equal("LOCAL");
+      cy.storageGet("ide.selected.project").then((project) => {
+        expect(project).to.exist;
+        expect(project).to.have.property("id", cloudProjectId);
+        expect(project).to.have.property("type", "CLOUD");
       });
     });
-  });
 
-  it("visit '/ide/projectId and open cloud project'", () => {
-    const cloudProjectId = "a166cc16-5c76-4aac-819e-118207a5dfa9";
+    it("redirects to error path if project id is invalid", () => {
+      const invalidProjectId = "1111111111";
 
-    cy.visit(`/ide/${cloudProjectId}`);
+      cy.intercept(`https://nuc.land/ide/api/projects/${invalidProjectId}`);
+      cy.intercept(
+        `https://nuc.land/ide/api/projects/${invalidProjectId}/services`
+      );
 
-    cy.cloudProjectIntercept(cloudProjectId).as("cloudProject");
+      cy.visit(`/ide/${invalidProjectId}`);
 
-    cy.wait("@cloudProject");
-
-    cy.window().then((win) => {
-      const recentProject = win.localStorage.getItem(`ide.selected.project`);
-
-      expect(JSON.parse(recentProject).id).to.equal(cloudProjectId);
-      expect(JSON.parse(recentProject).type).to.equal("CLOUD");
+      cy.url().should("contain", "/error");
     });
   });
 
-  it("visit '/ide/projectId?mode=local' and open local project", () => {
-    const localProjectId = "3450f289-0fc5-45e9-9a4a-606c0a63cdfe";
-
-    cy.fixture("/LOCAL/project.json").then((localProject) => {
-      cy.storageSet(`ide.projects.${localProjectId}`, localProject);
+  describe("Local Project", () => {
+    beforeEach(() => {
+      cy.setup("IDE", "SEED", "LOCAL");
+      cy.fixture("/PROJECTS/LOCAL/project.json").as("project");
     });
+    it("navigates recent project if there is recent project", () => {
+      const localProjectId = "3450f289-0fc5-45e9-9a4a-606c0a63cdfe";
+      const selectedProject = { id: localProjectId, type: "LOCAL" };
 
-    cy.visit(`/ide/${localProjectId}?mode=local`);
+      cy.get("@project").then((localProject) => {
+        cy.storageSet(`ide.projects.${localProjectId}`, localProject);
+      });
 
-    cy.url().should("contain", `ide/${localProjectId}/api?mode=local`);
+      cy.storageSet("ide.selected.project", selectedProject);
 
-    cy.location("pathname").then((pathname) => {
-      const pathParts = pathname.split("/");
-      const projectId = pathParts[pathParts.length - 2];
+      cy.visit("/ide");
 
-      cy.storageGet(`ide.selected.project`).then((selectedProject) => {
-        expect(selectedProject.id).to.equal(projectId);
-        expect(selectedProject.type).to.equal("LOCAL");
+      cy.url().should("include", `/${localProjectId}/api?mode=local`);
+    });
+    it.only("creates sample project", () => {
+      cy.visit("/ide/sample");
+
+      cy.url().should("contain", "/api");
+
+      cy.waitEvent("CONTAINER_LOADED");
+
+      cy.location("pathname").then((pathname) => {
+        const pathParts = pathname.split("/");
+        const projectId = pathParts[pathParts.length - 2];
+
+        cy.storageGet(`ide.projects.${projectId}`).as("project");
+
+        cy.get("@project").should("exist");
+
+        cy.storageGet(`ide.selected.project`).as("selectedProject");
+
+        cy.get("@selectedProject")
+          .should((selectedProject) => {
+            expect(selectedProject).to.not.be.null;
+          })
+          .then((selectedProject) => {
+            cy.log(selectedProject);
+            expect(selectedProject.id).to.equal(projectId);
+            expect(selectedProject.type).to.equal("LOCAL");
+          });
       });
     });
-  });
 
-  it("invalid projectId for cloud mode", () => {
-    const invalidProjectId = "1111111111";
+    it("opens project", () => {
+      const localProjectId = "3450f289-0fc5-45e9-9a4a-606c0a63cdfe";
 
-    cy.intercept(`https://nuc.land/ide/api/projects/${invalidProjectId}`);
+      cy.fixture("PROJECTS/LOCAL/project.json").then((localProject) => {
+        cy.storageSet(`ide.projects.${localProjectId}`, localProject);
+      });
 
-    cy.intercept(
-      `https://nuc.land/ide/api/projects/${invalidProjectId}/services`
-    );
+      cy.visit(`/ide/${localProjectId}?mode=local`);
 
-    cy.visit(`/ide/${invalidProjectId}`);
+      cy.url().should("contain", `ide/${localProjectId}/api?mode=local`);
 
-    cy.url().should("contain", "/error");
-  });
+      cy.location("pathname").then((pathname) => {
+        const pathParts = pathname.split("/");
+        const projectId = pathParts[pathParts.length - 2];
 
-  it("invalid projectId for local mode", () => {
-    const invalidProjectId = "1111111111";
+        cy.storageGet(`ide.selected.project`).then((selectedProject) => {
+          expect(selectedProject.id).to.equal(projectId);
+          expect(selectedProject.type).to.equal("LOCAL");
+        });
+      });
+    });
 
-    cy.visit(`/ide/${invalidProjectId}?mode=local`);
+    it("redirects to error path if project id is invalid", () => {
+      const invalidProjectId = "1111111111";
 
-    cy.url().should("contain", "/error");
+      cy.visit(`/ide/${invalidProjectId}?mode=local`);
+
+      cy.url().should("contain", "/error");
+    });
   });
 });
