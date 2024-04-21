@@ -84,8 +84,18 @@ const Editor = React.forwardRef((props, ref) => {
   };
   function editorOnMount(editor, monaco) {
     editorRef.current = { editor: editor, monaco: monaco };
+    let currentDefiniton;
     if (logic) {
-      setLogicModel(editor, monaco);
+      currentDefiniton = logics[0]?.definition?.trim();
+      const uniquePath = `/tmp/${uuidv4()}.ts`;
+      const model = monaco?.editor.createModel(
+        currentDefiniton,
+        "typescript",
+        monaco.Uri.file(uniquePath)
+      );
+      editorRef?.current.editor.setModel(model);
+      setLogicPath(uniquePath);
+      publish("WIDGET_LOADED", { name: "Editor" });
     }
 
     if (query) {
@@ -98,13 +108,11 @@ const Editor = React.forwardRef((props, ref) => {
   const setLogicModel = useCallback(() => {
     const { monaco, editor } = editorRef?.current;
     let currentDefiniton;
-
+    console.log("setLogicModel");
     if (monaco) {
       monaco.editor.getModels().forEach((model) => model.dispose());
       if (Object.keys(selectedLogic).length > 0) {
         currentDefiniton = selectedLogic.definition?.trim();
-      } else {
-        currentDefiniton = logics[0]?.definition?.trim();
       }
       const uniquePath = `/tmp/${uuidv4()}.ts`;
       const model = monaco?.editor.createModel(
@@ -114,7 +122,6 @@ const Editor = React.forwardRef((props, ref) => {
       );
       editorRef?.current.editor.setModel(model);
       setLogicPath(uniquePath);
-      publish("WIDGET_LOADED", { name: "Editor" });
     }
   }, [selectedLogic, monaco?.editor, editorRef]);
 
@@ -183,7 +190,6 @@ const Editor = React.forwardRef((props, ref) => {
       setQueryModel();
     }
   }, [context, logic, query, setLogicModel, setQueryModel]);
-
   return (
     <>
       <NucEditor
