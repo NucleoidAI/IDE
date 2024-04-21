@@ -1,8 +1,8 @@
 import AddNewButton from "./components/AddNewButton";
+import Context from "../../context";
 import InlineCreationForm from "./components/InlineCreationForm";
 import ProjectList from "./components/ProjectList";
 import React from "react";
-import State from "../../state";
 import WorkspacesIcon from "@mui/icons-material/Workspaces";
 import config from "../../../config";
 import http from "../../http";
@@ -32,7 +32,7 @@ function applyFilter({ inputData, query }) {
 }
 
 function ProjectDialog({ handleClose, open, setOpen }) {
-  const [login, setLogin] = useState(false);
+  const [login, setLogin] = useState(true);
   const [user, setUser] = useState(null);
   const { id: projectId } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
@@ -86,9 +86,8 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     const projects = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (key.startsWith("ide.projects.")) {
+      if (key.startsWith("ide.context.")) {
         const context = JSON.parse(localStorage.getItem(key));
-
         if (context.project) {
           projects.push(context.project);
         }
@@ -126,8 +125,8 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     return await Promise.all(projectPromises);
   };
 
-  const contextToCloud = (context) => {
-    const { project, api, declarations, functions, types } = context;
+  const contextToCloud = (specifications, project) => {
+    const { api, declarations, functions, types } = specifications;
 
     const createdProject = {
       name: project.name,
@@ -168,9 +167,12 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   }, [cloudProjects, localProjects]);
 
   const createProjectOnCloud = (name, context) => {
+    const { specifications, project } = context;
+
     setLoading(true);
-    context.nucleoid.project.name = name;
-    const createdContext = contextToCloud(context.nucleoid);
+    context.project.name = name;
+
+    const createdContext = contextToCloud(specifications, project);
 
     service
       .addProject(createdContext)
@@ -186,17 +188,18 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   };
 
   function createProjetOnLocal(name, context) {
-    context.nucleoid.project.name = name;
+    context.project.name = name;
+    context.project.type = "LOCAL";
+    const { specifications, project } = context;
+    console.log(specifications);
 
-    storage.set(
-      "ide",
-      "projects",
-      context.nucleoid.project.id,
-      context.nucleoid
-    );
+    storage.set("ide", "context", context.project.id, {
+      specifications: specifications,
+      project: project,
+    });
 
     publish("PROJECT_CREATED", {
-      id: context.nucleoid.project.id,
+      id: context.specifications.project.id,
     });
 
     return context;
@@ -205,8 +208,8 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   const createProject = (newProject) => {
     const { name, template } = newProject;
     const context =
-      template === "sample" ? State.withSample() : State.withBlank();
-    context.get = (prop) => State.resolve(context, prop);
+      template === "sample" ? Context.withSample() : Context.withBlank();
+    context.get = (prop) => Context.resolve(context, prop);
 
     if (login) {
       createProjectOnCloud(name, context);
@@ -219,7 +222,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
 
   const uploadToCloud = (projectId) => {
     setLoading(true);
-    const project = storage.get("ide", "projects", projectId);
+    const project = storage.get("ide", "context", projectId);
     const context = contextToCloud(project);
 
     service
@@ -228,7 +231,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
         publish("PROJECT_UPLOADED", {
           id: response.data.id,
         });
-        storage.remove("ide", "projects", projectId);
+        storage.remove("ide", "context", projectId);
         getLocalProjects();
         getCloudProjects();
       })
@@ -240,11 +243,14 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   const editProject = (projectToEdit) => {
     const { name, type, id } = projectToEdit;
     if (type === "LOCAL") {
-      const context = storage.get("ide", "projects", id);
-      const { project } = context;
+      const localContext = storage.get("ide", "context", id);
+      const { project, specifications } = localContext;
       project.name = name;
-      storage.remove("ide", "projects", id);
-      storage.set("ide", "projects", id, context);
+      storage.remove("ide", "context", id);
+      storage.set("ide", "context", id, {
+        specifications: specifications,
+        projcet: project,
+      });
 
       publish("PROJECT_UPDATED", {
         id: project.id,
@@ -280,7 +286,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
           setLoading(false);
         });
     } else {
-      localStorage.removeItem(`ide.projects.${project.id}`);
+      localStorage.removeItem(`ide.context.${project.id}`);
       getLocalProjects();
     }
     publish("PROJECT_DELETED", { id: projectId });

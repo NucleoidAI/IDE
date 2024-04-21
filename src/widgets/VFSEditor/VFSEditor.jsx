@@ -62,19 +62,19 @@ const VFSEditor = React.forwardRef((props, ref) => {
   function handleSave(e) {
     if (api) {
       const selected = context.pages.api.selected;
-      const endpointIndex = context.nucleoid.api.findIndex(
+      const endpointIndex = context.specifications.api.findIndex(
         (endpoint) =>
           endpoint.path === selected.path &&
           endpoint.method.toLowerCase() === selected.method.toLowerCase()
       );
       if (endpointIndex !== -1) {
-        context.nucleoid.api[endpointIndex]["x-nuc-action"] = e;
+        context.specifications.api[endpointIndex]["x-nuc-action"] = e;
       }
     }
 
     if (functions) {
       const selected = context.get("pages.functions.selected");
-      context.nucleoid.functions.find(
+      context.specifications.functions.find(
         (item) => item.path === selected
       ).definition = e;
     }
@@ -106,22 +106,27 @@ const VFSEditor = React.forwardRef((props, ref) => {
 
     const {
       project: { id },
-    } = context.nucleoid;
+    } = context;
 
     if (mode === "cloud") {
-      const nucContext = { ...context.nucleoid };
+      const nucContext = { ...context.specifications };
       delete nucContext.project;
 
       service.saveContext(id, nucContext);
     } else if (mode === "local") {
-      storage.set("ide", "projects", id, context.nucleoid);
+      storage.set("ide", "context", id, {
+        specifications: context.specifications,
+        project: context.project,
+      });
     } else if (mode === "terminal") {
       console.log("Terminal mode is not supported yet.");
     }
     publish("CONTEXT_SAVED", { contextId: id, to: mode });
     publish("CONTEXT_CHANGED", {
       // TODO Optimize preparing files
-      files: contextToMap(context.nucleoid).filter((item) => item.key === key),
+      files: contextToMap(context.specifications).filter(
+        (item) => item.key === key
+      ),
     });
   }, [api, context, mode]);
 
@@ -130,7 +135,7 @@ const VFSEditor = React.forwardRef((props, ref) => {
 
     editorRef.current = { editor: editor, monaco: monaco };
 
-    const nucFuncs = context.nucleoid.functions;
+    const nucFuncs = context.specifications.functions;
 
     options.globals = {};
     nucFuncs.forEach((item) => {
@@ -155,7 +160,7 @@ const VFSEditor = React.forwardRef((props, ref) => {
   const clearModels = useCallback(() => {
     const { monaco, editor } = editorRef?.current || {};
     const currentModel = editor?.getModel();
-    const NucFunctions = context.nucleoid.functions;
+    const NucFunctions = context.specifications.functions;
 
     const functionModels = monaco?.editor
       .getModels()
@@ -173,7 +178,7 @@ const VFSEditor = React.forwardRef((props, ref) => {
         model.dispose();
       }
     });
-  }, [context.nucleoid.functions, editorRef]);
+  }, [context.specifications.functions, editorRef]);
 
   React.useEffect(() => {
     if (editorRef?.current) {
@@ -234,7 +239,7 @@ function getFile(context, props) {
 
     if (!selected) return file;
 
-    const apiConfig = context.nucleoid.api.find(
+    const apiConfig = context.specifications.api.find(
       (endpoint) =>
         endpoint.path === selected?.path && endpoint.method === selected?.method
     );
@@ -252,7 +257,7 @@ function getFile(context, props) {
     if (!selected) return file;
 
     file.path = selected;
-    const functionItem = context.nucleoid.functions.find(
+    const functionItem = context.specifications.functions.find(
       (item) => item.path === selected
     );
 

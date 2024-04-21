@@ -1,17 +1,17 @@
-import State from "../state";
+import Context from "../context";
 import { publish } from "@nucleoidai/react-event";
 import { v4 as uuid } from "uuid";
 
-function contextReducer(state, { type, payload }) {
-  state = State.copy(state);
+function contextReducer(context, { type, payload }) {
+  context = Context.copy(context);
 
-  const { nucleoid, pages } = state;
+  const { specifications, pages } = context;
 
   switch (type) {
     case "SET_PROJECT": {
-      nucleoid.api = payload.project.nucleoid.api;
-      nucleoid.functions = payload.project.nucleoid.functions;
-      nucleoid.types = payload.project.nucleoid.types;
+      specifications.api = payload.project.specifications.api;
+      specifications.functions = payload.project.specifications.functions;
+      specifications.types = payload.project.specifications.types;
       pages.api.selected.path = "/";
 
       break;
@@ -29,7 +29,7 @@ function contextReducer(state, { type, payload }) {
 
       let method = pages.api.selected.method;
       const path = pages.api.selected.path;
-      const api = nucleoid.api;
+      const api = specifications.api;
 
       if (
         pages.api.dialog.type === "method" &&
@@ -44,7 +44,7 @@ function contextReducer(state, { type, payload }) {
         api[path][payload.method].summary = payload.summary;
         api[path][payload.method].description = payload.description;
 
-        nucleoid.types = payload.types;
+        specifications.types = payload.types;
 
         break;
       }
@@ -65,7 +65,7 @@ function contextReducer(state, { type, payload }) {
         api[path][payload.method].summary = payload.summary;
         api[path][payload.method].description = payload.description;
 
-        nucleoid.types = payload.types;
+        specifications.types = payload.types;
 
         break;
       }
@@ -84,7 +84,7 @@ function contextReducer(state, { type, payload }) {
       //api[path][method].action = payload.action;
       //api[path][method].summary = payload.summary;
       //api[path][method].description = payload.description;
-      nucleoid.types = types;
+      specifications.types = types;
       break;
     }
 
@@ -99,7 +99,7 @@ function contextReducer(state, { type, payload }) {
 
     case "SET_SELECTED_API": {
       if (payload.method === null) {
-        const endpoint = nucleoid.api.find(
+        const endpoint = specifications.api.find(
           (endpoint) => endpoint.path === payload.path
         );
 
@@ -133,36 +133,38 @@ function contextReducer(state, { type, payload }) {
     case "DELETE_RESOURCE": {
       const newObj = {};
       // TODO functional programming
-      Object.keys(state.nucleoid.api)
-        .filter((item) => !item.includes(state.pages.api.selected.path))
-        .forEach((objName) => (newObj[objName] = state.nucleoid.api[objName]));
+      Object.keys(context.specifications.api)
+        .filter((item) => !item.includes(context.pages.api.selected.path))
+        .forEach(
+          (objName) => (newObj[objName] = context.specifications.api[objName])
+        );
 
-      state.nucleoid.api = newObj;
-      state.pages.api.selected.path = "/";
-      state.pages.api.selected.method = "get";
+      context.specifications.api = newObj;
+      context.pages.api.selected.path = "/";
+      context.pages.api.selected.method = "get";
       break;
     }
 
     case "DELETE_METHOD": {
       const { path, method } = pages.api.selected;
 
-      const routeIndex = nucleoid.api.findIndex(
+      const routeIndex = specifications.api.findIndex(
         (route) =>
           route.path === path &&
           route.method.toLowerCase() === method.toLowerCase()
       );
 
       if (routeIndex !== -1) {
-        nucleoid.api.splice(routeIndex, 1);
+        specifications.api.splice(routeIndex, 1);
       }
 
-      const samePathRoutes = nucleoid.api.filter(
+      const samePathRoutes = specifications.api.filter(
         (route) => route.path === path
       );
       if (samePathRoutes.length > 0) {
-        state.pages.api.selected.method = samePathRoutes[0].method;
+        context.pages.api.selected.method = samePathRoutes[0].method;
       } else {
-        state.pages.api.selected.method = null;
+        context.pages.api.selected.method = null;
       }
 
       break;
@@ -193,7 +195,7 @@ function contextReducer(state, { type, payload }) {
 
     case "SAVE_LOGIC_DIALOG": {
       const { description, summary, definition } = payload;
-      const declarations = nucleoid.declarations;
+      const declarations = specifications.declarations;
 
       declarations.push({
         description,
@@ -211,7 +213,7 @@ function contextReducer(state, { type, payload }) {
 
     case "SAVE_FUNCTION_DIALOG": {
       const { path, type, definition, params, ext } = payload;
-      const functions = nucleoid.functions;
+      const functions = specifications.functions;
 
       functions.push({
         path,
@@ -231,18 +233,18 @@ function contextReducer(state, { type, payload }) {
     case "DELETE_FUNCTION": {
       const { path } = payload;
 
-      if (nucleoid.functions.length > 1) {
-        const index = nucleoid.functions.findIndex(
+      if (specifications.functions.length > 1) {
+        const index = specifications.functions.findIndex(
           (data) => data.path === path
         );
 
-        const fn = nucleoid.functions[index];
-        nucleoid.functions.splice(index, 1);
+        const fn = specifications.functions[index];
+        specifications.functions.splice(index, 1);
 
         publish("CONTEXT_CHANGED", {
           files: [{ key: `${fn.path}.${fn.ext}` }],
         });
-        state.pages.functions.selected = nucleoid.functions[0].path;
+        context.pages.functions.selected = specifications.functions[0].path;
       }
 
       break;
@@ -309,13 +311,13 @@ function contextReducer(state, { type, payload }) {
     }
 
     case "QUERY_RESULTS": {
-      const query = state.get("pages.query");
+      const query = context.get("pages.query");
       query.results = payload.results;
       break;
     }
 
     case "CREATE_SAMPLE_CRUD": {
-      const { api, functions } = nucleoid;
+      const { api, functions } = specifications;
       const className = payload.resource;
       const resource = payload.resource.toLowerCase() + "s";
 
@@ -379,17 +381,17 @@ function contextReducer(state, { type, payload }) {
     }
     case "UPDATE_API_SCHEMAS": {
       const { path, method, requestSchema, responseSchema } = payload;
-      const apiIndex = nucleoid.api.findIndex(
+      const apiIndex = specifications.api.findIndex(
         (api) => api.path === path && api.method === method
       );
 
       if (apiIndex !== -1) {
-        nucleoid.api[apiIndex].request = {
-          ...nucleoid.api[apiIndex].request,
+        specifications.api[apiIndex].request = {
+          ...specifications.api[apiIndex].request,
           schema: requestSchema,
         };
-        nucleoid.api[apiIndex].response = {
-          ...nucleoid.api[apiIndex].response,
+        specifications.api[apiIndex].response = {
+          ...specifications.api[apiIndex].response,
           schema: responseSchema,
         };
       }
@@ -398,7 +400,7 @@ function contextReducer(state, { type, payload }) {
 
     case "UPDATE_API_SUMMARY": {
       const { path, method, newSummary } = payload;
-      const apiEndpoint = nucleoid.api.find(
+      const apiEndpoint = specifications.api.find(
         (api) => api.path === path && api.method === method
       );
       if (apiEndpoint) {
@@ -409,7 +411,7 @@ function contextReducer(state, { type, payload }) {
 
     case "UPDATE_API_DESCRIPTION": {
       const { path, method, newDescription } = payload;
-      const apiEndpoint = nucleoid.api.find(
+      const apiEndpoint = specifications.api.find(
         (api) => api.path === path && api.method === method
       );
       if (apiEndpoint) {
@@ -419,17 +421,17 @@ function contextReducer(state, { type, payload }) {
     }
 
     case "DELETE_API": {
-      const selectedIndex = nucleoid.api.findIndex(
+      const selectedIndex = specifications.api.findIndex(
         (api) =>
           api.path === pages.api.selected.path &&
           api.method === pages.api.selected.method
       );
 
       if (selectedIndex > -1) {
-        nucleoid.api.splice(selectedIndex, 1);
-        if (nucleoid.api.length > 0) {
-          pages.api.selected.path = nucleoid.api[0].path;
-          pages.api.selected.method = nucleoid.api[0].method;
+        specifications.api.splice(selectedIndex, 1);
+        if (specifications.api.length > 0) {
+          pages.api.selected.path = specifications.api[0].path;
+          pages.api.selected.method = specifications.api[0].method;
         } else {
           pages.api.selected.path = "/";
           pages.api.selected.method = "get";
@@ -441,19 +443,19 @@ function contextReducer(state, { type, payload }) {
     }
     case "UPDATE_API_TYPES": {
       const { updatedTypes } = payload;
-      const typeIndex = nucleoid.types.findIndex(
+      const typeIndex = specifications.types.findIndex(
         (type) => type.name === updatedTypes.name
       );
       const updatedType = {
-        ...nucleoid.types[typeIndex],
+        ...specifications.types[typeIndex],
         schema: {
           ...updatedTypes,
         },
       };
       if (typeIndex !== -1) {
-        nucleoid.types[typeIndex] = updatedType;
+        specifications.types[typeIndex] = updatedType;
       } else {
-        nucleoid.types.push(updatedTypes);
+        specifications.types.push(updatedTypes);
       }
       break;
     }
@@ -471,42 +473,42 @@ function contextReducer(state, { type, payload }) {
           ],
         },
       };
-      nucleoid.types.push(newType);
+      specifications.types.push(newType);
       break;
     }
     case "DELETE_TYPE": {
       const { typeName } = payload;
-      const typeIndex = nucleoid.types.findIndex(
+      const typeIndex = specifications.types.findIndex(
         (type) => type.name === typeName
       );
 
       if (typeIndex !== -1) {
-        nucleoid.types.splice(typeIndex, 1);
+        specifications.types.splice(typeIndex, 1);
       }
       break;
     }
 
     case "UPDATE_TYPE_NAME": {
       const { oldTypeName, newTypeName } = payload;
-      const typeIndex = nucleoid.types.findIndex(
+      const typeIndex = specifications.types.findIndex(
         (type) => type.name === oldTypeName
       );
 
       if (typeIndex !== -1) {
-        nucleoid.types[typeIndex].name = newTypeName;
-        nucleoid.types[typeIndex].schema.name = newTypeName;
+        specifications.types[typeIndex].name = newTypeName;
+        specifications.types[typeIndex].schema.name = newTypeName;
       }
       break;
     }
     case "SAVE_API_PARAMS": {
       console.log("SAVE_API_PARAMS", payload);
       const { path, method, params } = payload;
-      const apiIndex = nucleoid.api.findIndex(
+      const apiIndex = specifications.api.findIndex(
         (api) => api.path === path && api.method === method
       );
 
       if (apiIndex !== -1) {
-        nucleoid.api[apiIndex].params = params;
+        specifications.api[apiIndex].params = params;
       }
       break;
     }
@@ -514,8 +516,8 @@ function contextReducer(state, { type, payload }) {
     default:
   }
 
-  console.debug("contextReducer", type, state);
-  return state;
+  console.debug("contextReducer", type, context);
+  return context;
 }
 
 export { contextReducer };

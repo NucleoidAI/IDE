@@ -29,7 +29,7 @@ function APISettings() {
 
   useEffect(() => {
     const selected = state.get("pages.api.selected");
-    const contextApis = state.nucleoid.api;
+    const contextApis = state.specifications.api;
 
     let selectApi = null;
 
@@ -39,8 +39,8 @@ function APISettings() {
       );
     }
 
-    const tsTypes = getTypes(state.get("nucleoid.functions"));
-    const nucTypes = state.get.nucleoid?.types;
+    const tsTypes = getTypes(state.get("specifications.functions"));
+    const nucTypes = state.get.specifications?.types;
 
     if (Array.isArray(nucTypes)) {
       customTypes = [...nucTypes, ...tsTypes];
@@ -48,7 +48,7 @@ function APISettings() {
       customTypes = [...tsTypes];
     }
 
-    const api = state.get("nucleoid.api");
+    const api = state.get("specifications.api");
 
     if (selected) {
       const selectedApiEndpoint = api.find(
@@ -66,7 +66,7 @@ function APISettings() {
         setDescription(selectApi.description || "");
 
         setTypes(
-          state.get("nucleoid.types").map((typeObject) => {
+          state.get("specifications.types").map((typeObject) => {
             return compile(typeObject);
           })
         );

@@ -25,8 +25,8 @@ const Editor = React.forwardRef((props, ref) => {
   const [context, distpach] = useContext();
   const { setLoading, logic, query, loading } = props;
   const selectedLogic = context.get("pages.logic.selected");
-  const nucFuncs = context.nucleoid.functions;
-  const logics = context.nucleoid.declarations;
+  const nucFuncs = context.specifications.functions;
+  const logics = context.specifications.declarations;
 
   useEffect(() => {
     if (query) {
@@ -83,7 +83,6 @@ const Editor = React.forwardRef((props, ref) => {
       });
   };
   function editorOnMount(editor, monaco) {
-
     editorRef.current = { editor: editor, monaco: monaco };
     if (logic) {
       setLogicModel(editor, monaco);
@@ -134,23 +133,23 @@ const Editor = React.forwardRef((props, ref) => {
     if (logic) {
       const {
         project: { id },
-      } = context.nucleoid;
+      } = context;
 
-      context.nucleoid.declarations = context.nucleoid.declarations.map(
-        (item) => {
+      context.specifications.declarations =
+        context.specifications.declarations.map((item) => {
           if (item.summary === selectedLogic?.summary) {
             return { ...item, definition: e };
           }
           return item;
-        }
-      );
+        });
 
       if (mode === "cloud") {
-        const nucContext = { ...context.nucleoid };
-        delete nucContext.project;
-        service.saveContext(id, nucContext);
+        service.saveContext(id, context.specifications);
       } else if (mode === "local") {
-        storage.set("ide", "projects", id, context.nucleoid);
+        storage.set("ide", "context", id, {
+          specifications: context.specifications,
+          project: context.project,
+        });
       } else if (mode === "terminal") {
         console.log("Terminal mode is not supported yet.");
       }

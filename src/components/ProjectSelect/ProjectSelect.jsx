@@ -8,7 +8,7 @@ import { Box, Button, Typography } from "@mui/material/";
 export default function ProjectSelect() {
   const [context] = useContext();
 
-  const projectName = context.nucleoid.project.name;
+  const name = context.project.name;
   const [open, setOpen] = React.useState(false);
   const handleClose = () => {
     setOpen(!open);
@@ -27,7 +27,7 @@ export default function ProjectSelect() {
           variant="caption"
           style={{ fontWeight: "bold", color: "#121212" }}
         >
-          {projectName}
+          {name}
         </Typography>
       </Button>
       <ProjectDialog handleClose={handleClose} open={open} setOpen={setOpen} />

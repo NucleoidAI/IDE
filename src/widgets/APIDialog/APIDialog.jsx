@@ -19,11 +19,11 @@ function APIDialog() {
   const addParams = useRef(() => {});
 
   const [context, dispatch] = useContext();
+  console.log(context);
 
   const { open, view } = context.get("pages.api.dialog");
-
   const selected = context.pages.api?.selected;
-  const contextApis = context.nucleoid.api;
+  const contextApis = context.specifications.api;
 
   let selectedApi = null;
 
@@ -44,8 +44,8 @@ function APIDialog() {
     }
   }, [selectedApi]);
 
-  const tstypes = getTypes(context.get("nucleoid.functions"));
-  const nuctypes = context.nucleoid.types;
+  const tstypes = getTypes(context.get("specifications.functions"));
+  const nuctypes = context.specifications.types;
 
   let types;
   if (Array.isArray(nuctypes)) {
@@ -121,7 +121,7 @@ function APIDialog() {
           tstypes={tstypes}
           nuctypes={nuctypes}
           types={types}
-          api={context.nucleoid.api}
+          api={context.specifications.api}
           selectedApi={selectedApi}
           requestSchemaRef={requestSchemaRef}
           responseSchemaRef={responseSchemaRef}
