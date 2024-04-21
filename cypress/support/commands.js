@@ -117,8 +117,11 @@ Cypress.Commands.add("typeEditor", (changedEditorValue) => {
   cy.get("section").should("be.visible");
   cy.get(".monaco-editor").should("be.visible");
 
-  cy.get('textarea[role="textbox"]').click();
-  cy.get('textarea[role="textbox"]').clear();
+  cy.get('textarea[role="textbox"]').click({ force: true });
+
+  cy.get('textarea[role="textbox"]').type("{selectall}{backspace}", {
+    force: true,
+  });
   cy.get('textarea[role="textbox"]').type(changedEditorValue, {
     parseSpecialCharSequences: false,
   });
