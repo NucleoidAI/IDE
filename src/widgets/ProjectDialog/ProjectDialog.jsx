@@ -204,6 +204,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
       createProjectOnCloud(name, context);
     } else {
       createProjetOnLocal(name, context);
+      getLocalProjects();
     }
 
     setFormArea("button");
