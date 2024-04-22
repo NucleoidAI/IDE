@@ -46,7 +46,7 @@ const Editor = React.forwardRef((props, ref) => {
           });
 
           const query = context.get("pages.query");
-          editorRef?.current.editor.onKeyUp(() => {
+          editorRef.current?.editor.onKeyUp(() => {
             query.text = editorRef?.current?.editor.getValue();
           });
         }
@@ -93,7 +93,7 @@ const Editor = React.forwardRef((props, ref) => {
         "typescript",
         monaco.Uri.file(uniquePath)
       );
-      editorRef?.current.editor.setModel(model);
+      editorRef.current?.editor.setModel(model);
       setLogicPath(uniquePath);
       publish("WIDGET_LOADED", { name: "Editor" });
     }
@@ -120,7 +120,7 @@ const Editor = React.forwardRef((props, ref) => {
         "typescript",
         monaco.Uri.file(uniquePath)
       );
-      editorRef?.current.editor.setModel(model);
+      editorRef.current?.editor.setModel(model);
       setLogicPath(uniquePath);
     }
   }, [selectedLogic, monaco?.editor, editorRef]);
@@ -132,7 +132,7 @@ const Editor = React.forwardRef((props, ref) => {
       "javascript",
       monaco.Uri.file(uniquePath)
     );
-    editorRef?.current.editor.setModel(model);
+    editorRef.current?.editor.setModel(model);
     setQueryPath(uniquePath);
   }, [monaco?.editor, editorRef, context]);
 
