@@ -38,7 +38,7 @@ describe("Projects Path", () => {
     });
   });
 
-  describe.only("Local Project", () => {
+  describe("Local Project", () => {
     beforeEach(() => {
       cy.setup("IDE", "SEED", "LOCAL");
       cy.fixture("/PROJECTS/LOCAL/project.json").as("project");
