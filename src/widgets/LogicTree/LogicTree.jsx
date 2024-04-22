@@ -52,8 +52,8 @@ function LogicTree({ openLogicDialog }) {
 
   const theme = useTheme();
 
-  const declarations = state.specifications.declarations;
-  const functions = state.specifications.functions;
+  const declarations = state.specification.declarations;
+  const functions = state.specification.functions;
   //eslint-disable-next-line
   const [logicExist, setLogicExist] = useState(Boolean(declarations.length));
 

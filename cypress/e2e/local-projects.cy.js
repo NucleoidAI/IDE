@@ -21,7 +21,7 @@ describe("Local Project", () => {
         cy.normalizeString(changedEditorValue).then(
           (normalizedChangedEditorValue) => {
             cy.normalizeString(
-              context.specifications.api[3]["x-nuc-action"]
+              context.specification.api[3]["x-nuc-action"]
             ).then((normalizedContextValue) => {
               expect(normalizedContextValue).to.contain(
                 normalizedChangedEditorValue
@@ -46,7 +46,7 @@ describe("Local Project", () => {
 
     cy.get("@projectId").then((projectId) => {
       cy.storageGet(`ide.context.${projectId}`).then((project) => {
-        cy.normalizeString(project.specifications.functions[0].definition).then(
+        cy.normalizeString(project.specification.functions[0].definition).then(
           (normalizedDefinition) => {
             cy.normalizeString(changedEditorValue).then(
               (normalizedNewOrder) => {
@@ -72,7 +72,7 @@ describe("Local Project", () => {
       cy.get("@projectId").then((projectId) => {
         cy.storageGet(`ide.context.${projectId}`).then((project) => {
           cy.normalizeString(
-            project.specifications.declarations[0].definition
+            project.specification.declarations[0].definition
           ).then((normalizedDefinition) => {
             cy.normalizeString(changedEditorValue).then(
               (normalizedChangedEditorValue) => {

@@ -259,10 +259,10 @@ function ApiButton() {
     }
   }, [run.status]); //eslint-disable-line
 
-  const runSandbox = async (context, specifications, runtime) => {
+  const runSandbox = async (context, specification, runtime) => {
     const types = [
       ...(context?.types || []),
-      ...getTypes(specifications.functions),
+      ...getTypes(specification.functions),
     ];
 
     setLoading(true);
@@ -294,9 +294,9 @@ function ApiButton() {
   const handleRun = () => {
     const context = mapToContext(
       vfs.fsMap,
-      deepCopy(ReactContext.get("specifications"))
+      deepCopy(ReactContext.get("specification"))
     );
-    runSandbox(context, ReactContext.get("specifications"), Settings.runtime());
+    runSandbox(context, ReactContext.get("specification"), Settings.runtime());
   };
 
   return (

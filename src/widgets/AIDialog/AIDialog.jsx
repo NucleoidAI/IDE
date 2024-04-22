@@ -41,8 +41,8 @@ function AIDialog({ editor, declarative, imperative, page }) {
     yamlPlugin,
   ];
 
-  const functions = context.specifications.functions;
-  const declarations = context.specifications.declarations;
+  const functions = context.specification.functions;
+  const declarations = context.specification.declarations;
 
   const editorRef = React.useRef(null);
 

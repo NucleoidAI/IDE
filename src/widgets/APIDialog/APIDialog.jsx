@@ -23,7 +23,7 @@ function APIDialog() {
 
   const { open, view } = context.get("pages.api.dialog");
   const selected = context.pages.api?.selected;
-  const contextApis = context.specifications.api;
+  const contextApis = context.specification.api;
 
   let selectedApi = null;
 
@@ -44,8 +44,8 @@ function APIDialog() {
     }
   }, [selectedApi]);
 
-  const tstypes = getTypes(context.get("specifications.functions"));
-  const nuctypes = context.specifications.types;
+  const tstypes = getTypes(context.get("specification.functions"));
+  const nuctypes = context.specification.types;
 
   let types;
   if (Array.isArray(nuctypes)) {
@@ -121,7 +121,7 @@ function APIDialog() {
           tstypes={tstypes}
           nuctypes={nuctypes}
           types={types}
-          api={context.specifications.api}
+          api={context.specification.api}
           selectedApi={selectedApi}
           requestSchemaRef={requestSchemaRef}
           responseSchemaRef={responseSchemaRef}

@@ -124,12 +124,12 @@ function ProjectDialog({ handleClose, open, setOpen }) {
 
     return await Promise.all(projectPromises);
   };
-  const contextToCloud = (specifications, project) => {
+  const contextToCloud = (specification, project) => {
     const createdProject = {
       name: project.name,
       type: "SINGLE",
       description: project.description,
-      service: { specifications },
+      service: { specification },
     };
 
     return createdProject;
@@ -159,11 +159,11 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   }, [cloudProjects, localProjects]);
 
   const createProjectOnCloud = (name, context) => {
-    const { specifications, project } = context;
+    const { specification, project } = context;
 
     setLoading(true);
     context.project.name = name;
-    const createdProject = contextToCloud(specifications, project);
+    const createdProject = contextToCloud(specification, project);
 
     service
       .addProject(createdProject)
@@ -183,7 +183,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     context.project.type = "LOCAL";
 
     storage.set("ide", "context", context.project.id, {
-      specifications: context.specifications,
+      specification: context.specification,
       project: context.project,
     });
 
@@ -234,11 +234,11 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     const { name, type, id } = projectToEdit;
     if (type === "LOCAL") {
       const localContext = storage.get("ide", "context", id);
-      const { project, specifications } = localContext;
+      const { project, specification } = localContext;
       project.name = name;
       storage.remove("ide", "context", id);
       storage.set("ide", "context", id, {
-        specifications: specifications,
+        specification: specification,
         project: project,
       });
 

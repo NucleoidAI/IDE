@@ -95,7 +95,7 @@ Cypress.Commands.add("setup", (container, fixtureType, type) => {
             context;
           cy.storageSet(`ide.context.3450f289-0fc5-45e9-9a4a-606c0a63cdfe`, {
             project: project,
-            specifications: {
+            specification: {
               api,
               logic,
               functions,

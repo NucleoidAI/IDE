@@ -60,16 +60,16 @@ function IDE() {
       return null;
     }
 
-    const { specifications, project } = localContext;
+    const { specification, project } = localContext;
 
-    if (!specifications && !project) {
+    if (!specification && !project) {
       navigate("/error/api");
       return null;
     }
     publish("PROJECT_NOT_FOUND", { status: false });
     publish("RECENT_PROJECT_NOT_FOUND", { status: false });
 
-    const context = Context.withPages({ specifications, project });
+    const context = Context.withPages({ specification, project });
     context.get = (prop) => Context.resolve(context, prop);
 
     return context;
@@ -92,17 +92,15 @@ function IDE() {
     publish("RECENT_PROJECT_NOT_FOUND", { status: false });
 
     if (project.type === "SINGLE") {
-      const specificationsId = projectService[0].id;
-      const { data: specifications } = await service.getContext(
-        specificationsId
-      );
+      const specificationId = projectService[0].id;
+      const { data: specification } = await service.getContext(specificationId);
 
-      const context = Context.withPages({ specifications });
+      const context = Context.withPages({ specification });
       context.get = (prop) => Context.resolve(context, prop);
       context.project = {
         type: "CLOUD",
         name: project.name,
-        id: specificationsId,
+        id: specificationId,
         description: project.description,
       };
 
@@ -120,9 +118,9 @@ function IDE() {
   function sampleProject() {
     const context = Context.withSample();
     context.get = (prop) => Context.resolve(context, prop);
-    const { specifications, project } = context;
+    const { specification, project } = context;
     storage.set("ide", "context", project.id, {
-      specifications: specifications,
+      specification: specification,
       project: project,
     });
 
@@ -181,7 +179,7 @@ function IDE() {
   };
 
   const initVfs = (context) => {
-    const files = contextToMap(context.specifications);
+    const files = contextToMap(context.specification);
     vfs.init(files);
   };
 

@@ -28,7 +28,7 @@ function FunctionTree({ openFunctionDialog }) {
   const [contextMenu, setContextMenu] = React.useState(null);
   const [hoveredNodeId, setHoveredNodeId] = React.useState(null);
   const [state, dispatch] = useContext();
-  const functions = state.get("specifications.functions");
+  const functions = state.get("specification.functions");
   //eslint-disable-next-line
   const [functionExist, setFunctionExist] = React.useState(
     Boolean(functions.length)

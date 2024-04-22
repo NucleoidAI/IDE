@@ -25,8 +25,8 @@ const Editor = React.forwardRef((props, ref) => {
   const [context, distpach] = useContext();
   const { setLoading, logic, query, loading } = props;
   const selectedLogic = context.get("pages.logic.selected");
-  const nucFuncs = context.specifications.functions;
-  const logics = context.specifications.declarations;
+  const nucFuncs = context.specification.functions;
+  const logics = context.specification.declarations;
 
   useEffect(() => {
     if (query) {
@@ -142,12 +142,12 @@ const Editor = React.forwardRef((props, ref) => {
         project: { id },
       } = context;
 
-      context.specifications.declarations =
-        context.specifications.declarations.map((item) => {
+      context.specification.declarations =
+        context.specification.declarations.map((item) => {
           if (item.summary === selectedLogic?.summary) {
             return { ...item, definition: e };
           } else if (
-            item.summary === context.specifications.declarations[0].summary
+            item.summary === context.specification.declarations[0].summary
           ) {
             return { ...item, definition: e };
           }
@@ -155,10 +155,10 @@ const Editor = React.forwardRef((props, ref) => {
         });
 
       if (mode === "cloud") {
-        service.saveContext(id, context.specifications);
+        service.saveContext(id, context.specification);
       } else if (mode === "local") {
         storage.set("ide", "context", id, {
-          specifications: context.specifications,
+          specification: context.specification,
           project: context.project,
         });
       } else if (mode === "terminal") {
