@@ -17,7 +17,7 @@ describe("Projects Path", () => {
 
       cy.waitEvent("CONTAINER_LOADED");
 
-      cy.storageGet("ide.selected.project").then((project) => {
+      cy.storageGet("ide.selected.context").then((project) => {
         expect(project).to.exist;
         expect(project).to.have.property("id", cloudProjectId);
         expect(project).to.have.property("type", "CLOUD");
@@ -38,7 +38,7 @@ describe("Projects Path", () => {
     });
   });
 
-  describe("Local Project", () => {
+  describe.only("Local Project", () => {
     beforeEach(() => {
       cy.setup("IDE", "SEED", "LOCAL");
       cy.fixture("/PROJECTS/LOCAL/project.json").as("project");
@@ -47,17 +47,13 @@ describe("Projects Path", () => {
       const localProjectId = "3450f289-0fc5-45e9-9a4a-606c0a63cdfe";
       const selectedProject = { id: localProjectId, type: "LOCAL" };
 
-      cy.get("@project").then((localProject) => {
-        cy.storageSet(`ide.projects.${localProjectId}`, localProject);
-      });
-
-      cy.storageSet("ide.selected.project", selectedProject);
+      cy.storageSet("ide.selected.context", selectedProject);
 
       cy.visit("/ide");
 
       cy.url().should("include", `/${localProjectId}/api?mode=local`);
     });
-    it.only("creates sample project", () => {
+    it("creates sample project", () => {
       cy.visit("/ide/sample");
 
       cy.url().should("contain", "/api");
@@ -68,11 +64,11 @@ describe("Projects Path", () => {
         const pathParts = pathname.split("/");
         const projectId = pathParts[pathParts.length - 2];
 
-        cy.storageGet(`ide.projects.${projectId}`).as("project");
+        cy.storageGet(`ide.context.${projectId}`).as("project");
 
         cy.get("@project").should("exist");
 
-        cy.storageGet(`ide.selected.project`).as("selectedProject");
+        cy.storageGet(`ide.selected.context`).as("selectedProject");
 
         cy.get("@selectedProject")
           .should((selectedProject) => {
@@ -89,10 +85,6 @@ describe("Projects Path", () => {
     it("opens project", () => {
       const localProjectId = "3450f289-0fc5-45e9-9a4a-606c0a63cdfe";
 
-      cy.fixture("PROJECTS/LOCAL/project.json").then((localProject) => {
-        cy.storageSet(`ide.projects.${localProjectId}`, localProject);
-      });
-
       cy.visit(`/ide/${localProjectId}?mode=local`);
 
       cy.url().should("contain", `ide/${localProjectId}/api?mode=local`);
@@ -101,7 +93,7 @@ describe("Projects Path", () => {
         const pathParts = pathname.split("/");
         const projectId = pathParts[pathParts.length - 2];
 
-        cy.storageGet(`ide.selected.project`).then((selectedProject) => {
+        cy.storageGet(`ide.selected.context`).then((selectedProject) => {
           expect(selectedProject.id).to.equal(projectId);
           expect(selectedProject.type).to.equal("LOCAL");
         });
