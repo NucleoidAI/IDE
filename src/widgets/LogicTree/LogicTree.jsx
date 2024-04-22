@@ -43,7 +43,7 @@ const styles = {
 };
 
 function LogicTree({ openLogicDialog }) {
-  const [newDeclaration] = useEvent("LOGIC_ADDED", { declaration: null });
+  const [newDeclaration] = useEvent("LOGIC_ADDED", null);
   const [state, dispatch] = useContext();
   const [treeData, setTreeData] = React.useState({});
   const [selectedKey, setSelectedKey] = useState([]);
@@ -123,7 +123,7 @@ function LogicTree({ openLogicDialog }) {
   }, []);
 
   useEffect(() => {
-    if (newDeclaration.declaration) {
+    if (newDeclaration) {
       const declarationSummary = newDeclaration.declaration.summary;
       const declarationClass = newDeclaration.declaration?.definition
         ?.split("$")[1]
@@ -142,7 +142,7 @@ function LogicTree({ openLogicDialog }) {
       select(`${declarationClass}-${treeData[declarationClass]?.length}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newDeclaration.declaration]);
+  }, [newDeclaration]);
 
   return (
     <Card sx={{ width: "100%", height: "100%" }}>
