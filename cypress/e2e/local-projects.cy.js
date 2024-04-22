@@ -59,7 +59,7 @@ describe("Local Project", () => {
     });
   });
 
-  it.only("saves changes in logic editor", () => {
+  it("saves changes in logic editor", () => {
     cy.get("@projectId").then((projectId) => {
       cy.visit(`/ide/${projectId}/logic?mode=local`);
     });
@@ -72,7 +72,7 @@ describe("Local Project", () => {
       cy.get("@projectId").then((projectId) => {
         cy.storageGet(`ide.context.${projectId}`).then((project) => {
           cy.normalizeString(
-            project.specifications.functions[0].definition
+            project.specifications.declarations[0].definition
           ).then((normalizedDefinition) => {
             cy.normalizeString(changedEditorValue).then(
               (normalizedChangedEditorValue) => {

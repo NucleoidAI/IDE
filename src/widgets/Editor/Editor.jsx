@@ -154,8 +154,6 @@ const Editor = React.forwardRef((props, ref) => {
           return item;
         });
 
-      console.log(e);
-
       if (mode === "cloud") {
         service.saveContext(id, context.specifications);
       } else if (mode === "local") {
