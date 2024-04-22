@@ -107,13 +107,12 @@ function LogicTree({ openLogicDialog }) {
         tree[decClass].params = matchingFunction.params;
       }
 
-      const firstSummary = tree[initialExpandedNodes[0]].summaries[0];
-      const item = declarations.find((item) => item.summary === firstSummary);
       setSelectedKey([initialExpandedNodes[0]]);
       publish("WIDGET_LOADED", { name: "LogicTree" });
       setTreeData(tree);
       setNodeKey(initialExpandedNodes);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
