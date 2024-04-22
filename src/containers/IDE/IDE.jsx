@@ -251,7 +251,6 @@ function IDE() {
   }, [event.name, ReactContext]);
 
   useEffect(() => {
-    console.log(projectChange);
     if (projectChange.id) {
       setContextProviderKey(uuid());
     }
