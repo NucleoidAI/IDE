@@ -146,9 +146,15 @@ const Editor = React.forwardRef((props, ref) => {
         context.specifications.declarations.map((item) => {
           if (item.summary === selectedLogic?.summary) {
             return { ...item, definition: e };
+          } else if (
+            item.summary === context.specifications.declarations[0].summary
+          ) {
+            return { ...item, definition: e };
           }
           return item;
         });
+
+      console.log(e);
 
       if (mode === "cloud") {
         service.saveContext(id, context.specifications);
