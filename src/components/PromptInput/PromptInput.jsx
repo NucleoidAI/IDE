@@ -56,7 +56,7 @@ function PromptInput({
     >
       <InputBase
         variant="chat"
-        data-cy="propmtInput-input"
+        data-cy="prompt-input-input"
         onChange={(e) => {
           if (e.target.value === "") {
             setKeyDown(false);
@@ -88,7 +88,7 @@ function PromptInput({
               size="medium"
               onClick={handleSendAIClick}
               disabled={mic || promptValue === ""}
-              data-cy="propmtInput-sendAI-button"
+              data-cy="propmt-input-send-ai-button"
             >
               <BoltIcon />
             </Fab>

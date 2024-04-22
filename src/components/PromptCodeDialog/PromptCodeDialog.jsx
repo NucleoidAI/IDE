@@ -76,7 +76,7 @@ function PromptCodeDialog({
                     variant="button"
                     size="medium"
                     onClick={handleSaveAIResponse}
-                    data-cy="promptCodeDialog-saveAIResponse-button"
+                    data-cy="prompt-code-dialog-save-ai-response-button"
                   >
                     <AutoFixHighIcon />
                   </Fab>
