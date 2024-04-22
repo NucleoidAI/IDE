@@ -80,7 +80,7 @@ Cypress.Commands.add("setup", (container, fixtureType, type) => {
         .then((context) => {
           cy.intercept(
             "GET",
-            `https://nuc.land/ide/api/services/${serviceId}/specifications`,
+            `https://nuc.land/ide/api/services/${serviceId}/specification`,
             {
               statusCode: 200,
               body: fixtureType === "BLANK" ? {} : context,
@@ -183,7 +183,7 @@ Cypress.Commands.add("saveContextIntercept", (serviceId) => {
     .then((context) => {
       cy.intercept(
         "PUT",
-        `https://nuc.land/ide/api/services/${serviceId}/specifications`,
+        `https://nuc.land/ide/api/services/${serviceId}/specification`,
         {
           statusCode: 200,
           body: context,
@@ -196,7 +196,7 @@ Cypress.Commands.add("saveContextIntercept", (serviceId) => {
     .then((context) => {
       cy.intercept(
         "GET",
-        `https://nuc.land/ide/api/services/${serviceId}/specifications`,
+        `https://nuc.land/ide/api/services/${serviceId}/specification`,
         {
           statusCode: 200,
           body: context,

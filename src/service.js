@@ -75,11 +75,11 @@ const getProjectServices = (projectId) => {
 };
 
 const getContext = (contextId) => {
-  return http.get(`services/${contextId}/specifications`);
+  return http.get(`services/${contextId}/specification`);
 };
 
 const saveContext = (contextId, context) => {
-  return http.put(`services/${contextId}/specifications`, context);
+  return http.put(`services/${contextId}/specification`, context);
 };
 
 const getGraph = () => {
