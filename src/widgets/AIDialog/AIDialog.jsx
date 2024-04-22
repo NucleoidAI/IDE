@@ -70,10 +70,10 @@ function AIDialog({ editor, declarative, imperative, page }) {
 
     nucFunctions.map((item) => context.push(item.definition));
     nucDeclarations.map((item) => context.push(item.definition));
-
     return context;
   };
 
+  // needs to return description and summary (AIDialog Q&A)
   const handleSendAIClick = () => {
     const { monaco } = editorRef?.current || {};
 
@@ -129,7 +129,6 @@ function AIDialog({ editor, declarative, imperative, page }) {
 
   function handleSaveDeclarative(generatedCode) {
     if (logicValidation(generatedCode)) {
-      publish("LOGIC_ADDED", { status: true });
       dispatch({
         type: "SAVE_LOGIC_DIALOG",
         payload: {
