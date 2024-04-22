@@ -32,7 +32,7 @@ function applyFilter({ inputData, query }) {
 }
 
 function ProjectDialog({ handleClose, open, setOpen }) {
-  const [login, setLogin] = useState(true);
+  const [login, setLogin] = useState(false);
   const [user, setUser] = useState(null);
   const { id: projectId } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
@@ -181,15 +181,14 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   function createProjetOnLocal(name, context) {
     context.project.name = name;
     context.project.type = "LOCAL";
-    const { specifications, project } = context;
 
     storage.set("ide", "context", context.project.id, {
-      specifications: specifications,
-      project: project,
+      specifications: context.specifications,
+      project: context.project,
     });
 
     publish("PROJECT_CREATED", {
-      id: context.specifications.project.id,
+      id: context.project.id,
     });
 
     return context;
