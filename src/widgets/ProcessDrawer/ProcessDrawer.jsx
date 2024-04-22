@@ -36,7 +36,7 @@ const ProcessDrawer = () => {
   const matchDownMD = useMediaQuery(theme.breakpoints.down("lg"));
 
   const location = useLocation();
-  const [state] = useContext();
+  const [ReactContext] = useContext();
 
   const [backdrop] = useState(false);
   const [link, setLink] = useState("");
@@ -111,7 +111,7 @@ const ProcessDrawer = () => {
   const handleDownloadContext = () => {
     const myURL = window.URL || window.webkitURL;
 
-    const file = new Blob([mapContextToOpenApi(state.nucleoid)], {
+    const file = new Blob([mapContextToOpenApi(ReactContext.nucleoid)], {
       type: "text/plain",
     });
     setLink(myURL.createObjectURL(file));
@@ -250,7 +250,7 @@ function ApiButton() {
   const [run] = useEvent("RUN_BUTTON_CLICKED", { status: false });
   const [loading, setLoading] = useState(false);
   const runtime = Settings.runtime();
-  const [state] = useContext();
+  const [ReactContext] = useContext();
 
   React.useEffect(() => {
     if (run.status) {
@@ -259,8 +259,11 @@ function ApiButton() {
     }
   }, [run.status]); //eslint-disable-line
 
-  const runSandbox = async (context, state, runtime) => {
-    const types = [...(context?.types || []), ...getTypes(state.functions)];
+  const runSandbox = async (context, specifications, runtime) => {
+    const types = [
+      ...(context?.types || []),
+      ...getTypes(specifications.functions),
+    ];
 
     setLoading(true);
     try {
@@ -289,8 +292,11 @@ function ApiButton() {
   };
 
   const handleRun = () => {
-    const context = mapToContext(vfs.fsMap, deepCopy(state.get("nucleoid")));
-    runSandbox(context, state.get("nucleoid"), Settings.runtime());
+    const context = mapToContext(
+      vfs.fsMap,
+      deepCopy(ReactContext.get("specifications"))
+    );
+    runSandbox(context, ReactContext.get("specifications"), Settings.runtime());
   };
 
   return (
