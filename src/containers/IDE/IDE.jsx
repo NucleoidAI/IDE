@@ -36,7 +36,7 @@ function IDE() {
   const { id } = useParams();
   const page = location.pathname.split("/")[2];
   const [contextProviderKey, setContextProviderKey] = React.useState(uuid());
-
+  const [projectChange] = useEvent("PROJECT_CHANGED", { id: null });
   const [event] = useEvent("PAGE_LOADED", {
     name: null,
   });
@@ -53,12 +53,14 @@ function IDE() {
   }, [mobileSize]);
 
   function getContextFromStorage(projectId) {
-    console.log(projectId);
-    const { specifications, project } = storage.get(
-      "ide",
-      "context",
-      projectId
-    );
+    const localContext = storage.get("ide", "context", projectId);
+
+    if (!localContext) {
+      navigate("/error/api");
+      return null;
+    }
+
+    const { specifications, project } = localContext;
 
     if (!specifications && !project) {
       navigate("/error/api");
@@ -66,8 +68,7 @@ function IDE() {
     }
     publish("PROJECT_NOT_FOUND", { status: false });
     publish("RECENT_PROJECT_NOT_FOUND", { status: false });
-    console.log(project);
-    console.log(specifications);
+
     const context = Context.withPages({ specifications, project });
     context.get = (prop) => Context.resolve(context, prop);
 
@@ -207,7 +208,6 @@ function IDE() {
       const recentProject = Path.getRecentProject();
 
       if (mode === "sample") {
-        console.log("sample");
         sampleProject();
       } else if (mode === "cloud") {
         project(projectId)
@@ -241,16 +241,21 @@ function IDE() {
     loaded = false;
     // eslint-disable-next-line
   }, [id]);
-
   useEffect(() => {
-    if (ReactContext && event.name === page.toUpperCase() && !loaded) {
+    if (ReactContext && event.name && !loaded) {
       publish("CONTAINER_LOADED", {
         name: "IDE",
       });
       loaded = true;
+    }
+  }, [event.name, ReactContext]);
+
+  useEffect(() => {
+    console.log(projectChange);
+    if (projectChange.id) {
       setContextProviderKey(uuid());
     }
-  }, [ReactContext, event.name]);
+  }, [projectChange]);
 
   if (!ReactContext) return null;
 
