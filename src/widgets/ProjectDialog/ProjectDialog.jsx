@@ -239,7 +239,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
       storage.remove("ide", "context", id);
       storage.set("ide", "context", id, {
         specifications: specifications,
-        projcet: project,
+        project: project,
       });
 
       publish("PROJECT_UPDATED", {
