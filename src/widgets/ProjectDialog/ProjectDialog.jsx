@@ -125,6 +125,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     return await Promise.all(projectPromises);
   };
   const contextToCloud = (specification, project) => {
+    console.log(project);
     const createdProject = {
       name: project.name,
       type: "SINGLE",
@@ -212,8 +213,10 @@ function ProjectDialog({ handleClose, open, setOpen }) {
 
   const uploadToCloud = (projectId) => {
     setLoading(true);
-    const project = storage.get("ide", "context", projectId);
-    const context = contextToCloud(project);
+    const localContext = storage.get("ide", "context", projectId);
+    const { project, specification } = localContext;
+
+    const context = contextToCloud(specification, project);
 
     service
       .addProject(context)
