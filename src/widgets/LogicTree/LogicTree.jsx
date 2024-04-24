@@ -107,7 +107,7 @@ function LogicTree({ openLogicDialog }) {
       }
       setSelectedKey([`${initialExpandedNodes[0]}-0`]);
       publish("WIDGET_LOADED", { name: "LogicTree" });
-
+      publish("LOGIC_SELECTED", { logic: declarations[0] });
       setTreeData(tree);
       setNodeKey(initialExpandedNodes);
     });
