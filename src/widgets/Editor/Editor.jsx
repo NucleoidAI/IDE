@@ -27,7 +27,6 @@ const Editor = React.forwardRef((props, ref) => {
   const [selected] = useEvent("LOGIC_SELECTED", null);
   const nucFuncs = context.specification.functions;
   const logics = context.specification.declarations;
-  console.log(selected);
 
   useEffect(() => {
     if (query) {
@@ -169,7 +168,7 @@ const Editor = React.forwardRef((props, ref) => {
 
       context.specification.declarations =
         context.specification.declarations.map((item) => {
-          if (selected.logic) {
+          if (selected) {
             if (item.summary === selected.logic.summary) {
               return { ...item, definition: e };
             }
