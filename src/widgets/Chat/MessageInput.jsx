@@ -85,7 +85,7 @@ const MessageInput = forwardRef((props, ref) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          width: { xs: "100%", sm: "90%", md: "80%" },
+          width: { xs: "100%", sm: "90%", md: "80%", lg: "60%" },
           borderRadius: theme.custom.chat.inputBorderRadius,
           padding: "10px",
           border: `1px solid`,
