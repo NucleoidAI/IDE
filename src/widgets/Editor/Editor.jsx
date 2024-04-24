@@ -144,8 +144,10 @@ const Editor = React.forwardRef((props, ref) => {
 
       context.specification.declarations =
         context.specification.declarations.map((item) => {
-          if (item.summary === selectedLogic?.summary) {
-            return { ...item, definition: e };
+          if (selectedLogic) {
+            if (item.summary === selectedLogic?.summary) {
+              return { ...item, definition: e };
+            }
           } else if (
             item.summary === context.specification.declarations[0].summary
           ) {
