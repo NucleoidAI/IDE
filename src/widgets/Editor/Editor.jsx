@@ -6,6 +6,7 @@ import Path from "../../utils/Path";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import QueryAIButton from "../../components/QueryAIButton";
 import { publish } from "@nucleoidai/react-event";
+import sandboxService from "../../sandboxService";
 import service from "../../service";
 import { storage } from "@nucleoidjs/webstorage";
 import styles from "../../layouts/HorizontalSplitLayout/styles";
@@ -57,7 +58,7 @@ const Editor = React.forwardRef((props, ref) => {
 
   const handleQuery = () => {
     setLoading(true);
-    service
+    sandboxService
       .query(editorRef ? editorRef.current.editor.getValue() : null)
       .then((data) => {
         try {
