@@ -86,16 +86,7 @@ const Editor = React.forwardRef((props, ref) => {
     editorRef.current = { editor: editor, monaco: monaco };
     let currentDefiniton;
     if (logic) {
-      currentDefiniton = logics[0]?.definition?.trim();
-      const uniquePath = `/tmp/${uuidv4()}.ts`;
-      const model = monaco?.editor.createModel(
-        currentDefiniton,
-        "typescript",
-        monaco.Uri.file(uniquePath)
-      );
-      editorRef.current?.editor.setModel(model);
-      setLogicPath(uniquePath);
-      publish("WIDGET_LOADED", { name: "Editor" });
+      setLogicModel();
     }
 
     if (query) {
@@ -109,16 +100,29 @@ const Editor = React.forwardRef((props, ref) => {
     const { monaco, editor } = editorRef?.current;
     let currentDefiniton;
     if (monaco) {
-      monaco.editor.getModels().forEach((model) => model.dispose());
-      currentDefiniton = selected.logic.definition?.trim();
-      const uniquePath = `/tmp/${uuidv4()}.ts`;
-      const model = monaco?.editor.createModel(
-        currentDefiniton,
-        "typescript",
-        monaco.Uri.file(uniquePath)
-      );
-      editorRef.current?.editor.setModel(model);
-      setLogicPath(uniquePath);
+      if (selected) {
+        monaco.editor.getModels().forEach((model) => model.dispose());
+        currentDefiniton = selected.logic.definition?.trim();
+        const uniquePath = `/tmp/${uuidv4()}.ts`;
+        const model = monaco?.editor.createModel(
+          currentDefiniton,
+          "typescript",
+          monaco.Uri.file(uniquePath)
+        );
+        editorRef.current?.editor.setModel(model);
+        setLogicPath(uniquePath);
+      } else {
+        monaco.editor.getModels().forEach((model) => model.dispose());
+        const uniquePath = `/tmp/${uuidv4()}.ts`;
+        const declaration = logics[0];
+        const model = monaco?.editor.createModel(
+          declaration.definition,
+          "typescript",
+          monaco.Uri.file(uniquePath)
+        );
+        editorRef.current?.editor.setModel(model);
+        setLogicPath(uniquePath);
+      }
     }
   }, [selected, monaco?.editor, editorRef]);
 
@@ -168,14 +172,10 @@ const Editor = React.forwardRef((props, ref) => {
 
       context.specification.declarations =
         context.specification.declarations.map((item) => {
-          if (selected) {
+          if (selected.logic) {
             if (item.summary === selected.logic.summary) {
               return { ...item, definition: e };
             }
-          } else if (
-            item.summary === context.specification.declarations[0].summary
-          ) {
-            return { ...item, definition: e };
           }
           return item;
         });
