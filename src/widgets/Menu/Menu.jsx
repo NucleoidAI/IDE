@@ -241,6 +241,7 @@ const SmallMenuLinks = (props) => {
           data-cy={`menu-${item.title}`}
           {...item}
           query={props.query}
+          id={props.id}
           key={key}
         />
       ))}
@@ -248,7 +249,7 @@ const SmallMenuLinks = (props) => {
   );
 };
 
-const MenuItem = ({ title, link, anchor, icon, query }) => {
+const MenuItem = ({ title, link, anchor, icon, query, id }) => {
   const [runtimeConnection] = useEvent("RUNTIME_CONNECTION", {
     status: false,
     metrics: {
@@ -265,7 +266,7 @@ const MenuItem = ({ title, link, anchor, icon, query }) => {
       }
       key={title}
       component={Link}
-      to={`../${link}${query}`}
+      to={`${id}/${link}${query}`}
       state={{ anchor }}
       relative="path"
     >

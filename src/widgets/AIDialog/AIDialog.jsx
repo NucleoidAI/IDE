@@ -41,8 +41,8 @@ function AIDialog({ editor, declarative, imperative, page }) {
     yamlPlugin,
   ];
 
-  const functions = context.specifications.functions;
-  const declarations = context.specifications.declarations;
+  const functions = context.specification.functions;
+  const declarations = context.specification.declarations;
 
   const editorRef = React.useRef(null);
 
@@ -70,22 +70,23 @@ function AIDialog({ editor, declarative, imperative, page }) {
 
     nucFunctions.map((item) => context.push(item.definition));
     nucDeclarations.map((item) => context.push(item.definition));
-
     return context;
   };
 
+  // needs to return description and summary (AIDialog Q&A)
   const handleSendAIClick = () => {
     const { monaco } = editorRef?.current || {};
 
     if (promptValue) {
       setLoading(true);
 
-      expert.post("/chat/completions", {
-        mode,
-        role: "USER",
-        context: generateContext(),
-        content: promptValue?.trim(),
-      } )
+      expert
+        .post("/chat/completions", {
+          mode,
+          role: "USER",
+          context: generateContext(),
+          content: promptValue?.trim(),
+        })
         .then((res) => {
           setSummary(res.data.summary);
           setDescription(res.data.description);

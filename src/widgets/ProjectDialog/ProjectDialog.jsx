@@ -32,7 +32,7 @@ function applyFilter({ inputData, query }) {
 }
 
 function ProjectDialog({ handleClose, open, setOpen }) {
-  const [login, setLogin] = useState(true);
+  const [login, setLogin] = useState(false);
   const [user, setUser] = useState(null);
   const { id: projectId } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
@@ -124,21 +124,14 @@ function ProjectDialog({ handleClose, open, setOpen }) {
 
     return await Promise.all(projectPromises);
   };
-
-  const contextToCloud = (specifications, project) => {
-    const { api, declarations, functions, types } = specifications;
-
+  const contextToCloud = (specification, project) => {
+    console.log(project);
     const createdProject = {
       name: project.name,
       type: "SINGLE",
       description: project.description,
+      service: { specification },
     };
-
-    createdProject.service = service;
-
-    const nucContext = { api, declarations, functions, types };
-
-    createdProject.service.context = nucContext;
 
     return createdProject;
   };
@@ -167,15 +160,14 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   }, [cloudProjects, localProjects]);
 
   const createProjectOnCloud = (name, context) => {
-    const { specifications, project } = context;
+    const { specification, project } = context;
 
     setLoading(true);
     context.project.name = name;
-
-    const createdContext = contextToCloud(specifications, project);
+    const createdProject = contextToCloud(specification, project);
 
     service
-      .addProject(createdContext)
+      .addProject(createdProject)
       .then((response) => {
         getCloudProjects();
         publish("PROJECT_CREATED", {
@@ -190,16 +182,14 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   function createProjetOnLocal(name, context) {
     context.project.name = name;
     context.project.type = "LOCAL";
-    const { specifications, project } = context;
-    console.log(specifications);
 
     storage.set("ide", "context", context.project.id, {
-      specifications: specifications,
-      project: project,
+      specification: context.specification,
+      project: context.project,
     });
 
     publish("PROJECT_CREATED", {
-      id: context.specifications.project.id,
+      id: context.project.id,
     });
 
     return context;
@@ -215,6 +205,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
       createProjectOnCloud(name, context);
     } else {
       createProjetOnLocal(name, context);
+      getLocalProjects();
     }
 
     setFormArea("button");
@@ -222,8 +213,10 @@ function ProjectDialog({ handleClose, open, setOpen }) {
 
   const uploadToCloud = (projectId) => {
     setLoading(true);
-    const project = storage.get("ide", "context", projectId);
-    const context = contextToCloud(project);
+    const localContext = storage.get("ide", "context", projectId);
+    const { project, specification } = localContext;
+
+    const context = contextToCloud(specification, project);
 
     service
       .addProject(context)
@@ -244,12 +237,12 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     const { name, type, id } = projectToEdit;
     if (type === "LOCAL") {
       const localContext = storage.get("ide", "context", id);
-      const { project, specifications } = localContext;
+      const { project, specification } = localContext;
       project.name = name;
       storage.remove("ide", "context", id);
       storage.set("ide", "context", id, {
-        specifications: specifications,
-        projcet: project,
+        specification: specification,
+        project: project,
       });
 
       publish("PROJECT_UPDATED", {

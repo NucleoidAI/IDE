@@ -29,7 +29,7 @@ function APISettings() {
 
   useEffect(() => {
     const selected = state.get("pages.api.selected");
-    const contextApis = state.specifications.api;
+    const contextApis = state.specification.api;
 
     let selectApi = null;
 
@@ -39,8 +39,8 @@ function APISettings() {
       );
     }
 
-    const tsTypes = getTypes(state.get("specifications.functions"));
-    const nucTypes = state.get.specifications?.types;
+    const tsTypes = getTypes(state.get("specification.functions"));
+    const nucTypes = state.get.specification?.types;
 
     if (Array.isArray(nucTypes)) {
       customTypes = [...nucTypes, ...tsTypes];
@@ -48,7 +48,7 @@ function APISettings() {
       customTypes = [...tsTypes];
     }
 
-    const api = state.get("specifications.api");
+    const api = state.get("specification.api");
 
     if (selected) {
       const selectedApiEndpoint = api.find(
@@ -66,7 +66,7 @@ function APISettings() {
         setDescription(selectApi.description || "");
 
         setTypes(
-          state.get("specifications.types").map((typeObject) => {
+          state.get("specification.types").map((typeObject) => {
             return compile(typeObject);
           })
         );

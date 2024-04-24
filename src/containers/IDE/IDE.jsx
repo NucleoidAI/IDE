@@ -36,7 +36,7 @@ function IDE() {
   const { id } = useParams();
   const page = location.pathname.split("/")[2];
   const [contextProviderKey, setContextProviderKey] = React.useState(uuid());
-
+  const [projectChange] = useEvent("PROJECT_CHANGED", { id: null });
   const [event] = useEvent("PAGE_LOADED", {
     name: null,
   });
@@ -53,22 +53,23 @@ function IDE() {
   }, [mobileSize]);
 
   function getContextFromStorage(projectId) {
-    console.log(projectId);
-    const { specifications, project } = storage.get(
-      "ide",
-      "context",
-      projectId
-    );
+    const localContext = storage.get("ide", "context", projectId);
 
-    if (!specifications && !project) {
+    if (!localContext) {
+      navigate("/error/api");
+      return null;
+    }
+
+    const { specification, project } = localContext;
+
+    if (!specification && !project) {
       navigate("/error/api");
       return null;
     }
     publish("PROJECT_NOT_FOUND", { status: false });
     publish("RECENT_PROJECT_NOT_FOUND", { status: false });
-    console.log(project);
-    console.log(specifications);
-    const context = Context.withPages({ specifications, project });
+
+    const context = Context.withPages({ specification, project });
     context.get = (prop) => Context.resolve(context, prop);
 
     return context;
@@ -91,17 +92,15 @@ function IDE() {
     publish("RECENT_PROJECT_NOT_FOUND", { status: false });
 
     if (project.type === "SINGLE") {
-      const specificationsId = projectService[0].id;
-      const { data: specifications } = await service.getContext(
-        specificationsId
-      );
+      const specificationId = projectService[0].id;
+      const { data: specification } = await service.getContext(specificationId);
 
-      const context = Context.withPages({ specifications });
+      const context = Context.withPages({ specification });
       context.get = (prop) => Context.resolve(context, prop);
       context.project = {
         type: "CLOUD",
         name: project.name,
-        id: specificationsId,
+        id: specificationId,
         description: project.description,
       };
 
@@ -119,9 +118,9 @@ function IDE() {
   function sampleProject() {
     const context = Context.withSample();
     context.get = (prop) => Context.resolve(context, prop);
-    const { specifications, project } = context;
+    const { specification, project } = context;
     storage.set("ide", "context", project.id, {
-      specifications: specifications,
+      specification: specification,
       project: project,
     });
 
@@ -180,7 +179,7 @@ function IDE() {
   };
 
   const initVfs = (context) => {
-    const files = contextToMap(context.specifications);
+    const files = contextToMap(context.specification);
     vfs.init(files);
   };
 
@@ -207,7 +206,6 @@ function IDE() {
       const recentProject = Path.getRecentProject();
 
       if (mode === "sample") {
-        console.log("sample");
         sampleProject();
       } else if (mode === "cloud") {
         project(projectId)
@@ -241,16 +239,20 @@ function IDE() {
     loaded = false;
     // eslint-disable-next-line
   }, [id]);
-
   useEffect(() => {
     if (ReactContext && event.name && !loaded) {
       publish("CONTAINER_LOADED", {
         name: "IDE",
       });
       loaded = true;
+    }
+  }, [event.name, ReactContext]);
+
+  useEffect(() => {
+    if (projectChange.id) {
       setContextProviderKey(uuid());
     }
-  }, [ReactContext, event.name]);
+  }, [projectChange]);
 
   if (!ReactContext) return null;
 

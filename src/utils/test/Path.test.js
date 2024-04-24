@@ -73,12 +73,12 @@ test("returns the project id", () => {
 test("returns the selected project in storage", () => {
   const projectId = "f1f04060-1ea4-46fc-bbf9-fb69c1faca8b";
 
-  storage.set("ide", "selected", "project", projectId);
+  storage.set("ide", "selected", "context", projectId);
 
   expect(storage.set).toHaveBeenCalledWith(
     "ide",
     "selected",
-    "project",
+    "context",
     projectId
   );
 
@@ -87,7 +87,7 @@ test("returns the selected project in storage", () => {
 });
 
 test("returns null when the selected project is not found", () => {
-  storage.set("ide", "selected", "project", null);
+  storage.set("ide", "selected", "context", null);
   const recentProject = Path.getRecentProject();
   expect(recentProject).toEqual(null);
 });

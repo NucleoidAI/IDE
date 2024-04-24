@@ -15,7 +15,7 @@ function Logic() {
   const [, dispatch] = useContext();
   useEffect(() => {
     if (event.name) {
-      publish("PAGE_LOADED", { name: "Logic" });
+      publish("PAGE_LOADED", { name: "LOGIC" });
     }
   }, [event.name]);
 

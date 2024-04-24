@@ -5,7 +5,7 @@ import { useTheme } from "@mui/material/styles";
 
 import { Box, Card, CardActions, Fab, Grid, Typography } from "@mui/material";
 import { ChevronRight, ExpandMore } from "@mui/icons-material";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { TreeItem, TreeView, treeItemClasses } from "@mui/lab";
 import { alpha, styled } from "@mui/material/styles";
 import { publish, useEvent } from "@nucleoidai/react-event";
@@ -43,7 +43,7 @@ const styles = {
 };
 
 function LogicTree({ openLogicDialog }) {
-  const [newDeclaration] = useEvent("LOGIC_ADDED", false);
+  const [newDeclaration] = useEvent("LOGIC_ADDED", null);
   const [state, dispatch] = useContext();
   const [treeData, setTreeData] = React.useState({});
   const [selectedKey, setSelectedKey] = useState([]);
@@ -52,8 +52,8 @@ function LogicTree({ openLogicDialog }) {
 
   const theme = useTheme();
 
-  const declarations = state.specifications.declarations;
-  const functions = state.specifications.functions;
+  const declarations = state.specification.declarations;
+  const functions = state.specification.functions;
   //eslint-disable-next-line
   const [logicExist, setLogicExist] = useState(Boolean(declarations.length));
 
@@ -83,44 +83,42 @@ function LogicTree({ openLogicDialog }) {
     }
   }
 
-  useEffect(() => {
-    if (declarations.length !== 0) {
-      const tree = {};
-      const initialExpandedNodes = [];
-      declarations.forEach((dec) => {
-        const decSummary = dec.summary;
-        const decClass = dec?.definition?.split("$")[1]?.match(/\b(\w+)\b/)[0];
+  const buildTreeData = useCallback(() => {
+    const tree = {};
+    const initialExpandedNodes = [];
+    declarations.forEach((dec) => {
+      const decSummary = dec.summary;
+      const decClass = dec?.definition?.split("$")[1]?.match(/\b(\w+)\b/)[0];
 
-        if (!tree[decClass]) {
-          tree[decClass] = {
-            summaries: [],
-            params: [],
-          };
-          initialExpandedNodes.push(decClass);
-        }
+      if (!tree[decClass]) {
+        tree[decClass] = {
+          summaries: [],
+          params: [],
+        };
+        initialExpandedNodes.push(decClass);
+      }
 
-        tree[decClass].summaries.push(decSummary);
+      tree[decClass].summaries.push(decSummary);
 
-        const matchingFunction = functions.find(
-          (func) => func.path === `/${decClass}`
-        );
-        if (matchingFunction) {
-          tree[decClass].params = matchingFunction.params;
-        }
+      const matchingFunction = functions.find(
+        (func) => func.path === `/${decClass}`
+      );
+      if (matchingFunction) {
+        tree[decClass].params = matchingFunction.params;
+      }
 
-        const firstSummary = tree[initialExpandedNodes[0]].summaries[0];
-        const item = declarations.find((item) => item.summary === firstSummary);
-        setSelectedKey([initialExpandedNodes[0]]);
-        dispatch({
-          type: "SET_SELECTED_LOGIC",
-          payload: { logic: item },
-        });
-      });
-
+      setSelectedKey([initialExpandedNodes[0]]);
+      publish("WIDGET_LOADED", { name: "LogicTree" });
       setTreeData(tree);
       setNodeKey(initialExpandedNodes);
-    }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  useEffect(() => {
+    if (declarations.length !== 0) {
+      buildTreeData();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -130,7 +128,6 @@ function LogicTree({ openLogicDialog }) {
       const declarationClass = newDeclaration.declaration?.definition
         ?.split("$")[1]
         ?.match(/\b(\w+)\b/)[0];
-
       setTreeData((prevTreeData) => {
         const newTreeData = { ...prevTreeData };
 
@@ -144,13 +141,12 @@ function LogicTree({ openLogicDialog }) {
 
       select(`${declarationClass}-${treeData[declarationClass]?.length}`);
     }
-    publish("LOGIC_ADDED", false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newDeclaration]);
 
   return (
     <Card sx={{ width: "100%", height: "100%" }}>
-      {logicExist ? (
+      {logicExist && Object.keys(treeData).length > 0 ? (
         <>
           <TreeView
             aria-label="controlled"

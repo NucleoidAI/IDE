@@ -135,7 +135,9 @@ const ProjectListItem = ({
         key={project.id}
         variant={variant()}
         secondaryAction={
-          selectedAction === "default" ? (
+          project.id === activeProjectId ? (
+            <></>
+          ) : selectedAction === "default" ? (
             <>
               {project.type === "LOCAL" && (
                 <IconButton
