@@ -44,7 +44,7 @@ const styles = {
 
 function LogicTree({ openLogicDialog }) {
   const [newDeclaration] = useEvent("LOGIC_ADDED", null);
-  const [state, dispatch] = useContext();
+  const [state] = useContext();
   const [treeData, setTreeData] = React.useState({});
   const [selectedKey, setSelectedKey] = useState([]);
   const [nodeKey, setNodeKey] = useState([]);
@@ -58,6 +58,7 @@ function LogicTree({ openLogicDialog }) {
   const [logicExist, setLogicExist] = useState(Boolean(declarations.length));
 
   function select(value) {
+    console.log(value);
     const [logicClass, logicIndex] = value.split("-");
 
     if (logicIndex === undefined) {
@@ -71,15 +72,13 @@ function LogicTree({ openLogicDialog }) {
       return;
     }
 
-    setSelectedKey([logicClass]);
-    const selectedSummary = treeData[logicClass].summaries[logicIndex];
-    const item = declarations.find((item) => item.summary === selectedSummary);
+    setSelectedKey([`${logicClass}-${logicIndex}`]);
 
-    if (item) {
-      dispatch({
-        type: "SET_SELECTED_LOGIC",
-        payload: { logic: item },
-      });
+    const selectedSummary = treeData[logicClass].summaries[logicIndex];
+    const logic = declarations.find((item) => item.summary === selectedSummary);
+
+    if (logic) {
+      publish("LOGIC_SELECTED", { logic });
     }
   }
 
@@ -106,9 +105,9 @@ function LogicTree({ openLogicDialog }) {
       if (matchingFunction) {
         tree[decClass].params = matchingFunction.params;
       }
-
-      setSelectedKey([initialExpandedNodes[0]]);
+      setSelectedKey([`${initialExpandedNodes[0]}-0`]);
       publish("WIDGET_LOADED", { name: "LogicTree" });
+
       setTreeData(tree);
       setNodeKey(initialExpandedNodes);
     });
