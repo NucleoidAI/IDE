@@ -7,6 +7,7 @@ import styles from "./styles";
 import { useEvent } from "@nucleoidai/react-event";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
+
 import { CircularProgress, Grid, Paper, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
@@ -34,7 +35,7 @@ function Logs() {
   return (
     <Page title={"Logs"}>
       <BlankLayout
-        logs={
+        content={
           loading ? (
             <CircularProgress />
           ) : (
