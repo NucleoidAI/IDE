@@ -80,7 +80,7 @@ const useChat = () => {
       },
       project: {
         id,
-        type: "chat",
+        type: "CHAT",
         name: "Chat Project",
         description: "This project has been converted from chat",
       },
