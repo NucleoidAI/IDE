@@ -1,4 +1,5 @@
 import { Box } from "@mui/material";
+import ChatDrawer from "../../widgets/ChatDrawer/ChatDrawer";
 import Context from "../../context";
 import ContextProvider from "../../context/context";
 import EducationDrawer from "../../components/EducationDrawer/EducationDrawer";
@@ -267,6 +268,7 @@ function IDE() {
       <Box sx={styles.root}>
         <Menu list={routes} query={modeQuery} id={id} title="IDE" />
         <EducationDrawer />
+        <ChatDrawer />
         <Box sx={styles.content}>
           <Outlet />
         </Box>
