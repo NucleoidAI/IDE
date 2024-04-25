@@ -156,7 +156,7 @@ function createObject(codeSnippet) {
 
 function createCodeSnippets(codeBlock) {
   const declarativeSnippets = [];
-  const imperativeSnippets = [];
+  const functions = [];
 
   let sourceFile = createASTFromCode(codeBlock);
 
@@ -180,10 +180,13 @@ function createCodeSnippets(codeBlock) {
 
   function visit(node) {
     if (isDeclarative) {
-      declarativeSnippets.push(node.getText(sourceFile));
-    } else {
       if (ts.isFunctionDeclaration(node) || ts.isClassDeclaration(node)) {
-        imperativeSnippets.push(node.getText(sourceFile));
+        functions.push(node.getText(sourceFile));
+      } else if (
+        ts.isExpressionStatement(node) &&
+        ts.isSourceFile(node.parent)
+      ) {
+        declarativeSnippets.push(node.getText(sourceFile));
       }
     }
 
@@ -194,10 +197,9 @@ function createCodeSnippets(codeBlock) {
 
   return {
     declarativeSnippets,
-    imperativeSnippets,
+    functions,
   };
 }
-
 function createAPI(functions) {
   const api = [];
 
@@ -236,22 +238,19 @@ function createAPI(functions) {
 }
 
 function compile(blocks) {
-  const imperativeSnippets = [];
-  const declarativeSnippets = [];
+  const functions = [];
+  const declarations = [];
 
   blocks.forEach((codeBlock) => {
-    const {
-      imperativeSnippets: imperatives,
-      declarativeSnippets: declaratives,
-    } = createCodeSnippets(codeBlock);
-    imperativeSnippets.push(...imperatives);
-    declarativeSnippets.push(...declaratives);
+    const { functions: extractedFunctions, declarativeSnippets } =
+      createCodeSnippets(codeBlock);
+    functions.push(
+      ...extractedFunctions.map((snippet) => createObject(snippet))
+    );
+    declarations.push(
+      ...declarativeSnippets.map((snippet) => createObject(snippet))
+    );
   });
-
-  const functions = imperativeSnippets.map((snippet) => createObject(snippet));
-  const declarations = declarativeSnippets.map((snippet) =>
-    createObject(snippet)
-  );
 
   const api = createAPI(functions);
 
