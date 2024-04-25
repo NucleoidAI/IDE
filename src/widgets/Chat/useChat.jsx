@@ -88,6 +88,8 @@ const useChat = () => {
 
     localStorage.setItem(`ide.projects.${id}`, JSON.stringify(project));
     publish("CHAT_CONVERTED", chat);
+    navigate(`/${id}/api?mode=local`);
+    navigate(0);
   };
 
   const deleteChat = () => {
