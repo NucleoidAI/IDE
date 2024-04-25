@@ -5,7 +5,6 @@ import NucEditor from "../../components/NucEditor/NucEditor";
 import Path from "../../utils/Path";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import QueryAIButton from "../../components/QueryAIButton";
-import { publish } from "@nucleoidai/react-event";
 import sandboxService from "../../sandboxService";
 import service from "../../service";
 import { storage } from "@nucleoidjs/webstorage";
