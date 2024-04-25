@@ -1,4 +1,5 @@
 import Project from "../../lib/Project";
+import { decompile } from "../APIDialog/Context.js";
 import expert from "../../http/expert.js";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
@@ -71,22 +72,21 @@ const useChat = () => {
 
     // TODO Restructure project context
     const project = {
-      context: {
-        specification: {
-          api,
-          functions,
-          declarations,
-        },
-        project: {
-          id,
-          type: "chat",
-          name: "Chat Project",
-          description: "This project has been converted from chat",
-        },
+      specification: {
+        api: api,
+        functions: functions,
+        declarations: declarations,
+        types: [],
+      },
+      project: {
+        id,
+        type: "chat",
+        name: "Chat Project",
+        description: "This project has been converted from chat",
       },
     };
 
-    localStorage.setItem(`ide.projects.${id}`, JSON.stringify(project));
+    localStorage.setItem(`ide.context.${id}`, JSON.stringify(project));
     publish("CHAT_CONVERTED", chat);
     navigate(`/${id}/api?mode=local`);
     navigate(0);
