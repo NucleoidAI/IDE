@@ -22,6 +22,7 @@ function MessageBox({
           xs: "100%",
           sm: "90%",
           md: "80%",
+          lg: "60%",
         },
         marginBottom: {
           xs: "12px",
