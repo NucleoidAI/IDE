@@ -1,9 +1,11 @@
 import Box from "@mui/material/Box";
 import ChatDisplay from "../Chat/ChatDisplay";
 import MessageInput from "../Chat/MessageInput";
+import Settings from "../../settings";
 import { publish } from "@nucleoidai/react-event";
 import { storage } from "@nucleoidjs/webstorage";
 import useChat from "../Chat/useChat";
+import { useEvent } from "@nucleoidai/react-event";
 import { useParams } from "react-router-dom";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -12,6 +14,15 @@ function SideChat() {
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const session = storage.get("ide", "chat", "sessions", id);
+  const messageInputRef = useRef();
+  const userMessageRef = useRef("");
+  const [chat, sendMessage] = useChat();
+  const [error] = useEvent("EXPERT_ERROR_OCCURRED", {
+    chatId: "",
+    status: false,
+    type: "",
+    content: "",
+  });
 
   useEffect(() => {
     if (session) {
@@ -21,9 +32,20 @@ function SideChat() {
     }
   }, []);
 
-  const messageInputRef = useRef();
-  const userMessageRef = useRef("");
-  const [chat, sendMessage] = useChat();
+  useEffect(() => {
+    if (error.status) {
+      setLoading(false);
+    }
+  }, [error.status]);
+
+  const refreshChat = () => {
+    messageInputRef.current.setValue(userMessageRef.current);
+    publish("EXPERT_ERROR_OCCURRED", {
+      status: false,
+      type: "",
+      content: "",
+    });
+  };
 
   const handleSendMessage = async () => {
     setLoading(true);
@@ -55,9 +77,9 @@ function SideChat() {
         currentUserMessage={userMessageRef.current}
         chat={chat}
         loading={loading}
-        error={false}
-        refreshChat={false}
-        codeCollapsed={false}
+        error={error}
+        refreshChat={refreshChat}
+        codeCollapsed={Settings.collapseCodeBlocks}
       />
       <MessageInput
         handleSendMessage={handleSendMessage}
