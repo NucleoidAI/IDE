@@ -190,7 +190,7 @@
         {
             "description": "All humans mortal property must be true",
             "summary": "All humans are mortal",
-            "definition": "\n      $Human.mortal = true\n    \n      socrates = new Human('Socrates')\n    \n      socrates.mortal === true\n    \n    "
+            "definition": "$Human.mortal = true\nsocrates = new Human('Socrates')\nsocrates.mortal === true"
         },
         {
             "description": "If the human is older than 18, do something",

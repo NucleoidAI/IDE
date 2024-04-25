@@ -56,7 +56,7 @@ function PromptInput({
     >
       <InputBase
         variant="chat"
-        data-cy="propmtInput-input"
+        data-cy="prompt-input-input"
         onChange={(e) => {
           if (e.target.value === "") {
             setKeyDown(false);
@@ -81,27 +81,31 @@ function PromptInput({
           justifyItems: "end",
         }}
       >
-        <Fab
-          variant="button"
-          size="medium"
-          loading={loading}
-          hide={isCodeGenerated}
-          onClick={handleSendAIClick}
-          disabled={mic || promptValue === ""}
-          data-cy="propmtInput-sendAI-button"
-        >
-          <BoltIcon />
-        </Fab>
-        <CircularProgress show={loading} />
-        <Fab
-          variant="button"
-          type="mic"
-          size="medium"
-          hide={keyDown}
-          onClick={handleMicClick}
-        >
-          <MicIcon />
-        </Fab>
+        {!loading ? (
+          !isCodeGenerated && (
+            <Fab
+              variant="button"
+              size="medium"
+              onClick={handleSendAIClick}
+              disabled={mic || promptValue === ""}
+              data-cy="propmt-input-send-ai-button"
+            >
+              <BoltIcon />
+            </Fab>
+          )
+        ) : (
+          <CircularProgress />
+        )}
+        {!keyDown && (
+          <Fab
+            variant="button"
+            type="mic"
+            size="medium"
+            onClick={handleMicClick}
+          >
+            <MicIcon />
+          </Fab>
+        )}
       </Stack>
     </Stack>
   );

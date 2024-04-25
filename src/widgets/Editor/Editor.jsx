@@ -5,7 +5,6 @@ import NucEditor from "../../components/NucEditor/NucEditor";
 import Path from "../../utils/Path";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import QueryAIButton from "../../components/QueryAIButton";
-import { publish } from "@nucleoidai/react-event";
 import service from "../../service";
 import { storage } from "@nucleoidjs/webstorage";
 import styles from "../../layouts/HorizontalSplitLayout/styles";
@@ -15,6 +14,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { CircularProgress, Fab, Grid } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
+import { publish, useEvent } from "@nucleoidai/react-event";
 
 const Editor = React.forwardRef((props, ref) => {
   const monaco = useMonaco();
@@ -24,9 +24,9 @@ const Editor = React.forwardRef((props, ref) => {
   const mode = Path.getMode();
   const [context, distpach] = useContext();
   const { setLoading, logic, query, loading } = props;
-  const selectedLogic = context.get("pages.logic.selected");
-  const nucFuncs = context.specifications.functions;
-  const logics = context.specifications.declarations;
+  const [selected] = useEvent("LOGIC_SELECTED", null);
+  const nucFuncs = context.specification.functions;
+  const logics = context.specification.declarations;
 
   useEffect(() => {
     if (query) {
@@ -46,7 +46,7 @@ const Editor = React.forwardRef((props, ref) => {
           });
 
           const query = context.get("pages.query");
-          editorRef?.current.editor.onKeyUp(() => {
+          editorRef.current?.editor.onKeyUp(() => {
             query.text = editorRef?.current?.editor.getValue();
           });
         }
@@ -84,8 +84,9 @@ const Editor = React.forwardRef((props, ref) => {
   };
   function editorOnMount(editor, monaco) {
     editorRef.current = { editor: editor, monaco: monaco };
+    let currentDefiniton;
     if (logic) {
-      setLogicModel(editor, monaco);
+      setLogicModel();
     }
 
     if (query) {
@@ -98,25 +99,32 @@ const Editor = React.forwardRef((props, ref) => {
   const setLogicModel = useCallback(() => {
     const { monaco, editor } = editorRef?.current;
     let currentDefiniton;
-
     if (monaco) {
-      monaco.editor.getModels().forEach((model) => model.dispose());
-      if (Object.keys(selectedLogic).length > 0) {
-        currentDefiniton = selectedLogic.definition?.trim();
+      if (selected) {
+        monaco.editor.getModels().forEach((model) => model.dispose());
+        currentDefiniton = selected.logic.definition?.trim();
+        const uniquePath = `/tmp/${uuidv4()}.ts`;
+        const model = monaco?.editor.createModel(
+          currentDefiniton,
+          "typescript",
+          monaco.Uri.file(uniquePath)
+        );
+        editorRef.current?.editor.setModel(model);
+        setLogicPath(uniquePath);
       } else {
-        currentDefiniton = logics[0]?.definition?.trim();
+        monaco.editor.getModels().forEach((model) => model.dispose());
+        const uniquePath = `/tmp/${uuidv4()}.ts`;
+        const declaration = logics[0];
+        const model = monaco?.editor.createModel(
+          declaration.definition,
+          "typescript",
+          monaco.Uri.file(uniquePath)
+        );
+        editorRef.current?.editor.setModel(model);
+        setLogicPath(uniquePath);
       }
-      const uniquePath = `/tmp/${uuidv4()}.ts`;
-      const model = monaco?.editor.createModel(
-        currentDefiniton,
-        "typescript",
-        monaco.Uri.file(uniquePath)
-      );
-      editorRef?.current.editor.setModel(model);
-      setLogicPath(uniquePath);
-      publish("WIDGET_LOADED", { name: "Editor" });
     }
-  }, [selectedLogic, monaco?.editor, editorRef]);
+  }, [selected, monaco?.editor, editorRef]);
 
   const setQueryModel = useCallback(() => {
     const uniquePath = `/tmp/${uuidv4()}.ts`;
@@ -125,9 +133,36 @@ const Editor = React.forwardRef((props, ref) => {
       "javascript",
       monaco.Uri.file(uniquePath)
     );
-    editorRef?.current.editor.setModel(model);
+    editorRef.current?.editor.setModel(model);
     setQueryPath(uniquePath);
   }, [monaco?.editor, editorRef, context]);
+
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
+  const debouncedSave = debounce((id, specification, project) => {
+    if (mode === "cloud") {
+      service.saveContext(id, specification);
+    } else if (mode === "local") {
+      storage.set("ide", "context", id, {
+        specification,
+        project,
+      });
+    } else if (mode === "terminal") {
+      console.log("Terminal mode is not supported yet.");
+    }
+
+    publish("CONTEXT_SAVED", { contextId: id, to: mode });
+  }, 300);
 
   function handleChange(e) {
     if (logic) {
@@ -135,26 +170,17 @@ const Editor = React.forwardRef((props, ref) => {
         project: { id },
       } = context;
 
-      context.specifications.declarations =
-        context.specifications.declarations.map((item) => {
-          if (item.summary === selectedLogic?.summary) {
-            return { ...item, definition: e };
+      context.specification.declarations =
+        context.specification.declarations.map((item) => {
+          if (selected.logic) {
+            if (item.summary === selected.logic.summary) {
+              return { ...item, definition: e };
+            }
           }
           return item;
         });
 
-      if (mode === "cloud") {
-        service.saveContext(id, context.specifications);
-      } else if (mode === "local") {
-        storage.set("ide", "context", id, {
-          specifications: context.specifications,
-          project: context.project,
-        });
-      } else if (mode === "terminal") {
-        console.log("Terminal mode is not supported yet.");
-      }
-
-      publish("CONTEXT_SAVED", { contextId: id, to: mode });
+      debouncedSave(id, context.specification, context.project);
     }
     if (query) {
       context.pages.query.text = e;
@@ -176,14 +202,13 @@ const Editor = React.forwardRef((props, ref) => {
   };
 
   React.useEffect(() => {
-    if (editorRef.current && logic) {
+    if (editorRef.current && logic && selected.logic) {
       setLogicModel();
     }
     if (editorRef.current && query) {
       setQueryModel();
     }
-  }, [context, logic, query, setLogicModel, setQueryModel]);
-
+  }, [selected, context, logic, query, setLogicModel, setQueryModel]);
   return (
     <>
       <NucEditor

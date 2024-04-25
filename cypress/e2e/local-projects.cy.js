@@ -12,14 +12,23 @@ describe("Local Project", () => {
 
     cy.waitEvent("CONTAINER_LOADED");
 
-    const changedEditorValue = `function action(req: { params: { item: string } }): any {\n  const newItem = req.params.item;\n  return Item[newItem];`;
+    const changedEditorValue = `function action(req: { params: { item: string } }): any {\n  const newItem = req.params.item;\n  return Item[newItem];\n}`;
 
     cy.typeEditor(changedEditorValue);
-    //fullCheckEditorValue("newItem");
 
     cy.get("@projectId").then((projectId) => {
-      cy.storageGet(`ide.projects.${projectId}`).then((project) => {
-        expect(project.api[3]["x-nuc-action"]).to.include("newItem");
+      cy.storageGet(`ide.context.${projectId}`).then((context) => {
+        cy.normalizeString(changedEditorValue).then(
+          (normalizedChangedEditorValue) => {
+            cy.normalizeString(
+              context.specification.api[3]["x-nuc-action"]
+            ).then((normalizedContextValue) => {
+              expect(normalizedContextValue).to.contain(
+                normalizedChangedEditorValue
+              );
+            });
+          }
+        );
       });
     });
   });
@@ -36,8 +45,16 @@ describe("Local Project", () => {
     cy.typeEditor(changedEditorValue);
 
     cy.get("@projectId").then((projectId) => {
-      cy.storageGet(`ide.projects.${projectId}`).then((project) => {
-        expect(project.functions[0].definition).to.include("NewOrder");
+      cy.storageGet(`ide.context.${projectId}`).then((project) => {
+        cy.normalizeString(project.specification.functions[0].definition).then(
+          (normalizedDefinition) => {
+            cy.normalizeString(changedEditorValue).then(
+              (normalizedNewOrder) => {
+                expect(normalizedDefinition).to.include(normalizedNewOrder);
+              }
+            );
+          }
+        );
       });
     });
   });
@@ -47,15 +64,25 @@ describe("Local Project", () => {
       cy.visit(`/ide/${projectId}/logic?mode=local`);
     });
 
-    cy.waitEvent("CONTAINER_LOADED");
+    cy.waitEvent("CONTAINER_LOADED").then(() => {
+      const changedEditorValue = `$Human.mortal = true;\nplaton = new Human('Platon');\nplaton.mortal === true;`;
 
-    const changedEditorValue = `$Human.mortal = true;\nplaton = new Human('Platon');\nplaton.mortal === true;`;
+      cy.typeEditor(changedEditorValue);
 
-    cy.typeEditor(changedEditorValue);
-
-    cy.get("@projectId").then((projectId) => {
-      cy.storageGet(`ide.projects.${projectId}`).then((project) => {
-        expect(project.declarations[0].definition).to.include("plato");
+      cy.get("@projectId").then((projectId) => {
+        cy.storageGet(`ide.context.${projectId}`).then((project) => {
+          cy.normalizeString(
+            project.specification.declarations[0].definition
+          ).then((normalizedDefinition) => {
+            cy.normalizeString(changedEditorValue).then(
+              (normalizedChangedEditorValue) => {
+                expect(normalizedDefinition).to.include(
+                  normalizedChangedEditorValue
+                );
+              }
+            );
+          });
+        });
       });
     });
   });

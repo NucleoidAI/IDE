@@ -5,13 +5,13 @@ import { v4 as uuid } from "uuid";
 function contextReducer(context, { type, payload }) {
   context = Context.copy(context);
 
-  const { specifications, pages } = context;
+  const { specification, pages } = context;
 
   switch (type) {
     case "SET_PROJECT": {
-      specifications.api = payload.project.specifications.api;
-      specifications.functions = payload.project.specifications.functions;
-      specifications.types = payload.project.specifications.types;
+      specification.api = payload.project.specification.api;
+      specification.functions = payload.project.specification.functions;
+      specification.types = payload.project.specification.types;
       pages.api.selected.path = "/";
 
       break;
@@ -29,7 +29,7 @@ function contextReducer(context, { type, payload }) {
 
       let method = pages.api.selected.method;
       const path = pages.api.selected.path;
-      const api = specifications.api;
+      const api = specification.api;
 
       if (
         pages.api.dialog.type === "method" &&
@@ -44,7 +44,7 @@ function contextReducer(context, { type, payload }) {
         api[path][payload.method].summary = payload.summary;
         api[path][payload.method].description = payload.description;
 
-        specifications.types = payload.types;
+        specification.types = payload.types;
 
         break;
       }
@@ -65,7 +65,7 @@ function contextReducer(context, { type, payload }) {
         api[path][payload.method].summary = payload.summary;
         api[path][payload.method].description = payload.description;
 
-        specifications.types = payload.types;
+        specification.types = payload.types;
 
         break;
       }
@@ -84,7 +84,7 @@ function contextReducer(context, { type, payload }) {
       //api[path][method].action = payload.action;
       //api[path][method].summary = payload.summary;
       //api[path][method].description = payload.description;
-      specifications.types = types;
+      specification.types = types;
       break;
     }
 
@@ -99,7 +99,7 @@ function contextReducer(context, { type, payload }) {
 
     case "SET_SELECTED_API": {
       if (payload.method === null) {
-        const endpoint = specifications.api.find(
+        const endpoint = specification.api.find(
           (endpoint) => endpoint.path === payload.path
         );
 
@@ -133,13 +133,13 @@ function contextReducer(context, { type, payload }) {
     case "DELETE_RESOURCE": {
       const newObj = {};
       // TODO functional programming
-      Object.keys(context.specifications.api)
+      Object.keys(context.specification.api)
         .filter((item) => !item.includes(context.pages.api.selected.path))
         .forEach(
-          (objName) => (newObj[objName] = context.specifications.api[objName])
+          (objName) => (newObj[objName] = context.specification.api[objName])
         );
 
-      context.specifications.api = newObj;
+      context.specification.api = newObj;
       context.pages.api.selected.path = "/";
       context.pages.api.selected.method = "get";
       break;
@@ -148,17 +148,17 @@ function contextReducer(context, { type, payload }) {
     case "DELETE_METHOD": {
       const { path, method } = pages.api.selected;
 
-      const routeIndex = specifications.api.findIndex(
+      const routeIndex = specification.api.findIndex(
         (route) =>
           route.path === path &&
           route.method.toLowerCase() === method.toLowerCase()
       );
 
       if (routeIndex !== -1) {
-        specifications.api.splice(routeIndex, 1);
+        specification.api.splice(routeIndex, 1);
       }
 
-      const samePathRoutes = specifications.api.filter(
+      const samePathRoutes = specification.api.filter(
         (route) => route.path === path
       );
       if (samePathRoutes.length > 0) {
@@ -195,7 +195,7 @@ function contextReducer(context, { type, payload }) {
 
     case "SAVE_LOGIC_DIALOG": {
       const { description, summary, definition } = payload;
-      const declarations = specifications.declarations;
+      const declarations = specification.declarations;
 
       declarations.push({
         description,
@@ -213,7 +213,7 @@ function contextReducer(context, { type, payload }) {
 
     case "SAVE_FUNCTION_DIALOG": {
       const { path, type, definition, params, ext } = payload;
-      const functions = specifications.functions;
+      const functions = specification.functions;
 
       functions.push({
         path,
@@ -233,18 +233,18 @@ function contextReducer(context, { type, payload }) {
     case "DELETE_FUNCTION": {
       const { path } = payload;
 
-      if (specifications.functions.length > 1) {
-        const index = specifications.functions.findIndex(
+      if (specification.functions.length > 1) {
+        const index = specification.functions.findIndex(
           (data) => data.path === path
         );
 
-        const fn = specifications.functions[index];
-        specifications.functions.splice(index, 1);
+        const fn = specification.functions[index];
+        specification.functions.splice(index, 1);
 
         publish("CONTEXT_CHANGED", {
           files: [{ key: `${fn.path}.${fn.ext}` }],
         });
-        context.pages.functions.selected = specifications.functions[0].path;
+        context.pages.functions.selected = specification.functions[0].path;
       }
 
       break;
@@ -317,7 +317,7 @@ function contextReducer(context, { type, payload }) {
     }
 
     case "CREATE_SAMPLE_CRUD": {
-      const { api, functions } = specifications;
+      const { api, functions } = specification;
       const className = payload.resource;
       const resource = payload.resource.toLowerCase() + "s";
 
@@ -381,17 +381,17 @@ function contextReducer(context, { type, payload }) {
     }
     case "UPDATE_API_SCHEMAS": {
       const { path, method, requestSchema, responseSchema } = payload;
-      const apiIndex = specifications.api.findIndex(
+      const apiIndex = specification.api.findIndex(
         (api) => api.path === path && api.method === method
       );
 
       if (apiIndex !== -1) {
-        specifications.api[apiIndex].request = {
-          ...specifications.api[apiIndex].request,
+        specification.api[apiIndex].request = {
+          ...specification.api[apiIndex].request,
           schema: requestSchema,
         };
-        specifications.api[apiIndex].response = {
-          ...specifications.api[apiIndex].response,
+        specification.api[apiIndex].response = {
+          ...specification.api[apiIndex].response,
           schema: responseSchema,
         };
       }
@@ -400,7 +400,7 @@ function contextReducer(context, { type, payload }) {
 
     case "UPDATE_API_SUMMARY": {
       const { path, method, newSummary } = payload;
-      const apiEndpoint = specifications.api.find(
+      const apiEndpoint = specification.api.find(
         (api) => api.path === path && api.method === method
       );
       if (apiEndpoint) {
@@ -411,7 +411,7 @@ function contextReducer(context, { type, payload }) {
 
     case "UPDATE_API_DESCRIPTION": {
       const { path, method, newDescription } = payload;
-      const apiEndpoint = specifications.api.find(
+      const apiEndpoint = specification.api.find(
         (api) => api.path === path && api.method === method
       );
       if (apiEndpoint) {
@@ -421,17 +421,17 @@ function contextReducer(context, { type, payload }) {
     }
 
     case "DELETE_API": {
-      const selectedIndex = specifications.api.findIndex(
+      const selectedIndex = specification.api.findIndex(
         (api) =>
           api.path === pages.api.selected.path &&
           api.method === pages.api.selected.method
       );
 
       if (selectedIndex > -1) {
-        specifications.api.splice(selectedIndex, 1);
-        if (specifications.api.length > 0) {
-          pages.api.selected.path = specifications.api[0].path;
-          pages.api.selected.method = specifications.api[0].method;
+        specification.api.splice(selectedIndex, 1);
+        if (specification.api.length > 0) {
+          pages.api.selected.path = specification.api[0].path;
+          pages.api.selected.method = specification.api[0].method;
         } else {
           pages.api.selected.path = "/";
           pages.api.selected.method = "get";
@@ -443,19 +443,19 @@ function contextReducer(context, { type, payload }) {
     }
     case "UPDATE_API_TYPES": {
       const { updatedTypes } = payload;
-      const typeIndex = specifications.types.findIndex(
+      const typeIndex = specification.types.findIndex(
         (type) => type.name === updatedTypes.name
       );
       const updatedType = {
-        ...specifications.types[typeIndex],
+        ...specification.types[typeIndex],
         schema: {
           ...updatedTypes,
         },
       };
       if (typeIndex !== -1) {
-        specifications.types[typeIndex] = updatedType;
+        specification.types[typeIndex] = updatedType;
       } else {
-        specifications.types.push(updatedTypes);
+        specification.types.push(updatedTypes);
       }
       break;
     }
@@ -473,42 +473,42 @@ function contextReducer(context, { type, payload }) {
           ],
         },
       };
-      specifications.types.push(newType);
+      specification.types.push(newType);
       break;
     }
     case "DELETE_TYPE": {
       const { typeName } = payload;
-      const typeIndex = specifications.types.findIndex(
+      const typeIndex = specification.types.findIndex(
         (type) => type.name === typeName
       );
 
       if (typeIndex !== -1) {
-        specifications.types.splice(typeIndex, 1);
+        specification.types.splice(typeIndex, 1);
       }
       break;
     }
 
     case "UPDATE_TYPE_NAME": {
       const { oldTypeName, newTypeName } = payload;
-      const typeIndex = specifications.types.findIndex(
+      const typeIndex = specification.types.findIndex(
         (type) => type.name === oldTypeName
       );
 
       if (typeIndex !== -1) {
-        specifications.types[typeIndex].name = newTypeName;
-        specifications.types[typeIndex].schema.name = newTypeName;
+        specification.types[typeIndex].name = newTypeName;
+        specification.types[typeIndex].schema.name = newTypeName;
       }
       break;
     }
     case "SAVE_API_PARAMS": {
       console.log("SAVE_API_PARAMS", payload);
       const { path, method, params } = payload;
-      const apiIndex = specifications.api.findIndex(
+      const apiIndex = specification.api.findIndex(
         (api) => api.path === path && api.method === method
       );
 
       if (apiIndex !== -1) {
-        specifications.api[apiIndex].params = params;
+        specification.api[apiIndex].params = params;
       }
       break;
     }
