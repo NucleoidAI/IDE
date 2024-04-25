@@ -203,7 +203,6 @@ function createCodeSnippets(codeBlock) {
 }
 function createAPI(functions) {
   const api = [];
-  api.push(rootObject);
 
   functions.forEach((func) => {
     if (func.type === "CLASS") {
@@ -255,7 +254,7 @@ function compile(blocks) {
   });
 
   const api = createAPI(functions);
-
+  api.unshift(rootObject);
   return { api, functions, declarations };
 }
 
