@@ -1,16 +1,16 @@
 import Box from "@mui/material/Box";
 import ChatDisplay from "../Chat/ChatDisplay";
-//import MessageInput from "../Chat/MessageInput";
+import MessageInput from "../Chat/MessageInput";
 import { publish } from "@nucleoidai/react-event";
 import { storage } from "@nucleoidjs/webstorage";
 import useChat from "../Chat/useChat";
 import { useParams } from "react-router-dom";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 function SideChat() {
   const { id } = useParams();
-
+  const [loading, setLoading] = useState(false);
   const session = storage.get("ide", "chat", "sessions", id);
 
   useEffect(() => {
@@ -21,9 +21,25 @@ function SideChat() {
     }
   }, []);
 
-  //const messageInputRef = useRef();
+  const messageInputRef = useRef();
   const userMessageRef = useRef("");
-  const [chat] = useChat();
+  const [chat, sendMessage] = useChat();
+
+  const handleSendMessage = async () => {
+    setLoading(true);
+    const first = !chat.messages.length;
+    const userMessage = messageInputRef.current.getValue();
+    userMessageRef.current = userMessage;
+    messageInputRef.current.clear();
+
+    await sendMessage(userMessage);
+
+    if (first) {
+      publish("CHAT_INITIATED", chat.id);
+    }
+
+    setLoading(false);
+  };
 
   return (
     <Box
@@ -38,10 +54,16 @@ function SideChat() {
       <ChatDisplay
         currentUserMessage={userMessageRef.current}
         chat={chat}
-        loading={false}
+        loading={loading}
         error={false}
         refreshChat={false}
         codeCollapsed={false}
+      />
+      <MessageInput
+        handleSendMessage={handleSendMessage}
+        ref={messageInputRef}
+        loading={loading}
+        showConvertToProject={false}
       />
     </Box>
   );
