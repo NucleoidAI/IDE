@@ -46,6 +46,82 @@ function typeCheck(codeSnippet) {
   }
 }
 
+function extractClassName(classDefinition) {
+  const sourceFile = createASTFromCode(classDefinition);
+
+  let className = "";
+
+  function visit(node) {
+    if (ts.isClassDeclaration(node)) {
+      className = node.name.getText(sourceFile);
+    }
+
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
+
+  return className;
+}
+
+function extractFunctionName(functionDefinition) {
+  const sourceFile = createASTFromCode(functionDefinition);
+  let functionName = "";
+
+  function visit(node) {
+    if (ts.isFunctionDeclaration(node)) {
+      functionName = node.name.getText(sourceFile);
+    }
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
+
+  return functionName;
+}
+
+function extractConstructorParams(classDefinition) {
+  const sourceFile = createASTFromCode(classDefinition);
+
+  let constructorParams = [];
+
+  function visit(node) {
+    if (ts.isConstructorDeclaration(node)) {
+      const params = node.parameters.map((param) => {
+        const name = param.name.getText(sourceFile);
+        const type = param.type ? param.type.getText(sourceFile) : "any";
+        return `${name}: ${type}`;
+      });
+      constructorParams = params;
+    }
+
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
+  return constructorParams;
+}
+
+function extractProperties(classDefinition) {
+  const sourceFile = createASTFromCode(classDefinition);
+
+  const properties = [];
+
+  function visit(node) {
+    if (ts.isPropertyDeclaration(node)) {
+      const name = node.name.getText(sourceFile);
+      const type = node.type ? node.type.getText(sourceFile) : "any";
+      properties.push({ name, type });
+    }
+
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
+
+  return properties;
+}
+
 function createObject(codeSnippet) {
   const codeType = typeCheck(codeSnippet);
 
@@ -157,82 +233,6 @@ function createAPI(functions) {
   });
 
   return api;
-}
-
-function extractClassName(classDefinition) {
-  const sourceFile = createASTFromCode(classDefinition);
-
-  let className = "";
-
-  function visit(node) {
-    if (ts.isClassDeclaration(node)) {
-      className = node.name.getText(sourceFile);
-    }
-
-    ts.forEachChild(node, visit);
-  }
-
-  visit(sourceFile);
-
-  return className;
-}
-
-function extractFunctionName(functionDefinition) {
-  const sourceFile = createASTFromCode(functionDefinition);
-  let functionName = "";
-
-  function visit(node) {
-    if (ts.isFunctionDeclaration(node)) {
-      functionName = node.name.getText(sourceFile);
-    }
-    ts.forEachChild(node, visit);
-  }
-
-  visit(sourceFile);
-
-  return functionName;
-}
-
-function extractConstructorParams(classDefinition) {
-  const sourceFile = createASTFromCode(classDefinition);
-
-  let constructorParams = [];
-
-  function visit(node) {
-    if (ts.isConstructorDeclaration(node)) {
-      const params = node.parameters.map((param) => {
-        const name = param.name.getText(sourceFile);
-        const type = param.type ? param.type.getText(sourceFile) : "any";
-        return `${name}: ${type}`;
-      });
-      constructorParams = params;
-    }
-
-    ts.forEachChild(node, visit);
-  }
-
-  visit(sourceFile);
-  return constructorParams;
-}
-
-function extractProperties(classDefinition) {
-  const sourceFile = createASTFromCode(classDefinition);
-
-  const properties = [];
-
-  function visit(node) {
-    if (ts.isPropertyDeclaration(node)) {
-      const name = node.name.getText(sourceFile);
-      const type = node.type ? node.type.getText(sourceFile) : "any";
-      properties.push({ name, type });
-    }
-
-    ts.forEachChild(node, visit);
-  }
-
-  visit(sourceFile);
-
-  return properties;
 }
 
 function compile(blocks) {
