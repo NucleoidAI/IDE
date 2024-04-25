@@ -11,9 +11,9 @@ import { useParams } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 
 function SideChat() {
-  const { id } = useParams();
+  const { id: contextId } = useParams();
   const [loading, setLoading] = useState(false);
-  const session = storage.get("ide", "chat", "sessions", id);
+  const session = storage.get("ide", "chat", "sessions", contextId);
   const messageInputRef = useRef();
   const userMessageRef = useRef("");
   const [chat, sendMessage] = useChat();
@@ -28,9 +28,17 @@ function SideChat() {
     if (session) {
       publish("CHAT_SELECTED", session);
     } else {
-      //Init chat with empty session
+      const createdChat = {
+        id: contextId,
+        title: "New Chat",
+        messages: [],
+        created: Date.now(),
+      };
+
+      publish("CHAT_SELECTED", createdChat);
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contextId]);
 
   useEffect(() => {
     if (error.status) {
@@ -70,6 +78,7 @@ function SideChat() {
         flexDirection: "column",
         backgroundColor: (theme) => theme.palette.background.paper,
         paddingBottom: "10px",
+        height: "100%",
         width: 700,
       }}
     >
