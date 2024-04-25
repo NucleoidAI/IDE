@@ -8,6 +8,7 @@ import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import SaveIcon from "@mui/icons-material/Save";
 import SchoolIcon from "@mui/icons-material/School";
 import Settings from "../../settings";
+import TryIcon from '@mui/icons-material/Try';
 import ViewListIcon from "@mui/icons-material/ViewList";
 import { deepCopy } from "../../utils/DeepCopy";
 import { getTypes } from "../../lib/TypeScript";
@@ -155,6 +156,11 @@ const ProcessDrawer = () => {
               onClick={() => publish("EDUCATION_DRAWER_OPENED", true)}
             >
               <SchoolIcon variant="pageIcon" />
+            </ListItemButton>
+          </Tooltip>
+          <Tooltip placement="left" title="Chat">
+            <ListItemButton onClick={() => publish("CHAT_DRAWER_OPENED", true)}>
+              <TryIcon variant="pageIcon" />
             </ListItemButton>
           </Tooltip>
           <Tooltip placement="left" title="Deploy (Coming soon)">
