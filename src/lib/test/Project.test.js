@@ -11,6 +11,7 @@ beforeAll(() => {
 
 test("compiles class block", () => {
   const result = Project.compile(blocks);
+  console.log(result);
 
   expect(result.functions[0].path).toBe("/User");
   expect(result.functions[0].params).toEqual([
@@ -18,12 +19,12 @@ test("compiles class block", () => {
     "lastName: string",
   ]);
   expect(result.functions[0].type).toBe("CLASS");
-  expect(result.api[0].path).toBe("/users");
-  expect(result.api[0].method).toBe("GET");
   expect(result.api[1].path).toBe("/users");
-  expect(result.api[1].method).toBe("POST");
-  expect(result.api[2].path).toBe("/users/{UserId}");
-  expect(result.api[2].method).toBe("GET");
+  expect(result.api[1].method).toBe("GET");
+  expect(result.api[2].path).toBe("/users");
+  expect(result.api[2].method).toBe("POST");
+  expect(result.api[3].path).toBe("/users/{UserId}");
+  expect(result.api[3].method).toBe("GET");
 });
 
 test("compiles declaration blocks", () => {
