@@ -1,5 +1,6 @@
 import Handlebars from "handlebars";
-import apiTemplates from "../templates/apiTemplates";
+
+import { apiTemplates, rootObject } from "../templates/apiTemplates";
 
 import * as ts from "typescript";
 
@@ -202,6 +203,7 @@ function createCodeSnippets(codeBlock) {
 }
 function createAPI(functions) {
   const api = [];
+  api.push(rootObject);
 
   functions.forEach((func) => {
     if (func.type === "CLASS") {

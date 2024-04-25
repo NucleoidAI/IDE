@@ -98,4 +98,27 @@ const apiTemplates = {
   `,
 };
 
-export default apiTemplates;
+const rootObject = {
+  path: "/",
+  method: "GET",
+  params: [],
+  response: {
+    type: "OPENAPI",
+    schema: {
+      name: "User",
+      type: "object",
+      properties: [
+        {
+          name: "name",
+          type: "string",
+        },
+      ],
+    },
+  },
+  summary: "Hello World",
+  description: "Hello World",
+  "x-nuc-action":
+    "function action(req: any): { message: string } {\n  return { message: 'Hello World' };\n}\n",
+};
+
+export { apiTemplates, rootObject };
