@@ -2,7 +2,6 @@ import Editor from "@monaco-editor/react";
 import { NucLinter } from "./NucLinter";
 import React from "react";
 import monacoDarkTheme from "../../lib/monacoEditorTheme.json";
-import { publish } from "@nucleoidai/react-event";
 import { useStorage } from "@nucleoidjs/webstorage";
 
 import { useEffect, useRef } from "react";
@@ -194,7 +193,6 @@ const NucEditor = React.forwardRef((props, ref) => {
       lintWithCustomLinter();
       formatDocument();
     }
-    publish("WIDGET_LOADED", { name: "NucEditor" });
     onMount && onMount(editor, monaco);
   }
   // eslint-disable-next-line

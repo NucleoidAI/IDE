@@ -4,7 +4,7 @@ import { api, declarations, functions, project, types } from "./sample";
 
 function init() {
   const context = {
-    specifications: {
+    specification: {
       api: [],
       types: [],
       functions: [],
@@ -67,19 +67,19 @@ function withBlank() {
 
 function withSample() {
   const context = init();
-  context.specifications.api = api;
-  context.specifications.types = types;
-  context.specifications.functions = functions;
-  context.specifications.declarations = declarations;
+  context.specification.api = api;
+  context.specification.types = types;
+  context.specification.functions = functions;
+  context.specification.declarations = declarations;
   context.project = project;
 
   context.project.id = uuid();
   return context;
 }
 
-function withPages({ specifications, project }) {
+function withPages({ specification, project }) {
   const context = init();
-  context.specifications = specifications;
+  context.specification = specification;
   context.project = project;
 
   return context;

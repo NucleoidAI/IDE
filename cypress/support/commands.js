@@ -80,7 +80,7 @@ Cypress.Commands.add("setup", (container, fixtureType, type) => {
         .then((context) => {
           cy.intercept(
             "GET",
-            `https://nuc.land/ide/api/services/${serviceId}/context`,
+            `https://nuc.land/ide/api/services/${serviceId}/specification`,
             {
               statusCode: 200,
               body: fixtureType === "BLANK" ? {} : context,
@@ -90,11 +90,19 @@ Cypress.Commands.add("setup", (container, fixtureType, type) => {
         .as("context");
     } else if (type === "LOCAL") {
       if (fixtureType === "SEED" || "") {
-        cy.fixture("PROJECTS/LOCAL/project").then((project) => {
-          cy.storageSet(
-            `ide.projects.3450f289-0fc5-45e9-9a4a-606c0a63cdfe`,
-            project
-          );
+        cy.fixture("PROJECTS/LOCAL/project").then((context) => {
+          const { project, types, functions, logic, api, declarations } =
+            context;
+          cy.storageSet(`ide.context.3450f289-0fc5-45e9-9a4a-606c0a63cdfe`, {
+            project: project,
+            specification: {
+              api,
+              logic,
+              functions,
+              types,
+              declarations,
+            },
+          });
         });
       }
     }
@@ -117,9 +125,10 @@ Cypress.Commands.add("typeEditor", (changedEditorValue) => {
   cy.get("section").should("be.visible");
   cy.get(".monaco-editor").should("be.visible");
 
-  cy.get('textarea[role="textbox"]').click();
-  cy.get('textarea[role="textbox"]').clear();
+  cy.get('textarea[role="textbox"]').focus().clear({ force: true });
+
   cy.get('textarea[role="textbox"]').type(changedEditorValue, {
+    force: true,
     parseSpecialCharSequences: false,
   });
 
@@ -174,7 +183,7 @@ Cypress.Commands.add("saveContextIntercept", (serviceId) => {
     .then((context) => {
       cy.intercept(
         "PUT",
-        `https://nuc.land/ide/api/services/${serviceId}/context`,
+        `https://nuc.land/ide/api/services/${serviceId}/specification`,
         {
           statusCode: 200,
           body: context,
@@ -187,7 +196,7 @@ Cypress.Commands.add("saveContextIntercept", (serviceId) => {
     .then((context) => {
       cy.intercept(
         "GET",
-        `https://nuc.land/ide/api/services/${serviceId}/context`,
+        `https://nuc.land/ide/api/services/${serviceId}/specification`,
         {
           statusCode: 200,
           body: context,
@@ -226,5 +235,7 @@ Cypress.Commands.add("waitEvent", (eventName) => {
     { timeout: 10000 }
   );
 });
+
+Cypress.Commands.add("normalizeString", (str) => str.replace(/\s/g, ""));
 
 /* eslint-enable */

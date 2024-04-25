@@ -22,8 +22,8 @@ const ResourceMenu = (props) => {
 
   React.useEffect(() => {
     const checkMethodAddable = () => {
-      const { pages, specifications } = state;
-      const { api } = specifications;
+      const { pages, specification } = state;
+      const { api } = specification;
 
       const countMethodsForPath = (path) => {
         return api.filter((endpoint) => endpoint.path === path).length;
@@ -80,7 +80,7 @@ const ResourceMenu = (props) => {
     } else {
       resourceRef.current = {
         deleteAdress: state.pages.api.selected,
-        deleteList: Object.keys(state.specifications.api).filter((item) => {
+        deleteList: Object.keys(state.specification.api).filter((item) => {
           return item.includes(state.pages.api.selected.path);
         }),
       };

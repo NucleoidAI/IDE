@@ -29,7 +29,7 @@ const getProjectId = () => {
 };
 
 const getRecentProject = () => {
-  const recentProject = storage.get("ide", "selected", "project");
+  const recentProject = storage.get("ide", "selected", "context");
 
   if (recentProject) {
     return recentProject;
