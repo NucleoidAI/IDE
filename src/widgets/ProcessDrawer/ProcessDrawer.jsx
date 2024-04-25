@@ -8,7 +8,7 @@ import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import SaveIcon from "@mui/icons-material/Save";
 import SchoolIcon from "@mui/icons-material/School";
 import Settings from "../../settings";
-import TryIcon from '@mui/icons-material/Try';
+import TryIcon from "@mui/icons-material/Try";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import { deepCopy } from "../../utils/DeepCopy";
 import { getTypes } from "../../lib/TypeScript";
@@ -138,7 +138,7 @@ const ProcessDrawer = () => {
         return false;
     }
   }
-
+  //idea: we collapse all BLALBLA_DRAWER_OPENED to DRAWER_OPENED and send drawer type as event payload
   return (
     <>
       <Drawer
