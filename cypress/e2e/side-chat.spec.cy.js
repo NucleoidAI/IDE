@@ -38,3 +38,32 @@ describe("created project by default", () => {
   });
 });
 
+describe("created project by chat", () => {
+  beforeEach(() => {
+    cy.setup("IDE", "SEED", "LOCAL");
+    cy.fixture("PROJECTS/LOCAL/project.json").as("project");
+    cy.wrap("3450f289-0fc5-45e9-9a4a-606c0a63cdfe").as("projectId");
+    cy.fixture("CHAT/chat-data.json").then((session) => {
+      cy.get("@projectId").then((id) => {
+        session.id = id;
+        cy.storageSet(`ide.chat.sessions.${id}`, session);
+        cy.visit(`/ide/${id}/api?mode=local`);
+      });
+    });
+  });
+  it("should load old messages when side chat is opened", () => {
+    cy.waitEvent("CONTAINER_LOADED").then(() => {
+      cy.getBySel("side-chat-button").click();
+
+      cy.getBySel("chat-welcome-message").should("to.not.exist");
+
+      cy.checkMessageResponse(
+        "ASSISTANT",
+        "Set the mortality property of all Human instances to true.",
+        3,
+        false,
+        "last"
+      );
+    });
+  });
+});
