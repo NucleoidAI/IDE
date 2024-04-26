@@ -5,6 +5,7 @@ import { Box, Typography } from "@mui/material";
 const WelcomeMessage = () => {
   return (
     <Box
+      data-cy="chat-welcome-message"
       sx={{
         display: "flex",
         flexDirection: "column",
