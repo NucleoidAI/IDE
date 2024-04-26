@@ -100,6 +100,18 @@ instance.interceptors.response.use(
         severity: "error",
       });
     }
+    if (err.response.status === 401 || err.response.status === 403) {
+      storage.remove("oauth.token");
+      let message = "Session expired. Please login again.";
+      if (err.response.status === 403) {
+        message = "Access forbidden. Please check your permissions.";
+      }
+      publish("GLOBAL_MESSAGE", {
+        status: true,
+        message: message,
+        severity: "error",
+      });
+    }
     return Promise.reject(err);
   }
 );
