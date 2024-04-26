@@ -4,9 +4,9 @@ const config = {
   api: "https://nuc.land/ide/api",
   expert: "https://nuc.land/ide/api/expert",
   oauth: {
-    accessTokenUrl: "https://nuc.land/api/oauth",
+    accessTokenUrl: "https://nuc.land/ide/api/oauth",
     clientId: "4806a6f27dc44ac5c27f",
-    redirectUri: "https://nuc.land/ide/api",
+    redirectUri: "https://nuc.land/ide/login",
     oauthUrl: "https://github.com/login/oauth/authorize",
   },
   sandbox: "https://nuc.land/sandbox",
