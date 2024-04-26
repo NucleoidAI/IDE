@@ -77,6 +77,7 @@ function IDE() {
   }
 
   async function project(projectId) {
+    console.log(projectId);
     const [projectResult, serviceResult] = await Promise.all([
       service.getProject(projectId),
       service.getProjectServices(projectId),
