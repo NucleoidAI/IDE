@@ -293,9 +293,9 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     } else if (type === "CLOUD") {
       navigate(`/${id}`);
     }
-
+    console.log(id);
     publish("PROJECT_CHANGED", {
-      id: projectId,
+      id,
     });
   };
 
