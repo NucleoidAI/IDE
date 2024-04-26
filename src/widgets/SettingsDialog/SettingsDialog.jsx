@@ -29,6 +29,8 @@ const SettingsDialog = ({ handleClose }) => {
   }, []);
 
   function saveSettingDialog() {
+    const previousRuntime = Settings.runtime();
+
     Settings.description(urlRef.current.description);
     Settings.runtime(urlRef.current.runtime);
 
@@ -41,6 +43,13 @@ const SettingsDialog = ({ handleClose }) => {
 
       Settings.url.terminal(terminal);
       Settings.url.app(app);
+    }
+
+    if (previousRuntime !== urlRef.current.runtime) {
+      publish("RUNTIME_CONNECTION", {
+        status: false,
+        metrics: { total: 100, free: 50 },
+      });
     }
 
     publish("SWAGGER_DIALOG", { open: false });

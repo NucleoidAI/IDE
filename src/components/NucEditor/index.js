@@ -1,1 +1,1 @@
-export { dafeult } from "./NucEditor";
+export { default } from "./NucEditor";
