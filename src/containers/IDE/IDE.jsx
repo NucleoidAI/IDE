@@ -77,6 +77,7 @@ function IDE() {
   }
 
   async function project(projectId) {
+    console.log(projectId);
     const [projectResult, serviceResult] = await Promise.all([
       service.getProject(projectId),
       service.getProjectServices(projectId),
@@ -138,7 +139,6 @@ function IDE() {
   }
 
   const initContext = (context) => {
-    console.log(context);
     if (
       !Settings.description() ||
       Settings.description() !== context.project.description
@@ -205,7 +205,7 @@ function IDE() {
       const mode = Path.getMode();
       const projectId = Path.getProjectId();
       const recentProject = Path.getRecentProject();
-
+      console.log(projectId);
       if (mode === "sample") {
         sampleProject();
       } else if (mode === "cloud") {
@@ -253,7 +253,7 @@ function IDE() {
     if (projectChange.id) {
       setContextProviderKey(uuid());
     }
-  }, [projectChange]);
+  }, [projectChange, ReactContext]);
 
   if (!ReactContext) return null;
 
