@@ -159,7 +159,10 @@ const ProcessDrawer = () => {
             </ListItemButton>
           </Tooltip>
           <Tooltip placement="left" title="Chat">
-            <ListItemButton onClick={() => publish("CHAT_DRAWER_OPENED", true)}>
+            <ListItemButton
+              data-cy="side-chat-button"
+              onClick={() => publish("CHAT_DRAWER_OPENED", true)}
+            >
               <TryIcon variant="pageIcon" />
             </ListItemButton>
           </Tooltip>
