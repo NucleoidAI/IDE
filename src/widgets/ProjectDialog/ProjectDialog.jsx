@@ -73,7 +73,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   useEffect(() => {
     if (projectNotFound.status) {
       setOpen(true);
-      publish("GLOBAL_MESSAGE", {
+      publish("APP_MESSAGE", {
         status: true,
         message: "Project not found",
         severity: "error",
@@ -330,7 +330,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
       handleClose();
       setSearchQuery("");
     } else {
-      publish("GLOBAL_MESSAGE", {
+      publish("APP_MESSAGE", {
         status: true,
         message,
         severity: "info",

@@ -292,7 +292,7 @@ function ApiButton() {
       publish("SWAGGER_DIALOG", { open: true });
     } catch {
       setLoading(false);
-      publish("GLOBAL_MESSAGE", {
+      publish("APP_MESSAGE", {
         status: true,
         message: "There is a problem communicating with the sandbox",
         severity: "info",

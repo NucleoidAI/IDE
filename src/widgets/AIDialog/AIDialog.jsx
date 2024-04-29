@@ -138,7 +138,7 @@ function AIDialog({ editor, declarative, imperative, page }) {
         },
       });
     } else {
-      publish("GLOBAL_MESSAGE", {
+      publish("APP_MESSAGE", {
         status: true,
         message: `You can only create declaration for existing functions.`,
         severity: "error",
