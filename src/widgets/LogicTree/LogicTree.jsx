@@ -58,7 +58,6 @@ function LogicTree({ openLogicDialog }) {
   const [logicExist, setLogicExist] = useState(Boolean(declarations.length));
 
   function select(value) {
-    console.log(value);
     const [logicClass, logicIndex] = value.split("-");
 
     if (logicIndex === undefined) {
@@ -73,7 +72,6 @@ function LogicTree({ openLogicDialog }) {
     }
 
     setSelectedKey([`${logicClass}-${logicIndex}`]);
-
     const selectedSummary = treeData[logicClass].summaries[logicIndex];
     const logic = declarations.find((item) => item.summary === selectedSummary);
 
@@ -127,18 +125,21 @@ function LogicTree({ openLogicDialog }) {
       const declarationClass = newDeclaration.declaration?.definition
         ?.split("$")[1]
         ?.match(/\b(\w+)\b/)[0];
+
       setTreeData((prevTreeData) => {
         const newTreeData = { ...prevTreeData };
 
         if (!newTreeData[declarationClass]) {
           newTreeData[declarationClass] = [];
+          return null;
         }
-        newTreeData[declarationClass].push(declarationSummary);
 
+        newTreeData[declarationClass].summaries.push(declarationSummary);
         return newTreeData;
       });
 
       select(`${declarationClass}-${treeData[declarationClass]?.length}`);
+      publish("LOGIC_ADDED", null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newDeclaration]);
