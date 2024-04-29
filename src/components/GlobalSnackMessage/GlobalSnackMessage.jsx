@@ -10,19 +10,13 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 export default function GlobalSnackMessage() {
-  const [globalMessage] = useEvent("GLOBAL_MESSAGE", {
+  const [appMessage] = useEvent("APP_MESSAGE", {
     status: false,
     message: "",
     severity: "success",
   });
 
-  const handleClose = () => {
-    publish("GLOBAL_MESSAGE", {
-      status: false,
-    });
-  };
-
-  if (globalMessage.status) {
+  if (appMessage.status) {
     return (
       <Stack
         sx={{
@@ -38,15 +32,13 @@ export default function GlobalSnackMessage() {
           open={true}
           autoHideDuration={6000}
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-          onClose={handleClose}
         >
           <Alert
             data-cy="global-snack-message"
-            onClose={handleClose}
-            severity={globalMessage.severity}
+            severity={appMessage.severity}
             sx={{ width: "100%" }}
           >
-            {globalMessage.message}
+            {appMessage.message}
           </Alert>
         </Snackbar>
       </Stack>
