@@ -202,7 +202,6 @@ function contextReducer(context, { type, payload }) {
         summary,
         definition,
       });
-      pages.logic.selected = declarations[declarations.length - 1];
 
       publish("LOGIC_ADDED", {
         declaration: declarations[declarations.length - 1],
