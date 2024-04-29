@@ -15,7 +15,6 @@ instance.interceptors.response.use(
   (err) => {
     if (err.response.status === 500) {
       publish("APP_MESSAGE", {
-        status: true,
         message: err.message,
         severity: "error",
       });

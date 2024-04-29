@@ -293,7 +293,6 @@ function ApiButton() {
     } catch {
       setLoading(false);
       publish("APP_MESSAGE", {
-        status: true,
         message: "There is a problem communicating with the sandbox",
         severity: "info",
       });

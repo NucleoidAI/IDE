@@ -95,7 +95,6 @@ instance.interceptors.response.use(
   (err) => {
     if (err.response.status === 500) {
       publish("APP_MESSAGE", {
-        status: true,
         message: err.message,
         severity: "error",
       });
@@ -107,7 +106,6 @@ instance.interceptors.response.use(
         message = "Access forbidden. Please check your permissions.";
       }
       publish("APP_MESSAGE", {
-        status: true,
         message: message,
         severity: "error",
       });

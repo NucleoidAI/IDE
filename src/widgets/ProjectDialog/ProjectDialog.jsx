@@ -74,7 +74,6 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     if (projectNotFound.status) {
       setOpen(true);
       publish("APP_MESSAGE", {
-        status: true,
         message: "Project not found",
         severity: "error",
       });
@@ -331,7 +330,6 @@ function ProjectDialog({ handleClose, open, setOpen }) {
       setSearchQuery("");
     } else {
       publish("APP_MESSAGE", {
-        status: true,
         message,
         severity: "info",
       });
