@@ -79,6 +79,7 @@ function AIDialog({ editor, declarative, imperative, page }) {
 
     if (promptValue) {
       setLoading(true);
+      setDescription(promptValue);
 
       http
         .post("/chat/completions", {
@@ -89,7 +90,6 @@ function AIDialog({ editor, declarative, imperative, page }) {
         })
         .then((res) => {
           setSummary(res.data.summary);
-          setDescription(res.data.description);
           const model = monaco.editor.createModel(
             res.data.code?.trim(),
             "typescript"
