@@ -99,7 +99,7 @@ const routes = [
     ],
   },
   { path: "/graph" },
-  { path: "/login", element: <Login /> },
+  { path: "/callback", element: <Login /> },
 ];
 
 export default routes;
