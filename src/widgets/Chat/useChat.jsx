@@ -1,5 +1,6 @@
 import Project from "../../lib/Project";
 import expert from "../../http/expert.js";
+import { startTransition } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 
@@ -87,8 +88,10 @@ const useChat = () => {
 
     localStorage.setItem(`ide.context.${id}`, JSON.stringify(project));
     publish("CHAT_CONVERTED", chat);
-    navigate(0);
-    navigate(`/${id}/api?mode=local`);
+
+    startTransition(() => {
+      navigate(`/${id}/api?mode=local`);
+    });
   };
 
   const deleteChat = () => {
