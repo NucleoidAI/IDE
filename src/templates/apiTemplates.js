@@ -21,7 +21,7 @@ const apiTemplates = {
         },
         "summary": "List {{pluralName}}",
         "description": "List {{pluralName}}",
-        "x-nuc-action": "function action() { return {{className}}; }"
+        "action": "function action() { return {{className}}; }"
       }
     `,
   createObject: `
@@ -60,7 +60,7 @@ const apiTemplates = {
         },
         "summary": "Create a {{singularName}}",
         "description": "Create a {{singularName}}",
-        "x-nuc-action": "function action(req) { const {{camelCase singularName}}Data = req.body; return new {{className}}({{#each properties}}{{camelCase ../singularName}}Data.{{name}}{{#unless @last}}, {{/unless}}{{/each}}); }"
+        "action": "function action(req) { const {{camelCase singularName}}Data = req.body; return new {{className}}({{#each properties}}{{camelCase ../singularName}}Data.{{name}}{{#unless @last}}, {{/unless}}{{/each}}); }"
       }
     `,
   readObject: `
@@ -93,7 +93,7 @@ const apiTemplates = {
       },
       "summary": "Read a {{singularName}}",
       "description": "Read a {{singularName}}",
-      "x-nuc-action": "function action(req) { const {{camelCase singularName}}Id = req.params.{{camelCase singularName}}Id; return {{className}}[{{camelCase singularName}}Id]; }"
+      "action": "function action(req) { const {{camelCase singularName}}Id = req.params.{{camelCase singularName}}Id; return {{className}}[{{camelCase singularName}}Id]; }"
     }
   `,
 };

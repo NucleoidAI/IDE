@@ -54,7 +54,7 @@ const contextToMap = (files) => {
         value:
           imports +
           "// @nuc-action\n" +
-          apiItem["x-nuc-action"] +
+          apiItem["action"] +
           "// @nuc-exports\n",
       });
     });
@@ -72,7 +72,7 @@ const mapToContext = (fsMap, context) => {
   });
 
   tmpContext?.api?.forEach((api) => {
-    api["x-nuc-action"] = parser
+    api["action"] = parser
       .parse(fsMap.get(`/build${api?.path}.${api?.method}.js`))
       .action()
       .replace("export {};\n", "");
