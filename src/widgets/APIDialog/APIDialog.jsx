@@ -23,16 +23,29 @@ function APIDialog() {
   const [context, dispatch] = useContext();
   console.log(context);
 
-  const { open, view } = context.get("pages.api.dialog");
+  const { open, view, type, action } = context.get("pages.api.dialog");
   const selected = context.pages.api?.selected;
   const contextApis = context.specification.api;
 
   let selectedApi = null;
 
-  if (Array.isArray(contextApis)) {
-    selectedApi = contextApis.find(
-      (api) => api.path === selected?.path && api.method === selected.method
-    );
+  if (action === "edit") {
+    if (Array.isArray(contextApis)) {
+      selectedApi = contextApis.find(
+        (api) => api.path === selected?.path && api.method === selected.method
+      );
+    }
+  } else if (action === "add") {
+    selectedApi = {
+      path: "/",
+      method: "POST",
+      summary: "",
+      description: "",
+      request: { type: "OPENAPI", schema: {} },
+      response: { type: "OPENAPI", schema: {} },
+      params: [],
+      "x-nuc-action": "",
+    };
   }
 
   useEffect(() => {
@@ -57,52 +70,77 @@ function APIDialog() {
   }
 
   const saveApiDialog = () => {
-    switch (view) {
-      case "TYPES":
-        console.log("types", typesRef.current.schemaOutput());
-        dispatch({
-          type: "UPDATE_API_TYPES",
-          payload: {
-            updatedTypes: typesRef.current.schemaOutput(),
-          },
-        });
+    const requestSchema = requestSchemaRef.current?.schemaOutput() || {};
+    const responseSchema = responseSchemaRef.current?.schemaOutput() || {};
+    const params = paramsRef.current;
+    const types = typesRef.current?.schemaOutput() || [];
+    const path = pathRef.current;
+    const method = methodRef.current;
 
-        break;
+    if (action === "add") {
+      console.log("add");
+      dispatch({
+        type: "SAVE_API_DIALOG",
+        payload: {
+          path,
+          method,
+          request: { type: "OPENAPI", schema: requestSchema },
+          response: { type: "OPENAPI", schema: responseSchema },
+          params,
+          types,
+          summary: "",
+          description: "",
+          "x-nuc-action": "",
+        },
+      });
+    } else {
+      console.log("edit");
+      switch (view) {
+        case "TYPES":
+          console.log("types", typesRef.current?.schemaOutput());
+          dispatch({
+            type: "UPDATE_API_TYPES",
+            payload: {
+              updatedTypes: typesRef.current?.schemaOutput() || [],
+            },
+          });
+          break;
 
-      case "BODY":
-        dispatch({
-          type: "UPDATE_API_SCHEMAS",
-          payload: {
-            path: selected?.path,
-            method: selected?.method,
-            requestSchema: requestSchemaRef.current.schemaOutput(),
-            responseSchema: responseSchemaRef.current.schemaOutput(),
-          },
-        });
-        break;
+        case "BODY":
+          dispatch({
+            type: "UPDATE_API_SCHEMAS",
+            payload: {
+              path: selected?.path,
+              method: selected?.method,
+              requestSchema: requestSchemaRef.current?.schemaOutput() || {},
+              responseSchema: responseSchemaRef.current?.schemaOutput() || {},
+            },
+          });
+          break;
 
-      case "PARAMS":
-        dispatch({
-          type: "SAVE_API_PARAMS",
-          payload: {
-            path: selected?.path,
-            method: selected?.method,
-            params: paramsRef.current,
-          },
-        });
-        break;
+        case "PARAMS":
+          dispatch({
+            type: "SAVE_API_PARAMS",
+            payload: {
+              path: selected?.path,
+              method: selected?.method,
+              params: paramsRef.current,
+            },
+          });
+          break;
 
-      default:
-        console.log("default");
-        return;
+        default:
+          console.log("default");
+          return;
+      }
+      dispatch({
+        type: "UPDATE_API_PATH_METHOD",
+        payload: {
+          path: pathRef.current,
+          method: methodRef.current,
+        },
+      });
     }
-    dispatch({
-      type: "UPDATE_API_PATH_METHOD",
-      payload: {
-        path: pathRef.current,
-        method: methodRef.current,
-      },
-    });
   };
 
   const handleTypesButtonClick = () => {

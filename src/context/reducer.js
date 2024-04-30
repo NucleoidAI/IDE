@@ -20,34 +20,34 @@ function contextReducer(context, { type, payload }) {
     case "OPEN_API_DIALOG": {
       const { type, action } = payload;
 
-      if (type === "method" && action === "add") {
-        const newMethod = {
-          path: pages.api.selected.path,
-          method: "POST",
-          summary: "",
-          description: "",
-          request: { type: "OPENAPI", schema: {} },
-          response: { type: "OPENAPI", schema: {} },
-          params: [],
-          "x-nuc-action": "",
-        };
+      // if (type === "method" && action === "add") {
+      //   const newMethod = {
+      //     path: pages.api.selected.path,
+      //     method: "POST",
+      //     summary: "",
+      //     description: "",
+      //     request: { type: "OPENAPI", schema: {} },
+      //     response: { type: "OPENAPI", schema: {} },
+      //     params: [],
+      //     "x-nuc-action": "",
+      //   };
 
-        specification.api.push(newMethod);
-        pages.api.selected = newMethod;
-      } else if (type === "resource" && action === "add") {
-        const newResource = {
-          path: "/",
-          method: "POST",
-          summary: "",
-          description: "",
-          request: { type: "OPENAPI", schema: {} },
-          response: { type: "OPENAPI", schema: {} },
-          params: [],
-          "x-nuc-action": "",
-        };
-        specification.api.push(newResource);
-        pages.api.selected = newResource;
-      }
+      //   specification.api.push(newMethod);
+      //   pages.api.selected = newMethod;
+      // } else if (type === "resource" && action === "add") {
+      //   const newResource = {
+      //     path: "/",
+      //     method: "POST",
+      //     summary: "",
+      //     description: "",
+      //     request: { type: "OPENAPI", schema: {} },
+      //     response: { type: "OPENAPI", schema: {} },
+      //     params: [],
+      //     "x-nuc-action": "",
+      //   };
+      //   specification.api.push(newResource);
+      //   pages.api.selected = newResource;
+      // }
 
       pages.api.dialog.type = type;
       pages.api.dialog.action = action;
@@ -57,65 +57,31 @@ function contextReducer(context, { type, payload }) {
     }
 
     case "SAVE_API_DIALOG": {
-      const { request, response, params, types } = payload;
+      const {
+        path,
+        method,
+        request,
+        response,
+        params,
+        types,
+        summary,
+        description,
+        action,
+      } = payload;
 
-      let method = pages.api.selected.method;
-      const path = pages.api.selected.path;
-      const api = specification.api;
+      const newApi = {
+        path,
+        method,
+        request,
+        response,
+        params,
+        summary,
+        description,
+        "x-nuc-action": action,
+      };
+      specification.api.push(newApi);
+      pages.api.selected = { path, method };
 
-      if (
-        pages.api.dialog.type === "method" &&
-        pages.api.dialog.action === "add"
-      ) {
-        api[path][payload.method] = {};
-        pages.api.selected.method = payload.method;
-        api[path][payload.method].request = payload.request;
-        api[path][payload.method].response = payload.response;
-        api[path][payload.method].params = payload.params;
-        api[path][payload.method]["x-nuc-action"] = payload.action;
-        api[path][payload.method].summary = payload.summary;
-        api[path][payload.method].description = payload.description;
-
-        specification.types = payload.types;
-
-        break;
-      }
-
-      if (
-        pages.api.dialog.type === "resource" &&
-        pages.api.dialog.action === "add"
-      ) {
-        const path = payload.path;
-        const method = payload.method;
-
-        api[path] = { [method]: {} };
-        pages.api.selected.method = payload.method;
-        api[path][method].request = payload.request;
-        api[path][method].response = payload.response;
-        api[path][method].params = payload.params;
-        api[path][payload.method]["x-nuc-action"] = payload.action;
-        api[path][payload.method].summary = payload.summary;
-        api[path][payload.method].description = payload.description;
-
-        specification.types = payload.types;
-
-        break;
-      }
-
-      if (method !== payload.method) {
-        api[path][payload.method] = { ...api[path][method] };
-        delete api[path][method];
-
-        method = payload.method;
-        pages.api.selected.method = method;
-      }
-
-      api[path][method].request = request;
-      api[path][method].response = response;
-      api[path][method].params = params;
-      //api[path][method].action = payload.action;
-      //api[path][method].summary = payload.summary;
-      //api[path][method].description = payload.description;
       specification.types = types;
       break;
     }
