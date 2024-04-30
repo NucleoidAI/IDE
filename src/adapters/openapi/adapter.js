@@ -73,7 +73,7 @@ const toPaths = (api) => {
     paths[method?.path][method?.method?.toLowerCase()] = {
       summary: method?.summary || "",
       description: method?.description || "",
-      "x-nuc-action": method["x-nuc-action"],
+      "x-nuc-action": method["action"],
       responses: {
         200: {
           description: "Successful Operation",
