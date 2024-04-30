@@ -24,10 +24,12 @@ function APIDialog() {
   console.log(context);
 
   const { open, view, type, action } = context.get("pages.api.dialog");
+
   const selected = context.pages.api?.selected;
   const contextApis = context.specification.api;
 
   let selectedApi = null;
+  let allowedMethods = ["GET", "POST", "PUT", "DELETE", "PATCH"];
 
   if (action === "edit") {
     if (Array.isArray(contextApis)) {
@@ -36,16 +38,37 @@ function APIDialog() {
       );
     }
   } else if (action === "add") {
-    selectedApi = {
-      path: "/",
-      method: "POST",
-      summary: "",
-      description: "",
-      request: { type: "OPENAPI", schema: {} },
-      response: { type: "OPENAPI", schema: {} },
-      params: [],
-      "x-nuc-action": "",
-    };
+    if (type === "method") {
+      const existingMethods = contextApis
+        .filter((api) => api.path === selected?.path)
+        .map((api) => api.method.toUpperCase());
+
+      allowedMethods = allowedMethods.filter(
+        (method) => !existingMethods.includes(method)
+      );
+
+      selectedApi = {
+        path: selected?.path,
+        method: allowedMethods[0] || "GET",
+        summary: "",
+        description: "",
+        request: { type: "OPENAPI", schema: {} },
+        response: { type: "OPENAPI", schema: {} },
+        params: [],
+        "x-nuc-action": "",
+      };
+    } else {
+      selectedApi = {
+        path: "",
+        method: "GET",
+        summary: "",
+        description: "",
+        request: { type: "OPENAPI", schema: {} },
+        response: { type: "OPENAPI", schema: {} },
+        params: [],
+        "x-nuc-action": "",
+      };
+    }
   }
 
   useEffect(() => {
@@ -163,6 +186,7 @@ function APIDialog() {
           methodRef={methodRef}
           pathRef={pathRef}
           onTypesButtonClick={handleTypesButtonClick}
+          allowedMethods={allowedMethods}
         />
 
         <TabManager

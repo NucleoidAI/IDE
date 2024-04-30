@@ -66,7 +66,6 @@ function contextReducer(context, { type, payload }) {
         types,
         summary,
         description,
-        action,
       } = payload;
 
       const newApi = {
@@ -77,8 +76,9 @@ function contextReducer(context, { type, payload }) {
         params,
         summary,
         description,
-        "x-nuc-action": action,
+        "x-nuc-action": "",
       };
+      pages.api.dialog.open = false;
       specification.api.push(newApi);
       pages.api.selected = { path, method };
 

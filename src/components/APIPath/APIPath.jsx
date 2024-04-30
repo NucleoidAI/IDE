@@ -1,19 +1,20 @@
 import LanguageIcon from "@mui/icons-material/Language";
 import styles from "./styles";
 
-import {
-  Box,
-  Button,
-  Grid,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Grid, MenuItem, Select, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-const APIPath = ({ method, path, methodRef, pathRef, onTypesButtonClick }) => {
-  const [selectedMethod, setSelectedMethod] = useState(method);
+const APIPath = ({
+  method,
+  path,
+  methodRef,
+  pathRef,
+  onTypesButtonClick,
+  allowedMethods,
+}) => {
+  const [selectedMethod, setSelectedMethod] = useState(
+    allowedMethods.includes(method) ? method : allowedMethods[0] || ""
+  );
   const [selectedPath, setSelectedPath] = useState(path);
 
   useEffect(() => {
@@ -30,10 +31,11 @@ const APIPath = ({ method, path, methodRef, pathRef, onTypesButtonClick }) => {
             value={selectedMethod}
             onChange={(e) => setSelectedMethod(e.target.value)}
           >
-            <MenuItem value="GET">GET</MenuItem>
-            <MenuItem value="POST">POST</MenuItem>
-            <MenuItem value="PUT">PUT</MenuItem>
-            <MenuItem value="DELETE">DELETE</MenuItem>
+            {allowedMethods.map((method) => (
+              <MenuItem key={method} value={method}>
+                {method}
+              </MenuItem>
+            ))}
           </Select>
           <Box component="span" sx={styles.text}></Box>
           <TextField
