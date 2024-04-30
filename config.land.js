@@ -5,7 +5,7 @@ const config = {
   expert: "https://nuc.land/ide/api/expert",
   oauth: {
     accessTokenUrl: "https://nuc.land/ide/api/oauth",
-    clientId: "4806a6f27dc44ac5c27f",
+    clientId: "c391f0f4f1ad600a20ef",
     redirectUri: "https://nuc.land/ide/login",
     oauthUrl: "https://github.com/login/oauth/authorize",
   },
