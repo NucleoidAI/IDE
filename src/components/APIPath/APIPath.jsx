@@ -1,19 +1,45 @@
 import LanguageIcon from "@mui/icons-material/Language";
 import styles from "./styles";
 
-import { Box, Button, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
 
-const APIPath = ({ method, path, onTypesButtonClick }) => {
+const APIPath = ({ method, path, methodRef, pathRef, onTypesButtonClick }) => {
+  const [selectedMethod, setSelectedMethod] = useState(method);
+  const [selectedPath, setSelectedPath] = useState(path);
+
+  useEffect(() => {
+    methodRef.current = selectedMethod;
+    pathRef.current = selectedPath;
+  }, [selectedMethod, selectedPath, methodRef, pathRef]);
+
   return (
     <Grid container sx={styles.root}>
       <Grid sx={styles.firstElement} />
       <Grid item>
         <Grid container item sx={styles.content}>
-          <Typography>{method}</Typography>
-          <Box component={"span"} sx={styles.text}>
-            /
-          </Box>
-          <Typography>{path.replace("/", "")}</Typography>
+          <Select
+            value={selectedMethod}
+            onChange={(e) => setSelectedMethod(e.target.value)}
+          >
+            <MenuItem value="GET">GET</MenuItem>
+            <MenuItem value="POST">POST</MenuItem>
+            <MenuItem value="PUT">PUT</MenuItem>
+            <MenuItem value="DELETE">DELETE</MenuItem>
+          </Select>
+          <Box component="span" sx={styles.text}></Box>
+          <TextField
+            value={selectedPath}
+            onChange={(e) => setSelectedPath(e.target.value)}
+          />
         </Grid>
       </Grid>
       <Button onClick={onTypesButtonClick}>

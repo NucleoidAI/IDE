@@ -544,6 +544,28 @@ function contextReducer(context, { type, payload }) {
       }
       break;
     }
+    case "UPDATE_API_PATH_METHOD": {
+      const { path, method } = payload;
+
+      const apiIndex = specification.api.findIndex(
+        (api) =>
+          api.path === pages.api.selected.path &&
+          api.method === pages.api.selected.method
+      );
+
+      if (apiIndex !== -1) {
+        specification.api[apiIndex].path = path;
+        specification.api[apiIndex].method = method;
+      }
+
+      pages.api.selected = {
+        ...pages.api.selected,
+        path: path,
+        method: method,
+      };
+
+      break;
+    }
 
     default:
   }

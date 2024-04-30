@@ -17,6 +17,8 @@ function APIDialog() {
   const typesRef = useRef();
   const paramsRef = useRef([]);
   const addParams = useRef(() => {});
+  const methodRef = useRef();
+  const pathRef = useRef();
 
   const [context, dispatch] = useContext();
   console.log(context);
@@ -94,6 +96,13 @@ function APIDialog() {
         console.log("default");
         return;
     }
+    dispatch({
+      type: "UPDATE_API_PATH_METHOD",
+      payload: {
+        path: pathRef.current,
+        method: methodRef.current,
+      },
+    });
   };
 
   const handleTypesButtonClick = () => {
@@ -111,8 +120,10 @@ function APIDialog() {
         handleClose={() => dispatch({ type: "CLOSE_API_DIALOG" })}
       >
         <APIPath
-          method={selectedApi.method}
-          path={selectedApi.path}
+          method={selectedApi?.method || "GET"}
+          path={selectedApi?.path || ""}
+          methodRef={methodRef}
+          pathRef={pathRef}
           onTypesButtonClick={handleTypesButtonClick}
         />
 
