@@ -330,13 +330,13 @@ function contextReducer(context, { type, payload }) {
           ...template,
           summary: `Get ${className} list`,
           description: `Get ${className} list`,
-          "action": `function action(req) {\n  return ${className};\n}\n`,
+          action: `function action(req) {\n  return ${className};\n}\n`,
         },
         post: {
           ...template,
           summary: `Create ${className}`,
           description: `Create ${className}`,
-          "action": `function action(req) {\n  return new ${className}();\n}\n`,
+          action: `function action(req) {\n  return new ${className}();\n}\n`,
         },
       };
       api[`/${resource}/{${resource}}`] = {
@@ -344,19 +344,19 @@ function contextReducer(context, { type, payload }) {
           ...template,
           summary: `Get ${className}`,
           description: `Get ${className}`,
-          "action": `function action(req) {\n  const ${resource} = req.params.${resource};\n  return ${className}[${resource}];\n}\n`,
+          action: `function action(req) {\n  const ${resource} = req.params.${resource};\n  return ${className}[${resource}];\n}\n`,
         },
         put: {
           ...template,
           summary: `Update ${className}`,
           description: `Update ${className}`,
-          "action": `function action(req) {\n  const ${resource} = req.params.${resource};\n  return ${className}[${resource}];\n}\n`,
+          action: `function action(req) {\n  const ${resource} = req.params.${resource};\n  return ${className}[${resource}];\n}\n`,
         },
         del: {
           ...template,
           summary: `Delete ${className}`,
           description: `Delete ${className}`,
-          "action": `function action(req) {\n  const ${resource} = req.params.${resource};\n  delete ${className}[${resource}];\n}\n`,
+          action: `function action(req) {\n  const ${resource} = req.params.${resource};\n  delete ${className}[${resource}];\n}\n`,
         },
       };
 
