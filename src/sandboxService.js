@@ -86,7 +86,11 @@ const get = async (endpoint) => {
 };
 const query = async (body) => {
   try {
-    const response = await http.post(`${terminalUrl}`, body);
+    const response = await http.post(`${terminalUrl}`, body, {
+      headers: {
+        "Content-Type": "application/javascript",
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Error querying:", error);
