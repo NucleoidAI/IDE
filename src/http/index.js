@@ -53,7 +53,7 @@ instance.oauth = (body) =>
 
 instance.getCodeFromGithub = () => {
   const popup = window.open(
-    `${config.oauth.oauthUrl}?scope=user&client_id=${config.oauth.clientId}`,
+    `${config.oauth.oauthUrl}?scope=user&client_id=${config.oauth.clientId}&redirect_uri=${config.oauth.redirectUri}`,
     "target_blank",
     "toolbar=yes,scrollbars=yes,resizable=yes,top=50,left=50,width=650,height=750"
   );
