@@ -296,6 +296,10 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     publish("PROJECT_CHANGED", {
       id,
     });
+    publish("RUNTIME_CONNECTION", {
+      status: false,
+      metrics: { total: 100, free: 50 },
+    });
   };
 
   const handleLogin = async () => {
