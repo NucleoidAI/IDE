@@ -37,7 +37,7 @@ export const api = [
     },
     summary: "Get all users",
     description: "Get all users",
-    "action": `function action(req: any): { message: string } {
+    action: `function action(req: any): { message: string } {
         return { message: "Hello World" };
       }`,
   },
@@ -67,7 +67,7 @@ export const api = [
     },
     summary: "Get item by name",
     description: "Get item by name",
-    "action": `function action(req: { query: { name: string } }): any {
+    action: `function action(req: { query: { name: string } }): any {
         const name = req.query.name;
         return (Item as any).filter(item => item.name === name);
       }`,
@@ -106,7 +106,7 @@ export const api = [
     },
     summary: "Create new item",
     description: "Create new item",
-    "action": `function action(req: { body: { name: string, barcode: string } }): any {
+    action: `function action(req: { body: { name: string, barcode: string } }): any {
         const name = req.body.name;
         const barcode = req.body.barcode;
         const check = (Item as any).find(i => i.barcode === barcode);
@@ -144,7 +144,7 @@ export const api = [
     summary: "Get item by id",
     description: "Get item by id",
 
-    "action": `function action(req: { params: { item: string } }): any {
+    action: `function action(req: { params: { item: string } }): any {
         const item = req.params.item;
         return Item[item];
       }`,

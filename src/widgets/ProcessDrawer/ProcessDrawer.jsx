@@ -281,7 +281,7 @@ function ApiButton() {
           ...toOpenApi({ api: context.api, types }),
           "x-nuc-functions": context.functions,
           "x-nuc-declerations": context.declarations,
-          "action": "start",
+          action: "start",
         },
       };
 
