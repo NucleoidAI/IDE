@@ -4,7 +4,7 @@ const config = {
   oauth: {
     accessTokenUrl: "https://nuc.land/ide/api/oauth",
     clientId: "c391f0f4f1ad600a20ef",
-    redirectUri: "https://nuc.land/ide/login",
+    redirectUri: "https://nuc.land/callback/ide",
     oauthUrl: "https://github.com/login/oauth/authorize",
   },
   sandbox: "https://nuc.land/sandbox",
