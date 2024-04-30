@@ -15,7 +15,10 @@ const refreshAuthLogic = async (failedRequest) => {
   let tokenRefreshResponse;
   if (!refreshToken && !accessToken) {
     const code = await instance.getCodeFromGithub();
-    tokenRefreshResponse = await instance.oauth({ code: code });
+    tokenRefreshResponse = await instance.oauth({
+      code: code,
+      redirect_uri: config.oauth.redirectUri,
+    });
   } else {
     tokenRefreshResponse = await instance.oauth({ refreshToken: refreshToken });
   }
