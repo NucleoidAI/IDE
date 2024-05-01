@@ -21,7 +21,6 @@ function APIDialog() {
   const pathRef = useRef();
 
   const [context, dispatch] = useContext();
-  console.log(context);
 
   const { open, view, type, action } = context.get("pages.api.dialog");
 
@@ -101,7 +100,6 @@ function APIDialog() {
     const method = methodRef.current;
 
     if (action === "add") {
-      console.log("add");
       dispatch({
         type: "SAVE_API_DIALOG",
         payload: {
