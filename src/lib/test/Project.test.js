@@ -48,3 +48,11 @@ test("ignores imperative block", () => {
   expect(result.functions).toEqual([]);
   expect(result.declarations).toEqual([]);
 });
+
+test("ignores imperative block without 'use imperative'", () => {
+  const imperativeBlockWithoutDirective =
+    "User.filter(u => u.firstName === 'John');";
+  const result = Project.compile([imperativeBlockWithoutDirective]);
+  expect(result.functions).toEqual([]);
+  expect(result.declarations).toEqual([]);
+});
