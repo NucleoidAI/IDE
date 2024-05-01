@@ -25,12 +25,12 @@ const APIPath = ({
   const [selectedMethod, setSelectedMethod] = useState(
     allowedMethods.includes(method) ? method : allowedMethods[0] || ""
   );
-  const [selectedPath, setSelectedPath] = useState(path);
+  const [selectedPath, setSelectedPath] = useState("");
 
   useEffect(() => {
     methodRef.current = selectedMethod;
-    pathRef.current = selectedPath;
-  }, [selectedMethod, selectedPath, methodRef, pathRef]);
+    pathRef.current = path + selectedPath;
+  }, [selectedMethod, selectedPath, methodRef, pathRef, path]);
 
   return (
     <Grid container sx={styles.root}>
@@ -51,10 +51,9 @@ const APIPath = ({
               ))}
             </Select>
           )}
-
-          {isPathDisabled ? (
-            <Typography>{path}</Typography>
-          ) : (
+          <Box component="span" sx={styles.text}></Box>
+          <Typography>{path}</Typography>
+          {!isPathDisabled && (
             <TextField
               value={selectedPath}
               onChange={(e) => setSelectedPath(e.target.value)}

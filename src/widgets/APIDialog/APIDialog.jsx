@@ -59,7 +59,7 @@ function APIDialog() {
       };
     } else {
       selectedApi = {
-        path: "",
+        path: selected?.path,
         method: "GET",
         summary: "",
         description: "",
