@@ -39,12 +39,13 @@ function APITree() {
   const [expanded, setExpanded] = useState([]);
   const [errors] = useEvent("DIAGNOSTICS_COMPLETED", []);
   const [state, dispatch] = useContext();
+  const theme = useTheme();
 
   const api = state.get("specification.api");
   //eslint-disable-next-line
   const [apiExists, setApiExists] = useState(Boolean(api.length));
 
-  const expandList = [];
+  const expandList = React.useMemo(() => [], []);
 
   const handleToggle = (event, ids) => {
     setExpanded(ids);
@@ -164,7 +165,8 @@ function APITree() {
                 handleContextMenu,
                 expandList,
                 rightClickMethod,
-                errors
+                errors,
+                theme
               )}
             </TreeView>
 
@@ -217,7 +219,8 @@ export const compile = (
   handleContextMenu,
   expandList,
   rightClickMethod,
-  errors
+  errors,
+  theme
 ) => {
   if (apiData.length !== 0) {
     const groupedByPath = apiData.reduce((acc, endpoint) => {
@@ -262,7 +265,6 @@ export const compile = (
       // eslint-disable-next-line
       let resourceHash;
       // eslint-disable-next-line
-      const theme = useTheme();
 
       return Object.keys(data).map((path) => {
         const { methods, children } = data[path];
