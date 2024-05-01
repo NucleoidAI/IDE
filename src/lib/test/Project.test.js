@@ -1,17 +1,8 @@
 import Project from "../Project.js";
-import chatData from "./chatData.json";
-
-let blocks;
-
-beforeAll(() => {
-  blocks = chatData.messages
-    .filter((message) => message.code)
-    .map((message) => message.code);
-});
+import { blocks } from "./blocks.js";
 
 test("compiles class block", () => {
   const result = Project.compile(blocks);
-  console.log(result);
 
   expect(result.functions[0].path).toBe("/User");
   expect(result.functions[0].params).toEqual([
