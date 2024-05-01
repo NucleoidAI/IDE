@@ -187,6 +187,9 @@ function APIDialog() {
           pathRef={pathRef}
           onTypesButtonClick={handleTypesButtonClick}
           allowedMethods={allowedMethods}
+          type={type}
+          isMethodDisabled={action === "edit" || type === "resource"}
+          isPathDisabled={action === "edit" || type === "method"}
         />
 
         <TabManager
