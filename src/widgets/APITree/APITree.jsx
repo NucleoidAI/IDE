@@ -130,7 +130,7 @@ function APITree() {
 
   useEffect(() => {
     if (!selected) {
-      select(Object.keys(map).pop());
+      select(Object.keys(map)[0]);
     }
     setMethodDisabled(checkMethodDeletable());
     handleExpandClick();
