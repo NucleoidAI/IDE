@@ -136,7 +136,7 @@ function APITree() {
     handleExpandClick();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected, state, select, checkMethodDeletable, handleExpandClick]);
+  }, [selected, state]);
 
   return (
     <Card sx={{ height: "100%" }}>
