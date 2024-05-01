@@ -136,7 +136,6 @@ function APITree() {
     handleExpandClick();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected, state]);
   }, [selected, state, select, checkMethodDeletable, handleExpandClick]);
 
   return (
