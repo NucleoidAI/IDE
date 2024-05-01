@@ -3,19 +3,11 @@
   "title": "New Chat",
   "messages": [
     {
-      "role": "USER",
-      "content": "Define an user with first name and last name"
-    },
-    {
       "role": "ASSISTANT",
       "mode": "DECLARATIVE",
       "type": "DECLARATIVE",
       "code": "'use declarative';\n\nclass User {\n firstName: string;\n lastName: string;\n\n constructor(firstName: string, lastName: string) {\n this.firstName = firstName;\n this.lastName = lastName;\n }\n}",
       "content": "An user with a first name and last name was defined using a class called User with properties for firstName and lastName."
-    },
-    {
-      "role": "USER",
-      "content": "Full name of user is first name and last name"
     },
     {
       "role": "ASSISTANT",
@@ -26,20 +18,12 @@
       "content": "The full name of the user was determined to be the combination of their first name and last name."
     },
     {
-      "role": "USER",
-      "content": "Initials of user is first letter of first name and last name"
-    },
-    {
       "role": "ASSISTANT",
       "mode": "DECLARATIVE",
       "type": "DECLARATIVE",
       "code": "'use declarative';\n\n$User.initials = $User.firstName.charAt(0) + $User.lastName.charAt(0);",
       "result": "use declarative",
       "content": "The initials of the user were generated using the first letter of their first name and last name."
-    },
-    {
-      "role": "USER",
-      "content": "List all users whose last name is 'Doe'"
     },
     {
       "role": "ASSISTANT",
