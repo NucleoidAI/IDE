@@ -110,12 +110,12 @@ Cypress.Commands.add("setup", (container, fixtureType, type) => {
     if (fixtureType === "SEED" || "") {
       cy.fixture("CHAT/chat-data.json").then((data) => {
         cy.storageSet(`ide.chat.sessions.${data.id}`, data);
-        cy.visit(`/ide/chat/${data.id}`);
+        cy.visit(`/chat/${data.id}`);
       });
     } else if (fixtureType === "BLANK") {
       cy.fixture("CHAT/empty-chat-data.json").then((data) => {
         cy.storageSet(`ide.chat.sessions.${data.id}`, data);
-        cy.visit(`/ide/chat/${data.id}`);
+        cy.visit(`/chat/${data.id}`);
       });
     }
   }
