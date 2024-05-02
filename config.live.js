@@ -1,5 +1,4 @@
 const config = {
-  name: "IDE",
   base: "/ide",
   api: "https://nucleoid.com/ide/api",
   oauth: {
