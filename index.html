@@ -45,14 +45,15 @@
   <script type="module" src="/src/index.jsx"></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-L9H12K94J4"></script>
 
-  <script>
+  <script type="module">
+    import config from "./config.js";
     const params = new URLSearchParams(window.location.search);
 
     if (params.get("clear") === "true") {
       localStorage.clear();
     }
 
-    if (params.get("dev")) {
+    if (params.get("dev") || !config.base) {
       localStorage.setItem("beta", params.get("dev"));
       localStorage.setItem("debug", params.get("dev"));
     }
@@ -87,7 +88,8 @@
 
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
-        navigator.serviceWorker.register("/ide/service-worker.js?v=3");
+        const base = config.base || window.location.origin;
+        navigator.serviceWorker.register(`${base}/service-worker.js?v=3`);
       });
     }
 
