@@ -85,7 +85,7 @@ describe("Projects Path", () => {
 
       cy.visit(`/${localProjectId}?mode=local`);
 
-      cy.url().should("contain", `ide/${localProjectId}/api?mode=local`);
+      cy.url().should("contain", `/${localProjectId}/api?mode=local`);
 
       cy.location("pathname").then((pathname) => {
         const pathParts = pathname.split("/");
