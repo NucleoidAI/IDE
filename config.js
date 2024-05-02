@@ -1,5 +1,5 @@
 const config = {
-  api: "https://api-nucleoid-com-land.gentleflower-99ef02e0.eastus.azurecontainerapps.io/",
+  api: "http://localhost:3000",
   oauth: {
     accessTokenUrl: "http://localhost:3000/oauth",
     clientId: "0c2844d3d19dc9293fc5",
