@@ -81,6 +81,10 @@ function contextReducer(context, { type, payload }) {
       pages.api.dialog.open = false;
       specification.api.push(newApi);
       pages.api.selected = { path, method };
+      publish("SELECTED_API_CHANGED", {
+        path: path,
+        method: method,
+      });
 
       specification.types = types;
       break;
@@ -109,6 +113,12 @@ function contextReducer(context, { type, payload }) {
         path: payload.path,
         method: payload.method,
       };
+
+      publish("SELECTED_API_CHANGED", {
+        path: payload.path,
+        method: payload.method,
+      });
+
       break;
     }
 

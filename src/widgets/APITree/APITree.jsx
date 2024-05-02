@@ -41,6 +41,11 @@ function APITree() {
   const [state, dispatch] = useContext();
   const theme = useTheme();
 
+  const [selectedAPI] = useEvent("SELECTED_API_CHANGED", {
+    path: "/",
+    method: "GET",
+  });
+
   const api = state.get("specification.api");
   //eslint-disable-next-line
   const [apiExists, setApiExists] = useState(Boolean(api.length));
@@ -55,15 +60,28 @@ function APITree() {
     setExpanded([...expandList]);
   };
 
-  const select = (id) => {
+  const select = (id, callDispatch = true) => {
     if (map[id]) {
       setSelected(id);
-      dispatch({ type: "SET_SELECTED_API", payload: map[id] });
+      if (callDispatch) {
+        dispatch({ type: "SET_SELECTED_API", payload: map[id] });
+      }
     }
   };
 
+  useEffect(() => {
+    const selectedId = Object.keys(map).find(
+      (key) =>
+        map[key].path === selectedAPI.path &&
+        map[key].method === selectedAPI.method
+    );
+    if (selectedId) {
+      select(selectedId, false);
+    }
+  }, [selectedAPI]);
+
   const handleContextMenu = (event, hash) => {
-    event.preventDefault();
+    event.preventDsefault();
 
     if (hash) select(hash);
 
