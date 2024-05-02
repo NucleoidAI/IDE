@@ -21,6 +21,7 @@ const APIPath = ({
   allowedMethods,
   isMethodDisabled,
   isPathDisabled,
+  validatePath,
 }) => {
   const [selectedMethod, setSelectedMethod] = useState(
     allowedMethods.includes(method) ? method : allowedMethods[0] || ""
@@ -32,6 +33,7 @@ const APIPath = ({
   useEffect(() => {
     methodRef.current = selectedMethod;
     pathRef.current = path + selectedPath;
+    validatePath(pathRef.current);
   }, [selectedMethod, selectedPath, methodRef, pathRef, path]);
 
   return (

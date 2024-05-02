@@ -9,7 +9,7 @@ import React from "react";
 import { getTypes } from "../../lib/TypeScript";
 import { useContext } from "../../context/context";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function APIDialog() {
   const requestSchemaRef = useRef();
@@ -19,6 +19,7 @@ function APIDialog() {
   const addParams = useRef(() => {});
   const methodRef = useRef();
   const pathRef = useRef();
+  const [saveDisable, setSaveDisable] = useState(true);
 
   const [context, dispatch] = useContext();
 
@@ -164,6 +165,18 @@ function APIDialog() {
     }
   };
 
+  const validatePath = (path) => {
+    console.log("validatePath", path);
+    const isDuplicate = contextApis.some(
+      (api) => api.path === path && api.method === methodRef.current
+    );
+    if (isDuplicate || path.includes("//")) {
+      setSaveDisable(true);
+    } else {
+      setSaveDisable(false);
+    }
+  };
+
   const handleTypesButtonClick = () => {
     dispatch({
       type: "SET_API_DIALOG_VIEW",
@@ -188,6 +201,7 @@ function APIDialog() {
           type={type}
           isMethodDisabled={action === "edit" || type === "resource"}
           isPathDisabled={action === "edit" || type === "method"}
+          validatePath={validatePath}
         />
 
         <TabManager
@@ -206,6 +220,7 @@ function APIDialog() {
         />
         <APIDialogAction
           view={view}
+          saveDisable={saveDisable}
           setApiDialogView={(button) =>
             dispatch({
               type: "SET_API_DIALOG_VIEW",
