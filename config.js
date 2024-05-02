@@ -1,6 +1,5 @@
 const config = {
   name: "IDE",
-  base: "/ide",
   api: "https://api-nucleoid-com-land.gentleflower-99ef02e0.eastus.azurecontainerapps.io/",
   oauth: {
     accessTokenUrl: "http://localhost:3000/oauth",
