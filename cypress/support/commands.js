@@ -29,7 +29,7 @@ Cypress.Commands.add("setup", (container, fixtureType, type) => {
 
   if (container === "IDE") {
     cy.fixture("/PROJECTS/projects.json").then((projects) => {
-      cy.intercept("GET", "https://nuc.land/ide/api/projects", {
+      cy.intercept("GET", "/projects", {
         statusCode: 200,
         body: fixtureType === "BLANK" ? {} : projects,
       }).as("getProjects");
@@ -53,7 +53,7 @@ Cypress.Commands.add("setup", (container, fixtureType, type) => {
           const cloudProject = projects.find((p) => p.id === cloudProjectId);
           cy.intercept(
             "GET",
-            `https://nuc.land/ide/api/projects/${cloudProjectId}`,
+            `/projects/${cloudProjectId}`,
             {
               statusCode: 200,
               body: fixtureType === "BLANK" ? {} : cloudProject,
@@ -66,7 +66,7 @@ Cypress.Commands.add("setup", (container, fixtureType, type) => {
         .then((service) => {
           cy.intercept(
             "GET",
-            `https://nuc.land/ide/api/projects/${cloudProjectId}/services`,
+            `/projects/${cloudProjectId}/services`,
             {
               statusCode: 200,
               body: fixtureType === "BLANK" ? {} : service,
@@ -80,7 +80,7 @@ Cypress.Commands.add("setup", (container, fixtureType, type) => {
         .then((context) => {
           cy.intercept(
             "GET",
-            `https://nuc.land/ide/api/services/${serviceId}/specification`,
+            `/services/${serviceId}/specification`,
             {
               statusCode: 200,
               body: fixtureType === "BLANK" ? {} : context,
@@ -136,7 +136,7 @@ Cypress.Commands.add("typeEditor", (changedEditorValue) => {
 });
 
 Cypress.Commands.add("sendMessage", (message, fixture) => {
-  cy.intercept("POST", "/ide/api/expert/chat/sessions/*", (req) => {
+  cy.intercept("POST", "/chat/sessions/*", (req) => {
     if (req.body.content === message) {
       req.reply({
         statusCode: 200,
@@ -183,7 +183,7 @@ Cypress.Commands.add("saveContextIntercept", (serviceId) => {
     .then((context) => {
       cy.intercept(
         "PUT",
-        `https://nuc.land/ide/api/services/${serviceId}/specification`,
+        `services/${serviceId}/specification`,
         {
           statusCode: 200,
           body: context,
@@ -196,7 +196,7 @@ Cypress.Commands.add("saveContextIntercept", (serviceId) => {
     .then((context) => {
       cy.intercept(
         "GET",
-        `https://nuc.land/ide/api/services/${serviceId}/specification`,
+        `/services/${serviceId}/specification`,
         {
           statusCode: 200,
           body: context,

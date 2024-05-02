@@ -68,7 +68,7 @@ describe("ChatWidget", () => {
   });
 
   it("displays error message", () => {
-    cy.intercept("POST", "/ide/api/expert/chat/sessions/*", (req) => {
+    cy.intercept("POST", "/chat/sessions/*", (req) => {
       if (req.body.content === "trigger error") {
         req.reply({
           statusCode: 400,
@@ -111,7 +111,7 @@ describe("ChatWidget", () => {
   it("should handle suggestions and update the overlay", () => {
     cy.fixture("MESSAGES/hello").then((hello) => {
       cy.fixture("MESSAGES/define-human").then((defineHuman) => {
-        cy.intercept("POST", "/ide/api/expert/chat/sessions/*", (req) => {
+        cy.intercept("POST", "/chat/sessions/*", (req) => {
           if (req.body.content === "hello") {
             req.reply({
               statusCode: 200,

@@ -27,10 +27,8 @@ describe("Projects Path", () => {
     it("redirects to error path if project id is invalid", () => {
       const invalidProjectId = "1111111111";
 
-      cy.intercept(`https://nuc.land/ide/api/projects/${invalidProjectId}`);
-      cy.intercept(
-        `https://nuc.land/ide/api/projects/${invalidProjectId}/services`
-      );
+      cy.intercept(`/projects/${invalidProjectId}`);
+      cy.intercept(`/projects/${invalidProjectId}/services`);
 
       cy.visit(`/ide/${invalidProjectId}`);
 
