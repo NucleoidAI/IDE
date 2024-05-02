@@ -81,7 +81,7 @@ function APITree() {
   }, [selectedAPI]);
 
   const handleContextMenu = (event, hash) => {
-    event.preventDsefault();
+    event.preventDefault();
 
     if (hash) select(hash);
 
