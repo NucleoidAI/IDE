@@ -76,7 +76,9 @@ function contextReducer(context, { type, payload }) {
         params,
         summary,
         description,
-        "x-nuc-action": "",
+        "x-nuc-action": `function action(req) {
+          return req.body.name;
+        }`,
       };
       pages.api.dialog.open = false;
       specification.api.push(newApi);
