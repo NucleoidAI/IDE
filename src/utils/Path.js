@@ -24,8 +24,26 @@ const addSlashMark = (path) => {
 };
 
 const getProjectId = () => {
-  const parts = window.location.pathname.split("/");
-  return parts.length >= 3 ? parts[2] : null;
+  const regex =
+    /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}/g;
+
+  const pathname = window.location.pathname;
+  const segments = pathname.split("/");
+
+  for (const segment of segments) {
+    const match = segment.match(regex);
+    if (match) {
+      return match[0];
+    } else if (
+      segment === "new" ||
+      segment === "sample" ||
+      segment === "mobile" ||
+      segment === "chat" ||
+      segment === "error"
+    ) {
+      return segment;
+    }
+  }
 };
 
 const getRecentProject = () => {
