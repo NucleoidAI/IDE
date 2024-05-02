@@ -1,5 +1,5 @@
+import config from "../config";
 import { storage } from "@nucleoidjs/webstorage";
-
 const isUsed = (paths, prefix, suffix, value) => {
   if (value === "" && paths.includes(prefix.charAt(0, prefix.length - 1)))
     return true;
@@ -24,25 +24,13 @@ const addSlashMark = (path) => {
 };
 
 const getProjectId = () => {
-  const regex =
-    /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}/g;
-
-  const pathname = window.location.pathname;
-  const segments = pathname.split("/");
-
-  for (const segment of segments) {
-    const match = segment.match(regex);
-    if (match) {
-      return match[0];
-    } else if (
-      segment === "new" ||
-      segment === "sample" ||
-      segment === "mobile" ||
-      segment === "chat" ||
-      segment === "error"
-    ) {
-      return segment;
-    }
+  const { base } = config;
+  if (base) {
+    const parts = window.location.pathname.split("/");
+    return parts[3];
+  } else {
+    const parts = window.location.pathname.split("/");
+    return parts[1];
   }
 };
 
@@ -61,7 +49,7 @@ const getMode = () => {
   const mode = urlParams.get("mode");
 
   const id = getProjectId();
-
+  console.log(id);
   if (mode) {
     return mode;
   } else {
