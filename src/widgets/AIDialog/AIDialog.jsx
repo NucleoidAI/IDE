@@ -4,7 +4,7 @@ import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import PromptCodeDialog from "../../components/PromptCodeDialog";
 import actions from "../../actions";
 import { deepCopy } from "../../utils/DeepCopy";
-import expert from "../../http/expert.js";
+import http from "../../http";
 import { publish } from "@nucleoidai/react-event";
 import service from "../../service";
 import { useContext } from "../../context/context";
@@ -80,7 +80,7 @@ function AIDialog({ editor, declarative, imperative, page }) {
     if (promptValue) {
       setLoading(true);
 
-      expert
+      http
         .post("/chat/completions", {
           mode,
           role: "USER",
