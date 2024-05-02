@@ -49,7 +49,7 @@ const getMode = () => {
   const mode = urlParams.get("mode");
 
   const id = getProjectId();
-  console.log(id);
+
   if (mode) {
     return mode;
   } else {
@@ -65,8 +65,6 @@ const getMode = () => {
       return "error";
     } else if (id) {
       return "cloud";
-    } else {
-      return null;
     }
   }
 };

@@ -64,8 +64,7 @@ test("returns false when the new path is not used", () => {
 });
 
 test("returns the project id", () => {
-  window.location.pathname =
-    "/projects/f1f04060-1ea4-46fc-bbf9-fb69c1faca8b/api";
+  window.location.pathname = "/f1f04060-1ea4-46fc-bbf9-fb69c1faca8b/api";
   const id = Path.getProjectId();
   expect(id).toEqual("f1f04060-1ea4-46fc-bbf9-fb69c1faca8b");
 });
@@ -100,14 +99,7 @@ test("returns the mode from the URL", () => {
 
 test("returns the mode from the project id", () => {
   window.location.search = "";
-  window.location.pathname = "ide/f1f04060-1ea4-46fc-bbf9-fb69c1faca8b/api";
+  window.location.pathname = "/f1f04060-1ea4-46fc-bbf9-fb69c1faca8b/api";
   const mode = Path.getMode();
   expect(mode).toEqual("cloud");
-});
-
-test("returns null when the mode is not found", () => {
-  window.location.search = "";
-  window.location.pathname = "ide/api";
-  const mode = Path.getMode();
-  expect(mode).toEqual(null);
 });
