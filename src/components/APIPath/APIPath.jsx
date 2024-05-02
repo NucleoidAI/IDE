@@ -25,7 +25,9 @@ const APIPath = ({
   const [selectedMethod, setSelectedMethod] = useState(
     allowedMethods.includes(method) ? method : allowedMethods[0] || ""
   );
-  const [selectedPath, setSelectedPath] = useState("");
+  const [selectedPath, setSelectedPath] = useState(
+    !isPathDisabled && path !== "/" ? "/" : ""
+  );
 
   useEffect(() => {
     methodRef.current = selectedMethod;
