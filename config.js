@@ -1,4 +1,5 @@
 const config = {
+  base: "/",
   api: "http://localhost:3000",
   oauth: {
     accessTokenUrl: "http://localhost:3000/oauth",
