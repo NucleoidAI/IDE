@@ -1,5 +1,6 @@
 import config from "../config";
 import { storage } from "@nucleoidjs/webstorage";
+
 const isUsed = (paths, prefix, suffix, value) => {
   if (value === "" && paths.includes(prefix.charAt(0, prefix.length - 1)))
     return true;
@@ -23,17 +24,6 @@ const addSlashMark = (path) => {
   return path?.substring(path.length - 1) !== "/" ? "/" : "";
 };
 
-const getProjectId = () => {
-  const { base } = config;
-  if (base) {
-    const parts = window.location.pathname.split("/");
-    return parts[3];
-  } else {
-    const parts = window.location.pathname.split("/");
-    return parts[1];
-  }
-};
-
 const getRecentProject = () => {
   const recentProject = storage.get("ide", "selected", "context");
 
@@ -45,27 +35,25 @@ const getRecentProject = () => {
 };
 
 const getMode = () => {
+  const { base } = config;
+  const modes = ["sample", "mobile", "chat", "new", "error"];
+
+  const urlParts = window.location.pathname.split("/");
+  const modeIndex = base ? 3 : 1;
+  const mode = urlParts[modeIndex];
+
+  const uuidPattern =
+    /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+
+  const checkId = uuidPattern.test(mode);
+  const checkMode = modes.includes(mode);
   const urlParams = new URLSearchParams(window.location.search);
-  const mode = urlParams.get("mode");
+  const queryMode = urlParams.get("mode");
 
-  const id = getProjectId();
-
-  if (mode) {
-    return mode;
+  if (checkId) {
+    return queryMode || "cloud";
   } else {
-    if (id === "sample") {
-      return "sample";
-    } else if (id === "mobile") {
-      return "mobile";
-    } else if (id === "chat") {
-      return "chat";
-    } else if (id === "new") {
-      return "new";
-    } else if (id === "error") {
-      return "error";
-    } else if (id) {
-      return "cloud";
-    }
+    return checkMode ? mode : "error";
   }
 };
 
@@ -74,7 +62,6 @@ const Path = {
   split,
   addSlashMark,
   getMode,
-  getProjectId,
   getRecentProject,
 };
 
