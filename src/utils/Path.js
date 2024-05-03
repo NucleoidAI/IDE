@@ -1,4 +1,4 @@
-import config from "../config";
+import config from "../../config";
 import { storage } from "@nucleoidjs/webstorage";
 
 const isUsed = (paths, prefix, suffix, value) => {
@@ -39,7 +39,7 @@ const getMode = () => {
   const modes = ["sample", "mobile", "chat", "new", ""];
 
   const urlParts = window.location.pathname.split("/");
-  const modeIndex = base ? 3 : 1;
+  const modeIndex = base ? 2 : 1;
   const mode = urlParts[modeIndex];
 
   const uuidPattern =
@@ -54,6 +54,8 @@ const getMode = () => {
     return queryMode || "cloud";
   } else if (checkMode) {
     return mode;
+  } else if (mode === undefined || mode === "") {
+    return null;
   } else {
     return "error";
   }
