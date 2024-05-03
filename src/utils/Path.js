@@ -36,7 +36,7 @@ const getRecentProject = () => {
 
 const getMode = () => {
   const { base } = config;
-  const modes = ["sample", "mobile", "chat", "new", "error"];
+  const modes = ["sample", "mobile", "chat", "new", ""];
 
   const urlParts = window.location.pathname.split("/");
   const modeIndex = base ? 3 : 1;
@@ -53,9 +53,9 @@ const getMode = () => {
   if (checkId) {
     return queryMode || "cloud";
   } else if (checkMode) {
-    return "error";
+    return mode;
   } else {
-    return null;
+    return "error";
   }
 };
 

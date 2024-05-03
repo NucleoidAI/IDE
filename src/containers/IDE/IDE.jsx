@@ -203,7 +203,7 @@ function IDE() {
     async function initMode() {
       const mode = Path.getMode();
       const recentProject = Path.getRecentProject();
-      console.log("mode", mode);
+
       if (mode === "sample") {
         sampleProject();
       } else if (mode === "cloud") {
@@ -226,10 +226,11 @@ function IDE() {
         const blankContext = blankProject();
         setReactContext(initContext(blankContext));
       } else if (mode === "error") {
+        navigate("/error/api");
         const blankContext = blankProject();
         setReactContext(initContext(blankContext));
         publish("PROJECT_NOT_FOUND", { status: true });
-      } else {
+      } else if (mode === "") {
         checkRecentProject(recentProject);
       }
     }
