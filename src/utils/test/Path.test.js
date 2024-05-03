@@ -63,12 +63,6 @@ test("returns false when the new path is not used", () => {
   expect(result).toEqual(false);
 });
 
-test("returns the project id", () => {
-  window.location.pathname = "/f1f04060-1ea4-46fc-bbf9-fb69c1faca8b/api";
-  const id = Path.getProjectId();
-  expect(id).toEqual("f1f04060-1ea4-46fc-bbf9-fb69c1faca8b");
-});
-
 test("returns the selected project in storage", () => {
   const projectId = "f1f04060-1ea4-46fc-bbf9-fb69c1faca8b";
 
@@ -91,15 +85,29 @@ test("returns null when the selected project is not found", () => {
   expect(recentProject).toEqual(null);
 });
 
-test("returns the mode from the URL", () => {
+test("returns the mode from the query", () => {
   window.location.search = "?mode=local";
   const mode = Path.getMode();
   expect(mode).toEqual("local");
 });
 
-test("returns the mode from the project id", () => {
+test("returns the cloud mode", () => {
   window.location.search = "";
   window.location.pathname = "/f1f04060-1ea4-46fc-bbf9-fb69c1faca8b/api";
   const mode = Path.getMode();
   expect(mode).toEqual("cloud");
+});
+
+test("returns the sample mode", () => {
+  window.location.search = "";
+  window.location.pathname = "/sample";
+  const mode = Path.getMode();
+  expect(mode).toEqual("sample");
+});
+
+test("returns 'error' when pathname does not match uuid format", () => {
+  window.location.search = "";
+  window.location.pathname = "/1111-555";
+  const mode = Path.getMode();
+  expect(mode).toEqual("error");
 });
