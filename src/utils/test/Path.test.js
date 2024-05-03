@@ -1,6 +1,6 @@
 import Path from "../Path.js";
+import config from "../../../config.js";
 import { storage } from "@nucleoidjs/webstorage";
-
 jest.mock("@nucleoidjs/webstorage", () => {
   const memory = new Map();
   return {
@@ -86,7 +86,7 @@ test("returns null when the selected project is not found", () => {
 });
 
 test("returns the mode from the query", () => {
-  window.location.pathname = "/f1f04060-1ea4-46fc-bbf9-fb69c1faca8b";
+  window.location.pathname = `${config.base}/f1f04060-1ea4-46fc-bbf9-fb69c1faca8b`;
   window.location.search = "?mode=local";
   const mode = Path.getMode();
   expect(mode).toEqual("local");
@@ -94,21 +94,21 @@ test("returns the mode from the query", () => {
 
 test("returns the cloud mode", () => {
   window.location.search = "";
-  window.location.pathname = "/f1f04060-1ea4-46fc-bbf9-fb69c1faca8b/api";
+  window.location.pathname = `${config.base}/f1f04060-1ea4-46fc-bbf9-fb69c1faca8b/api`;
   const mode = Path.getMode();
   expect(mode).toEqual("cloud");
 });
 
 test("returns the sample mode", () => {
   window.location.search = "";
-  window.location.pathname = "/sample";
+  window.location.pathname = `${config.base}/sample`;
   const mode = Path.getMode();
   expect(mode).toEqual("sample");
 });
 
 test("returns 'error' when pathname does not match uuid format", () => {
   window.location.search = "";
-  window.location.pathname = "/f1f04060-46fc-bbf9-fb69c1faca8b";
+  window.location.pathname = `${config.base}/f1f04060-46fc-bbf9-fb69c1faca8b`;
   const mode = Path.getMode();
   expect(mode).toEqual("error");
 });
