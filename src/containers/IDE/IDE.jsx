@@ -137,7 +137,6 @@ function IDE() {
   }
 
   const initContext = (context) => {
-    console.log(context.project);
     if (
       !Settings.description() ||
       Settings.description() !== context.project.description
@@ -230,7 +229,7 @@ function IDE() {
         const blankContext = blankProject();
         setReactContext(initContext(blankContext));
         publish("PROJECT_NOT_FOUND", { status: true });
-      } else if (mode === "") {
+      } else {
         checkRecentProject(recentProject);
       }
     }
