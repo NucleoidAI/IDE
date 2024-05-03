@@ -57,8 +57,8 @@ const useChat = () => {
     }
   };
 
-  const convertChat = () => {
-    const { id, messages } = chat;
+  const convertChat = (chatToConvert) => {
+    const { id, messages } = chatToConvert;
 
     const blocks = [];
 
@@ -87,7 +87,7 @@ const useChat = () => {
     };
 
     localStorage.setItem(`ide.context.${id}`, JSON.stringify(project));
-    publish("CHAT_CONVERTED", chat);
+    publish("CHAT_CONVERTED", chatToConvert);
 
     startTransition(() => {
       navigate(`/${id}/api?mode=local`);

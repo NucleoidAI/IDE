@@ -30,12 +30,13 @@ function ChatHistory() {
 
   const handleChatClick = (chatId) => navigate(`/chat/${chatId}`);
 
-  const handleConvertToProject = () => {
+  const handleConvertToProject = (chatId) => {
     showConfirmDialog(
       "Convert to Project",
       "Are you sure you want to convert this chat to a project?",
       () => {
-        convertChat();
+        const chat = storage.get("ide", "chat", "sessions", chatId);
+        convertChat(chat);
       }
     );
   };
@@ -108,7 +109,7 @@ function ChatHistory() {
                   <Tooltip title="Convert to Project">
                     <IconButton
                       size="small"
-                      onClick={() => handleConvertToProject()}
+                      onClick={() => handleConvertToProject(chat.id)}
                     >
                       <CodeIcon fontSize="small" />
                     </IconButton>
