@@ -108,7 +108,7 @@ test("returns the sample mode", () => {
 
 test("returns 'error' when pathname does not match uuid format", () => {
   window.location.search = "";
-  window.location.pathname = "/1111-555";
+  window.location.pathname = "/f1f04060-46fc-bbf9-fb69c1faca8b";
   const mode = Path.getMode();
   expect(mode).toEqual("error");
 });
