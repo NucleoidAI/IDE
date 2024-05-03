@@ -1,8 +1,9 @@
 import Context from "../context";
 import { contextReducer } from "../context/reducer";
 
-jest.mock("@nucleoidai/react-event", () => {});
-
+jest.mock("@nucleoidai/react-event", () => ({
+  publish: jest.fn(),
+}));
 test("Resolve context with property", () => {
   const state = contextReducer(Context.init(), {
     type: "SET_SELECTED_API",
