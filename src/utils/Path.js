@@ -52,8 +52,10 @@ const getMode = () => {
 
   if (checkId) {
     return queryMode || "cloud";
+  } else if (checkMode) {
+    return "error";
   } else {
-    return checkMode ? mode : "error";
+    return null;
   }
 };
 
