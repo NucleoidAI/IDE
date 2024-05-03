@@ -147,7 +147,7 @@ function createObject(codeSnippet) {
   } else if (codeType === "declaration") {
     return {
       description: "",
-      summary: "",
+      summary: codeSnippet.substring(0, 20),
       definition: codeSnippet,
     };
   }
