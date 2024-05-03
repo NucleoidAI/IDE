@@ -99,7 +99,7 @@ describe("Projects Path", () => {
     });
 
     it("redirects to error path if project id is invalid", () => {
-      const invalidProjectId = "1111111111";
+      const invalidProjectId = "f1f04060-1aa4-46fc-bbf9-fb69c1faca8b";
 
       cy.visit(`/${invalidProjectId}?mode=local`);
 
