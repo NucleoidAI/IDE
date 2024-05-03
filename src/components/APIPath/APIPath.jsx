@@ -34,7 +34,7 @@ const APIPath = ({
     methodRef.current = selectedMethod;
     pathRef.current = path + selectedPath;
     validatePath(pathRef.current);
-  }, [selectedMethod, selectedPath, methodRef, pathRef, path]);
+  }, [selectedMethod, selectedPath, methodRef, pathRef, path, validatePath]);
 
   return (
     <Grid container sx={styles.root}>

@@ -78,6 +78,7 @@ function APITree() {
     if (selectedId) {
       select(selectedId, false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAPI]);
 
   const handleContextMenu = (event, hash) => {
