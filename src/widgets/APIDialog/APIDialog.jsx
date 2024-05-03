@@ -166,11 +166,14 @@ function APIDialog() {
   };
 
   const validatePath = (path) => {
-    console.log("validatePath", path);
     const isDuplicate = contextApis.some(
       (api) => api.path === path && api.method === methodRef.current
     );
-    if (isDuplicate || path.includes("//")) {
+
+    if (action === "edit") {
+      setSaveDisable(false);
+      return;
+    } else if (isDuplicate || path.includes("//")) {
       setSaveDisable(true);
     } else {
       setSaveDisable(false);
