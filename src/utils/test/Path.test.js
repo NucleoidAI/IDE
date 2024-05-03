@@ -1,6 +1,6 @@
 import Path from "../Path.js";
-import config from "../../../config.js";
 import { storage } from "@nucleoidjs/webstorage";
+
 jest.mock("@nucleoidjs/webstorage", () => {
   const memory = new Map();
   return {
@@ -85,30 +85,38 @@ test("returns null when the selected project is not found", () => {
   expect(recentProject).toEqual(null);
 });
 
-test("returns the mode from the query", () => {
-  window.location.pathname = `${config.base}/f1f04060-1ea4-46fc-bbf9-fb69c1faca8b`;
-  window.location.search = "?mode=local";
-  const mode = Path.getMode();
-  expect(mode).toEqual("local");
-});
-
-test("returns the cloud mode", () => {
-  window.location.search = "";
-  window.location.pathname = `${config.base}/f1f04060-1ea4-46fc-bbf9-fb69c1faca8b/api`;
+test("returns cloud when id is in correct UUID form", () => {
+  const id = "f1f04060-1ea4-46fc-bbf9-fb69c1faca8b";
+  window.location.pathname = `/${id}`;
   const mode = Path.getMode();
   expect(mode).toEqual("cloud");
 });
 
-test("returns the sample mode", () => {
-  window.location.search = "";
-  window.location.pathname = `${config.base}/sample`;
+test("returns search parameter when id is in correct UUID form and '?mode' query is provided", () => {
+  const id = "f1f04060-1ea4-46fc-bbf9-fb69c1faca8b";
+  window.location.pathname = `/${id}`;
+  window.location.search = "?mode=MODE";
   const mode = Path.getMode();
-  expect(mode).toEqual("sample");
+  expect(mode).toEqual("MODE");
 });
 
-test("returns 'error' when pathname does not match uuid format", () => {
-  window.location.search = "";
-  window.location.pathname = `${config.base}/f1f04060-46fc-bbf9-fb69c1faca8b`;
+test("returns null when id is not in correct UUID form", () => {
+  window.location.pathname = "/1111-1111";
   const mode = Path.getMode();
-  expect(mode).toEqual("error");
+  expect(mode).toEqual(null);
+});
+
+test("returns null when id is not in correct UUID form and search parameter is provided", () => {
+  window.location.pathname = "/1111-1111";
+  window.location.search = "?mode=MODE";
+  const mode = Path.getMode();
+  expect(mode).toEqual(null);
+});
+
+test("returns mode when base path is not '/' ", () => {
+  const id = "f1f04060-1ea4-46fc-bbf9-fb69c1faca8b";
+  window.location.pathname = `/basename/${id}`;
+  window.location.search = "?mode=MODE";
+  const mode = Path.getMode();
+  expect(mode).toEqual("MODE");
 });
