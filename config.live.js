@@ -1,8 +1,15 @@
 const config = {
   name: "IDE",
   base: "/ide",
-  api: "http://localhost:3000",
-  expert: "https://nucleoid.com/api/expert",
+  api: "https://nucleoid.com/ide/api",
+  expert: "https://nucleoid.com/ide/api/expert",
+  oauth: {
+    accessTokenUrl: "",
+    clientId: "",
+    redirectUri: "",
+    oauthUrl: "",
+  },
+  sandbox: "",
 };
 
 export default config;

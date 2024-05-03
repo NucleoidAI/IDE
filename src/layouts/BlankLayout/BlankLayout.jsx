@@ -1,9 +1,10 @@
-import { Grid } from "@mui/material";
 import React from "react";
+
+import { Box, Grid } from "@mui/material";
 
 function BlankLayout({ content }) {
   return (
-    <Grid container>
+    <Box sx={{ height: "100%", overflowY: "auto" }}>
       <Grid
         container
         item
@@ -13,7 +14,7 @@ function BlankLayout({ content }) {
       >
         {content}
       </Grid>
-    </Grid>
+    </Box>
   );
 }
 

@@ -1,8 +1,15 @@
 const config = {
   name: "IDE",
   base: "/ide",
-  api: "http://localhost:3000",
+  api: "https://nuc.land/ide/api",
   expert: "https://nuc.land/ide/api/expert",
+  oauth: {
+    accessTokenUrl: "https://nuc.land/ide/api/oauth",
+    clientId: "4806a6f27dc44ac5c27f",
+    redirectUri: "https://nuc.land/ide/login",
+    oauthUrl: "https://github.com/login/oauth/authorize",
+  },
+  sandbox: "https://nuc.land/sandbox",
 };
 
 export default config;

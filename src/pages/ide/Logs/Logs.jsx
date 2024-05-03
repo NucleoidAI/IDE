@@ -1,13 +1,14 @@
 import BlankLayout from "../../../layouts/BlankLayout";
 import Page from "../../../components/Page";
+import ReadOnlyEditor from "../../../components/ReadOnlyEditor";
 import moment from "moment";
 import { publish } from "@nucleoidai/react-event";
 import sandboxService from "../../../sandboxService";
-import styles from "./styles";
 import { useEvent } from "@nucleoidai/react-event";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { CircularProgress, Grid, Paper, TextField } from "@mui/material";
+
+import { Box, CircularProgress, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 function Logs() {
@@ -34,25 +35,38 @@ function Logs() {
   return (
     <Page title={"Logs"}>
       <BlankLayout
-        logs={
+        content={
           loading ? (
             <CircularProgress />
           ) : (
             logs.map((log) => (
-              <Paper key={uuid()} sx={styles.logitem}>
-                <TextField
-                  variant={"outlined"}
-                  fullWidth
-                  inputProps={{ style: { fontFamily: "monospace" } }}
-                  multiline
-                  value={log.s.trim()}
+              <Box
+                component="pre"
+                key={uuid()}
+                sx={{
+                  overflowX: "auto",
+                  justifyContent: "center",
+                  marginTop: "8px",
+                  borderRadius: "5px",
+                  padding: "0",
+                  userSelect: "text",
+                  width: "50%",
+                }}
+              >
+                <ReadOnlyEditor
+                  title={"Log"}
+                  value={
+                    log.s ? log.s : `No code was provided for this log entry.`
+                  }
+                  language="typescript"
+                  isCollapsed={false}
                 />
                 <Grid container justifyContent={"center"} sx={{ mt: 1 }}>
                   {moment(log.d).format("MM/DD hh:mm:ss")}
                   &nbsp;&nbsp;-&nbsp;&nbsp;
                   {log.t}ms
                 </Grid>
-              </Paper>
+              </Box>
             ))
           )
         }
