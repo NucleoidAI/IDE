@@ -137,7 +137,7 @@ function IDE() {
   }
 
   const initContext = (context) => {
-    console.log(context);
+    console.log(context.project);
     if (
       !Settings.description() ||
       Settings.description() !== context.project.description
@@ -202,13 +202,12 @@ function IDE() {
   React.useEffect(() => {
     async function initMode() {
       const mode = Path.getMode();
-      const projectId = Path.getProjectId();
       const recentProject = Path.getRecentProject();
-
+      console.log("mode", mode);
       if (mode === "sample") {
         sampleProject();
       } else if (mode === "cloud") {
-        project(projectId)
+        project(id)
           .then((result) => {
             initVfs(result);
             return setReactContext(initContext(result));
@@ -217,7 +216,7 @@ function IDE() {
             navigate("/error/api");
           });
       } else if (mode === "local") {
-        const context = getContextFromStorage(projectId);
+        const context = getContextFromStorage(id);
         if (!context) return;
         initVfs(context);
         return setReactContext(initContext(context));
@@ -252,7 +251,7 @@ function IDE() {
     if (projectChange.id) {
       setContextProviderKey(uuid());
     }
-  }, [projectChange]);
+  }, [projectChange, ReactContext]);
 
   if (!ReactContext) return null;
 
