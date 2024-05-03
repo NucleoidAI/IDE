@@ -86,6 +86,7 @@ test("returns null when the selected project is not found", () => {
 });
 
 test("returns the mode from the query", () => {
+  window.location.pathname = "/f1f04060-1ea4-46fc-bbf9-fb69c1faca8b";
   window.location.search = "?mode=local";
   const mode = Path.getMode();
   expect(mode).toEqual("local");
