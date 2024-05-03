@@ -88,8 +88,7 @@
 
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
-        const base = config.base || window.location.origin;
-        navigator.serviceWorker.register(`${base}/service-worker.js?v=3`);
+        navigator.serviceWorker.register(`${window.location.origin}${config.base}/service-worker.js?v=3`);
       });
     }
 

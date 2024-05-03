@@ -12,7 +12,7 @@ const config = defineConfig({
   video: true,
   e2e: {
     setupNodeEvents(on, config) {},
-    baseUrl: `http://localhost:5173/${appConfig.base || ""}`,
+    baseUrl: `http://localhost:5174${appConfig.base}`,
   },
 });
 
