@@ -23,11 +23,6 @@ const addSlashMark = (path) => {
   return path?.substring(path.length - 1) !== "/" ? "/" : "";
 };
 
-const getProjectId = () => {
-  const parts = window.location.pathname.split("/");
-  return parts.length >= 3 ? parts[2] : null;
-};
-
 const getRecentProject = () => {
   const recentProject = storage.get("ide", "selected", "context");
 
@@ -39,29 +34,20 @@ const getRecentProject = () => {
 };
 
 const getMode = () => {
+  const urlParts = window.location.pathname.split("/");
+
+  const uuidPattern =
+    /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+
+  const validUuid = urlParts.some((part) => uuidPattern.test(part));
+
   const urlParams = new URLSearchParams(window.location.search);
-  const mode = urlParams.get("mode");
+  const queryMode = urlParams.get("mode");
 
-  const id = getProjectId();
-
-  if (mode) {
-    return mode;
+  if (validUuid) {
+    return queryMode ? queryMode : "cloud";
   } else {
-    if (id === "sample") {
-      return "sample";
-    } else if (id === "mobile") {
-      return "mobile";
-    } else if (id === "chat") {
-      return "chat";
-    } else if (id === "new") {
-      return "new";
-    } else if (id === "error") {
-      return "error";
-    } else if (id) {
-      return "cloud";
-    } else {
-      return null;
-    }
+    return null;
   }
 };
 
@@ -70,7 +56,6 @@ const Path = {
   split,
   addSlashMark,
   getMode,
-  getProjectId,
   getRecentProject,
 };
 

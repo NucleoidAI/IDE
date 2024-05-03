@@ -7,7 +7,7 @@ describe("Local Project", () => {
 
   it("saves changes in API editor", () => {
     cy.get("@projectId").then((projectId) => {
-      cy.visit(`/ide/${projectId}/api?mode=local`);
+      cy.visit(`/${projectId}/api?mode=local`);
     });
 
     cy.waitEvent("CONTAINER_LOADED");
@@ -35,7 +35,7 @@ describe("Local Project", () => {
 
   it("saves changes in functions editor", () => {
     cy.get("@projectId").then((projectId) => {
-      cy.visit(`/ide/${projectId}/functions?mode=local`);
+      cy.visit(`/${projectId}/functions?mode=local`);
     });
 
     cy.waitEvent("CONTAINER_LOADED");
@@ -61,7 +61,7 @@ describe("Local Project", () => {
 
   it("saves changes in logic editor", () => {
     cy.get("@projectId").then((projectId) => {
-      cy.visit(`/ide/${projectId}/logic?mode=local`);
+      cy.visit(`/${projectId}/logic?mode=local`);
     });
 
     cy.waitEvent("CONTAINER_LOADED").then(() => {
