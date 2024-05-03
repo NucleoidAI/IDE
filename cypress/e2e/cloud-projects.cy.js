@@ -12,7 +12,7 @@ describe("Cloud Project", () => {
 
   it("saves changes in API editor", () => {
     cy.get("@projectId").then((projectId) => {
-      cy.visit(`/ide/${projectId}/api`);
+      cy.visit(`/${projectId}/api`);
     });
 
     cy.waitEvent("CONTAINER_LOADED");
@@ -30,7 +30,7 @@ describe("Cloud Project", () => {
 
   it("saves changes in functions editor", () => {
     cy.get("@projectId").then((projectId) => {
-      cy.visit(`/ide/${projectId}/functions`);
+      cy.visit(`/${projectId}/functions`);
     });
 
     cy.waitEvent("CONTAINER_LOADED");
@@ -48,7 +48,7 @@ describe("Cloud Project", () => {
 
   it("saves changes in logic editor", () => {
     cy.get("@projectId").then((projectId) => {
-      cy.visit(`/ide/${projectId}/logic`);
+      cy.visit(`/${projectId}/logic`);
     });
 
     cy.waitEvent("CONTAINER_LOADED");
