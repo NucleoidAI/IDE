@@ -315,10 +315,8 @@ const lightTheme = createTheme({
             flexGrow: 1,
             minHeight: "80px",
             backgroundColor: base.grey[200],
-            border: `1px solid #9e9e9e`,
             "&:hover": {
               backgroundColor: base.grey[300],
-              border: `1px solid ${base.grey[300]}`,
             },
             textAlign: "left",
             justifyContent: "flex-start",
@@ -538,10 +536,8 @@ const darkTheme = createTheme({
             flexGrow: 1,
             minHeight: "80px",
             backgroundColor: base.grey[900],
-            border: `1px solid #9e9e9e`,
             "&:hover": {
               backgroundColor: base.grey[700],
-              border: `1px solid ${base.grey[700]}`,
             },
             textAlign: "left",
             justifyContent: "flex-start",
