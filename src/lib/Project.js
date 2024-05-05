@@ -253,9 +253,13 @@ function compile(blocks) {
     );
   });
 
-  const api = createAPI(functions);
+  const uniqueFunctions = functions.filter(
+    (func, index, self) => index === self.findIndex((f) => f.path === func.path)
+  );
+
+  const api = createAPI(uniqueFunctions);
   api.unshift(rootObject);
-  return { api, functions, declarations };
+  return { api, functions: uniqueFunctions, declarations };
 }
 
 export default { compile };
