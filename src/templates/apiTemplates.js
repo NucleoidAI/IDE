@@ -65,7 +65,7 @@ const apiTemplates = {
     `,
   readObject: `
     {
-      "path": "/{{pluralName}}/{{encloseBraces singularName}}",
+      "path": "/{{pluralName}}/{{encloseBraces (camelCase singularName)}}",
       "method": "GET",
       "params": [
         {
@@ -95,7 +95,7 @@ const apiTemplates = {
       "description": "Read a {{singularName}}",
       "x-nuc-action": "function action(req) { const {{camelCase singularName}}Id = req.params.{{camelCase singularName}}Id; return {{className}}[{{camelCase singularName}}Id]; }"
     }
-  `,
+    `,
 };
 
 const rootObject = {
