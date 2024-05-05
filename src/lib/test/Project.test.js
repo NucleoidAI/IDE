@@ -14,7 +14,7 @@ test("compiles class block", () => {
   expect(result.api[1].method).toBe("GET");
   expect(result.api[2].path).toBe("/users");
   expect(result.api[2].method).toBe("POST");
-  expect(result.api[3].path).toBe("/users/{UserId}");
+  expect(result.api[3].path).toBe("/users/{userId}");
   expect(result.api[3].method).toBe("GET");
 });
 
