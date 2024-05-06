@@ -1,8 +1,6 @@
 const config = {
-  name: "IDE",
-  base: "/ide",
-  api: "https://nuc.land/ide/api",
-  expert: "https://nuc.land/ide/api/expert",
+  base: "/",
+  api: "http://localhost:3000",
   oauth: {
     accessTokenUrl: "http://localhost:3000/oauth",
     clientId: "0c2844d3d19dc9293fc5",

@@ -23,12 +23,14 @@ const WelcomeMessage = () => {
           marginBottom: "8px",
         }}
       >
-        <Logo beta={false} />
+        <Logo beta={false} title={"Chat"} />
       </Box>
       <Typography variant="h4" gutterBottom sx={{ marginBottom: "4px" }}>
-        Welcome to the NucChat!
+        Neuro-Symbolic AI
       </Typography>
-      <Typography variant="subtitle1">This is subtitle</Typography>
+      <Typography variant="subtitle1">
+        Build your logical context with Declarative Logic
+      </Typography>
     </Box>
   );
 };

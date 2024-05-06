@@ -4,7 +4,6 @@ import InlineCreationForm from "./components/InlineCreationForm";
 import ProjectList from "./components/ProjectList";
 import React from "react";
 import WorkspacesIcon from "@mui/icons-material/Workspaces";
-import config from "../../../config";
 import http from "../../http";
 import service from "../../service";
 import { storage } from "@nucleoidjs/webstorage";
@@ -307,7 +306,6 @@ function ProjectDialog({ handleClose, open, setOpen }) {
       const response = await http.oauth({
         code: code,
         grant_type: "authorization_code",
-        redirect_uri: config.oauth.redirectUri,
       });
       const accessToken = response.accessToken;
       const refreshToken = response.refreshToken;

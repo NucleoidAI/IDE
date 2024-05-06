@@ -1,10 +1,11 @@
 /* eslint-disable */
 
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import Project from "../../lib/Project.js";
 import PromptCodeDialog from "../../components/PromptCodeDialog";
 import actions from "../../actions";
 import { deepCopy } from "../../utils/DeepCopy";
-import expert from "../../http/expert.js";
+import http from "../../http";
 import { publish } from "@nucleoidai/react-event";
 import service from "../../service";
 import { useContext } from "../../context/context";
@@ -81,7 +82,7 @@ function AIDialog({ editor, declarative, imperative, page }) {
       setLoading(true);
       setDescription(promptValue);
 
-      expert
+      http
         .post("/chat/completions", {
           mode,
           role: "USER",
@@ -89,9 +90,10 @@ function AIDialog({ editor, declarative, imperative, page }) {
           content: promptValue?.trim(),
         })
         .then((res) => {
+          const compiledCode = Project.compile(res.data.code);
           setSummary(res.data.summary);
           const model = monaco.editor.createModel(
-            res.data.code?.trim(),
+            compiledCode.trim(),
             "typescript"
           );
 

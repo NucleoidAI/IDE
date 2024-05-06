@@ -59,8 +59,8 @@ const LandingDialog = () => {
         </Box>
 
         <Box>
-          Nucleoid low-code framework lets you build your APIs with the help of
-          AI and built-in datastore.
+          Nucleoid low-code platform lets you build your logic and APIs with the
+          help of AI and built-in datastore.
         </Box>
         <Box sx={styles.content}>
           <Box sx={styles.howItWorks}>

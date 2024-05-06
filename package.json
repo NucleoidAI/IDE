@@ -14,7 +14,7 @@
     "lint": "eslint . --ext js,jsx --max-warnings 0",
     "preview": "vite preview",
     "cy:run": "cypress run",
-    "test:e2e": "start-server-and-test vite http://localhost:5173/ide cy:run"
+    "test:e2e": "start-server-and-test vite http://localhost:5173 cy:run"
   },
   "dependencies": {
     "@emotion/react": "^11.9.3",

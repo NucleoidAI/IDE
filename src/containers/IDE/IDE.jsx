@@ -203,13 +203,9 @@ function IDE() {
   React.useEffect(() => {
     async function initMode() {
       const mode = Path.getMode();
-      const projectId = Path.getProjectId();
       const recentProject = Path.getRecentProject();
-      console.log(projectId);
-      if (mode === "sample") {
-        sampleProject();
-      } else if (mode === "cloud") {
-        project(projectId)
+      if (mode === "cloud") {
+        project(id)
           .then((result) => {
             initVfs(result);
             return setReactContext(initContext(result));
@@ -218,21 +214,27 @@ function IDE() {
             navigate("/error/api");
           });
       } else if (mode === "local") {
-        const context = getContextFromStorage(projectId);
+        const context = getContextFromStorage(id);
         if (!context) return;
         initVfs(context);
         return setReactContext(initContext(context));
-      } else if (mode === "mobile") {
-        return setReactContext("mobile");
-      } else if (mode === "new") {
-        const blankContext = blankProject();
-        setReactContext(initContext(blankContext));
-      } else if (mode === "error") {
-        const blankContext = blankProject();
-        setReactContext(initContext(blankContext));
-        publish("PROJECT_NOT_FOUND", { status: true });
       } else {
-        checkRecentProject(recentProject);
+        if (id === "sample") {
+          sampleProject();
+        } else if (id === "mobile") {
+          return setReactContext("mobile");
+        } else if (id === "new") {
+          const blankContext = blankProject();
+          setReactContext(initContext(blankContext));
+        } else if (id === "error") {
+          const blankContext = blankProject();
+          setReactContext(initContext(blankContext));
+          publish("PROJECT_NOT_FOUND", { status: true });
+        } else if (id === undefined) {
+          checkRecentProject(recentProject);
+        } else {
+          navigate("/error/api");
+        }
       }
     }
 

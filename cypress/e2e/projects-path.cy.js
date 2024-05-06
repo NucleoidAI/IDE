@@ -5,7 +5,7 @@ describe("Projects Path", () => {
     });
 
     it("navigates new project page if recent project not found ", () => {
-      cy.visit("/ide");
+      cy.visit("/");
 
       cy.url().should("include", "/new/api?mode=local");
     });
@@ -13,7 +13,7 @@ describe("Projects Path", () => {
     it("opens project", () => {
       const cloudProjectId = "a166cc16-5c76-4aac-819e-118207a5dfa9";
 
-      cy.visit(`/ide/${cloudProjectId}`);
+      cy.visit(`/${cloudProjectId}`);
 
       cy.waitEvent("CONTAINER_LOADED");
 
@@ -25,14 +25,12 @@ describe("Projects Path", () => {
     });
 
     it("redirects to error path if project id is invalid", () => {
-      const invalidProjectId = "1111111111";
+      const invalidProjectId = "f1f04060-1aa4-46fc-bbf9-fb69c1faca8b";
 
-      cy.intercept(`https://nuc.land/ide/api/projects/${invalidProjectId}`);
-      cy.intercept(
-        `https://nuc.land/ide/api/projects/${invalidProjectId}/services`
-      );
+      cy.intercept(`/projects/${invalidProjectId}`);
+      cy.intercept(`/projects/${invalidProjectId}/services`);
 
-      cy.visit(`/ide/${invalidProjectId}`);
+      cy.visit(`/${invalidProjectId}`);
 
       cy.url().should("contain", "/error");
     });
@@ -49,12 +47,12 @@ describe("Projects Path", () => {
 
       cy.storageSet("ide.selected.context", selectedProject);
 
-      cy.visit("/ide");
+      cy.visit("/");
 
       cy.url().should("include", `/${localProjectId}/api?mode=local`);
     });
     it("creates sample project", () => {
-      cy.visit("/ide/sample");
+      cy.visit("/sample");
 
       cy.url().should("contain", "/api");
 
@@ -85,9 +83,9 @@ describe("Projects Path", () => {
     it("opens project", () => {
       const localProjectId = "3450f289-0fc5-45e9-9a4a-606c0a63cdfe";
 
-      cy.visit(`/ide/${localProjectId}?mode=local`);
+      cy.visit(`/${localProjectId}?mode=local`);
 
-      cy.url().should("contain", `ide/${localProjectId}/api?mode=local`);
+      cy.url().should("contain", `/${localProjectId}/api?mode=local`);
 
       cy.location("pathname").then((pathname) => {
         const pathParts = pathname.split("/");
@@ -101,9 +99,9 @@ describe("Projects Path", () => {
     });
 
     it("redirects to error path if project id is invalid", () => {
-      const invalidProjectId = "1111111111";
+      const invalidProjectId = "f1f04060-1aa4-46fc-bbf9-fb69c1faca8b";
 
-      cy.visit(`/ide/${invalidProjectId}?mode=local`);
+      cy.visit(`/${invalidProjectId}?mode=local`);
 
       cy.url().should("contain", "/error");
     });
