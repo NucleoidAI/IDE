@@ -4,6 +4,7 @@ import InlineCreationForm from "./components/InlineCreationForm";
 import ProjectList from "./components/ProjectList";
 import React from "react";
 import WorkspacesIcon from "@mui/icons-material/Workspaces";
+import config from "../../../config";
 import http from "../../http";
 import service from "../../service";
 import { storage } from "@nucleoidjs/webstorage";
@@ -301,10 +302,12 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   };
 
   const handleLogin = async () => {
+    const { redirectUri } = config.oauth;
     try {
       const code = await http.getCodeFromGithub();
       const response = await http.oauth({
-        code: code,
+        code,
+        redirectUri,
         grant_type: "authorization_code",
       });
       const accessToken = response.accessToken;
