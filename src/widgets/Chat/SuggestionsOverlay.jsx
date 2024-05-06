@@ -214,7 +214,7 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat, error }) => {
             display: "flex",
             flexDirection: { xs: "column", md: "column", lg: "row" },
             justifyContent: "space-between",
-            width: { xs: "100%", sm: "80%", md: "55%" },
+            width: { xs: "100%", sm: "80%", md: "60%" },
             gap: "10px",
           }}
         >
