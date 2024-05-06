@@ -1,6 +1,7 @@
 /* eslint-disable */
 
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import Project from "../../lib/Project.js";
 import PromptCodeDialog from "../../components/PromptCodeDialog";
 import actions from "../../actions";
 import { deepCopy } from "../../utils/DeepCopy";
@@ -89,9 +90,10 @@ function AIDialog({ editor, declarative, imperative, page }) {
           content: promptValue?.trim(),
         })
         .then((res) => {
+          const compiledCode = Project.compile(res.data.code);
           setSummary(res.data.summary);
           const model = monaco.editor.createModel(
-            res.data.code?.trim(),
+            compiledCode.trim(),
             "typescript"
           );
 
