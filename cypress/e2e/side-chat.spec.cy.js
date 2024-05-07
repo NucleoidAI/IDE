@@ -6,7 +6,7 @@ describe("created project by default", () => {
   });
   it("should create and save a new session when side chat is opened", () => {
     cy.get("@projectId").then((projectId) => {
-      cy.visit(`/ide/${projectId}/api?mode=local`);
+      cy.visit(`/${projectId}/api?mode=local`);
     });
 
     cy.waitEvent("CONTAINER_LOADED").then(() => {
@@ -47,7 +47,7 @@ describe("created project by chat", () => {
       cy.get("@projectId").then((id) => {
         session.id = id;
         cy.storageSet(`ide.chat.sessions.${id}`, session);
-        cy.visit(`/ide/${id}/api?mode=local`);
+        cy.visit(`/${id}/api?mode=local`);
       });
     });
   });
