@@ -76,7 +76,7 @@ Cypress.Commands.add("setup", (container, fixtureType, type) => {
         })
         .as("services");
 
-      cy.fixture("/CONTEXT/context.json")
+      cy.fixture("/SPECIFICATION/specification.json")
         .then((context) => {
           cy.intercept(
             "GET",
@@ -179,27 +179,27 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add("saveContextIntercept", (serviceId) => {
-  cy.fixture("/CONTEXT/changed-context.json")
-    .then((context) => {
+  cy.fixture("/SPECIFICATION/changed-specification.json")
+    .then((specification) => {
       cy.intercept(
         "PUT",
         `services/${serviceId}/specification`,
         {
           statusCode: 200,
-          body: context,
+          body: specification,
         }
       );
     })
     .as("contextPut");
 
-  cy.fixture("/CONTEXT/changed-context.json")
-    .then((context) => {
+  cy.fixture("/SPECIFICATION/changed-specification.json")
+    .then((specification) => {
       cy.intercept(
         "GET",
         `/services/${serviceId}/specification`,
         {
           statusCode: 200,
-          body: context,
+          body: specification,
         }
       );
     })
