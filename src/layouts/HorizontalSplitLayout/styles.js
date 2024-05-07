@@ -2,14 +2,12 @@ const styles = {
   root: { width: "100%", height: "100%" },
   editorGrid: { transition: "all .3s ease-in-out" },
   editorPaper: { height: "100%" },
-  runButton(theme) {
-    return {
-      position: "relative",
-      bottom: 3 + theme.spacing(1),
-      right: theme.spacing(1),
-      justifyContent: "flex-end",
-      alignItems: "center",
-    };
+  runButton: {
+    "z-index": 1,
+    position: "absolute",
+    right: 15,
+    width: 90,
+    mt: -4,
   },
   contentGrid: { pt: 1, transition: "all .3s ease-in-out" },
   loadingCard: { height: "100%" },
