@@ -21,35 +21,6 @@ function contextReducer(context, { type, payload }) {
     case "OPEN_API_DIALOG": {
       const { type, action } = payload;
 
-      // if (type === "method" && action === "add") {
-      //   const newMethod = {
-      //     path: pages.api.selected.path,
-      //     method: "POST",
-      //     summary: "",
-      //     description: "",
-      //     request: { type: "OPENAPI", schema: {} },
-      //     response: { type: "OPENAPI", schema: {} },
-      //     params: [],
-      //     "x-nuc-action": "",
-      //   };
-
-      //   specification.api.push(newMethod);
-      //   pages.api.selected = newMethod;
-      // } else if (type === "resource" && action === "add") {
-      //   const newResource = {
-      //     path: "/",
-      //     method: "POST",
-      //     summary: "",
-      //     description: "",
-      //     request: { type: "OPENAPI", schema: {} },
-      //     response: { type: "OPENAPI", schema: {} },
-      //     params: [],
-      //     "x-nuc-action": "",
-      //   };
-      //   specification.api.push(newResource);
-      //   pages.api.selected = newResource;
-      // }
-
       pages.api.dialog.type = type;
       pages.api.dialog.action = action;
       pages.api.dialog.open = true;
