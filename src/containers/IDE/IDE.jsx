@@ -183,7 +183,6 @@ function IDE() {
 
   const checkRecentProject = (recentProject) => {
     if (recentProject) {
-      publish("PROJECT_NOT_FOUND", { status: false });
       if (recentProject.type === "CLOUD") {
         navigate(`/${recentProject.id}`);
       } else if (recentProject.type === "LOCAL") {
@@ -221,9 +220,9 @@ function IDE() {
           const blankContext = blankProject();
           setReactContext(initContext(blankContext));
         } else if (id === "error") {
+          publish("PROJECT_NOT_FOUND", true);
           const blankContext = blankProject();
           setReactContext(initContext(blankContext));
-          publish("PROJECT_NOT_FOUND", { status: true });
         } else if (id === undefined) {
           checkRecentProject(recentProject);
         } else {
@@ -233,6 +232,7 @@ function IDE() {
     }
 
     initMode();
+
     loaded = false;
     // eslint-disable-next-line
   }, [id]);
