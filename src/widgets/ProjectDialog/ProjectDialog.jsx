@@ -1,6 +1,7 @@
 import AddNewButton from "./components/AddNewButton";
 import Context from "../../context";
 import InlineCreationForm from "./components/InlineCreationForm";
+import Path from "../../utils/Path";
 import ProjectList from "./components/ProjectList";
 import React from "react";
 import WorkspacesIcon from "@mui/icons-material/Workspaces";
@@ -41,8 +42,9 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   const [cloudProjects, setCloudProjects] = useState([]);
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [event] = useEvent("RECENT_PROJECT_NOT_FOUND", { status: false });
-  const [projectNotFound] = useEvent("PROJECT_NOT_FOUND", { status: false });
+  const mode = Path.getMode();
+  const [projectFounded] = useEvent("PROJECT_FOUNDED", null);
+  const [projectNotFound] = useEvent("PROJECT_NOT_FOUNDED", false);
 
   const navigate = useNavigate();
 
@@ -64,23 +66,22 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   }, []);
 
   useEffect(() => {
-    if (event.status) {
+    if (mode === null) {
       setOpen(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [event.status]);
+  }, [mode]);
 
   useEffect(() => {
-    if (projectNotFound.status) {
+    if (projectNotFound && projectFounded === null) {
       setOpen(true);
-      publish("GLOBAL_MESSAGE", {
-        status: true,
+      publish("APP_MESSAGE", {
         message: "Project not found",
         severity: "error",
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectNotFound.status]);
+  }, [projectNotFound]);
 
   const getProjectsFromLocalStorage = () => {
     const projects = [];
@@ -125,7 +126,6 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     return await Promise.all(projectPromises);
   };
   const contextToCloud = (specification, project) => {
-    console.log(project);
     const createdProject = {
       name: project.name,
       type: "SINGLE",
@@ -293,19 +293,23 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     } else if (type === "CLOUD") {
       navigate(`/${id}`);
     }
-
     publish("PROJECT_CHANGED", {
-      id: projectId,
+      id,
+    });
+    publish("RUNTIME_CONNECTION", {
+      status: false,
+      metrics: { total: 100, free: 50 },
     });
   };
 
   const handleLogin = async () => {
+    const { redirectUri } = config.oauth;
     try {
       const code = await http.getCodeFromGithub();
       const response = await http.oauth({
-        code: code,
+        code,
+        redirectUri,
         grant_type: "authorization_code",
-        redirect_uri: config.oauth.redirectUri,
       });
       const accessToken = response.accessToken;
       const refreshToken = response.refreshToken;
@@ -326,12 +330,11 @@ function ProjectDialog({ handleClose, open, setOpen }) {
       projectExist ? "please select a project" : "create a new project"
     }.`;
 
-    if (!event.status && !projectNotFound.status) {
+    if (projectFounded !== null) {
       handleClose();
       setSearchQuery("");
     } else {
-      publish("GLOBAL_MESSAGE", {
-        status: true,
+      publish("APP_MESSAGE", {
         message,
         severity: "info",
       });

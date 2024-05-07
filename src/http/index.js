@@ -15,7 +15,10 @@ const refreshAuthLogic = async (failedRequest) => {
   let tokenRefreshResponse;
   if (!refreshToken && !accessToken) {
     const code = await instance.getCodeFromGithub();
-    tokenRefreshResponse = await instance.oauth({ code: code });
+    tokenRefreshResponse = await instance.oauth({
+      code: code,
+      redirect_uri: config.oauth.redirectUri,
+    });
   } else {
     tokenRefreshResponse = await instance.oauth({ refreshToken: refreshToken });
   }
@@ -50,7 +53,7 @@ instance.oauth = (body) =>
 
 instance.getCodeFromGithub = () => {
   const popup = window.open(
-    `${config.oauth.oauthUrl}?scope=user&client_id=${config.oauth.clientId}`,
+    `${config.oauth.oauthUrl}?scope=user&client_id=${config.oauth.clientId}&redirect_uri=${config.oauth.redirectUri}`,
     "target_blank",
     "toolbar=yes,scrollbars=yes,resizable=yes,top=50,left=50,width=650,height=750"
   );
@@ -94,9 +97,19 @@ instance.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response.status === 500) {
-      publish("GLOBAL_MESSAGE", {
-        status: true,
+      publish("APP_MESSAGE", {
         message: err.message,
+        severity: "error",
+      });
+    }
+    if (err.response.status === 401 || err.response.status === 403) {
+      storage.remove("oauth.token");
+      let message = "Session expired. Please login again.";
+      if (err.response.status === 403) {
+        message = "Access forbidden. Please check your permissions.";
+      }
+      publish("APP_MESSAGE", {
+        message: message,
         severity: "error",
       });
     }

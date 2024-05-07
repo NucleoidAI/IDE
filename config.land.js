@@ -3,8 +3,8 @@ const config = {
   api: "https://api-nucleoid-com-land.gentleflower-99ef02e0.eastus.azurecontainerapps.io",
   oauth: {
     accessTokenUrl: "https://nuc.land/ide/api/oauth",
-    clientId: "4806a6f27dc44ac5c27f",
-    redirectUri: "https://nuc.land/ide/login",
+    clientId: "c391f0f4f1ad600a20ef",
+    redirectUri: "https://nuc.land/callback/ide",
     oauthUrl: "https://github.com/login/oauth/authorize",
   },
   sandbox: "https://nuc.land/sandbox",

@@ -1,5 +1,5 @@
+import AppSnackMessage from "./components/AppSnackMessage/AppSnackMessage";
 import EventRegistry from "./EventRegistry";
-import GlobalSnackMessage from "./components/GlobalSnackMessage/GlobalSnackMessage";
 import Path from "./utils/Path";
 import RouteManager from "./RouteManager";
 import Settings from "./settings";
@@ -80,7 +80,7 @@ function App() {
         <CssBaseline />
         <EventRegistry />
         <RouteManager routes={routes} mode={Path.getMode()} />
-        <GlobalSnackMessage />
+        <AppSnackMessage />
       </ThemeProvider>
     </StyledEngineProvider>
   );

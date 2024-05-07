@@ -3,6 +3,7 @@ import SendIcon from "@mui/icons-material/Send";
 import { storage } from "@nucleoidjs/webstorage";
 import useChat from "./useChat";
 import useConfirmDialog from "../../components/ConfirmDialog";
+import { useEvent } from "@nucleoidai/react-event";
 import { useParams } from "react-router-dom";
 
 import {
@@ -30,6 +31,7 @@ const MessageInput = forwardRef((props, ref) => {
   const [ConfirmDialog, showConfirmDialog] = useConfirmDialog();
   const inputRef = useRef(null);
   const { chatId } = useParams();
+  const [chatMessageResponded] = useEvent("CHAT_MESSAGE_RESPONDED", null);
 
   useEffect(() => {
     if (showConvertToProject) {
@@ -40,6 +42,12 @@ const MessageInput = forwardRef((props, ref) => {
       return () => clearTimeout(timer);
     }
   }, [showConvertToProject]);
+
+  useEffect(() => {
+    if (chatMessageResponded) {
+      inputRef.current.focus();
+    }
+  }, [chatMessageResponded]);
 
   useImperativeHandle(ref, () => ({
     getValue: () => inputRef.current.value,
@@ -89,7 +97,7 @@ const MessageInput = forwardRef((props, ref) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          width: { xs: "100%", sm: "90%", md: "80%", lg: "60%" },
+          width: { xs: "100%", sm: "90%", md: "80%", lg: "70%" },
           borderRadius: theme.custom.chat.inputBorderRadius,
           padding: "10px",
           border: `1px solid`,

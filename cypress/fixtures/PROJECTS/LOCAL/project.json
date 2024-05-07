@@ -31,7 +31,7 @@
             },
             "summary": "Get all users",
             "description": "Get all users",
-            "x-nuc-action": "function action(req: any): { message: string } {\n        return { message: \"Hello World\" };\n      }"
+            "action": "function action(req: any): { message: string } {\n        return { message: \"Hello World\" };\n      }"
         },
         {
             "path": "/items",
@@ -59,7 +59,7 @@
             },
             "summary": "Get item by name",
             "description": "Get item by name",
-            "x-nuc-action": "function action(req: { query: { name: string } }): any {\n        const name = req.query.name;\n        return (Item as any).filter(item => item.name === name);\n      }"
+            "action": "function action(req: { query: { name: string } }): any {\n        const name = req.query.name;\n        return (Item as any).filter(item => item.name === name);\n      }"
         },
         {
             "path": "/items",
@@ -95,7 +95,7 @@
             },
             "summary": "Create new item",
             "description": "Create new item",
-            "x-nuc-action": "function action(req: { body: { name: string, barcode: string } }): any {\n        const name = req.body.name;\n        const barcode = req.body.barcode;\n        const check = (Item as any).find(i => i.barcode === barcode);\n        if(check) {\n          throw \"DUPLICATE_BARCODE\";\n        }\n        return new Item(name, barcode);\n      }"
+            "action": "function action(req: { body: { name: string, barcode: string } }): any {\n        const name = req.body.name;\n        const barcode = req.body.barcode;\n        const check = (Item as any).find(i => i.barcode === barcode);\n        if(check) {\n          throw \"DUPLICATE_BARCODE\";\n        }\n        return new Item(name, barcode);\n      }"
         },
         {
             "path": "/items/{item}",
@@ -124,7 +124,7 @@
             },
             "summary": "Get item by id",
             "description": "Get item by id",
-            "x-nuc-action": "function action(req: { params: { item: string } }): any {\n  const item = req.params.item;\n  return Item[item];\n}\n"
+            "action": "function action(req: { params: { item: string } }): any {\n  const item = req.params.item;\n  return Item[item];\n}\n"
         }
     ],
     "types": [

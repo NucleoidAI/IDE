@@ -1,8 +1,18 @@
 import RefreshIcon from "@mui/icons-material/Refresh";
+import { publish } from "@nucleoidai/react-event";
 
 import { Box, Stack, Typography, alpha } from "@mui/material";
 
 const ErrorMessage = ({ show, content, type, refreshChat }) => {
+  const handleChatRefresh = () => {
+    publish("EXPERT_ERROR_OCCURRED", {
+      chatId: "",
+      type: "",
+      content: "",
+    });
+    refreshChat();
+  };
+
   return (
     show && (
       <Box
@@ -10,7 +20,7 @@ const ErrorMessage = ({ show, content, type, refreshChat }) => {
         sx={{
           backgroundColor: alpha("#f44336", 0.1),
           border: "1px solid #f44336",
-          width: { xs: "100%", sm: "90%", md: "80%" },
+          width: { xs: "100%", sm: "90%", md: "80%", lg: "70%" },
           marginBottom: { xs: "12px", sm: "16px", md: "20px" },
           padding: "10px",
           borderRadius: "10px",
@@ -39,7 +49,7 @@ const ErrorMessage = ({ show, content, type, refreshChat }) => {
           </Typography>
           <Box
             component={RefreshIcon}
-            onClick={refreshChat}
+            onClick={handleChatRefresh}
             sx={{
               "&:hover": {
                 color: "gray",
