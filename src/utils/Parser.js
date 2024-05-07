@@ -3,8 +3,9 @@ import { deepCopy } from "./DeepCopy";
 const parser = {
   result: null,
   parse(code) {
-    this.result = code.split(/\/\/ @nuc-....../g).filter((item) => item !== "");
-
+    this.result = code
+      .split(/\/\/ @nuc-[a-z]+\n/g)
+      .filter((item) => item !== "");
     return this;
   },
   action() {

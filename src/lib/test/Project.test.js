@@ -1,73 +1,49 @@
 import Project from "../Project.js";
+import { blocks } from "./blocks.js";
 
 test("compiles class block", () => {
-  const blocks = [
-    `class Item {
-      name: string;
-      barcode: string;
-      constructor(name: string, barcode: string) {
-        this.name = name;
-        this.barcode = barcode;
-      }
-    }`,
-  ];
-
   const result = Project.compile(blocks);
-  expect(result.functions[0].path).toBe("/Item");
+
+  expect(result.functions[0].path).toBe("/User");
   expect(result.functions[0].params).toEqual([
-    "name: string",
-    "barcode: string",
+    "firstName: string",
+    "lastName: string",
   ]);
   expect(result.functions[0].type).toBe("CLASS");
-  expect(result.api[0].path).toBe("/items");
-  expect(result.api[0].method).toBe("GET");
-  expect(result.api[1].path).toBe("/items");
-  expect(result.api[1].method).toBe("POST");
-  expect(result.api[2].path).toBe("/items/{ItemId}");
-  expect(result.api[2].method).toBe("GET");
+  expect(result.api[1].path).toBe("/users");
+  expect(result.api[1].method).toBe("GET");
+  expect(result.api[2].path).toBe("/users");
+  expect(result.api[2].method).toBe("POST");
+  expect(result.api[3].path).toBe("/users/{userId}");
+  expect(result.api[3].method).toBe("GET");
 });
 
-test("compiles function block", () => {
-  const blocks = [
-    `function verifyBarcode(item) {
-       if (!item.barcode) {
-         throw new Error("Barcode is required");
-       }
-     }`,
-  ];
-
-  const result = Project.compile(blocks);
-  expect(result.functions[0].path).toBe("/verifyBarcode");
-  expect(result.functions[0].type).toBe("FUNCTION");
-});
-
-test("compiles declaration block", () => {
-  const blocks = [
-    `class Item {
-      name: string;
-      barcode: string;
-      constructor(name: string, barcode: string) {
-        this.name = name;
-        this.barcode = barcode;
-      }
-    }`,
-    `"use declarative"
-    if ($Item.name && $Item.barcode) {
-       return ($Item.description = $Item.name + $Item.barcode);
-     }`,
-  ];
-
+test("compiles declaration blocks", () => {
   const result = Project.compile(blocks);
 
   expect(result.declarations[0].definition.replace(/\s/g, "")).toBe(
-    "if($Item.name&&$Item.barcode){return($Item.description=$Item.name+$Item.barcode);}"
+    "$User.fullName=$User.firstName+''+$User.lastName;"
+  );
+  expect(result.declarations[1].definition.replace(/\s/g, "")).toBe(
+    "$User.initials=$User.firstName.charAt(0)+$User.lastName.charAt(0);"
   );
 });
 
-test("compiles empty block", () => {
-  const result = Project.compile([]);
+test("ignores imperative block", () => {
+  const imperativeBlock = blocks.find((block) =>
+    block.includes("'use imperative';")
+  );
 
-  expect(result.api.length).toBe(0);
-  expect(result.functions.length).toBe(0);
-  expect(result.declarations.length).toBe(0);
+  const result = Project.compile([imperativeBlock]);
+
+  expect(result.functions).toEqual([]);
+  expect(result.declarations).toEqual([]);
+});
+
+test("ignores imperative block without 'use imperative'", () => {
+  const imperativeBlockWithoutDirective =
+    "User.filter(u => u.firstName === 'John');";
+  const result = Project.compile([imperativeBlockWithoutDirective]);
+  expect(result.functions).toEqual([]);
+  expect(result.declarations).toEqual([]);
 });

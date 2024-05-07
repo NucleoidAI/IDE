@@ -1,4 +1,5 @@
 import Context from "../context";
+import apiActionTemplates from "../templates/apiActionTemplates";
 import { publish } from "@nucleoidai/react-event";
 import { v4 as uuid } from "uuid";
 
@@ -18,72 +19,45 @@ function contextReducer(context, { type, payload }) {
     }
 
     case "OPEN_API_DIALOG": {
-      pages.api.dialog.type = payload.type;
-      pages.api.dialog.action = payload.action;
+      const { type, action } = payload;
+
+      pages.api.dialog.type = type;
+      pages.api.dialog.action = action;
       pages.api.dialog.open = true;
+
       break;
     }
 
     case "SAVE_API_DIALOG": {
-      const { request, response, params, types } = payload;
+      const {
+        path,
+        method,
+        request,
+        response,
+        params,
+        types,
+        summary,
+        description,
+      } = payload;
 
-      let method = pages.api.selected.method;
-      const path = pages.api.selected.path;
-      const api = specification.api;
+      const newApi = {
+        path,
+        method,
+        request,
+        response,
+        params,
+        summary,
+        description,
+        '"action"': apiActionTemplates[method.toUpperCase()],
+      };
+      pages.api.dialog.open = false;
+      specification.api.push(newApi);
+      pages.api.selected = { path, method };
+      publish("SELECTED_API_CHANGED", {
+        path: path,
+        method: method,
+      });
 
-      if (
-        pages.api.dialog.type === "method" &&
-        pages.api.dialog.action === "add"
-      ) {
-        api[path][payload.method] = {};
-        pages.api.selected.method = payload.method;
-        api[path][payload.method].request = payload.request;
-        api[path][payload.method].response = payload.response;
-        api[path][payload.method].params = payload.params;
-        api[path][payload.method]["action"] = payload.action;
-        api[path][payload.method].summary = payload.summary;
-        api[path][payload.method].description = payload.description;
-
-        specification.types = payload.types;
-
-        break;
-      }
-
-      if (
-        pages.api.dialog.type === "resource" &&
-        pages.api.dialog.action === "add"
-      ) {
-        const path = payload.path;
-        const method = payload.method;
-
-        api[path] = { [method]: {} };
-        pages.api.selected.method = payload.method;
-        api[path][method].request = payload.request;
-        api[path][method].response = payload.response;
-        api[path][method].params = payload.params;
-        api[path][payload.method]["action"] = payload.action;
-        api[path][payload.method].summary = payload.summary;
-        api[path][payload.method].description = payload.description;
-
-        specification.types = payload.types;
-
-        break;
-      }
-
-      if (method !== payload.method) {
-        api[path][payload.method] = { ...api[path][method] };
-        delete api[path][method];
-
-        method = payload.method;
-        pages.api.selected.method = method;
-      }
-
-      api[path][method].request = request;
-      api[path][method].response = response;
-      api[path][method].params = params;
-      //api[path][method].action = payload.action;
-      //api[path][method].summary = payload.summary;
-      //api[path][method].description = payload.description;
       specification.types = types;
       break;
     }
@@ -111,6 +85,12 @@ function contextReducer(context, { type, payload }) {
         path: payload.path,
         method: payload.method,
       };
+
+      publish("SELECTED_API_CHANGED", {
+        path: payload.path,
+        method: payload.method,
+      });
+
       break;
     }
 
@@ -509,6 +489,28 @@ function contextReducer(context, { type, payload }) {
       if (apiIndex !== -1) {
         specification.api[apiIndex].params = params;
       }
+      break;
+    }
+    case "UPDATE_API_PATH_METHOD": {
+      const { path, method } = payload;
+
+      const apiIndex = specification.api.findIndex(
+        (api) =>
+          api.path === pages.api.selected.path &&
+          api.method === pages.api.selected.method
+      );
+
+      if (apiIndex !== -1) {
+        specification.api[apiIndex].path = path;
+        specification.api[apiIndex].method = method;
+      }
+
+      pages.api.selected = {
+        ...pages.api.selected,
+        path: path,
+        method: method,
+      };
+
       break;
     }
 

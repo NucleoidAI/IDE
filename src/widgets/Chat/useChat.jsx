@@ -1,5 +1,6 @@
 import Project from "../../lib/Project";
 import http from "../../http";
+import { startTransition } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 
@@ -56,8 +57,8 @@ const useChat = () => {
     }
   };
 
-  const convertChat = () => {
-    const { id, messages } = chat;
+  const convertChat = (chatToConvert) => {
+    const { id, messages } = chatToConvert;
 
     const blocks = [];
 
@@ -71,23 +72,26 @@ const useChat = () => {
 
     // TODO Restructure project context
     const project = {
-      context: {
-        project: {
-          id,
-          type: "chat",
-          name: "Chat Project",
-          description: "This project has been converted from chat",
-        },
-        api,
-        functions,
-        declarations,
+      specification: {
+        api: api,
+        functions: functions,
+        declarations: declarations,
+        types: [],
+      },
+      project: {
+        id,
+        type: "CHAT",
+        name: "Chat Project",
+        description: "This project has been converted from chat",
       },
     };
 
-    localStorage.setItem(`ide.projects.${id}`, JSON.stringify(project));
-    publish("CHAT_CONVERTED", chat);
-    navigate(`/${id}/api?mode=local`);
-    navigate(0);
+    localStorage.setItem(`ide.context.${id}`, JSON.stringify(project));
+    publish("CHAT_CONVERTED", chatToConvert);
+
+    startTransition(() => {
+      navigate(`/${id}/api?mode=local`);
+    });
   };
 
   const deleteChat = () => {

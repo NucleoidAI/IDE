@@ -67,7 +67,6 @@ const toOpenApiSchema = (schema) => {
 
 const toPaths = (api) => {
   const paths = {};
-
   api.forEach((method) => {
     if (!paths[method?.path]) paths[method?.path] = {};
     paths[method?.path][method?.method?.toLowerCase()] = {
@@ -79,7 +78,9 @@ const toPaths = (api) => {
           description: "Successful Operation",
           content: {
             "application/json": {
-              schema: { ...toOpenApiSchema(method?.response?.schema) },
+              schema: {
+                ...toOpenApiSchema(method?.response?.schema),
+              },
             },
           },
         },
@@ -89,7 +90,11 @@ const toPaths = (api) => {
             "application/json": {
               schema: {
                 type: "object",
-                properties: { message: { type: "string" } },
+                properties: {
+                  message: {
+                    type: "string",
+                  },
+                },
               },
             },
           },
@@ -98,11 +103,13 @@ const toPaths = (api) => {
       requestBody: method?.request?.schema && {
         content: {
           "application/json": {
-            schema: { ...toOpenApiSchema(method?.request?.schema) },
+            schema: {
+              ...toOpenApiSchema(method?.request?.schema),
+            },
           },
         },
       },
-      parameters: [],
+      parameters: method?.params?.map(toOpenApiParameter) || [],
       request: undefined,
       response: undefined,
       action: undefined,
@@ -110,6 +117,18 @@ const toPaths = (api) => {
     };
   });
   return paths;
+};
+
+const toOpenApiParameter = (param) => {
+  return {
+    name: param.name,
+    in: param.in,
+    required: param.required,
+    schema: {
+      type: param.type,
+    },
+    description: param.description,
+  };
 };
 
 const toSchemas = (types) => {

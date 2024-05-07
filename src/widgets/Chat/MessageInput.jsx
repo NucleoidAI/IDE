@@ -1,7 +1,9 @@
 import CodeIcon from "@mui/icons-material/Code";
 import SendIcon from "@mui/icons-material/Send";
+import { storage } from "@nucleoidjs/webstorage";
 import useChat from "./useChat";
 import useConfirmDialog from "../../components/ConfirmDialog";
+import { useParams } from "react-router-dom";
 
 import {
   Box,
@@ -27,6 +29,7 @@ const MessageInput = forwardRef((props, ref) => {
   const [isInputEmpty, setIsInputEmpty] = useState(true);
   const [ConfirmDialog, showConfirmDialog] = useConfirmDialog();
   const inputRef = useRef(null);
+  const { chatId } = useParams();
 
   useEffect(() => {
     if (showConvertToProject) {
@@ -55,7 +58,8 @@ const MessageInput = forwardRef((props, ref) => {
       "Convert to Project",
       "Are you sure you want to convert this chat to a project?",
       () => {
-        convertChat();
+        const chat = storage.get("ide", "chat", "sessions", chatId);
+        convertChat(chat);
       }
     );
   };
