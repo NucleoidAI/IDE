@@ -31,7 +31,7 @@ const apiData = [
     },
     summary: "Get all users",
     description: "Get all users",
-    "x-nuc-action":
+    action:
       "function action(req) {\n    return { message: 'Hello World' };\n}\n",
   },
   {
@@ -60,7 +60,7 @@ const apiData = [
     },
     summary: "Get item by name",
     description: "Get item by name",
-    "x-nuc-action":
+    action:
       "function action(req) {\n    const name = req.query.name;\n    return Item.filter((item) => item.name === name);\n}\n",
   },
   {
@@ -97,7 +97,7 @@ const apiData = [
     },
     summary: "Create new item",
     description: "Create new item",
-    "x-nuc-action":
+    action:
       "function action(req) {\n    const name = req.body.name;\n    const barcode = req.body.barcode;\n    const check = Item.find((i) => i.barcode === barcode);\n    if (check) {\n        throw 'DUPLICATE_BARCODE';\n    }\n    return new Item(name, barcode);\n}\n",
   },
   {
@@ -127,7 +127,7 @@ const apiData = [
     },
     summary: "Get item by id",
     description: "Get item by id",
-    "x-nuc-action":
+    action:
       "function action(req) {\n    const item = req.params.item;\n    return Item[item];\n}\n",
   },
 ];
