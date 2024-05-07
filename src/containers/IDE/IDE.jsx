@@ -67,7 +67,7 @@ function IDE() {
       navigate("/error/api");
       return null;
     }
-    publish("PROJECT_NOT_FOUND", { status: false });
+    publish("PROJECT_FOUNDED", { id: projectId, type: "LOCAL", from: "URL" });
 
     const context = Context.withPages({ specification, project });
     context.get = (prop) => Context.resolve(context, prop);
@@ -88,7 +88,7 @@ function IDE() {
     const projectService = serviceResult.data;
     const project = projectResult.data;
 
-    publish("PROJECT_NOT_FOUND", { status: false });
+    publish("PROJECT_FOUNDED", { id: projectId, type: "CLOUD", from: "URL" });
 
     if (project.type === "SINGLE") {
       const specificationId = projectService[0].id;
