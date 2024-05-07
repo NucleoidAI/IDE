@@ -220,7 +220,7 @@ function IDE() {
           const blankContext = blankProject();
           setReactContext(initContext(blankContext));
         } else if (id === "error") {
-          publish("PROJECT_NOT_FOUND", true);
+          publish("PROJECT_NOT_FOUNDED", true);
           const blankContext = blankProject();
           setReactContext(initContext(blankContext));
         } else if (id === undefined) {

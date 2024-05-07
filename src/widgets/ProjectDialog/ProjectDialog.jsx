@@ -44,7 +44,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   const [loading, setLoading] = useState(false);
   const mode = Path.getMode();
   const [projectFounded] = useEvent("PROJECT_FOUNDED", null);
-  const [projectNotFound] = useEvent("PROJECT_NOT_FOUND", false);
+  const [projectNotFound] = useEvent("PROJECT_NOT_FOUNDED", false);
 
   const navigate = useNavigate();
 
