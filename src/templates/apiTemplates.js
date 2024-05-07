@@ -65,7 +65,7 @@ const apiTemplates = {
     `,
   readObject: `
     {
-      "path": "/{{pluralName}}/{{encloseBraces singularName}}",
+      "path": "/{{pluralName}}/{{encloseBraces (camelCase singularName)}}",
       "method": "GET",
       "params": [
         {
@@ -95,7 +95,30 @@ const apiTemplates = {
       "description": "Read a {{singularName}}",
       "x-nuc-action": "function action(req) { const {{camelCase singularName}}Id = req.params.{{camelCase singularName}}Id; return {{className}}[{{camelCase singularName}}Id]; }"
     }
-  `,
+    `,
 };
 
-export default apiTemplates;
+const rootObject = {
+  path: "/",
+  method: "GET",
+  params: [],
+  response: {
+    type: "OPENAPI",
+    schema: {
+      name: "User",
+      type: "object",
+      properties: [
+        {
+          name: "name",
+          type: "string",
+        },
+      ],
+    },
+  },
+  summary: "Hello World",
+  description: "Hello World",
+  "x-nuc-action":
+    "function action(req: any): { message: string } {\n  return { message: 'Hello World' };\n}\n",
+};
+
+export { apiTemplates, rootObject };

@@ -288,7 +288,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   const runProject = (project) => {
     const { type, id } = project;
 
-    if (type === "LOCAL") {
+    if (type === "LOCAL" || type === "CHAT") {
       navigate(`/${id}?mode=local`);
     } else if (type === "CLOUD") {
       navigate(`/${id}`);
