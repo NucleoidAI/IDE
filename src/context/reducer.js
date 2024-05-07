@@ -48,7 +48,7 @@ function contextReducer(context, { type, payload }) {
         params,
         summary,
         description,
-        '"action"': apiActionTemplates[method.toUpperCase()],
+        action: apiActionTemplates[method.toUpperCase()],
       };
       pages.api.dialog.open = false;
       specification.api.push(newApi);
