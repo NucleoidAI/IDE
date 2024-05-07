@@ -13,7 +13,7 @@ import { useContext } from "../../context/context";
 import { useMonaco } from "@monaco-editor/react";
 import { v4 as uuidv4 } from "uuid";
 
-import { CircularProgress, Fab, Grid } from "@mui/material";
+import { Box, CircularProgress, Fab, Grid, Stack } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import { publish, useEvent } from "@nucleoidai/react-event";
 
@@ -225,7 +225,7 @@ const Editor = React.forwardRef((props, ref) => {
         ref={ref}
       />
       {query && (
-        <Grid container item sx={styles.runButton}>
+        <Stack direction={"row"} sx={styles.runButton}>
           <QueryAIButton />
           <AIDialog imperative page={"query"} editor={editorRef} />
           {!loading && (
@@ -234,7 +234,7 @@ const Editor = React.forwardRef((props, ref) => {
             </Fab>
           )}
           {loading && <CircularProgress />}
-        </Grid>
+        </Stack>
       )}
     </>
   );
