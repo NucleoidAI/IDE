@@ -10,7 +10,7 @@ const ErrorMessage = ({ show, content, type, refreshChat }) => {
         sx={{
           backgroundColor: alpha("#f44336", 0.1),
           border: "1px solid #f44336",
-          width: { xs: "100%", sm: "90%", md: "80%" },
+          width: { xs: "100%", sm: "90%", md: "80%", lg: "70%" },
           marginBottom: { xs: "12px", sm: "16px", md: "20px" },
           padding: "10px",
           borderRadius: "10px",
