@@ -19,7 +19,6 @@ function SideChat() {
   const [chat, sendMessage] = useChat();
   const [error] = useEvent("EXPERT_ERROR_OCCURRED", {
     chatId: "",
-    status: false,
     type: "",
     content: "",
   });
@@ -41,18 +40,13 @@ function SideChat() {
   }, [contextId]);
 
   useEffect(() => {
-    if (error.status) {
+    if (error) {
       setLoading(false);
     }
-  }, [error.status]);
+  }, [error]);
 
   const refreshChat = () => {
     messageInputRef.current.setValue(userMessageRef.current);
-    publish("EXPERT_ERROR_OCCURRED", {
-      status: false,
-      type: "",
-      content: "",
-    });
   };
 
   const handleSendMessage = async () => {

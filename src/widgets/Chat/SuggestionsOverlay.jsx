@@ -190,7 +190,7 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat, error }) => {
     publish("SUGGESTIONS_OVERLAY", { active: true });
   }, [chat]);
 
-  if (error.status && error.chatId === chat.id) {
+  if (error.chatId === chat.id) {
     return null;
   }
 
