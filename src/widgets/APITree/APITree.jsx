@@ -367,11 +367,14 @@ export const compile = (
           <TreeItem
             key={path}
             nodeId={path}
-            label={<div className="path">{path}</div>}
+            label={
+              <div className="path" onClick={handleResourceClick}>
+                {path}
+              </div>
+            }
             children={[...methodItems, ...childItems]}
             collapseIcon={<ArrowIcon down />}
             expandIcon={<ArrowIcon right />}
-            onClick={handleResourceClick}
           />
         );
       });
