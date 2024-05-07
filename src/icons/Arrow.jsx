@@ -10,13 +10,13 @@ const style = {
 
 function Arrow({ up, down, right, left }) {
   return up ? (
-    <KeyboardArrowUpIcon style={style} />
+    <KeyboardArrowUpIcon />
   ) : down ? (
-    <KeyboardArrowDownIcon style={style} />
+    <KeyboardArrowDownIcon />
   ) : right ? (
-    <KeyboardArrowRightIcon style={style} />
+    <KeyboardArrowRightIcon />
   ) : left ? (
-    <KeyboardArrowLeftIcon style={style} />
+    <KeyboardArrowLeftIcon />
   ) : null;
 }
 
