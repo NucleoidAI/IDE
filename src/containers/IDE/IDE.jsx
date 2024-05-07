@@ -68,7 +68,6 @@ function IDE() {
       return null;
     }
     publish("PROJECT_NOT_FOUND", { status: false });
-    publish("RECENT_PROJECT_NOT_FOUND", { status: false });
 
     const context = Context.withPages({ specification, project });
     context.get = (prop) => Context.resolve(context, prop);
@@ -77,7 +76,6 @@ function IDE() {
   }
 
   async function project(projectId) {
-    console.log(projectId);
     const [projectResult, serviceResult] = await Promise.all([
       service.getProject(projectId),
       service.getProjectServices(projectId),
@@ -91,7 +89,6 @@ function IDE() {
     const project = projectResult.data;
 
     publish("PROJECT_NOT_FOUND", { status: false });
-    publish("RECENT_PROJECT_NOT_FOUND", { status: false });
 
     if (project.type === "SINGLE") {
       const specificationId = projectService[0].id;
@@ -187,15 +184,12 @@ function IDE() {
   const checkRecentProject = (recentProject) => {
     if (recentProject) {
       publish("PROJECT_NOT_FOUND", { status: false });
-      publish("RECENT_PROJECT_NOT_FOUND", { status: false });
-
       if (recentProject.type === "CLOUD") {
         navigate(`/${recentProject.id}`);
       } else if (recentProject.type === "LOCAL") {
         navigate(`/${recentProject.id}?mode=local`);
       }
     } else {
-      publish("RECENT_PROJECT_NOT_FOUND", { status: true });
       navigate("/new");
     }
   };
