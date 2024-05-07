@@ -6,8 +6,9 @@ import {
   typesData,
 } from "./adapterTestData";
 
+// TODO Convert to BDD
 describe("toOpenApi", () => {
-  test("should convert API definition and types to OpenAPI specification", () => {
+  test("converts API definition and types to OpenAPI specification", () => {
     const actualOpenApi = toOpenApi({ api: apiData, types: typesData });
     expect(actualOpenApi).toEqual(expectedOpenApi);
   });
