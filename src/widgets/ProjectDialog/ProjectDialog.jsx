@@ -1,6 +1,7 @@
 import AddNewButton from "./components/AddNewButton";
 import Context from "../../context";
 import InlineCreationForm from "./components/InlineCreationForm";
+import Path from "../../utils/Path";
 import ProjectList from "./components/ProjectList";
 import React from "react";
 import WorkspacesIcon from "@mui/icons-material/Workspaces";
@@ -41,8 +42,9 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   const [cloudProjects, setCloudProjects] = useState([]);
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [projectNotFound] = useEvent("PROJECT_NOT_FOUND", { status: false });
   const mode = Path.getMode();
+  const [projectFounded] = useEvent("PROJECT_FOUNDED", null);
+  const [projectNotFound] = useEvent("PROJECT_NOT_FOUND", false);
 
   const navigate = useNavigate();
 
@@ -71,7 +73,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   }, [mode]);
 
   useEffect(() => {
-    if (projectNotFound.status) {
+    if (projectNotFound && projectFounded === null) {
       setOpen(true);
       publish("APP_MESSAGE", {
         message: "Project not found",
@@ -79,7 +81,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectNotFound.status]);
+  }, [projectNotFound]);
 
   const getProjectsFromLocalStorage = () => {
     const projects = [];
@@ -124,7 +126,6 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     return await Promise.all(projectPromises);
   };
   const contextToCloud = (specification, project) => {
-    console.log(project);
     const createdProject = {
       name: project.name,
       type: "SINGLE",
