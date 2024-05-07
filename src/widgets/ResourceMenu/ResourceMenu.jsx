@@ -36,7 +36,7 @@ const ResourceMenu = (props) => {
 
       if (pages.api.selected) {
         const apiSelectedPath = pages.api.selected.path;
-        return countMethodsForPath(apiSelectedPath) > 3;
+        return countMethodsForPath(apiSelectedPath) > 4;
       }
       return false;
     };

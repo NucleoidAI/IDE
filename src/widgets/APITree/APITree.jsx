@@ -39,12 +39,18 @@ function APITree() {
   const [expanded, setExpanded] = useState([]);
   const [errors] = useEvent("DIAGNOSTICS_COMPLETED", []);
   const [state, dispatch] = useContext();
+  const theme = useTheme();
+
+  const [selectedAPI] = useEvent("SELECTED_API_CHANGED", {
+    path: "/",
+    method: "GET",
+  });
 
   const api = state.get("specification.api");
   //eslint-disable-next-line
   const [apiExists, setApiExists] = useState(Boolean(api.length));
 
-  const expandList = [];
+  const expandList = React.useMemo(() => [], []);
 
   const handleToggle = (event, ids) => {
     setExpanded(ids);
@@ -54,12 +60,26 @@ function APITree() {
     setExpanded([...expandList]);
   };
 
-  const select = (id) => {
+  const select = (id, callDispatch = true) => {
     if (map[id]) {
       setSelected(id);
-      dispatch({ type: "SET_SELECTED_API", payload: map[id] });
+      if (callDispatch) {
+        dispatch({ type: "SET_SELECTED_API", payload: map[id] });
+      }
     }
   };
+
+  useEffect(() => {
+    const selectedId = Object.keys(map).find(
+      (key) =>
+        map[key].path === selectedAPI.path &&
+        map[key].method === selectedAPI.method
+    );
+    if (selectedId) {
+      select(selectedId, false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedAPI]);
 
   const handleContextMenu = (event, hash) => {
     event.preventDefault();
@@ -129,7 +149,7 @@ function APITree() {
 
   useEffect(() => {
     if (!selected) {
-      select(Object.keys(map).pop());
+      select(Object.keys(map)[0]);
     }
     setMethodDisabled(checkMethodDeletable());
     handleExpandClick();
@@ -164,7 +184,8 @@ function APITree() {
                 handleContextMenu,
                 expandList,
                 rightClickMethod,
-                errors
+                errors,
+                theme
               )}
             </TreeView>
 
@@ -217,7 +238,8 @@ export const compile = (
   handleContextMenu,
   expandList,
   rightClickMethod,
-  errors
+  errors,
+  theme
 ) => {
   if (apiData.length !== 0) {
     const groupedByPath = apiData.reduce((acc, endpoint) => {
@@ -262,7 +284,6 @@ export const compile = (
       // eslint-disable-next-line
       let resourceHash;
       // eslint-disable-next-line
-      const theme = useTheme();
 
       return Object.keys(data).map((path) => {
         const { methods, children } = data[path];
