@@ -138,7 +138,7 @@ const ProcessDrawer = () => {
         return false;
     }
   }
-  //idea: we collapse all BLALBLA_DRAWER_OPENED to DRAWER_OPENED and send drawer type as event payload
+  // TODO Collapse all [TYPE]_DRAWER_OPENED to DRAWER_OPENED and send drawer type as event payload
   return (
     <>
       <Drawer
