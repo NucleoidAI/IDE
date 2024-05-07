@@ -41,8 +41,8 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   const [cloudProjects, setCloudProjects] = useState([]);
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [event] = useEvent("RECENT_PROJECT_NOT_FOUND", { status: false });
   const [projectNotFound] = useEvent("PROJECT_NOT_FOUND", { status: false });
+  const mode = Path.getMode();
 
   const navigate = useNavigate();
 
@@ -64,11 +64,11 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   }, []);
 
   useEffect(() => {
-    if (event.status) {
+    if (mode === null) {
       setOpen(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [event.status]);
+  }, [mode]);
 
   useEffect(() => {
     if (projectNotFound.status) {
@@ -329,7 +329,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
       projectExist ? "please select a project" : "create a new project"
     }.`;
 
-    if (!event.status && !projectNotFound.status) {
+    if (projectFounded !== null) {
       handleClose();
       setSearchQuery("");
     } else {
