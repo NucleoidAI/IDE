@@ -334,9 +334,7 @@ export const compile = (
                         justifyContent: "center",
                       }}
                     >
-                      {method.method === "DELETE"
-                        ? "DEL"
-                        : method.method.toUpperCase()}
+                      {method.method.toUpperCase()}
                     </span>
                   </Box>
                   {error && (

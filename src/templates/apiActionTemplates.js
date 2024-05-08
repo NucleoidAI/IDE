@@ -15,7 +15,7 @@ const apiActionTemplates = {
     return { id: id, name: name };
   }`,
 
-  DELETE: `function action(req) {
+  DEL: `function action(req) {
     const { id } = req.params;
     return { message: \`Resource with ID \${id} deleted successfully\` };
   }`,
