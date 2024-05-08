@@ -25,12 +25,21 @@ const DeleteResourceDialog = forwardRef(({ setOpen, deleteResource }, ref) => {
     >
       <DialogTitle id="responsive-dialog-title">Delete resource</DialogTitle>
       <DialogContent>
-        The selected resource and all methods and resources under it will be
-        deleted. Resources to be deleted :<br />
-        <br />
-        {resource.deleteList.map((item, index) => {
-          return <Typography key={index}>{item}</Typography>;
-        })}
+        <Typography>
+          The selected resource "{resource?.deleteAdress}" will be deleted.
+        </Typography>
+        {resource?.deleteList.length > 0 && (
+          <>
+            <Typography sx={{ mt: 2 }}>
+              The following child resources will also be deleted:
+            </Typography>
+            {resource?.deleteList.map((item, index) => (
+              <Typography key={index} sx={{ ml: 2 }}>
+                - {item}
+              </Typography>
+            ))}
+          </>
+        )}
       </DialogContent>
       <DialogActions>
         <Button autoFocus onClick={handleClose}>
