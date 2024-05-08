@@ -10,8 +10,8 @@ let terminalUrl = "";
 let landingLevel = 0;
 
 const getLandingLevel = () => {
-  const landingSettings = Settings.landing();
-  return landingSettings.level;
+  const { level } = Settings.landing();
+  return level;
 };
 
 const createSandbox = async (context, runtime) => {
