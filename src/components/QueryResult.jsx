@@ -7,10 +7,15 @@ import { useTheme } from "@mui/material";
 function QueryResult({ json }) {
   const [themeStorage] = useStorage("platform", "theme", "light");
   const theme = useTheme();
+
+  const jsonViewTheme =
+    themeStorage === "light" ? "grayscale:inverted" : "grayscale";
+
   return (
     <ReactJsonView
       src={json}
       name={null}
+      theme={jsonViewTheme}
       displayDataTypes={false}
       displayObjectSize={false}
       quotesOnKeys={false}
