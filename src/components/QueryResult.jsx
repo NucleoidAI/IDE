@@ -1,9 +1,11 @@
 import "./QueryResult.css";
 
 import ReactJsonView from "react-json-view";
+import { useStorage } from "@nucleoidjs/webstorage";
 import { useTheme } from "@mui/material";
 
 function QueryResult({ json }) {
+  const [themeStorage] = useStorage("platform", "theme", "light");
   const theme = useTheme();
   return (
     <ReactJsonView
