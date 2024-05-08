@@ -368,7 +368,11 @@ export const compile = (
             key={path}
             nodeId={path}
             label={
-              <div className="path" onClick={handleResourceClick}>
+              <div
+                className="path"
+                onClick={handleResourceClick}
+                style={{ cursor: "default" }}
+              >
                 {path}
               </div>
             }
