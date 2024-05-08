@@ -68,7 +68,7 @@ const VFSEditor = React.forwardRef((props, ref) => {
           endpoint.method.toLowerCase() === selected.method.toLowerCase()
       );
       if (endpointIndex !== -1) {
-        context.specification.api[endpointIndex]["x-nuc-action"] = e;
+        context.specification.api[endpointIndex]["action"] = e;
       }
     }
 
@@ -248,7 +248,7 @@ function getFile(context, props) {
 
     file.path = selected?.path + selected?.method;
 
-    file.code = apiConfig["x-nuc-action"];
+    file.code = apiConfig["action"];
   }
 
   if (functions) {

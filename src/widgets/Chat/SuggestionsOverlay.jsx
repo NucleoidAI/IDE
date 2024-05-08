@@ -190,7 +190,7 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat, error }) => {
     publish("SUGGESTIONS_OVERLAY", { active: true });
   }, [chat]);
 
-  if (error.status && error.chatId === chat.id) {
+  if (error.chatId === chat.id) {
     return null;
   }
 
@@ -214,7 +214,7 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat, error }) => {
             display: "flex",
             flexDirection: { xs: "column", md: "column", lg: "row" },
             justifyContent: "space-between",
-            width: { xs: "100%", sm: "80%", md: "55%" },
+            width: { xs: "100%", sm: "80%", md: "65%" },
             gap: "10px",
           }}
         >

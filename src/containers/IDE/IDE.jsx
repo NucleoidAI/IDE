@@ -1,4 +1,5 @@
 import { Box } from "@mui/material";
+import ChatDrawer from "../../widgets/ChatDrawer/ChatDrawer";
 import Context from "../../context";
 import ContextProvider from "../../context/context";
 import EducationDrawer from "../../components/EducationDrawer/EducationDrawer";
@@ -66,8 +67,7 @@ function IDE() {
       navigate("/error/api");
       return null;
     }
-    publish("PROJECT_NOT_FOUND", { status: false });
-    publish("RECENT_PROJECT_NOT_FOUND", { status: false });
+    publish("PROJECT_FOUNDED", { id: projectId, type: "LOCAL", from: "URL" });
 
     const context = Context.withPages({ specification, project });
     context.get = (prop) => Context.resolve(context, prop);
@@ -88,8 +88,7 @@ function IDE() {
     const projectService = serviceResult.data;
     const project = projectResult.data;
 
-    publish("PROJECT_NOT_FOUND", { status: false });
-    publish("RECENT_PROJECT_NOT_FOUND", { status: false });
+    publish("PROJECT_FOUNDED", { id: projectId, type: "CLOUD", from: "URL" });
 
     if (project.type === "SINGLE") {
       const specificationId = projectService[0].id;
@@ -184,16 +183,12 @@ function IDE() {
 
   const checkRecentProject = (recentProject) => {
     if (recentProject) {
-      publish("PROJECT_NOT_FOUND", { status: false });
-      publish("RECENT_PROJECT_NOT_FOUND", { status: false });
-
       if (recentProject.type === "CLOUD") {
         navigate(`/${recentProject.id}`);
       } else if (recentProject.type === "LOCAL") {
         navigate(`/${recentProject.id}?mode=local`);
       }
     } else {
-      publish("RECENT_PROJECT_NOT_FOUND", { status: true });
       navigate("/new");
     }
   };
@@ -225,9 +220,9 @@ function IDE() {
           const blankContext = blankProject();
           setReactContext(initContext(blankContext));
         } else if (id === "error") {
+          publish("PROJECT_NOT_FOUNDED", true);
           const blankContext = blankProject();
           setReactContext(initContext(blankContext));
-          publish("PROJECT_NOT_FOUND", { status: true });
         } else if (id === undefined) {
           checkRecentProject(recentProject);
         } else {
@@ -237,6 +232,7 @@ function IDE() {
     }
 
     initMode();
+
     loaded = false;
     // eslint-disable-next-line
   }, [id]);
@@ -267,6 +263,7 @@ function IDE() {
       <Box sx={styles.root}>
         <Menu list={routes} query={modeQuery} id={id} title="IDE" />
         <EducationDrawer />
+        <ChatDrawer />
         <Box sx={styles.content}>
           <Outlet />
         </Box>

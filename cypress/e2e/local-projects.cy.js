@@ -20,13 +20,13 @@ describe("Local Project", () => {
       cy.storageGet(`ide.context.${projectId}`).then((context) => {
         cy.normalizeString(changedEditorValue).then(
           (normalizedChangedEditorValue) => {
-            cy.normalizeString(
-              context.specification.api[0]["x-nuc-action"]
-            ).then((normalizedContextValue) => {
-              expect(normalizedContextValue).to.contain(
-                normalizedChangedEditorValue
-              );
-            });
+            cy.normalizeString(context.specification.api[0]["action"]).then(
+              (normalizedContextValue) => {
+                expect(normalizedContextValue).to.contain(
+                  normalizedChangedEditorValue
+                );
+              }
+            );
           }
         );
       });

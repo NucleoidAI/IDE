@@ -1,6 +1,7 @@
 /* eslint-disable */
 
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import Project from "../../lib/Project.js";
 import PromptCodeDialog from "../../components/PromptCodeDialog";
 import actions from "../../actions";
 import { deepCopy } from "../../utils/DeepCopy";
@@ -79,6 +80,7 @@ function AIDialog({ editor, declarative, imperative, page }) {
 
     if (promptValue) {
       setLoading(true);
+      setDescription(promptValue);
 
       http
         .post("/chat/completions", {
@@ -88,10 +90,10 @@ function AIDialog({ editor, declarative, imperative, page }) {
           content: promptValue?.trim(),
         })
         .then((res) => {
+          const compiledCode = Project.compile(res.data.code);
           setSummary(res.data.summary);
-          setDescription(res.data.description);
           const model = monaco.editor.createModel(
-            res.data.code?.trim(),
+            compiledCode.trim(),
             "typescript"
           );
 
@@ -138,8 +140,7 @@ function AIDialog({ editor, declarative, imperative, page }) {
         },
       });
     } else {
-      publish("GLOBAL_MESSAGE", {
-        status: true,
+      publish("APP_MESSAGE", {
         message: `You can only create declaration for existing functions.`,
         severity: "error",
       });

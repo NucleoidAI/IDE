@@ -8,6 +8,7 @@ import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import SaveIcon from "@mui/icons-material/Save";
 import SchoolIcon from "@mui/icons-material/School";
 import Settings from "../../settings";
+import TryIcon from "@mui/icons-material/Try";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import { deepCopy } from "../../utils/DeepCopy";
 import { getTypes } from "../../lib/TypeScript";
@@ -137,7 +138,7 @@ const ProcessDrawer = () => {
         return false;
     }
   }
-
+  // TODO Collapse all [TYPE]_DRAWER_OPENED to DRAWER_OPENED and send drawer type as event payload
   return (
     <>
       <Drawer
@@ -155,6 +156,14 @@ const ProcessDrawer = () => {
               onClick={() => publish("EDUCATION_DRAWER_OPENED", true)}
             >
               <SchoolIcon variant="pageIcon" />
+            </ListItemButton>
+          </Tooltip>
+          <Tooltip placement="left" title="Chat">
+            <ListItemButton
+              data-cy="side-chat-button"
+              onClick={() => publish("CHAT_DRAWER_OPENED", true)}
+            >
+              <TryIcon variant="pageIcon" />
             </ListItemButton>
           </Tooltip>
           <Tooltip placement="left" title="Deploy (Coming soon)">
@@ -272,7 +281,7 @@ function ApiButton() {
           ...toOpenApi({ api: context.api, types }),
           "x-nuc-functions": context.functions,
           "x-nuc-declerations": context.declarations,
-          "x-nuc-action": "start",
+          action: "start",
         },
       };
 
@@ -283,8 +292,7 @@ function ApiButton() {
       publish("SWAGGER_DIALOG", { open: true });
     } catch {
       setLoading(false);
-      publish("GLOBAL_MESSAGE", {
-        status: true,
+      publish("APP_MESSAGE", {
         message: "There is a problem communicating with the sandbox",
         severity: "info",
       });
