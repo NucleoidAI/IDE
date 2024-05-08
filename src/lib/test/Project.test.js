@@ -47,3 +47,21 @@ test("ignores imperative block without 'use imperative'", () => {
   expect(result.functions).toEqual([]);
   expect(result.declarations).toEqual([]);
 });
+
+test("takes the last instance as the unique one", () => {
+  const duplicateBlocks = [
+    "'use declarative';\n\nclass User {\n firstName: string;\n lastName: string;\n}",
+    "'use declarative';\n\nclass User {\n firstName: string;\n lastName: string;\n age: number;\n}",
+  ];
+  const result = Project.compile(duplicateBlocks);
+  expect(result.functions[0].definition).toContain("age: number");
+});
+
+test("removes duplicate declarations", () => {
+  const duplicateDeclarationBlocks = [
+    "'use declarative';\n\n$User.fullName = $User.firstName + ' ' + $User.lastName;",
+    "'use declarative';\n\n$User.fullName = $User.firstName + ' ' + $User.lastName;",
+  ];
+  const result = Project.compile(duplicateDeclarationBlocks);
+  expect(result.declarations.length).toBe(1);
+});
