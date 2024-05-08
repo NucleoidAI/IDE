@@ -186,7 +186,8 @@ function APITree() {
                 rightClickMethod,
                 errors,
                 theme,
-                select
+                select,
+                handleResourceMenu
               )}
             </TreeView>
 
@@ -241,7 +242,8 @@ export const compile = (
   rightClickMethod,
   errors,
   theme,
-  select
+  select,
+  handleResourceMenu
 ) => {
   if (apiData.length !== 0) {
     const groupedByPath = apiData.reduce((acc, endpoint) => {
@@ -365,6 +367,12 @@ export const compile = (
           }
         };
 
+        const handleResourceContextMenu = (event) => {
+          event.preventDefault();
+          handleResourceClick(event);
+          handleResourceMenu(event);
+        };
+
         return (
           <TreeItem
             key={path}
@@ -373,6 +381,7 @@ export const compile = (
               <div
                 className="path"
                 onClick={handleResourceClick}
+                onContextMenu={handleResourceContextMenu}
                 style={{ cursor: "default" }}
               >
                 {path}
