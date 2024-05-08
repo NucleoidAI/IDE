@@ -26,7 +26,7 @@ const DeleteResourceDialog = forwardRef(({ setOpen, deleteResource }, ref) => {
       <DialogTitle id="responsive-dialog-title">Delete resource</DialogTitle>
       <DialogContent>
         <Typography>
-          The selected resource "{resource?.deleteAdress}" will be deleted.
+          {`The selected resource "${resource?.deleteAdress}" will be deleted.`}
         </Typography>
         {resource?.deleteList.length > 0 && (
           <>
