@@ -90,12 +90,21 @@ function AIDialog({ editor, declarative, imperative, page }) {
           content: promptValue?.trim(),
         })
         .then((res) => {
+          let code;
           const compiledCode = Project.compile([res.data.code]);
-          setSummary(compiledCode.declarations[0].summary);
-          const model = monaco.editor.createModel(
-            compiledCode.declarations[0].definition,
-            "typescript"
-          );
+
+          if (page === "api") {
+            const { api } = compiledCode;
+            code = api[0]["x-nuc-action"];
+          } else if (page === "logic") {
+            const { declarations } = compiledCode;
+            code = declarations[0].definition;
+            setSummary(res.data.summary);
+          } else if (page === "query") {
+            // TODO: filter res.data.code
+            code = res.data.code;
+          }
+          const model = monaco.editor.createModel(code, "typescript");
 
           editorRef.current.nucEditor.setModel(model);
           setIsCodeGenerated(true);
@@ -168,9 +177,9 @@ function AIDialog({ editor, declarative, imperative, page }) {
       if (page === "api") {
         const action = prettierStandalone.format(
           `
-      function action(req) {
+      
         ${generatedCode}
-      }
+      
       `,
           {
             plugins,
