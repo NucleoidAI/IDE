@@ -90,10 +90,10 @@ function AIDialog({ editor, declarative, imperative, page }) {
           content: promptValue?.trim(),
         })
         .then((res) => {
-          const compiledCode = Project.compile(res.data.code);
-          setSummary(res.data.summary);
+          const compiledCode = Project.compile([res.data.code]);
+          setSummary(compiledCode.declarations[0].summary);
           const model = monaco.editor.createModel(
-            compiledCode.trim(),
+            compiledCode.declarations[0].definition,
             "typescript"
           );
 
