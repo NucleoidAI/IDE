@@ -217,11 +217,20 @@ function contextReducer(context, { type, payload }) {
           (data) => data.path === path
         );
 
-        const fn = specification.functions[index];
+        const deletedFunction = specification.functions[index];
         specification.functions.splice(index, 1);
 
+        const remainingFunctions = specification.functions.filter(
+          (data) => data.path !== path
+        );
+
+        const files = remainingFunctions.map((func) => ({
+          key: `${func.path}.ts`,
+          value: func,
+        }));
+
         publish("CONTEXT_CHANGED", {
-          files: [{ key: `${fn.path}.${fn.ext}` }],
+          files: [{ key: `${deletedFunction.path}.ts` }, ...files],
         });
         context.pages.functions.selected = specification.functions[0].path;
       }
