@@ -161,39 +161,19 @@ ${imperatives[0]};
 
   const handleSaveImperative = (generatedCode) => {
     const mEditor = editor.current.editor;
-    const lineNumber = mEditor?.getSelection().endLineNumber;
-    const selected = mEditor
-      ?.getModel()
-      .getValueInRange(mEditor.getSelection());
 
-    if (selected) {
-      const withLine = mEditor?.getModel().getValue().split("\n");
-
-      withLine.splice(lineNumber, 0, generatedCode);
-      const res = withLine.join("\n");
-      const prettyText = prettierStandalone.format(res, {
-        plugins,
-      });
-
-      mEditor?.getModel().setValue(prettyText);
-    } else {
-      if (page === "api") {
-        const action = prettierStandalone.format(
-          `
-      
-        ${generatedCode}
-      
-      `,
-          {
-            plugins,
-          }
-        );
-        mEditor?.getModel().setValue(action);
-      }
-      if (page === "query") {
-        const query = context.get("pages.query");
-        query.text = generatedCode;
-      }
+    if (page === "api") {
+      const action = prettierStandalone.format(
+        generatedCode,
+        {
+          plugins,
+        }
+      );
+      mEditor?.getModel().setValue(action);
+    }
+    if (page === "query") {
+      const query = context.get("pages.query");
+      query.text = generatedCode;
     }
   };
 
