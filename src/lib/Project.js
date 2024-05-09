@@ -158,6 +158,7 @@ function createObject(codeSnippet) {
 function createCodeSnippets(codeBlock) {
   const declarativeSnippets = [];
   const functions = [];
+  const imperativeSnippets = [];
 
   let sourceFile = createASTFromCode(codeBlock);
 
@@ -171,13 +172,12 @@ function createCodeSnippets(codeBlock) {
     firstStatement.expression.text === "use declarative"
   ) {
     isDeclarative = true;
-
-    const start = firstStatement.getStart();
-    const end = firstStatement.getEnd();
-    codeBlock = codeBlock.slice(0, start) + codeBlock.slice(end);
-
-    sourceFile = createASTFromCode(codeBlock);
   }
+  const start = firstStatement.getStart();
+  const end = firstStatement.getEnd();
+  codeBlock = codeBlock.slice(0, start) + codeBlock.slice(end);
+
+  sourceFile = createASTFromCode(codeBlock);
 
   function visit(node) {
     if (isDeclarative) {
@@ -189,6 +189,9 @@ function createCodeSnippets(codeBlock) {
       ) {
         declarativeSnippets.push(node.getText(sourceFile));
       }
+    } else {
+      imperativeSnippets.push(node.getText(sourceFile));
+      return;
     }
 
     ts.forEachChild(node, visit);
@@ -198,6 +201,7 @@ function createCodeSnippets(codeBlock) {
 
   return {
     declarativeSnippets,
+    imperativeSnippets,
     functions,
   };
 }
@@ -262,4 +266,4 @@ function compile(blocks) {
   return { api, functions: uniqueFunctions, declarations };
 }
 
-export default { compile };
+export default { compile, createCodeSnippets };
