@@ -91,14 +91,21 @@ function AIDialog({ editor, declarative, imperative, page }) {
         })
         .then((res) => {
           let code;
-          const codeSnippets = Project.createCodeSnippets(res.data.code);
+          const { functions, declarations, imperatives } = Project.compile([
+            res.data.code,
+          ]);
+
           if (page === "api") {
-            code = codeSnippets.imperativeSnippets[0];
+            code = `function action() {
+${imperatives[0]};
+}`;
           } else if (page === "logic") {
-            code = codeSnippets.declarativeSnippets[0];
+            code = declarations[0].definition;
             setSummary(res.data.summary);
           } else if (page === "query") {
-            code = codeSnippets.imperativeSnippets[0];
+            code = imperatives[0];
+          } else if (page === "function") {
+            code = functions[0];
           }
           const model = monaco.editor.createModel(code, "typescript");
 

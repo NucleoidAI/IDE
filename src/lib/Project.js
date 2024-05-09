@@ -245,16 +245,21 @@ function createAPI(functions) {
 function compile(blocks) {
   const functions = [];
   const declarations = [];
+  const imperatives = [];
 
   blocks.forEach((codeBlock) => {
-    const { functions: extractedFunctions, declarativeSnippets } =
-      createCodeSnippets(codeBlock);
+    const {
+      functions: extractedFunctions,
+      declarativeSnippets,
+      imperativeSnippets,
+    } = createCodeSnippets(codeBlock);
     functions.push(
       ...extractedFunctions.map((snippet) => createObject(snippet))
     );
     declarations.push(
       ...declarativeSnippets.map((snippet) => createObject(snippet))
     );
+    imperatives.push(...imperativeSnippets);
   });
 
   const uniqueFunctions = functions.filter(
@@ -263,7 +268,7 @@ function compile(blocks) {
 
   const api = createAPI(uniqueFunctions);
   api.unshift(rootObject);
-  return { api, functions: uniqueFunctions, declarations };
+  return { api, functions: uniqueFunctions, declarations, imperatives };
 }
 
-export default { compile, createCodeSnippets };
+export default { compile };
