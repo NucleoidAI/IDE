@@ -268,18 +268,37 @@ function ApiButton() {
     }
   }, [run.status]); //eslint-disable-line
 
+  const removeStaticMethods = (functions) => {
+    return functions.map((func) => {
+      if (func.type === "CLASS") {
+        const definitionLines = func.definition.split("\n");
+        const filteredLines = definitionLines.filter(
+          (line) =>
+            !line.includes("static filter") && !line.includes("static find")
+        );
+        return {
+          ...func,
+          definition: filteredLines.join("\n"),
+        };
+      }
+      return func;
+    });
+  };
+
   const runSandbox = async (context, specification, runtime) => {
     const types = [
       ...(context?.types || []),
       ...getTypes(specification.functions),
     ];
 
+    const filteredFunctions = removeStaticMethods(context.functions);
+
     setLoading(true);
     try {
       const openapi = {
         openapi: {
           ...toOpenApi({ api: context.api, types }),
-          "x-nuc-functions": context.functions,
+          "x-nuc-functions": filteredFunctions,
           "x-nuc-declerations": context.declarations,
           action: "start",
         },
