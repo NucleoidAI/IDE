@@ -116,7 +116,6 @@ function APIDialog() {
         },
       });
     } else {
-      console.log("edit");
       switch (view) {
         case "TYPES":
           console.log("types", typesRef.current?.schemaOutput());
@@ -156,11 +155,7 @@ function APIDialog() {
           return;
       }
       dispatch({
-        type: "UPDATE_API_PATH_METHOD",
-        payload: {
-          path: pathRef.current,
-          method: methodRef.current,
-        },
+        type: "CLOSE_API_DIALOG",
       });
     }
   };

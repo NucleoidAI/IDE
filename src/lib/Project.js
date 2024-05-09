@@ -262,8 +262,16 @@ function compile(blocks) {
     imperatives.push(...imperativeSnippets);
   });
 
-  const uniqueFunctions = functions.filter(
-    (func, index, self) => index === self.findIndex((f) => f.path === func.path)
+  const uniqueFunctions = functions.reduceRight(
+    (acc, func) =>
+      acc.find((f) => f.path === func.path) ? acc : [func, ...acc],
+    []
+  );
+
+  const uniqueDeclarations = declarations.reduceRight(
+    (acc, dec) =>
+      acc.find((d) => d.definition === dec.definition) ? acc : [dec, ...acc],
+    []
   );
 
   const api = createAPI(uniqueFunctions);

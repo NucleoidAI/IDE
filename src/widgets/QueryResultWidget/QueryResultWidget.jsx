@@ -24,7 +24,7 @@ function QueryResultWidget({
 
   return loading ? (
     <Card sx={styles.loadingCard}>
-      <LinearProgress color="inherit" />
+      <LinearProgress />
     </Card>
   ) : (
     <Card sx={styles.contentCard}>

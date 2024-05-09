@@ -117,7 +117,7 @@ const rootObject = {
   },
   summary: "Hello World",
   description: "Hello World",
-  "x-nuc-action":
+  action:
     "function action(req: any): { message: string } {\n  return { message: 'Hello World' };\n}\n",
 };
 
