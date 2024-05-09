@@ -90,12 +90,24 @@ function AIDialog({ editor, declarative, imperative, page }) {
           content: promptValue?.trim(),
         })
         .then((res) => {
-          const compiledCode = Project.compile(res.data.code);
-          setSummary(res.data.summary);
-          const model = monaco.editor.createModel(
-            compiledCode.trim(),
-            "typescript"
-          );
+          let code;
+          const { functions, declarations, imperatives } = Project.compile([
+            res.data.code,
+          ]);
+
+          if (page === "api") {
+            code = `function action() {
+${imperatives[0]};
+}`;
+          } else if (page === "logic") {
+            code = declarations[0].definition;
+            setSummary(res.data.summary);
+          } else if (page === "query") {
+            code = imperatives[0];
+          } else if (page === "function") {
+            code = functions[0];
+          }
+          const model = monaco.editor.createModel(code, "typescript");
 
           editorRef.current.nucEditor.setModel(model);
           setIsCodeGenerated(true);
@@ -149,39 +161,19 @@ function AIDialog({ editor, declarative, imperative, page }) {
 
   const handleSaveImperative = (generatedCode) => {
     const mEditor = editor.current.editor;
-    const lineNumber = mEditor?.getSelection().endLineNumber;
-    const selected = mEditor
-      ?.getModel()
-      .getValueInRange(mEditor.getSelection());
 
-    if (selected) {
-      const withLine = mEditor?.getModel().getValue().split("\n");
-
-      withLine.splice(lineNumber, 0, generatedCode);
-      const res = withLine.join("\n");
-      const prettyText = prettierStandalone.format(res, {
-        plugins,
-      });
-
-      mEditor?.getModel().setValue(prettyText);
-    } else {
-      if (page === "api") {
-        const action = prettierStandalone.format(
-          `
-      function action(req) {
-        ${generatedCode}
-      }
-      `,
-          {
-            plugins,
-          }
-        );
-        mEditor?.getModel().setValue(action);
-      }
-      if (page === "query") {
-        const query = context.get("pages.query");
-        query.text = generatedCode;
-      }
+    if (page === "api") {
+      const action = prettierStandalone.format(
+        generatedCode,
+        {
+          plugins,
+        }
+      );
+      mEditor?.getModel().setValue(action);
+    }
+    if (page === "query") {
+      const query = context.get("pages.query");
+      query.text = generatedCode;
     }
   };
 
