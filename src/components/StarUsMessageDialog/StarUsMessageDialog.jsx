@@ -5,12 +5,14 @@ import Snackbar from "@mui/material/Snackbar";
 import StarUsOnGithub from "../StarUsOnGithub";
 import styles from "./styles";
 import { Box, IconButton, Paper, Typography } from "@mui/material";
+import onboardDispatcher from "../../containers/IDE/Onboarding/onboardDispatcher";
 
 const StarUsMessageDialog = ({ message, openTime }) => {
   const { vertical, horizontal } = message;
   const [open, setOpen] = React.useState(false);
 
   const handleClose = () => {
+    onboardDispatcher({ level: 5 });
     setOpen(false);
   };
 
@@ -21,6 +23,14 @@ const StarUsMessageDialog = ({ message, openTime }) => {
     }, openTime);
     return () => clearTimeout(timer);
   }, [openTime]);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      handleClose();
+      Settings.landing({ level: 5 });
+    }, 6000);
+    return () => clearTimeout(timer);
+  }, [open]);
 
   return (
     <Snackbar
