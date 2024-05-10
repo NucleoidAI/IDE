@@ -102,7 +102,7 @@ const toPaths = (api, types) => {
           },
         },
       },
-      request: method?.request?.schema && {
+      requestBody: method?.request?.schema && {
         content: {
           "application/json": {
             schema: {
@@ -112,10 +112,6 @@ const toPaths = (api, types) => {
         },
       },
       parameters: method?.params?.map(toOpenApiParameter) || [],
-      request: undefined,
-      response: undefined,
-      action: undefined,
-      params: undefined,
     };
   });
   return paths;

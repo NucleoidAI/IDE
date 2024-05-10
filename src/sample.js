@@ -324,12 +324,7 @@ function action(req) {
     response: {
       type: "OPENAPI",
       schema: {
-        type: "object",
-        properties: [
-          {
-            type: "Order",
-          },
-        ],
+        type: "Order",
       },
     },
     summary: "Get order by id",
