@@ -275,6 +275,7 @@ function compile(blocks) {
   );
 
   const api = createAPI(uniqueFunctions);
+
   api.unshift(rootObject);
   return {
     api,
