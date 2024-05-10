@@ -23,7 +23,6 @@ function APISettings() {
   const [response, setResponse] = useState();
   const [types, setTypes] = useState();
   const [description, setDescription] = useState();
-
   const [selected] = useEvent("SELECTED_API_CHANGED", {
     path: "/",
     method: "GET",
@@ -39,11 +38,9 @@ function APISettings() {
 
     if (Array.isArray(contextApis)) {
       selectApi = contextApis.find(
-        (api) => api.path === selected?.path && api.method === selected.method
         (api) => api.path === selected.path && api.method === selected.method
       );
     }
-
     const tsTypes = getTypes(state.get("specification.functions"));
     const nucTypes = state.get.specification?.types;
 
@@ -53,21 +50,14 @@ function APISettings() {
       customTypes = [...tsTypes];
     }
 
-    const api = state.get("specification.api");
-
     if (selected) {
-      const selectedApiEndpoint = api.find(
-        (endpoint) =>
-          endpoint.path === selected.path && endpoint.method === selected.method
-      );
-
-      if (selectedApiEndpoint) {
+      if (selectApi) {
         setSelectedApi(selectApi);
         setMethod(selectApi.method);
-        setParams(selectedApiEndpoint.params || []);
+        setParams(selectApi.params || []);
         setSummary(selectApi.summary || "");
         setRequest(selectApi.request?.schema || {});
-        setResponse(selectedApi.response?.schema || {});
+        setResponse(selectApi.response?.schema || {});
         setDescription(selectApi.description || "");
 
         setTypes(
@@ -77,7 +67,6 @@ function APISettings() {
         );
       }
     }
-  }, [state, method]);
   }, [state, method, selected]);
 
   const handleSummaryChange = (newSummary) => {
