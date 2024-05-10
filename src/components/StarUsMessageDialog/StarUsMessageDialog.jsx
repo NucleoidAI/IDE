@@ -3,9 +3,9 @@ import React from "react";
 import Settings from "../../settings";
 import Snackbar from "@mui/material/Snackbar";
 import StarUsOnGithub from "../StarUsOnGithub";
+import onboardDispatcher from "../../containers/IDE/Onboarding/onboardDispatcher";
 import styles from "./styles";
 import { Box, IconButton, Paper, Typography } from "@mui/material";
-import onboardDispatcher from "../../containers/IDE/Onboarding/onboardDispatcher";
 
 const StarUsMessageDialog = ({ message, openTime }) => {
   const { vertical, horizontal } = message;
