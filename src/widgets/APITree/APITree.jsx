@@ -378,7 +378,7 @@ export const compile = (
             label={
               <div
                 className="path"
-                onClick={handleResourceClick}
+                onClick={(e) => e.stopPropagation()}
                 onContextMenu={handleResourceContextMenu}
                 style={{ cursor: "default" }}
               >
