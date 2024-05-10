@@ -8,6 +8,7 @@ import { compile } from "../../widgets/APIDialog/Context";
 import { getTypes } from "../../lib/TypeScript";
 import styles from "./styles";
 import { useContext } from "../../context/context";
+import { useEvent } from "@nucleoidai/react-event";
 
 import { Box, Fab, Grid, Typography, useMediaQuery } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
@@ -22,23 +23,24 @@ function APISettings() {
   const [response, setResponse] = useState();
   const [types, setTypes] = useState();
   const [description, setDescription] = useState();
-
+  const [selected] = useEvent("SELECTED_API_CHANGED", {
+    path: "/",
+    method: "GET",
+  });
   const matchWidth = useMediaQuery("(min-width:900px)");
   const summaryRef = useRef([]);
   let customTypes = [];
 
   useEffect(() => {
-    const selected = state.get("pages.api.selected");
     const contextApis = state.specification.api;
 
-    let selectApi = null;
+    let selectedAPISettings = null;
 
     if (Array.isArray(contextApis)) {
-      selectApi = contextApis.find(
-        (api) => api.path === selected?.path && api.method === selected.method
+      selectedAPISettings = contextApis.find(
+        (api) => api.path === selected.path && api.method === selected.method
       );
     }
-
     const tsTypes = getTypes(state.get("specification.functions"));
     const nucTypes = state.get.specification?.types;
 
@@ -48,22 +50,15 @@ function APISettings() {
       customTypes = [...tsTypes];
     }
 
-    const api = state.get("specification.api");
-
     if (selected) {
-      const selectedApiEndpoint = api.find(
-        (endpoint) =>
-          endpoint.path === selected.path && endpoint.method === selected.method
-      );
-
-      if (selectedApiEndpoint) {
-        setSelectedApi(selectApi);
-        setMethod(selectApi.method);
-        setParams(selectedApiEndpoint.params || []);
-        setSummary(selectApi.summary || "");
-        setRequest(selectApi.request?.schema || {});
-        setResponse(selectedApi.response?.schema || {});
-        setDescription(selectApi.description || "");
+      if (selectedAPISettings) {
+        setSelectedApi(selectedAPISettings);
+        setMethod(selectedAPISettings.method);
+        setParams(selectedAPISettings.params || []);
+        setSummary(selectedAPISettings.summary || "");
+        setRequest(selectedAPISettings.request?.schema || {});
+        setResponse(selectedAPISettings.response?.schema || {});
+        setDescription(selectedAPISettings.description || "");
 
         setTypes(
           state.get("specification.types").map((typeObject) => {
@@ -72,7 +67,7 @@ function APISettings() {
         );
       }
     }
-  }, [state, method]);
+  }, [state, method, selected]);
 
   const handleSummaryChange = (newSummary) => {
     dispatch({
