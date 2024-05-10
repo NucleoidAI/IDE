@@ -50,7 +50,7 @@ const SchemaPropertyEditor = ({
           disabled={disableNameChange}
           fullWidth
           sx={{
-            borderBottom: "2px solid lightgray",
+            borderBottom: "2px solid transparent",
             "&:hover": {
               borderBottom: "2px solid gray",
             },
