@@ -331,8 +331,8 @@ function action(req) {
     description: "Get order by id",
     action: `
 function action(req) {
-  const itemId = req.params.itemId;
-  return Item[itemId];
+  const order = req.params.order;
+  return Order[order];
 }
 `,
   },
@@ -433,8 +433,8 @@ function action(req) {
     description: "Delete order by id",
     action: `
 function action(req) {
-  const item = req.params.item;
-  delete Item[item];
+  const order = req.params.order;
+  delete Order[order];
 }
 `,
   },
