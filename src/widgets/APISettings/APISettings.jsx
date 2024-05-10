@@ -8,6 +8,7 @@ import { compile } from "../../widgets/APIDialog/Context";
 import { getTypes } from "../../lib/TypeScript";
 import styles from "./styles";
 import { useContext } from "../../context/context";
+import { useEvent } from "@nucleoidai/react-event";
 
 import { Box, Fab, Grid, Typography, useMediaQuery } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
@@ -23,12 +24,15 @@ function APISettings() {
   const [types, setTypes] = useState();
   const [description, setDescription] = useState();
 
+  const [selected] = useEvent("SELECTED_API_CHANGED", {
+    path: "/",
+    method: "GET",
+  });
   const matchWidth = useMediaQuery("(min-width:900px)");
   const summaryRef = useRef([]);
   let customTypes = [];
 
   useEffect(() => {
-    const selected = state.get("pages.api.selected");
     const contextApis = state.specification.api;
 
     let selectApi = null;
@@ -36,6 +40,7 @@ function APISettings() {
     if (Array.isArray(contextApis)) {
       selectApi = contextApis.find(
         (api) => api.path === selected?.path && api.method === selected.method
+        (api) => api.path === selected.path && api.method === selected.method
       );
     }
 
@@ -73,6 +78,7 @@ function APISettings() {
       }
     }
   }, [state, method]);
+  }, [state, method, selected]);
 
   const handleSummaryChange = (newSummary) => {
     dispatch({
