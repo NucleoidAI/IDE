@@ -268,10 +268,21 @@ function compile(blocks) {
     []
   );
 
+  const uniqueDeclarations = declarations.reduceRight(
+    (acc, dec) =>
+      acc.find((d) => d.definition === dec.definition) ? acc : [dec, ...acc],
+    []
+  );
+
   const api = createAPI(uniqueFunctions);
 
   api.unshift(rootObject);
-  return { api, functions: uniqueFunctions, declarations, imperatives };
+  return {
+    api,
+    functions: uniqueFunctions,
+    declarations: uniqueDeclarations,
+    imperatives,
+  };
 }
 
 export default { compile };
