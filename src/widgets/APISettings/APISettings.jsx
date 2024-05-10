@@ -34,10 +34,10 @@ function APISettings() {
   useEffect(() => {
     const contextApis = state.specification.api;
 
-    let selectApi = null;
+    let selectedAPISettings = null;
 
     if (Array.isArray(contextApis)) {
-      selectApi = contextApis.find(
+      selectedAPISettings = contextApis.find(
         (api) => api.path === selected.path && api.method === selected.method
       );
     }
@@ -51,14 +51,14 @@ function APISettings() {
     }
 
     if (selected) {
-      if (selectApi) {
-        setSelectedApi(selectApi);
-        setMethod(selectApi.method);
-        setParams(selectApi.params || []);
-        setSummary(selectApi.summary || "");
-        setRequest(selectApi.request?.schema || {});
-        setResponse(selectApi.response?.schema || {});
-        setDescription(selectApi.description || "");
+      if (selectedAPISettings) {
+        setSelectedApi(selectedAPISettings);
+        setMethod(selectedAPISettings.method);
+        setParams(selectedAPISettings.params || []);
+        setSummary(selectedAPISettings.summary || "");
+        setRequest(selectedAPISettings.request?.schema || {});
+        setResponse(selectedAPISettings.response?.schema || {});
+        setDescription(selectedAPISettings.description || "");
 
         setTypes(
           state.get("specification.types").map((typeObject) => {
