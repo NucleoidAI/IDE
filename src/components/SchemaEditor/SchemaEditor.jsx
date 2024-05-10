@@ -54,16 +54,16 @@ const SchemaEditor = forwardRef(
         key={node.id}
         nodeId={level === 0 ? "1" : node.id}
         label={
-          <div
-            style={{
+          <Box
+            sx={{
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
               width: "100%",
             }}
           >
-            <div
-              style={{
+            <Box
+              sx={{
                 display: "flex",
                 alignItems: "center",
                 gap: "1px",
@@ -110,7 +110,7 @@ const SchemaEditor = forwardRef(
                   <AddCircleOutlineIcon fontSize="small" />
                 </IconButton>
               )}
-            </div>
+            </Box>
 
             {true && (
               <IconButton
@@ -129,7 +129,7 @@ const SchemaEditor = forwardRef(
                 <RemoveCircleOutlineIcon fontSize="small" />
               </IconButton>
             )}
-          </div>
+          </Box>
         }
       >
         {Array.isArray(node.properties)

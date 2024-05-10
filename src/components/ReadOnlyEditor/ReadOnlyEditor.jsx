@@ -1,10 +1,13 @@
 import "highlight.js/styles/github-dark.css";
+
 import EditIcon from "@mui/icons-material/Edit";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import hljs from "highlight.js";
+
 import { Box, Collapse, IconButton, Stack, Typography } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
+
 import * as prettierStandalone from "prettier/standalone";
 import * as typescriptPlugin from "prettier/parser-typescript";
 
@@ -20,6 +23,9 @@ const ReadOnlyEditor = ({
 
   useEffect(() => {
     if (codeRef.current) {
+      if (codeRef.current.dataset.highlighted === "yes") {
+        delete codeRef.current.dataset.highlighted;
+      }
       hljs.highlightElement(codeRef.current);
     }
   }, [language, value]);
