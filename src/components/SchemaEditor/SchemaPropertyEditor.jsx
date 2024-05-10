@@ -9,7 +9,7 @@ const SchemaPropertyEditor = ({
   customTypes,
 }) => {
   const [editMode, setEditMode] = useState(null);
-  const [name, setName] = useState(node.name);
+  const [name, setName] = useState(node.name || "");
   const [type, setType] = useState(node.type);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
 
@@ -17,6 +17,7 @@ const SchemaPropertyEditor = ({
     setName(newName);
     onNameChange(newName);
   };
+
   const handleTypeChange = (newType) => {
     setType(newType);
     onTypeChange(newType);
@@ -42,15 +43,25 @@ const SchemaPropertyEditor = ({
         gap: "4px",
       }}
     >
-      {editMode === "name" ? (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          width: "100%",
+          gap: "4px",
+        }}
+        onClick={() => {
+          setEditMode("name");
+        }}
+      >
         <Input
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => handleNameChange(e.target.value)}
           disableUnderline
           disabled={disableNameChange}
           fullWidth
           sx={{
-            borderBottom: "1px solid lightgray",
+            borderBottom: "2px solid transparent",
             "&:hover": {
               borderBottom: "2px solid gray",
             },
@@ -59,37 +70,7 @@ const SchemaPropertyEditor = ({
             },
           }}
         />
-      ) : (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            width: "100%",
-            gap: "4px",
-          }}
-          onClick={(e) => {
-            e.stopPropagation();
-            setEditMode("name");
-          }}
-        >
-          <Input
-            value={name}
-            onChange={(e) => handleNameChange(e.target.value)}
-            disabled={disableNameChange}
-            disableUnderline
-            autoFocus
-            fullWidth
-            sx={{
-              "&:hover": {
-                borderBottom: "2px solid gray",
-              },
-              "&:focus": {
-                borderBottom: "2px solid blue",
-              },
-            }}
-          />
-        </Box>
-      )}
+      </Box>
 
       {editMode === "type" ? (
         <Select
