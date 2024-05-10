@@ -1,4 +1,4 @@
-const toOpenApiSchema = (schema) => {
+const toOpenApiSchema = (schema, types) => {
   if (typeof schema !== "object") {
     return schema;
   }
@@ -7,65 +7,67 @@ const toOpenApiSchema = (schema) => {
   const object = { ...other, type, properties: {}, items: {}, ref };
 
   switch (type) {
-    case "array":
-      {
-        delete object.name;
-        const nested = toOpenApiSchema(schema.properties[0]);
-        object.items = nested;
-        delete object.properties;
-      }
+    case "array": {
+      delete object.name;
+      const nested = toOpenApiSchema(schema.properties[0], types);
+      object.items = nested;
+      delete object.properties;
       break;
-    case "object":
-      {
-        delete object.items;
-        delete object.name;
-
-        for (const key in properties) {
-          const property = properties[key];
-          const { name, type } = property;
-
-          if (property.type === "object") {
-            delete object.name;
-            const nested = toOpenApiSchema(property);
+    }
+    case "object": {
+      delete object.items;
+      delete object.name;
+      for (const key in properties) {
+        const property = properties[key];
+        const { name, type } = property;
+        if (property.type === "object") {
+          delete object.name;
+          const nested = toOpenApiSchema(property, types);
+          object.properties[name] = nested;
+        } else {
+          if (property.type === "array") {
+            const nested = toOpenApiSchema(property, types);
             object.properties[name] = nested;
           } else {
-            if (property.type === "array") {
-              const nested = toOpenApiSchema(property);
-              object.properties[name] = nested;
+            if (types && types.find((t) => t.name === type)) {
+              object.properties[name] = {
+                $ref: `#/components/schemas/${type}`,
+              };
+            } else if (type === "ref") {
+              object.properties[name] = {
+                $ref: `#/components/schemas/${property.ref}`,
+              };
             } else {
-              if (type === "ref") {
-                object.properties[name] = {
-                  $ref: "#/components/schemas/" + property.ref,
-                };
-              } else {
-                object.properties[name] = { type };
-              }
+              object.properties[name] = { type };
             }
           }
         }
       }
       break;
-    default:
-      {
-        if (type === "ref") {
-          object["$ref"] = `#/components/schemas/${object.ref}`;
-          delete object.type;
-        } else {
-          object["type"] = type;
-        }
-        delete object.name;
-        delete object.id;
-        delete object.properties;
-        delete object.items;
-        delete object.ref;
+    }
+    default: {
+      if (types && types.find((t) => t.name === type)) {
+        object["$ref"] = `#/components/schemas/${type}`;
+        delete object.type;
+      } else if (type === "ref") {
+        object["$ref"] = `#/components/schemas/${ref}`;
+        delete object.type;
+      } else {
+        object["type"] = type;
       }
+      delete object.name;
+      delete object.id;
+      delete object.properties;
+      delete object.items;
+      delete object.ref;
       break;
+    }
   }
 
   return object;
 };
 
-const toPaths = (api) => {
+const toPaths = (api, types) => {
   const paths = {};
   api.forEach((method) => {
     if (!paths[method?.path]) paths[method?.path] = {};
@@ -79,7 +81,7 @@ const toPaths = (api) => {
           content: {
             "application/json": {
               schema: {
-                ...toOpenApiSchema(method?.response?.schema),
+                ...toOpenApiSchema(method?.response?.schema, types),
               },
             },
           },
@@ -100,11 +102,11 @@ const toPaths = (api) => {
           },
         },
       },
-      requestBody: method?.request?.schema && {
+      request: method?.request?.schema && {
         content: {
           "application/json": {
             schema: {
-              ...toOpenApiSchema(method?.request?.schema),
+              ...toOpenApiSchema(method?.request?.schema, types),
             },
           },
         },
@@ -144,9 +146,10 @@ const toSchemas = (types) => {
 };
 
 const toOpenApi = ({ api, types }) => {
+  console.log("console.log()", api, types);
   const openapi = {};
 
-  openapi.paths = toPaths(api);
+  openapi.paths = toPaths(api, types);
   openapi.components = { schemas: toSchemas(types) };
 
   return openapi;
