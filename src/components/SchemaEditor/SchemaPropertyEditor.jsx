@@ -80,6 +80,7 @@ const SchemaPropertyEditor = ({
             autoFocus
             fullWidth
             sx={{
+              borderBottom: "2px solid transparent",
               "&:hover": {
                 borderBottom: "2px solid gray",
               },
