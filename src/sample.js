@@ -56,9 +56,7 @@ function action(req) {
         type: "array",
         properties: [
           {
-            type: "ref",
-            name: "item",
-            ref: "Item",
+            type: "Item",
           },
         ],
       },
@@ -94,14 +92,7 @@ function action(req) {
     response: {
       type: "OPENAPI",
       schema: {
-        type: "object",
-        properties: [
-          {
-            type: "ref",
-            name: "item",
-            ref: "Item",
-          },
-        ],
+        type: "Item",
       },
     },
     summary: "Create new item",
@@ -136,14 +127,7 @@ function action(req) {
     response: {
       type: "OPENAPI",
       schema: {
-        type: "object",
-        properties: [
-          {
-            type: "ref",
-            name: "itemId",
-            ref: "Item",
-          },
-        ],
+        type: "Item",
       },
     },
     summary: "Get item by id",
@@ -158,6 +142,15 @@ function action(req) {
   {
     path: "/items/{itemId}",
     method: "PUT",
+    params: [
+      {
+        name: "itemId",
+        in: "path",
+        type: "string",
+        required: true,
+        description: "itemId",
+      },
+    ],
     request: {
       type: "OPENAPI",
       schema: {
@@ -177,14 +170,7 @@ function action(req) {
     response: {
       type: "OPENAPI",
       schema: {
-        type: "object",
-        properties: [
-          {
-            type: "ref",
-            name: "item",
-            ref: "Item",
-          },
-        ],
+        type: "Item",
       },
     },
     summary: "Update item by id",
@@ -217,6 +203,30 @@ function action(req) {
   {
     path: "/items/{itemId}",
     method: "DEL",
+    request: {
+      type: "OPENAPI",
+      schema: {
+        type: "object",
+        properties: [
+          {
+            name: "id",
+            type: "string",
+          },
+        ],
+      },
+    },
+    response: {
+      type: "OPENAPI",
+      schema: {
+        type: "object",
+        properties: [
+          {
+            name: "id",
+            type: "string",
+          },
+        ],
+      },
+    },
     params: [
       {
         name: "itemId",
@@ -242,12 +252,10 @@ function action(req) {
     response: {
       type: "OPENAPI",
       schema: {
-        type: "object",
+        type: "array",
         properties: [
           {
-            type: "ref",
-            name: "itemId",
-            ref: "Item",
+            type: "Order",
           },
         ],
       },
@@ -283,14 +291,7 @@ function action(req) {
     response: {
       type: "OPENAPI",
       schema: {
-        type: "object",
-        properties: [
-          {
-            type: "ref",
-            name: "itemId",
-            ref: "Item",
-          },
-        ],
+        type: "Order",
       },
     },
     summary: "Create order",
@@ -323,22 +324,15 @@ function action(req) {
     response: {
       type: "OPENAPI",
       schema: {
-        type: "object",
-        properties: [
-          {
-            type: "ref",
-            name: "itemId",
-            ref: "Item",
-          },
-        ],
+        type: "Order",
       },
     },
     summary: "Get order by id",
     description: "Get order by id",
     action: `
 function action(req) {
-  const itemId = req.params.itemId;
-  return Item[itemId];
+  const order = req.params.order;
+  return Order[order];
 }
 `,
   },
@@ -354,17 +348,26 @@ function action(req) {
         description: "orderId",
       },
     ],
-    response: {
+    request: {
       type: "OPENAPI",
       schema: {
         type: "object",
         properties: [
           {
-            type: "ref",
-            name: "itemId",
-            ref: "Item",
+            name: "item",
+            type: "string",
+          },
+          {
+            name: "qty",
+            type: "integer",
           },
         ],
+      },
+    },
+    response: {
+      type: "OPENAPI",
+      schema: {
+        type: "Order",
       },
     },
     summary: "Update order by id",
@@ -402,12 +405,36 @@ function action(req) {
         description: "orderId",
       },
     ],
+    request: {
+      type: "OPENAPI",
+      schema: {
+        type: "object",
+        properties: [
+          {
+            name: "id",
+            type: "string",
+          },
+        ],
+      },
+    },
+    response: {
+      type: "OPENAPI",
+      schema: {
+        type: "object",
+        properties: [
+          {
+            name: "id",
+            type: "string",
+          },
+        ],
+      },
+    },
     summary: "Delete order by id",
     description: "Delete order by id",
     action: `
 function action(req) {
-  const item = req.params.item;
-  delete Item[item];
+  const order = req.params.order;
+  delete Order[order];
 }
 `,
   },
