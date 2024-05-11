@@ -29,7 +29,7 @@ function APIDialog() {
   const contextApis = context.specification.api;
 
   let selectedApi = null;
-  let allowedMethods = ["GET", "POST", "PUT", "DELETE", "PATCH"];
+  let allowedMethods = ["GET", "POST", "PUT", "DEL", "PATCH"];
 
   if (action === "edit") {
     if (Array.isArray(contextApis)) {

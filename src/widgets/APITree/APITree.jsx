@@ -185,7 +185,9 @@ function APITree() {
                 expandList,
                 rightClickMethod,
                 errors,
-                theme
+                theme,
+                select,
+                handleResourceMenu
               )}
             </TreeView>
 
@@ -239,7 +241,9 @@ export const compile = (
   expandList,
   rightClickMethod,
   errors,
-  theme
+  theme,
+  select,
+  handleResourceMenu
 ) => {
   if (apiData.length !== 0) {
     const groupedByPath = apiData.reduce((acc, endpoint) => {
@@ -347,11 +351,40 @@ export const compile = (
         const childItems = children ? renderTree(children) : [];
         expandList.push(path);
 
+        const handleResourceClick = (event) => {
+          event.stopPropagation();
+
+          if (methods.length > 0) {
+            const firstMethod = methods[0];
+            const payload = {
+              path: firstMethod.path,
+              method: firstMethod.method,
+            };
+            const hash = window.btoa(JSON.stringify(payload));
+            select(hash);
+          }
+        };
+
+        const handleResourceContextMenu = (event) => {
+          event.preventDefault();
+          handleResourceClick(event);
+          handleResourceMenu(event);
+        };
+
         return (
           <TreeItem
             key={path}
             nodeId={path}
-            label={<div className="path">{path}</div>}
+            label={
+              <div
+                className="path"
+                onClick={(e) => e.stopPropagation()}
+                onContextMenu={handleResourceContextMenu}
+                style={{ cursor: "default" }}
+              >
+                {path}
+              </div>
+            }
             children={[...methodItems, ...childItems]}
             collapseIcon={<ArrowIcon down />}
             expandIcon={<ArrowIcon right />}

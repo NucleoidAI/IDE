@@ -4,19 +4,17 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import React from "react";
 
-const style = {
-  fill: "#212121",
-};
+// fill: "#212121", old fill color
 
 function Arrow({ up, down, right, left }) {
   return up ? (
-    <KeyboardArrowUpIcon style={style} />
+    <KeyboardArrowUpIcon />
   ) : down ? (
-    <KeyboardArrowDownIcon style={style} />
+    <KeyboardArrowDownIcon />
   ) : right ? (
-    <KeyboardArrowRightIcon style={style} />
+    <KeyboardArrowRightIcon />
   ) : left ? (
-    <KeyboardArrowLeftIcon style={style} />
+    <KeyboardArrowLeftIcon />
   ) : null;
 }
 

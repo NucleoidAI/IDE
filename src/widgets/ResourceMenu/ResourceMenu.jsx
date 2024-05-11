@@ -63,9 +63,10 @@ const ResourceMenu = (props) => {
   };
 
   const deleteResource = () => {
-    selectPath();
+    const { pages } = state;
     dispatch({
       type: "DELETE_RESOURCE",
+      payload: { path: pages.api.selected.path },
     });
     handleClose();
     setOpen(false);
@@ -78,13 +79,19 @@ const ResourceMenu = (props) => {
       setAlertMessage("Root path cannot be deleted");
       handleClose();
     } else {
-      resourceRef.current = {
-        deleteAdress: state.pages.api.selected,
-        deleteList: Object.keys(state.specification.api).filter((item) => {
-          return item.includes(state.pages.api.selected.path);
-        }),
-      };
+      const selectedPath = state.pages.api.selected.path;
+      const deleteList = state.specification.api
+        .filter(
+          (item) =>
+            item.path.startsWith(selectedPath) && item.path !== selectedPath
+        )
+        .map((item) => item.path)
+        .filter((path, index, self) => self.indexOf(path) === index);
 
+      resourceRef.current = {
+        deleteAdress: selectedPath,
+        deleteList: deleteList,
+      };
       handleClose();
       setOpen(true);
     }
@@ -138,7 +145,10 @@ const ResourceMenu = (props) => {
           <Typography sx={styles.menuItemText}>Method</Typography>
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleResourceDeleteDialog}>
+        <MenuItem
+          onClick={handleResourceDeleteDialog}
+          disabled={state.pages.api.selected?.path === "/"}
+        >
           <DeleteIcon />
           <Typography sx={styles.menuItemText}>Delete</Typography>
         </MenuItem>

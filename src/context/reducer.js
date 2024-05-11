@@ -111,17 +111,27 @@ function contextReducer(context, { type, payload }) {
       break;
 
     case "DELETE_RESOURCE": {
-      const newObj = {};
-      // TODO functional programming
-      Object.keys(context.specification.api)
-        .filter((item) => !item.includes(context.pages.api.selected.path))
-        .forEach(
-          (objName) => (newObj[objName] = context.specification.api[objName])
-        );
+      const { path } = payload;
 
-      context.specification.api = newObj;
-      context.pages.api.selected.path = "/";
-      context.pages.api.selected.method = "get";
+      specification.api = specification.api.filter(
+        (api) => !api.path.startsWith(path)
+      );
+
+      if (pages.api.selected.path.startsWith(path)) {
+        if (specification.api.length > 0) {
+          pages.api.selected.path = specification.api[0].path;
+          pages.api.selected.method = specification.api[0].method;
+        } else {
+          pages.api.selected.path = "/";
+          pages.api.selected.method = "get";
+        }
+
+        publish("SELECTED_API_CHANGED", {
+          path: pages.api.selected.path,
+          method: pages.api.selected.method,
+        });
+      }
+
       break;
     }
 
