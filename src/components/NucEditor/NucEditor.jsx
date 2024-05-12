@@ -6,31 +6,13 @@ import { useStorage } from "@nucleoidjs/webstorage";
 
 import { useEffect, useRef } from "react";
 
-import * as angularPlugin from "prettier/parser-angular";
-import * as babelPlugin from "prettier/parser-babel";
-import * as glimmerPlugin from "prettier/parser-glimmer";
-import * as graphqlPlugin from "prettier/parser-graphql";
-import * as htmlPlugin from "prettier/parser-html";
-import * as markdownPlugin from "prettier/parser-markdown";
-import * as meriyahPlugin from "prettier/parser-meriyah";
 import * as prettierStandalone from "prettier/standalone";
 import * as typescriptPlugin from "prettier/parser-typescript";
-import * as yamlPlugin from "prettier/parser-yaml";
 
 const NucEditor = React.forwardRef((props, ref) => {
   const { onCodeEditorChange, defaultValue, path, onMount, onSave } = props;
 
-  const plugins = [
-    angularPlugin,
-    babelPlugin,
-    glimmerPlugin,
-    graphqlPlugin,
-    htmlPlugin,
-    markdownPlugin,
-    meriyahPlugin,
-    typescriptPlugin,
-    yamlPlugin,
-  ];
+  const plugins = [typescriptPlugin];
   const editorRef = useRef(null);
   const timerRef = React.useRef();
 
@@ -69,44 +51,6 @@ const NucEditor = React.forwardRef((props, ref) => {
     monaco.editor.setModelMarkers(editor.getModel(), "customLinting", markers);
   };
 
-  const lint = React.useCallback(async () => {
-    const editor = editorRef?.current?.editor;
-    const monaco = editorRef?.current?.monaco;
-
-    if (editor && editor.getModel()) {
-      const worker = await monaco.languages.typescript.getTypeScriptWorker();
-      const ts = await worker(editor.getModel().uri);
-      const diagnostics = await ts.getSemanticDiagnostics(
-        editor.getModel().uri.toString()
-      );
-
-      const text = editor.getValue();
-
-      const markers = diagnostics.map((diagnostic) => {
-        const start = getLineAndColumn(text, diagnostic.start);
-        const end = getLineAndColumn(
-          text,
-          diagnostic.start + diagnostic.length
-        );
-        const severity =
-          diagnostic.category === 1
-            ? monaco.MarkerSeverity.Warning
-            : monaco.MarkerSeverity.Error;
-
-        return {
-          startLineNumber: start.line,
-          startColumn: start.column,
-          endLineNumber: end.line,
-          endColumn: end.column,
-          message: diagnostic.messageText,
-          severity: severity,
-        };
-      });
-
-      monaco.editor.setModelMarkers(editor.getModel(), "action", markers);
-    }
-  }, []);
-
   const formatDocument = () => {
     const editor = editorRef.current?.editor;
     if (editor) {
@@ -134,6 +78,11 @@ const NucEditor = React.forwardRef((props, ref) => {
     if (!editor.getModel()) {
       editor.setValue("");
     }
+
+    monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+      noSemanticValidation: true,
+    });
+
     monaco.languages.registerDocumentFormattingEditProvider("typescript", {
       provideDocumentFormattingEdits(model) {
         const text = model.getValue();
@@ -189,7 +138,6 @@ const NucEditor = React.forwardRef((props, ref) => {
     });
     const model = editor.getModel();
     if (model.uri.path !== "/empty") {
-      lint();
       lintWithCustomLinter();
       formatDocument();
     }
@@ -202,7 +150,6 @@ const NucEditor = React.forwardRef((props, ref) => {
     clearTimeout(timerRef.current);
 
     timerRef.current = setTimeout(() => {
-      lint();
       lintWithCustomLinter();
     }, 400);
 
