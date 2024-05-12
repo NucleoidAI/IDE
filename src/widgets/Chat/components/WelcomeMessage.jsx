@@ -28,9 +28,7 @@ const WelcomeMessage = () => {
       <Typography variant="h4" gutterBottom sx={{ marginBottom: "4px" }}>
         Neuro-Symbolic AI
       </Typography>
-      <Typography variant="subtitle1">
-        Build your logical context with Declarative Logic
-      </Typography>
+      <Typography>Build your logical context with Declarative Logic</Typography>
     </Box>
   );
 };

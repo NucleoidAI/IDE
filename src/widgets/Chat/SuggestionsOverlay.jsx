@@ -17,8 +17,8 @@ const initialSuggestions = [
             description: "Create a human with name 'Socrates'",
             children: [
               {
-                summary: "Finding Socrates",
-                description: "Find human with name 'Socrates'",
+                summary: "Socrates Mortality",
+                description: "Is human with name 'Socrates' mortal?",
               },
               {
                 summary: "List of Mortals",
@@ -106,8 +106,8 @@ const initialSuggestions = [
               "Initials of user is first letter of first name and last name",
             children: [
               {
-                summary: "Finding John Doe",
-                description: "Find user with name 'John Doe'",
+                summary: "Legend of John Doe",
+                description: "Create user with name 'John Doe'",
               },
               {
                 summary: "List of Does",
