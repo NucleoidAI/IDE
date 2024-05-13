@@ -1,5 +1,6 @@
 import ChatEditor from "./ChatEditor";
 import ErrorMessage from "./components/ErrorMessage";
+import { GitHub } from "@mui/icons-material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import MessageBox from "./components/MessageBox";
 import WelcomeMessage from "./components/WelcomeMessage";
@@ -13,11 +14,10 @@ import {
   DialogContent,
   DialogTitle,
   Fab,
-  useTheme,
   Typography,
+  useTheme,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-import { GitHub } from "@mui/icons-material";
 
 const ChatDisplay = ({
   chat,
