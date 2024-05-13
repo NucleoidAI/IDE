@@ -61,7 +61,7 @@ const Onboarding = () => {
             vertical: "bottom",
             horizontal: "right",
           }}
-          openTime={4000}
+          openTime={10000}
         />
       );
     }

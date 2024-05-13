@@ -19,7 +19,6 @@ const StarUsMessageDialog = ({ message, openTime }) => {
   React.useEffect(() => {
     const timer = setTimeout(() => {
       setOpen(true);
-      Settings.landing({ level: 5 });
     }, openTime);
     return () => clearTimeout(timer);
   }, [openTime]);
@@ -27,8 +26,7 @@ const StarUsMessageDialog = ({ message, openTime }) => {
   React.useEffect(() => {
     const timer = setTimeout(() => {
       handleClose();
-      Settings.landing({ level: 5 });
-    }, 6000);
+    }, 11000);
     return () => clearTimeout(timer);
   }, [open]);
 
