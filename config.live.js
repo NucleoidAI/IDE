@@ -1,6 +1,6 @@
 const config = {
   base: "/ide",
-  expert: "https://nucleoid.com/ide/expert",
+  expert: "https://nucleoid.com/ide",
   api: "https://nucleoid.com/ide/api",
   oauth: {
     accessTokenUrl: "",
