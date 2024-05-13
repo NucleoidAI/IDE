@@ -1,8 +1,8 @@
 import Close from "@mui/icons-material/Close";
 import React from "react";
-import Settings from "../../settings";
 import Snackbar from "@mui/material/Snackbar";
 import StarUsOnGithub from "../StarUsOnGithub";
+import onboardDispatcher from "../../containers/IDE/Onboarding/onboardDispatcher";
 import styles from "./styles";
 import { Box, IconButton, Paper, Typography } from "@mui/material";
 
@@ -11,16 +11,23 @@ const StarUsMessageDialog = ({ message, openTime }) => {
   const [open, setOpen] = React.useState(false);
 
   const handleClose = () => {
+    onboardDispatcher({ level: 5 });
     setOpen(false);
   };
 
   React.useEffect(() => {
     const timer = setTimeout(() => {
       setOpen(true);
-      Settings.landing({ level: 5 });
     }, openTime);
     return () => clearTimeout(timer);
   }, [openTime]);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      handleClose();
+    }, 11000);
+    return () => clearTimeout(timer);
+  }, [open]);
 
   return (
     <Snackbar
