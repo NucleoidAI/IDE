@@ -83,6 +83,7 @@ instance.getUserDetails = async () => {
       return {
         name: response.data.login,
         avatarUrl: response.data.avatar_url,
+        id: response.data.id,
       };
     } catch (error) {
       console.error("Failed to fetch user details:", error);
