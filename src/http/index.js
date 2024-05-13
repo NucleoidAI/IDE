@@ -93,16 +93,24 @@ instance.getUserDetails = async () => {
   return null;
 };
 
+instance.interceptors.request.use((config) => {
+  const token = storage.get("oauth.token").accessToken;
+  if (token) {
+    config.headers["Authorization"] = "Bearer " + token;
+  }
+  return config;
+});
+
 instance.interceptors.response.use(
   (res) => res,
   (err) => {
-    if (err.response.status === 500) {
+    if (err.response?.status === 500) {
       publish("APP_MESSAGE", {
         message: err.message,
         severity: "error",
       });
     }
-    if (err.response.status === 401 || err.response.status === 403) {
+    if (err.response?.status === 401) {
       storage.remove("oauth.token");
       let message = "Session expired. Please login again.";
       if (err.response.status === 403) {
