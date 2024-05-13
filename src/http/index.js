@@ -80,7 +80,6 @@ instance.getUserDetails = async () => {
           Authorization: `token ${refreshToken}`,
         },
       });
-      console.log("User details:", response.data);
       return {
         name: response.data.login,
         avatarUrl: response.data.avatar_url,
