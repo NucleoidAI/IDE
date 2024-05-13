@@ -6,6 +6,7 @@ import { storage } from "@nucleoidjs/webstorage";
 function LogoutButton({ onLogout }) {
   const handleLogout = () => {
     storage.remove("oauth.token");
+    publish("USER", { login: false, id: null });
     onLogout && onLogout();
   };
 
