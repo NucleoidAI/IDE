@@ -52,6 +52,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     try {
       const userDetails = await http.getUserDetails();
       setUser(userDetails);
+      return userDetails;
     } catch (error) {
       console.error("Failed to fetch user details:", error);
     }
@@ -322,7 +323,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
         refreshToken: refreshToken,
       });
       setLogin(true);
-      fetchUserDetails().then(() => {
+      fetchUserDetails().then((user) => {
         publish("USER", { login: true, id: user.id });
       });
     } catch (error) {
