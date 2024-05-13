@@ -1,5 +1,5 @@
 import ClosableDialogTitle from "../../components/ClosableDialogTitle";
-import LogoutIcon from "@mui/icons-material/Logout";
+import LogoutButton from "../../components/LogoutButton";
 import React from "react";
 import Settings from "../../settings";
 import SettingsDialogTabs from "../../components/SettingsDialogTabs";
@@ -81,9 +81,7 @@ const SettingsDialog = ({ handleClose }) => {
         <SettingsDialogTabs ref={urlRef} />
       </DialogContent>
       <DialogActions sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Button variant="gray" startIcon={<LogoutIcon />}>
-          Logout
-        </Button>
+        <LogoutButton />
         <Button
           sx={{ color: "white" }}
           autoFocus
