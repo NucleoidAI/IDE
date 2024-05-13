@@ -1,5 +1,5 @@
 import Project from "../../lib/Project";
-import http from "../../http";
+import expert from "../../http/expert";
 import { startTransition } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
@@ -24,7 +24,7 @@ const useChat = () => {
 
   const sendMessage = async (message) => {
     try {
-      const { data } = await http.post(`/chat/sessions/${chat.id}`, {
+      const { data } = await expert.post(`/chat/sessions/${chat.id}`, {
         role: "USER",
         content: message,
       });
