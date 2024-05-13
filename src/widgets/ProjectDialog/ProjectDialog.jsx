@@ -337,7 +337,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
       projectExist ? "please select a project" : "create a new project"
     }.`;
 
-    if (projectFounded !== null) {
+    if (projectFounded !== null && projectId !== "new") {
       handleClose();
       setSearchQuery("");
     } else {
