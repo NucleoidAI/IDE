@@ -4,6 +4,7 @@ import React from "react";
 import Settings from "../../settings";
 import SettingsDialogTabs from "../../components/SettingsDialogTabs";
 import { publish } from "@nucleoidai/react-event";
+import { storage } from "@nucleoidjs/webstorage";
 import { useTheme } from "@mui/material/styles";
 
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
@@ -11,6 +12,7 @@ import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 const SettingsDialog = ({ handleClose }) => {
   const theme = useTheme();
   const urlRef = React.useRef();
+  const oauthToken = storage.get("oauth.token");
 
   React.useEffect(() => {
     const terminal = Settings.url.terminal();
@@ -57,6 +59,10 @@ const SettingsDialog = ({ handleClose }) => {
     handleClose();
   }
 
+  const handleLogout = () => {
+    handleClose();
+  };
+
   return (
     <Dialog
       open={true}
@@ -77,11 +83,18 @@ const SettingsDialog = ({ handleClose }) => {
         label="Settings"
         handleClose={() => handleClose()}
       />
+
       <DialogContent>
         <SettingsDialogTabs ref={urlRef} />
       </DialogContent>
-      <DialogActions sx={{ display: "flex", justifyContent: "space-between" }}>
-        <LogoutButton />
+
+      <DialogActions
+        sx={{
+          display: "flex",
+          justifyContent: oauthToken ? "space-between" : "flex-end",
+        }}
+      >
+        {oauthToken && <LogoutButton onLogout={handleLogout} />}
         <Button
           sx={{ color: "white" }}
           autoFocus

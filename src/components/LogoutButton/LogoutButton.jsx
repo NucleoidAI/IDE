@@ -3,11 +3,12 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { publish } from "@nucleoidai/react-event";
 import { storage } from "@nucleoidjs/webstorage";
 
-function LogoutButton() {
+function LogoutButton({ onLogout }) {
   const handleLogout = () => {
     storage.remove("oauth.token");
-    publish("USER_LOGGED_OUT");
+    onLogout && onLogout();
   };
+
   return (
     <Button variant="gray" onClick={handleLogout} startIcon={<LogoutIcon />}>
       Logout
