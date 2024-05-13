@@ -310,6 +310,13 @@ const lightTheme = createTheme({
     MuiButton: {
       variants: [
         {
+          props: { variant: "gray" },
+          style: {
+            backgroundColor: "#424242",
+            color: base.grey[300],
+          },
+        },
+        {
           props: { variant: "suggestion" },
           style: {
             flexGrow: 1,
@@ -530,6 +537,13 @@ const darkTheme = createTheme({
         },
       },
       variants: [
+        {
+          props: { variant: "gray" },
+          style: {
+            backgroundColor: base.grey[800],
+            color: base.grey[300],
+          },
+        },
         {
           props: { variant: "suggestion" },
           style: {
