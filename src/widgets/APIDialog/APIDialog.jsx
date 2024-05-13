@@ -161,8 +161,7 @@ function APIDialog() {
   };
 
   const validatePath = (path) => {
-    // eslint-disable-next-line no-useless-escape
-    const allowedChars = /^[a-zA-Z0-9-{}\/]+$/;
+    const allowedChars = /^[a-z0-9-{}]+$/;
 
     const isValidChars = allowedChars.test(path);
 
@@ -173,7 +172,7 @@ function APIDialog() {
     if (action === "edit") {
       setSaveDisable(false);
       return;
-    } else if (isDuplicate || path.includes("//") || !isValidChars) {
+    } else if (isDuplicate || !isValidChars) {
       setSaveDisable(true);
     } else {
       setSaveDisable(false);
