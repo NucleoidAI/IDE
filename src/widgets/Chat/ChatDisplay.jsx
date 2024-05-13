@@ -1,5 +1,6 @@
 import ChatEditor from "./ChatEditor";
 import ErrorMessage from "./components/ErrorMessage";
+import { GitHub } from "@mui/icons-material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import MessageBox from "./components/MessageBox";
 import WelcomeMessage from "./components/WelcomeMessage";
@@ -13,6 +14,7 @@ import {
   DialogContent,
   DialogTitle,
   Fab,
+  Tooltip,
   useTheme,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
@@ -77,9 +79,14 @@ const ChatDisplay = ({
     }
   }, [currentUserMessage]);
 
+  const handleGitHubClick = () => {
+    window.open("http://github.com/NucleoidAI/Nucleoid", "_blank");
+  };
+
   return (
     <Box
       sx={{
+        position: "relative",
         overflow: "auto",
         flex: 1,
         display: "flex",
@@ -96,6 +103,20 @@ const ChatDisplay = ({
       ref={messagesContainerRef}
       onScroll={handleScroll}
     >
+      <Tooltip
+        title="Report"
+        sx={{
+          position: "absolute",
+          top: "10px",
+          right: "20px",
+          cursor: "pointer",
+        }}
+      >
+        <Fab size="small">
+          <GitHub onClick={handleGitHubClick} />
+        </Fab>
+      </Tooltip>
+
       {chat && chat.messages.length === 0 ? (
         <WelcomeMessage />
       ) : (
