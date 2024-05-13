@@ -14,7 +14,7 @@ import {
   DialogContent,
   DialogTitle,
   Fab,
-  Typography,
+  Tooltip,
   useTheme,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
@@ -35,9 +35,6 @@ const ChatDisplay = ({
   const [suggestionsOverlay] = useEvent("SUGGESTIONS_OVERLAY", {
     active: false,
   });
-
-  const [hoveringGitHub, setHoveringGitHub] = useState(false);
-  const [reportVisible, setReportVisible] = useState(false);
 
   const messagesContainerRef = useRef(null);
 
@@ -82,18 +79,6 @@ const ChatDisplay = ({
     }
   }, [currentUserMessage]);
 
-  const handleGitHubMouseEnter = () => {
-    setHoveringGitHub(true);
-    setTimeout(() => {
-      setReportVisible(true);
-    }, 2000);
-  };
-
-  const handleGitHubMouseLeave = () => {
-    setHoveringGitHub(false);
-    setReportVisible(false);
-  };
-
   const handleGitHubClick = () => {
     window.open("http://github.com/NucleoidAI/Nucleoid", "_blank");
   };
@@ -118,35 +103,20 @@ const ChatDisplay = ({
       ref={messagesContainerRef}
       onScroll={handleScroll}
     >
-      <GitHub
+      <Tooltip
+        title="Report"
         sx={{
           position: "absolute",
           top: "10px",
           right: "20px",
           cursor: "pointer",
         }}
-        onMouseEnter={handleGitHubMouseEnter}
-        onMouseLeave={handleGitHubMouseLeave}
-        onClick={handleGitHubClick}
-      />
+      >
+        <Fab size="small">
+          <GitHub onClick={handleGitHubClick} />
+        </Fab>
+      </Tooltip>
 
-      {reportVisible && hoveringGitHub && (
-        <Typography
-          sx={{
-            position: "absolute",
-            top: "35px",
-            right: "9px",
-            backgroundColor: "white",
-            color: "black",
-            paddingX: "8px",
-            fontSize: "12px",
-            borderRadius: "2px",
-            zIndex: 1000,
-          }}
-        >
-          Report
-        </Typography>
-      )}
       {chat && chat.messages.length === 0 ? (
         <WelcomeMessage />
       ) : (
