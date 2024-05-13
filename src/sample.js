@@ -473,37 +473,7 @@ export const functions = [
   },
 ];
 
-export const declarations = [
-  {
-    description: "All humans mortal property must be true",
-    summary: "All humans are mortal",
-    definition: `
-      $Human.mortal = true
-    
-      socrates = new Human('Socrates')
-    
-      socrates.mortal === true
-    
-    `,
-  },
-  {
-    description: "If the human is older than 18, do something",
-    summary: "If The Human is Over 18 Years Old",
-    definition: `
-      if( $Human.age > 18 )
-      {
-        //do something
-      }
-    `,
-  },
-  {
-    description: "All Orders barcode string starts with NUC",
-    summary: "All orders barcode start with NUC prefix",
-    definition: `
-      $Order.barcode.include("NUC")
-    `,
-  },
-];
+export const declarations = [];
 
 export const project = {
   type: "LOCAL",

@@ -298,9 +298,9 @@ function ApiButton() {
       const openapi = {
         openapi: {
           ...toOpenApi({ api: context.api, types }),
+          "x-nuc-action": "start",
           "x-nuc-functions": filteredFunctions,
-          "x-nuc-declerations": context.declarations,
-          action: "start",
+          "x-nuc-declarations": context.declarations,
         },
       };
 

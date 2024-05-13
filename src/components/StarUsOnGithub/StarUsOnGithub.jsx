@@ -19,7 +19,7 @@ const StarUsOnGithub = ({ color, clickEvent }) => {
         gtag("event", "click_github");
       }}
     >
-      Star us on Github
+      Star us on GitHub
     </Button>
   );
 };
