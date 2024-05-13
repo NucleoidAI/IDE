@@ -161,6 +161,7 @@ function APIDialog() {
   };
 
   const validatePath = (path) => {
+    // eslint-disable-next-line no-useless-escape
     const allowedChars = /^[a-zA-Z0-9-{}\/]+$/;
 
     const isValidChars = allowedChars.test(path);
