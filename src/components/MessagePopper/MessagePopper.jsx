@@ -66,6 +66,7 @@ const MessagePopper = ({ title, openTime }) => {
             disabled={disable}
             sx={{ mr: 1 }}
             onClick={() => {
+              setOpen(false);
               setDisable(true);
               publish("RUN_BUTTON_CLICKED", { status: true });
             }}
