@@ -1,6 +1,5 @@
 import Close from "@mui/icons-material/Close";
 import React from "react";
-import Settings from "../../settings";
 import Snackbar from "@mui/material/Snackbar";
 import StarUsOnGithub from "../StarUsOnGithub";
 import onboardDispatcher from "../../containers/IDE/Onboarding/onboardDispatcher";
