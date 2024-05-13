@@ -26,14 +26,12 @@ const APIPath = ({
   const [selectedMethod, setSelectedMethod] = useState(
     allowedMethods.includes(method) ? method : allowedMethods[0] || ""
   );
-  const [selectedPath, setSelectedPath] = useState(
-    !isPathDisabled && path !== "/" ? "/" : ""
-  );
+  const [selectedPath, setSelectedPath] = useState("");
 
   useEffect(() => {
     methodRef.current = selectedMethod;
-    pathRef.current = path + selectedPath;
-    validatePath(pathRef.current);
+    pathRef.current = path + (path !== "/" ? "/" : "") + selectedPath;
+    validatePath(selectedPath);
   }, [selectedMethod, selectedPath, methodRef, pathRef, path, validatePath]);
 
   return (
@@ -56,7 +54,10 @@ const APIPath = ({
             </Select>
           )}
           <Box component="span" sx={styles.text}></Box>
-          <Typography>{path}</Typography>
+          <Typography>
+            {path}
+            {path !== "/" ? "/" : ""}
+          </Typography>
           {!isPathDisabled && (
             <TextField
               value={selectedPath}
