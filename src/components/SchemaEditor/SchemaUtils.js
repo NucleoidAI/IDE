@@ -112,14 +112,24 @@ export const changeProperty = (propertyId, changes, setSchemaData) => {
       if (changes.type === "object") {
         if (!updatedNode.properties || updatedNode.properties.length === 0) {
           updatedNode.properties = [
-            { name: "id", type: "string", id: uuidv4() },
+            {
+              name: "id",
+              type: "string",
+              id: uuidv4(),
+            },
           ];
         }
       } else if (changes.type === "array") {
-        if (updatedNode.properties) {
-          updatedNode.properties = updatedNode.properties.slice(0, 1);
+        if (!updatedNode.properties || updatedNode.properties.length === 0) {
+          updatedNode.properties = [
+            {
+              name: "item",
+              type: "string",
+              id: uuidv4(),
+            },
+          ];
         } else {
-          updatedNode.properties = [];
+          updatedNode.properties = updatedNode.properties.slice(0, 1);
         }
       } else if (changes.type !== "object" && changes.type !== "array") {
         delete updatedNode.properties;
