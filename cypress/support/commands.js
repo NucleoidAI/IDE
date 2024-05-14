@@ -26,6 +26,7 @@ Cypress.Commands.add("setup", (container, fixtureType, type) => {
   cy.clearLocalStorage();
   cy.storageSet(`debug`, true);
   cy.storageSet(`ide.landing`, { level: Number.MAX_SAFE_INTEGER });
+  cy.storageSet("oauth.token", { accesToken: "test", refreshToken: "test" });
 
   if (container === "IDE") {
     cy.fixture("/PROJECTS/projects.json").then((projects) => {
@@ -51,41 +52,29 @@ Cypress.Commands.add("setup", (container, fixtureType, type) => {
       cy.fixture("/PROJECTS/projects.json")
         .then((projects) => {
           const cloudProject = projects.find((p) => p.id === cloudProjectId);
-          cy.intercept(
-            "GET",
-            `/projects/${cloudProjectId}`,
-            {
-              statusCode: 200,
-              body: fixtureType === "BLANK" ? {} : cloudProject,
-            }
-          );
+          cy.intercept("GET", `/projects/${cloudProjectId}`, {
+            statusCode: 200,
+            body: fixtureType === "BLANK" ? {} : cloudProject,
+          });
         })
         .as("project");
 
       cy.fixture("/SERVICE/single-project-service.json")
         .then((service) => {
-          cy.intercept(
-            "GET",
-            `/projects/${cloudProjectId}/services`,
-            {
-              statusCode: 200,
-              body: fixtureType === "BLANK" ? {} : service,
-            }
-          );
+          cy.intercept("GET", `/projects/${cloudProjectId}/services`, {
+            statusCode: 200,
+            body: fixtureType === "BLANK" ? {} : service,
+          });
           serviceId = service[0].id;
         })
         .as("services");
 
       cy.fixture("/SPECIFICATION/specification.json")
         .then((context) => {
-          cy.intercept(
-            "GET",
-            `/services/${serviceId}/specification`,
-            {
-              statusCode: 200,
-              body: fixtureType === "BLANK" ? {} : context,
-            }
-          );
+          cy.intercept("GET", `/services/${serviceId}/specification`, {
+            statusCode: 200,
+            body: fixtureType === "BLANK" ? {} : context,
+          });
         })
         .as("context");
     } else if (type === "LOCAL") {
@@ -181,27 +170,19 @@ Cypress.Commands.add(
 Cypress.Commands.add("saveContextIntercept", (serviceId) => {
   cy.fixture("/SPECIFICATION/changed-specification.json")
     .then((specification) => {
-      cy.intercept(
-        "PUT",
-        `services/${serviceId}/specification`,
-        {
-          statusCode: 200,
-          body: specification,
-        }
-      );
+      cy.intercept("PUT", `services/${serviceId}/specification`, {
+        statusCode: 200,
+        body: specification,
+      });
     })
     .as("contextPut");
 
   cy.fixture("/SPECIFICATION/changed-specification.json")
     .then((specification) => {
-      cy.intercept(
-        "GET",
-        `/services/${serviceId}/specification`,
-        {
-          statusCode: 200,
-          body: specification,
-        }
-      );
+      cy.intercept("GET", `/services/${serviceId}/specification`, {
+        statusCode: 200,
+        body: specification,
+      });
     })
     .as("contextGet");
 });
