@@ -202,7 +202,7 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat, error }) => {
         flexWrap: "wrap",
         justifyContent: "center",
         position: "absolute",
-        bottom: "10%",
+        bottom: "12%",
         width: "100%",
         padding: "10px",
       }}
@@ -212,7 +212,7 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat, error }) => {
           data-cy="suggestions-container"
           sx={{
             display: "flex",
-            flexDirection: { xs: "row", md: "row", lg: "row" },
+            flexDirection: { xs: "column", md: "row", lg: "row" },
             justifyContent: "space-between",
             width: { xs: "80%", sm: "80%", md: "65%" },
             gap: "10px",
