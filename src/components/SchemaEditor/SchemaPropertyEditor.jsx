@@ -43,34 +43,45 @@ const SchemaPropertyEditor = ({
         gap: "4px",
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          width: "100%",
-          gap: "4px",
-        }}
-        onClick={() => {
-          setEditMode("name");
-        }}
-      >
-        <Input
-          value={name}
-          onChange={(e) => handleNameChange(e.target.value)}
-          disableUnderline
-          disabled={disableNameChange}
-          fullWidth
+      {!disableNameChange ? (
+        <Box
           sx={{
-            borderBottom: "2px solid transparent",
-            "&:hover": {
-              borderBottom: "2px solid gray",
-            },
-            "&:focus": {
-              borderBottom: "2px solid blue",
-            },
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+            gap: "4px",
           }}
-        />
-      </Box>
+          onClick={() => {
+            setEditMode("name");
+          }}
+        >
+          <Input
+            value={name}
+            onChange={(e) => handleNameChange(e.target.value)}
+            disableUnderline
+            fullWidth
+            sx={{
+              borderBottom: "2px solid transparent",
+              "&:hover": {
+                borderBottom: "2px solid gray",
+              },
+              "&:focus": {
+                borderBottom: "2px solid blue",
+              },
+            }}
+          />
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          {/* Empty placeholder */}
+        </Box>
+      )}
 
       {editMode === "type" ? (
         <Select
