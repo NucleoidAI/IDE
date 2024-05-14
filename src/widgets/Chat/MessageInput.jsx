@@ -23,7 +23,12 @@ import React, {
 } from "react";
 
 const MessageInput = forwardRef((props, ref) => {
-  const { loading, handleSendMessage, showConvertToProject } = props;
+  const {
+    loading,
+    handleSendMessage,
+    showConvertToProject,
+    disableConvertToProject,
+  } = props;
   const theme = useTheme();
   const [, , convertChat] = useChat();
   const [isAnimating, setIsAnimating] = useState(false);
@@ -150,6 +155,21 @@ const MessageInput = forwardRef((props, ref) => {
               <CodeIcon sx={{ color: "white" }} />{" "}
             </IconButton>
           </Tooltip>
+        )}
+        {disableConvertToProject && (
+          <IconButton
+            variant="button"
+            sx={{
+              ml: 1,
+              backgroundColor: "#31363F",
+              "&:hover": {
+                backgroundColor: "#31363F",
+              },
+            }}
+            data-cy="disable-convert-to-project-button"
+          >
+            <CodeIcon sx={{ color: "white" }} />{" "}
+          </IconButton>
         )}
         <IconButton
           type="submit"
