@@ -29,7 +29,7 @@ function init() {
 
   const level2 = subscribe("CHAT_MESSAGE_RESPONDED", (chat) => {
     if (
-      level == 2 &&
+      level === 2 &&
       chat.messages.filter((message) => message.code).length >= 1
     ) {
       storage.set("chat", "onboarding", { level: 3 });
