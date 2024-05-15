@@ -166,7 +166,7 @@ function APIDialog() {
     const isValidChars = allowedChars.test(path);
 
     const isDuplicate = contextApis.some(
-      (api) => api.path === path && api.method === methodRef.current
+      (api) => api.path === `/${path}` && api.method === methodRef.current
     );
 
     if (action === "edit") {
