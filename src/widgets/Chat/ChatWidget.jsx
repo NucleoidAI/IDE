@@ -20,7 +20,7 @@ const ChatWidget = () => {
   const [loading, setLoading] = useState(false);
   const [landingLevel] = useEvent(
     "ONBOARDING_LEVEL_ACHIEVED",
-    storage.get("chat", "onboarding") || 0
+    storage.get("chat", "onboarding") || { level: 0 }
   );
   const messageInputRef = useRef();
   const userMessageRef = useRef("");
@@ -121,7 +121,7 @@ const ChatWidget = () => {
         ref={messageInputRef}
         loading={loading}
         showConvertToProject={landingLevel.level === 1}
-        disableConvertToProject={landingLevel.level === 2}
+        disableConvertToProject={landingLevel.level === 3}
       />
     </Box>
   );
