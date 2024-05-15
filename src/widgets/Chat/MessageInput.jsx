@@ -158,6 +158,7 @@ const MessageInput = forwardRef((props, ref) => {
         )}
         {disableConvertToProject && (
           <IconButton
+            disabled
             variant="button"
             sx={{
               ml: 1,
