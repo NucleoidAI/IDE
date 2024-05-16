@@ -69,12 +69,6 @@ const NucEditor = React.forwardRef((props, ref) => {
 
     editorRef.current = { editor: editor, monaco: monaco };
 
-    monaco.editor.defineTheme("custom-dark-theme", monacoDarkTheme);
-
-    monaco.editor.setTheme(
-      themeStorage === "light" ? "vs-light" : "custom-dark-theme"
-    );
-
     if (!editor.getModel()) {
       editor.setValue("");
     }
@@ -143,8 +137,10 @@ const NucEditor = React.forwardRef((props, ref) => {
     }
     onMount && onMount(editor, monaco);
   }
-  // eslint-disable-next-line
-  const beforeMount = (monaco) => {};
+
+  const beforeMount = (monaco) => {
+    monaco.editor.defineTheme("custom-dark-theme", monacoDarkTheme);
+  };
 
   function handleChange(e) {
     clearTimeout(timerRef.current);
@@ -163,6 +159,7 @@ const NucEditor = React.forwardRef((props, ref) => {
       data-cy="nuc-editor"
       ref={ref}
       key={themeStorage}
+      theme={themeStorage === "light" ? "vs-light" : "custom-dark-theme"}
       defaultValue={defaultValue}
       path={path || "empty"}
       onChange={handleChange}
