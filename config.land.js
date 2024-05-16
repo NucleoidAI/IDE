@@ -1,5 +1,7 @@
 const config = {
   base: "/ide",
+  expert:
+    "https://api-nucleoid-com-land.gentleflower-99ef02e0.eastus.azurecontainerapps.io",
   api: "https://api-nucleoid-com-land.gentleflower-99ef02e0.eastus.azurecontainerapps.io",
   oauth: {
     accessTokenUrl: "https://nuc.land/ide/api/oauth",

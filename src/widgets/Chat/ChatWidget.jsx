@@ -18,9 +18,10 @@ const ChatWidget = () => {
   const { chatId } = useParams("chatId");
 
   const [loading, setLoading] = useState(false);
-  const [landingLevel] = useEvent("ONBOARDING_LEVEL_ACHIEVED", {
-    level: Number.MAX_SAFE_INTEGER,
-  });
+  const [landingLevel] = useEvent(
+    "ONBOARDING_LEVEL_ACHIEVED",
+    storage.get("chat", "onboarding") || { level: 0 }
+  );
   const messageInputRef = useRef();
   const userMessageRef = useRef("");
   const [chat, sendMessage] = useChat();
@@ -120,6 +121,7 @@ const ChatWidget = () => {
         ref={messageInputRef}
         loading={loading}
         showConvertToProject={landingLevel.level === 1}
+        disableConvertToProject={landingLevel.level === 3}
       />
     </Box>
   );

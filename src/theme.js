@@ -310,6 +310,13 @@ const lightTheme = createTheme({
     MuiButton: {
       variants: [
         {
+          props: { variant: "gray" },
+          style: {
+            backgroundColor: "#424242",
+            color: base.grey[300],
+          },
+        },
+        {
           props: { variant: "suggestion" },
           style: {
             flexGrow: 1,
@@ -373,12 +380,14 @@ const lightTheme = createTheme({
       "& .MuiDrawer-paper": {
         top: "10%",
         height: 380,
+        width: 70,
         borderTopLeftRadius: "5px",
         borderBottomLeftRadius: "5px",
         background: "#353e48",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        alignItems: "center",
         paddingTop: 1,
         paddingBottom: 1,
       },
@@ -386,13 +395,15 @@ const lightTheme = createTheme({
     drawerSmall: {
       "& .MuiDrawer-paper": {
         top: "10%",
-        height: 338,
+        height: 350,
+        width: 70,
         borderTopLeftRadius: "5px",
         borderBottomLeftRadius: "5px",
         background: "#353e48",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        alignItems: "center",
         paddingTop: 1,
         paddingBottom: 1,
       },
@@ -530,6 +541,13 @@ const darkTheme = createTheme({
         },
       },
       variants: [
+        {
+          props: { variant: "gray" },
+          style: {
+            backgroundColor: base.grey[800],
+            color: base.grey[300],
+          },
+        },
         {
           props: { variant: "suggestion" },
           style: {
@@ -695,6 +713,7 @@ const darkTheme = createTheme({
       "& .MuiDrawer-paper": {
         top: "10%",
         height: 380,
+        width: 70,
         borderTopLeftRadius: "5px",
         borderBottomLeftRadius: "5px",
         background: base.grey[900],
@@ -702,6 +721,7 @@ const darkTheme = createTheme({
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        alignItems: "center",
         paddingTop: 1,
         paddingBottom: 1,
       },
@@ -709,7 +729,8 @@ const darkTheme = createTheme({
     drawerSmall: {
       "& .MuiDrawer-paper": {
         top: "10%",
-        height: 338,
+        height: 350,
+        width: 70,
         borderTopLeftRadius: "5px",
         borderBottomLeftRadius: "5px",
         background: base.grey[900],
@@ -717,6 +738,7 @@ const darkTheme = createTheme({
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        alignItems: "center",
         paddingTop: 1,
         paddingBottom: 1,
       },

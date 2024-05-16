@@ -161,14 +161,18 @@ function APIDialog() {
   };
 
   const validatePath = (path) => {
+    const allowedChars = /^[a-z0-9-{}]+$/;
+
+    const isValidChars = allowedChars.test(path);
+
     const isDuplicate = contextApis.some(
-      (api) => api.path === path && api.method === methodRef.current
+      (api) => api.path === `/${path}` && api.method === methodRef.current
     );
 
     if (action === "edit") {
       setSaveDisable(false);
       return;
-    } else if (isDuplicate || path.includes("//")) {
+    } else if (isDuplicate || !isValidChars) {
       setSaveDisable(true);
     } else {
       setSaveDisable(false);
