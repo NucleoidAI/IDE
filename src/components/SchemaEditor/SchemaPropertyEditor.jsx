@@ -25,14 +25,18 @@ const SchemaPropertyEditor = ({
     setIsSelectOpen(false);
   };
 
-  const propertyTypes = [
-    "string",
-    "number",
-    "boolean",
-    "object",
-    "array",
-    ...customTypes.map((type) => type.name),
-  ];
+  const isRootNode = node.level === 0;
+
+  const propertyTypes = isRootNode
+    ? ["object", "array", ...customTypes.map((type) => type.name)]
+    : [
+        "string",
+        "number",
+        "boolean",
+        "object",
+        "array",
+        ...customTypes.map((type) => type.name),
+      ];
 
   return (
     <Box
