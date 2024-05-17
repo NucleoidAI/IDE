@@ -66,7 +66,7 @@ const APIPath = ({
           )}
         </Grid>
       </Grid>
-      <Button onClick={onTypesButtonClick}>
+      <Button onClick={onTypesButtonClick} data-cy="types-button">
         <LanguageIcon sx={styles.icon} />
         Types
       </Button>

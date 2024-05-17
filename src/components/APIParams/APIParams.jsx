@@ -37,6 +37,7 @@ const APIParams = forwardRef(({ types }, ref) => {
         height: "85%",
         p: 2,
       }}
+      data-cy="api-params"
     >
       <ParamTable types={types} params={params} setParams={setParams} />
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>

@@ -153,6 +153,7 @@ function APISettings() {
             size={"small"}
             onClick={openEditDialog}
             sx={{ position: "absolute", right: 15, bottom: 15 }}
+            data-cy="edit-api-button"
           >
             <EditIcon />
           </Fab>
@@ -172,7 +173,12 @@ function APISettings() {
             />
             <Grid container sx={styles.editIcon}>
               {selectedApi && Object.keys(selectedApi).length > 0 && (
-                <Fab variant="button" size={"small"} onClick={openEditDialog}>
+                <Fab
+                  variant="button"
+                  size={"small"}
+                  onClick={openEditDialog}
+                  data-cy="edit-api-button"
+                >
                   <EditIcon />
                 </Fab>
               )}

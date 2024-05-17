@@ -78,6 +78,7 @@ const APITypes = ({ tstypes, nuctypes, typesRef }) => {
         height: "85%",
         p: 2,
       }}
+      data-cy="api-types"
     >
       <Box
         sx={{

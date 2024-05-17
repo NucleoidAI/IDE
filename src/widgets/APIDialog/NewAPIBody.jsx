@@ -12,6 +12,7 @@ const NewAPIBody = ({ types, api, requestSchemaRef, responseSchemaRef }) => {
         height: "85%",
         p: 2,
       }}
+      data-cy="api-body"
     >
       <Box
         sx={{

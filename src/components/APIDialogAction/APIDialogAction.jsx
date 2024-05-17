@@ -48,8 +48,12 @@ function APIDialogAction({
             },
           }}
         >
-          <ToggleButton value={"PARAMS"}>PARAMS</ToggleButton>
-          <ToggleButton value={"BODY"}>BODY</ToggleButton>
+          <ToggleButton value={"PARAMS"} data-cy="params-toggle">
+            PARAMS
+          </ToggleButton>
+          <ToggleButton value={"BODY"} data-cy="body-toggle">
+            BODY
+          </ToggleButton>
         </ToggleButtonGroup>
       </Box>
       <Box sx={{ display: "flex", gap: 1 }}>
