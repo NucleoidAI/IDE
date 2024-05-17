@@ -534,6 +534,17 @@ const darkTheme = createTheme({
       },
     },
 
+    MuiToggleButton: {
+      styleOverrides: {
+        root: {
+          color: base.grey[600],
+          "&.Mui-selected": {
+            color: base.primary.main,
+          },
+        },
+      },
+    },
+
     MuiButton: {
       styleOverrides: {
         root: {
