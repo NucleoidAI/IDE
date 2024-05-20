@@ -7,7 +7,17 @@ import React from "react";
 describe("APIDialog Component", () => {
   it("should open the dialog when triggered", () => {
     const initialState = Context.withSample();
-    console.log(initialState);
+
+    initialState.pages.api.dialog = {
+      open: true,
+      type: "method",
+      action: "edit",
+    };
+    initialState.pages.api.selected = {
+      path: "/items",
+      method: "POST",
+    };
+    initialState.pages.api.dialog.view = "BODY";
 
     const mockReducer = (state, action) => {
       if (action.type === "OPEN_API_DIALOG") {

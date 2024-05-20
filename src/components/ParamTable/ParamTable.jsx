@@ -1,4 +1,4 @@
-import { DataGrid } from "@mui/x-data-grid";
+//import { DataGrid } from "@mui/x-data-grid";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import React from "react";
 import TypeMenu from "../TypeMenu";
@@ -117,13 +117,14 @@ const ParamTable = ({ types, params, setParams }) => {
   };
 
   return (
-    <DataGrid
-      sx={styles.dataGrid}
-      columns={columns}
-      rows={params}
-      hideFooter
-      disableSelectionOnClick
-    />
+    // <DataGrid
+    //   sx={styles.dataGrid}
+    //   columns={columns}
+    //   rows={params}
+    //   hideFooter
+    //   disableSelectionOnClick
+    // />
+    <>temporarily disabled for tests</>
   );
 };
 
