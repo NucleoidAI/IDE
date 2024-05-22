@@ -1,15 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Box, useTheme, Snackbar, Alert } from "@mui/material";
-import { publish } from "@nucleoidai/react-event";
-import { storage } from "@nucleoidjs/webstorage";
-import { useEvent } from "@nucleoidai/react-event";
-import { useParams } from "react-router-dom";
+import "./ChatMainArea.css";
+
 import ChatDisplay from "./ChatDisplay";
 import MessageInput from "./MessageInput";
 import Settings from "../../settings";
 import SuggestionsOverlay from "./SuggestionsOverlay";
+import { publish } from "@nucleoidai/react-event";
+import { storage } from "@nucleoidjs/webstorage";
 import useChat from "./useChat";
-import "./ChatMainArea.css";
+import { useEvent } from "@nucleoidai/react-event";
+import { useParams } from "react-router-dom";
+
+import { Box, useTheme } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
 
 const ChatWidget = () => {
   const theme = useTheme();
@@ -23,13 +25,17 @@ const ChatWidget = () => {
   const messageInputRef = useRef();
   const userMessageRef = useRef("");
   const [chat, sendMessage] = useChat();
-  const [error, setError] = useState({}); // State to manage errors
-  const [snackbarOpen, setSnackbarOpen] = useState(false); // State to control Snackbar visibility
+  const [error] = useEvent("APP_MESSAGE", {
+    message: "",
+    severity: "",
+  });
 
   const loadChat = async () => {
     if (chatId) {
+      // TODO Verify chat is valid in local storage
+
+      // Requires async call
       try {
-        // Verify chat is valid in local storage
         const session = await storage.get("ide", "chat", "sessions", chatId);
         publish("CHAT_SELECTED", session);
 
@@ -37,14 +43,17 @@ const ChatWidget = () => {
           name: "ChatWidget",
         });
       } catch (err) {
-        setError("Could not connect to the server.");
-        setSnackbarOpen(true);
+        setLoading(false);
+        publish("APP_MESSAGE", {
+          message: "Failed to load chat",
+          severity: "error",
+        });
       }
     }
   };
 
   useEffect(() => {
-    loadChat();
+    loadChat().then();
     // eslint-disable-next-line
   }, [chatId]);
 
@@ -57,32 +66,36 @@ const ChatWidget = () => {
 
     try {
       await sendMessage(userMessage);
+
       if (first) {
         publish("CHAT_INITIATED", chat.id);
       }
     } catch (err) {
-      setError("Failed to send message.");
-      setSnackbarOpen(true);
+      setLoading(false);
+      publish("APP_MESSAGE", {
+        message: "Failed to send message",
+        severity: "error",
+      });
     }
-
-    setLoading(false);
   };
 
   const handleSuggestionClick = async (suggestion) => {
     const first = !chat.messages.length;
     setLoading(true);
     userMessageRef.current = suggestion.description;
-
     try {
       await sendMessage(suggestion.description);
+
       if (first) {
         publish("CHAT_INITIATED", chat.id);
       }
     } catch (err) {
-      setError("Failed to connect network.");
-      setSnackbarOpen(true);
+      setLoading(false);
+      publish("APP_MESSAGE", {
+        message: "Failed to connect network",
+        severity: "error",
+      });
     }
-    setLoading(false);
   };
 
   const refreshChat = () => {
@@ -94,13 +107,6 @@ const ChatWidget = () => {
       setLoading(false);
     }
   }, [error]);
-
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setSnackbarOpen(false);
-  };
 
   return (
     <Box
@@ -136,20 +142,6 @@ const ChatWidget = () => {
         showConvertToProject={landingLevel.level === 1}
         disableConvertToProject={landingLevel.level === 3}
       />
-
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          {error}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };
