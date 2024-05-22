@@ -5,7 +5,7 @@ describe("APIDialog", () => {
     cy.wrap("3450f289-0fc5-45e9-9a4a-606c0a63cdfe").as("projectId");
   });
 
-  describe("Edit Mode", () => {
+  describe("in edit Mode", () => {
     beforeEach(() => {
       cy.get("@projectId").then((projectId) => {
         cy.visit(`/${projectId}/api?mode=local`);
@@ -70,9 +70,29 @@ describe("APIDialog", () => {
             .should("contain", "number");
         });
     });
+
+    it("should change property of a schema to array and not allow more than one property inside", () => {
+      expect(true).to.be.false;
+    });
+
+    it("should view types and add a new type and save it", () => {
+      expect(true).to.be.false;
+    });
+
+    it("should view parameters and add a new parameter and save it", () => {
+      expect(true).to.be.false;
+    });
+
+    it("should delete the correct path", () => {
+      expect(true).to.be.false;
+    });
+
+    it("should not allow deleting the root path", () => {
+      expect(true).to.be.false;
+    });
   });
 
-  describe("Add Mode: Method", () => {
+  describe("in method adding mode", () => {
     beforeEach(() => {
       cy.get("@projectId").then((projectId) => {
         cy.visit(`/${projectId}/api?mode=local`);
@@ -86,9 +106,17 @@ describe("APIDialog", () => {
     it("should open dialog in add method mode", () => {
       cy.getBySel("method-select").should("be.visible");
     });
+
+    it("should not allow duplicate methods", () => {
+      expect(true).to.be.false;
+    });
+
+    it("should allow addition of new method and save it to correct path", () => {
+      expect(true).to.be.false;
+    });
   });
 
-  describe("Add Mode: Resource", () => {
+  describe("in resource adding mode", () => {
     beforeEach(() => {
       cy.get("@projectId").then((projectId) => {
         cy.visit(`/${projectId}/api?mode=local`);
@@ -101,6 +129,14 @@ describe("APIDialog", () => {
 
     it("should open dialog in add resource mode", () => {
       cy.getBySel("path-input").should("be.visible");
+    });
+
+    it("should add a new resource and save it correctly", () => {
+      expect(true).to.be.false;
+    });
+
+    it("should not allow duplicate paths and disable the save button", () => {
+      expect(true).to.be.false;
     });
   });
 });
