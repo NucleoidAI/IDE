@@ -73,7 +73,7 @@ const Schema = ({ initialData = {}, customTypes = [] }) => {
                     borderRadius: "4px",
                   }}
                 >
-                  {node.name}
+                  {level === 0 ? "" : node.name}
                 </Typography>
               </Box>
 
