@@ -13,13 +13,12 @@ axios.defaults.headers.common["Content-Type"] = "application/json";
 instance.interceptors.response.use(
   (res) => res,
   (err) => {
-    if (err.response.status === 500) {
+    if (err.response?.status === 500) {
       publish("APP_MESSAGE", {
         message: err.message,
         severity: "error",
       });
     }
-
     return Promise.reject(err);
   }
 );
