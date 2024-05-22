@@ -106,6 +106,7 @@ const SchemaEditor = forwardRef(
                     color: (theme) => theme.palette.grey[600],
                     marginRight: "-8px ",
                   }}
+                  data-cy={`add-property-button-${node.id}`}
                 >
                   <AddCircleOutlineIcon fontSize="small" />
                 </IconButton>

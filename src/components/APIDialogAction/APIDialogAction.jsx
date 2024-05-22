@@ -85,6 +85,7 @@ function APIDialogAction({
             onClick={handleTooltipOpen}
             disabled={deleteDisable}
             startIcon={<DeleteIcon />}
+            data-cy="delete-api-button"
           >
             Delete
           </Button>
@@ -95,6 +96,7 @@ function APIDialogAction({
           onClick={saveApiDialog}
           disabled={saveDisable}
           startIcon={<SaveIcon />}
+          data-cy="save-api-button"
         >
           Save
         </Button>

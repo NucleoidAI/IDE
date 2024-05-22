@@ -35,6 +35,7 @@ const NewAPIBody = ({ types, api, requestSchemaRef, responseSchemaRef }) => {
             justifyContent: "center",
             alignItems: "center",
           }}
+          data-cy="request-schema-editor"
         >
           <SchemaEditor
             ref={requestSchemaRef}
@@ -69,6 +70,7 @@ const NewAPIBody = ({ types, api, requestSchemaRef, responseSchemaRef }) => {
             justifyContent: "center",
             alignItems: "center",
           }}
+          data-cy="response-schema-editor"
         >
           <SchemaEditor
             ref={responseSchemaRef}
