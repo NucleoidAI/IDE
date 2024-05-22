@@ -25,9 +25,10 @@ const ChatWidget = () => {
   const messageInputRef = useRef();
   const userMessageRef = useRef("");
   const [chat, sendMessage] = useChat();
-  const [error] = useEvent("APP_MESSAGE", {
-    message: "",
-    severity: "",
+  const [error] = useEvent("EXPERT_ERROR_OCCURRED", {
+    chatId: "",
+    type: "",
+    content: "",
   });
 
   const loadChat = async () => {
@@ -43,13 +44,13 @@ const ChatWidget = () => {
           name: "ChatWidget",
         });
       } catch (err) {
-        setLoading(false);
         publish("APP_MESSAGE", {
           message: "Failed to load chat",
           severity: "error",
         });
       }
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -71,12 +72,12 @@ const ChatWidget = () => {
         publish("CHAT_INITIATED", chat.id);
       }
     } catch (err) {
-      setLoading(false);
       publish("APP_MESSAGE", {
         message: "Failed to send message",
         severity: "error",
       });
     }
+    setLoading(false);
   };
 
   const handleSuggestionClick = async (suggestion) => {
@@ -90,12 +91,12 @@ const ChatWidget = () => {
         publish("CHAT_INITIATED", chat.id);
       }
     } catch (err) {
-      setLoading(false);
       publish("APP_MESSAGE", {
         message: "Failed to connect network",
         severity: "error",
       });
     }
+    setLoading(false);
   };
 
   const refreshChat = () => {
