@@ -218,7 +218,7 @@ const MenuLinks = (props) => {
                 (title === "Query" || title === "Logs")
               }
               sx={styles.listItem}
-              component={Link}
+              component={link}
               to={`${id}/${link}${query}`}
               state={{ anchor }}
               relative="path"
