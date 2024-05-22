@@ -22,6 +22,54 @@ describe("APIDialog", () => {
       cy.getBySel("types-button").click();
       cy.getBySel("api-types").should("be.visible");
     });
+
+    it("should edit schema of response and save it", () => {
+      cy.getBySel("response-schema-editor")
+        .find("[data-cy^='property-type-select-']")
+        .then(($properties) => {
+          const initialPropertyCount = $properties.length;
+
+          cy.getBySel("response-schema-editor")
+            .find("[data-cy^='add-property-button-']")
+            .first()
+            .click();
+
+          cy.getBySel("response-schema-editor")
+            .find("[data-cy^='property-type-select-']")
+            .should("have.length", initialPropertyCount + 1);
+
+          cy.getBySel("response-schema-editor")
+            .find("[data-cy^='property-name-field-']")
+            .eq(1)
+            .clear()
+            .type("test");
+
+          cy.getBySel("response-schema-editor")
+            .find("[data-cy^='property-type-select-']")
+            .eq(1)
+            .click();
+
+          cy.getBySel("property-type-option-number").click();
+
+          cy.getBySel("save-api-button").click();
+          cy.getBySel("edit-api-button").click();
+
+          cy.getBySel("response-schema-editor")
+            .find("[data-cy^='property-type-select-']")
+            .should("have.length", initialPropertyCount + 1);
+
+          cy.getBySel("response-schema-editor")
+            .find("[data-cy^='property-name-field-']")
+            .eq(1)
+            .find("input")
+            .should("have.value", "test");
+
+          cy.getBySel("response-schema-editor")
+            .find("[data-cy^='property-type-select-']")
+            .eq(1)
+            .should("contain", "number");
+        });
+    });
   });
 
   describe("Add Mode: Method", () => {
