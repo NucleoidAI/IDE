@@ -1,7 +1,7 @@
 const config = {
   base: "/",
-  expert: "http://localhost:3000",
   api: "http://localhost:3000",
+  expert: "http://localhost:3000",
   oauth: {
     accessTokenUrl: "http://localhost:3000/oauth",
     clientId: "0c2844d3d19dc9293fc5",
