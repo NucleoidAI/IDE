@@ -44,10 +44,11 @@ const ChatWidget = () => {
           name: "ChatWidget",
         });
       } catch (err) {
-        publish("APP_MESSAGE", {
-          message: "Failed to load chat",
-          severity: "error",
-        });
+        if (err.response?.status === 400) {
+          publish("EXPERT_ERROR_OCCURRED", {
+            chatId,
+          });
+        }
       }
     }
     setLoading(false);
@@ -72,10 +73,11 @@ const ChatWidget = () => {
         publish("CHAT_INITIATED", chat.id);
       }
     } catch (err) {
-      publish("APP_MESSAGE", {
-        message: "Failed to send message",
-        severity: "error",
-      });
+      if (err.response?.status === 400) {
+        publish("EXPERT_ERROR_OCCURRED", {
+          chatId: chat.id,
+        });
+      }
     }
     setLoading(false);
   };
@@ -91,10 +93,11 @@ const ChatWidget = () => {
         publish("CHAT_INITIATED", chat.id);
       }
     } catch (err) {
-      publish("APP_MESSAGE", {
-        message: "Failed to connect network",
-        severity: "error",
-      });
+      if (err.response?.status === 400) {
+        publish("EXPERT_ERROR_OCCURRED", {
+          chatId: chat.id,
+        });
+      }
     }
     setLoading(false);
   };
