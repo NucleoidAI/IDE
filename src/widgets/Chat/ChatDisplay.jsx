@@ -86,7 +86,6 @@ const ChatDisplay = ({
   return (
     <Box
       sx={{
-        position: "relative",
         overflow: "auto",
         flex: 1,
         display: "flex",
