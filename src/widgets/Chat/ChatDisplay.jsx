@@ -104,7 +104,7 @@ const ChatDisplay = ({
       onScroll={handleScroll}
     >
       <Tooltip
-        title="Report"
+        title="NucleoidAI/Nucleoid"
         sx={{
           position: "absolute",
           top: "10px",
