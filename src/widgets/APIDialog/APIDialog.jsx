@@ -172,7 +172,7 @@ function APIDialog() {
     if (action === "edit") {
       setSaveDisable(false);
       return;
-    } else if (isDuplicate || !isValidChars) {
+    } else if (isDuplicate || (!isValidChars && type === "resource")) {
       setSaveDisable(true);
     } else {
       setSaveDisable(false);
