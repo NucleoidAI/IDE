@@ -93,6 +93,7 @@ const TypeList = ({
               bgcolor: (theme) => theme.palette.action.hover,
             },
           }}
+          data-cy={`type-list-item-${item.name}`}
         >
           {editingType === item.name ? (
             <TypeEditor
@@ -152,7 +153,12 @@ const TypeList = ({
           transform: "translateX(-50%)",
         }}
       >
-        <Fab color="primary" onClick={handleAddTypeClick} size="small">
+        <Fab
+          color="primary"
+          onClick={handleAddTypeClick}
+          size="small"
+          data-cy="add-type-button"
+        >
           <Add />
         </Fab>
       </Box>
