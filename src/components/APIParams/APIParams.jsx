@@ -41,7 +41,11 @@ const APIParams = forwardRef(({ types }, ref) => {
     >
       <ParamTable types={types} params={params} setParams={setParams} />
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <Fab size={"small"} onClick={handleAddParams}>
+        <Fab
+          size={"small"}
+          onClick={handleAddParams}
+          data-cy="add-param-button"
+        >
           <AddIcon />
         </Fab>
       </Box>

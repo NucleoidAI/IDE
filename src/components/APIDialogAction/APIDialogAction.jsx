@@ -73,6 +73,7 @@ function APIDialogAction({
               color="error"
               onClick={deleteMethod}
               startIcon={<DeleteIcon />}
+              data-cy="delete-api-button-yes"
             >
               Delete
             </Button>

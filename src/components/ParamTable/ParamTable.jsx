@@ -20,6 +20,7 @@ const ParamTable = ({ types, params, setParams }) => {
             onChange={(event) => updateParam(id, "name", event.target.value)}
             fullWidth
             placeholder="Enter name"
+            data-cy={`param-name-field-${id}`}
           />
         );
       },
@@ -80,6 +81,7 @@ const ParamTable = ({ types, params, setParams }) => {
             }
             fullWidth
             placeholder="Enter description"
+            data-cy={`param-description-field-${id}`}
           />
         );
       },
