@@ -151,12 +151,84 @@ describe("APIDialog", () => {
         .should("contain", "string");
     });
 
-    it("should view parameters and add a new parameter and save it", () => {
-      expect(true).to.be.false;
+    it("should add a new parameter with name and description and save it", () => {
+      cy.getBySel("params-toggle").click();
+      cy.getBySel("api-params").should("be.visible");
+
+      cy.getBySel("api-params")
+        .find("[data-cy^='param-name-field-'] input")
+        .then(($params) => {
+          const initialParamCount = $params.length;
+
+          cy.getBySel("add-param-button").click();
+
+          cy.getBySel("api-params")
+            .find("[data-cy^='param-name-field-'] input")
+            .should("have.length", initialParamCount + 1);
+
+          const newParamName = "newParam";
+          const newParamDescription = "Newparameterdescription";
+          cy.getBySel("api-params")
+            .find("[data-cy^='param-name-field-'] input")
+            .eq(initialParamCount)
+            .clear()
+            .type(newParamName);
+
+          cy.getBySel("api-params")
+            .find("[data-cy^='param-description-field-'] input")
+            .eq(initialParamCount)
+            .clear()
+            .type(newParamDescription);
+
+          cy.getBySel("save-api-button").click();
+
+          cy.getBySel("edit-api-button").click();
+
+          cy.getBySel("params-toggle").click();
+
+          cy.getBySel("api-params")
+            .find("[data-cy^='param-name-field-'] input")
+            .should("have.length", initialParamCount + 1);
+
+          cy.getBySel("api-params")
+            .find("[data-cy^='param-name-field-'] input")
+            .eq(initialParamCount)
+            .should("have.value", newParamName);
+
+          cy.getBySel("api-params")
+            .find("[data-cy^='param-description-field-'] input")
+            .eq(initialParamCount)
+            .should("have.value", newParamDescription);
+        });
     });
 
-    it("should delete the correct path", () => {
-      expect(true).to.be.false;
+    it("should delete the selected method", () => {
+      cy.getBySel("close-dialog-button").click();
+
+      cy.get('[data-cy^="method-"]').then(($methods) => {
+        const methodCount = $methods.length;
+
+        if (methodCount >= 2) {
+          cy.get('[data-cy^="method-"]')
+            .eq(1)
+            .then(($method) => {
+              const methodName = $method.attr("data-cy");
+              cy.wrap($method).click();
+
+              cy.getBySel("edit-api-button").click();
+
+              cy.getBySel("delete-api-button").click();
+
+              cy.getBySel("delete-api-button-yes").click();
+
+              cy.get('[data-cy^="method-"]').should(
+                "have.length",
+                methodCount - 1
+              );
+              cy.get(`[data-cy="${methodName}"]`).should("not.exist");
+            });
+        }
+      });
     });
 
     it("should not allow deleting the root path", () => {
