@@ -72,11 +72,83 @@ describe("APIDialog", () => {
     });
 
     it("should change property of a schema to array and not allow more than one property inside", () => {
-      expect(true).to.be.false;
+      cy.getBySel("response-schema-editor")
+        .find("[data-cy^='property-type-select-']")
+        .first()
+        .click();
+
+      cy.getBySel("property-type-option-array").click();
+
+      cy.getBySel("response-schema-editor")
+        .find("[data-cy^='add-property-button-']")
+        .first()
+        .should("be.disabled");
+
+      cy.getBySel("save-api-button").click();
+      cy.getBySel("edit-api-button").click();
+
+      cy.getBySel("response-schema-editor")
+        .find("[data-cy^='property-type-select-']")
+        .first()
+        .should("contain", "array");
+
+      cy.getBySel("response-schema-editor")
+        .find("[data-cy^='add-property-button-']")
+        .first()
+        .should("be.disabled");
     });
 
-    it("should view types and add a new type and save it", () => {
-      expect(true).to.be.false;
+    it("should add a new type, edit it using SchemaEditor, and save it", () => {
+      cy.getBySel("types-button").click();
+      cy.getBySel("api-types").should("be.visible");
+
+      cy.getBySel("add-type-button").click();
+
+      const newTypeName = "TestType";
+      cy.getBySel("type-name-input").type(newTypeName);
+
+      cy.getBySel("confirm-type-button").click();
+
+      cy.getBySel(`type-list-item-${newTypeName}`).should("be.visible");
+
+      cy.getBySel("type-schema-editor")
+        .find("[data-cy^='add-property-button-']")
+        .first()
+        .click();
+
+      cy.getBySel("type-schema-editor")
+        .find("[data-cy^='property-name-field-']")
+        .eq(1)
+        .clear()
+        .type("testField");
+
+      cy.getBySel("type-schema-editor")
+        .find("[data-cy^='property-type-select-']")
+        .eq(1)
+        .click();
+
+      cy.getBySel("property-type-option-string").click();
+
+      cy.getBySel("save-api-button").click();
+
+      cy.getBySel("edit-api-button").click();
+
+      cy.getBySel("types-button").click();
+
+      cy.getBySel(`type-list-item-${newTypeName}`).should("be.visible");
+
+      cy.getBySel(`type-list-item-${newTypeName}`).click();
+
+      cy.getBySel("type-schema-editor")
+        .find("[data-cy^='property-name-field-']")
+        .eq(1)
+        .find("input")
+        .should("have.value", "testField");
+
+      cy.getBySel("type-schema-editor")
+        .find("[data-cy^='property-type-select-']")
+        .eq(1)
+        .should("contain", "string");
     });
 
     it("should view parameters and add a new parameter and save it", () => {
