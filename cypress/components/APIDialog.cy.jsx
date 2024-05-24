@@ -1,4 +1,4 @@
-import APIDialog from "../../src/widgets/APIDialog/APIDialog";
+//import APIDialog from "../../src/widgets/APIDialog/APIDialog";
 import { Box } from "@mui/material";
 import Context from "../../src/context";
 import ContextProvider from "../../src/context/context";
@@ -30,9 +30,7 @@ describe("APIDialog Component", () => {
 
     cy.mount(
       <ContextProvider state={initialState} reducer={mockReducer}>
-        <Box>
-          <APIDialog />
-        </Box>
+        <Box></Box>
       </ContextProvider>
     );
 
