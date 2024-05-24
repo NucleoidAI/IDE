@@ -48,7 +48,11 @@ const APIPath = ({
               data-cy="method-select"
             >
               {allowedMethods.map((method) => (
-                <MenuItem key={method} value={method}>
+                <MenuItem
+                  key={method}
+                  value={method}
+                  data-cy={`method-menuitem-${method}`}
+                >
                   {method}
                 </MenuItem>
               ))}
