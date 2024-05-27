@@ -50,10 +50,11 @@ const ChatWidget = () => {
     // eslint-disable-next-line
   }, [chatId]);
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = async (suggestion) => {
     setLoading(true);
     const first = !chat.messages.length;
-    const userMessage = messageInputRef.current.getValue();
+    const userMessage =
+      suggestion?.description || messageInputRef.current.getValue();
     userMessageRef.current = userMessage;
     messageInputRef.current.clear();
 
@@ -64,48 +65,13 @@ const ChatWidget = () => {
         publish("CHAT_INITIATED", chat.id);
       }
     } catch (error) {
-      if (error.response?.status === 500) {
-        publish("APP_MESSAGE", {
-          message: "Failed to send message",
-          severity: "error",
-        });
-      } else if (error.response?.status === 400) {
-        publish("EXPERT_ERROR_OCCURED", {
-          chatId: chat.id,
-          type: error.response.data.type,
-          content: error.message,
-        });
-      }
+      publish("EXPERT_ERROR_OCCURRED", {
+        chatId: chat.id,
+        type: error.response.data.type,
+        content: error.response.data.content,
+      });
     }
 
-    setLoading(false);
-  };
-
-  const handleSuggestionClick = async (suggestion) => {
-    const first = !chat.messages.length;
-    setLoading(true);
-    userMessageRef.current = suggestion.description;
-
-    try {
-      await sendMessage(suggestion.description);
-
-      if (first) {
-        publish("CHAT_INITIATED", chat.id);
-      }
-    } catch (error) {
-      if (error.response.status === 500) {
-        publish("APP_MESSAGE", {
-          message: "dsada",
-          severity: "warning",
-        });
-      } else if (error.response.status === 400) {
-        publish("EXPERT_ERROR_OCCURED", {
-          chatId: chat.id,
-          type: error.response.data.type,
-          content: error.message,
-        });
-      }
-    }
     setLoading(false);
   };
 
@@ -140,7 +106,7 @@ const ChatWidget = () => {
       />
 
       <SuggestionsOverlay
-        onSuggestionClick={handleSuggestionClick}
+        onSuggestionClick={handleSendMessage}
         chat={chat}
         loading={loading}
         error={error}

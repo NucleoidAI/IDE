@@ -28,8 +28,13 @@ const useChat = () => {
       content: message,
     });
 
+    // Skip if no data is returned
+    if (!data) {
+      return;
+    }
+
     const assistantMessage = {
-      role: "assistant",
+      role: "ASSISTANT",
       ...data,
     };
 
