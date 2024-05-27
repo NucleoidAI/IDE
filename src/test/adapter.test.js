@@ -3,7 +3,10 @@ import { toOpenApi } from "../adapters/openapi/adapter";
 import {
   apiData,
   declarationsData,
-  openApiData as expectedOpenApi,
+  openApiData as expectedFullOpenApi,
+  expectedNestedResourceNestedTypesOpenApi,
+  expectedNestedResourceSingleTypeOpenApi,
+  expectedSingleResourceSingleTypeOpenApi,
   functionsData,
   nestedResourceApiData,
   nestedTypeData,
@@ -20,63 +23,66 @@ describe("OpenAPI Adapter", () => {
       functions: functionsData,
       declarations: declarationsData,
     });
-    expect(actualOpenApi).toEqual(expectedOpenApi);
+
+    expect(actualOpenApi).toEqual(expectedFullOpenApi);
   });
 
   test("should convert API and types (Single resource, single type)", () => {
-    const expectedOpenApi = {};
-
     const actualOpenApi = toOpenApi({
       api: singleResourceApiData,
       types: singleTypeData,
+      functions: functionsData,
+      declarations: declarationsData,
     });
 
-    expect(actualOpenApi).toEqual(expectedOpenApi);
+    expect(actualOpenApi).toEqual(expectedSingleResourceSingleTypeOpenApi);
   });
 
   test("should convert nested API and types (Nested resource and single type)", () => {
-    const expectedOpenApi = {};
-
     const actualOpenApi = toOpenApi({
       api: nestedResourceApiData,
       types: singleTypeData,
+      functions: functionsData,
+      declarations: declarationsData,
     });
 
-    expect(actualOpenApi).toEqual(expectedOpenApi);
+    expect(actualOpenApi).toEqual(expectedNestedResourceSingleTypeOpenApi);
   });
 
   test("should convert nested API and nested types (Nested resource and nested types)", () => {
-    const expectedOpenApi = {};
-
     const actualOpenApi = toOpenApi({
       api: nestedResourceApiData,
       types: nestedTypeData,
+      functions: functionsData,
+      declarations: declarationsData,
     });
 
-    expect(actualOpenApi).toEqual(expectedOpenApi);
+    expect(actualOpenApi).toEqual(expectedNestedResourceNestedTypesOpenApi);
   });
 
   test("should handle empty API definition", () => {
-    const emptyApiDefinition = {};
-    const customTypes = [];
+    const emptyApiDefinition = [];
 
     const actualOpenApiSpec = toOpenApi({
       api: emptyApiDefinition,
-      types: customTypes,
+      types: typesData,
+      functions: functionsData,
+      declarations: declarationsData,
     });
 
-    expect(actualOpenApiSpec.paths).toEqual({});
+    expect(actualOpenApiSpec.openapi.paths).toEqual({});
   });
 
   test("should handle empty custom types", () => {
-    const apiDefinition = {};
     const emptyCustomTypes = [];
 
     const actualOpenApiSpec = toOpenApi({
-      api: apiDefinition,
+      api: apiData,
       types: emptyCustomTypes,
+      functions: functionsData,
+      declarations: declarationsData,
     });
 
-    expect(actualOpenApiSpec.components.schemas).toBeUndefined();
+    expect(actualOpenApiSpec.openapi.components.schemas).toEqual({});
   });
 });
