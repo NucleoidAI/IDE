@@ -104,23 +104,31 @@ instance.interceptors.request.use((config) => {
 instance.interceptors.response.use(
   (res) => res,
   (err) => {
-    if (err.response?.status === 500) {
+    if (!err.response || err.response.status === 500) {
       publish("APP_MESSAGE", {
         message: err.message,
         severity: "error",
       });
+
+      return Promise.resolve(err.message);
     }
-    if (err.response?.status === 401) {
+
+    let message = err.message;
+
+    if (err.response.status === 401) {
       storage.remove("oauth.token");
-      let message = "Session expired. Please login again.";
-      if (err.response.status === 403) {
-        message = "Access forbidden. Please check your permissions.";
-      }
-      publish("APP_MESSAGE", {
-        message: message,
-        severity: "error",
-      });
+      message = "Session expired. Please login again.";
     }
+
+    if (err.response.status === 403) {
+      message = "Access forbidden. Please check your permissions.";
+    }
+
+    publish("APP_MESSAGE", {
+      message: message,
+      severity: "error",
+    });
+
     return Promise.reject(err);
   }
 );

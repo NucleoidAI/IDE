@@ -9,7 +9,7 @@
   "scripts": {
     "test": "jest",
     "dev": "vite",
-    "dev:cy": "cypress open",
+    "dev:cy": "cypress open --e2e --browser chrome",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --max-warnings 0",
     "preview": "vite preview",
