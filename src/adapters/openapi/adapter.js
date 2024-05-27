@@ -141,13 +141,16 @@ const toSchemas = (types) => {
   return schemas;
 };
 
-const toOpenApi = ({ api, types }) => {
-  console.log("console.log()", api, types);
-  const openapi = {};
-
-  openapi.paths = toPaths(api, types);
-  openapi.components = { schemas: toSchemas(types) };
-
+const toOpenApi = ({ api, types, functions, declarations }) => {
+  const openapi = {
+    openapi: {
+      paths: toPaths(api, types),
+      components: { schemas: toSchemas(types) },
+      "x-nuc-action": "start",
+      "x-nuc-functions": functions,
+      "x-nuc-declarations": declarations,
+    },
+  };
   return openapi;
 };
 

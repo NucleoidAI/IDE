@@ -295,14 +295,12 @@ function ApiButton() {
 
     setLoading(true);
     try {
-      const openapi = {
-        openapi: {
-          ...toOpenApi({ api: context.api, types }),
-          "x-nuc-action": "start",
-          "x-nuc-functions": filteredFunctions,
-          "x-nuc-declarations": context.declarations,
-        },
-      };
+      const openapi = toOpenApi({
+        api: context.api,
+        types,
+        functions: filteredFunctions,
+        declarations: context.declarations,
+      });
 
       await sandboxService.createSandbox(openapi, runtime);
 
