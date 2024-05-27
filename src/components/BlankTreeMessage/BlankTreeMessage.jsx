@@ -1,18 +1,39 @@
-import { Stack, Typography } from "@mui/material";
+import { AutoAwesome } from "@mui/icons-material";
+import { CardActions, Fab, Stack, Typography, Box } from "@mui/material";
+import React from "react";
 
-function BlankTreeMessage({ item }) {
+function BlankTreeMessage({ item, openLogicDialog, functionsExist }) {
   return (
-    <Stack sx={{ height: "100%", display: "flex", justifyContent: "center" }}>
-      <Typography
+    <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      <Box
         sx={{
-          color: "text.secondary",
-          textAlign: "center",
-          textJustify: "center",
+          flex: 1,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        No {item} defined yet
-      </Typography>
-    </Stack>
+        <Typography
+          sx={{
+            color: "text.secondary",
+            textAlign: "center",
+          }}
+        >
+          No {item} defined yet
+        </Typography>
+      </Box>
+      {functionsExist && (
+        <Box
+          sx={{ display: "flex", justifyContent: "center", marginBottom: 1 }}
+        >
+          <CardActions>
+            <Fab size="medium" onClick={openLogicDialog}>
+              <AutoAwesome />
+            </Fab>
+          </CardActions>
+        </Box>
+      )}
+    </Box>
   );
 }
 
