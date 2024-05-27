@@ -19,6 +19,7 @@ instance.interceptors.response.use(
         severity: "error",
       });
     }
+
     return Promise.reject(err);
   }
 );

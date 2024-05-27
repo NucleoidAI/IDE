@@ -9,6 +9,7 @@ import { storage } from "@nucleoidjs/webstorage";
 import useChat from "./useChat";
 import { useEvent } from "@nucleoidai/react-event";
 import { useParams } from "react-router-dom";
+
 import { Box, useTheme } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
@@ -31,24 +32,17 @@ const ChatWidget = () => {
   });
 
   const loadChat = async () => {
-    setLoading(true);
     if (chatId) {
-      try {
-        const session = await storage.get("ide", "chat", "sessions", chatId);
-        publish("CHAT_SELECTED", session);
-        publish("WIDGET_LOADED", { name: "ChatWidget" });
-      } catch (err) {
-        if (err.response?.status === 400) {
-          publish("EXPERT_ERROR_OCCURRED", { chatId });
-        } else if (!err.response || err.response?.status === 500) {
-          publish("APP_MESSAGE", {
-            message: "Failed to load chat",
-            severity: "error",
-          });
-        }
-      }
+      // TODO Verify chat is valid in local storage
+
+      // Requires async call
+      const session = await storage.get("ide", "chat", "sessions", chatId);
+      publish("CHAT_SELECTED", session);
+
+      publish("WIDGET_LOADED", {
+        name: "ChatWidget",
+      });
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -69,36 +63,46 @@ const ChatWidget = () => {
       if (first) {
         publish("CHAT_INITIATED", chat.id);
       }
-    } catch (err) {
-      if (err.response?.status === 400) {
-        publish("EXPERT_ERROR_OCCURRED", { chatId: chat.id });
-      } else if (!err.response || err.response?.status === 500) {
+    } catch (error) {
+      if (error.response?.status === 500) {
         publish("APP_MESSAGE", {
           message: "Failed to send message",
           severity: "error",
         });
+      } else if (error.response?.status === 400) {
+        publish("EXPERT_ERROR_OCCURED", {
+          chatId: chat.id,
+          type: error.response.data.type,
+          content: error.message,
+        });
       }
     }
+
     setLoading(false);
   };
 
   const handleSuggestionClick = async (suggestion) => {
-    setLoading(true);
     const first = !chat.messages.length;
+    setLoading(true);
     userMessageRef.current = suggestion.description;
+
     try {
       await sendMessage(suggestion.description);
 
       if (first) {
         publish("CHAT_INITIATED", chat.id);
       }
-    } catch (err) {
-      if (err.response?.status === 400) {
-        publish("EXPERT_ERROR_OCCURRED", { chatId: chat.id });
-      } else if (!err.response || err.response?.status === 500) {
+    } catch (error) {
+      if (error.response.status === 500) {
         publish("APP_MESSAGE", {
-          message: "Failed to connect network",
-          severity: "error",
+          message: "dsada",
+          severity: "warning",
+        });
+      } else if (error.response.status === 400) {
+        publish("EXPERT_ERROR_OCCURED", {
+          chatId: chat.id,
+          type: error.response.data.type,
+          content: error.message,
         });
       }
     }
