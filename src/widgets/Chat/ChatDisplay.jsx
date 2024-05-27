@@ -79,10 +79,6 @@ const ChatDisplay = ({
     }
   }, [currentUserMessage]);
 
-  const handleGitHubClick = () => {
-    window.open("http://github.com/NucleoidAI/Nucleoid", "_blank");
-  };
-
   return (
     <Box
       sx={{
@@ -104,6 +100,9 @@ const ChatDisplay = ({
     >
       <Tooltip
         title="NucleoidAI/Nucleoid"
+        onClick={() =>
+          window.open("http://github.com/NucleoidAI/Nucleoid", "_blank")
+        }
         sx={{
           position: "absolute",
           top: "10px",
@@ -112,7 +111,7 @@ const ChatDisplay = ({
         }}
       >
         <Fab size="small">
-          <GitHub onClick={handleGitHubClick} />
+          <GitHub />
         </Fab>
       </Tooltip>
 
