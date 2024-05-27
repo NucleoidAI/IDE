@@ -10,8 +10,8 @@ const instance = axios.create({
 });
 
 const refreshAuthLogic = async (failedRequest) => {
-  const refreshToken = storage.get("oauth.token").refreshToken;
-  const accessToken = storage.get("oauth.token").accessToken;
+  const refreshToken = storage.get("oauth.token")?.refreshToken;
+  const accessToken = storage.get("oauth.token")?.accessToken;
   let tokenRefreshResponse;
   if (!refreshToken && !accessToken) {
     const code = await instance.getCodeFromGithub();
@@ -72,7 +72,7 @@ instance.getCodeFromGithub = () => {
 };
 
 instance.getUserDetails = async () => {
-  const refreshToken = storage.get("oauth.token").refreshToken;
+  const refreshToken = storage.get("oauth.token")?.refreshToken;
   if (refreshToken) {
     try {
       const response = await axios.get("https://api.github.com/user", {
@@ -94,7 +94,7 @@ instance.getUserDetails = async () => {
 };
 
 instance.interceptors.request.use((config) => {
-  const token = storage.get("oauth.token").accessToken;
+  const token = storage.get("oauth.token")?.accessToken;
   if (token) {
     config.headers["Authorization"] = "Bearer " + token;
   }
@@ -110,26 +110,8 @@ instance.interceptors.response.use(
         severity: "error",
       });
 
-      return Promise.resolve(err.message);
+      throw new Error(err.message);
     }
-
-    let message = err.message;
-
-    if (err.response.status === 401) {
-      storage.remove("oauth.token");
-      message = "Session expired. Please login again.";
-    }
-
-    if (err.response.status === 403) {
-      message = "Access forbidden. Please check your permissions.";
-    }
-
-    publish("APP_MESSAGE", {
-      message: message,
-      severity: "error",
-    });
-
-    return Promise.reject(err);
   }
 );
 

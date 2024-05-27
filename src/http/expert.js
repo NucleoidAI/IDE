@@ -18,6 +18,7 @@ instance.interceptors.response.use(
         message: err.message,
         severity: "error",
       });
+
       return Promise.resolve(err.message);
     } else {
       return Promise.reject(err);
