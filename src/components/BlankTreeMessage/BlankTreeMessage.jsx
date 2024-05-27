@@ -1,6 +1,5 @@
 import { AutoAwesome } from "@mui/icons-material";
-import { CardActions, Fab, Stack, Typography, Box } from "@mui/material";
-import React from "react";
+import { Box, CardActions, Fab, Typography } from "@mui/material";
 
 function BlankTreeMessage({ item, openLogicDialog, functionsExist }) {
   return (
