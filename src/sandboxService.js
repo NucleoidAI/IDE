@@ -7,7 +7,6 @@ import scheduler from "./connectionScheduler";
 let sandboxId = null;
 let appUrl = "";
 let terminalUrl = "";
-let landingLevel = 0;
 
 const getLandingLevel = () => {
   const { level } = Settings.landing();
@@ -101,15 +100,12 @@ const query = async (body) => {
 
 const checkLandingLevel = () => {
   setTimeout(() => {
+    const landingLevel = getLandingLevel();
+
     if (landingLevel < 2) {
       onboardDispatcher({ level: 2 });
-      setLandingLevel(2);
     }
   }, 0);
-};
-
-const setLandingLevel = (level) => {
-  landingLevel = level;
 };
 
 const sandboxService = {
