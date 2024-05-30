@@ -152,6 +152,7 @@ const ResourceMenu = (props) => {
         <MenuItem
           onClick={handleResourceDeleteDialog}
           disabled={state.pages.api.selected?.path === "/"}
+          data-cy="delete-resource"
         >
           <DeleteIcon />
           <Typography sx={styles.menuItemText}>Delete</Typography>

@@ -108,7 +108,7 @@ function APISettings() {
           sx={styles.content}
           spacing={1}
         >
-          <Grid item xs={6} sx={styles.schema}>
+          <Grid item xs={6} sx={styles.schema} data-cy="request-schema">
             <Grid container justifyContent={"center"} alignItems={"center"}>
               <Typography fontWeight={"bolder"} fontSize={"medium"}>
                 Request
@@ -127,7 +127,7 @@ function APISettings() {
               <Schema initialData={request} customTypes={customTypes} />
             )}
           </Grid>
-          <Grid item xs={6} sx={styles.schema}>
+          <Grid item xs={6} sx={styles.schema} data-cy="response-schema">
             <Grid container justifyContent={"center"} alignItems={"center"}>
               <Typography fontWeight={"bolder"} fontSize={"medium"}>
                 Response
