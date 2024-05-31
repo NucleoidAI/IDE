@@ -62,6 +62,7 @@ const ParamTable = ({ types, params, setParams }) => {
             onChange={(event) =>
               updateParam(id, "required", event.target.checked)
             }
+            data-cy={`param-required-checkbox-${id}`}
           />
         );
       },
