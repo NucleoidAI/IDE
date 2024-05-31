@@ -1,25 +1,8 @@
 /* eslint-disable */
 import { mount } from "cypress/react18";
-import { subscribe } from "@nucleoidai/react-event";
 
 Cypress.Commands.add("mount", (component, options) => {
   return mount(component, options);
-});
-
-Cypress.Commands.add("getBySel", (selector, ...args) => {
-  return cy.get(`[data-cy=${selector}]`, ...args);
-});
-
-Cypress.Commands.add("storageSet", (key, value) => {
-  cy.window().then((win) => {
-    win.localStorage.setItem(key, JSON.stringify(value));
-  });
-});
-
-Cypress.Commands.add("storageGet", (key) => {
-  cy.window().then((win) => {
-    return JSON.parse(win.localStorage.getItem(key));
-  });
 });
 
 Cypress.Commands.add("setup", (container, fixtureType, type) => {
@@ -200,21 +183,6 @@ Cypress.Commands.add("checkEditorValue", (expectedValue) => {
           expect(val.trim()).to.contain(expected.trim());
         });
     });
-});
-
-Cypress.Commands.add("waitEvent", (eventName) => {
-  return cy.wrap(
-    new Promise((resolve) => {
-      cy.window().then(({ nucleoid: { Event } }) => {
-        const registry = Event.subscribe(eventName, () => {
-          registry.unsubscribe();
-
-          resolve();
-        });
-      });
-    }),
-    { timeout: 10000 }
-  );
 });
 
 Cypress.Commands.add("normalizeString", (str) => str.replace(/\s/g, ""));
