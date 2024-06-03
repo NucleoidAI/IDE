@@ -7,10 +7,10 @@ describe("APITypes", () => {
       cy.visit(`/${projectId}/api?mode=local`);
     });
     cy.waitEvent("CONTAINER_LOADED");
+    cy.openAPIDialog("edit");
   });
 
   it("displays TS class", () => {
-    cy.getBySel("edit-api-button").click();
     cy.getBySel("types-button").click();
     cy.getBySel("api-types").should("be.visible");
     cy.getBySel("type-schema-editor").should("be.visible");
@@ -19,7 +19,6 @@ describe("APITypes", () => {
   });
 
   it("adds type", () => {
-    cy.getBySel("edit-api-button").click();
     cy.getBySel("types-button").click();
     cy.getBySel("api-types").should("be.visible");
 
@@ -34,7 +33,6 @@ describe("APITypes", () => {
   });
 
   it("updates type", () => {
-    cy.getBySel("edit-api-button").click();
     cy.getBySel("types-button").click();
     cy.getBySel("api-types").should("be.visible");
 
@@ -61,7 +59,6 @@ describe("APITypes", () => {
   });
 
   it("deletes type", () => {
-    cy.getBySel("edit-api-button").click();
     cy.getBySel("types-button").click();
     cy.getBySel("api-types").should("be.visible");
 

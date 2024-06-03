@@ -12,7 +12,7 @@ describe("APIDialog", () => {
   });
 
   it("navigates between params, body and types", () => {
-    cy.getBySel("edit-api-button").click();
+    cy.openAPIDialog("edit");
 
     cy.getBySel("api-body").should("be.visible");
     cy.getBySel("params-toggle").click();
@@ -24,7 +24,7 @@ describe("APIDialog", () => {
   it("updates schema of request if method is not GET", () => {});
 
   it("updates schema of response", () => {
-    cy.getBySel("edit-api-button").click();
+    cy.openAPIDialog("edit");;
 
     cy.getBySel("response-schema-editor")
       .find("[data-cy^='property-type-select-']")
@@ -76,8 +76,7 @@ describe("APIDialog", () => {
   it("displays params view in body if method is GET", () => {});
 
   it("adds resource", () => {
-    cy.getBySel("resource-menu").click();
-    cy.getBySel("add-resource").click();
+    cy.openAPIDialog("resource");
 
     cy.getBySel("path-input").type("newresource");
     cy.getBySel("save-api-button").click();
@@ -86,8 +85,7 @@ describe("APIDialog", () => {
   });
 
   it("adds method", () => {
-    cy.getBySel("resource-menu").click();
-    cy.getBySel("add-method").click();
+    cy.openAPIDialog("method"); 
 
     cy.getBySel("method-select").click();
 
@@ -121,7 +119,7 @@ describe("APIDialog", () => {
             const methodName = $method.attr("data-cy");
             cy.wrap($method).click();
 
-            cy.getBySel("edit-api-button").click();
+            cy.openAPIDialog("edit");
 
             cy.getBySel("delete-api-button").click();
 
@@ -140,8 +138,7 @@ describe("APIDialog", () => {
   it("prevents deleting root resource", () => {});
 
   it("prevents dup method", () => {
-    cy.getBySel("resource-menu").click();
-    cy.getBySel("add-method").click();
+    cy.openAPIDialog("method");
 
     cy.getBySel("method-select").click();
 
@@ -157,8 +154,7 @@ describe("APIDialog", () => {
   });
 
   it("prevents dup resource", () => {
-    cy.getBySel("resource-menu").click();
-    cy.getBySel("add-resource").click();
+    cy.openAPIDialog("resource");
 
     cy.get('[data-cy^="path-"]')
       .eq(1)

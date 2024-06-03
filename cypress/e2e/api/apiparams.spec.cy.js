@@ -9,7 +9,7 @@ describe("APIParams", () => {
     });
 
     cy.waitEvent("CONTAINER_LOADED");
-    cy.getBySel("edit-api-button").click();
+    cy.openAPIDialog("edit");
     cy.getBySel("params-toggle").click();
   });
 

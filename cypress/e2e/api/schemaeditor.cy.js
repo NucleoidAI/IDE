@@ -9,7 +9,7 @@ describe("SchemaEditor", () => {
     });
 
     cy.waitEvent("CONTAINER_LOADED");
-    cy.getBySel("edit-api-button").click();
+    cy.openAPIDialog("edit");
   });
 
   it("adds string/number to root object", () => {
