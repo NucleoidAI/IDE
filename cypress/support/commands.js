@@ -217,6 +217,72 @@ Cypress.Commands.add("saveAndOpenAPIDialog", () => {
 // schemaeditor add property
 
 // apiparams add param (name, description, required)
+Cypress.Commands.add("addParam", (name, description, required) => {
+  cy.getBySel("api-params")
+    .find("[data-cy^='param-name-field-'] input")
+    .then(($params) => {
+      const initialParamCount = $params.length;
+
+      cy.getBySel("add-param-button").click();
+
+      cy.getBySel("api-params")
+        .find("[data-cy^='param-name-field-'] input")
+        .should("have.length", initialParamCount + 1);
+
+      cy.getBySel("api-params")
+        .find("[data-cy^='param-name-field-'] input")
+        .eq(initialParamCount)
+        .clear()
+        .type(name);
+
+      cy.getBySel("api-params")
+        .find("[data-cy^='param-description-field-'] input")
+        .eq(initialParamCount)
+        .clear()
+        .type(description);
+
+      if (!required) {
+        cy.getBySel("api-params")
+          .find("[data-cy^='param-required-checkbox-'] input")
+          .eq(initialParamCount)
+          .click();
+      }
+
+      cy.saveAndOpenAPIDialog();
+
+      cy.getBySel("params-toggle").click();
+    });
+});
+
+Cypress.Commands.add(
+  "updateParam",
+  (index, newName, newDescription, required) => {
+    cy.getBySel("api-params")
+      .find(`[data-cy^='param-name-field-'] input`)
+      .eq(index)
+      .clear()
+      .type(newName);
+
+    cy.getBySel("api-params")
+      .find(`[data-cy^='param-description-field-'] input`)
+      .eq(index)
+      .clear()
+      .type(newDescription);
+
+    if (!required) {
+      cy.getBySel("api-params")
+        .find(`[data-cy^='param-required-checkbox-'] input`)
+        .eq(index)
+        .check();
+    } else {
+      cy.getBySel("api-params")
+        .find(`[data-cy^='param-required-checkbox-'] input`)
+        .eq(index)
+        .uncheck();
+    }
+  }
+);
+
 // apiparams verify param
 
 /* eslint-enable */

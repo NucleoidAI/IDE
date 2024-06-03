@@ -14,34 +14,15 @@ describe("APIParams", () => {
   });
 
   it("adds new parameter with required check", () => {
+    const newParamName = "newParam";
+    const newParamDescription = "NewDescription";
+
     cy.getBySel("api-params")
       .find("[data-cy^='param-name-field-'] input")
       .then(($params) => {
         const initialParamCount = $params.length;
 
-        cy.getBySel("add-param-button").click();
-
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-name-field-'] input")
-          .should("have.length", initialParamCount + 1);
-
-        const newParamName = "newParam";
-        const newParamDescription = "NewDescription";
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-name-field-'] input")
-          .eq(initialParamCount)
-          .clear()
-          .type(newParamName);
-
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-description-field-'] input")
-          .eq(initialParamCount)
-          .clear()
-          .type(newParamDescription);
-
-        cy.saveAndOpenAPIDialog();
-
-        cy.getBySel("params-toggle").click();
+        cy.addParam(newParamName, newParamDescription, true);
 
         cy.getBySel("api-params")
           .find("[data-cy^='param-name-field-'] input")
@@ -65,39 +46,14 @@ describe("APIParams", () => {
   });
 
   it("adds new parameter without required check", () => {
+    const newParamName = "newParam";
+    const newParamDescription = "NewDescription";
     cy.getBySel("api-params")
       .find("[data-cy^='param-name-field-'] input")
       .then(($params) => {
         const initialParamCount = $params.length;
 
-        cy.getBySel("add-param-button").click();
-
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-name-field-'] input")
-          .should("have.length", initialParamCount + 1);
-
-        const newParamName = "newParam";
-        const newParamDescription = "NewDescription";
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-name-field-'] input")
-          .eq(initialParamCount)
-          .clear()
-          .type(newParamName);
-
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-description-field-'] input")
-          .eq(initialParamCount)
-          .clear()
-          .type(newParamDescription);
-
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-required-checkbox-'] input")
-          .eq(initialParamCount)
-          .click();
-
-        cy.saveAndOpenAPIDialog();
-
-        cy.getBySel("params-toggle").click();
+        cy.addParam(newParamName, newParamDescription, false);
 
         cy.getBySel("api-params")
           .find("[data-cy^='param-name-field-'] input")
@@ -129,22 +85,7 @@ describe("APIParams", () => {
         const updatedParamName = "updatedParam";
         const updatedParamDescription = "UpdatedDescription";
 
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-name-field-'] input")
-          .eq(0)
-          .clear()
-          .type(updatedParamName);
-
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-description-field-'] input")
-          .eq(0)
-          .clear()
-          .type(updatedParamDescription);
-
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-required-checkbox-'] input")
-          .eq(0)
-          .click();
+        cy.updateParam(0, updatedParamName, updatedParamDescription, false);
 
         cy.saveAndOpenAPIDialog();
 
