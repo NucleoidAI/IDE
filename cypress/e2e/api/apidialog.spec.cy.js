@@ -7,12 +7,12 @@ describe("APIDialog", () => {
     cy.get("@projectId").then((projectId) => {
       cy.visit(`/${projectId}/api?mode=local`);
     });
+
+    cy.waitEvent("CONTAINER_LOADED");
   });
 
   it("navigates between params, body and types", () => {
-    cy.waitEvent("CONTAINER_LOADED").then(() => {
-      cy.getBySel("edit-api-button").click();
-    });
+    cy.getBySel("edit-api-button").click();
 
     cy.getBySel("api-body").should("be.visible");
     cy.getBySel("params-toggle").click();
@@ -24,9 +24,7 @@ describe("APIDialog", () => {
   it("updates schema of request if method is not GET", () => {});
 
   it("updates schema of response", () => {
-    cy.waitEvent("CONTAINER_LOADED").then(() => {
-      cy.getBySel("edit-api-button").click();
-    });
+    cy.getBySel("edit-api-button").click();
 
     cy.getBySel("response-schema-editor")
       .find("[data-cy^='property-type-select-']")
@@ -78,10 +76,8 @@ describe("APIDialog", () => {
   it("displays params view in body if method is GET", () => {});
 
   it("adds resource", () => {
-    cy.waitEvent("CONTAINER_LOADED").then(() => {
-      cy.getBySel("resource-menu").click();
-      cy.getBySel("add-resource").click();
-    });
+    cy.getBySel("resource-menu").click();
+    cy.getBySel("add-resource").click();
 
     cy.getBySel("path-input").type("newresource");
     cy.getBySel("save-api-button").click();
@@ -90,10 +86,8 @@ describe("APIDialog", () => {
   });
 
   it("adds method", () => {
-    cy.waitEvent("CONTAINER_LOADED").then(() => {
-      cy.getBySel("resource-menu").click();
-      cy.getBySel("add-method").click();
-    });
+    cy.getBySel("resource-menu").click();
+    cy.getBySel("add-method").click();
 
     cy.getBySel("method-select").click();
 
@@ -146,10 +140,8 @@ describe("APIDialog", () => {
   it("prevents deleting root resource", () => {});
 
   it("prevents dup method", () => {
-    cy.waitEvent("CONTAINER_LOADED").then(() => {
-      cy.getBySel("resource-menu").click();
-      cy.getBySel("add-method").click();
-    });
+    cy.getBySel("resource-menu").click();
+    cy.getBySel("add-method").click();
 
     cy.getBySel("method-select").click();
 
@@ -165,10 +157,8 @@ describe("APIDialog", () => {
   });
 
   it("prevents dup resource", () => {
-    cy.waitEvent("CONTAINER_LOADED").then(() => {
-      cy.getBySel("resource-menu").click();
-      cy.getBySel("add-resource").click();
-    });
+    cy.getBySel("resource-menu").click();
+    cy.getBySel("add-resource").click();
 
     cy.get('[data-cy^="path-"]')
       .eq(1)

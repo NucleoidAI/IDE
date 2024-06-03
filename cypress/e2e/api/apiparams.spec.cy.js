@@ -8,10 +8,9 @@ describe("APIParams", () => {
       cy.visit(`/${projectId}/api?mode=local`);
     });
 
-    cy.waitEvent("CONTAINER_LOADED").then(() => {
-      cy.getBySel("edit-api-button").click();
-      cy.getBySel("params-toggle").click();
-    });
+    cy.waitEvent("CONTAINER_LOADED");
+    cy.getBySel("edit-api-button").click();
+    cy.getBySel("params-toggle").click();
   });
 
   it("adds new parameter with required check", () => {

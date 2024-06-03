@@ -8,9 +8,8 @@ describe("SchemaEditor", () => {
       cy.visit(`/${projectId}/api?mode=local`);
     });
 
-    cy.waitEvent("CONTAINER_LOADED").then(() => {
-      cy.getBySel("edit-api-button").click();
-    });
+    cy.waitEvent("CONTAINER_LOADED");
+    cy.getBySel("edit-api-button").click();
   });
 
   it("adds string/number to root object", () => {
