@@ -19,16 +19,6 @@ function Chat() {
   const navigate = useNavigate();
   const { chatId } = useParams("chatId");
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-
-  useEffect(() => {
-    if (isMobile) {
-      Settings.collapseCodeBlocks(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   useEffect(() => {
     if (event.name) {
       publish("CONTAINER_LOADED", {
