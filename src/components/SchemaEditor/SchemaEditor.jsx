@@ -215,8 +215,8 @@ const SchemaEditor = forwardRef(
     SchemaEditor.changeProperty = handleChangeProperty;
     return (
       <TreeView
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
+        defaultCollapseIcon={<ExpandMoreIcon data-cy="collapse-icon" />}
+        defaultExpandIcon={<ChevronRightIcon data-cy="expand-icon" />}
         defaultExpanded={["1"]}
         sx={{
           flexGrow: 1,
