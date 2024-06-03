@@ -187,4 +187,33 @@ Cypress.Commands.add("checkEditorValue", (expectedValue) => {
 
 Cypress.Commands.add("normalizeString", (str) => str.replace(/\s/g, ""));
 
+Cypress.Commands.add("openAPIDialog", (mode) => {
+  if (mode === "edit") {
+    cy.getBySel("edit-api-button").click();
+  } else if (mode === "method") {
+    cy.getBySel("resource-menu").click();
+    cy.getBySel("add-method").click();
+  } else if (mode === "resource") {
+    cy.getBySel("resource-menu").click();
+    cy.getBySel("add-resource").click();
+  }
+});
+
+// apidialog save and open again
+
+// apitree select method from api tree
+
+// apitree click on some other method and come back to the same method
+
+// schemaeditor edit name
+// scheemaeditor verify name
+
+// schemaeditor edit type
+// schemaeditor verify type
+
+// schemaeditor add property
+
+// apiparams add param (name, description, required)
+// apiparams verify param
+
 /* eslint-enable */
