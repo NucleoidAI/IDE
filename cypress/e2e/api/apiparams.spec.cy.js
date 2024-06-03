@@ -39,9 +39,7 @@ describe("APIParams", () => {
           .clear()
           .type(newParamDescription);
 
-        cy.getBySel("save-api-button").click();
-
-        cy.getBySel("edit-api-button").click();
+        cy.saveAndOpenAPIDialog();
 
         cy.getBySel("params-toggle").click();
 
@@ -97,9 +95,7 @@ describe("APIParams", () => {
           .eq(initialParamCount)
           .click();
 
-        cy.getBySel("save-api-button").click();
-
-        cy.getBySel("edit-api-button").click();
+        cy.saveAndOpenAPIDialog();
 
         cy.getBySel("params-toggle").click();
 
@@ -150,9 +146,7 @@ describe("APIParams", () => {
           .eq(0)
           .click();
 
-        cy.getBySel("save-api-button").click();
-
-        cy.getBySel("edit-api-button").click();
+        cy.saveAndOpenAPIDialog();
 
         cy.getBySel("params-toggle").click();
 

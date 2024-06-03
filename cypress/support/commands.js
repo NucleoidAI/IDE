@@ -199,7 +199,10 @@ Cypress.Commands.add("openAPIDialog", (mode) => {
   }
 });
 
-// apidialog save and open again
+Cypress.Commands.add("saveAndOpenAPIDialog", () => {
+  cy.getBySel("save-api-button").click();
+  cy.getBySel("edit-api-button").click();
+});
 
 // apitree select method from api tree
 
