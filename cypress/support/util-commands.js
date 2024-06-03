@@ -1,3 +1,5 @@
+//TODO: this commands will be imported from platform library
+
 Cypress.Commands.add("checkStorage", (key, expectedValue) => {
   cy.window().should((win) => {
     const actualValue = win.localStorage.getItem(key);
