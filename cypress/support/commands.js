@@ -216,7 +216,6 @@ Cypress.Commands.add("saveAndOpenAPIDialog", () => {
 
 // schemaeditor add property
 
-// apiparams add param (name, description, required)
 Cypress.Commands.add("addParam", (name, description, required) => {
   cy.getBySel("api-params")
     .find("[data-cy^='param-name-field-'] input")
@@ -283,6 +282,24 @@ Cypress.Commands.add(
   }
 );
 
-// apiparams verify param
+Cypress.Commands.add(
+  "verifyParam",
+  (index, expectedName, expectedDescription, isChecked) => {
+    cy.getBySel("api-params")
+      .find(`[data-cy^='param-name-field-'] input`)
+      .eq(index)
+      .should("have.value", expectedName);
+
+    cy.getBySel("api-params")
+      .find(`[data-cy^='param-description-field-'] input`)
+      .eq(index)
+      .should("have.value", expectedDescription);
+
+    cy.getBySel("api-params")
+      .find(`[data-cy^='param-required-checkbox-'] input`)
+      .eq(index)
+      .should(isChecked ? "be.checked" : "not.be.checked");
+  }
+);
 
 /* eslint-enable */

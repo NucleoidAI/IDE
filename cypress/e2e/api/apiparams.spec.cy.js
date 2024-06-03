@@ -28,26 +28,19 @@ describe("APIParams", () => {
           .find("[data-cy^='param-name-field-'] input")
           .should("have.length", initialParamCount + 1);
 
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-name-field-'] input")
-          .eq(initialParamCount)
-          .should("have.value", newParamName);
-
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-description-field-'] input")
-          .eq(initialParamCount)
-          .should("have.value", newParamDescription);
-
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-required-checkbox-'] input")
-          .eq(initialParamCount)
-          .should("be.checked");
+        cy.verifyParam(
+          initialParamCount,
+          newParamName,
+          newParamDescription,
+          true
+        );
       });
   });
 
   it("adds new parameter without required check", () => {
     const newParamName = "newParam";
     const newParamDescription = "NewDescription";
+
     cy.getBySel("api-params")
       .find("[data-cy^='param-name-field-'] input")
       .then(($params) => {
@@ -59,20 +52,12 @@ describe("APIParams", () => {
           .find("[data-cy^='param-name-field-'] input")
           .should("have.length", initialParamCount + 1);
 
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-name-field-'] input")
-          .eq(initialParamCount)
-          .should("have.value", newParamName);
-
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-description-field-'] input")
-          .eq(initialParamCount)
-          .should("have.value", newParamDescription);
-
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-required-checkbox-'] input")
-          .eq(initialParamCount)
-          .should("not.be.checked");
+        cy.verifyParam(
+          initialParamCount,
+          newParamName,
+          newParamDescription,
+          false
+        );
       });
   });
 
@@ -95,20 +80,7 @@ describe("APIParams", () => {
           .find("[data-cy^='param-name-field-'] input")
           .should("have.length", initialParamCount);
 
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-name-field-'] input")
-          .eq(0)
-          .should("have.value", updatedParamName);
-
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-description-field-'] input")
-          .eq(0)
-          .should("have.value", updatedParamDescription);
-
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-required-checkbox-'] input")
-          .eq(0)
-          .should("be.checked");
+        cy.verifyParam(0, updatedParamName, updatedParamDescription, true);
       });
   });
 });
