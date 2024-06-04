@@ -72,7 +72,7 @@ describe("API Page", () => {
 
   it("updates summary and description", () => {
     cy.waitEvent("CONTAINER_LOADED");
-    cy.get('[data-cy^="method-"]').first().click();
+    cy.apitreeSelectMethod("/GET");
 
     const newSummary = "New Summary";
     const newDescription = "New Description";
@@ -80,8 +80,7 @@ describe("API Page", () => {
     cy.getBySel("summary-textfield").clear().type(newSummary);
     cy.getBySel("description-textfield").clear().type(newDescription);
 
-    cy.get('[data-cy^="method-"]').eq(1).click();
-    cy.get('[data-cy^="method-"]').first().click();
+    cy.apitreeClickOtherMethodAndReturn("/GET", "/POST");
 
     cy.getBySel("summary-textfield")
       .find("input")

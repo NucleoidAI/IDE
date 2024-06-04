@@ -204,9 +204,17 @@ Cypress.Commands.add("saveAndOpenAPIDialog", () => {
   cy.getBySel("edit-api-button").click();
 });
 
-// apitree select method from api tree
+Cypress.Commands.add("apitreeSelectMethod", (methodName) => {
+  cy.get(`[data-cy^="method-${methodName}"]`).click();
+});
 
-// apitree click on some other method and come back to the same method
+Cypress.Commands.add(
+  "apitreeClickOtherMethodAndReturn",
+  (originalMethod, otherMethod) => {
+    cy.get(`[data-cy^="method-${otherMethod}"]`).click();
+    cy.get(`[data-cy^="method-${originalMethod}"]`).click();
+  }
+);
 
 Cypress.Commands.add("schemaEditorEditType", (propertyIndex, newType) => {
   cy.getBySel("response-schema-editor")
