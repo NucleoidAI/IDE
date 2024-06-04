@@ -22,9 +22,7 @@ describe("APITree", () => {
   it("displays GET, PUT, POST, DEL and PATCH methods", () => {
     cy.get('[data-cy^="path-"]')
       .first()
-      .then(($path) => {
-        const pathName = $path.attr("data-cy");
-
+      .then(() => {
         const methods = ["PUT", "POST", "DEL", "PATCH"];
         methods.forEach(() => {
           cy.getBySel("resource-menu").click();

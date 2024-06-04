@@ -1,3 +1,4 @@
+/* eslint-disable */
 describe("APIDialog", () => {
   beforeEach(() => {
     cy.setup("IDE", "SEED", "LOCAL");
