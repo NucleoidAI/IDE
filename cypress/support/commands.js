@@ -208,13 +208,30 @@ Cypress.Commands.add("saveAndOpenAPIDialog", () => {
 
 // apitree click on some other method and come back to the same method
 
-// schemaeditor edit name
-// scheemaeditor verify name
+Cypress.Commands.add("schemaEditorEditType", (propertyIndex, newType) => {
+  cy.getBySel("response-schema-editor")
+    .find(`[data-cy^='property-type-select-']`)
+    .eq(propertyIndex)
+    .click();
+  cy.getBySel(`property-type-option-${newType}`).click();
+});
 
-// schemaeditor edit type
-// schemaeditor verify type
+Cypress.Commands.add(
+  "schemaEditorVerifyType",
+  (propertyIndex, expectedType) => {
+    cy.getBySel("response-schema-editor")
+      .find(`[data-cy^='property-type-select-']`)
+      .eq(propertyIndex)
+      .should("contain", expectedType);
+  }
+);
 
-// schemaeditor add property
+Cypress.Commands.add("schemaEditorAddProperty", (parentIndex = 0) => {
+  cy.getBySel("response-schema-editor")
+    .find(`[data-cy^='add-property-button-']`)
+    .eq(parentIndex)
+    .click();
+});
 
 Cypress.Commands.add("addParam", (name, description, required) => {
   cy.getBySel("api-params")

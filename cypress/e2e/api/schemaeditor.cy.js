@@ -18,34 +18,16 @@ describe("SchemaEditor", () => {
       .then(($properties) => {
         const initialPropertyCount = $properties.length;
 
-        cy.getBySel("response-schema-editor")
-          .find("[data-cy^='add-property-button-']")
-          .first()
-          .click()
-          .click();
+        cy.schemaEditorAddProperty();
+        cy.schemaEditorAddProperty();
 
-        cy.getBySel("response-schema-editor")
-          .find("[data-cy^='property-type-select-']")
-          .eq(initialPropertyCount)
-          .click();
-        cy.getBySel("property-type-option-number").click();
-
-        cy.getBySel("response-schema-editor")
-          .find("[data-cy^='property-type-select-']")
-          .eq(initialPropertyCount + 1)
-          .click();
-        cy.getBySel("property-type-option-string").click();
+        cy.schemaEditorEditType(initialPropertyCount, "number");
+        cy.schemaEditorEditType(initialPropertyCount + 1, "string");
 
         cy.saveAndOpenAPIDialog();
 
-        cy.getBySel("response-schema-editor")
-          .find("[data-cy^='property-type-select-']")
-          .eq(initialPropertyCount)
-          .should("contain", "number");
-        cy.getBySel("response-schema-editor")
-          .find("[data-cy^='property-type-select-']")
-          .eq(initialPropertyCount + 1)
-          .should("contain", "string");
+        cy.schemaEditorVerifyType(initialPropertyCount, "number");
+        cy.schemaEditorVerifyType(initialPropertyCount + 1, "string");
       });
   });
 
@@ -55,74 +37,34 @@ describe("SchemaEditor", () => {
       .then(($properties) => {
         const initialPropertyCount = $properties.length;
 
-        cy.getBySel("response-schema-editor")
-          .find("[data-cy^='add-property-button-']")
-          .first()
-          .click();
+        cy.schemaEditorAddProperty();
 
-        cy.getBySel("response-schema-editor")
-          .find("[data-cy^='property-type-select-']")
-          .eq(initialPropertyCount)
-          .click();
-        cy.getBySel("property-type-option-Order").click();
+        cy.schemaEditorEditType(initialPropertyCount, "Order");
 
         cy.saveAndOpenAPIDialog();
 
-        cy.getBySel("response-schema-editor")
-          .find("[data-cy^='property-type-select-']")
-          .eq(initialPropertyCount)
-          .should("contain", "Order");
+        cy.schemaEditorVerifyType(initialPropertyCount, "Order");
       });
   });
 
   it("adds TS type to root array", () => {
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='property-type-select-']")
-      .first()
-      .click();
-    cy.getBySel("property-type-option-array").click();
-
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='property-type-select-']")
-      .eq(1)
-      .click();
-    cy.getBySel("property-type-option-Order").click();
+    cy.schemaEditorEditType(0, "array");
+    cy.schemaEditorEditType(1, "Order");
 
     cy.saveAndOpenAPIDialog();
 
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='property-type-select-']")
-      .first()
-      .should("contain", "array");
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='property-type-select-']")
-      .eq(1)
-      .should("contain", "Order");
+    cy.schemaEditorVerifyType(0, "array");
+    cy.schemaEditorVerifyType(1, "Order");
   });
 
   it("adds string/number to root array", () => {
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='property-type-select-']")
-      .first()
-      .click();
-    cy.getBySel("property-type-option-array").click();
-
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='property-type-select-']")
-      .eq(1)
-      .click();
-    cy.getBySel("property-type-option-number").click();
+    cy.schemaEditorEditType(0, "array");
+    cy.schemaEditorEditType(1, "number");
 
     cy.saveAndOpenAPIDialog();
 
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='property-type-select-']")
-      .first()
-      .should("contain", "array");
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='property-type-select-']")
-      .eq(1)
-      .should("contain", "number");
+    cy.schemaEditorVerifyType(0, "array");
+    cy.schemaEditorVerifyType(1, "number");
   });
 
   it("prevents choosing string/number as root object", () => {
@@ -136,32 +78,17 @@ describe("SchemaEditor", () => {
   });
 
   it("adds string/number to nested object", () => {
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='add-property-button-']")
-      .first()
-      .click();
+    cy.schemaEditorAddProperty();
+    cy.schemaEditorEditType(1, "object");
 
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='property-type-select-']")
-      .eq(1)
-      .click();
-    cy.getBySel("property-type-option-object").click();
-
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='add-property-button-']")
-      .eq(1)
-      .click();
+    cy.schemaEditorAddProperty(1);
 
     cy.getBySel("response-schema-editor")
       .find("[data-cy='expand-icon']")
       .first()
       .click();
 
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='property-type-select-']")
-      .eq(2)
-      .click();
-    cy.getBySel("property-type-option-number").click();
+    cy.schemaEditorEditType(2, "number");
 
     cy.saveAndOpenAPIDialog();
 
@@ -170,39 +97,21 @@ describe("SchemaEditor", () => {
       .first()
       .click();
 
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='property-type-select-']")
-      .eq(2)
-      .should("contain", "number");
+    cy.schemaEditorVerifyType(2, "number");
   });
 
   it("adds array to nested object", () => {
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='add-property-button-']")
-      .first()
-      .click();
+    cy.schemaEditorAddProperty();
+    cy.schemaEditorEditType(1, "object");
 
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='property-type-select-']")
-      .eq(1)
-      .click();
-    cy.getBySel("property-type-option-object").click();
-
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='add-property-button-']")
-      .eq(1)
-      .click();
+    cy.schemaEditorAddProperty(1);
 
     cy.getBySel("response-schema-editor")
       .find("[data-cy='expand-icon']")
       .first()
       .click();
 
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='property-type-select-']")
-      .eq(2)
-      .click();
-    cy.getBySel("property-type-option-array").click();
+    cy.schemaEditorEditType(2, "array");
 
     cy.saveAndOpenAPIDialog();
 
@@ -211,39 +120,21 @@ describe("SchemaEditor", () => {
       .first()
       .click();
 
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='property-type-select-']")
-      .eq(2)
-      .should("contain", "array");
+    cy.schemaEditorVerifyType(2, "array");
   });
 
   it("adds TS type to nested object", () => {
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='add-property-button-']")
-      .first()
-      .click();
+    cy.schemaEditorAddProperty();
+    cy.schemaEditorEditType(1, "object");
 
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='property-type-select-']")
-      .eq(1)
-      .click();
-    cy.getBySel("property-type-option-object").click();
-
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='add-property-button-']")
-      .eq(1)
-      .click();
+    cy.schemaEditorAddProperty(1);
 
     cy.getBySel("response-schema-editor")
       .find("[data-cy='expand-icon']")
       .first()
       .click();
 
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='property-type-select-']")
-      .eq(2)
-      .click();
-    cy.getBySel("property-type-option-Order").click();
+    cy.schemaEditorEditType(2, "Order");
 
     cy.saveAndOpenAPIDialog();
 
@@ -252,34 +143,19 @@ describe("SchemaEditor", () => {
       .first()
       .click();
 
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='property-type-select-']")
-      .eq(2)
-      .should("contain", "Order");
+    cy.schemaEditorVerifyType(2, "Order");
   });
 
-  it("adds TS type to nested array", () => {
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='add-property-button-']")
-      .first()
-      .click();
-
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='property-type-select-']")
-      .eq(1)
-      .click();
-    cy.getBySel("property-type-option-array").click();
+  it.only("adds TS type to nested array", () => {
+    cy.schemaEditorAddProperty();
+    cy.schemaEditorEditType(1, "array");
 
     cy.getBySel("response-schema-editor")
       .find("[data-cy='expand-icon']")
       .first()
       .click();
 
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='property-type-select-']")
-      .eq(2)
-      .click();
-    cy.getBySel("property-type-option-Order").click();
+    cy.schemaEditorEditType(2, "Order");
 
     cy.saveAndOpenAPIDialog();
 
@@ -288,9 +164,6 @@ describe("SchemaEditor", () => {
       .first()
       .click();
 
-    cy.getBySel("response-schema-editor")
-      .find("[data-cy^='property-type-select-']")
-      .eq(2)
-      .should("contain", "Order");
+    cy.schemaEditorVerifyType(2, "Order");
   });
 });
