@@ -1,4 +1,3 @@
-/* eslint-disable */
 describe("API Page", () => {
   beforeEach(() => {
     cy.setup("IDE", "SEED", "LOCAL");
@@ -73,7 +72,7 @@ describe("API Page", () => {
 
   it("updates summary and description", () => {
     cy.waitEvent("CONTAINER_LOADED");
-    cy.apitreeSelectMethod("/GET");
+    cy.get('[data-cy^="method-"]').first().click();
 
     const newSummary = "New Summary";
     const newDescription = "New Description";
@@ -81,7 +80,8 @@ describe("API Page", () => {
     cy.getBySel("summary-textfield").clear().type(newSummary);
     cy.getBySel("description-textfield").clear().type(newDescription);
 
-    cy.apitreeClickOtherMethodAndReturn("/GET", "/POST");
+    cy.get('[data-cy^="method-"]').eq(1).click();
+    cy.get('[data-cy^="method-"]').first().click();
 
     cy.getBySel("summary-textfield")
       .find("input")
