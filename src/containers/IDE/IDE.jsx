@@ -26,6 +26,7 @@ import { Outlet, useParams } from "react-router-dom"; // eslint-disable-line
 import React, { useEffect } from "react";
 import { publish, useEvent } from "@nucleoidai/react-event";
 import { useMediaQuery, useTheme } from "@mui/material";
+import sandboxService from "../../sandboxService";
 
 let loaded = false;
 
@@ -81,6 +82,13 @@ function IDE() {
       type: "TERMINAL",
       from: "URL",
     });
+
+    publish("RUNTIME_CONNECTION", {
+      status: false,
+      metrics: { total: 100, free: 50 },
+    });
+
+    sandboxService.setTerminalUrl(Settings.url.terminal());
 
     const context = Context.withBlank();
     context.get = (prop) => Context.resolve(context, prop);
