@@ -31,6 +31,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react"; //eslint-disable-line
 import { publish, useEvent } from "@nucleoidai/react-event";
+import Path from "../../utils/Path";
 
 const ProcessDrawer = () => {
   const theme = useTheme();
@@ -326,6 +327,8 @@ function ApiButton() {
     runSandbox(context, ReactContext.get("specification"), Settings.runtime());
   };
 
+  const mode = Path.getMode();
+
   return (
     <>
       {loading ? (
@@ -340,7 +343,7 @@ function ApiButton() {
             onMouseEnter={(e) => {
               e.currentTarget.focus();
             }}
-            disabled={errors.length > 0}
+            disabled={mode === "terminal" || errors.length > 0}
           >
             <PlayCircleFilledIcon variant="pageIcon" />
           </ListItemButton>
