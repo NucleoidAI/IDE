@@ -29,6 +29,7 @@ import {
   Tooltip,
   useMediaQuery,
 } from "@mui/material";
+import Path from "../../utils/Path";
 
 const withFilter = (Component) => {
   return (props) => {
@@ -207,6 +208,7 @@ const MenuLinks = (props) => {
 
   const { query, id } = props;
 
+  const mode = Path.getMode();
   return (
     <>
       {props.list.map(({ title, link, anchor, icon }) => {
@@ -214,8 +216,11 @@ const MenuLinks = (props) => {
           <React.Fragment key={title}>
             <ListItemButton
               disabled={
-                runtimeConnection.status === false &&
-                (title === "Query" || title === "Logs")
+                mode === "terminal"
+                  ? runtimeConnection.status === true ||
+                    !(title === "Query" || title === "Logs")
+                  : runtimeConnection.status === false &&
+                    (title === "Query" || title === "Logs")
               }
               sx={styles.listItem}
               component={Link}
@@ -257,12 +262,16 @@ const MenuItem = ({ title, link, anchor, icon, query, id }) => {
       free: 50,
     },
   });
+  const mode = Path.getMode();
   return (
     <ListItemButton
       data-cy={`menu-${title}`}
       disabled={
-        runtimeConnection.status === false &&
-        (title === "Query" || title === "Logs")
+        mode === "terminal"
+          ? runtimeConnection.status === true ||
+            !(title === "Query" || title === "Logs")
+          : runtimeConnection.status === false &&
+            (title === "Query" || title === "Logs")
       }
       key={title}
       component={Link}
