@@ -75,6 +75,19 @@ function IDE() {
     return context;
   }
 
+  function getContextFromTerminal(projectId) {
+    publish("PAGE_LOADED", {
+      id: projectId,
+      type: "TERMINAL",
+      from: "URL",
+    });
+
+    const context = Context.withBlank();
+    context.get = (prop) => Context.resolve(context, prop);
+
+    return context;
+  }
+
   async function project(projectId) {
     const [projectResult, serviceResult] = await Promise.all([
       service.getProject(projectId),
@@ -210,6 +223,9 @@ function IDE() {
         const context = getContextFromStorage(id);
         if (!context) return;
         initVfs(context);
+        return setReactContext(initContext(context));
+      } else if (mode === "terminal") {
+        const context = getContextFromTerminal(id);
         return setReactContext(initContext(context));
       } else {
         if (id === "sample") {
