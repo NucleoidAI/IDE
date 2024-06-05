@@ -72,7 +72,8 @@ describe("APIParams", () => {
 
         cy.updateParam(0, updatedParamName, updatedParamDescription, false);
 
-        cy.saveAndOpenAPIDialog();
+        cy.getBySel("save-api-button").click();
+        cy.openAPIDialog("EDIT").click();
 
         cy.getBySel("params-toggle").click();
 

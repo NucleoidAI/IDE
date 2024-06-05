@@ -24,7 +24,8 @@ describe("SchemaEditor", () => {
         cy.schemaEditorEditType(initialPropertyCount, "number");
         cy.schemaEditorEditType(initialPropertyCount + 1, "string");
 
-        cy.saveAndOpenAPIDialog();
+        cy.getBySel("save-api-button").click();
+        cy.openAPIDialog("EDIT").click();
 
         cy.schemaEditorVerifyType(initialPropertyCount, "number");
         cy.schemaEditorVerifyType(initialPropertyCount + 1, "string");
@@ -41,7 +42,8 @@ describe("SchemaEditor", () => {
 
         cy.schemaEditorEditType(initialPropertyCount, "Order");
 
-        cy.saveAndOpenAPIDialog();
+        cy.getBySel("save-api-button").click();
+        cy.openAPIDialog("EDIT").click();
 
         cy.schemaEditorVerifyType(initialPropertyCount, "Order");
       });
@@ -51,7 +53,8 @@ describe("SchemaEditor", () => {
     cy.schemaEditorEditType(0, "array");
     cy.schemaEditorEditType(1, "Order");
 
-    cy.saveAndOpenAPIDialog();
+    cy.getBySel("save-api-button").click();
+    cy.openAPIDialog("EDIT").click();
 
     cy.schemaEditorVerifyType(0, "array");
     cy.schemaEditorVerifyType(1, "Order");
@@ -61,7 +64,8 @@ describe("SchemaEditor", () => {
     cy.schemaEditorEditType(0, "array");
     cy.schemaEditorEditType(1, "number");
 
-    cy.saveAndOpenAPIDialog();
+    cy.getBySel("save-api-button").click();
+    cy.openAPIDialog("EDIT").click();
 
     cy.schemaEditorVerifyType(0, "array");
     cy.schemaEditorVerifyType(1, "number");
@@ -90,7 +94,8 @@ describe("SchemaEditor", () => {
 
     cy.schemaEditorEditType(2, "number");
 
-    cy.saveAndOpenAPIDialog();
+    cy.getBySel("save-api-button").click();
+    cy.openAPIDialog("EDIT").click();
 
     cy.getBySel("response-schema-editor")
       .find("[data-cy='expand-icon']")
@@ -113,7 +118,8 @@ describe("SchemaEditor", () => {
 
     cy.schemaEditorEditType(2, "array");
 
-    cy.saveAndOpenAPIDialog();
+    cy.getBySel("save-api-button").click();
+    cy.openAPIDialog("EDIT").click();
 
     cy.getBySel("response-schema-editor")
       .find("[data-cy='expand-icon']")
@@ -136,7 +142,8 @@ describe("SchemaEditor", () => {
 
     cy.schemaEditorEditType(2, "Order");
 
-    cy.saveAndOpenAPIDialog();
+    cy.getBySel("save-api-button").click();
+    cy.openAPIDialog("EDIT").click();
 
     cy.getBySel("response-schema-editor")
       .find("[data-cy='expand-icon']")
@@ -157,7 +164,8 @@ describe("SchemaEditor", () => {
 
     cy.schemaEditorEditType(2, "Order");
 
-    cy.saveAndOpenAPIDialog();
+    cy.getBySel("save-api-button").click();
+    cy.openAPIDialog("EDIT").click();
 
     cy.getBySel("response-schema-editor")
       .find("[data-cy='expand-icon']")

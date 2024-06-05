@@ -54,7 +54,8 @@ describe("APIDialog", () => {
 
         cy.getBySel("property-type-option-number").click();
 
-        cy.saveAndOpenAPIDialog();
+        cy.getBySel("save-api-button").click();
+        cy.openAPIDialog("EDIT").click();
 
         cy.getBySel("response-schema-editor")
           .find("[data-cy^='property-type-select-']")
@@ -79,7 +80,8 @@ describe("APIDialog", () => {
     cy.openAPIDialog("resource");
 
     cy.getBySel("path-input").type("newresource");
-    cy.saveAndOpenAPIDialog();
+    cy.getBySel("save-api-button").click();
+    cy.openAPIDialog("EDIT").click();
 
     cy.getBySel("path-text").should("contain.text", "/newresource");
   });
@@ -99,7 +101,8 @@ describe("APIDialog", () => {
 
             cy.get("body").click();
 
-            cy.saveAndOpenAPIDialog();
+            cy.getBySel("save-api-button").click();
+            cy.openAPIDialog("EDIT").click();
 
             cy.getBySel("method-text").should("contain.text", firstMethod);
           });

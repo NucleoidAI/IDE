@@ -199,11 +199,6 @@ Cypress.Commands.add("openAPIDialog", (mode) => {
   }
 });
 
-Cypress.Commands.add("saveAndOpenAPIDialog", () => {
-  cy.getBySel("save-api-button").click();
-  cy.getBySel("edit-api-button").click();
-});
-
 Cypress.Commands.add("apitreeSelectMethod", (methodName) => {
   cy.get(`[data-cy^="method-${methodName}"]`).click();
 });
@@ -272,7 +267,8 @@ Cypress.Commands.add("addParam", (name, description, required) => {
           .click();
       }
 
-      cy.saveAndOpenAPIDialog();
+      cy.getBySel("save-api-button").click();
+      cy.openAPIDialog("EDIT").click();
 
       cy.getBySel("params-toggle").click();
     });
