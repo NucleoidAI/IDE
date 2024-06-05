@@ -188,12 +188,12 @@ Cypress.Commands.add("checkEditorValue", (expectedValue) => {
 Cypress.Commands.add("normalizeString", (str) => str.replace(/\s/g, ""));
 
 Cypress.Commands.add("openAPIDialog", (mode) => {
-  if (mode === "edit") {
+  if (mode === "EDIT") {
     cy.getBySel("edit-api-button").click();
-  } else if (mode === "method") {
+  } else if (mode === "METHOD") {
     cy.getBySel("resource-menu").click();
     cy.getBySel("add-method").click();
-  } else if (mode === "resource") {
+  } else if (mode === "RESOURCE") {
     cy.getBySel("resource-menu").click();
     cy.getBySel("add-resource").click();
   }
@@ -268,7 +268,7 @@ Cypress.Commands.add("addParam", (name, description, required) => {
       }
 
       cy.getBySel("save-api-button").click();
-      cy.openAPIDialog("EDIT").click();
+      cy.openAPIDialog("EDIT");
 
       cy.getBySel("params-toggle").click();
     });

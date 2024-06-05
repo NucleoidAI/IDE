@@ -9,7 +9,7 @@ describe("APIParams", () => {
     });
 
     cy.waitEvent("CONTAINER_LOADED");
-    cy.openAPIDialog("edit");
+    cy.openAPIDialog("EDIT");
     cy.getBySel("params-toggle").click();
   });
 
@@ -73,7 +73,7 @@ describe("APIParams", () => {
         cy.updateParam(0, updatedParamName, updatedParamDescription, false);
 
         cy.getBySel("save-api-button").click();
-        cy.openAPIDialog("EDIT").click();
+        cy.openAPIDialog("EDIT");
 
         cy.getBySel("params-toggle").click();
 

@@ -13,7 +13,7 @@ describe("APIDialog", () => {
   });
 
   it("navigates between params, body and types", () => {
-    cy.openAPIDialog("edit");
+    cy.openAPIDialog("EDIT");
 
     cy.getBySel("api-body").should("be.visible");
     cy.getBySel("params-toggle").click();
@@ -25,7 +25,7 @@ describe("APIDialog", () => {
   it("updates schema of request if method is not GET", () => {});
 
   it("updates schema of response", () => {
-    cy.openAPIDialog("edit");
+    cy.openAPIDialog("EDIT");
 
     cy.getBySel("response-schema-editor")
       .find("[data-cy^='property-type-select-']")
@@ -55,7 +55,7 @@ describe("APIDialog", () => {
         cy.getBySel("property-type-option-number").click();
 
         cy.getBySel("save-api-button").click();
-        cy.openAPIDialog("EDIT").click();
+        cy.openAPIDialog("EDIT");
 
         cy.getBySel("response-schema-editor")
           .find("[data-cy^='property-type-select-']")
@@ -77,17 +77,16 @@ describe("APIDialog", () => {
   it("displays params view in body if method is GET", () => {});
 
   it("adds resource", () => {
-    cy.openAPIDialog("resource");
+    cy.openAPIDialog("RESOURCE");
 
     cy.getBySel("path-input").type("newresource");
     cy.getBySel("save-api-button").click();
-    cy.openAPIDialog("EDIT").click();
-
+    cy.openAPIDialog("EDIT");
     cy.getBySel("path-text").should("contain.text", "/newresource");
   });
 
   it("adds method", () => {
-    cy.openAPIDialog("method");
+    cy.openAPIDialog("METHOD");
 
     cy.getBySel("method-select").click();
 
@@ -102,7 +101,7 @@ describe("APIDialog", () => {
             cy.get("body").click();
 
             cy.getBySel("save-api-button").click();
-            cy.openAPIDialog("EDIT").click();
+            cy.openAPIDialog("EDIT");
 
             cy.getBySel("method-text").should("contain.text", firstMethod);
           });
@@ -120,7 +119,7 @@ describe("APIDialog", () => {
             const methodName = $method.attr("data-cy");
             cy.wrap($method).click();
 
-            cy.openAPIDialog("edit");
+            cy.openAPIDialog("EDIT");
 
             cy.getBySel("delete-api-button").click();
 
@@ -139,7 +138,7 @@ describe("APIDialog", () => {
   it("prevents deleting root resource", () => {});
 
   it("prevents dup method", () => {
-    cy.openAPIDialog("method");
+    cy.openAPIDialog("METHOD");
 
     cy.getBySel("method-select").click();
 
@@ -155,7 +154,7 @@ describe("APIDialog", () => {
   });
 
   it("prevents dup resource", () => {
-    cy.openAPIDialog("resource");
+    cy.openAPIDialog("RESOURCE");
 
     cy.get('[data-cy^="path-"]')
       .eq(1)

@@ -12,7 +12,7 @@ describe("API Page", () => {
   });
 
   it("opens APIDialog for given method and resource with right click", () => {
-    cy.openAPIDialog("edit");
+    cy.openAPIDialog("EDIT");
 
     cy.getBySel("method-text").should("have.text", "GET");
     cy.getBySel("path-text").should("have.text", "/ ");

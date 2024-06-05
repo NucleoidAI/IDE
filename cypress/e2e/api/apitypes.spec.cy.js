@@ -8,7 +8,7 @@ describe("APITypes", () => {
       cy.visit(`/${projectId}/api?mode=local`);
     });
     cy.waitEvent("CONTAINER_LOADED");
-    cy.openAPIDialog("edit");
+    cy.openAPIDialog("EDIT");
   });
 
   it("displays TS class", () => {
