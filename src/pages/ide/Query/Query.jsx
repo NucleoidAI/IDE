@@ -9,6 +9,7 @@ import { useEvent } from "@nucleoidai/react-event";
 import { useNavigate } from "react-router-dom";
 
 import React, { useState } from "react";
+import Path from "../../../utils/Path";
 
 function Query() {
   const [event] = useEvent("WIDGET_LOADED", { name: null });
@@ -21,12 +22,15 @@ function Query() {
 
   const [runtimeConnection] = useEvent("RUNTIME_CONNECTION");
   const navigate = useNavigate();
+  const mode = Path.getMode();
 
   React.useEffect(() => {
-    if (!runtimeConnection) {
+    if (mode === "terminal") {
+      navigate("?mode=terminal");
+    } else if (!runtimeConnection) {
       navigate("/");
     }
-  }, [runtimeConnection, navigate]);
+  }, [runtimeConnection, navigate, mode]);
 
   useEffect(() => {
     if (event.name) {

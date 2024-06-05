@@ -10,18 +10,22 @@ import { v4 as uuid } from "uuid";
 
 import { Box, CircularProgress, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import Path from "../../../utils/Path";
 
 function Logs() {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [runtimeConnection] = useEvent("RUNTIME_CONNECTION");
   const navigate = useNavigate();
+  const mode = Path.getMode();
 
   React.useEffect(() => {
-    if (!runtimeConnection) {
+    if (mode === "terminal") {
+      navigate("?mode=terminal");
+    } else if (!runtimeConnection) {
       navigate("/");
     }
-  }, [runtimeConnection, navigate]);
+  }, [runtimeConnection, navigate, mode]);
 
   useEffect(() => {
     setLoading(true);
