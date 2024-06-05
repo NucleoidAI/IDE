@@ -1,4 +1,5 @@
 import { storage } from "@nucleoidjs/webstorage";
+import Path from "./utils/Path";
 const Settings = {
   projects: [],
   dialog: {},
@@ -8,7 +9,12 @@ const Settings = {
       if (url) {
         storage.set("ide", "terminal", url);
       } else {
-        return storage.get("ide", "terminal");
+        const mode = Path.getMode();
+        if (mode === "terminal") {
+          return "http://localhost:8448";
+        } else {
+          return storage.get("ide", "terminal");
+        }
       }
     },
     app: (url) => {
