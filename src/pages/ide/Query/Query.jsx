@@ -25,12 +25,10 @@ function Query() {
   const mode = Path.getMode();
 
   React.useEffect(() => {
-    if (mode === "terminal") {
-      navigate("?mode=terminal");
-    } else if (!runtimeConnection) {
+    if (!runtimeConnection) {
       navigate("/");
     }
-  }, [runtimeConnection, navigate, mode]);
+  }, [runtimeConnection, navigate]);
 
   useEffect(() => {
     if (event.name) {
