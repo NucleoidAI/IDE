@@ -9,12 +9,7 @@ const Settings = {
       if (url) {
         storage.set("ide", "terminal", url);
       } else {
-        const mode = Path.getMode();
-        if (mode === "terminal") {
-          return "http://localhost:8448";
-        } else {
-          return storage.get("ide", "terminal");
-        }
+        return storage.get("ide", "terminal");
       }
     },
     app: (url) => {
