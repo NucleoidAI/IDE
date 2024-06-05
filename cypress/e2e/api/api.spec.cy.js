@@ -1,3 +1,4 @@
+/* eslint-disable */
 describe("API Page", () => {
   beforeEach(() => {
     cy.setup("IDE", "SEED", "LOCAL");
