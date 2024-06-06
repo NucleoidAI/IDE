@@ -2,6 +2,7 @@ import Backdrop from "@mui/material/Backdrop";
 import { Chat } from "@mui/icons-material";
 import DownloadIcon from "@mui/icons-material/Download";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import Path from "../../utils/Path";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
@@ -31,7 +32,6 @@ import {
 } from "@mui/material";
 import React, { useState } from "react"; //eslint-disable-line
 import { publish, useEvent } from "@nucleoidai/react-event";
-import Path from "../../utils/Path";
 
 const ProcessDrawer = () => {
   const theme = useTheme();

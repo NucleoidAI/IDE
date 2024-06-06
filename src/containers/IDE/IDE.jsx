@@ -14,6 +14,7 @@ import SwaggerDialog from "../../components/SwaggerDialog";
 import { contextReducer } from "../../context/reducer";
 import { contextToMap } from "../../utils/Parser";
 import routes from "../../routes";
+import sandboxService from "../../sandboxService";
 import service from "../../service";
 import { storage } from "@nucleoidjs/webstorage";
 import styles from "./styles";
@@ -26,7 +27,6 @@ import { Outlet, useParams } from "react-router-dom"; // eslint-disable-line
 import React, { useEffect } from "react";
 import { publish, useEvent } from "@nucleoidai/react-event";
 import { useMediaQuery, useTheme } from "@mui/material";
-import sandboxService from "../../sandboxService";
 
 let loaded = false;
 

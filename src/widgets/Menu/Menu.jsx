@@ -4,6 +4,7 @@ import LgDrawerStyled from "../../components/LgDrawerStyled";
 import { Link } from "react-router-dom"; // eslint-disable-line
 import Logo from "../../components/Logo";
 import OpenSwaggerDialog from "../../components/OpenSwaggerDialog";
+import Path from "../../utils/Path";
 import ProjectSelect from "../../components/ProjectSelect";
 import ProjectSelectSmall from "../../components/ProjectSelectSmall/ProjectSelectSmall";
 import React from "react";
@@ -29,7 +30,6 @@ import {
   Tooltip,
   useMediaQuery,
 } from "@mui/material";
-import Path from "../../utils/Path";
 
 const withFilter = (Component) => {
   return (props) => {
