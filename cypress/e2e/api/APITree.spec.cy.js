@@ -21,7 +21,7 @@ describe("APITree", () => {
       .first()
       .then(() => {
         const methods = ["PUT", "POST", "DEL", "PATCH"];
-        methods.forEach((method) => {
+        methods.forEach(() => {
           cy.getBySel("resource-menu").click();
           cy.getBySel("add-method").click();
           cy.getBySel("save-api-button").click();
