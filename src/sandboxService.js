@@ -112,6 +112,7 @@ const sandboxService = {
   createSandbox,
   getLandingLevel,
   getAppUrl,
+  setTerminalUrl,
   getTerminalUrl,
   get,
   query,

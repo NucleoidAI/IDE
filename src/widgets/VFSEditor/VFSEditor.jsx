@@ -119,7 +119,10 @@ const VFSEditor = React.forwardRef((props, ref) => {
         project: context.project,
       });
     } else if (mode === "terminal") {
-      console.log("Terminal mode is not supported yet.");
+      publish("RUNTIME_CONNECTION", {
+        status: true,
+        metrics: { total: 100, free: 50 },
+      });
     }
     publish("CONTEXT_SAVED", { contextId: id, to: mode });
     publish("CONTEXT_CHANGED", {

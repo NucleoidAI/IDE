@@ -2,6 +2,7 @@ import Backdrop from "@mui/material/Backdrop";
 import { Chat } from "@mui/icons-material";
 import DownloadIcon from "@mui/icons-material/Download";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import Path from "../../utils/Path";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
@@ -326,6 +327,8 @@ function ApiButton() {
     runSandbox(context, ReactContext.get("specification"), Settings.runtime());
   };
 
+  const mode = Path.getMode();
+
   return (
     <>
       {loading ? (
@@ -340,7 +343,7 @@ function ApiButton() {
             onMouseEnter={(e) => {
               e.currentTarget.focus();
             }}
-            disabled={errors.length > 0}
+            disabled={mode === "terminal" || errors.length > 0}
           >
             <PlayCircleFilledIcon variant="pageIcon" />
           </ListItemButton>
