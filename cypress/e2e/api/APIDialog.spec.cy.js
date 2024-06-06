@@ -29,49 +29,47 @@ describe("APIDialog", () => {
 
     cy.getBySel("response-schema-editor")
       .find("[data-cy^='property-type-select-']")
-      .then(($properties) => {
-        const initialPropertyCount = $properties.length;
+      .as("propertyTypeSelect");
 
-        cy.getBySel("response-schema-editor")
-          .find("[data-cy^='add-property-button-']")
-          .first()
-          .click();
+    cy.get("@propertyTypeSelect").then(($properties) => {
+      const initialPropertyCount = $properties.length;
 
-        cy.getBySel("response-schema-editor")
-          .find("[data-cy^='property-type-select-']")
-          .should("have.length", initialPropertyCount + 1);
+      cy.getBySel("response-schema-editor")
+        .find("[data-cy^='add-property-button-']")
+        .first()
+        .click();
 
-        cy.getBySel("response-schema-editor")
-          .find("[data-cy^='property-name-field-']")
-          .eq(1)
-          .clear()
-          .type("test");
+      cy.get("@propertyTypeSelect").should(
+        "have.length",
+        initialPropertyCount + 1
+      );
 
-        cy.getBySel("response-schema-editor")
-          .find("[data-cy^='property-type-select-']")
-          .eq(1)
-          .click();
+      cy.getBySel("response-schema-editor")
+        .find("[data-cy^='property-name-field-']")
+        .eq(1)
+        .clear()
+        .type("test");
 
-        cy.getBySel("property-type-option-number").click();
+      cy.get("@propertyTypeSelect").eq(1).click();
 
-        cy.getBySel("save-api-button").click();
-        cy.openAPIDialog("EDIT");
+      cy.getBySel("property-type-option-number").click();
 
-        cy.getBySel("response-schema-editor")
-          .find("[data-cy^='property-type-select-']")
-          .should("have.length", initialPropertyCount + 1);
+      cy.getBySel("save-api-button").click();
+      cy.openAPIDialog("EDIT");
 
-        cy.getBySel("response-schema-editor")
-          .find("[data-cy^='property-name-field-']")
-          .eq(1)
-          .find("input")
-          .should("have.value", "test");
+      cy.get("@propertyTypeSelect").should(
+        "have.length",
+        initialPropertyCount + 1
+      );
 
-        cy.getBySel("response-schema-editor")
-          .find("[data-cy^='property-type-select-']")
-          .eq(1)
-          .should("contain", "number");
-      });
+      cy.getBySel("response-schema-editor")
+        .find("[data-cy^='property-name-field-']")
+        .eq(1)
+        .find("input")
+        .should("have.value", "test");
+
+      cy.get("@propertyTypeSelect").eq(1).should("contain", "number");
+    });
   });
 
   it("displays params view in body if method is GET", () => {});
@@ -92,19 +90,16 @@ describe("APIDialog", () => {
 
     cy.get('[data-cy^="method-menuitem-"]')
       .first()
-      .then(($menuItem) => {
-        cy.wrap($menuItem)
-          .invoke("text")
-          .then((text) => {
-            const firstMethod = text.trim();
+      .invoke("text")
+      .then((text) => {
+        const firstMethod = text.trim();
 
-            cy.get("body").click();
+        cy.get("body").click();
 
-            cy.getBySel("save-api-button").click();
-            cy.openAPIDialog("EDIT");
+        cy.getBySel("save-api-button").click();
+        cy.openAPIDialog("EDIT");
 
-            cy.getBySel("method-text").should("contain.text", firstMethod);
-          });
+        cy.getBySel("method-text").should("contain.text", firstMethod);
       });
   });
 
@@ -115,14 +110,12 @@ describe("APIDialog", () => {
       if (methodCount >= 2) {
         cy.get('[data-cy^="method-"]')
           .eq(1)
-          .then(($method) => {
-            const methodName = $method.attr("data-cy");
-            cy.wrap($method).click();
-
+          .invoke("attr", "data-cy")
+          .then((methodName) => {
+            cy.get(`[data-cy="${methodName}"]`).click();
             cy.openAPIDialog("EDIT");
 
             cy.getBySel("delete-api-button").click();
-
             cy.getBySel("delete-api-button-yes").click();
 
             cy.get('[data-cy^="method-"]').should(

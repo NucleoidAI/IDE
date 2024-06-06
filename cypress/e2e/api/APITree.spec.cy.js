@@ -11,11 +11,8 @@ describe("APITree", () => {
   });
 
   it("displays multiple nested resources", () => {
-    cy.get('[data-cy^="path-"]').then(($paths) => {
-      $paths.each((index, path) => {
-        const currentPath = path.getAttribute("data-cy");
-        cy.get(`[data-cy="${currentPath}"]`).should("exist");
-      });
+    cy.get('[data-cy^="path-"]').each(($path) => {
+      cy.wrap($path).should("exist");
     });
   });
 
@@ -24,7 +21,7 @@ describe("APITree", () => {
       .first()
       .then(() => {
         const methods = ["PUT", "POST", "DEL", "PATCH"];
-        methods.forEach(() => {
+        methods.forEach((method) => {
           cy.getBySel("resource-menu").click();
           cy.getBySel("add-method").click();
           cy.getBySel("save-api-button").click();

@@ -19,22 +19,22 @@ describe("APIParams", () => {
 
     cy.getBySel("api-params")
       .find("[data-cy^='param-name-field-'] input")
-      .then(($params) => {
-        const initialParamCount = $params.length;
+      .as("paramsFields");
 
-        cy.addParam(newParamName, newParamDescription, true);
+    cy.get("@paramsFields").then(($params) => {
+      const initialParamCount = $params.length;
 
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-name-field-'] input")
-          .should("have.length", initialParamCount + 1);
+      cy.addParam(newParamName, newParamDescription, true);
 
-        cy.verifyParam(
-          initialParamCount,
-          newParamName,
-          newParamDescription,
-          true
-        );
-      });
+      cy.get("@paramsFields").should("have.length", initialParamCount + 1);
+
+      cy.verifyParam(
+        initialParamCount,
+        newParamName,
+        newParamDescription,
+        true
+      );
+    });
   });
 
   it("adds new parameter without required check", () => {
@@ -43,45 +43,44 @@ describe("APIParams", () => {
 
     cy.getBySel("api-params")
       .find("[data-cy^='param-name-field-'] input")
-      .then(($params) => {
-        const initialParamCount = $params.length;
+      .as("paramsFields");
 
-        cy.addParam(newParamName, newParamDescription, false);
+    cy.get("@paramsFields").then(($params) => {
+      const initialParamCount = $params.length;
 
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-name-field-'] input")
-          .should("have.length", initialParamCount + 1);
+      cy.addParam(newParamName, newParamDescription, false);
 
-        cy.verifyParam(
-          initialParamCount,
-          newParamName,
-          newParamDescription,
-          false
-        );
-      });
+      cy.get("@paramsFields").should("have.length", initialParamCount + 1);
+
+      cy.verifyParam(
+        initialParamCount,
+        newParamName,
+        newParamDescription,
+        false
+      );
+    });
   });
 
   it("updates parameters", () => {
+    const updatedParamName = "updatedParam";
+    const updatedParamDescription = "UpdatedDescription";
+
     cy.getBySel("api-params")
       .find("[data-cy^='param-name-field-'] input")
-      .then(($params) => {
-        const initialParamCount = $params.length;
+      .as("paramsFields");
 
-        const updatedParamName = "updatedParam";
-        const updatedParamDescription = "UpdatedDescription";
+    cy.get("@paramsFields").then(($params) => {
+      const initialParamCount = $params.length;
 
-        cy.updateParam(0, updatedParamName, updatedParamDescription, false);
+      cy.updateParam(0, updatedParamName, updatedParamDescription, false);
 
-        cy.getBySel("save-api-button").click();
-        cy.openAPIDialog("EDIT");
+      cy.getBySel("save-api-button").click();
+      cy.openAPIDialog("EDIT");
+      cy.getBySel("params-toggle").click();
 
-        cy.getBySel("params-toggle").click();
+      cy.get("@paramsFields").should("have.length", initialParamCount);
 
-        cy.getBySel("api-params")
-          .find("[data-cy^='param-name-field-'] input")
-          .should("have.length", initialParamCount);
-
-        cy.verifyParam(0, updatedParamName, updatedParamDescription, true);
-      });
+      cy.verifyParam(0, updatedParamName, updatedParamDescription, true);
+    });
   });
 });

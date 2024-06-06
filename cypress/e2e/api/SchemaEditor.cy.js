@@ -15,38 +15,41 @@ describe("SchemaEditor", () => {
   it("adds string/number to root object", () => {
     cy.getBySel("response-schema-editor")
       .find("[data-cy^='property-type-select-']")
-      .then(($properties) => {
-        const initialPropertyCount = $properties.length;
+      .as("propertyTypeSelect");
 
-        cy.schemaEditorAddProperty();
-        cy.schemaEditorAddProperty();
+    cy.get("@propertyTypeSelect").then(($properties) => {
+      const initialPropertyCount = $properties.length;
 
-        cy.schemaEditorEditType(initialPropertyCount, "number");
-        cy.schemaEditorEditType(initialPropertyCount + 1, "string");
+      cy.schemaEditorAddProperty();
+      cy.schemaEditorAddProperty();
 
-        cy.getBySel("save-api-button").click();
-        cy.openAPIDialog("EDIT");
+      cy.schemaEditorEditType(initialPropertyCount, "number");
+      cy.schemaEditorEditType(initialPropertyCount + 1, "string");
 
-        cy.schemaEditorVerifyType(initialPropertyCount, "number");
-        cy.schemaEditorVerifyType(initialPropertyCount + 1, "string");
-      });
+      cy.getBySel("save-api-button").click();
+      cy.openAPIDialog("EDIT");
+
+      cy.schemaEditorVerifyType(initialPropertyCount, "number");
+      cy.schemaEditorVerifyType(initialPropertyCount + 1, "string");
+    });
   });
 
   it("adds TS type to root object", () => {
     cy.getBySel("response-schema-editor")
       .find("[data-cy^='property-type-select-']")
-      .then(($properties) => {
-        const initialPropertyCount = $properties.length;
+      .as("propertyTypeSelect");
 
-        cy.schemaEditorAddProperty();
+    cy.get("@propertyTypeSelect").then(($properties) => {
+      const initialPropertyCount = $properties.length;
 
-        cy.schemaEditorEditType(initialPropertyCount, "Order");
+      cy.schemaEditorAddProperty();
+      cy.schemaEditorEditType(initialPropertyCount, "Order");
 
-        cy.getBySel("save-api-button").click();
-        cy.openAPIDialog("EDIT");
+      cy.getBySel("save-api-button").click();
+      cy.openAPIDialog("EDIT");
 
-        cy.schemaEditorVerifyType(initialPropertyCount, "Order");
-      });
+      cy.schemaEditorVerifyType(initialPropertyCount, "Order");
+    });
   });
 
   it("adds TS type to root array", () => {
@@ -129,11 +132,9 @@ describe("SchemaEditor", () => {
     cy.schemaEditorVerifyType(2, "array");
   });
 
-  it("adds TS type to nested object", () => {
+  it("adds TS type to nested array", () => {
     cy.schemaEditorAddProperty();
-    cy.schemaEditorEditType(1, "object");
-
-    cy.schemaEditorAddProperty(1);
+    cy.schemaEditorEditType(1, "array");
 
     cy.getBySel("response-schema-editor")
       .find("[data-cy='expand-icon']")
@@ -153,9 +154,11 @@ describe("SchemaEditor", () => {
     cy.schemaEditorVerifyType(2, "Order");
   });
 
-  it.only("adds TS type to nested array", () => {
+  it("adds TS type to nested object", () => {
     cy.schemaEditorAddProperty();
-    cy.schemaEditorEditType(1, "array");
+    cy.schemaEditorEditType(1, "object");
+
+    cy.schemaEditorAddProperty(1);
 
     cy.getBySel("response-schema-editor")
       .find("[data-cy='expand-icon']")
