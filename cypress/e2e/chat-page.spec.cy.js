@@ -1,6 +1,8 @@
 describe("ChatWidget", () => {
   beforeEach(() => {
     cy.setup("CHAT", "SEED");
+    cy.fixture("MESSAGES/hello").as("helloMessage");
+    cy.fixture("MESSAGES/define-human").as("defineHumanMessage");
   });
 
   it("displays existing messages", () => {
@@ -108,24 +110,20 @@ describe("ChatWidget", () => {
   });
 
   // TODO Revisit this test
-  it("should handle suggestions and update the overlay", () => {
-    cy.fixture("MESSAGES/hello").then((hello) => {
-      cy.fixture("MESSAGES/define-human").then((defineHuman) => {
-        cy.intercept("POST", "/chat/sessions/*", (req) => {
-          if (req.body.content === "hello") {
-            req.reply({
-              statusCode: 200,
-              body: hello,
-            });
-          } else if (req.body.content === "define a human") {
-            req.reply({
-              statusCode: 200,
-              body: defineHuman,
-            });
-          }
-        }).as("postMessage");
-      });
-    });
+  it("should handle suggestions and update the overlay", function () {
+    cy.intercept("POST", "/chat/sessions/*", (req) => {
+      if (req.body.content === "hello") {
+        req.reply({
+          statusCode: 200,
+          body: this.helloMessage,
+        });
+      } else if (req.body.content === "define a human") {
+        req.reply({
+          statusCode: 200,
+          body: this.defineHumanMessage,
+        });
+      }
+    }).as("postMessage");
 
     cy.getBySel("message-input").type("hello");
     cy.getBySel("send-button").click();
