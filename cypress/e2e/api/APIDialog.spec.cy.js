@@ -144,7 +144,15 @@ describe("APIDialog", () => {
     });
   });
 
-  it("prevents deleting root resource", () => {});
+  it("prevents deleting root resource", () => {
+    cy.get('[data-cy^="path-"]').contains("/").first().click();
+
+    cy.get('[data-cy^="method-"]').contains("GET").first().click();
+
+    cy.openAPIDialog("EDIT");
+
+    cy.getBySel("delete-api-button").should("be.disabled");
+  });
 
   it("prevents dup method", () => {
     cy.openAPIDialog("METHOD");
