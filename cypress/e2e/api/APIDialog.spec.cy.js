@@ -84,7 +84,7 @@ describe("APIDialog", () => {
     });
   });
 
-  it.only("displays params view in body if method is GET", () => {
+  it("displays params view in body if method is GET", () => {
     cy.get('[data-cy^="method-"]').contains("GET").first().click();
     cy.openAPIDialog("EDIT");
     cy.getBySel("param-view").should("be.visible");
