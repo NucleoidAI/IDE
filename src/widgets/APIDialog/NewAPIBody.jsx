@@ -1,3 +1,4 @@
+import ParamView from "../../components/ParamView";
 import React from "react";
 import SchemaEditor from "../../components/SchemaEditor";
 
@@ -37,11 +38,17 @@ const NewAPIBody = ({ types, api, requestSchemaRef, responseSchemaRef }) => {
           }}
           data-cy="request-schema-editor"
         >
-          <SchemaEditor
-            ref={requestSchemaRef}
-            initialData={api.request ? api.request.schema : ""}
-            customTypes={types}
-          />
+          {api.method === "GET" ? (
+            <Box sx={{ width: "100%", height: "100%" }}>
+              <ParamView params={api.params} />
+            </Box>
+          ) : (
+            <SchemaEditor
+              ref={requestSchemaRef}
+              initialData={api.request ? api.request.schema : ""}
+              customTypes={types}
+            />
+          )}
           <Typography variant="h6" gutterBottom>
             Request
           </Typography>
@@ -49,6 +56,7 @@ const NewAPIBody = ({ types, api, requestSchemaRef, responseSchemaRef }) => {
       </Box>
 
       <Divider orientation="vertical" flexItem sx={{ width: "1rem" }} />
+
       <Box
         sx={{
           flex: 1,
