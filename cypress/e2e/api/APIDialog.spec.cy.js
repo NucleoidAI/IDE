@@ -22,8 +22,20 @@ describe("APIDialog", () => {
     cy.getBySel("api-types").should("be.visible");
   });
 
-  it("updates schema of request if method is not GET", () => {});
+  it("updates schema of request if method is not GET", () => {
+    cy.get('[data-cy^="method-"]').then(($methods) => {
+      const nonGetMethods = $methods.filter((_, method) => {
+        return !method.getAttribute("data-cy").includes("GET");
+      });
 
+      if (nonGetMethods.length > 0) {
+        cy.wrap(nonGetMethods.eq(0)).click();
+        cy.openAPIDialog("EDIT");
+
+        cy.getBySel("request-schema-editor").should("be.visible");
+      }
+    });
+  });
   it("updates schema of response", () => {
     cy.openAPIDialog("EDIT");
 
@@ -72,7 +84,11 @@ describe("APIDialog", () => {
     });
   });
 
-  it("displays params view in body if method is GET", () => {});
+  it.only("displays params view in body if method is GET", () => {
+    cy.get('[data-cy^="method-"]').contains("GET").first().click();
+    cy.openAPIDialog("EDIT");
+    cy.getBySel("param-view").should("be.visible");
+  });
 
   it("adds resource", () => {
     cy.openAPIDialog("RESOURCE");
