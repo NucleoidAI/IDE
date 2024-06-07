@@ -29,7 +29,12 @@ function ChatMenu(props) {
   const matchDownMD = useMediaQuery(theme.breakpoints.down("lg"));
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const handleCreateNewChat = () => navigate("/chat");
+  const handleCreateNewChat = (closeMenu = false) => {
+    navigate("/chat");
+    if (closeMenu) {
+      setOpenMd(false);
+    }
+  };
   const handleClose = () => setOpenMd(false);
 
   return (
@@ -85,7 +90,7 @@ function ChatMenu(props) {
                 variant="button"
                 edge="start"
                 size="small"
-                onClick={handleCreateNewChat}
+                onClick={() => handleCreateNewChat(true)}
                 sx={{ alignSelf: "center", my: 2 }}
               >
                 <AddIcon />
@@ -126,7 +131,7 @@ function ChatMenu(props) {
                     variant="button"
                     edge="start"
                     size="small"
-                    onClick={handleCreateNewChat}
+                    onClick={() => handleCreateNewChat(true)}
                     sx={{ alignSelf: "center", my: 2 }}
                   >
                     <AddIcon />
@@ -187,7 +192,7 @@ function ChatMenu(props) {
                 variant="button"
                 edge="start"
                 size="small"
-                onClick={handleCreateNewChat}
+                onClick={() => handleCreateNewChat(true)}
                 sx={{ alignSelf: "center", my: 2 }}
               >
                 <AddIcon />
@@ -227,7 +232,7 @@ function ChatMenu(props) {
                     variant="button"
                     edge="start"
                     size="small"
-                    onClick={handleCreateNewChat}
+                    onClick={() => handleCreateNewChat(false)}
                     sx={{ alignSelf: "center", my: 2 }}
                   >
                     <AddIcon />
@@ -274,7 +279,7 @@ function ChatMenu(props) {
                 variant="button"
                 edge="start"
                 size="small"
-                onClick={handleCreateNewChat}
+                onClick={() => handleCreateNewChat(false)}
                 sx={{ alignSelf: "center", my: 2 }}
               >
                 <AddIcon />
