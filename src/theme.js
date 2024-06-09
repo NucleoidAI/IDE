@@ -1,7 +1,7 @@
 import { alpha } from "@mui/material/styles";
 import { createTheme } from "@mui/material";
 
-import { action, base, error, primary, success } from "./palette";
+import { action, base, error, palette, primary, success } from "./palette";
 
 const micAnimation = {
   "& span": {
@@ -67,6 +67,11 @@ const commonThemeProperties = {
     MuiDataGrid: {
       styleOverrides: {
         root: {
+          borderColor: palette.grey[500],
+          "& .MuiDataGrid-columnHeader, & .MuiDataGrid-cell, & .MuiDataGrid-columnHeaders, & .MuiDataGrid-footerContainer":
+            {
+              borderColor: palette.grey[500],
+            },
           "& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-cell:focus-within":
             {
               outline: "none",
@@ -171,6 +176,12 @@ const commonThemeProperties = {
           props: { variant: "pageIcon" },
           style: {
             color: base.grey[400],
+          },
+        },
+        {
+          props: { variant: "success" },
+          style: {
+            color: success.dark,
           },
         },
       ],
