@@ -24,14 +24,17 @@ function QueryResultWidget({
 }) {
   const [checked, setChecked] = useState(true);
   const theme = useTheme();
-  const isDisabled = !result || typeof result.result !== "object";
+  const isDisabled =
+    !result ||
+    typeof result.result !== "object" ||
+    !Array.isArray(result.result);
 
   return loading ? (
     <Card sx={styles.loadingCard}>
       <LinearProgress />
     </Card>
   ) : (
-    <Card sx={styles.contentCard}>
+    <Card sx={styles.contentCard} data-cy="query-result-widget">
       <RatioIconButtons
         handleSetOutputRatio={handleSetOutputRatio}
         outputRatio={outputRatio}
@@ -41,6 +44,7 @@ function QueryResultWidget({
           <FormControlLabel
             control={
               <Switch
+                data-cy="json-switch"
                 checked={checked}
                 onChange={() => setChecked(!checked)}
                 disabled={isDisabled}
@@ -79,7 +83,9 @@ const ResultTypes = (result, isTable) => {
 
   if (result) {
     const timeComponent = (
-      <Typography variant="h7">{result.time} ms</Typography>
+      <Typography data-cy="time" variant="h7">
+        {result.time} ms
+      </Typography>
     );
 
     if (typeof result.result === "object") {
@@ -87,10 +93,15 @@ const ResultTypes = (result, isTable) => {
         return isTable ? (
           <Box display="flex" flexDirection="column" gap={2}>
             <Box display="flex" gap={1}>
-              <DoneIcon sx={{ color: theme.palette.success.dark }} />
+              <DoneIcon
+                data-cy="done-icon"
+                sx={{ color: theme.palette.success.dark }}
+              />
               {timeComponent}
             </Box>
-            <QueryResult json={result.result} />
+            <Box data-cy="array">
+              <QueryResult json={result.result} />
+            </Box>
           </Box>
         ) : (
           <QueryArrayTable json={result.result} />
@@ -98,8 +109,16 @@ const ResultTypes = (result, isTable) => {
       } else {
         return (
           <Box display="flex" flexDirection="column" gap={2}>
-            <QueryResult json={result.result} />
-            {timeComponent}
+            <Box display="flex" gap={1}>
+              <DoneIcon
+                data-cy="done-icon"
+                sx={{ color: theme.palette.success.dark }}
+              />
+              {timeComponent}
+            </Box>
+            <Box data-cy="object">
+              <QueryResult json={result.result} />
+            </Box>
           </Box>
         );
       }
@@ -107,7 +126,10 @@ const ResultTypes = (result, isTable) => {
       if (result.result === null || result.result === undefined) {
         return (
           <Box display="flex" alignItems="center" gap={2}>
-            <DoneIcon sx={{ color: theme.palette.success.dark }} />
+            <DoneIcon
+              data-cy="done-icon"
+              sx={{ color: theme.palette.success.dark }}
+            />
             {timeComponent}
           </Box>
         );
@@ -116,10 +138,15 @@ const ResultTypes = (result, isTable) => {
         return (
           <Box display="flex" flexDirection="column" gap={2}>
             <Box display="flex" gap={2}>
-              <DoneIcon sx={{ color: theme.palette.success.dark }} />
+              <DoneIcon
+                data-cy="done-icon"
+                sx={{ color: theme.palette.success.dark }}
+              />
               {timeComponent}
             </Box>
-            <QueryResult json={value} />
+            <Box data-cy="value">
+              <QueryResult json={value} />
+            </Box>
           </Box>
         );
       }

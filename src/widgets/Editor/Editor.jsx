@@ -228,12 +228,18 @@ const Editor = React.forwardRef((props, ref) => {
         setEditorRef={editorRef}
         ref={ref}
       />
+
       {query && (
         <Stack direction={"row"} sx={styles.runButton}>
           <QueryAIButton />
           <AIDialog imperative page={"query"} editor={editorRef} />
           {!loading && (
-            <Fab variant="button" size={"small"} onClick={() => handleQuery()}>
+            <Fab
+              data-cy="query-button"
+              variant="button"
+              size={"small"}
+              onClick={() => handleQuery()}
+            >
               <PlayArrowIcon />
             </Fab>
           )}
