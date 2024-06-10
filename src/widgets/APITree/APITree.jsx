@@ -206,11 +206,16 @@ function APITree() {
                 onClick={() => {
                   editMethod();
                 }}
+                data-cy="edit-method-menu-item"
               >
                 <EditIcon />
                 <Typography sx={styles.menuItemText}>Edit</Typography>
               </MenuItem>
-              <MenuItem onClick={handleDeleteMethod} disabled={methodDisabled}>
+              <MenuItem
+                onClick={handleDeleteMethod}
+                disabled={methodDisabled}
+                data-cy="delete-method-button"
+              >
                 <DeleteIcon />
                 <Typography sx={styles.menuItemText}>Delete</Typography>
               </MenuItem>
@@ -223,7 +228,12 @@ function APITree() {
           </Grid>
 
           <CardActions>
-            <Fab variant="button" size={"small"} onClick={handleResourceMenu}>
+            <Fab
+              variant="button"
+              size={"small"}
+              onClick={handleResourceMenu}
+              data-cy="resource-menu"
+            >
               <AddIcon />
             </Fab>
           </CardActions>
@@ -324,6 +334,7 @@ export const compile = (
                     alignItems: "center",
                     justifyContent: "space-between",
                   }}
+                  data-cy={`method-${method.path}${method.method}`}
                 >
                   <Box sx={theme.custom.apiTreeItem}>
                     <span
@@ -381,6 +392,7 @@ export const compile = (
                 onClick={(e) => e.stopPropagation()}
                 onContextMenu={handleResourceContextMenu}
                 style={{ cursor: "default" }}
+                data-cy={`path-${path}`}
               >
                 {path}
               </div>

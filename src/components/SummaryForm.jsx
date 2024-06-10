@@ -25,6 +25,7 @@ const SummaryForm = forwardRef(
               }
             }}
             onChange={handleSummaryChange}
+            data-cy="summary-textfield"
           />
           <TextField
             label={"Description"}
@@ -38,6 +39,7 @@ const SummaryForm = forwardRef(
               }
             }}
             onChange={handleDescriptionChange}
+            data-cy="description-textfield"
           />
         </>
       );

@@ -136,11 +136,15 @@ const ResourceMenu = (props) => {
         }}
         TransitionComponent={Fade}
       >
-        <MenuItem onClick={addResource}>
+        <MenuItem onClick={addResource} data-cy="add-resource">
           <SourceIcon />
           <Typography sx={styles.menuItemText}>Resource</Typography>
         </MenuItem>
-        <MenuItem onClick={addMethod} disabled={methodDisabled}>
+        <MenuItem
+          onClick={addMethod}
+          disabled={methodDisabled}
+          data-cy="add-method"
+        >
           <HttpIcon />
           <Typography sx={styles.menuItemText}>Method</Typography>
         </MenuItem>
@@ -148,6 +152,7 @@ const ResourceMenu = (props) => {
         <MenuItem
           onClick={handleResourceDeleteDialog}
           disabled={state.pages.api.selected?.path === "/"}
+          data-cy="delete-resource"
         >
           <DeleteIcon />
           <Typography sx={styles.menuItemText}>Delete</Typography>

@@ -52,7 +52,7 @@ const APITypes = ({ tstypes, nuctypes, typesRef }) => {
     const initialData = findSchemaByName(selectedType);
 
     return (
-      <Box sx={{ width: "100%", height: "100%" }}>
+      <Box sx={{ width: "100%", height: "100%" }} data-cy="type-schema-editor">
         {useSchemaEditor ? (
           <SchemaEditor
             key={selectedType}
@@ -78,6 +78,7 @@ const APITypes = ({ tstypes, nuctypes, typesRef }) => {
         height: "85%",
         p: 2,
       }}
+      data-cy="api-types"
     >
       <Box
         sx={{

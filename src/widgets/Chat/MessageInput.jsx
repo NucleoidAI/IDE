@@ -54,6 +54,10 @@ const MessageInput = forwardRef((props, ref) => {
     }
   }, [chatMessageResponded]);
 
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
+
   useImperativeHandle(ref, () => ({
     getValue: () => inputRef.current.value,
     clear: () => {

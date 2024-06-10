@@ -73,6 +73,7 @@ const SchemaPropertyEditor = ({
                 borderBottom: "2px solid blue",
               },
             }}
+            data-cy={`property-name-field-${node.id}`}
           />
         </Box>
       ) : (
@@ -82,9 +83,7 @@ const SchemaPropertyEditor = ({
             display: "flex",
             alignItems: "center",
           }}
-        >
-          {/* Empty placeholder */}
-        </Box>
+        ></Box>
       )}
 
       {editMode === "type" ? (
@@ -99,7 +98,11 @@ const SchemaPropertyEditor = ({
           onOpen={() => setIsSelectOpen(true)}
         >
           {propertyTypes.map((typeOption) => (
-            <MenuItem value={typeOption} key={typeOption}>
+            <MenuItem
+              value={typeOption}
+              key={typeOption}
+              data-cy={`property-type-option-${typeOption}`}
+            >
               {typeOption}
             </MenuItem>
           ))}
@@ -119,6 +122,7 @@ const SchemaPropertyEditor = ({
                 backgroundColor: (theme) => theme.palette.grey[600],
               },
             }}
+            data-cy={`property-type-select-${node.id}`}
           >
             {node.type}
           </Typography>

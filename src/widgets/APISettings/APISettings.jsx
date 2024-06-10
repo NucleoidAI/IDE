@@ -108,7 +108,7 @@ function APISettings() {
           sx={styles.content}
           spacing={1}
         >
-          <Grid item xs={6} sx={styles.schema}>
+          <Grid item xs={6} sx={styles.schema} data-cy="request-schema">
             <Grid container justifyContent={"center"} alignItems={"center"}>
               <Typography fontWeight={"bolder"} fontSize={"medium"}>
                 Request
@@ -127,7 +127,7 @@ function APISettings() {
               <Schema initialData={request} customTypes={customTypes} />
             )}
           </Grid>
-          <Grid item xs={6} sx={styles.schema}>
+          <Grid item xs={6} sx={styles.schema} data-cy="response-schema">
             <Grid container justifyContent={"center"} alignItems={"center"}>
               <Typography fontWeight={"bolder"} fontSize={"medium"}>
                 Response
@@ -153,6 +153,7 @@ function APISettings() {
             size={"small"}
             onClick={openEditDialog}
             sx={{ position: "absolute", right: 15, bottom: 15 }}
+            data-cy="edit-api-button"
           >
             <EditIcon />
           </Fab>
@@ -172,7 +173,12 @@ function APISettings() {
             />
             <Grid container sx={styles.editIcon}>
               {selectedApi && Object.keys(selectedApi).length > 0 && (
-                <Fab variant="button" size={"small"} onClick={openEditDialog}>
+                <Fab
+                  variant="button"
+                  size={"small"}
+                  onClick={openEditDialog}
+                  data-cy="edit-api-button"
+                >
                   <EditIcon />
                 </Fab>
               )}
