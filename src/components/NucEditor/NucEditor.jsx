@@ -156,7 +156,6 @@ const NucEditor = React.forwardRef((props, ref) => {
 
   return (
     <Editor
-      data-cy="nuc-editor"
       ref={ref}
       key={themeStorage}
       theme={themeStorage === "light" ? "vs-light" : "custom-dark-theme"}
