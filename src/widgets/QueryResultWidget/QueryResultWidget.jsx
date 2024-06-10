@@ -1,9 +1,9 @@
+import DoneIcon from "@mui/icons-material/Done";
 import LinearProgress from "@mui/material/LinearProgress";
 import QueryArrayTable from "../../components/QueryArrayTable";
 import QueryResult from "../../components/QueryResult";
 import RatioIconButtons from "../../components/RatioIconButtons/RatioIconButtons";
 import styles from "./styles";
-import DoneIcon from "@mui/icons-material/Done";
 
 import {
   Box,

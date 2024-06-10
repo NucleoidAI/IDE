@@ -1,7 +1,7 @@
 import { alpha } from "@mui/material/styles";
 import { createTheme } from "@mui/material";
 
-import { action, base, error, palette, primary, success } from "./palette";
+import { action, base, error, primary, success } from "./palette";
 
 const micAnimation = {
   "& span": {
