@@ -1,4 +1,5 @@
 import { v4 as uuid } from "uuid";
+
 import {
   Table,
   TableBody,
@@ -11,7 +12,7 @@ function ParamView({ params }) {
   params = params || [];
 
   return (
-    <Table size={"small"}>
+    <Table size={"small"} data-cy="param-view">
       <colgroup>
         <col style={{ width: "50%" }} />
         <col style={{ width: "50%" }} />

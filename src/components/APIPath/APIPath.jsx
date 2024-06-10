@@ -40,33 +40,38 @@ const APIPath = ({
       <Grid item>
         <Grid container item sx={styles.content}>
           {isMethodDisabled ? (
-            <Typography>{method}</Typography>
+            <Typography data-cy="method-text">{method}</Typography>
           ) : (
             <Select
               value={selectedMethod}
               onChange={(e) => setSelectedMethod(e.target.value)}
+              data-cy="method-select"
             >
               {allowedMethods.map((method) => (
-                <MenuItem key={method} value={method}>
+                <MenuItem
+                  key={method}
+                  value={method}
+                  data-cy={`method-menuitem-${method}`}
+                >
                   {method}
                 </MenuItem>
               ))}
             </Select>
           )}
           <Box component="span" sx={styles.text}></Box>
-          <Typography>
-            {path}
-            {path !== "/" ? "/" : ""}
+          <Typography data-cy="path-text">
+            {path} {path !== "/" ? "/" : ""}
           </Typography>
           {!isPathDisabled && (
             <TextField
               value={selectedPath}
               onChange={(e) => setSelectedPath(e.target.value)}
+              data-cy="path-input"
             />
           )}
         </Grid>
       </Grid>
-      <Button onClick={onTypesButtonClick}>
+      <Button onClick={onTypesButtonClick} data-cy="types-button">
         <LanguageIcon sx={styles.icon} />
         Types
       </Button>

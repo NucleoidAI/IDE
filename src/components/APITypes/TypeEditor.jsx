@@ -25,9 +25,14 @@ const TypeEditor = ({ initialValue = "", onConfirm, onCancel }) => {
         variant="outlined"
         size="small"
         sx={{ width: "60%", marginRight: 1 }}
+        data-cy="type-name-input"
       />
       <Box>
-        <IconButton onClick={handleConfirm} size="small">
+        <IconButton
+          onClick={handleConfirm}
+          size="small"
+          data-cy="confirm-type-button"
+        >
           <Check />
         </IconButton>
         <IconButton onClick={onCancel} size="small">

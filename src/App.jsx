@@ -15,7 +15,7 @@ import React, { useEffect } from "react";
 import { darkTheme, lightTheme } from "./theme";
 import { publish, subscribe, useEvent } from "@nucleoidai/react-event";
 
-window.nucleoid = {
+window["@nucleoidai"] = {
   Event: { publish, subscribe, useEvent },
 };
 

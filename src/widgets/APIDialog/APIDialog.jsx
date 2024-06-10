@@ -223,6 +223,10 @@ function APIDialog() {
         <APIDialogAction
           view={view}
           saveDisable={saveDisable}
+          deleteDisable={
+            (selectedApi?.method === "GET" && selectedApi?.path === "/") ||
+            action === "add"
+          }
           setApiDialogView={(button) =>
             dispatch({
               type: "SET_API_DIALOG_VIEW",

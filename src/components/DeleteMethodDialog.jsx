@@ -26,7 +26,11 @@ const DeleteMethodDialog = ({ setOpen, deleteMethod }) => {
         <Button autoFocus onClick={handleClose}>
           Cancel
         </Button>
-        <Button onClick={deleteMethod} autoFocus>
+        <Button
+          onClick={deleteMethod}
+          autoFocus
+          data-cy="delete-method-confirm-button"
+        >
           Delete
         </Button>
       </DialogActions>
