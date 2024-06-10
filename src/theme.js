@@ -67,10 +67,10 @@ const commonThemeProperties = {
     MuiDataGrid: {
       styleOverrides: {
         root: {
-          borderColor: palette.grey[500],
+          borderColor: base.grey[700],
           "& .MuiDataGrid-columnHeader, & .MuiDataGrid-cell, & .MuiDataGrid-columnHeaders, & .MuiDataGrid-footerContainer":
             {
-              borderColor: palette.grey[500],
+              borderColor: base.grey[700],
             },
           "& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-cell:focus-within":
             {
