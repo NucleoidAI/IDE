@@ -1,0 +1,17 @@
+{
+  "$nuc": [
+    {
+      "iof": "$CLASS",
+      "pre": true,
+      "nme": {
+        "type": "Identifier",
+        "name": "User"
+      },
+      "mths": []
+    }
+  ],
+  "declarative": false,
+  "date": 1718012539498,
+  "time": 7,
+  "error": false
+}
