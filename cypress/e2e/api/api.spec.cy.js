@@ -1,4 +1,3 @@
-/* eslint-disable */
 describe("API Page", () => {
   beforeEach(() => {
     cy.setup("IDE", "SEED", "LOCAL");
@@ -71,8 +70,11 @@ describe("API Page", () => {
     const newSummary = "New Summary";
     const newDescription = "New Description";
 
-    cy.getBySel("summary-textfield").clear().type(newSummary);
-    cy.getBySel("description-textfield").clear().type(newDescription);
+    cy.getBySel("summary-textfield").clear();
+    cy.getBySel("summary-textfield").type(newSummary);
+
+    cy.getBySel("description-textfield").clear();
+    cy.getBySel("description-textfield").type(newDescription);
 
     cy.get('[data-cy^="method-"]').eq(1).click();
     cy.get('[data-cy^="method-"]').first().click();

@@ -1,4 +1,3 @@
-/* eslint-disable */
 describe("APIDialog", () => {
   beforeEach(() => {
     cy.setup("IDE", "SEED", "LOCAL");
@@ -59,7 +58,11 @@ describe("APIDialog", () => {
       cy.getBySel("response-schema-editor")
         .find("[data-cy^='property-name-field-']")
         .eq(1)
-        .clear()
+        .clear();
+
+      cy.getBySel("response-schema-editor")
+        .find("[data-cy^='property-name-field-']")
+        .eq(1)
         .type("test");
 
       cy.get("@propertyTypeSelect").eq(1).click();
@@ -177,7 +180,8 @@ describe("APIDialog", () => {
       .eq(1)
       .invoke("text")
       .then((existingPath) => {
-        cy.getBySel("path-input").clear().type(existingPath.replace(/\//g, ""));
+        cy.getBySel("path-input").clear();
+        cy.getBySel("path-input").type(existingPath.replace(/\//g, ""));
 
         cy.getBySel("save-api-button").should("be.disabled");
       });

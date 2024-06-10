@@ -1,4 +1,3 @@
-/* eslint-disable */
 describe("APITypes", () => {
   beforeEach(() => {
     cy.setup("IDE", "SEED", "LOCAL");
@@ -48,7 +47,9 @@ describe("APITypes", () => {
     cy.getBySel(`type-item-actions-${newTypeName}`).click();
     cy.getBySel(`edit-type-button-${newTypeName}`).click();
 
-    cy.getBySel("type-name-input").clear().type(updatedTypeName);
+    cy.getBySel("type-name-input").clear();
+    cy.getBySel("type-name-input").type(updatedTypeName);
+
     cy.getBySel("confirm-type-button").click();
 
     cy.getBySel("type-list").should("not.contain", newTypeName);
