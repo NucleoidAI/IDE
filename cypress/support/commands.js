@@ -219,4 +219,27 @@ Cypress.Commands.add("waitEvent", (eventName) => {
 
 Cypress.Commands.add("normalizeString", (str) => str.replace(/\s/g, ""));
 
+Cypress.Commands.add(
+  "checkLocalContext",
+  (projectId, specification, changedEditorValue) => {
+    let checkedSpecification;
+    cy.storageGet(`ide.context.${projectId}`).then((project) => {
+      if (specification === "api") {
+        checkedSpecification = project.specification.api[0]["action"];
+      } else if (specification === "declaration") {
+        checkedSpecification = project.specification.declarations[0].definition;
+      }
+      if (specification === "function") {
+        checkedSpecification = project.specification.functions[0].definition;
+      }
+
+      cy.normalizeString(checkedSpecification).then((normalizedDefinition) => {
+        cy.normalizeString(changedEditorValue).then((normalizedNewOrder) => {
+          expect(normalizedDefinition).to.include(normalizedNewOrder);
+        });
+      });
+    });
+  }
+);
+
 /* eslint-enable */
