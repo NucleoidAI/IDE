@@ -29,7 +29,12 @@ function ChatMenu(props) {
   const matchDownMD = useMediaQuery(theme.breakpoints.down("lg"));
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const handleCreateNewChat = () => navigate("/chat");
+  const handleCreateNewChat = () => {
+    navigate("/chat");
+    if (openMd) {
+      setOpenMd(false);
+    }
+  };
   const handleClose = () => setOpenMd(false);
 
   return (
