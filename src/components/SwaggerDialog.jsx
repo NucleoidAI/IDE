@@ -74,7 +74,11 @@ export default function SwaggerDialog() {
               }}
             >
               <IconButton edge="start" onClick={handleClose} aria-label="close">
-                <KeyboardArrowDown sx={{ color: "#e0e0e0" }} fontSize="large" />
+                <KeyboardArrowDown
+                  data-cy="close-arrow"
+                  sx={{ color: "#e0e0e0" }}
+                  fontSize="large"
+                />
               </IconButton>
               <Box
                 sx={{
