@@ -114,7 +114,7 @@ Cypress.Commands.add("typeEditor", (changedEditorValue) => {
   cy.get("section").should("be.visible");
   cy.get(".monaco-editor").should("be.visible");
 
-  cy.get('textarea[role="textbox"]').focus().clear({ force: true });
+  cy.get('textarea[role="textbox"]').type("{selectall}{del}");
 
   cy.get('textarea[role="textbox"]').type(changedEditorValue, {
     force: true,
@@ -241,5 +241,15 @@ Cypress.Commands.add(
     });
   }
 );
+
+Cypress.Commands.add("runSandbox", () => {
+  cy.getBySel("run-button").click();
+
+  cy.waitEvent("SWAGGER_DIALOG");
+
+  cy.wait(2000);
+
+  cy.getBySel("close-arrow").click();
+});
 
 /* eslint-enable */
