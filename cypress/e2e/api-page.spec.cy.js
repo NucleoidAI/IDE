@@ -5,10 +5,8 @@ describe("Local Mode", () => {
     cy.wrap("3450f289-0fc5-45e9-9a4a-606c0a63cdfe").as("projectId");
   });
 
-  it("saves changes in API editor", () => {
-    cy.get("@projectId").then((projectId) => {
-      cy.visit(`/${projectId}/api?mode=local`);
-    });
+  it("saves changes in API editor", function () {
+    cy.visit(`/${this.projectId}/api?mode=local`);
 
     cy.waitEvent("CONTAINER_LOADED");
 
@@ -16,21 +14,7 @@ describe("Local Mode", () => {
 
     cy.typeEditor(changedEditorValue);
 
-    cy.get("@projectId").then((projectId) => {
-      cy.storageGet(`ide.context.${projectId}`).then((context) => {
-        cy.normalizeString(changedEditorValue).then(
-          (normalizedChangedEditorValue) => {
-            cy.normalizeString(context.specification.api[0]["action"]).then(
-              (normalizedContextValue) => {
-                expect(normalizedContextValue).to.contain(
-                  normalizedChangedEditorValue
-                );
-              }
-            );
-          }
-        );
-      });
-    });
+    cy.checkLocalContext(this.projectId, "api", changedEditorValue);
   });
 });
 
