@@ -4,11 +4,10 @@ import Page from "../../../components/Page";
 import QueryResultWidget from "../../../widgets/QueryResultWidget/QueryResultWidget";
 import { publish } from "@nucleoidai/react-event";
 import { useContext } from "../../../context/context";
-import { useEffect } from "react";
 import { useEvent } from "@nucleoidai/react-event";
 import { useNavigate } from "react-router-dom";
-
 import React, { useState } from "react";
+import { useCallback, useEffect } from "react";
 
 function Query() {
   const [event] = useEvent("WIDGET_LOADED", { name: null });
@@ -40,22 +39,31 @@ function Query() {
 
   const [loading, setLoading] = useState(false);
 
-  const handleSetOutputRatio = (ratio) => {
-    const query = state.get("pages.query");
-    query.outputRatio = ratio;
-    setOutputRatio(ratio);
-  };
+  const handleSetOutputRatio = useCallback(
+    (ratio) => {
+      setState((prevState) => {
+        const query = { ...prevState.pages.query, outputRatio: ratio };
+        return { ...prevState, pages: { ...prevState.pages, query } };
+      });
+      setOutputRatio(ratio);
+    },
+    [setState]
+  );
 
   // Effect to reset the state when the component is unmounted
   useEffect(() => {
     return () => {
-      const query = state.get("pages.query");
-      query.outputRatio = defaultOutputRatio;
-      query.results = null; // or any default value for results
-      query.text = defaultText; // Reset the text to default
-      setState({ ...state });
+      setState((prevState) => {
+        const query = {
+          ...prevState.pages.query,
+          outputRatio: defaultOutputRatio,
+          results: null,
+          text: defaultText,
+        };
+        return { ...prevState, pages: { ...prevState.pages, query } };
+      });
     };
-  }, []);
+  }, [defaultOutputRatio, defaultText, setState]);
 
   useEffect(() => {
     publish("PAGE_LOADED", { name: "Query" });
