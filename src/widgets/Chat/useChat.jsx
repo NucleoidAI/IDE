@@ -1,5 +1,5 @@
 import Project from "../../lib/Project";
-import http from "../../http";
+import expert from "../../http/expert";
 import { startTransition } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
@@ -23,38 +23,34 @@ const useChat = () => {
   }, [selectedChat]);
 
   const sendMessage = async (message) => {
-    try {
-      const { data } = await http.post(`/chat/sessions/${chat.id}`, {
-        role: "USER",
-        content: message,
-      });
+    const { data } = await expert.post(`/chat/sessions/${chat.id}`, {
+      role: "USER",
+      content: message,
+    });
 
-      const assistantMessage = {
-        role: "assistant",
-        ...data,
-      };
-
-      const updatedMessages = [
-        ...chat.messages,
-        { role: "USER", content: message },
-        assistantMessage,
-      ];
-      const updatedChat = { ...chat, messages: updatedMessages };
-      localStorage.setItem(
-        `ide.chat.sessions.${chat.id}`,
-        JSON.stringify(updatedChat)
-      );
-
-      publish("CHAT_MESSAGE_RESPONDED", updatedChat);
-      setChat(updatedChat);
-    } catch ({ response }) {
-      publish("EXPERT_ERROR_OCCURRED", {
-        chatId: chat.id,
-        status: true,
-        type: response.data.type,
-        content: response.data.content,
-      });
+    // Skip if no data is returned
+    if (!data) {
+      return;
     }
+
+    const assistantMessage = {
+      role: "ASSISTANT",
+      ...data,
+    };
+
+    const updatedMessages = [
+      ...chat.messages,
+      { role: "USER", content: message },
+      assistantMessage,
+    ];
+    const updatedChat = { ...chat, messages: updatedMessages };
+    localStorage.setItem(
+      `ide.chat.sessions.${chat.id}`,
+      JSON.stringify(updatedChat)
+    );
+
+    publish("CHAT_MESSAGE_RESPONDED", updatedChat);
+    setChat(updatedChat);
   };
 
   const convertChat = (chatToConvert) => {
@@ -80,7 +76,7 @@ const useChat = () => {
       },
       project: {
         id,
-        type: "CHAT",
+        type: "LOCAL",
         name: "Chat Project",
         description: "This project has been converted from chat",
       },

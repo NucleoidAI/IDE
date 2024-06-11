@@ -69,6 +69,7 @@ const TypeList = ({
         position: "relative",
         height: "100%",
       }}
+      data-cy="type-list"
     >
       {combinedData.map((item) => (
         <Box
@@ -93,19 +94,24 @@ const TypeList = ({
               bgcolor: (theme) => theme.palette.action.hover,
             },
           }}
+          data-cy={`type-list-item-${item.name}`}
         >
           {editingType === item.name ? (
             <TypeEditor
               initialValue={item.name}
               onConfirm={handleUpdateType}
               onCancel={() => setEditingType(null)}
+              data-cy="type-editor"
             />
           ) : (
             <>
               <Typography variant="body1" style={{ textAlign: "left" }}>
                 {item.name}
               </Typography>
-              <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box
+                sx={{ display: "flex", alignItems: "center" }}
+                data-cy={`type-item-actions-${item.name}`}
+              >
                 {item.isTypeScript && (
                   <span
                     style={{
@@ -113,6 +119,7 @@ const TypeList = ({
                       color: "#808080",
                       fontWeight: "bold",
                     }}
+                    data-cy={`typescript-item-${item.name}`}
                   >
                     TS
                   </span>
@@ -122,12 +129,14 @@ const TypeList = ({
                     <IconButton
                       size="small"
                       onClick={() => handleEditType(item.name)}
+                      data-cy={`edit-type-button-${item.name}`}
                     >
                       <Edit />
                     </IconButton>
                     <IconButton
                       size="small"
                       onClick={() => handleDeleteType(item.name)}
+                      data-cy={`delete-type-button-${item.name}`}
                     >
                       <Delete />
                     </IconButton>
@@ -142,6 +151,7 @@ const TypeList = ({
         <TypeEditor
           onConfirm={handleAddTypeConfirm}
           onCancel={() => setIsAddingType(false)}
+          data-cy="add-type-editor"
         />
       )}
       <Box
@@ -152,7 +162,12 @@ const TypeList = ({
           transform: "translateX(-50%)",
         }}
       >
-        <Fab color="primary" onClick={handleAddTypeClick} size="small">
+        <Fab
+          color="primary"
+          onClick={handleAddTypeClick}
+          size="small"
+          data-cy="add-type-button"
+        >
           <Add />
         </Fab>
       </Box>

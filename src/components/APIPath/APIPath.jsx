@@ -26,14 +26,12 @@ const APIPath = ({
   const [selectedMethod, setSelectedMethod] = useState(
     allowedMethods.includes(method) ? method : allowedMethods[0] || ""
   );
-  const [selectedPath, setSelectedPath] = useState(
-    !isPathDisabled && path !== "/" ? "/" : ""
-  );
+  const [selectedPath, setSelectedPath] = useState("");
 
   useEffect(() => {
     methodRef.current = selectedMethod;
-    pathRef.current = path + selectedPath;
-    validatePath(pathRef.current);
+    pathRef.current = path + (path !== "/" ? "/" : "") + selectedPath;
+    validatePath(selectedPath);
   }, [selectedMethod, selectedPath, methodRef, pathRef, path, validatePath]);
 
   return (
@@ -42,30 +40,38 @@ const APIPath = ({
       <Grid item>
         <Grid container item sx={styles.content}>
           {isMethodDisabled ? (
-            <Typography>{method}</Typography>
+            <Typography data-cy="method-text">{method}</Typography>
           ) : (
             <Select
               value={selectedMethod}
               onChange={(e) => setSelectedMethod(e.target.value)}
+              data-cy="method-select"
             >
               {allowedMethods.map((method) => (
-                <MenuItem key={method} value={method}>
+                <MenuItem
+                  key={method}
+                  value={method}
+                  data-cy={`method-menuitem-${method}`}
+                >
                   {method}
                 </MenuItem>
               ))}
             </Select>
           )}
           <Box component="span" sx={styles.text}></Box>
-          <Typography>{path}</Typography>
+          <Typography data-cy="path-text">
+            {path} {path !== "/" ? "/" : ""}
+          </Typography>
           {!isPathDisabled && (
             <TextField
               value={selectedPath}
               onChange={(e) => setSelectedPath(e.target.value)}
+              data-cy="path-input"
             />
           )}
         </Grid>
       </Grid>
-      <Button onClick={onTypesButtonClick}>
+      <Button onClick={onTypesButtonClick} data-cy="types-button">
         <LanguageIcon sx={styles.icon} />
         Types
       </Button>

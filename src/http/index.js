@@ -10,8 +10,8 @@ const instance = axios.create({
 });
 
 const refreshAuthLogic = async (failedRequest) => {
-  const refreshToken = storage.get("oauth.token").refreshToken;
-  const accessToken = storage.get("oauth.token").accessToken;
+  const refreshToken = storage.get("oauth.token")?.refreshToken;
+  const accessToken = storage.get("oauth.token")?.accessToken;
   let tokenRefreshResponse;
   if (!refreshToken && !accessToken) {
     const code = await instance.getCodeFromGithub();
@@ -72,7 +72,7 @@ instance.getCodeFromGithub = () => {
 };
 
 instance.getUserDetails = async () => {
-  const refreshToken = storage.get("oauth.token").refreshToken;
+  const refreshToken = storage.get("oauth.token")?.refreshToken;
   if (refreshToken) {
     try {
       const response = await axios.get("https://api.github.com/user", {
@@ -80,10 +80,10 @@ instance.getUserDetails = async () => {
           Authorization: `token ${refreshToken}`,
         },
       });
-      console.log("User details:", response.data);
       return {
         name: response.data.login,
         avatarUrl: response.data.avatar_url,
+        id: response.data.id,
       };
     } catch (error) {
       console.error("Failed to fetch user details:", error);
@@ -93,27 +93,25 @@ instance.getUserDetails = async () => {
   return null;
 };
 
+instance.interceptors.request.use((config) => {
+  const token = storage.get("oauth.token")?.accessToken;
+  if (token) {
+    config.headers["Authorization"] = "Bearer " + token;
+  }
+  return config;
+});
+
 instance.interceptors.response.use(
   (res) => res,
   (err) => {
-    if (err.response.status === 500) {
+    if (!err.response || err.response.status === 500) {
       publish("APP_MESSAGE", {
         message: err.message,
         severity: "error",
       });
+
+      throw new Error(err.message);
     }
-    if (err.response.status === 401 || err.response.status === 403) {
-      storage.remove("oauth.token");
-      let message = "Session expired. Please login again.";
-      if (err.response.status === 403) {
-        message = "Access forbidden. Please check your permissions.";
-      }
-      publish("APP_MESSAGE", {
-        message: message,
-        severity: "error",
-      });
-    }
-    return Promise.reject(err);
   }
 );
 

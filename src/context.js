@@ -95,5 +95,12 @@ const resolve = (context, param) => {
   }
 };
 
-const Context = { init, copy, withSample, resolve, withPages, withBlank };
+const Context = {
+  init,
+  copy,
+  withSample,
+  resolve,
+  withPages,
+  withBlank,
+};
 export default Context;

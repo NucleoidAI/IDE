@@ -45,13 +45,14 @@ function ProjectDialog({ handleClose, open, setOpen }) {
   const mode = Path.getMode();
   const [projectFounded] = useEvent("PROJECT_FOUNDED", null);
   const [projectNotFound] = useEvent("PROJECT_NOT_FOUNDED", false);
-
+  const [userEvent] = useEvent("USER", { login: null, id: null });
   const navigate = useNavigate();
 
   const fetchUserDetails = async () => {
     try {
       const userDetails = await http.getUserDetails();
       setUser(userDetails);
+      return userDetails;
     } catch (error) {
       console.error("Failed to fetch user details:", error);
     }
@@ -59,11 +60,15 @@ function ProjectDialog({ handleClose, open, setOpen }) {
 
   useEffect(() => {
     const oauthToken = storage.get("oauth.token");
-    if (oauthToken) {
+    if (oauthToken !== null) {
       setLogin(true);
       fetchUserDetails();
+    } else {
+      setLogin(false);
+      setUser(null);
+      setCloudProjects([]);
     }
-  }, []);
+  }, [userEvent]);
 
   useEffect(() => {
     if (mode === null) {
@@ -318,7 +323,9 @@ function ProjectDialog({ handleClose, open, setOpen }) {
         refreshToken: refreshToken,
       });
       setLogin(true);
-      fetchUserDetails();
+      fetchUserDetails().then((user) => {
+        publish("USER", { login: true, id: user.id });
+      });
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -330,7 +337,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
       projectExist ? "please select a project" : "create a new project"
     }.`;
 
-    if (projectFounded !== null) {
+    if (projectFounded !== null && projectId !== "new") {
       handleClose();
       setSearchQuery("");
     } else {

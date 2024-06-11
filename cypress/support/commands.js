@@ -1,31 +1,15 @@
 /* eslint-disable */
 import { mount } from "cypress/react18";
-import { subscribe } from "@nucleoidai/react-event";
 
 Cypress.Commands.add("mount", (component, options) => {
   return mount(component, options);
-});
-
-Cypress.Commands.add("getBySel", (selector, ...args) => {
-  return cy.get(`[data-cy=${selector}]`, ...args);
-});
-
-Cypress.Commands.add("storageSet", (key, value) => {
-  cy.window().then((win) => {
-    win.localStorage.setItem(key, JSON.stringify(value));
-  });
-});
-
-Cypress.Commands.add("storageGet", (key) => {
-  cy.window().then((win) => {
-    return JSON.parse(win.localStorage.getItem(key));
-  });
 });
 
 Cypress.Commands.add("setup", (container, fixtureType, type) => {
   cy.clearLocalStorage();
   cy.storageSet(`debug`, true);
   cy.storageSet(`ide.landing`, { level: Number.MAX_SAFE_INTEGER });
+  cy.storageSet("oauth.token", { accesToken: "test", refreshToken: "test" });
 
   if (container === "IDE") {
     cy.fixture("/PROJECTS/projects.json").then((projects) => {
@@ -51,41 +35,29 @@ Cypress.Commands.add("setup", (container, fixtureType, type) => {
       cy.fixture("/PROJECTS/projects.json")
         .then((projects) => {
           const cloudProject = projects.find((p) => p.id === cloudProjectId);
-          cy.intercept(
-            "GET",
-            `/projects/${cloudProjectId}`,
-            {
-              statusCode: 200,
-              body: fixtureType === "BLANK" ? {} : cloudProject,
-            }
-          );
+          cy.intercept("GET", `/projects/${cloudProjectId}`, {
+            statusCode: 200,
+            body: fixtureType === "BLANK" ? {} : cloudProject,
+          });
         })
         .as("project");
 
       cy.fixture("/SERVICE/single-project-service.json")
         .then((service) => {
-          cy.intercept(
-            "GET",
-            `/projects/${cloudProjectId}/services`,
-            {
-              statusCode: 200,
-              body: fixtureType === "BLANK" ? {} : service,
-            }
-          );
+          cy.intercept("GET", `/projects/${cloudProjectId}/services`, {
+            statusCode: 200,
+            body: fixtureType === "BLANK" ? {} : service,
+          });
           serviceId = service[0].id;
         })
         .as("services");
 
       cy.fixture("/SPECIFICATION/specification.json")
         .then((context) => {
-          cy.intercept(
-            "GET",
-            `/services/${serviceId}/specification`,
-            {
-              statusCode: 200,
-              body: fixtureType === "BLANK" ? {} : context,
-            }
-          );
+          cy.intercept("GET", `/services/${serviceId}/specification`, {
+            statusCode: 200,
+            body: fixtureType === "BLANK" ? {} : context,
+          });
         })
         .as("context");
     } else if (type === "LOCAL") {
@@ -181,27 +153,19 @@ Cypress.Commands.add(
 Cypress.Commands.add("saveContextIntercept", (serviceId) => {
   cy.fixture("/SPECIFICATION/changed-specification.json")
     .then((specification) => {
-      cy.intercept(
-        "PUT",
-        `services/${serviceId}/specification`,
-        {
-          statusCode: 200,
-          body: specification,
-        }
-      );
+      cy.intercept("PUT", `services/${serviceId}/specification`, {
+        statusCode: 200,
+        body: specification,
+      });
     })
     .as("contextPut");
 
   cy.fixture("/SPECIFICATION/changed-specification.json")
     .then((specification) => {
-      cy.intercept(
-        "GET",
-        `/services/${serviceId}/specification`,
-        {
-          statusCode: 200,
-          body: specification,
-        }
-      );
+      cy.intercept("GET", `/services/${serviceId}/specification`, {
+        statusCode: 200,
+        body: specification,
+      });
     })
     .as("contextGet");
 });
@@ -221,21 +185,142 @@ Cypress.Commands.add("checkEditorValue", (expectedValue) => {
     });
 });
 
-Cypress.Commands.add("waitEvent", (eventName) => {
-  return cy.wrap(
-    new Promise((resolve) => {
-      cy.window().then(({ nucleoid: { Event } }) => {
-        const registry = Event.subscribe(eventName, () => {
-          registry.unsubscribe();
+Cypress.Commands.add("normalizeString", (str) => str.replace(/\s/g, ""));
 
-          resolve();
-        });
-      });
-    }),
-    { timeout: 10000 }
-  );
+Cypress.Commands.add("openAPIDialog", (mode) => {
+  if (mode === "EDIT") {
+    cy.getBySel("edit-api-button").click();
+  } else if (mode === "METHOD") {
+    cy.getBySel("resource-menu").click();
+    cy.getBySel("add-method").click();
+  } else if (mode === "RESOURCE") {
+    cy.getBySel("resource-menu").click();
+    cy.getBySel("add-resource").click();
+  }
 });
 
-Cypress.Commands.add("normalizeString", (str) => str.replace(/\s/g, ""));
+Cypress.Commands.add("apitreeSelectMethod", (methodName) => {
+  cy.get(`[data-cy^="method-${methodName}"]`).click();
+});
+
+Cypress.Commands.add(
+  "apitreeClickOtherMethodAndReturn",
+  (originalMethod, otherMethod) => {
+    cy.get(`[data-cy^="method-${otherMethod}"]`).click();
+    cy.get(`[data-cy^="method-${originalMethod}"]`).click();
+  }
+);
+
+Cypress.Commands.add("schemaEditorEditType", (propertyIndex, newType) => {
+  cy.getBySel("response-schema-editor")
+    .find(`[data-cy^='property-type-select-']`)
+    .eq(propertyIndex)
+    .click();
+  cy.getBySel(`property-type-option-${newType}`).click();
+});
+
+Cypress.Commands.add(
+  "schemaEditorVerifyType",
+  (propertyIndex, expectedType) => {
+    cy.getBySel("response-schema-editor")
+      .find(`[data-cy^='property-type-select-']`)
+      .eq(propertyIndex)
+      .should("contain", expectedType);
+  }
+);
+
+Cypress.Commands.add("schemaEditorAddProperty", (parentIndex = 0) => {
+  cy.getBySel("response-schema-editor")
+    .find(`[data-cy^='add-property-button-']`)
+    .eq(parentIndex)
+    .click();
+});
+
+Cypress.Commands.add("addParam", (name, description, required) => {
+  cy.getBySel("api-params")
+    .find("[data-cy^='param-name-field-'] input")
+    .then(($params) => {
+      const initialParamCount = $params.length;
+
+      cy.getBySel("add-param-button").click();
+
+      cy.getBySel("api-params")
+        .find("[data-cy^='param-name-field-'] input")
+        .should("have.length", initialParamCount + 1);
+
+      cy.getBySel("api-params")
+        .find("[data-cy^='param-name-field-'] input")
+        .eq(initialParamCount)
+        .clear()
+        .type(name);
+
+      cy.getBySel("api-params")
+        .find("[data-cy^='param-description-field-'] input")
+        .eq(initialParamCount)
+        .clear()
+        .type(description);
+
+      if (!required) {
+        cy.getBySel("api-params")
+          .find("[data-cy^='param-required-checkbox-'] input")
+          .eq(initialParamCount)
+          .click();
+      }
+
+      cy.getBySel("save-api-button").click();
+      cy.openAPIDialog("EDIT");
+
+      cy.getBySel("params-toggle").click();
+    });
+});
+
+Cypress.Commands.add(
+  "updateParam",
+  (index, newName, newDescription, required) => {
+    cy.getBySel("api-params")
+      .find(`[data-cy^='param-name-field-'] input`)
+      .eq(index)
+      .clear()
+      .type(newName);
+
+    cy.getBySel("api-params")
+      .find(`[data-cy^='param-description-field-'] input`)
+      .eq(index)
+      .clear()
+      .type(newDescription);
+
+    if (!required) {
+      cy.getBySel("api-params")
+        .find(`[data-cy^='param-required-checkbox-'] input`)
+        .eq(index)
+        .check();
+    } else {
+      cy.getBySel("api-params")
+        .find(`[data-cy^='param-required-checkbox-'] input`)
+        .eq(index)
+        .uncheck();
+    }
+  }
+);
+
+Cypress.Commands.add(
+  "verifyParam",
+  (index, expectedName, expectedDescription, isChecked) => {
+    cy.getBySel("api-params")
+      .find(`[data-cy^='param-name-field-'] input`)
+      .eq(index)
+      .should("have.value", expectedName);
+
+    cy.getBySel("api-params")
+      .find(`[data-cy^='param-description-field-'] input`)
+      .eq(index)
+      .should("have.value", expectedDescription);
+
+    cy.getBySel("api-params")
+      .find(`[data-cy^='param-required-checkbox-'] input`)
+      .eq(index)
+      .should(isChecked ? "be.checked" : "not.be.checked");
+  }
+);
 
 /* eslint-enable */

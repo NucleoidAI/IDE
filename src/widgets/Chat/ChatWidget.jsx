@@ -18,9 +18,10 @@ const ChatWidget = () => {
   const { chatId } = useParams("chatId");
 
   const [loading, setLoading] = useState(false);
-  const [landingLevel] = useEvent("ONBOARDING_LEVEL_ACHIEVED", {
-    level: Number.MAX_SAFE_INTEGER,
-  });
+  const [landingLevel] = useEvent(
+    "ONBOARDING_LEVEL_ACHIEVED",
+    storage.get("chat", "onboarding") || { level: 0 }
+  );
   const messageInputRef = useRef();
   const userMessageRef = useRef("");
   const [chat, sendMessage] = useChat();
@@ -49,32 +50,28 @@ const ChatWidget = () => {
     // eslint-disable-next-line
   }, [chatId]);
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = async (suggestion) => {
     setLoading(true);
     const first = !chat.messages.length;
-    const userMessage = messageInputRef.current.getValue();
+    const userMessage =
+      suggestion?.description || messageInputRef.current.getValue();
     userMessageRef.current = userMessage;
     messageInputRef.current.clear();
 
-    await sendMessage(userMessage);
+    try {
+      await sendMessage(userMessage);
 
-    if (first) {
-      publish("CHAT_INITIATED", chat.id);
+      if (first) {
+        publish("CHAT_INITIATED", chat.id);
+      }
+    } catch (error) {
+      publish("EXPERT_ERROR_OCCURRED", {
+        chatId: chat.id,
+        type: error.response.data.type,
+        content: error.response.data.content,
+      });
     }
 
-    setLoading(false);
-  };
-
-  const handleSuggestionClick = async (suggestion) => {
-    const first = !chat.messages.length;
-    setLoading(true);
-    userMessageRef.current = suggestion.description;
-
-    await sendMessage(suggestion.description);
-
-    if (first) {
-      publish("CHAT_INITIATED", chat.id);
-    }
     setLoading(false);
   };
 
@@ -109,7 +106,7 @@ const ChatWidget = () => {
       />
 
       <SuggestionsOverlay
-        onSuggestionClick={handleSuggestionClick}
+        onSuggestionClick={handleSendMessage}
         chat={chat}
         loading={loading}
         error={error}
@@ -120,6 +117,7 @@ const ChatWidget = () => {
         ref={messageInputRef}
         loading={loading}
         showConvertToProject={landingLevel.level === 1}
+        disableConvertToProject={landingLevel.level === 3}
       />
     </Box>
   );

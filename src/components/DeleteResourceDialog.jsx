@@ -45,7 +45,11 @@ const DeleteResourceDialog = forwardRef(({ setOpen, deleteResource }, ref) => {
         <Button autoFocus onClick={handleClose}>
           Cancel
         </Button>
-        <Button onClick={handleDelete} autoFocus>
+        <Button
+          onClick={handleDelete}
+          autoFocus
+          data-cy="delete-resource-confirm-button"
+        >
           Delete
         </Button>
       </DialogActions>

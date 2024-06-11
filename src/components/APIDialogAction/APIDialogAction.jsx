@@ -48,8 +48,12 @@ function APIDialogAction({
             },
           }}
         >
-          <ToggleButton value={"PARAMS"}>PARAMS</ToggleButton>
-          <ToggleButton value={"BODY"}>BODY</ToggleButton>
+          <ToggleButton value={"PARAMS"} data-cy="params-toggle">
+            PARAMS
+          </ToggleButton>
+          <ToggleButton value={"BODY"} data-cy="body-toggle">
+            BODY
+          </ToggleButton>
         </ToggleButtonGroup>
       </Box>
       <Box sx={{ display: "flex", gap: 1 }}>
@@ -69,6 +73,7 @@ function APIDialogAction({
               color="error"
               onClick={deleteMethod}
               startIcon={<DeleteIcon />}
+              data-cy="delete-api-button-yes"
             >
               Delete
             </Button>
@@ -81,6 +86,7 @@ function APIDialogAction({
             onClick={handleTooltipOpen}
             disabled={deleteDisable}
             startIcon={<DeleteIcon />}
+            data-cy="delete-api-button"
           >
             Delete
           </Button>
@@ -91,6 +97,7 @@ function APIDialogAction({
           onClick={saveApiDialog}
           disabled={saveDisable}
           startIcon={<SaveIcon />}
+          data-cy="save-api-button"
         >
           Save
         </Button>

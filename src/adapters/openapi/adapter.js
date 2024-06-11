@@ -135,9 +135,17 @@ const toSchemas = (types) => {
   }
   const schemas = {};
   types.forEach((type) => {
-    schemas[type?.name] = toOpenApiSchema(type?.schema);
+    const schema = toOpenApiSchema(type?.schema, types);
+    for (const key in schema.properties) {
+      const property = schema.properties[key];
+      if (types.find((t) => t.name === property.type)) {
+        schema.properties[key] = {
+          $ref: `#/components/schemas/${property.type}`,
+        };
+      }
+    }
+    schemas[type?.name] = schema;
   });
-
   return schemas;
 };
 

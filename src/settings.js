@@ -1,4 +1,5 @@
 import { storage } from "@nucleoidjs/webstorage";
+
 const Settings = {
   projects: [],
   dialog: {},

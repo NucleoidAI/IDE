@@ -14,6 +14,7 @@ import SwaggerDialog from "../../components/SwaggerDialog";
 import { contextReducer } from "../../context/reducer";
 import { contextToMap } from "../../utils/Parser";
 import routes from "../../routes";
+import sandboxService from "../../sandboxService";
 import service from "../../service";
 import { storage } from "@nucleoidjs/webstorage";
 import styles from "./styles";
@@ -70,6 +71,26 @@ function IDE() {
     publish("PROJECT_FOUNDED", { id: projectId, type: "LOCAL", from: "URL" });
 
     const context = Context.withPages({ specification, project });
+    context.get = (prop) => Context.resolve(context, prop);
+
+    return context;
+  }
+
+  function getContextFromTerminal(projectId) {
+    publish("PAGE_LOADED", {
+      id: projectId,
+      type: "TERMINAL",
+      from: "URL",
+    });
+
+    publish("RUNTIME_CONNECTION", {
+      status: false,
+      metrics: { total: 100, free: 50 },
+    });
+
+    sandboxService.setTerminalUrl(Settings.url.terminal());
+
+    const context = Context.withBlank();
     context.get = (prop) => Context.resolve(context, prop);
 
     return context;
@@ -210,6 +231,9 @@ function IDE() {
         const context = getContextFromStorage(id);
         if (!context) return;
         initVfs(context);
+        return setReactContext(initContext(context));
+      } else if (mode === "terminal") {
+        const context = getContextFromTerminal(id);
         return setReactContext(initContext(context));
       } else {
         if (id === "sample") {

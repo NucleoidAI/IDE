@@ -9,7 +9,7 @@ const getClassFunctions = (functions) => {
 const resolveType = (type, classNameToStructureMap) => {
   if (typeof type === "string") {
     if (classNameToStructureMap[type]) {
-      return { type: "ref", ref: type };
+      return { type };
     } else {
       return { type };
     }

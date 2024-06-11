@@ -56,6 +56,7 @@ function LogicTree({ openLogicDialog }) {
   const functions = state.specification.functions;
   //eslint-disable-next-line
   const [logicExist, setLogicExist] = useState(Boolean(declarations.length));
+  const functionsExist = Boolean(functions.length);
 
   function select(value) {
     const [logicClass, logicIndex] = value.split("-");
@@ -255,7 +256,11 @@ function LogicTree({ openLogicDialog }) {
           </CardActions>
         </>
       ) : (
-        <BlankTreeMessage item={"Logic"} />
+        <BlankTreeMessage
+          item={"Logic"}
+          openLogicDialog={openLogicDialog}
+          functionsExist={functionsExist}
+        />
       )}
     </Card>
   );
