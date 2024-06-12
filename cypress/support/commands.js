@@ -349,11 +349,11 @@ Cypress.Commands.add(
 Cypress.Commands.add("runSandbox", () => {
   cy.getBySel("run-button").click();
 
-  cy.waitEvent("SWAGGER_DIALOG");
-
-  cy.wait(2000);
+  cy.wait(1000);
 
   cy.getBySel("close-arrow").click();
+
+  cy.waitEvent("SWAGGER_DIALOG");
 });
 
 /* eslint-enable */
