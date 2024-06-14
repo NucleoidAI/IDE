@@ -1,6 +1,8 @@
 import { Avatar } from "@mui/material";
 import GraphImage from "../../images/graph.png";
 import React from "react";
+import { storage } from "@nucleoidjs/webstorage";
+
 import { Box, Fab } from "@mui/material/";
 import { publish, useEvent } from "@nucleoidai/react-event";
 
@@ -29,7 +31,9 @@ const GraphButton = () => {
           }}
           variant={"contained"}
           onClick={() => {
-            publish("GRAPH_DIALOG", { open: true });
+            publish("GRAPH_DIALOG_OPENED", {
+              terminalUrl: storage.get("ide.terminal"),
+            });
           }}
         >
           <Avatar sx={{ p: 0.5 }} src={GraphImage} />

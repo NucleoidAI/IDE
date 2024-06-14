@@ -6,6 +6,7 @@ import GraphImage from "../../images/graph.png";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import MessageBox from "./components/MessageBox";
 import WelcomeMessage from "./components/WelcomeMessage";
+import { storage } from "@nucleoidjs/webstorage";
 
 import {
   Box,
@@ -118,7 +119,11 @@ const ChatDisplay = ({
       </Tooltip>
       <Tooltip
         title="Graph"
-        onClick={() => publish("GRAPH_DIALOG", { open: true })}
+        onClick={() =>
+          publish("GRAPH_DIALOG_OPENED", {
+            terminalUrl: storage.get("ide.terminal"),
+          })
+        }
         sx={{
           position: "absolute",
           top: "10px",
