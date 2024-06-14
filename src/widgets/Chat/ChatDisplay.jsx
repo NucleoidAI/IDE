@@ -1,10 +1,11 @@
+import Avatar from "@mui/material/Avatar";
 import ChatEditor from "./ChatEditor";
 import ErrorMessage from "./components/ErrorMessage";
 import { GitHub } from "@mui/icons-material";
+import GraphImage from "../../images/graph.png";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import MessageBox from "./components/MessageBox";
 import WelcomeMessage from "./components/WelcomeMessage";
-import { useEvent } from "@nucleoidai/react-event";
 
 import {
   Box,
@@ -18,6 +19,7 @@ import {
   useTheme,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
+import { publish, useEvent } from "@nucleoidai/react-event";
 
 const ChatDisplay = ({
   chat,
@@ -110,8 +112,22 @@ const ChatDisplay = ({
           cursor: "pointer",
         }}
       >
-        <Fab size="small">
+        <Fab variant="button">
           <GitHub />
+        </Fab>
+      </Tooltip>
+      <Tooltip
+        title="Graph"
+        onClick={() => publish("GRAPH_DIALOG", { open: true })}
+        sx={{
+          position: "absolute",
+          top: "10px",
+          right: "85px",
+          cursor: "pointer",
+        }}
+      >
+        <Fab variant="button">
+          <Avatar sx={{ p: 0.5 }} src={GraphImage} />
         </Fab>
       </Tooltip>
 
