@@ -16,6 +16,7 @@ import {
   DialogContent,
   DialogTitle,
   Fab,
+  Fade,
   Tooltip,
   useTheme,
 } from "@mui/material";
@@ -29,6 +30,7 @@ const ChatDisplay = ({
   refreshChat,
   currentUserMessage,
   codeCollapsed,
+  codeResponse,
 }) => {
   const theme = useTheme();
   const [openDialog, setOpenDialog] = useState(false);
@@ -39,6 +41,10 @@ const ChatDisplay = ({
     active: false,
   });
 
+  const [onboarding] = useEvent(
+    "ONBOARDING_LEVEL_ACHIEVED",
+    storage.get("chat", "onboarding") || { level: 0 }
+  );
   const messagesContainerRef = useRef(null);
 
   const handleOpenDialog = (code) => {
@@ -117,24 +123,28 @@ const ChatDisplay = ({
           <GitHub />
         </Fab>
       </Tooltip>
-      <Tooltip
-        title="Graph"
-        onClick={() =>
-          publish("GRAPH_DIALOG_OPENED", {
-            terminalUrl: storage.get("ide.terminal"),
-          })
-        }
-        sx={{
-          position: "absolute",
-          top: "10px",
-          right: "85px",
-          cursor: "pointer",
-        }}
-      >
-        <Fab variant="button">
-          <Avatar sx={{ p: 0.5 }} src={GraphImage} />
-        </Fab>
-      </Tooltip>
+      {codeResponse && (
+        <Fade in={true} timeout={1000}>
+          <Tooltip
+            title="Graph"
+            onClick={() =>
+              publish("GRAPH_DIALOG_OPENED", {
+                terminalUrl: storage.get("ide.terminal"),
+              })
+            }
+            sx={{
+              position: "absolute",
+              top: "10px",
+              right: "85px",
+              cursor: "pointer",
+            }}
+          >
+            <Fab variant="button">
+              <Avatar sx={{ p: 0.5 }} src={GraphImage} />
+            </Fab>
+          </Tooltip>
+        </Fade>
+      )}
 
       {chat && chat.messages.length === 0 ? (
         <WelcomeMessage />

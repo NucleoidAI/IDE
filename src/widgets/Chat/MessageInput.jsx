@@ -27,7 +27,7 @@ const MessageInput = forwardRef((props, ref) => {
     loading,
     handleSendMessage,
     showConvertToProject,
-    disableConvertToProject,
+    highlightConvertToProject,
   } = props;
   const theme = useTheme();
   const [, , convertChat] = useChat();
@@ -39,14 +39,14 @@ const MessageInput = forwardRef((props, ref) => {
   const [chatMessageResponded] = useEvent("CHAT_MESSAGE_RESPONDED", null);
 
   useEffect(() => {
-    if (showConvertToProject) {
+    if (highlightConvertToProject) {
       setIsAnimating(true);
       const timer = setTimeout(() => {
         setIsAnimating(false);
       }, 2000);
       return () => clearTimeout(timer);
     }
-  }, [showConvertToProject]);
+  }, [highlightConvertToProject]);
 
   useEffect(() => {
     if (chatMessageResponded) {
@@ -88,6 +88,33 @@ const MessageInput = forwardRef((props, ref) => {
 
   const handleInputChange = (event) => {
     setIsInputEmpty(!event.target.value.trim());
+  };
+
+  const convertToProjectButton = () => {
+    return (
+      <Tooltip
+        title={
+          <Typography sx={{ fontSize: "1rem" }}>Convert to Project</Typography>
+        }
+        placement="top"
+      >
+        <IconButton
+          type="button"
+          onClick={handleProjectIconClick}
+          className={isAnimating ? "pulse-animation" : ""}
+          sx={{
+            ml: 1,
+            backgroundColor: highlightConvertToProject ? "#209958" : "none",
+            "&:hover": {
+              backgroundColor: highlightConvertToProject ? "#209958" : "none",
+            },
+          }}
+          data-cy="convert-to-project-button"
+        >
+          <CodeIcon sx={{ color: "white" }} />
+        </IconButton>
+      </Tooltip>
+    );
   };
 
   return (
@@ -134,48 +161,7 @@ const MessageInput = forwardRef((props, ref) => {
           sx={{ flexGrow: 1 }}
           data-cy="message-input"
         />
-        {showConvertToProject && (
-          <Tooltip
-            title={
-              <Typography sx={{ fontSize: "1rem" }}>
-                Convert to Project
-              </Typography>
-            }
-            placement="top"
-          >
-            <IconButton
-              type="button"
-              onClick={handleProjectIconClick}
-              className={isAnimating ? "pulse-animation" : ""}
-              sx={{
-                ml: 1,
-                backgroundColor: "#209958",
-                "&:hover": {
-                  backgroundColor: "#209958",
-                },
-              }}
-              data-cy="convert-to-project-button"
-            >
-              <CodeIcon sx={{ color: "white" }} />{" "}
-            </IconButton>
-          </Tooltip>
-        )}
-        {disableConvertToProject && (
-          <IconButton
-            disabled
-            variant="button"
-            sx={{
-              ml: 1,
-              backgroundColor: "#31363F",
-              "&:hover": {
-                backgroundColor: "#31363F",
-              },
-            }}
-            data-cy="disable-convert-to-project-button"
-          >
-            <CodeIcon sx={{ color: "white" }} />{" "}
-          </IconButton>
-        )}
+        {showConvertToProject && convertToProjectButton()}
         <IconButton
           type="submit"
           disabled={loading || isInputEmpty}

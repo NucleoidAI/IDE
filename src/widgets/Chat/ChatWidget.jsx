@@ -17,11 +17,14 @@ const ChatWidget = () => {
   const theme = useTheme();
   const { chatId } = useParams("chatId");
 
+  const [codeResponse, setCodeResponse] = useState(false);
+  const [isItFirstVisit, setIsItFirstVisit] = useState();
   const [loading, setLoading] = useState(false);
   const [landingLevel] = useEvent(
     "ONBOARDING_LEVEL_ACHIEVED",
     storage.get("chat", "onboarding") || { level: 0 }
   );
+  const [chatMessageResponded] = useEvent("CHAT_MESSAGE_RESPONDED", null);
   const messageInputRef = useRef();
   const userMessageRef = useRef("");
   const [chat, sendMessage] = useChat();
@@ -30,7 +33,6 @@ const ChatWidget = () => {
     type: "",
     content: "",
   });
-
   const loadChat = async () => {
     if (chatId) {
       // TODO Verify chat is valid in local storage
@@ -38,7 +40,19 @@ const ChatWidget = () => {
       // Requires async call
       const session = await storage.get("ide", "chat", "sessions", chatId);
       publish("CHAT_SELECTED", session);
-
+      if (landingLevel.level === 0) {
+        setIsItFirstVisit(true);
+      } else {
+        setIsItFirstVisit(false);
+      }
+      console.log(
+        session.messages.filter((message) => message.code).length >= 1
+      );
+      if (session.messages.filter((message) => message.code).length >= 1) {
+        setCodeResponse(true);
+      } else {
+        setCodeResponse(false);
+      }
       publish("WIDGET_LOADED", {
         name: "ChatWidget",
       });
@@ -49,6 +63,19 @@ const ChatWidget = () => {
     loadChat().then();
     // eslint-disable-next-line
   }, [chatId]);
+
+  useEffect(() => {
+    if (landingLevel.level > 0) {
+      storage.set("ide", "terminal", chatId);
+    }
+    // eslint-disable-next-line
+  }, [landingLevel, chatId]);
+
+  useEffect(() => {
+    if (chat.messages.filter((message) => message.code).length === 1) {
+      setCodeResponse(true);
+    }
+  }, [chatMessageResponded]);
 
   const handleSendMessage = async (suggestion) => {
     setLoading(true);
@@ -102,6 +129,7 @@ const ChatWidget = () => {
         loading={loading}
         error={error}
         refreshChat={refreshChat}
+        codeResponse={codeResponse}
         codeCollapsed={Settings.collapseCodeBlocks}
       />
 
@@ -116,8 +144,8 @@ const ChatWidget = () => {
         handleSendMessage={handleSendMessage}
         ref={messageInputRef}
         loading={loading}
-        showConvertToProject={landingLevel.level === 1}
-        disableConvertToProject={landingLevel.level === 3}
+        showConvertToProject={codeResponse}
+        highlightConvertToProject={isItFirstVisit && landingLevel.level === 1}
       />
     </Box>
   );
