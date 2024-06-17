@@ -41,10 +41,6 @@ const ChatDisplay = ({
     active: false,
   });
 
-  const [onboarding] = useEvent(
-    "ONBOARDING_LEVEL_ACHIEVED",
-    storage.get("chat", "onboarding") || { level: 0 }
-  );
   const messagesContainerRef = useRef(null);
 
   const handleOpenDialog = (code) => {

@@ -11,7 +11,6 @@ const GraphDialog = () => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    console.log("graphDialogOpened", graphDialogOpened);
     if (graphDialogOpened.terminalUrl !== "") {
       setOpen(true);
     }
