@@ -1,4 +1,4 @@
-describe("Query Page", () => {
+describe("Query", () => {
   describe("Terminal Mode", () => {
     beforeEach(() => {
       cy.setup("IDE", "SEED", "LOCAL");

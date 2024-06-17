@@ -1,5 +1,5 @@
 describe("Side Chat", () => {
-  describe("created project by default", () => {
+  describe("creates a project by default", () => {
     beforeEach(() => {
       cy.setup("IDE", "SEED", "LOCAL");
       cy.fixture("PROJECTS/LOCAL/project.json").as("project");
@@ -39,7 +39,7 @@ describe("Side Chat", () => {
     });
   });
 
-  describe("created project by chat", () => {
+  describe("creates a project by chat", () => {
     beforeEach(() => {
       cy.setup("IDE", "SEED", "LOCAL");
       cy.fixture("PROJECTS/LOCAL/project.json").as("project");

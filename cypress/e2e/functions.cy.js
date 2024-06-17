@@ -1,4 +1,4 @@
-describe("Functions Page", () => {
+describe("Functions", () => {
   describe("Local Mode", () => {
     beforeEach(() => {
       cy.setup("IDE", "SEED", "LOCAL");
