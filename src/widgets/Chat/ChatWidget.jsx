@@ -45,11 +45,10 @@ const ChatWidget = () => {
       } else {
         setIsItFirstVisit(false);
       }
-      console.log(
-        session.messages.filter((message) => message.code).length >= 1
-      );
+
       if (session.messages.filter((message) => message.code).length >= 1) {
         setCodeResponse(true);
+        storage.set("ide", "terminal", chatId);
       } else {
         setCodeResponse(false);
       }
@@ -65,16 +64,11 @@ const ChatWidget = () => {
   }, [chatId]);
 
   useEffect(() => {
-    if (landingLevel.level > 0) {
+    if (chat.messages.filter((message) => message.code).length === 1) {
+      setCodeResponse(true);
       storage.set("ide", "terminal", chatId);
     }
     // eslint-disable-next-line
-  }, [landingLevel, chatId]);
-
-  useEffect(() => {
-    if (chat.messages.filter((message) => message.code).length === 1) {
-      setCodeResponse(true);
-    }
   }, [chatMessageResponded]);
 
   const handleSendMessage = async (suggestion) => {
