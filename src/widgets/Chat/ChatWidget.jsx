@@ -66,7 +66,12 @@ const ChatWidget = () => {
   useEffect(() => {
     if (chat.messages.filter((message) => message.code).length === 1) {
       setCodeResponse(true);
-      storage.set("ide", "terminal", chatId);
+      storage.set(
+        "ide",
+        "terminal",
+        `https://nucleoid.com/sandbox/terminal/${chatId}`
+      );
+      storage.set("ide", "app", `https://nucleoid.com/sandbox/${chatId}/`);
     }
     // eslint-disable-next-line
   }, [chatMessageResponded]);
