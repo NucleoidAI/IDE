@@ -34,6 +34,18 @@ const ReadOnlyEditor = ({
     setCollapsed(!collapsed);
   };
 
+  let formattedCode;
+  try {
+    formattedCode = prettierStandalone.format(value, {
+      parser: "typescript",
+      plugins: [typescriptPlugin],
+      singleQuote: true,
+    });
+  } catch (error) {
+    console.error("Error formatting code with Prettier:", error);
+    formattedCode = value; // Fall back to the original code if formatting fails
+  }
+
   return (
     <Stack
       sx={{
@@ -72,12 +84,9 @@ const ReadOnlyEditor = ({
           ref={codeRef}
           className={language}
           data-cy="code-block"
+          sx={{ whiteSpace: "pre-wrap" }} // Ensure the code retains formatting
         >
-          {prettierStandalone.format(value, {
-            parser: "typescript",
-            plugins: [typescriptPlugin],
-            singleQuote: true,
-          })}
+          {formattedCode}
         </Stack>
       </Collapse>
     </Stack>

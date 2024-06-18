@@ -338,6 +338,7 @@ function ApiButton() {
       ) : (
         <Tooltip title={`Start ${runtime}`} placement="left">
           <ListItemButton
+            data-cy="run-button"
             name="onboardRun"
             onClick={handleRun}
             onMouseEnter={(e) => {

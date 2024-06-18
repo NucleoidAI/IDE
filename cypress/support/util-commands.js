@@ -24,7 +24,7 @@ Cypress.Commands.add("getBySel", (selector, ...args) => {
 });
 
 Cypress.Commands.add("waitEvent", (eventName) => {
-  cy.window().then({ timeout: 60000 }, (window) => {
+  cy.window().then((window) => {
     const { Event } = window["@nucleoidai"];
 
     return new Cypress.Promise((resolve) => {

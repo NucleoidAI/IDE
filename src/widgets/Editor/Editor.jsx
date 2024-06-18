@@ -36,16 +36,6 @@ const Editor = React.forwardRef((props, ref) => {
           editorRef.current.editor.focus();
           editorRef.current.editor.setValue(context.get("pages.query.text"));
           editorRef.current.editor.setPosition({ lineNumber: 1, column: 1000 });
-          editorRef.current.editor.addAction({
-            id: "lintEvent",
-            label: "lintEvent",
-            keybindings: [
-              monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
-              monaco.KeyMod.chord(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter),
-            ],
-            run: () => handleQuery(),
-          });
-
           const query = context.get("pages.query");
           editorRef.current?.editor.onKeyUp(() => {
             query.text = editorRef?.current?.editor.getValue();
@@ -85,6 +75,17 @@ const Editor = React.forwardRef((props, ref) => {
   };
   function editorOnMount(editor, monaco) {
     editorRef.current = { editor: editor, monaco: monaco };
+
+    editor.addAction({
+      id: "lintEvent",
+      label: "lintEvent",
+      keybindings: [
+        monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
+        monaco.KeyMod.chord(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter),
+      ],
+      run: () => handleQuery(),
+    });
+
     if (logic) {
       setLogicModel();
       publish("WIDGET_LOADED", { name: "Editor" });
@@ -227,12 +228,18 @@ const Editor = React.forwardRef((props, ref) => {
         setEditorRef={editorRef}
         ref={ref}
       />
+
       {query && (
         <Stack direction={"row"} sx={styles.runButton}>
           <QueryAIButton />
           <AIDialog imperative page={"query"} editor={editorRef} />
           {!loading && (
-            <Fab variant="button" size={"small"} onClick={() => handleQuery()}>
+            <Fab
+              data-cy="query-button"
+              variant="button"
+              size={"small"}
+              onClick={() => handleQuery()}
+            >
               <PlayArrowIcon />
             </Fab>
           )}

@@ -97,7 +97,7 @@ Cypress.Commands.add("typeEditor", (changedEditorValue) => {
   cy.get("section").should("be.visible");
   cy.get(".monaco-editor").should("be.visible");
 
-  cy.get('textarea[role="textbox"]').focus().clear({ force: true });
+  cy.get('textarea[role="textbox"]').type("{selectall}{del}");
 
   cy.get('textarea[role="textbox"]').type(changedEditorValue, {
     force: true,
@@ -322,5 +322,50 @@ Cypress.Commands.add(
       .should(isChecked ? "be.checked" : "not.be.checked");
   }
 );
+
+Cypress.Commands.add(
+  "checkLocalContext",
+  (projectId, specification, changedEditorValue) => {
+    let checkedSpecification;
+    cy.storageGet(`ide.context.${projectId}`).then((project) => {
+      if (specification === "api") {
+        checkedSpecification = project.specification.api[0]["action"];
+      } else if (specification === "declaration") {
+        checkedSpecification = project.specification.declarations[0].definition;
+      }
+      if (specification === "function") {
+        checkedSpecification = project.specification.functions[0].definition;
+      }
+
+      cy.normalizeString(checkedSpecification).then((normalizedDefinition) => {
+        cy.normalizeString(changedEditorValue).then((normalizedNewOrder) => {
+          expect(normalizedDefinition).to.include(normalizedNewOrder);
+        });
+      });
+    });
+  }
+);
+
+Cypress.Commands.add("runSandbox", () => {
+  cy.getBySel("run-button").click();
+
+  cy.intercept("POST", "https://nuc.land/sandbox/openapi", {
+    fixture: "Query/query.openapi.json",
+  });
+
+  cy.intercept(
+    "GET",
+    "https://nuc.land/sandbox/terminal/f390c2da-20ba-41e8-816c-fefec298aa0a/metrics",
+    {
+      fixture: "Query/query.metrics.json",
+    }
+  );
+
+  cy.wait(1000);
+
+  cy.getBySel("close-arrow").click();
+
+  cy.waitEvent("SWAGGER_DIALOG");
+});
 
 /* eslint-enable */

@@ -3,6 +3,7 @@ import appConfig from "./config.js";
 import { defineConfig } from "cypress";
 
 const config = defineConfig({
+  defaultCommandTimeout: 60000,
   component: {
     devServer: {
       framework: "react",

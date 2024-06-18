@@ -4,20 +4,23 @@ import Page from "../../../components/Page";
 import QueryResultWidget from "../../../widgets/QueryResultWidget/QueryResultWidget";
 import { publish } from "@nucleoidai/react-event";
 import { useContext } from "../../../context/context";
-import { useEffect } from "react";
 import { useEvent } from "@nucleoidai/react-event";
 import { useNavigate } from "react-router-dom";
-
 import React, { useState } from "react";
+import { useCallback, useEffect } from "react";
 
 function Query() {
   const [event] = useEvent("WIDGET_LOADED", { name: null });
 
-  const [state] = useContext();
+  const [state, setState] = useContext();
   const result = state.get("pages.query.results");
-  const [outputRatio, setOutputRatio] = React.useState(
-    state.get("pages.query.outputRatio")
-  );
+  const text = state.get("pages.query.text");
+
+  // Define default values
+  const defaultOutputRatio = state.get("pages.query.outputRatio");
+  const defaultText = ""; // Assuming the default text is an empty string
+
+  const [outputRatio, setOutputRatio] = React.useState(defaultOutputRatio);
 
   const [runtimeConnection] = useEvent("RUNTIME_CONNECTION");
   const navigate = useNavigate();
@@ -36,11 +39,31 @@ function Query() {
 
   const [loading, setLoading] = useState(false);
 
-  const handleSetOutputRatio = (ratio) => {
-    const query = state.get("pages.query");
-    query.outputRatio = ratio;
-    setOutputRatio(ratio);
-  };
+  const handleSetOutputRatio = useCallback(
+    (ratio) => {
+      setState((prevState) => {
+        const query = { ...prevState.pages.query, outputRatio: ratio };
+        return { ...prevState, pages: { ...prevState.pages, query } };
+      });
+      setOutputRatio(ratio);
+    },
+    [setState]
+  );
+
+  // Effect to reset the state when the component is unmounted
+  useEffect(() => {
+    return () => {
+      setState((prevState) => {
+        const query = {
+          ...prevState.pages.query,
+          outputRatio: defaultOutputRatio,
+          results: null,
+          text: defaultText,
+        };
+        return { ...prevState, pages: { ...prevState.pages, query } };
+      });
+    };
+  }, [defaultOutputRatio, defaultText, setState]);
 
   useEffect(() => {
     publish("PAGE_LOADED", { name: "Query" });
@@ -50,7 +73,9 @@ function Query() {
     <Page title={"Query"}>
       <HorizontalSplitLayout
         outputRatio={outputRatio}
-        topSection={<Editor loading={loading} setLoading={setLoading} query />}
+        topSection={
+          <Editor loading={loading} setLoading={setLoading} query text={text} />
+        }
         bottomSection={
           <QueryResultWidget
             result={result}

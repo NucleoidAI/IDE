@@ -1,0 +1,34 @@
+{
+  "result": 1,
+  "$nuc": [
+    {
+      "iof": "$ASSIGNMENT",
+      "pre": true,
+      "knd": null,
+      "$": {
+        "iof": "$VARIABLE",
+        "pre": true,
+        "nme": {
+          "type": "Identifier",
+          "name": "a"
+        },
+        "val": {
+          "iof": "EXPRESSION",
+          "tokens": {
+            "iof": "Expression",
+            "node": {
+              "type": "Literal",
+              "value": 1,
+              "raw": "1"
+            }
+          }
+        },
+        "asg": true
+      }
+    }
+  ],
+  "declarative": false,
+  "date": 1718010663873,
+  "time": 10,
+  "error": false
+}

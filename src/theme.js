@@ -67,6 +67,11 @@ const commonThemeProperties = {
     MuiDataGrid: {
       styleOverrides: {
         root: {
+          borderColor: base.grey[700],
+          "& .MuiDataGrid-columnHeader, & .MuiDataGrid-cell, & .MuiDataGrid-columnHeaders, & .MuiDataGrid-footerContainer":
+            {
+              borderColor: base.grey[700],
+            },
           "& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-cell:focus-within":
             {
               outline: "none",
@@ -171,6 +176,12 @@ const commonThemeProperties = {
           props: { variant: "pageIcon" },
           style: {
             color: base.grey[400],
+          },
+        },
+        {
+          props: { variant: "success" },
+          style: {
+            color: success.dark,
           },
         },
       ],

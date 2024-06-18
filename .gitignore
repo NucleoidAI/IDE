@@ -9,6 +9,8 @@
 /.pnp
 .pnp.js
 
+/cypress/videos/*
+
 # testing
 /coverage
 
