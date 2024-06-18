@@ -349,6 +349,10 @@ Cypress.Commands.add(
 Cypress.Commands.add("runSandbox", () => {
   cy.getBySel("run-button").click();
 
+  cy.intercept("POST", "https://nuc.land/sandbox/openapi", {
+    fixture: "Query/query.openapi.json",
+  });
+
   cy.wait(1000);
 
   cy.getBySel("close-arrow").click();
