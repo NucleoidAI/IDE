@@ -28,11 +28,12 @@ const GraphDialog = () => {
     >
       <DialogContent
         sx={{
-          width: "80vw",
-          height: "90vh",
+          width: "100%",
+          height: "100%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          padding: 0,
         }}
       >
         <iframe
@@ -40,7 +41,7 @@ const GraphDialog = () => {
           width={"100%"}
           height={"100%"}
           style={{ border: "none" }}
-          src={"/ide/graph"}
+          src={"https://nucleoid.com/ide/graph"}
         ></iframe>
       </DialogContent>
     </NucDialog>
