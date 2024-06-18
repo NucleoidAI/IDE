@@ -3,7 +3,6 @@ import ChatDrawer from "../../widgets/ChatDrawer/ChatDrawer";
 import Context from "../../context";
 import ContextProvider from "../../context/context";
 import EducationDrawer from "../../components/EducationDrawer/EducationDrawer";
-import GraphDialog from "../../components/GraphDialog/GraphDialog";
 import Menu from "../../widgets/Menu";
 import Onboard from "./Onboarding";
 import Path from "../../utils/Path";
@@ -296,7 +295,6 @@ function IDE() {
         <SwaggerDialog />
 
         <PopChat />
-        <GraphDialog />
       </Box>
     </ContextProvider>
   );

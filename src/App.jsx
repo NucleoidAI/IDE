@@ -1,5 +1,6 @@
 import AppSnackMessage from "./components/AppSnackMessage/AppSnackMessage";
 import EventRegistry from "./EventRegistry";
+import GraphDialog from "./components/GraphDialog/GraphDialog";
 import Path from "./utils/Path";
 import RouteManager from "./RouteManager";
 import Settings from "./settings";
@@ -81,6 +82,7 @@ function App() {
         <EventRegistry />
         <RouteManager routes={routes} mode={Path.getMode()} />
         <AppSnackMessage />
+        <GraphDialog />
       </ThemeProvider>
     </StyledEngineProvider>
   );

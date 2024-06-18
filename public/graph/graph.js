@@ -169,7 +169,9 @@ const style = [
 ];
 
 Promise.all([
-  fetch(localStorage.getItem("terminal") + "/graph").then((res) => res.json()),
+  fetch(localStorage.getItem("ide.terminal") + "/graph").then((res) =>
+    res.json()
+  ),
 ]).then(function (dataArray) {
   const graph = [];
   const data = dataArray[0];

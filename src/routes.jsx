@@ -98,7 +98,6 @@ const routes = [
       },
     ],
   },
-  { path: "/graph" },
   { path: "/callback", element: <Login /> },
 ];
 

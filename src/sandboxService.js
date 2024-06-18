@@ -41,7 +41,8 @@ const createSandbox = async (context, runtime) => {
       setAppUrl(sandboxUrl);
       setTerminalUrl(sandboxUrl);
     }
-
+    Settings.url.app(appUrl);
+    Settings.url.terminal(terminalUrl);
     scheduler.start();
     checkLandingLevel();
     return sandboxId;
@@ -53,6 +54,7 @@ const createSandbox = async (context, runtime) => {
 
 const setAppUrl = (sandboxUrl) => {
   if (sandboxId) {
+    console.log("appUrl", `${sandboxUrl}/${sandboxId}/`);
     appUrl = `${sandboxUrl}/${sandboxId}/`;
   } else {
     appUrl = "http://localhost:3000";
