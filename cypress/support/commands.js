@@ -353,6 +353,14 @@ Cypress.Commands.add("runSandbox", () => {
     fixture: "Query/query.openapi.json",
   });
 
+  cy.intercept(
+    "GET",
+    "https://nuc.land/sandbox/terminal/f390c2da-20ba-41e8-816c-fefec298aa0a/metrics",
+    {
+      fixture: "Query/query.metrics.json",
+    }
+  );
+
   cy.wait(1000);
 
   cy.getBySel("close-arrow").click();
