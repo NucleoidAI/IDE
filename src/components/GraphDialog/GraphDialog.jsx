@@ -22,7 +22,7 @@ const GraphDialog = () => {
       handleClose={() => {
         setOpen(false);
       }}
-      title={"Graph"}
+      title={"Logic Graph"}
       maximizedDimensions={{ width: "75rem", height: "60rem" }}
       minimizedDimensions={{ width: "65rem", height: "50rem" }}
     >
