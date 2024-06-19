@@ -41,7 +41,7 @@ const GraphDialog = () => {
           width={"100%"}
           height={"100%"}
           style={{ border: "none" }}
-          src={"https://nucleoid.com/ide/graph"}
+          src={"/ide/graph"}
         ></iframe>
       </DialogContent>
     </NucDialog>
