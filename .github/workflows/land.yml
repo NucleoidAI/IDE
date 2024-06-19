@@ -5,11 +5,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
-    uses: NucleoidAI/actions/.github/workflows/test.yml@main
+  deploy:
+    uses: NucleoidAI/actions/.github/workflows/deploy.yml@main
     secrets: inherit
 
-  deploy:
-    needs: test
-    uses: NucleoidAI/actions/.github/workflows/deploy.yml@main
+  test:
+    needs: deploy
+    uses: NucleoidAI/actions/.github/workflows/test.yml@main
     secrets: inherit
