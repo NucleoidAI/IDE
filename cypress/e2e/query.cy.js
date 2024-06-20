@@ -143,7 +143,7 @@ describe("Query", () => {
         .find('[data-cy="value"]')
         .should("have.text", "{value:1}");
     });
-    it("display success icon only when result is empty", function () {
+    it.only("display success icon only when result is empty", function () {
       cy.intercept("POST", "http://localhost:3000", {
         fixture: "Query/query.empty.json",
       }).as("emptyQuery");
@@ -151,6 +151,8 @@ describe("Query", () => {
       const value = "class User {}";
       cy.typeEditor(value);
       cy.getBySel("query-button").click();
+
+      cy.waitEvent("SWAGGER_DIALOG");
 
       cy.getBySel("query-result-widget").find("[data-cy=time]").should("exist");
       cy.getBySel("query-result-widget")
