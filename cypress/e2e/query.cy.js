@@ -127,7 +127,7 @@ describe("Query", () => {
         .find('[data-cy="object"]')
         .should("have.text", "{id:1}");
     });
-    it("display object with value when result is a value", () => {
+    it("displays object with value when result is a value", () => {
       cy.intercept("POST", "http://localhost:3000", {
         fixture: "Query/query.json",
       }).as("valueQuery");
@@ -143,7 +143,7 @@ describe("Query", () => {
         .find('[data-cy="value"]')
         .should("have.text", "{value:1}");
     });
-    it.only("display success icon only when result is empty", function () {
+    it("displays success icon only when result is empty", function () {
       cy.intercept("POST", "http://localhost:3000", {
         fixture: "Query/query.empty.json",
       }).as("emptyQuery");
@@ -159,7 +159,7 @@ describe("Query", () => {
         .find("[data-cy=done-icon]")
         .should("exist");
     });
-    it("display array tree and data grid when result is an array", () => {
+    it("displays array tree and data grid when result is an array", () => {
       cy.intercept("POST", "http://localhost:3000", {
         fixture: "Query/query.array.json",
       }).as("arrayQuery");
