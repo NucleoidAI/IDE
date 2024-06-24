@@ -1,6 +1,7 @@
 import "./ChatMainArea.css";
 
 import ChatDisplay from "./ChatDisplay";
+import DisclaimerMessage from "./DisclaimerMessage";
 import MessageInput from "./MessageInput";
 import Settings from "../../settings";
 import SuggestionsOverlay from "./SuggestionsOverlay";
@@ -146,6 +147,8 @@ const ChatWidget = () => {
         showConvertToProject={codeResponse}
         highlightConvertToProject={isItFirstVisit && landingLevel.level === 1}
       />
+
+      <DisclaimerMessage />
     </Box>
   );
 };

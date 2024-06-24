@@ -202,8 +202,7 @@ const SuggestionsOverlay = ({ onSuggestionClick, loading, chat, error }) => {
         flexWrap: "wrap",
         justifyContent: "center",
         position: "absolute",
-        bottom: { xs: "10%", sm: "12%" },
-
+        bottom: { xs: "15%", sm: "15%" },
         width: "100%",
         padding: "10px",
       }}
