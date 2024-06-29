@@ -12,9 +12,7 @@ const apiData = [
       },
     ],
     response: {
-      type: "OPENAPI",
       schema: {
-        name: "Hello",
         type: "object",
         properties: [
           {
@@ -41,7 +39,6 @@ const apiData = [
       },
     ],
     response: {
-      type: "OPENAPI",
       schema: {
         type: "array",
         properties: [
@@ -60,7 +57,6 @@ const apiData = [
     path: "/items",
     method: "POST",
     request: {
-      type: "OPENAPI",
       schema: {
         type: "object",
         properties: [
@@ -76,7 +72,6 @@ const apiData = [
       },
     },
     response: {
-      type: "OPENAPI",
       schema: {
         type: "Item",
       },
@@ -99,7 +94,6 @@ const apiData = [
       },
     ],
     response: {
-      type: "OPENAPI",
       schema: {
         type: "Item",
       },
@@ -122,7 +116,6 @@ const apiData = [
       },
     ],
     request: {
-      type: "OPENAPI",
       schema: {
         type: "object",
         properties: [
@@ -138,7 +131,6 @@ const apiData = [
       },
     },
     response: {
-      type: "OPENAPI",
       schema: {
         type: "Item",
       },
@@ -152,7 +144,6 @@ const apiData = [
     path: "/items/{itemId}",
     method: "DEL",
     request: {
-      type: "OPENAPI",
       schema: {
         type: "object",
         properties: [
@@ -164,7 +155,6 @@ const apiData = [
       },
     },
     response: {
-      type: "OPENAPI",
       schema: {
         type: "object",
         properties: [
@@ -194,7 +184,6 @@ const apiData = [
     method: "GET",
     params: [],
     response: {
-      type: "OPENAPI",
       schema: {
         type: "array",
         properties: [
@@ -213,7 +202,6 @@ const apiData = [
     method: "POST",
     params: [],
     request: {
-      type: "OPENAPI",
       schema: {
         type: "object",
         properties: [
@@ -229,7 +217,6 @@ const apiData = [
       },
     },
     response: {
-      type: "OPENAPI",
       schema: {
         type: "Order",
       },
@@ -252,7 +239,6 @@ const apiData = [
       },
     ],
     response: {
-      type: "OPENAPI",
       schema: {
         type: "Order",
       },
@@ -275,7 +261,6 @@ const apiData = [
       },
     ],
     request: {
-      type: "OPENAPI",
       schema: {
         type: "object",
         properties: [
@@ -291,7 +276,6 @@ const apiData = [
       },
     },
     response: {
-      type: "OPENAPI",
       schema: {
         type: "Order",
       },
@@ -314,7 +298,6 @@ const apiData = [
       },
     ],
     request: {
-      type: "OPENAPI",
       schema: {
         type: "object",
         properties: [
@@ -326,7 +309,6 @@ const apiData = [
       },
     },
     response: {
-      type: "OPENAPI",
       schema: {
         type: "object",
         properties: [
@@ -415,9 +397,7 @@ const singleResourceApiData = [
       },
     ],
     response: {
-      type: "OPENAPI",
       schema: {
-        name: "Hello",
         type: "object",
         properties: [
           {
@@ -444,7 +424,6 @@ const singleResourceApiData = [
       },
     ],
     response: {
-      type: "OPENAPI",
       schema: {
         type: "array",
         properties: [
@@ -463,7 +442,6 @@ const singleResourceApiData = [
     path: "/items",
     method: "POST",
     request: {
-      type: "OPENAPI",
       schema: {
         type: "object",
         properties: [
@@ -479,7 +457,6 @@ const singleResourceApiData = [
       },
     },
     response: {
-      type: "OPENAPI",
       schema: {
         type: "Item",
       },
@@ -525,7 +502,6 @@ const nestedResourceApiData = [
       },
     ],
     response: {
-      type: "OPENAPI",
       schema: {
         name: "Hello",
         type: "object",
@@ -554,7 +530,6 @@ const nestedResourceApiData = [
       },
     ],
     response: {
-      type: "OPENAPI",
       schema: {
         type: "array",
         properties: [
@@ -573,7 +548,6 @@ const nestedResourceApiData = [
     path: "/items",
     method: "POST",
     request: {
-      type: "OPENAPI",
       schema: {
         type: "object",
         properties: [
@@ -589,7 +563,6 @@ const nestedResourceApiData = [
       },
     },
     response: {
-      type: "OPENAPI",
       schema: {
         type: "Item",
       },
@@ -612,7 +585,6 @@ const nestedResourceApiData = [
       },
     ],
     response: {
-      type: "OPENAPI",
       schema: {
         type: "Item",
       },
@@ -635,7 +607,6 @@ const nestedResourceApiData = [
       },
     ],
     request: {
-      type: "OPENAPI",
       schema: {
         type: "object",
         properties: [
@@ -651,7 +622,6 @@ const nestedResourceApiData = [
       },
     },
     response: {
-      type: "OPENAPI",
       schema: {
         type: "Item",
       },
@@ -665,7 +635,6 @@ const nestedResourceApiData = [
     path: "/items/{itemId}",
     method: "DEL",
     request: {
-      type: "OPENAPI",
       schema: {
         type: "object",
         properties: [
@@ -677,7 +646,6 @@ const nestedResourceApiData = [
       },
     },
     response: {
-      type: "OPENAPI",
       schema: {
         type: "object",
         properties: [

@@ -2,7 +2,6 @@
     "types": [
         {
             "name": "Item",
-            "type": "OPENAPI",
             "schema": {
                 "name": "Item",
                 "type": "object",
@@ -29,7 +28,6 @@
             "path": "/",
             "method": "GET",
             "response": {
-                "type": "OPENAPI",
                 "schema": {
                     "name": "User",
                     "type": "object",
@@ -62,7 +60,6 @@
             "path": "/items",
             "method": "GET",
             "response": {
-                "type": "OPENAPI",
                 "schema": {
                     "type": "array",
                     "properties": [
@@ -89,7 +86,6 @@
             "summary": "Create new item",
             "path": "/items",
             "request": {
-                "type": "OPENAPI",
                 "schema": {
                     "type": "object",
                     "properties": [
@@ -106,7 +102,6 @@
             },
             "method": "POST",
             "response": {
-                "type": "OPENAPI",
                 "schema": {
                     "type": "object",
                     "properties": [
@@ -126,7 +121,6 @@
             "path": "/items/{item}",
             "method": "GET",
             "response": {
-                "type": "OPENAPI",
                 "schema": {
                     "type": "object",
                     "properties": [

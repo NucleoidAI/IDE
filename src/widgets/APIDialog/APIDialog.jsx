@@ -52,8 +52,8 @@ function APIDialog() {
         method: allowedMethods[0] || "GET",
         summary: "",
         description: "",
-        request: { type: "OPENAPI", schema: {} },
-        response: { type: "OPENAPI", schema: {} },
+        request: { schema: {} },
+        response: { schema: {} },
         params: [],
         "x-nuc-action": "",
       };
@@ -63,8 +63,8 @@ function APIDialog() {
         method: "GET",
         summary: "",
         description: "",
-        request: { type: "OPENAPI", schema: {} },
-        response: { type: "OPENAPI", schema: {} },
+        request: { schema: {} },
+        response: { schema: {} },
         params: [],
         "x-nuc-action": "",
       };
@@ -106,8 +106,8 @@ function APIDialog() {
         payload: {
           path,
           method,
-          request: { type: "OPENAPI", schema: requestSchema },
-          response: { type: "OPENAPI", schema: responseSchema },
+          request: { schema: requestSchema },
+          response: { schema: responseSchema },
           params,
           types,
           summary: "",

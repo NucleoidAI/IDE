@@ -461,7 +461,6 @@ function contextReducer(context, { type, payload }) {
       const { typeName } = payload;
       const newType = {
         name: typeName,
-        type: "OPENAPI",
         schema: {
           name: typeName,
           type: "object",

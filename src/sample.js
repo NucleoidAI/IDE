@@ -19,9 +19,7 @@ export const api = [
       },
     ],
     response: {
-      type: "OPENAPI",
       schema: {
-        name: "Hello",
         type: "object",
         properties: [
           {
@@ -51,7 +49,6 @@ function action(req) {
       },
     ],
     response: {
-      type: "OPENAPI",
       schema: {
         type: "array",
         properties: [
@@ -74,7 +71,6 @@ function action(req) {
     path: "/items",
     method: "POST",
     request: {
-      type: "OPENAPI",
       schema: {
         type: "object",
         properties: [
@@ -90,7 +86,6 @@ function action(req) {
       },
     },
     response: {
-      type: "OPENAPI",
       schema: {
         type: "Item",
       },
@@ -125,7 +120,6 @@ function action(req) {
       },
     ],
     response: {
-      type: "OPENAPI",
       schema: {
         type: "Item",
       },
@@ -152,7 +146,6 @@ function action(req) {
       },
     ],
     request: {
-      type: "OPENAPI",
       schema: {
         type: "object",
         properties: [
@@ -168,7 +161,6 @@ function action(req) {
       },
     },
     response: {
-      type: "OPENAPI",
       schema: {
         type: "Item",
       },
@@ -204,7 +196,6 @@ function action(req) {
     path: "/items/{itemId}",
     method: "DEL",
     request: {
-      type: "OPENAPI",
       schema: {
         type: "object",
         properties: [
@@ -216,7 +207,6 @@ function action(req) {
       },
     },
     response: {
-      type: "OPENAPI",
       schema: {
         type: "object",
         properties: [
@@ -250,7 +240,6 @@ function action(req) {
     method: "GET",
     params: [],
     response: {
-      type: "OPENAPI",
       schema: {
         type: "array",
         properties: [
@@ -273,7 +262,6 @@ function action(req) {
     method: "POST",
     params: [],
     request: {
-      type: "OPENAPI",
       schema: {
         type: "object",
         properties: [
@@ -289,7 +277,6 @@ function action(req) {
       },
     },
     response: {
-      type: "OPENAPI",
       schema: {
         type: "Order",
       },
@@ -322,7 +309,6 @@ function action(req) {
       },
     ],
     response: {
-      type: "OPENAPI",
       schema: {
         type: "Order",
       },
@@ -349,7 +335,6 @@ function action(req) {
       },
     ],
     request: {
-      type: "OPENAPI",
       schema: {
         type: "object",
         properties: [
@@ -365,7 +350,6 @@ function action(req) {
       },
     },
     response: {
-      type: "OPENAPI",
       schema: {
         type: "Order",
       },
@@ -406,7 +390,6 @@ function action(req) {
       },
     ],
     request: {
-      type: "OPENAPI",
       schema: {
         type: "object",
         properties: [
@@ -418,7 +401,6 @@ function action(req) {
       },
     },
     response: {
-      type: "OPENAPI",
       schema: {
         type: "object",
         properties: [
