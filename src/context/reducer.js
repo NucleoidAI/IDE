@@ -1,5 +1,5 @@
 import Context from "../context";
-import apiActionTemplates from "../templates/apiActionTemplates";
+import ActionTemplate from "../templates/ActionTemplate.js";
 import { publish } from "@nucleoidai/react-event";
 import { v4 as uuid } from "uuid";
 
@@ -48,7 +48,7 @@ function contextReducer(context, { type, payload }) {
         params,
         summary,
         description,
-        action: apiActionTemplates[method.toUpperCase()],
+        action: ActionTemplate[method.toUpperCase()],
       };
       pages.api.dialog.open = false;
       specification.api.push(newApi);

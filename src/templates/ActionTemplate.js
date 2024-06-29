@@ -1,4 +1,4 @@
-const apiActionTemplates = {
+const ActionTemplate = {
   GET: `function action(req) {
     const { id } = req.params;
     return { id: id, name: 'John Doe' };
@@ -27,4 +27,4 @@ const apiActionTemplates = {
   }`,
 };
 
-export default apiActionTemplates;
+export default ActionTemplate;

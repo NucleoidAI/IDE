@@ -1,16 +1,24 @@
+import APITemplate from "../templates/APITemplate.js";
 import Handlebars from "handlebars";
-
-import { apiTemplates, rootObject } from "../templates/apiTemplates";
+import pluralize from "pluralize";
 
 import * as ts from "typescript";
 
-Handlebars.registerHelper("camelCase", function (str) {
-  return str.charAt(0).toLowerCase() + str.slice(1);
-});
+Handlebars.registerHelper(
+  "camelCase",
+  (str) => str.charAt(0).toLowerCase() + str.slice(1)
+);
 
-Handlebars.registerHelper("encloseBraces", function (str) {
-  return `{${str}Id}`;
-});
+Handlebars.registerHelper("pluralize", (str) => pluralize(str));
+
+Handlebars.registerHelper("lowerCase", (str) => str.toLowerCase());
+
+Handlebars.registerHelper(
+  "camelCase",
+  (str) => str.charAt(0).toLowerCase() + str.slice(1)
+);
+
+Handlebars.registerHelper("encloseBraces", (str) => `{${str}Id}`);
 
 function createASTFromCode(code) {
   return ts.createSourceFile("temp.ts", code, ts.ScriptTarget.Latest, true);
@@ -216,25 +224,19 @@ function createAPI(functions) {
 
       const context = {
         className,
-        singularName: className,
-        pluralName: `${className.toLowerCase()}s`,
         properties,
       };
 
-      const listObjectsTemplate = Handlebars.compile(apiTemplates.listObjects);
-      const createObjectTemplate = Handlebars.compile(
-        apiTemplates.createObject
-      );
-      const readObjectTemplate = Handlebars.compile(apiTemplates.readObject);
-
-      const listObjectsAPI = listObjectsTemplate(context);
-      const createObjectAPI = createObjectTemplate(context);
-      const readObjectAPI = readObjectTemplate(context);
-
       api.push(
-        JSON.parse(listObjectsAPI),
-        JSON.parse(createObjectAPI),
-        JSON.parse(readObjectAPI)
+        ...[
+          APITemplate.listObjects,
+          APITemplate.createObject,
+          APITemplate.readObject,
+          APITemplate.updateObject,
+          APITemplate.deleteObject,
+        ]
+          .map((template) => Handlebars.compile(template)(context))
+          .map((apiObject) => JSON.parse(apiObject))
       );
     }
   });
@@ -275,8 +277,9 @@ function compile(blocks) {
   );
 
   const api = createAPI(uniqueFunctions);
+  const rootString = Handlebars.compile(APITemplate.rootObject)({});
+  api.unshift(JSON.parse(rootString));
 
-  api.unshift(rootObject);
   return {
     api,
     functions: uniqueFunctions,
