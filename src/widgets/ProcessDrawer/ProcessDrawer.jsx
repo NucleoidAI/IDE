@@ -39,83 +39,22 @@ const ProcessDrawer = () => {
 
   const location = useLocation();
   const [ReactContext] = useContext();
+  const { project, specification } = ReactContext;
 
   const [backdrop] = useState(false);
   const [link, setLink] = useState("");
 
   const handleSaveProject = () => {};
 
-  const mapOpenApiPaths = (api) => {
-    const tmpApi = deepCopy(api);
-    Object.keys(api).forEach((resource) => {
-      Object.keys(api[resource]).forEach((method) => {
-        tmpApi[resource][method].responses = {
-          200: {
-            content: {
-              "application/json": { schema: api[resource][method].response },
-            },
-          },
-          400: {
-            content: {
-              "application/json": {
-                schema: {
-                  type: "object",
-                  properties: {
-                    message: { type: "string" },
-                  },
-                },
-              },
-            },
-          },
-        };
-
-        tmpApi[resource][method].requestBody = {
-          content: {
-            "application/json": { schema: api[resource][method].request },
-          },
-        };
-
-        delete tmpApi[resource][method].response;
-        delete tmpApi[resource][method].request;
-      });
-    });
-
-    return tmpApi;
-  };
-
-  const mapContextToOpenApi = (context) => {
-    const openApi = {
-      openapi: "3.0.1",
-      info: {
-        // TODO : change title with project name
-        title: "",
-        description: Settings.description(),
-      },
-      paths: mapOpenApiPaths(context.api),
-      "x-nuc-functions": context.functions,
-      components: {
-        schemas: context.types,
-      },
-    };
-    return (
-      Settings.beta()
-        ? JSON.stringify({
-            functions: context.functions,
-            api: context.api,
-            types: context.types,
-          })
-        : JSON.stringify(openApi)
-    )
-      .replace(/\\n/g, " ")
-      .replace(/ +/g, " ");
-  };
-
   const handleDownloadContext = () => {
     const myURL = window.URL || window.webkitURL;
+    const download = JSON.stringify({ project, specification });
+    console.log(download);
 
-    const file = new Blob([mapContextToOpenApi(ReactContext.nucleoid)], {
+    const file = new Blob([download], {
       type: "text/plain",
     });
+
     setLink(myURL.createObjectURL(file));
   };
 
@@ -150,21 +89,21 @@ const ProcessDrawer = () => {
       >
         <Box>
           <ApiButton />
+          <Tooltip placement="left" title="Go to GitHub">
+            <ListItemButton
+              onClick={() =>
+                window.open("https://github.com/NucleoidAI/Nucleoid", "_blank")
+              }
+            >
+              <GitHubIcon variant="pageIcon" />
+            </ListItemButton>
+          </Tooltip>
           <SwaggerButton />
-
           <Tooltip placement="left" title="Open Nucleoid Education">
             <ListItemButton
               onClick={() => publish("EDUCATION_DRAWER_OPENED", true)}
             >
               <SchoolIcon variant="pageIcon" />
-            </ListItemButton>
-          </Tooltip>
-          <Tooltip placement="left" title="Chat">
-            <ListItemButton
-              data-cy="side-chat-button"
-              onClick={() => publish("CHAT_DRAWER_OPENED", true)}
-            >
-              <TryIcon variant="pageIcon" />
             </ListItemButton>
           </Tooltip>
           <Tooltip placement="left" title="Deploy (Coming soon)">
@@ -177,8 +116,7 @@ const ProcessDrawer = () => {
               component={"a"}
               onClick={handleDownloadContext}
               href={link}
-              // TODO : change with projectname
-              download={"nuc.openapi.json"}
+              download={`${project.id}.nuc.json`}
               target="_blank"
             >
               <DownloadIcon variant="pageIcon" />
@@ -196,13 +134,12 @@ const ProcessDrawer = () => {
           )}
         </Box>
         <Box>
-          <Tooltip placement="left" title="Go to GitHub">
+          <Tooltip placement="left" title="Chat">
             <ListItemButton
-              onClick={() =>
-                window.open("https://github.com/NucleoidJS/Nucleoid", "_blank")
-              }
+              data-cy="side-chat-button"
+              onClick={() => publish("CHAT_DRAWER_OPENED", true)}
             >
-              <GitHubIcon variant="pageIcon" />
+              <TryIcon variant="pageIcon" />
             </ListItemButton>
           </Tooltip>
           {Settings.debug() && (
