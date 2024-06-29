@@ -23,7 +23,7 @@ const APITemplate = {
   `,
   listObjects: `
     {
-      "path": "/{{pluralize className}}",
+      "path": "/{{camelCase (pluralize className)}}",
       "method": "GET",
       "params": [],
       "response": {
@@ -43,7 +43,7 @@ const APITemplate = {
     `,
   createObject: `
     {
-      "path": "/{{pluralize className}}",
+      "path": "/{{camelCase (pluralize className)}}",
       "method": "POST",
       "params": [],
       "request": {
@@ -63,7 +63,7 @@ const APITemplate = {
     `,
   readObject: `
     {
-      "path": "/{{pluralize className}}/{{encloseBraces (camelCase className)}}",
+      "path": "/{{camelCase (pluralize className)}}/{{encloseBraces (camelCase className)}}",
       "method": "GET",
       "params": [
         {
@@ -86,7 +86,7 @@ const APITemplate = {
     `,
   updateObject: `
     {
-      "path": "/{{pluralize className}}/{{encloseBraces (camelCase className)}}",
+      "path": "/{{camelCase (pluralize className)}}/{{encloseBraces (camelCase className)}}",
       "method": "PATCH",
       "params": [
         {
@@ -123,7 +123,7 @@ const APITemplate = {
     `,
   deleteObject: `
     {
-      "path": "/{{pluralize className}}/{{encloseBraces (camelCase className)}}",
+      "path": "/{{camelCase (pluralize className)}}/{{encloseBraces (camelCase className)}}",
       "method": "DEL",
       "params": [
         {
