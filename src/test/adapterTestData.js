@@ -141,6 +141,19 @@ const apiData = [
   {
     path: "/items/{itemId}",
     method: "DEL",
+    params: [
+      {
+        name: "itemId",
+        in: "path",
+        type: "string",
+        required: true,
+        description: "itemId",
+      },
+    ],
+    summary: "Delete item by id",
+    description: "Delete item by id",
+    action:
+      "function action(req) {\n    const item = req.params.item;\n    delete Item[item];\n}\n",
     request: {
       schema: {
         type: "object",
@@ -163,19 +176,6 @@ const apiData = [
         ],
       },
     },
-    params: [
-      {
-        name: "itemId",
-        in: "path",
-        type: "string",
-        required: true,
-        description: "itemId",
-      },
-    ],
-    summary: "Delete item by id",
-    description: "Delete item by id",
-    action:
-      "function action(req) {\n    const item = req.params.item;\n    delete Item[item];\n}\n",
   },
   {
     path: "/orders",
@@ -329,6 +329,10 @@ const typesData = [
       type: "object",
       properties: [
         {
+          name: "id",
+          type: "string",
+        },
+        {
           name: "item",
           type: "Item",
         },
@@ -344,6 +348,10 @@ const typesData = [
     schema: {
       type: "object",
       properties: [
+        {
+          name: "id",
+          type: "string",
+        },
         {
           name: "name",
           type: "string",
@@ -372,6 +380,7 @@ const functionsData = [
       "class Item {\n    constructor(name, barcode) {\n        this.name = name;\n        this.barcode = barcode;\n    }\n}\n",
   },
 ];
+
 const declarationsData = [];
 
 const singleResourceApiData = [
@@ -462,6 +471,10 @@ const singleTypeData = [
     schema: {
       type: "object",
       properties: [
+        {
+          name: "id",
+          type: "string",
+        },
         {
           name: "name",
           type: "string",
@@ -663,6 +676,10 @@ const nestedTypeData = [
       type: "object",
       properties: [
         {
+          name: "id",
+          type: "string",
+        },
+        {
           name: "barcode",
           type: "string",
         },
@@ -678,6 +695,10 @@ const nestedTypeData = [
     schema: {
       type: "object",
       properties: [
+        {
+          name: "id",
+          type: "string",
+        },
         {
           name: "order",
           type: "Order",
