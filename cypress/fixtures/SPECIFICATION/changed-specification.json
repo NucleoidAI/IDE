@@ -3,7 +3,6 @@
     {
       "name": "Item",
       "schema": {
-        "name": "Item",
         "type": "object",
         "properties": [
           {
@@ -29,7 +28,6 @@
       "method": "GET",
       "response": {
         "schema": {
-          "name": "User",
           "type": "object",
           "properties": [
             {
@@ -62,13 +60,9 @@
       "response": {
         "schema": {
           "type": "array",
-          "properties": [
-            {
-              "type": "ref",
-              "name": "item",
-              "ref": "Item"
-            }
-          ]
+          "items": {
+            "type": "Item"
+          }
         }
       },
       "action": "function action(req: { query: { name: string } }): any {\n        const name = req.query.name;\n        return (Item as any).filter(item => item.name === name);\n      }",
@@ -106,9 +100,8 @@
           "type": "object",
           "properties": [
             {
-              "type": "ref",
               "name": "item",
-              "ref": "Item"
+              "type": "Item"
             }
           ]
         }
@@ -125,9 +118,8 @@
           "type": "object",
           "properties": [
             {
-              "type": "ref",
               "name": "item",
-              "ref": "Item"
+              "type": "Item"
             }
           ]
         }
@@ -166,19 +158,28 @@
     {
       "path": "/Order",
       "definition": "class NewOrder {\n      name: string;\n      barcode: string;\n      constructor(name: string, barcode: string) {\n  this.name = name;\nthis.barcode = barcode;\n }\n    }",
-      "params": ["name: string", "barcode: string"],
+      "params": [
+        "name: string",
+        "barcode: string"
+      ],
       "type": "CLASS"
     },
     {
       "path": "/Item",
       "definition": "class Item {\n      name: string;\n      barcode: string;\n      constructor(name: string, barcode: string) {\n        this.name = name;\n        this.barcode = barcode;\n      }\n    }",
-      "params": ["name: string", "barcode: string"],
+      "params": [
+        "name: string",
+        "barcode: string"
+      ],
       "type": "CLASS"
     },
     {
       "path": "/Human",
       "definition": "class Human {\n      name: string;\n      barcode: string;\n      constructor(name: string, barcode: string) {\n        this.name = name;\n        this.barcode = barcode;\n      }\n    }",
-      "params": ["name: string", "barcode: string"],
+      "params": [
+        "name: string",
+        "barcode: string"
+      ],
       "type": "CLASS"
     }
   ]

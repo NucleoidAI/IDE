@@ -45,11 +45,9 @@
             "response": {
                 "schema": {
                     "type": "array",
-                    "properties": [
+                    "items": [
                         {
-                            "type": "ref",
-                            "name": "item",
-                            "ref": "Item"
+                            "type": "Item"
                         }
                     ]
                 }
@@ -81,9 +79,8 @@
                     "type": "object",
                     "properties": [
                         {
-                            "type": "ref",
                             "name": "item",
-                            "ref": "Item"
+                            "type": "Item"
                         }
                     ]
                 }
@@ -125,7 +122,6 @@
         {
             "name": "Item",
             "schema": {
-                "name": "Item",
                 "type": "object",
                 "properties": [
                     {

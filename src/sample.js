@@ -51,11 +51,9 @@ function action(req) {
     response: {
       schema: {
         type: "array",
-        properties: [
-          {
-            type: "Item",
-          },
-        ],
+        items: {
+          type: "Item",
+        },
       },
     },
     summary: "List items by name",
@@ -242,11 +240,9 @@ function action(req) {
     response: {
       schema: {
         type: "array",
-        properties: [
-          {
-            type: "Order",
-          },
-        ],
+        items: {
+          type: "Order",
+        },
       },
     },
     summary: "List orders",

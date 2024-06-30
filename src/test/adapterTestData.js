@@ -41,11 +41,9 @@ const apiData = [
     response: {
       schema: {
         type: "array",
-        properties: [
-          {
-            type: "Item",
-          },
-        ],
+        items: {
+          type: "Item",
+        },
       },
     },
     summary: "List items by name",
@@ -186,11 +184,9 @@ const apiData = [
     response: {
       schema: {
         type: "array",
-        properties: [
-          {
-            type: "Order",
-          },
-        ],
+        items: {
+          type: "Order",
+        },
       },
     },
     summary: "List orders",
@@ -329,15 +325,12 @@ const apiData = [
 const typesData = [
   {
     name: "Order",
-    type: "TS",
     schema: {
-      name: "Order",
       type: "object",
       properties: [
         {
           name: "item",
-          type: "ref",
-          ref: "Item",
+          type: "Item",
         },
         {
           name: "qty",
@@ -348,9 +341,7 @@ const typesData = [
   },
   {
     name: "Item",
-    type: "TS",
     schema: {
-      name: "Item",
       type: "object",
       properties: [
         {
@@ -426,11 +417,9 @@ const singleResourceApiData = [
     response: {
       schema: {
         type: "array",
-        properties: [
-          {
-            type: "Item",
-          },
-        ],
+        items: {
+          type: "Item",
+        },
       },
     },
     summary: "List items by name",
@@ -470,9 +459,7 @@ const singleResourceApiData = [
 const singleTypeData = [
   {
     name: "Item",
-    type: "TS",
     schema: {
-      name: "Item",
       type: "object",
       properties: [
         {
@@ -503,7 +490,6 @@ const nestedResourceApiData = [
     ],
     response: {
       schema: {
-        name: "Hello",
         type: "object",
         properties: [
           {
@@ -532,11 +518,9 @@ const nestedResourceApiData = [
     response: {
       schema: {
         type: "array",
-        properties: [
-          {
-            type: "Item",
-          },
-        ],
+        items: {
+          type: "Item",
+        },
       },
     },
     summary: "List items by name",
@@ -675,9 +659,7 @@ const nestedResourceApiData = [
 const nestedTypeData = [
   {
     name: "Order",
-    type: "TS",
     schema: {
-      name: "Order",
       type: "object",
       properties: [
         {
@@ -693,15 +675,12 @@ const nestedTypeData = [
   },
   {
     name: "Item",
-    type: "TS",
     schema: {
-      name: "Item",
       type: "object",
       properties: [
         {
           name: "order",
-          type: "ref",
-          ref: "Order",
+          type: "Order",
         },
         {
           name: "barcode",

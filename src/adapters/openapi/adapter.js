@@ -1,16 +1,15 @@
-const toOpenApiSchema = (schema, types) => {
+// TODO Rename to OpenAPIAdapter in adapters folder
+const toOpenApiSchema = (schema, types = []) => {
   if (typeof schema !== "object") {
     return schema;
   }
 
-  const { type, properties, ref, ...other } = schema;
-  const object = { ...other, type, properties: {}, items: {}, ref };
+  const { type, properties, ...other } = schema;
+  const object = { ...other, type, properties: {}, items: {} };
 
   switch (type) {
     case "array": {
-      delete object.name;
-      const nested = toOpenApiSchema(schema.properties[0], types);
-      object.items = nested;
+      object.items = toOpenApiSchema(schema.items, types);
       delete object.properties;
       break;
     }
@@ -22,44 +21,33 @@ const toOpenApiSchema = (schema, types) => {
         const { name, type } = property;
         if (property.type === "object") {
           delete object.name;
-          const nested = toOpenApiSchema(property, types);
-          object.properties[name] = nested;
+          object.properties[name] = toOpenApiSchema(property, types);
+        } else if (property.type === "array") {
+          object.items = toOpenApiSchema(property.items, types);
         } else {
-          if (property.type === "array") {
-            const nested = toOpenApiSchema(property, types);
-            object.properties[name] = nested;
+          if (types.find((t) => t.name === type)) {
+            object.properties[name] = {
+              $ref: `#/components/schemas/${type}`,
+            };
           } else {
-            if (types && types.find((t) => t.name === type)) {
-              object.properties[name] = {
-                $ref: `#/components/schemas/${type}`,
-              };
-            } else if (type === "ref") {
-              object.properties[name] = {
-                $ref: `#/components/schemas/${property.ref}`,
-              };
-            } else {
-              object.properties[name] = { type };
-            }
+            object.properties[name] = { type };
           }
         }
       }
       break;
     }
     default: {
-      if (types && types.find((t) => t.name === type)) {
+      if (types.find((t) => t.name === type)) {
         object["$ref"] = `#/components/schemas/${type}`;
-        delete object.type;
-      } else if (type === "ref") {
-        object["$ref"] = `#/components/schemas/${ref}`;
         delete object.type;
       } else {
         object["type"] = type;
       }
-      delete object.name;
+
       delete object.id;
+      delete object.name;
       delete object.properties;
       delete object.items;
-      delete object.ref;
       break;
     }
   }
@@ -150,7 +138,7 @@ const toSchemas = (types) => {
 };
 
 const toOpenApi = ({ api, types, functions, declarations }) => {
-  const openapi = {
+  return {
     openapi: {
       paths: toPaths(api, types),
       components: { schemas: toSchemas(types) },
@@ -159,7 +147,6 @@ const toOpenApi = ({ api, types, functions, declarations }) => {
       "x-nuc-declarations": declarations,
     },
   };
-  return openapi;
 };
 
 export { toOpenApiSchema, toOpenApi };

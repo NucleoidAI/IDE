@@ -1,194 +1,186 @@
 {
-    "types": [
-        {
-            "name": "Item",
-            "schema": {
-                "name": "Item",
-                "type": "object",
-                "properties": [
-                    {
-                        "type": "string",
-                        "name": "id"
-                    },
-                    {
-                        "type": "string",
-                        "name": "name"
-                    },
-                    {
-                        "type": "string",
-                        "name": "barcode"
-                    }
-                ]
+  "types": [
+    {
+      "name": "Item",
+      "schema": {
+        "type": "object",
+        "properties": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "barcode",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ],
+  "api": [
+    {
+      "summary": "Get all users",
+      "path": "/",
+      "method": "GET",
+      "response": {
+        "schema": {
+          "type": "object",
+          "properties": [
+            {
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "name": "age",
+              "type": "number"
             }
+          ]
         }
-    ],
-    "api": [
+      },
+      "action": "function action(req: any): { message: string } {\n        return { message: \"Hello World\" };\n      }",
+      "description": "Get all users",
+      "params": [
         {
-            "summary": "Get all users",
-            "path": "/",
-            "method": "GET",
-            "response": {
-                "schema": {
-                    "name": "User",
-                    "type": "object",
-                    "properties": [
-                        {
-                            "name": "name",
-                            "type": "string"
-                        },
-                        {
-                            "name": "age",
-                            "type": "number"
-                        }
-                    ]
-                }
-            },
-            "action": "function action(req: any): { message: string } {\n        return { message: \"Hello World\" };\n      }",
-            "description": "Get all users",
-            "params": [
-                {
-                    "name": "example",
-                    "description": "example",
-                    "type": "string",
-                    "in": "query",
-                    "required": false
-                }
-            ]
-        },
-        {
-            "summary": "Get item by name",
-            "path": "/items",
-            "method": "GET",
-            "response": {
-                "schema": {
-                    "type": "array",
-                    "properties": [
-                        {
-                            "type": "ref",
-                            "name": "item",
-                            "ref": "Item"
-                        }
-                    ]
-                }
-            },
-            "action": "function action(req: { query: { name: string } }): any {\n        const name = req.query.name;\n        return (Item as any).filter(item => item.name === name);\n      }",
-            "description": "Get item by name",
-            "params": [
-                {
-                    "name": "name",
-                    "type": "string",
-                    "in": "query",
-                    "required": true
-                }
-            ]
-        },
-        {
-            "summary": "Create new item",
-            "path": "/items",
-            "request": {
-                "schema": {
-                    "type": "object",
-                    "properties": [
-                        {
-                            "name": "name",
-                            "type": "string"
-                        },
-                        {
-                            "name": "barcode",
-                            "type": "string"
-                        }
-                    ]
-                }
-            },
-            "method": "POST",
-            "response": {
-                "schema": {
-                    "type": "object",
-                    "properties": [
-                        {
-                            "type": "ref",
-                            "name": "item",
-                            "ref": "Item"
-                        }
-                    ]
-                }
-            },
-            "action": "function action(req: { body: { name: string, barcode: string } }): any {\n        const name = req.body.name;\n        const barcode = req.body.barcode;\n        const check = (Item as any).find(i => i.barcode === barcode);\n        if(check) {\n          throw \"DUPLICATE_BARCODE\";\n        }\n        return new Item(name, barcode);\n      }",
-            "description": "Create new item"
-        },
-        {
-            "summary": "Get item by id",
-            "path": "/items/{item}",
-            "method": "GET",
-            "response": {
-                "schema": {
-                    "type": "object",
-                    "properties": [
-                        {
-                            "type": "ref",
-                            "name": "item",
-                            "ref": "Item"
-                        }
-                    ]
-                }
-            },
-            "action": "function action(req: { params: { item: string } }): any {\n  const item = req.params.item;\n  return Item[item];\n}\n",
-            "description": "Get item by id",
-            "params": [
-                {
-                    "name": "item",
-                    "description": "item",
-                    "type": "string",
-                    "in": "path",
-                    "required": true
-                }
-            ]
+          "name": "example",
+          "description": "example",
+          "type": "string",
+          "in": "query",
+          "required": false
         }
-    ],
-    "declarations": [
-        {
-            "summary": "All humans are mortal",
-            "description": "All humans mortal property must be true",
-            "definition": "$Human.mortal = true\nsocrates = new Human('Socrates')\nsocrates.mortal === true\n"
-        },
-        {
-            "summary": "If The Human is Over 18 Years Old",
-            "description": "If the human is older than 18, do something",
-            "definition": "\n      if( $Human.age > 18 )\n      {\n        //do something\n      }\n    \n    "
-        },
-        {
-            "summary": "All orders barcode start with NUC prefix",
-            "description": "All Orders barcode string starts with NUC",
-            "definition": "\n      $Order.barcode.include(\"NUC\")\n    \n    "
+      ]
+    },
+    {
+      "summary": "Get item by name",
+      "path": "/items",
+      "method": "GET",
+      "response": {
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "Item"
+          }
         }
-    ],
-    "functions": [
+      },
+      "action": "function action(req: { query: { name: string } }): any {\n        const name = req.query.name;\n        return (Item as any).filter(item => item.name === name);\n      }",
+      "description": "Get item by name",
+      "params": [
         {
-            "path": "/Order",
-            "definition": "class NewOrder {\n      name: string;\n      barcode: string;\n      constructor(name: string, barcode: string) {\n  this.name = name;\nthis.barcode = barcode;\n      }\n    }",
-            "params": [
-                "name: string",
-                "barcode: string"
-            ],
-            "type": "CLASS"
-        },
-        {
-            "path": "/Item",
-            "definition": "class Item {\n      name: string;\n      barcode: string;\n      constructor(name: string, barcode: string) {\n        this.name = name;\n        this.barcode = barcode;\n      }\n    }",
-            "params": [
-                "name: string",
-                "barcode: string"
-            ],
-            "type": "CLASS"
-        },
-        {
-            "path": "/Human",
-            "definition": "class Human {\n      name: string;\n      barcode: string;\n      constructor(name: string, barcode: string) {\n        this.name = name;\n        this.barcode = barcode;\n      }\n    }",
-            "params": [
-                "name: string",
-                "barcode: string"
-            ],
-            "type": "CLASS"
+          "name": "name",
+          "type": "string",
+          "in": "query",
+          "required": true
         }
-    ]
+      ]
+    },
+    {
+      "summary": "Create new item",
+      "path": "/items",
+      "request": {
+        "schema": {
+          "type": "object",
+          "properties": [
+            {
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "name": "barcode",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "method": "POST",
+      "response": {
+        "schema": {
+          "type": "object",
+          "properties": [
+            {
+              "name": "item",
+              "type": "Item"
+            }
+          ]
+        }
+      },
+      "action": "function action(req: { body: { name: string, barcode: string } }): any {\n        const name = req.body.name;\n        const barcode = req.body.barcode;\n        const check = (Item as any).find(i => i.barcode === barcode);\n        if(check) {\n          throw \"DUPLICATE_BARCODE\";\n        }\n        return new Item(name, barcode);\n      }",
+      "description": "Create new item"
+    },
+    {
+      "summary": "Get item by id",
+      "path": "/items/{item}",
+      "method": "GET",
+      "response": {
+        "schema": {
+          "type": "object",
+          "properties": [
+            {
+              "name": "item",
+              "type": "Item"
+            }
+          ]
+        }
+      },
+      "action": "function action(req: { params: { item: string } }): any {\n  const item = req.params.item;\n  return Item[item];\n}\n",
+      "description": "Get item by id",
+      "params": [
+        {
+          "name": "item",
+          "description": "item",
+          "type": "string",
+          "in": "path",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "declarations": [
+    {
+      "summary": "All humans are mortal",
+      "description": "All humans mortal property must be true",
+      "definition": "$Human.mortal = true\nsocrates = new Human('Socrates')\nsocrates.mortal === true\n"
+    },
+    {
+      "summary": "If The Human is Over 18 Years Old",
+      "description": "If the human is older than 18, do something",
+      "definition": "\n      if( $Human.age > 18 )\n      {\n        //do something\n      }\n    \n    "
+    },
+    {
+      "summary": "All orders barcode start with NUC prefix",
+      "description": "All Orders barcode string starts with NUC",
+      "definition": "\n      $Order.barcode.include(\"NUC\")\n    \n    "
+    }
+  ],
+  "functions": [
+    {
+      "path": "/Order",
+      "definition": "class NewOrder {\n      name: string;\n      barcode: string;\n      constructor(name: string, barcode: string) {\n  this.name = name;\nthis.barcode = barcode;\n      }\n    }",
+      "params": [
+        "name: string",
+        "barcode: string"
+      ],
+      "type": "CLASS"
+    },
+    {
+      "path": "/Item",
+      "definition": "class Item {\n      name: string;\n      barcode: string;\n      constructor(name: string, barcode: string) {\n        this.name = name;\n        this.barcode = barcode;\n      }\n    }",
+      "params": [
+        "name: string",
+        "barcode: string"
+      ],
+      "type": "CLASS"
+    },
+    {
+      "path": "/Human",
+      "definition": "class Human {\n      name: string;\n      barcode: string;\n      constructor(name: string, barcode: string) {\n        this.name = name;\n        this.barcode = barcode;\n      }\n    }",
+      "params": [
+        "name: string",
+        "barcode: string"
+      ],
+      "type": "CLASS"
+    }
+  ]
 }

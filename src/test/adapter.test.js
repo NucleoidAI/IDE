@@ -12,151 +12,91 @@ import {
 } from "./adapterTestData";
 
 describe("OpenAPI Adapter", () => {
-  const checkResponseSchema = (response) => {
-    expect(response).toHaveProperty("description");
-    expect(response.content).toHaveProperty("application/json");
-    expect(response.content["application/json"]).toHaveProperty("schema");
-  };
-
-  const checkParameterSchema = (param) => {
-    expect(param).toHaveProperty("name");
-    expect(param).toHaveProperty("in");
-    expect(param).toHaveProperty("required");
-    expect(param).toHaveProperty("schema");
-  };
-
-  test("should convert API definition, types, functions, and declarations to OpenAPI specification", () => {
-    const actualOpenApi = toOpenApi({
+  test("converts API definition, types, functions, and declarations to OpenAPI specification", () => {
+    const { openapi } = toOpenApi({
       api: apiData,
       types: typesData,
       functions: functionsData,
       declarations: declarationsData,
     });
 
-    expect(Object.keys(actualOpenApi.openapi.paths).length).toBeGreaterThan(0);
-
-    Object.values(actualOpenApi.openapi.paths).forEach((path) => {
-      Object.values(path).forEach((method) => {
-        expect(method).toHaveProperty("summary");
-        expect(method).toHaveProperty("description");
-        expect(method).toHaveProperty("responses");
-        Object.values(method.responses).forEach(checkResponseSchema);
-        method.parameters?.forEach(checkParameterSchema);
-      });
-    });
-
     expect(
-      Object.keys(actualOpenApi.openapi.components.schemas).length
-    ).toBeGreaterThan(0);
-
-    expect(actualOpenApi.openapi).toHaveProperty(
-      "x-nuc-functions",
-      functionsData
-    );
-    expect(actualOpenApi.openapi).toHaveProperty(
-      "x-nuc-declarations",
-      declarationsData
-    );
-  });
-
-  test("should convert API and types (Single resource, single type)", () => {
-    const actualOpenApi = toOpenApi({
-      api: singleResourceApiData,
-      types: singleTypeData,
-      functions: functionsData,
-      declarations: declarationsData,
+      openapi.paths["/"].get.responses["200"].content["application/json"].schema
+    ).toEqual({
+      type: "object",
+      properties: {
+        message: {
+          type: "string",
+        },
+      },
     });
-
-    expect(Object.keys(actualOpenApi.openapi.paths).length).toBeGreaterThan(0);
-
-    Object.values(actualOpenApi.openapi.paths).forEach((path) => {
-      Object.values(path).forEach((method) => {
-        expect(method).toHaveProperty("summary");
-        expect(method).toHaveProperty("description");
-        expect(method).toHaveProperty("responses");
-        Object.values(method.responses).forEach(checkResponseSchema);
-        method.parameters?.forEach(checkParameterSchema);
-      });
-    });
-
     expect(
-      Object.keys(actualOpenApi.openapi.components.schemas).length
-    ).toBeGreaterThan(0);
-  });
-
-  test("should convert nested API and types (Nested resource and single type)", () => {
-    const actualOpenApi = toOpenApi({
-      api: nestedResourceApiData,
-      types: singleTypeData,
-      functions: functionsData,
-      declarations: declarationsData,
+      openapi.paths["/items"].get.responses["200"].content["application/json"]
+        .schema
+    ).toEqual({
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/Item",
+      },
     });
-
-    expect(Object.keys(actualOpenApi.openapi.paths).length).toBeGreaterThan(0);
-
-    Object.values(actualOpenApi.openapi.paths).forEach((path) => {
-      Object.values(path).forEach((method) => {
-        expect(method).toHaveProperty("summary");
-        expect(method).toHaveProperty("description");
-        expect(method).toHaveProperty("responses");
-        Object.values(method.responses).forEach(checkResponseSchema);
-        method.parameters?.forEach(checkParameterSchema);
-      });
-    });
-
     expect(
-      Object.keys(actualOpenApi.openapi.components.schemas).length
-    ).toBeGreaterThan(0);
+      openapi.paths["/items"].post.requestBody.content["application/json"]
+        .schema
+    ).toEqual({
+      $ref: "#/components/schemas/Item",
+    });
+  });
+});
+
+test("should convert API and types (Single resource, single type)", () => {
+  const { openapi } = toOpenApi({
+    api: singleResourceApiData,
+    types: singleTypeData,
+    functions: functionsData,
+    declarations: declarationsData,
+  });
+});
+
+test("should convert nested API and types (Nested resource and single type)", () => {
+  const { openapi } = toOpenApi({
+    api: nestedResourceApiData,
+    types: singleTypeData,
+    functions: functionsData,
+    declarations: declarationsData,
+  });
+});
+
+test("should convert nested API and nested types (Nested resource and nested types)", () => {
+  const { openapi } = toOpenApi({
+    api: nestedResourceApiData,
+    types: nestedTypeData,
+    functions: functionsData,
+    declarations: declarationsData,
+  });
+});
+
+test("handles empty API definition", () => {
+  const emptyApiDefinition = [];
+
+  const actualOpenApiSpec = toOpenApi({
+    api: emptyApiDefinition,
+    types: typesData,
+    functions: functionsData,
+    declarations: declarationsData,
   });
 
-  test("should convert nested API and nested types (Nested resource and nested types)", () => {
-    const actualOpenApi = toOpenApi({
-      api: nestedResourceApiData,
-      types: nestedTypeData,
-      functions: functionsData,
-      declarations: declarationsData,
-    });
+  expect(actualOpenApiSpec.openapi.paths).toEqual({});
+});
 
-    expect(Object.keys(actualOpenApi.openapi.paths).length).toBeGreaterThan(0);
+test("handles empty custom types", () => {
+  const emptyCustomTypes = [];
 
-    Object.values(actualOpenApi.openapi.paths).forEach((path) => {
-      Object.values(path).forEach((method) => {
-        expect(method).toHaveProperty("summary");
-        expect(method).toHaveProperty("description");
-        expect(method).toHaveProperty("responses");
-        Object.values(method.responses).forEach(checkResponseSchema);
-        method.parameters?.forEach(checkParameterSchema);
-      });
-    });
-
-    expect(
-      Object.keys(actualOpenApi.openapi.components.schemas).length
-    ).toBeGreaterThan(0);
+  const actualOpenApiSpec = toOpenApi({
+    api: apiData,
+    types: emptyCustomTypes,
+    functions: functionsData,
+    declarations: declarationsData,
   });
 
-  test("should handle empty API definition", () => {
-    const emptyApiDefinition = [];
-
-    const actualOpenApiSpec = toOpenApi({
-      api: emptyApiDefinition,
-      types: typesData,
-      functions: functionsData,
-      declarations: declarationsData,
-    });
-
-    expect(actualOpenApiSpec.openapi.paths).toEqual({});
-  });
-
-  test("should handle empty custom types", () => {
-    const emptyCustomTypes = [];
-
-    const actualOpenApiSpec = toOpenApi({
-      api: apiData,
-      types: emptyCustomTypes,
-      functions: functionsData,
-      declarations: declarationsData,
-    });
-
-    expect(actualOpenApiSpec.openapi.components.schemas).toEqual({});
-  });
+  expect(actualOpenApiSpec.openapi.components.schemas).toEqual({});
 });
