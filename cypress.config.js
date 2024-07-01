@@ -4,6 +4,7 @@ import { defineConfig } from "cypress";
 
 const config = defineConfig({
   defaultCommandTimeout: 60000,
+  chromeWebSecurity: false,
   component: {
     devServer: {
       framework: "react",
