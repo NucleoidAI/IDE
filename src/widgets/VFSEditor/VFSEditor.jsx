@@ -6,7 +6,6 @@ import { contextToMap } from "../../utils/Parser";
 import { publish } from "@nucleoidai/react-event";
 import rules from "./rules";
 import service from "../../service";
-import { storage } from "@nucleoidjs/webstorage";
 import { useContext } from "../../context/context";
 
 import { Box, Grid } from "@mui/material";
@@ -104,27 +103,9 @@ const VFSEditor = React.forwardRef((props, ref) => {
       key = context.get("pages.functions.selected") + ".ts";
     }
 
-    const {
-      project: { id },
-    } = context;
+    service.saveContext(context);
 
-    if (mode === "cloud") {
-      const nucContext = { ...context.specification };
-      delete nucContext.project;
-
-      service.saveContext(id, nucContext);
-    } else if (mode === "local") {
-      storage.set("ide", "context", id, {
-        specification: context.specification,
-        project: context.project,
-      });
-    } else if (mode === "terminal") {
-      publish("RUNTIME_CONNECTION", {
-        status: true,
-        metrics: { total: 100, free: 50 },
-      });
-    }
-    publish("CONTEXT_SAVED", { contextId: id, to: mode });
+    publish("CONTEXT_SAVED", { contextId: context.project.id, to: mode });
     publish("CONTEXT_CHANGED", {
       // TODO Optimize preparing files
       files: contextToMap(context.specification).filter(
