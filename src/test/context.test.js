@@ -1,9 +1,37 @@
 import Context from "../context";
 import { contextReducer } from "../context/reducer";
+import { storage } from "@nucleoidjs/webstorage";
+
+jest.mock("@nucleoidjs/webstorage", () => {
+  const memory = new Map();
+  return {
+    storage: {
+      get: jest.fn((...args) => memory.get(args.join("."))),
+      set: jest.fn((...args) => {
+        const value = args.pop();
+        memory.set(args.join("."), value);
+      }),
+      clear: jest.fn(() => memory.clear()),
+    },
+  };
+});
 
 jest.mock("@nucleoidai/react-event", () => ({
   publish: jest.fn(),
 }));
+
+beforeEach(() => {
+  storage.set("ide", "selected", "context", {
+    id: "21d2530b-4657-4ac0-b8cd-1a9f82786e32",
+  });
+  storage.set(
+    "ide",
+    "context",
+    "21d2530b-4657-4ac0-b8cd-1a9f82786e32",
+    Context.withBlank()
+  );
+});
+
 test("Resolve context with property", () => {
   const state = contextReducer(Context.init(), {
     type: "SET_SELECTED_API",
