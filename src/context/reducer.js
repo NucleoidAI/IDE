@@ -6,8 +6,6 @@ import { storage } from "@nucleoidjs/webstorage";
 import { v4 as uuid } from "uuid";
 
 function contextReducer(context, { type, payload }) {
-  const { id } = storage.get("ide", "selected", "context");
-  const { project } = storage.get("ide", "context", id);
   context = Context.copy(context);
 
   const { specification, pages } = context;
@@ -544,7 +542,13 @@ function contextReducer(context, { type, payload }) {
     default:
   }
 
-  service.saveContext({ project, specification });
+  const selectedContext = storage.get("ide", "selected", "context");
+
+  if (selectedContext) {
+    const { project } = storage.get("ide", "context", selectedContext.id);
+    service.saveContext({ project, specification });
+  }
+
   console.debug("contextReducer", type, context);
   return context;
 }
