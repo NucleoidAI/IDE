@@ -45,41 +45,49 @@ const styles = {
 function LogicTree({ openLogicDialog }) {
   const [newDeclaration] = useEvent("LOGIC_ADDED", null);
   const [state] = useContext();
-  const [treeData, setTreeData] = React.useState({});
+  const [treeData, setTreeData] = useState({});
   const [selectedKey, setSelectedKey] = useState([]);
   const [nodeKey, setNodeKey] = useState([]);
   const [hoveredNodeId, setHoveredNodeId] = useState(null);
 
   const theme = useTheme();
+  // eslint-disable-next-line
+  const declarations = state?.specification?.declarations;
+  // eslint-disable-next-line
+  const functions = state?.specification?.functions;
 
-  const declarations = state.specification.declarations;
-  const functions = state.specification.functions;
-  //eslint-disable-next-line
-  const [logicExist, setLogicExist] = useState(Boolean(declarations.length));
-  const functionsExist = Boolean(functions.length);
+  const logicExist = declarations.length > 0;
+  const functionsExist = functions.length > 0;
 
-  function select(value) {
-    const [logicClass, logicIndex] = value.split("-");
+  const select = useCallback(
+    (value) => {
+      const [logicClass, logicIndex] = value.split("-");
 
-    if (logicIndex === undefined) {
-      setNodeKey((oldNodeKey) => {
-        if (oldNodeKey.includes(logicClass)) {
-          return oldNodeKey.filter((item) => item !== logicClass);
-        } else {
-          return [...oldNodeKey, logicClass];
+      if (logicIndex === undefined) {
+        setNodeKey((oldNodeKey) => {
+          if (oldNodeKey.includes(logicClass)) {
+            return oldNodeKey.filter((item) => item !== logicClass);
+          } else {
+            return [...oldNodeKey, logicClass];
+          }
+        });
+        return;
+      }
+
+      if (treeData[logicClass] && treeData[logicClass].summaries) {
+        setSelectedKey([`${logicClass}-${logicIndex}`]);
+        const selectedSummary = treeData[logicClass].summaries[logicIndex];
+        const logic = declarations.find(
+          (item) => item.summary === selectedSummary
+        );
+
+        if (logic) {
+          publish("LOGIC_SELECTED", { logic });
         }
-      });
-      return;
-    }
-
-    setSelectedKey([`${logicClass}-${logicIndex}`]);
-    const selectedSummary = treeData[logicClass].summaries[logicIndex];
-    const logic = declarations.find((item) => item.summary === selectedSummary);
-
-    if (logic) {
-      publish("LOGIC_SELECTED", { logic });
-    }
-  }
+      }
+    },
+    [treeData, declarations]
+  );
 
   const buildTreeData = useCallback(() => {
     const tree = {};
@@ -104,21 +112,20 @@ function LogicTree({ openLogicDialog }) {
       if (matchingFunction) {
         tree[decClass].params = matchingFunction.params;
       }
-      setSelectedKey([`${initialExpandedNodes[0]}-0`]);
-      publish("WIDGET_LOADED", { name: "LogicTree" });
-      publish("LOGIC_SELECTED", { logic: declarations[0] });
-      setTreeData(tree);
-      setNodeKey(initialExpandedNodes);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
+    setSelectedKey([`${initialExpandedNodes[0]}-0`]);
+    publish("WIDGET_LOADED", { name: "LogicTree" });
+    publish("LOGIC_SELECTED", { logic: declarations[0] });
+    setTreeData(tree);
+    setNodeKey(initialExpandedNodes);
+  }, [declarations, functions]);
 
   useEffect(() => {
-    if (declarations.length !== 0) {
+    if (declarations.length > 0) {
       buildTreeData();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [declarations, buildTreeData]);
 
   useEffect(() => {
     if (newDeclaration) {
@@ -131,19 +138,24 @@ function LogicTree({ openLogicDialog }) {
         const newTreeData = { ...prevTreeData };
 
         if (!newTreeData[declarationClass]) {
-          newTreeData[declarationClass] = [];
-          return null;
+          newTreeData[declarationClass] = {
+            summaries: [],
+            params: [],
+          };
         }
 
         newTreeData[declarationClass].summaries.push(declarationSummary);
+
+        select(
+          `${declarationClass}-${newTreeData[declarationClass].summaries.length}`
+        );
+
         return newTreeData;
       });
 
-      select(`${declarationClass}-${treeData[declarationClass]?.length}`);
       publish("LOGIC_ADDED", null);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newDeclaration]);
+  }, [newDeclaration, treeData, select]);
 
   return (
     <Card sx={{ width: "100%", height: "100%" }}>
@@ -230,21 +242,22 @@ function LogicTree({ openLogicDialog }) {
                   </Box>
                 }
               >
-                {summaries.map((summary, innerIndex) => {
-                  const formattedLabel =
-                    summary.length > 30
-                      ? `${summary.substring(0, 30)}..`
-                      : summary;
+                {summaries &&
+                  summaries.map((summary, innerIndex) => {
+                    const formattedLabel =
+                      summary.length > 30
+                        ? `${summary.substring(0, 30)}..`
+                        : summary;
 
-                  return (
-                    <StyledTreeItem
-                      key={innerIndex}
-                      nodeId={`${nodeId}-${innerIndex}`}
-                      label={<>{formattedLabel}</>}
-                      title={summary}
-                    />
-                  );
-                })}
+                    return (
+                      <StyledTreeItem
+                        key={innerIndex}
+                        nodeId={`${nodeId}-${innerIndex}`}
+                        label={<>{formattedLabel}</>}
+                        title={summary}
+                      />
+                    );
+                  })}
               </StyledTreeItem>
             ))}
           </TreeView>

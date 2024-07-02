@@ -163,12 +163,9 @@ ${imperatives[0]};
     const mEditor = editor.current.editor;
 
     if (page === "api") {
-      const action = prettierStandalone.format(
-        generatedCode,
-        {
-          plugins,
-        }
-      );
+      const action = prettierStandalone.format(generatedCode, {
+        plugins,
+      });
       mEditor?.getModel().setValue(action);
     }
     if (page === "query") {
@@ -187,6 +184,21 @@ ${imperatives[0]};
     setPromptValue("");
   };
 
+  const handleKeyDown = (event) => {
+    if (event.ctrlKey && event.key === "Enter") {
+      handleSendAIClick();
+    }
+  };
+
+  const handleResetClick = () => {
+    // Reset the state to its initial values
+    setLoading(false);
+    setPromptValue("");
+    setIsCodeGenerated(false);
+    setSummary("");
+    setDescription("");
+  };
+
   return (
     <PromptCodeDialog
       logic
@@ -194,6 +206,7 @@ ${imperatives[0]};
       title={mode}
       page={page}
       inputPlaceHolder={page}
+      onKeyDown={handleKeyDown}
       handleSendAIClick={handleSendAIClick}
       handleSaveAIResponse={handleSaveAIResponse}
       handlePromptChange={handleInputChange}
@@ -203,6 +216,7 @@ ${imperatives[0]};
       promptValue={promptValue}
       isCodeGenerated={isCodeGenerated}
       loading={loading}
+      handleResetClick={handleResetClick}
     />
   );
 }

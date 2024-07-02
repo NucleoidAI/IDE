@@ -96,7 +96,7 @@ function ChatMenu(props) {
                 <AddIcon />
               </Fab>
             </Box>
-            <Box sx={{ flexGrow: 1, overflow: "auto" }}>
+            <Box sx={{ flexGrow: 1, overflow: "auto" }} onClick={handleClose}>
               <ChatHistory />
             </Box>
 
@@ -198,7 +198,7 @@ function ChatMenu(props) {
                 <AddIcon />
               </Fab>
             </Box>
-            <Box sx={{ flexGrow: 1, overflow: "auto" }}>
+            <Box sx={{ flexGrow: 1, overflow: "auto" }} onClick={handleClose}>
               <ChatHistory />
             </Box>
             <Settings size={"large"} />

@@ -4,6 +4,7 @@ import BoltIcon from "@mui/icons-material/Bolt";
 import Fab from "@mui/material/Fab";
 import InputBase from "@mui/material/InputBase";
 import MicIcon from "@mui/icons-material/Mic";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import { alpha } from "@mui/material/styles";
 
 import { CircularProgress, Stack } from "@mui/material";
@@ -18,6 +19,8 @@ function PromptInput({
   isCodeGenerated,
   loading,
   handleSendAIClick,
+  handleResetClick,
+  onKeyDown,
   inputPlaceHolder,
   setPromptValue,
 }) {
@@ -52,6 +55,7 @@ function PromptInput({
         border: (theme) => `1px solid ${alpha(theme.palette.grey[400], 0.5)}`,
         borderRadius: (theme) => theme.custom.chat.inputBorderRadius,
         padding: 1,
+        position: "relative",
       }}
     >
       <InputBase
@@ -63,6 +67,7 @@ function PromptInput({
           }
           handlePromptChange(e);
         }}
+        onKeyDown={onKeyDown}
         onKeyPress={() => {
           setKeyDown(true);
         }}
@@ -82,7 +87,7 @@ function PromptInput({
         }}
       >
         {!loading ? (
-          !isCodeGenerated && (
+          !isCodeGenerated ? (
             <Fab
               variant="button"
               size="medium"
@@ -91,6 +96,20 @@ function PromptInput({
               data-cy="propmt-input-send-ai-button"
             >
               <BoltIcon />
+            </Fab>
+          ) : (
+            <Fab
+              variant="button"
+              type="reset"
+              size="small"
+              onClick={handleResetClick}
+              sx={{
+                position: "absolute",
+                bottom: "0",
+                right: "0",
+              }}
+            >
+              <RefreshIcon />
             </Fab>
           )
         ) : (

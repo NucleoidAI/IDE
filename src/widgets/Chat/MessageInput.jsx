@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 
 import {
   Box,
+  CircularProgress,
   IconButton,
   TextField,
   Tooltip,
@@ -33,10 +34,12 @@ const MessageInput = forwardRef((props, ref) => {
   const [, , convertChat] = useChat();
   const [isAnimating, setIsAnimating] = useState(false);
   const [isInputEmpty, setIsInputEmpty] = useState(true);
+  const [loadingConvert, setLoadingConvert] = useState(false);
   const [ConfirmDialog, showConfirmDialog] = useConfirmDialog();
   const inputRef = useRef(null);
   const { chatId } = useParams();
   const [chatMessageResponded] = useEvent("CHAT_MESSAGE_RESPONDED", null);
+  const [chatConverted] = useEvent("CHAT_CONVERTED", null);
 
   useEffect(() => {
     if (highlightConvertToProject) {
@@ -75,7 +78,11 @@ const MessageInput = forwardRef((props, ref) => {
       "Convert to Project",
       "Are you sure you want to convert this chat to a project?",
       () => {
+        setLoadingConvert(true);
         const chat = storage.get("ide", "chat", "sessions", chatId);
+        if (chatConverted) {
+          setLoadingConvert(false);
+        }
         convertChat(chat);
       }
     );
@@ -161,7 +168,18 @@ const MessageInput = forwardRef((props, ref) => {
           sx={{ flexGrow: 1 }}
           data-cy="message-input"
         />
-        {showConvertToProject && convertToProjectButton()}
+        {loadingConvert && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <CircularProgress size={24} />
+          </Box>
+        )}
+        {!loadingConvert && showConvertToProject && convertToProjectButton()}
         <IconButton
           type="submit"
           disabled={loading || isInputEmpty}
