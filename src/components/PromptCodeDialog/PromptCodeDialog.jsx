@@ -1,6 +1,8 @@
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
+import CloseIcon from "@mui/icons-material/Close";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
+import IconButton from "@mui/material/IconButton";
 import NucEditor from "../../components/NucEditor/NucEditor";
 import PromptInput from "../PromptInput/PromptInput";
 import Slide from "@mui/material/Slide";
@@ -13,6 +15,8 @@ function PromptCodeDialog({
   handleSendAIClick,
   handleSaveAIResponse,
   handlePromptChange,
+  onKeyDown,
+  handleResetClick,
   setPromptValue,
   promptValue,
   loading,
@@ -46,6 +50,11 @@ function PromptCodeDialog({
               avatar={<Box component={logo} />}
               title={page.toUpperCase()}
               titleTypographyProps={{ variant: "h5" }}
+              action={
+                <IconButton onClick={handleClose}>
+                  <CloseIcon />
+                </IconButton>
+              }
             />
             <CardContent
               sx={{
@@ -91,6 +100,8 @@ function PromptCodeDialog({
               isCodeGenerated={isCodeGenerated}
               loading={loading}
               inputPlaceHolder={inputPlaceHolder}
+              onKeyDown={onKeyDown}
+              handleResetClick={handleResetClick}
             />
           </Card>
         </Stack>
