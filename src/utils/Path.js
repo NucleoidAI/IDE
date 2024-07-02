@@ -24,7 +24,7 @@ const addSlashMark = (path) => {
 };
 
 const getRecentProject = () => {
-  const recentProject = storage.get("ide", "selected", "context");
+  const recentProject = storage.get("ide", "selected", "project");
 
   if (recentProject) {
     return recentProject;
