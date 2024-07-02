@@ -156,17 +156,15 @@ const Editor = React.forwardRef((props, ref) => {
     };
   }
 
-  const debouncedSave = debounce((id, context) => {
-    service.saveContext(context);
+  const debouncedSave = debounce((project, specification) => {
+    service.saveSpecification(project, specification);
 
-    publish("CONTEXT_SAVED", { contextId: id, to: mode });
+    publish("CONTEXT_SAVED", { contextId: project.id, to: mode });
   }, 300);
 
   function handleChange(e) {
     if (logic) {
-      const {
-        project: { id },
-      } = context;
+      const { project, specification } = context;
 
       context.specification.declarations =
         context.specification.declarations.map((item) => {
@@ -178,7 +176,7 @@ const Editor = React.forwardRef((props, ref) => {
           return item;
         });
 
-      debouncedSave(id, context);
+      debouncedSave(project, specification);
     }
     if (query) {
       context.pages.query.text = e;

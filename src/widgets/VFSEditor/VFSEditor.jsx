@@ -6,6 +6,7 @@ import { contextToMap } from "../../utils/Parser";
 import { publish } from "@nucleoidai/react-event";
 import rules from "./rules";
 import service from "../../service";
+import { storage } from "@nucleoidjs/webstorage";
 import { useContext } from "../../context/context";
 
 import { Box, Grid } from "@mui/material";
@@ -30,7 +31,7 @@ const VFSEditor = React.forwardRef((props, ref) => {
   const timerRef = React.useRef();
   const [context] = useContext();
   const editorRef = React.useRef(null);
-
+  const selectedProject = storage.get("ide", "selected", "project");
   const file = getFile(context, props);
 
   const checkFunction = React.useCallback(() => {
@@ -103,7 +104,7 @@ const VFSEditor = React.forwardRef((props, ref) => {
       key = context.get("pages.functions.selected") + ".ts";
     }
 
-    service.saveContext(context);
+    service.saveSpecification(selectedProject, context.specification);
 
     publish("CONTEXT_SAVED", { contextId: context.project.id, to: mode });
     publish("CONTEXT_CHANGED", {
