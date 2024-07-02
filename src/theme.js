@@ -67,7 +67,7 @@ const commonThemeProperties = {
     MuiDataGrid: {
       styleOverrides: {
         root: {
-          borderColor: base.grey[700],
+          borderColor: base.grey[0],
           "& .MuiDataGrid-columnHeader, & .MuiDataGrid-cell, & .MuiDataGrid-columnHeaders, & .MuiDataGrid-footerContainer":
             {
               borderColor: base.grey[700],
@@ -107,11 +107,6 @@ const commonThemeProperties = {
       },
     },
     MuiTextField: {
-      defaultProps: {
-        variant: "standard",
-      },
-    },
-    MuiSelect: {
       defaultProps: {
         variant: "standard",
       },
@@ -356,10 +351,63 @@ const lightTheme = createTheme({
       },
     },
 
+    MuiSelect: {
+      styleOverrides: {
+        icon: {
+          color: base.grey[700],
+        },
+      },
+      defaultProps: {
+        variant: "standard",
+      },
+    },
+
     MuiBackdrop: {
       styleOverrides: {
         root: {
           backgroundColor: "rgba(0,0,0,0.1)",
+        },
+      },
+    },
+    MuiInputBase: {
+      variants: [
+        {
+          props: { variant: "chat" },
+          style: {
+            color: base.grey[400],
+            margin: 5,
+            borderRadius: 10,
+          },
+        },
+      ],
+      styleOverrides: {
+        root: {
+          color: base.grey[200],
+          "&.Mui-disabled": {
+            color: base.grey[700],
+            WebkitTextFillColor: "initial",
+          },
+          "&:before": {
+            borderBottom: `1px solid ${base.grey[600]}`,
+          },
+          "&:hover:not(.Mui-disabled):before": {
+            borderBottom: `2px solid ${base.grey[400]}`,
+          },
+          "&.Mui-focused:after": {
+            borderBottom: `2px solid ${base.primary.dark}`,
+          },
+        },
+        input: {
+          color: base.grey[700],
+          WebkitTextFillColor: "initial",
+          "&.Mui-disabled": {
+            color: base.grey[700],
+            WebkitTextFillColor: "initial",
+          },
+          "&::placeholder": {
+            color: base.grey[500],
+            opacity: 1,
+          },
         },
       },
     },
@@ -537,6 +585,17 @@ const darkTheme = createTheme({
       },
     },
 
+    MuiSelect: {
+      styleOverrides: {
+        icon: {
+          color: base.grey[0],
+        },
+      },
+      defaultProps: {
+        variant: "standard",
+      },
+    },
+
     MuiBackdrop: {
       styleOverrides: {
         root: {
@@ -598,9 +657,6 @@ const darkTheme = createTheme({
             color: base.grey[400],
             margin: 5,
             borderRadius: 10,
-            "& .MuiInputBase-input.Mui-disabled": {
-              WebkitTextFillColor: alpha(base.grey[400], 0.5),
-            },
           },
         },
       ],
@@ -608,7 +664,8 @@ const darkTheme = createTheme({
         root: {
           color: base.grey[200],
           "&.Mui-disabled": {
-            color: base.grey[500],
+            color: base.grey[0],
+            WebkitTextFillColor: "initial",
           },
           "&:before": {
             borderBottom: `1px solid ${base.grey[600]}`,
@@ -621,6 +678,12 @@ const darkTheme = createTheme({
           },
         },
         input: {
+          color: base.grey[0],
+          WebkitTextFillColor: "initial",
+          "&.Mui-disabled": {
+            color: base.grey[0],
+            WebkitTextFillColor: "initial",
+          },
           "&::placeholder": {
             color: base.grey[500],
             opacity: 1,
