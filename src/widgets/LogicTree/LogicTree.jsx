@@ -52,9 +52,9 @@ function LogicTree({ openLogicDialog }) {
 
   const theme = useTheme();
   // eslint-disable-next-line
-  const declarations = state?.specification?.declarations || [];
+  const declarations = state?.specification?.declarations;
   // eslint-disable-next-line
-  const functions = state?.specification?.functions || [];
+  const functions = state?.specification?.functions;
 
   const logicExist = declarations.length > 0;
   const functionsExist = functions.length > 0;
