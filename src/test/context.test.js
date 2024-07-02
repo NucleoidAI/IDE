@@ -21,12 +21,12 @@ jest.mock("@nucleoidai/react-event", () => ({
 }));
 
 beforeEach(() => {
-  storage.set("ide", "selected", "context", {
+  storage.set("ide", "selected", "project", {
     id: "21d2530b-4657-4ac0-b8cd-1a9f82786e32",
   });
   storage.set(
     "ide",
-    "context",
+    "project",
     "21d2530b-4657-4ac0-b8cd-1a9f82786e32",
     Context.withBlank()
   );
