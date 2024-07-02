@@ -80,12 +80,12 @@ const getContext = (contextId) => {
   return http.get(`services/${contextId}/specification`);
 };
 
-const saveContext = (context) => {
-  const { project, specification } = context;
-  const { id, type } = project;
+const saveSpecification = (selected, specification) => {
+  const { id, type } = selected;
+
   switch (type) {
     case "LOCAL":
-      storage.set("ide", "context", id, { project, specification });
+      storage.set("ide", "specification", id, specification);
       break;
     case "CLOUD":
       return http.put(`services/${id}/specification`, specification);
@@ -129,7 +129,7 @@ const service = {
   deleteProject,
   getProjectServices,
   getContext,
-  saveContext,
+  saveSpecification,
   createSandbox,
   getGraph,
   getConfig,
