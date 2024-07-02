@@ -8,10 +8,10 @@ function LogoutButton({ onLogout }) {
 
   const handleLogout = () => {
     storage.remove("oauth.token");
-    const latestContext = storage.get("ide", "selected", "context");
+    const latestContext = storage.get("ide", "selected", "project");
     publish("USER", { login: false, id: null });
     if (latestContext.type === "CLOUD") {
-      storage.remove("ide", "selected", "context");
+      storage.remove("ide", "selected", "project");
       navigate("/new");
     }
     onLogout && onLogout();

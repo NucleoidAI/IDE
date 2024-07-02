@@ -31,7 +31,7 @@ const VFSEditor = React.forwardRef((props, ref) => {
   const timerRef = React.useRef();
   const [context] = useContext();
   const editorRef = React.useRef(null);
-
+  const selectedProject = storage.get("ide", "selected", "project");
   const file = getFile(context, props);
 
   const checkFunction = React.useCallback(() => {
@@ -104,33 +104,16 @@ const VFSEditor = React.forwardRef((props, ref) => {
       key = context.get("pages.functions.selected") + ".ts";
     }
 
-    const {
-      project: { id },
-    } = context;
+    service.saveSpecification(selectedProject, context.specification);
 
-    if (mode === "cloud") {
-      const nucContext = { ...context.specification };
-      delete nucContext.project;
-
-      service.saveContext(id, nucContext);
-    } else if (mode === "local") {
-      storage.set("ide", "context", id, {
-        specification: context.specification,
-        project: context.project,
-      });
-    } else if (mode === "terminal") {
-      publish("RUNTIME_CONNECTION", {
-        status: true,
-        metrics: { total: 100, free: 50 },
-      });
-    }
-    publish("CONTEXT_SAVED", { contextId: id, to: mode });
+    publish("CONTEXT_SAVED", { contextId: context.project.id, to: mode });
     publish("CONTEXT_CHANGED", {
       // TODO Optimize preparing files
       files: contextToMap(context.specification).filter(
         (item) => item.key === key
       ),
     });
+    //eslint-disable-next-line
   }, [api, context, mode]);
 
   function handleEditorDidMount(editor, monaco) {

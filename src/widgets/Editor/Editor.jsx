@@ -156,29 +156,15 @@ const Editor = React.forwardRef((props, ref) => {
     };
   }
 
-  const debouncedSave = debounce((id, specification, project) => {
-    if (mode === "cloud") {
-      service.saveContext(id, specification);
-    } else if (mode === "local") {
-      storage.set("ide", "context", id, {
-        specification,
-        project,
-      });
-    } else if (mode === "terminal") {
-      publish("RUNTIME_CONNECTION", {
-        status: true,
-        metrics: { total: 100, free: 50 },
-      });
-    }
+  const debouncedSave = debounce((project, specification) => {
+    service.saveSpecification(project, specification);
 
-    publish("CONTEXT_SAVED", { contextId: id, to: mode });
+    publish("CONTEXT_SAVED", { contextId: project.id, to: mode });
   }, 300);
 
   function handleChange(e) {
     if (logic) {
-      const {
-        project: { id },
-      } = context;
+      const { project, specification } = context;
 
       context.specification.declarations =
         context.specification.declarations.map((item) => {
@@ -190,7 +176,7 @@ const Editor = React.forwardRef((props, ref) => {
           return item;
         });
 
-      debouncedSave(id, context.specification, context.project);
+      debouncedSave(project, specification);
     }
     if (query) {
       context.pages.query.text = e;
