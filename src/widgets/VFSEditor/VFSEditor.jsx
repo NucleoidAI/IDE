@@ -113,6 +113,7 @@ const VFSEditor = React.forwardRef((props, ref) => {
         (item) => item.key === key
       ),
     });
+    //eslint-disable-next-line
   }, [api, context, mode]);
 
   function handleEditorDidMount(editor, monaco) {
