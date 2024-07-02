@@ -39,6 +39,7 @@ const MessageInput = forwardRef((props, ref) => {
   const inputRef = useRef(null);
   const { chatId } = useParams();
   const [chatMessageResponded] = useEvent("CHAT_MESSAGE_RESPONDED", null);
+  const [chatConverted] = useEvent("CHAT_CONVERTED", null);
 
   useEffect(() => {
     if (highlightConvertToProject) {
@@ -76,13 +77,13 @@ const MessageInput = forwardRef((props, ref) => {
     showConfirmDialog(
       "Convert to Project",
       "Are you sure you want to convert this chat to a project?",
-      async () => {
+      () => {
         setLoadingConvert(true);
         const chat = storage.get("ide", "chat", "sessions", chatId);
-        // Introduce a delay of 2 seconds (2000 milliseconds)
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        await convertChat(chat);
-        setLoadingConvert(false);
+        if (chatConverted) {
+          setLoadingConvert(false);
+        }
+        convertChat(chat);
       }
     );
   };
