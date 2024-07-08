@@ -65,15 +65,19 @@ Cypress.Commands.add("setup", (container, fixtureType, type) => {
         cy.fixture("PROJECTS/LOCAL/project").then((context) => {
           const { project, types, functions, logic, api, declarations } =
             context;
-          cy.storageSet(`ide.context.3450f289-0fc5-45e9-9a4a-606c0a63cdfe`, {
-            project: project,
-            specification: {
+          cy.storageSet(
+            `ide.specification.3450f289-0fc5-45e9-9a4a-606c0a63cdfe`,
+            {
               api,
               logic,
               functions,
               types,
               declarations,
-            },
+            }
+          );
+          cy.storageSet(`ide.project.3450f289-0fc5-45e9-9a4a-606c0a63cdfe`, {
+            ...project,
+            id: "3450f289-0fc5-45e9-9a4a-606c0a63cdfe",
           });
         });
       }
@@ -327,7 +331,7 @@ Cypress.Commands.add(
   "checkLocalContext",
   (projectId, specification, changedEditorValue) => {
     let checkedSpecification;
-    cy.storageGet(`ide.context.${projectId}`).then((project) => {
+    cy.storageGet(`ide.specification.${projectId}`).then((project) => {
       if (specification === "api") {
         checkedSpecification = project.specification.api[0]["action"];
       } else if (specification === "declaration") {
