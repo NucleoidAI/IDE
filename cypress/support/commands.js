@@ -101,14 +101,15 @@ Cypress.Commands.add("typeEditor", (changedEditorValue) => {
   cy.get("section").should("be.visible");
   cy.get(".monaco-editor").should("be.visible");
 
-  cy.get('textarea[role="textbox"]').type("{selectall}{del}");
+  cy.get(
+    "[class^='monaco-editor no-user-select  showUnused showDeprecated vs-dark']"
+  ).click();
 
+  cy.get('textarea[role="textbox"]').type("{selectAll}");
   cy.get('textarea[role="textbox"]').type(changedEditorValue, {
     force: true,
     parseSpecialCharSequences: false,
   });
-
-  cy.wait(1000);
 });
 
 Cypress.Commands.add("sendMessage", (message, fixture) => {
@@ -331,14 +332,15 @@ Cypress.Commands.add(
   "checkLocalContext",
   (projectId, specification, changedEditorValue) => {
     let checkedSpecification;
-    cy.storageGet(`ide.specification.${projectId}`).then((project) => {
+    cy.storageGet(`ide.specification.${projectId}`).then((spec) => {
       if (specification === "api") {
-        checkedSpecification = project.specification.api[0]["action"];
+        checkedSpecification = spec.api[0]["action"];
       } else if (specification === "declaration") {
-        checkedSpecification = project.specification.declarations[0].definition;
+        checkedSpecification = spec.declarations[0].definition;
       }
       if (specification === "function") {
-        checkedSpecification = project.specification.functions[0].definition;
+        console.log(spec.functions[0].definition);
+        checkedSpecification = spec.functions[0].definition;
       }
 
       cy.normalizeString(checkedSpecification).then((normalizedDefinition) => {
