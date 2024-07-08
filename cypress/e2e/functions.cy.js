@@ -15,6 +15,8 @@ describe("Functions", () => {
 
       cy.typeEditor(changedEditorValue);
 
+      cy.waitEvent("CONTEXT_SAVED");
+
       cy.checkLocalContext(this.projectId, "function", changedEditorValue);
     });
   });
