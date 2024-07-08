@@ -17,7 +17,7 @@ describe("Projects Path", () => {
 
       cy.waitEvent("CONTAINER_LOADED");
 
-      cy.storageGet("ide.selected.context").then((project) => {
+      cy.storageGet("ide.selected.project").then((project) => {
         expect(project).to.exist;
         expect(project).to.have.property("id", cloudProjectId);
         expect(project).to.have.property("type", "CLOUD");
@@ -45,7 +45,7 @@ describe("Projects Path", () => {
       const localProjectId = "3450f289-0fc5-45e9-9a4a-606c0a63cdfe";
       const selectedProject = { id: localProjectId, type: "LOCAL" };
 
-      cy.storageSet("ide.selected.context", selectedProject);
+      cy.storageSet("ide.selected.project", selectedProject);
 
       cy.visit("/");
 
@@ -62,11 +62,11 @@ describe("Projects Path", () => {
         const pathParts = pathname.split("/");
         const projectId = pathParts[pathParts.length - 2];
 
-        cy.storageGet(`ide.context.${projectId}`).as("project");
+        cy.storageGet(`ide.specification.${projectId}`).as("project");
 
         cy.get("@project").should("exist");
 
-        cy.storageGet(`ide.selected.context`).as("selectedProject");
+        cy.storageGet(`ide.selected.project`).as("selectedProject");
 
         cy.get("@selectedProject")
           .should((selectedProject) => {
@@ -91,7 +91,7 @@ describe("Projects Path", () => {
         const pathParts = pathname.split("/");
         const projectId = pathParts[pathParts.length - 2];
 
-        cy.storageGet(`ide.selected.context`).then((selectedProject) => {
+        cy.storageGet(`ide.selected.project`).then((selectedProject) => {
           expect(selectedProject.id).to.equal(projectId);
           expect(selectedProject.type).to.equal("LOCAL");
         });
