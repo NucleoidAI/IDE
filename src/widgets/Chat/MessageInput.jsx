@@ -67,16 +67,22 @@ const MessageInput = forwardRef((props, ref) => {
   }));
 
   useEffect(() => {
-    if (chatMessageResponded && !mobileSize) {
-      inputRef.current.focus();
+    if (chatMessageResponded) {
+      if (mobileSize) {
+        inputRef.current.blur();
+      } else {
+        inputRef.current.focus();
+      }
     }
-  }, [chatMessageResponded]);
+  }, [chatMessageResponded, mobileSize]);
 
   useEffect(() => {
-    if (!mobileSize) {
+    if (mobileSize) {
+      inputRef.current.blur();
+    } else {
       inputRef.current.focus();
     }
-  }, []);
+  }, [mobileSize]);
 
   const handleProjectIconClick = () => {
     showConfirmDialog(
