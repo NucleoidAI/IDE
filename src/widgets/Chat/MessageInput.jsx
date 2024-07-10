@@ -38,7 +38,6 @@ const MessageInput = forwardRef((props, ref) => {
   const [ConfirmDialog, showConfirmDialog] = useConfirmDialog();
   const inputRef = useRef(null);
   const { chatId } = useParams();
-  const [chatMessageResponded] = useEvent("CHAT_MESSAGE_RESPONDED", null);
   const [chatConverted] = useEvent("CHAT_CONVERTED", null);
 
   useEffect(() => {
@@ -50,16 +49,6 @@ const MessageInput = forwardRef((props, ref) => {
       return () => clearTimeout(timer);
     }
   }, [highlightConvertToProject]);
-
-  useEffect(() => {
-    if (chatMessageResponded) {
-      inputRef.current.focus();
-    }
-  }, [chatMessageResponded]);
-
-  useEffect(() => {
-    inputRef.current.focus();
-  }, []);
 
   useImperativeHandle(ref, () => ({
     getValue: () => inputRef.current.value,
