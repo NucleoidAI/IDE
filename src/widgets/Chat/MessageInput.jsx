@@ -13,6 +13,7 @@ import {
   TextField,
   Tooltip,
   Typography,
+  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import React, {
@@ -38,7 +39,10 @@ const MessageInput = forwardRef((props, ref) => {
   const [ConfirmDialog, showConfirmDialog] = useConfirmDialog();
   const inputRef = useRef(null);
   const { chatId } = useParams();
+  const [chatMessageResponded] = useEvent("CHAT_MESSAGE_RESPONDED", null);
   const [chatConverted] = useEvent("CHAT_CONVERTED", null);
+
+  const mobileSize = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     if (highlightConvertToProject) {
@@ -61,6 +65,18 @@ const MessageInput = forwardRef((props, ref) => {
       setIsInputEmpty(false);
     },
   }));
+
+  useEffect(() => {
+    if (chatMessageResponded && !mobileSize) {
+      inputRef.current.focus();
+    }
+  }, [chatMessageResponded]);
+
+  useEffect(() => {
+    if (!mobileSize) {
+      inputRef.current.focus();
+    }
+  }, []);
 
   const handleProjectIconClick = () => {
     showConfirmDialog(
