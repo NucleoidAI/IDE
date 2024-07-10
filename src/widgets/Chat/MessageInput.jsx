@@ -13,6 +13,7 @@ import {
   TextField,
   Tooltip,
   Typography,
+  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import React, {
@@ -41,6 +42,8 @@ const MessageInput = forwardRef((props, ref) => {
   const [chatMessageResponded] = useEvent("CHAT_MESSAGE_RESPONDED", null);
   const [chatConverted] = useEvent("CHAT_CONVERTED", null);
 
+  const mobileSize = useMediaQuery(theme.breakpoints.down("sm"));
+
   useEffect(() => {
     if (highlightConvertToProject) {
       setIsAnimating(true);
@@ -50,16 +53,6 @@ const MessageInput = forwardRef((props, ref) => {
       return () => clearTimeout(timer);
     }
   }, [highlightConvertToProject]);
-
-  useEffect(() => {
-    if (chatMessageResponded) {
-      inputRef.current.focus();
-    }
-  }, [chatMessageResponded]);
-
-  useEffect(() => {
-    inputRef.current.focus();
-  }, []);
 
   useImperativeHandle(ref, () => ({
     getValue: () => inputRef.current.value,
@@ -72,6 +65,24 @@ const MessageInput = forwardRef((props, ref) => {
       setIsInputEmpty(false);
     },
   }));
+
+  useEffect(() => {
+    if (chatMessageResponded) {
+      if (mobileSize) {
+        inputRef.current.blur();
+      } else {
+        inputRef.current.focus();
+      }
+    }
+  }, [chatMessageResponded, mobileSize]);
+
+  useEffect(() => {
+    if (mobileSize) {
+      inputRef.current.blur();
+    } else {
+      inputRef.current.focus();
+    }
+  }, [mobileSize]);
 
   const handleProjectIconClick = () => {
     showConfirmDialog(
