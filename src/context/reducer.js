@@ -1,9 +1,12 @@
 import ActionTemplate from "../templates/ActionTemplate.js";
 import Context from "../context";
 import { publish } from "@nucleoidai/react-event";
+import service from "../service.js";
+import { storage } from "@nucleoidjs/webstorage";
 import { v4 as uuid } from "uuid";
 
 function contextReducer(context, { type, payload }) {
+  const selectedProject = storage.get("ide", "selected", "project");
   context = Context.copy(context);
 
   const { specification, pages } = context;
@@ -455,6 +458,7 @@ function contextReducer(context, { type, payload }) {
       } else {
         specification.types.push(updatedTypes);
       }
+
       break;
     }
     case "ADD_TYPE": {
@@ -471,6 +475,7 @@ function contextReducer(context, { type, payload }) {
         },
       };
       specification.types.push(newType);
+
       break;
     }
     case "DELETE_TYPE": {
@@ -482,6 +487,7 @@ function contextReducer(context, { type, payload }) {
       if (typeIndex !== -1) {
         specification.types.splice(typeIndex, 1);
       }
+
       break;
     }
 
@@ -495,6 +501,7 @@ function contextReducer(context, { type, payload }) {
         specification.types[typeIndex].name = newTypeName;
         specification.types[typeIndex].schema.name = newTypeName;
       }
+
       break;
     }
     case "SAVE_API_PARAMS": {
@@ -507,6 +514,7 @@ function contextReducer(context, { type, payload }) {
       if (apiIndex !== -1) {
         specification.api[apiIndex].params = params;
       }
+
       break;
     }
     case "UPDATE_API_PATH_METHOD": {
@@ -535,6 +543,7 @@ function contextReducer(context, { type, payload }) {
     default:
   }
 
+  service.saveSpecification(selectedProject, specification);
   console.debug("contextReducer", type, context);
   return context;
 }

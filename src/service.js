@@ -1,5 +1,7 @@
 import Settings from "./settings";
 import http from "./http";
+import { publish } from "@nucleoidai/react-event";
+import { storage } from "@nucleoidjs/webstorage";
 
 const query = async (body) => {
   return fetch(Settings.url.terminal(), {
@@ -78,8 +80,21 @@ const getContext = (contextId) => {
   return http.get(`services/${contextId}/specification`);
 };
 
-const saveContext = (contextId, context) => {
-  return http.put(`services/${contextId}/specification`, context);
+const saveSpecification = (selected, specification) => {
+  const { id, type } = selected;
+
+  switch (type) {
+    case "LOCAL":
+      storage.set("ide", "specification", id, specification);
+      break;
+    case "CLOUD":
+      return http.put(`services/${id}/specification`, specification);
+    case "TERMINAL":
+      publish("RUNTIME_CONNECTION", {
+        status: true,
+        metrics: { total: 100, free: 50 },
+      });
+  }
 };
 
 const getGraph = () => {
@@ -114,7 +129,7 @@ const service = {
   deleteProject,
   getProjectServices,
   getContext,
-  saveContext,
+  saveSpecification,
   createSandbox,
   getGraph,
   getConfig,

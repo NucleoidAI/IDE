@@ -54,14 +54,8 @@ function IDE() {
   }, [mobileSize]);
 
   function getContextFromStorage(projectId) {
-    const localContext = storage.get("ide", "context", projectId);
-
-    if (!localContext) {
-      navigate("/error/api");
-      return null;
-    }
-
-    const { specification, project } = localContext;
+    const project = storage.get("ide", "project", projectId);
+    const specification = storage.get("ide", "specification", projectId);
 
     if (!specification && !project) {
       navigate("/error/api");
@@ -123,7 +117,7 @@ function IDE() {
         description: project.description,
       };
 
-      storage.set("ide", "selected", "context", {
+      storage.set("ide", "selected", "project", {
         id: project.id,
         type: "CLOUD",
       });
@@ -138,10 +132,8 @@ function IDE() {
     const context = Context.withSample();
     context.get = (prop) => Context.resolve(context, prop);
     const { specification, project } = context;
-    storage.set("ide", "context", project.id, {
-      specification: specification,
-      project: project,
-    });
+    storage.set("ide", "project", project.id, project);
+    storage.set("ide", "specification", project.id, specification);
 
     navigate(`/${project.id}/api?mode=local`);
 
@@ -156,6 +148,7 @@ function IDE() {
   }
 
   const initContext = (context) => {
+    console.log(context);
     if (
       !Settings.description() ||
       Settings.description() !== context.project.description
@@ -179,9 +172,9 @@ function IDE() {
 
     if (
       context.project.type === "LOCAL" &&
-      storage.get("ide", "context", context.project.id)
+      storage.get("ide", "project", context.project.id)
     ) {
-      storage.set("ide", "selected", "context", {
+      storage.set("ide", "selected", "project", {
         id: context.project.id,
         type: "LOCAL",
       });
@@ -197,6 +190,7 @@ function IDE() {
   };
 
   const initVfs = (context) => {
+    console.log(context);
     const files = contextToMap(context.specification);
     vfs.init(files);
   };
