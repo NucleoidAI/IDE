@@ -190,7 +190,10 @@ const MessageInput = forwardRef((props, ref) => {
             <CircularProgress size={24} />
           </Box>
         )}
-        {!loadingConvert && showConvertToProject && convertToProjectButton()}
+        {!loadingConvert &&
+          showConvertToProject &&
+          !mobileSize &&
+          convertToProjectButton()}
         <IconButton
           type="submit"
           disabled={loading || isInputEmpty}
