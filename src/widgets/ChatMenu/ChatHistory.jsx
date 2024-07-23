@@ -23,6 +23,7 @@ function ChatHistory() {
   const navigate = useNavigate();
   const [selectedChat] = useEvent("CHAT_SELECTED");
   const [initChat] = useEvent("CHAT_INITIATED");
+  const [chatMessageResponded] = useEvent("CHAT_MESSAGE_RESPONDED", null);
   const { chatId } = useParams();
   const [chats, setChats] = useState([]);
   const [, , convertChat, deleteChat] = useChat();
@@ -73,7 +74,7 @@ function ChatHistory() {
       }
     }
     setChats(menu.sort((a, b) => b.created - a.created));
-  }, [selectedChat, initChat]);
+  }, [selectedChat, initChat, chatMessageResponded]);
 
   return (
     <Box
