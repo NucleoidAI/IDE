@@ -10,8 +10,10 @@ import PopChat from "../../widgets/PopChat";
 import ProcessDrawer from "../../widgets/ProcessDrawer/ProcessDrawer";
 import Settings from "../../settings";
 import SwaggerDialog from "../../components/SwaggerDialog";
+import config from "../../../config";
 import { contextReducer } from "../../context/reducer";
 import { contextToMap } from "../../utils/Parser";
+import http from "../../http";
 import routes from "../../routes";
 import sandboxService from "../../sandboxService";
 import service from "../../service";
@@ -96,42 +98,69 @@ function IDE() {
   }
 
   async function project(projectId) {
-    const [projectResult, serviceResult] = await Promise.all([
-      service.getProject(projectId),
-      service.getProjectServices(),
-    ]).catch((error) => {
-      if (error.response.status === 404) {
-        return [undefined, undefined];
-      }
-    });
+    const appId = config.id;
+    const { refreshToken } = storage.get("oauth.token");
 
-    const projectService = serviceResult.data;
-    const project = projectResult.data;
+    return http
+      .post("/oauth", { appId, refreshToken, projectId })
+      .then(({ data }) => {
+        const { refreshToken, accessToken } = data;
+        storage.set("oauth.token", { accessToken, refreshToken });
 
-    publish("PROJECT_FOUNDED", { id: projectId, type: "CLOUD", from: "URL" });
+        return Promise.all([
+          service.getProject(projectId),
+          service.getProjectServices(),
+        ]);
+      })
+      .then(([projectResult, serviceResult]) => {
+        if (!projectResult || !serviceResult) {
+          console.log("Project or service not found");
+          throw new Error("Project or service not found");
+        }
 
-    if (project.type === "SINGLE") {
-      const specificationId = projectService[0].id;
-      const { data: specification } = await service.getContext(specificationId);
+        const projectService = serviceResult.data;
+        const project = projectResult.data;
 
-      const context = Context.withPages({ specification });
-      context.get = (prop) => Context.resolve(context, prop);
-      context.project = {
-        type: "CLOUD",
-        name: project.name,
-        id: specificationId,
-        description: project.description,
-      };
+        publish("PROJECT_FOUNDED", {
+          id: projectId,
+          type: "CLOUD",
+          from: "URL",
+        });
 
-      storage.set("ide", "selected", "context", {
-        id: project.id,
-        type: "CLOUD",
+        if (project.type === "SINGLE") {
+          const specificationId = projectService[0].id;
+          return service
+            .getContext(specificationId)
+            .then(({ data: specification }) => {
+              const context = Context.withPages({ specification });
+              context.get = (prop) => Context.resolve(context, prop);
+              context.project = {
+                type: "CLOUD",
+                name: project.name,
+                id: specificationId,
+                description: project.description,
+              };
+              console.log(context);
+              storage.set("ide", "selected", "context", {
+                id: project.id,
+                type: "CLOUD",
+              });
+
+              return context;
+            });
+        } else {
+          console.log("Multiple projects not supported yet.");
+          return null;
+        }
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 404) {
+          console.log("Project or services not found");
+        } else {
+          console.error("An error occurred", error);
+        }
+        throw error;
       });
-
-      return context;
-    } else {
-      console.log("Multiple projects not supported yet.");
-    }
   }
 
   function sampleProject() {

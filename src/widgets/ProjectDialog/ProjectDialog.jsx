@@ -291,18 +291,6 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     if (type === "LOCAL" || type === "CHAT") {
       navigate(`/${id}?mode=local`);
     } else if (type === "CLOUD") {
-      const refreshToken = storage.get("oauth.token")?.refreshToken;
-      const appId = config.id;
-      http
-        .post("/oauth", { appId, refreshToken, projectId: id })
-        .then(({ data }) => {
-          const { refreshToken, accessToken } = data;
-          storage.set("oauth.token", {
-            accessToken: accessToken,
-            refreshToken: refreshToken,
-          });
-        });
-
       navigate(`/${id}`);
     }
     publish("PROJECT_CHANGED", {
