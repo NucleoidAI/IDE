@@ -70,8 +70,8 @@ const deleteProject = (projectId) => {
   });
 };
 
-const getProjectServices = (projectId) => {
-  return http.get(`/projects/${projectId}/services`);
+const getProjectServices = () => {
+  return http.get(`/services`);
 };
 
 const getContext = (contextId) => {

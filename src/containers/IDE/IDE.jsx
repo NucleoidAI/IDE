@@ -98,7 +98,7 @@ function IDE() {
   async function project(projectId) {
     const [projectResult, serviceResult] = await Promise.all([
       service.getProject(projectId),
-      service.getProjectServices(projectId),
+      service.getProjectServices(),
     ]).catch((error) => {
       if (error.response.status === 404) {
         return [undefined, undefined];
