@@ -10,6 +10,10 @@ Cypress.Commands.add("setup", (container, fixtureType, type) => {
   cy.storageSet(`debug`, true);
   cy.storageSet(`ide.landing`, { level: Number.MAX_SAFE_INTEGER });
   cy.storageSet("oauth.token", { accesToken: "test", refreshToken: "test" });
+  cy.intercept("POST", "/oauth", {
+    statusCode: 200,
+    body: fixtureType === "BLANK" ? {} : [],
+  });
 
   if (container === "IDE") {
     cy.fixture("/PROJECTS/projects.json").then((projects) => {
@@ -42,9 +46,14 @@ Cypress.Commands.add("setup", (container, fixtureType, type) => {
         })
         .as("project");
 
+      cy.intercept("GET", "/oauth", {
+        statusCode: 200,
+        body: fixtureType === "BLANK" ? {} : [],
+      });
+
       cy.fixture("/SERVICE/single-project-service.json")
         .then((service) => {
-          cy.intercept("GET", `/projects/${cloudProjectId}/services`, {
+          cy.intercept("GET", `/services`, {
             statusCode: 200,
             body: fixtureType === "BLANK" ? {} : service,
           });
