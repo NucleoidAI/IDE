@@ -11,14 +11,12 @@ import useChat from "./useChat";
 import { useEvent } from "@nucleoidai/react-event";
 import { useParams } from "react-router-dom";
 
-import { Box, useMediaQuery, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
 const ChatWidget = () => {
   const theme = useTheme();
   const { chatId } = useParams("chatId");
-
-  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const [codeResponse, setCodeResponse] = useState(false);
   const [isItFirstVisit, setIsItFirstVisit] = useState();
@@ -122,7 +120,7 @@ const ChatWidget = () => {
         height: "100%",
         width: "100%",
         backgroundColor: theme.palette.background.paper,
-        paddingBottom: isMobile ? "25px" : "10px",
+        paddingBottom: "10px",
       }}
     >
       <ChatDisplay
