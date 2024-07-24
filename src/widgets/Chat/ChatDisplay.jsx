@@ -96,7 +96,7 @@ const ChatDisplay = ({
         paddingX: { xs: "8px", sm: "16px", md: "20px" },
         paddingTop: "20px",
         paddingBottom: {
-          xs: suggestionsOverlay.active ? 19 : 1,
+          xs: suggestionsOverlay.active ? 8 : 1,
           sm: suggestionsOverlay.active ? 12.5 : 2.5,
         },
       }}
