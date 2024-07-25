@@ -307,7 +307,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     try {
       const code = await http.getCodeFromGithub();
       const response = await http.oauth({
-        appId: config.id,
+        appId: config.appId,
         code,
         redirectUri,
         grant_type: "authorization_code",

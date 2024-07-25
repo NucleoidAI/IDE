@@ -1,5 +1,5 @@
 const config = {
-  id: "977f5f57-8936-4388-8eb0-00a512cf01cc",
+  appId: "977f5f57-8936-4388-8eb0-00a512cf01cc",
   base: "/ide",
   api: "https://api.nucleoid.com",
   expert: "https://api.nucleoid.com",

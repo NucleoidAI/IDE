@@ -98,7 +98,7 @@ function IDE() {
   }
 
   async function project(projectId) {
-    const appId = config.id;
+    const appId = config.appId;
     const { refreshToken } = storage.get("oauth.token");
 
     return http
