@@ -115,18 +115,12 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     const response = await service.getProjects();
     const projects = response.data;
 
-    const projectPromises = projects.map(async (project) => {
-      if (project.type === "SINGLE") {
+    const projectPromises = projects
+      .filter((project) => project.type === "SINGLE")
+      .map(async (project) => {
         project.type = "CLOUD";
         return project;
-      }
-
-      if (project.type === "MULTIPLE") {
-        console.log("Multiple services not supported yet");
-      }
-
-      return null;
-    });
+      });
 
     return await Promise.all(projectPromises);
   };
@@ -143,6 +137,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
 
   const getCloudProjects = async () => {
     const projects = await cloudToContext();
+    console.log(projects);
     setCloudProjects(projects);
   };
 
@@ -312,6 +307,7 @@ function ProjectDialog({ handleClose, open, setOpen }) {
     try {
       const code = await http.getCodeFromGithub();
       const response = await http.oauth({
+        appId: config.appId,
         code,
         redirectUri,
         grant_type: "authorization_code",

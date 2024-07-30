@@ -16,6 +16,7 @@ const refreshAuthLogic = async (failedRequest) => {
   if (!refreshToken && !accessToken) {
     const code = await instance.getCodeFromGithub();
     tokenRefreshResponse = await instance.oauth({
+      appId: config.appId,
       code: code,
       redirect_uri: config.oauth.redirectUri,
     });

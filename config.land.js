@@ -1,4 +1,5 @@
 const config = {
+  appId: "977f5f57-8936-4388-8eb0-00a512cf01cc",
   base: "/ide",
   api: "https://api-nucleoid-com-land.gentleflower-99ef02e0.eastus.azurecontainerapps.io",
   expert:
