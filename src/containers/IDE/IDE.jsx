@@ -85,7 +85,7 @@ function IDE() {
     });
 
     publish("RUNTIME_CONNECTION", {
-      status: false,
+      status: true,
       metrics: { total: 100, free: 50 },
     });
 
