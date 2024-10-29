@@ -1,5 +1,6 @@
 import Project from "../../lib/Project";
 import expert from "../../http/expert";
+import gtag from "../../gtag.js";
 import { startTransition } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
@@ -19,6 +20,7 @@ const useChat = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    gtag("event", "init_chat");
     setChat(selectedChat);
   }, [selectedChat]);
 
