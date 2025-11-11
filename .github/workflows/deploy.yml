@@ -1,15 +1,30 @@
-name: Deploy
+name: IDE
 on:
   push:
+    branches: [main]
     tags:
-      - v[0-9]+.[0-9]+.[0-9]+
-
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        type: choice
+        options:
+          - land
+          - live
+        default: 'land'
 jobs:
-  test:
-    uses: NucleoidAI/actions/.github/workflows/test.yml@main
-    secrets: inherit
-
-  deploy:
-    needs: test
-    uses: NucleoidAI/actions/.github/workflows/deploy.yml@main
-    secrets: inherit
+  IDE:
+    uses: ./.github/workflows/deploy.yml
+    with:
+      service_name: ide.nucleoid.com
+      environment: ${{ startsWith(github.ref, 'refs/tags/') && 'live' || github.event.inputs.environment || 'land' }}
+      context_path: .
+      install_dependencies: true
+      dependency_path: .
+      run_lint: true
+      run_build: true
+      setup_config: true
+    secrets:
+      DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
