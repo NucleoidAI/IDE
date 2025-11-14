@@ -1,4 +1,4 @@
-name: IDE
+name: Deploy
 on:
   push:
     branches: [main]
@@ -16,7 +16,7 @@ on:
         default: 'land'
 jobs:
   IDE:
-    uses: ./.github/workflows/deploy.yml
+    uses: GreyCollar/GreyCollar/.github/workflows/deploy.yml@main
     with:
       service_name: ide.nucleoid.com
       environment: ${{ startsWith(github.ref, 'refs/tags/') && 'live' || github.event.inputs.environment || 'land' }}
