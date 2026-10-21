@@ -16,7 +16,7 @@ on:
         default: 'land'
 jobs:
   IDE:
-    uses: GreyCollar/GreyCollar/.github/workflows/deploy.yml@main
+    uses: canmingir/actions/.github/workflows/deploy.yml@main
     with:
       service_name: ide.nucleoid.com
       environment: ${{ startsWith(github.ref, 'refs/tags/') && 'live' || github.event.inputs.environment || 'land' }}
